@@ -2,7 +2,7 @@
  *  KCemu -- the KC 85/3 and KC 85/4 Emulator
  *  Copyright (C) 1997-2001 Torsten Paul
  *
- *  $Id: ui_8.h,v 1.2 2002/10/31 01:02:43 torsten_paul Exp $
+ *  $Id$
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -19,23 +19,37 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-#ifndef __ui_generic_ui_8_h
-#define __ui_generic_ui_8_h
+#ifndef __kc_pio6_h
+#define __kc_pio6_h
 
-#include "kc/system.h"
+#include "kc/pio.h"
+#include "kc/ports.h"
 
-#include "ui/generic/ui_led.h"
-
-class UI_8 : public UI_LED
+class PIO6_1 : public PIO
 {
+ private:
+  byte_t _led_value;
+
  public:
-  UI_8(void);
-  virtual ~UI_8(void);
+  PIO6_1(void);
+  virtual ~PIO6_1(void);
+  byte_t in(word_t addr);
+  void out(word_t addr, byte_t val);
+  void change_A(byte_t changed, byte_t val);
+  void change_B(byte_t changed, byte_t val);
 
-  virtual void generic_update(bool clear_cache = false);
-
-  virtual int  generic_get_mode(void);
-  virtual void generic_set_mode(int mode);
+  virtual byte_t get_led_value(void);
 };
 
-#endif /* __ui_generic_ui_8_h */
+class PIO6_2 : public PIO
+{
+ public:
+  PIO6_2(void);
+  virtual ~PIO6_2(void);
+  byte_t in(word_t addr);
+  void out(word_t addr, byte_t val);
+  void change_A(byte_t changed, byte_t val);
+  void change_B(byte_t changed, byte_t val);
+};
+
+#endif /* __kc_pio6_h */

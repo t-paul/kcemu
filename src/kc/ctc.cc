@@ -333,7 +333,14 @@ CTC::c_out(byte_t channel, byte_t val)
         }
       
       _irq_valid[channel] += 4;
-      add_callback(_timer_value[channel], this, (void *)((long)_irq_valid[channel]));
+      /*
+       *  Added a fixed offset for callback timing added for the poly880
+       *  emulation. Without offset the CTC caused NMI is triggered
+       *  one opcode too early.
+       *
+       *  FIXME: check timing
+       */
+      add_callback(_timer_value[channel] + 4, this, (void *)((long)_irq_valid[channel]));
       return;
     }
 	

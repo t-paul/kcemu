@@ -71,6 +71,7 @@
 #include "kc/sound.h"
 #include "kc/ctc_fdc.h"
 #include "kc/z80_fdc.h"
+#include "kc/poly880.h"
 
 #include "ui/log.h"
 #include "cmd/cmd.h"
@@ -104,6 +105,12 @@
 #include "kc/ports4.h"
 #include "kc/memory4.h"
 
+#include "kc/ctc6.h"
+#include "kc/pio6.h"
+#include "kc/keyb6.h"
+#include "kc/ports6.h"
+#include "kc/memory6.h"
+
 #include "kc/ctc8.h"
 #include "kc/pio8.h"
 #include "kc/keyb8.h"
@@ -123,12 +130,14 @@
 # include "ui/gtk/ui_gtk1.h"
 # include "ui/gtk/ui_gtk3.h"
 # include "ui/gtk/ui_gtk4.h"
+# include "ui/gtk/ui_gtk6.h"
 # include "ui/gtk/ui_gtk8.h"
 # include "ui/gtk/ui_gtk9.h"
 # define UI_0 UI_Gtk0
 # define UI_1 UI_Gtk1
 # define UI_3 UI_Gtk3
 # define UI_4 UI_Gtk4
+# define UI_6 UI_Gtk6
 # define UI_8 UI_Gtk8
 # define UI_9 UI_Gtk9
 #endif /* USE_UI_GTK */
@@ -181,6 +190,7 @@ PortInterface *porti;
 GDC           *gdc;
 VIS           *vis;
 SVG           *svg;
+Poly880       *poly880;
 
 Z80_FDC         *fdc_z80;
 FloppyIO        *fdc_io;
@@ -280,6 +290,9 @@ static kc_variant_names_t kc_types[] = {
   { "kc85/4",              4, KC_TYPE_85_4,  KC_VARIANT_NONE,
     _("    KC 85/4 with 64k RAM, 64k screen memory, 12k system ROM with HC-CAOS 4.2\n"
       "    and 4k BASIC ROM.\n")
+  },
+  { "poly880",             6, KC_TYPE_POLY880, KC_VARIANT_NONE,
+    _("    Polycomputer 880.\n")
   },
   { "kc87",               -7, KC_TYPE_87,    KC_VARIANT_87_11,
     ">kc87.11"
@@ -1085,11 +1098,11 @@ main(int argc, char **argv)
   while (1)
     {
 #ifdef HAVE_GETOPT_LONG
-      c = getopt_long(argc, argv, "01234789hvDe:d:f:l:s:t:H:M:FLWV",
+      c = getopt_long(argc, argv, "012346789hvDe:d:f:l:s:t:H:M:FLWV",
                       long_options, &option_index);
 #else
 #ifdef HAVE_GETOPT
-      c = getopt(argc, argv, "01234789hvDe:d:f:l:s:H:M:FLWV");
+      c = getopt(argc, argv, "012346789hvDe:d:f:l:s:H:M:FLWV");
 #else
 #warning neither HAVE_GETOPT_LONG nor HAVE_GETOPT defined
 #warning commandline parsing disabled!
@@ -1117,6 +1130,9 @@ main(int argc, char **argv)
         case '4':
           type = 4;
           break;
+	case '6':
+	  type = 6;
+	  break;
         case '7':
           type = 7;
           break;
@@ -1237,6 +1253,7 @@ main(int argc, char **argv)
       gdc = NULL;
       vis = NULL;
       svg = NULL;
+      poly880 = NULL;
 
       switch (kcemu_kc_type)
 	{
@@ -1344,6 +1361,17 @@ main(int argc, char **argv)
 	  tape->set_tape_callback(p9);
 	  pio      = p9;
 	  break;
+	case KC_TYPE_POLY880:
+	  ui       = new UI_6;
+	  pio      = new PIO6_1;
+	  pio2     = new PIO6_2;
+	  ctc      = new CTC6;
+	  porti    = new Ports6;
+	  memory   = new Memory6;
+	  tape     = new Tape(500, 1000, 2000, 0);
+	  keyboard = new Keyboard6;
+	  poly880  = new Poly880;
+	  pio->register_callback_B_in((Keyboard6 *)keyboard);
 	default:
 	  break;
 	}
@@ -1454,6 +1482,12 @@ main(int argc, char **argv)
 	  ctc->iei(1);
 	  z80->daisy_chain_set_first(ctc->get_first()); // highest priority
 	  z80->daisy_chain_set_last(ctc->get_last());  // lowest priority
+	  break;
+	case KC_TYPE_POLY880:
+	  portg = ports->register_ports("PIO1",   0x80, 4, pio,   10);
+	  portg = ports->register_ports("PIO2",   0x84, 4, pio2,  10);
+	  portg = ports->register_ports("CTC",    0x88, 4, ctc,   10);
+	  portg = ports->register_ports("PortFC", 0xfc, 1, porti, 10);
 	  break;
 	default:
 	  break;

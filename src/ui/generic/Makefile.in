@@ -125,8 +125,10 @@ libui_generic_a_SOURCES = \
 	ui_1.cc		\
 	ui_3.cc		\
 	ui_4.cc		\
+	ui_6.cc		\
 	ui_8.cc		\
 	ui_9.cc		\
+	ui_led.cc	\
 	scanline.cc	\
 	module.cc	\
 	tape.cc
@@ -140,8 +142,9 @@ LIBRARIES = $(noinst_LIBRARIES)
 libui_generic_a_AR = $(AR) cru
 libui_generic_a_LIBADD =
 am_libui_generic_a_OBJECTS = ui_0.$(OBJEXT) ui_1.$(OBJEXT) \
-	ui_3.$(OBJEXT) ui_4.$(OBJEXT) ui_8.$(OBJEXT) ui_9.$(OBJEXT) \
-	scanline.$(OBJEXT) module.$(OBJEXT) tape.$(OBJEXT)
+	ui_3.$(OBJEXT) ui_4.$(OBJEXT) ui_6.$(OBJEXT) ui_8.$(OBJEXT) \
+	ui_9.$(OBJEXT) ui_led.$(OBJEXT) scanline.$(OBJEXT) \
+	module.$(OBJEXT) tape.$(OBJEXT)
 libui_generic_a_OBJECTS = $(am_libui_generic_a_OBJECTS)
 
 DEFS = @DEFS@
@@ -154,8 +157,9 @@ am__depfiles_maybe = depfiles
 @AMDEP_TRUE@DEP_FILES = ./$(DEPDIR)/module.Po ./$(DEPDIR)/scanline.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/tape.Po ./$(DEPDIR)/ui_0.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/ui_1.Po ./$(DEPDIR)/ui_3.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/ui_4.Po ./$(DEPDIR)/ui_8.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/ui_9.Po
+@AMDEP_TRUE@	./$(DEPDIR)/ui_4.Po ./$(DEPDIR)/ui_6.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/ui_8.Po ./$(DEPDIR)/ui_9.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/ui_led.Po
 CXXCOMPILE = $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) \
 	$(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS)
 CXXLD = $(CXX)
@@ -198,8 +202,10 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ui_1.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ui_3.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ui_4.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ui_6.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ui_8.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ui_9.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ui_led.Po@am__quote@
 
 distclean-depend:
 	-rm -rf ./$(DEPDIR)

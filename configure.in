@@ -14,9 +14,10 @@ dnl -----------------------
 AC_ARG_ENABLE(sound,        [  --enable-sound          enable sound using libSDL (broken!) [default=no]],,enable_sound=no)
 AC_ARG_ENABLE(libaudiofile, [  --enable-libaudiofile   enable usage of libaudiofile if present [default=yes]],,enable_libaudiofile=yes)
 AC_ARG_ENABLE(libsndfile,   [  --enable-libsndfile     enable usage of libsndfile if present [default=yes]],,enable_libsndfile=yes)
-AC_ARG_ENABLE(libflac,      [  --enable-libflac        enable usage of libFLAC if present [default=yes]],,enable_libflac=yes)
+AC_ARG_ENABLE(libflac,      [  --enable-libflac        enable usage of libFLAC 1.0.x if present [default=yes]],,enable_libflac=yes)
 AC_ARG_ENABLE(libvorbis,    [  --enable-libvorbis      enable usage of libvorbis if present [default=yes]],,enable_libvorbis=yes)
 AC_ARG_ENABLE(libmp3lame,   [  --enable-libmp3lame     enable usage of libmp3lame if present [default=yes]],,enable_libmp3lame=yes)
+AC_ARG_ENABLE(ms-bitfields, [  --enable-ms-bitfields   enable usage of gcc -mms-bitfields on MinGW [default=yes]],,enable_ms_bitfields=yes)
 AC_ARG_WITH(ui,             [  --with-ui=UI            use User Interface UI (gtk or sdl) [default=auto]],,with_ui=auto)
 AC_ARG_WITH(debug_level,    [  --with-debug-level=L    set debug level to L (0..3) [default=1]])
 
@@ -27,7 +28,7 @@ dnl ---------------------
 KCEMU_MAJOR_VERSION=0
 KCEMU_MINOR_VERSION=3
 KCEMU_MICRO_VERSION=7
-KCEMU_EXTRA_VERSION=beta7
+KCEMU_EXTRA_VERSION=beta8
 
 if test $KCEMU_MICRO_VERSION -eq 0
 then
@@ -63,19 +64,21 @@ dnl ---------------------
 
 AC_PROG_CC
 
-dnl
-dnl  check for compiler-flag -mms-bitfields needed for mingw/cygwin
-dnl  it defines the bit-field layout to be MS Visual C/C++ compatible
-dnl
-ac_save_CFLAGS=$CFLAGS
-CFLAGS="-mms-bitfields"
-AC_CACHE_CHECK(whether $CC accepts $CFLAGS, ac_cv_prog_cc_mms_bitfields,
-	  [AC_COMPILE_IFELSE([AC_LANG_PROGRAM()], [ac_cv_prog_cc_mms_bitfields=yes],
-                                                  [ac_cv_prog_cc_mms_bitfields=no])])
-if test $ac_cv_prog_cc_mms_bitfields = yes; then
-	CFLAGS="$ac_save_CFLAGS $CFLAGS"
-else
-	CFLAGS="$ac_save_CFLAGS"
+if test x$enable_ms_bitfields = xyes; then
+	dnl
+	dnl  check for compiler-flag -mms-bitfields needed for mingw/cygwin
+	dnl  it defines the bit-field layout to be MS Visual C/C++ compatible
+	dnl
+	ac_save_CFLAGS=$CFLAGS
+	CFLAGS="-mms-bitfields"
+	AC_CACHE_CHECK(whether $CC accepts $CFLAGS, ac_cv_prog_cc_mms_bitfields,
+		  [AC_COMPILE_IFELSE([AC_LANG_PROGRAM()], [ac_cv_prog_cc_mms_bitfields=yes],
+	                                                  [ac_cv_prog_cc_mms_bitfields=no])])
+	if test $ac_cv_prog_cc_mms_bitfields = yes; then
+		CFLAGS="$ac_save_CFLAGS $CFLAGS"
+	else
+		CFLAGS="$ac_save_CFLAGS"
+	fi
 fi
 
 AC_PROG_CXX
@@ -326,14 +329,8 @@ dnl ------------------
 dnl  check for libflac
 dnl ------------------
 
-dnl #
-dnl # ARGH, the function name FLAC__file_decoder_set_filename triggers
-dnl # some quite interresting bugs in autoconf (at least in version 2.13)
-dnl # We check for MD5Init instead :-(
-dnl #
-
 if test x$enable_libflac = xyes; then
-	AC_CHECK_LIB(FLAC, MD5Init, have_libflac=yes, have_libflac=no)
+	AC_CHECK_LIB(FLAC, FLAC__file_decoder_process_metadata, have_libflac=yes, have_libflac=no)
 	if test x$have_libflac = xyes; then
 		F_L_A_C_LIBS=-lFLAC
 		AC_SUBST(F_L_A_C_LIBS)
@@ -343,6 +340,8 @@ if test x$enable_libflac = xyes; then
 ***
 *** Unable to find libFLAC library! The audio loader module which
 *** requires this library will be disabled.
+***
+*** Currently only libFLAC 1.0.x is supported!
 ***
 *** This is NO ERROR. It only means you can't playback certain
 *** audio file types (e.g. .FLAC) in the emulated tape recorder.
@@ -381,7 +380,18 @@ if test x"$HOST_OS" = "xLinux" -o x"$HOST_OS" = "xMinGW"; then
 	dnl  check for libgtk
 	dnl ------------------
 
-	AM_PATH_GTK_2_0(2.2.1, have_libgtk=yes, have_libgtk=no)
+	if ! test "x$enable_gtktest" = "xno" ; then
+		AM_PATH_GTK_2_0(2.2.1, have_libgtk=yes, have_libgtk=no)
+	else
+		have_libgtk=yes
+		gtk_config_major_version=?
+		gtk_config_minor_version=?
+		gtk_config_micro_version=?
+		AC_MSG_CHECKING([for GTK library])
+		AC_MSG_RESULT([gtk-check disabled, using only GTK_CFLAGS/GTK_LIBS environment variables])
+		AC_SUBST(GTK_CFLAGS, $GTK_CFLAGS)
+		AC_SUBST(GTK_LIBS, $GTK_LIBS)
+	fi
 
 	if test x$have_libgtk = xyes; then
 		AC_DEFINE(HAVE_LIBGTK, 1, "have libgtk")

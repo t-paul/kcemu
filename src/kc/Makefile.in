@@ -145,6 +145,7 @@ kcemu_SOURCES = \
 	ctc.cc		\
 	ctc1.cc		\
 	ctc3.cc		\
+	ctc6.cc		\
 	ctc8.cc		\
 	ctc9.cc		\
 	ctc_fdc.cc	\
@@ -153,6 +154,7 @@ kcemu_SOURCES = \
 	keyb0.cc	\
 	keyb1.cc	\
 	keyb3.cc	\
+	keyb6.cc	\
 	keyb8.cc	\
 	keyb9.cc	\
 	memory.cc	\
@@ -161,6 +163,7 @@ kcemu_SOURCES = \
 	memory2.cc	\
 	memory3.cc	\
 	memory4.cc	\
+	memory6.cc	\
 	memory7.cc	\
 	memory8.cc	\
 	memory9.cc	\
@@ -182,11 +185,13 @@ kcemu_SOURCES = \
 	pio2.cc		\
 	pio3.cc		\
 	pio4.cc		\
+	pio6.cc		\
 	pio8.cc		\
 	pio9.cc		\
 	ports.cc	\
 	ports0.cc	\
 	ports4.cc	\
+	ports6.cc	\
 	module.cc	\
 	mod_ram.cc	\
 	mod_ram1.cc	\
@@ -208,6 +213,7 @@ kcemu_SOURCES = \
 	timer.cc	\
 	timer1.cc	\
 	timer3.cc	\
+	poly880.cc	\
 	z80.cc		\
 	z80_fdc.cc	\
 	wav.cc		\
@@ -279,28 +285,30 @@ PROGRAMS = $(bin_PROGRAMS) $(noinst_PROGRAMS)
 @TARGET_LINUX_TRUE@	mod_4131.$(OBJEXT)
 am_kcemu_OBJECTS = debug.$(OBJEXT) kc.$(OBJEXT) rc.$(OBJEXT) \
 	ic.$(OBJEXT) ctc.$(OBJEXT) ctc1.$(OBJEXT) ctc3.$(OBJEXT) \
-	ctc8.$(OBJEXT) ctc9.$(OBJEXT) ctc_fdc.$(OBJEXT) \
+	ctc6.$(OBJEXT) ctc8.$(OBJEXT) ctc9.$(OBJEXT) ctc_fdc.$(OBJEXT) \
 	ctc_base.$(OBJEXT) cb_list.$(OBJEXT) keyb0.$(OBJEXT) \
-	keyb1.$(OBJEXT) keyb3.$(OBJEXT) keyb8.$(OBJEXT) keyb9.$(OBJEXT) \
-	memory.$(OBJEXT) memory0.$(OBJEXT) memory1.$(OBJEXT) \
-	memory2.$(OBJEXT) memory3.$(OBJEXT) memory4.$(OBJEXT) \
-	memory7.$(OBJEXT) memory8.$(OBJEXT) memory9.$(OBJEXT) \
-	sh_mem.$(OBJEXT) disk_io.$(OBJEXT) gdc.$(OBJEXT) vis.$(OBJEXT) \
-	svg.$(OBJEXT) fdc.$(OBJEXT) fdc0s.$(OBJEXT) fdc4.$(OBJEXT) \
-	fdc7.$(OBJEXT) fdc9.$(OBJEXT) fdc_cmd.$(OBJEXT) \
-	floppy.$(OBJEXT) pio.$(OBJEXT) pio0.$(OBJEXT) pio1.$(OBJEXT) \
-	pio2.$(OBJEXT) pio3.$(OBJEXT) pio4.$(OBJEXT) pio8.$(OBJEXT) \
-	pio9.$(OBJEXT) ports.$(OBJEXT) ports0.$(OBJEXT) \
-	ports4.$(OBJEXT) module.$(OBJEXT) mod_ram.$(OBJEXT) \
+	keyb1.$(OBJEXT) keyb3.$(OBJEXT) keyb6.$(OBJEXT) keyb8.$(OBJEXT) \
+	keyb9.$(OBJEXT) memory.$(OBJEXT) memory0.$(OBJEXT) \
+	memory1.$(OBJEXT) memory2.$(OBJEXT) memory3.$(OBJEXT) \
+	memory4.$(OBJEXT) memory6.$(OBJEXT) memory7.$(OBJEXT) \
+	memory8.$(OBJEXT) memory9.$(OBJEXT) sh_mem.$(OBJEXT) \
+	disk_io.$(OBJEXT) gdc.$(OBJEXT) vis.$(OBJEXT) svg.$(OBJEXT) \
+	fdc.$(OBJEXT) fdc0s.$(OBJEXT) fdc4.$(OBJEXT) fdc7.$(OBJEXT) \
+	fdc9.$(OBJEXT) fdc_cmd.$(OBJEXT) floppy.$(OBJEXT) pio.$(OBJEXT) \
+	pio0.$(OBJEXT) pio1.$(OBJEXT) pio2.$(OBJEXT) pio3.$(OBJEXT) \
+	pio4.$(OBJEXT) pio6.$(OBJEXT) pio8.$(OBJEXT) pio9.$(OBJEXT) \
+	ports.$(OBJEXT) ports0.$(OBJEXT) ports4.$(OBJEXT) \
+	ports6.$(OBJEXT) module.$(OBJEXT) mod_ram.$(OBJEXT) \
 	mod_ram1.$(OBJEXT) mod_r64.$(OBJEXT) mod_cpm.$(OBJEXT) \
 	mod_ram8.$(OBJEXT) mod_64k.$(OBJEXT) mod_rom.$(OBJEXT) \
 	mod_rom1.$(OBJEXT) mod_192k.$(OBJEXT) mod_ramf.$(OBJEXT) \
 	mod_fdc.$(OBJEXT) mod_gdc.$(OBJEXT) mod_rtc.$(OBJEXT) \
 	mod_disk.$(OBJEXT) mod_list.$(OBJEXT) tape.$(OBJEXT) \
 	disk.$(OBJEXT) timer.$(OBJEXT) timer1.$(OBJEXT) \
-	timer3.$(OBJEXT) z80.$(OBJEXT) z80_fdc.$(OBJEXT) wav.$(OBJEXT) \
-	sound.$(OBJEXT) sound3.$(OBJEXT) sound8.$(OBJEXT) \
-	disass.$(OBJEXT) $(am__objects_1)
+	timer3.$(OBJEXT) poly880.$(OBJEXT) z80.$(OBJEXT) \
+	z80_fdc.$(OBJEXT) wav.$(OBJEXT) sound.$(OBJEXT) \
+	sound3.$(OBJEXT) sound8.$(OBJEXT) disass.$(OBJEXT) \
+	$(am__objects_1)
 kcemu_OBJECTS = $(am_kcemu_OBJECTS)
 @TARGET_BEOS_FALSE@@TARGET_LINUX_FALSE@@TARGET_MINGW_FALSE@@TARGET_UI_GTK_FALSE@@TARGET_UI_SDL_FALSE@@USE_INCLUDED_GETOPT_TRUE@kcemu_DEPENDENCIES = \
 @TARGET_BEOS_FALSE@@TARGET_LINUX_FALSE@@TARGET_MINGW_FALSE@@TARGET_UI_GTK_FALSE@@TARGET_UI_SDL_FALSE@@USE_INCLUDED_GETOPT_TRUE@	../z80core/libz80.a \
@@ -1276,38 +1284,41 @@ depcomp = $(SHELL) $(top_srcdir)/depcomp
 am__depfiles_maybe = depfiles
 @AMDEP_TRUE@DEP_FILES = ./$(DEPDIR)/cb_list.Po ./$(DEPDIR)/ctc.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/ctc1.Po ./$(DEPDIR)/ctc3.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/ctc8.Po ./$(DEPDIR)/ctc9.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/ctc_base.Po ./$(DEPDIR)/ctc_fdc.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/debug.Po ./$(DEPDIR)/disass.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/disk.Po ./$(DEPDIR)/disk_io.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/fdc.Po ./$(DEPDIR)/fdc0s.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/fdc4.Po ./$(DEPDIR)/fdc7.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/fdc9.Po ./$(DEPDIR)/fdc_cmd.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/floppy.Po ./$(DEPDIR)/gdc.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/ic.Po ./$(DEPDIR)/kc.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/kcemu-send.Po ./$(DEPDIR)/keyb0.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/keyb1.Po ./$(DEPDIR)/keyb3.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/ctc6.Po ./$(DEPDIR)/ctc8.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/ctc9.Po ./$(DEPDIR)/ctc_base.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/ctc_fdc.Po ./$(DEPDIR)/debug.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/disass.Po ./$(DEPDIR)/disk.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/disk_io.Po ./$(DEPDIR)/fdc.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/fdc0s.Po ./$(DEPDIR)/fdc4.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/fdc7.Po ./$(DEPDIR)/fdc9.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/fdc_cmd.Po ./$(DEPDIR)/floppy.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/gdc.Po ./$(DEPDIR)/ic.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/kc.Po ./$(DEPDIR)/kcemu-send.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/keyb0.Po ./$(DEPDIR)/keyb1.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/keyb3.Po ./$(DEPDIR)/keyb6.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/keyb8.Po ./$(DEPDIR)/keyb9.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/memory.Po ./$(DEPDIR)/memory0.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/memory1.Po ./$(DEPDIR)/memory2.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/memory3.Po ./$(DEPDIR)/memory4.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/memory7.Po ./$(DEPDIR)/memory8.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/memory9.Po ./$(DEPDIR)/mod_192k.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/mod_4131.Po ./$(DEPDIR)/mod_64k.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/mod_cpm.Po ./$(DEPDIR)/mod_disk.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/mod_fdc.Po ./$(DEPDIR)/mod_gdc.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/mod_js.Po ./$(DEPDIR)/mod_list.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/mod_r64.Po ./$(DEPDIR)/mod_ram.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/mod_ram1.Po ./$(DEPDIR)/mod_ram8.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/mod_ramf.Po ./$(DEPDIR)/mod_rom.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/mod_rom1.Po ./$(DEPDIR)/mod_rtc.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/mod_v24.Po ./$(DEPDIR)/module.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/pio.Po ./$(DEPDIR)/pio0.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/pio1.Po ./$(DEPDIR)/pio2.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/pio3.Po ./$(DEPDIR)/pio4.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/memory6.Po ./$(DEPDIR)/memory7.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/memory8.Po ./$(DEPDIR)/memory9.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/mod_192k.Po ./$(DEPDIR)/mod_4131.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/mod_64k.Po ./$(DEPDIR)/mod_cpm.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/mod_disk.Po ./$(DEPDIR)/mod_fdc.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/mod_gdc.Po ./$(DEPDIR)/mod_js.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/mod_list.Po ./$(DEPDIR)/mod_r64.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/mod_ram.Po ./$(DEPDIR)/mod_ram1.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/mod_ram8.Po ./$(DEPDIR)/mod_ramf.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/mod_rom.Po ./$(DEPDIR)/mod_rom1.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/mod_rtc.Po ./$(DEPDIR)/mod_v24.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/module.Po ./$(DEPDIR)/pio.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/pio0.Po ./$(DEPDIR)/pio1.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/pio2.Po ./$(DEPDIR)/pio3.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/pio4.Po ./$(DEPDIR)/pio6.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/pio8.Po ./$(DEPDIR)/pio9.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/ports.Po ./$(DEPDIR)/ports0.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/ports4.Po ./$(DEPDIR)/rc.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/poly880.Po ./$(DEPDIR)/ports.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/ports0.Po ./$(DEPDIR)/ports4.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/ports6.Po ./$(DEPDIR)/rc.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/sh_mem.Po ./$(DEPDIR)/sound.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/sound3.Po ./$(DEPDIR)/sound8.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/svg.Po ./$(DEPDIR)/tape.Po \
@@ -1384,6 +1395,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ctc.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ctc1.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ctc3.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ctc6.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ctc8.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ctc9.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ctc_base.Po@am__quote@
@@ -1406,6 +1418,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/keyb0.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/keyb1.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/keyb3.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/keyb6.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/keyb8.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/keyb9.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/memory.Po@am__quote@
@@ -1414,6 +1427,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/memory2.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/memory3.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/memory4.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/memory6.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/memory7.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/memory8.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/memory9.Po@am__quote@
@@ -1442,11 +1456,14 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/pio2.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/pio3.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/pio4.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/pio6.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/pio8.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/pio9.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/poly880.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ports.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ports0.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ports4.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ports6.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/rc.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/sh_mem.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/sound.Po@am__quote@

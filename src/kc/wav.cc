@@ -465,8 +465,16 @@ WavPlayer::do_play(void)
       if (v > 2000)
 	break;
     }
+  
+  if (get_kc_type() & KC_TYPE_85_2_CLASS)
+    {
+      v = (1750000.0 * byte_cnt) / _sample_freq;
+    }
+  else
+    {
+      v = (2500000.0 * byte_cnt) / _sample_freq;
+    }
 
-  v = (1750000.0 * byte_cnt) / _sample_freq;
   if (v > 2000)
     v = 2000;
 
@@ -474,7 +482,8 @@ WavPlayer::do_play(void)
   CMD_EXEC_ARGS("ui-wav-info", &_info_args);
 
 #if 0
-  z80->addCallback(v, this, (void *)0);
+  printf("%d / %d / %d - %d\n", _bit_0, _bit_1, _bit_s, (long)v);
+  z80->addCallback((long long)v, this, (void *)0);
 #else
   if (v < 550)
     {

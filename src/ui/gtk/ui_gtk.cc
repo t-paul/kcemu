@@ -26,10 +26,7 @@
 #include <string.h>
 #include <unistd.h>
 
-#include <X11/Xatom.h>
-
 #include <gtk/gtk.h>
-#include <gdk/gdkx.h>
 #include <gdk/gdkkeysyms.h>
 
 #include "kc/system.h"
@@ -275,7 +272,7 @@ UI_Gtk::key_press_release(GdkEventKey *event, bool press)
   int c = 0;
   int key_code;
 
-  key_code = XKeysymToKeycode(GDK_DISPLAY(), event->keyval);
+  key_code = event->hardware_keycode;
 
   switch (event->keyval)
     {
@@ -350,6 +347,7 @@ UI_Gtk::key_press_release(GdkEventKey *event, bool press)
     case GDK_KP_Enter:         c = 0x0d;           break;
     default:
       c = event->keyval & 0xff;
+      break;
     }
 
   DBG(2, form("KCemu/UI/key_kc",
@@ -368,7 +366,7 @@ UI_Gtk::sf_key_press(GtkWidget */*widget*/, GdkEventKey *event)
 {
   DBG(2, form("KCemu/UI/key_press",
               "key_press:   keyval = %04x, keycode = %04x\n",
-              event->keyval, XKeysymToKeycode(GDK_DISPLAY(), event->keyval)));
+              event->keyval, event->hardware_keycode));
 
   key_press_release(event, true);
 
@@ -380,7 +378,7 @@ UI_Gtk::sf_key_release(GtkWidget */*widget*/, GdkEventKey *event)
 {
   DBG(2, form("KCemu/UI/key_release",
               "key_release: keyval = %04x, keycode = %04x\n",
-              event->keyval, XKeysymToKeycode(GDK_DISPLAY(), event->keyval)));
+              event->keyval, event->hardware_keycode));
 
   key_press_release(event, false);
 
@@ -394,7 +392,6 @@ UI_Gtk::sf_focus_in(GtkWidget * /* widget */, GdkEventFocus *event)
               "got focus\n"));
 
   keyboard->keyReleased(-1, -1);
-  //gdk_key_repeat_disable();
 }
 
 void
@@ -404,7 +401,6 @@ UI_Gtk::sf_focus_out(GtkWidget *widget, GdkEventFocus *event)
               "lost focus\n"));
 
   keyboard->keyReleased(-1, -1);
-  //gdk_key_repeat_restore();
 }
 
 void
@@ -753,7 +749,6 @@ UI_Gtk::UI_Gtk(void)
 UI_Gtk::~UI_Gtk(void)
 {
   gtk_widget_destroy(_main.window);
-  //gdk_key_repeat_restore();
         
   delete _about_window;
   delete _tape_window;
@@ -873,8 +868,6 @@ UI_Gtk::init(int *argc, char ***argv)
    *  don't let gtk catch SIGSEGV, make core dumps ;-)
    */
   signal(SIGSEGV, SIG_DFL);
-
-  //gdk_key_repeat_disable();
 
   _main.statusbar_sec = 0;
   Status::instance()->addStatusListener(this);

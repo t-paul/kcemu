@@ -2,6 +2,10 @@
 # $Id: TODO,v 1.9 2002/10/31 16:39:53 torsten_paul Exp $
 #
 
+- fix key repeat with gtk-2.2
+- fix .TAP import/export for files with non-linear block
+  numbering (e.g. os-save)
+- fix kc2wav -> wav2kc for z9001-mc programs
 - fix timing bug when loading digger by double click in the
   tape window and starting the program before the tape
   loader has timed out

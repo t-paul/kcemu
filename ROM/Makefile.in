@@ -153,6 +153,7 @@ pkgdata_DATA = \
 	k1505_80.rom	\
 	k5651_40.rom	\
 	k5651_60.rom	\
+	poly_880.rom	\
 	lc80__00.rom	\
 	lc80__08.rom
 

@@ -31,18 +31,6 @@
 
 class TapeWindow : public UI_Gtk_Window, public TapeInterface
 {
- public:
-  enum {
-    TAPE_REWIND  = 1,
-    TAPE_FF      = 2,
-    TAPE_RECORD  = 3,
-    TAPE_PLAY    = 4,
-    TAPE_DETACH  = 5,
-    TAPE_ATTACH  = 6,
-    TAPE_STOP    = 7,
-    TAPE_CHANGED = 8,
-  };
-
  private:
   struct {
     GtkWidget *vbox;

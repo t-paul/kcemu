@@ -123,6 +123,9 @@ pkgdata_DATA = \
 	kc854.key \
 	kc854_keyboard.xpm \
 	kc854_keyboard_pressed.xpm \
+	poly880.key \
+	poly880_keyboard.xpm \
+	poly880_keyboard_pressed.xpm \
 	lc80.key \
 	lc80_keyboard.xpm \
 	lc80_keyboard_pressed.xpm
@@ -143,6 +146,7 @@ libui_gtk_a_SOURCES = \
 	ui_gtk1.cc	\
 	ui_gtk3.cc	\
 	ui_gtk4.cc	\
+	ui_gtk6.cc	\
 	ui_gtk8.cc	\
 	ui_gtk9.cc	\
 	cmd.cc		\
@@ -177,9 +181,9 @@ libui_gtk_a_AR = $(AR) cru
 libui_gtk_a_LIBADD =
 am_libui_gtk_a_OBJECTS = gtkledline.$(OBJEXT) ui_gtk.$(OBJEXT) \
 	ui_gtk0.$(OBJEXT) ui_gtk1.$(OBJEXT) ui_gtk3.$(OBJEXT) \
-	ui_gtk4.$(OBJEXT) ui_gtk8.$(OBJEXT) ui_gtk9.$(OBJEXT) \
-	cmd.$(OBJEXT) window.$(OBJEXT) disk.$(OBJEXT) tape.$(OBJEXT) \
-	tapeadd.$(OBJEXT) info.$(OBJEXT) about.$(OBJEXT) \
+	ui_gtk4.$(OBJEXT) ui_gtk6.$(OBJEXT) ui_gtk8.$(OBJEXT) \
+	ui_gtk9.$(OBJEXT) cmd.$(OBJEXT) window.$(OBJEXT) disk.$(OBJEXT) \
+	tape.$(OBJEXT) tapeadd.$(OBJEXT) info.$(OBJEXT) about.$(OBJEXT) \
 	color.$(OBJEXT) module.$(OBJEXT) keyboard.$(OBJEXT) \
 	debug.$(OBJEXT) copying.$(OBJEXT) fbrowse.$(OBJEXT) \
 	dialog.$(OBJEXT) image.$(OBJEXT) wav.$(OBJEXT) hedit.$(OBJEXT)
@@ -212,8 +216,9 @@ am__depfiles_maybe = depfiles
 @AMDEP_TRUE@	./$(DEPDIR)/tapeadd.Po ./$(DEPDIR)/ui_gtk.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/ui_gtk0.Po ./$(DEPDIR)/ui_gtk1.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/ui_gtk3.Po ./$(DEPDIR)/ui_gtk4.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/ui_gtk8.Po ./$(DEPDIR)/ui_gtk9.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/wav.Po ./$(DEPDIR)/window.Po
+@AMDEP_TRUE@	./$(DEPDIR)/ui_gtk6.Po ./$(DEPDIR)/ui_gtk8.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/ui_gtk9.Po ./$(DEPDIR)/wav.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/window.Po
 COMPILE = $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) \
 	$(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS)
 CCLD = $(CC)
@@ -305,6 +310,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ui_gtk1.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ui_gtk3.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ui_gtk4.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ui_gtk6.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ui_gtk8.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ui_gtk9.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/wav.Po@am__quote@

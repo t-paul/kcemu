@@ -205,13 +205,13 @@ PIO::out_CTRL(int port, byte_t val)
     {
       DBG(2, form("KCemu/PIO/A/out_CTRL",
 		  "PIO::out(): port A CTRL (mode %d): val = %02x\n",
-		  p, _mode[A], val));
+		  _mode[A], val));
     }
   else
     {
       DBG(2, form("KCemu/PIO/B/out_CTRL",
 		  "PIO::out(): port B CTRL (mode %d): val = %02x\n",
-		  p, _mode[B], val));
+		  _mode[B], val));
     }
 
   /*
@@ -432,11 +432,11 @@ PIO::set_EXT(int port, byte_t mask, byte_t val)
         _ext_fn[port] = ((_ext[port] & _irq_mask[port]) != _irq_mask[port]);
     }
 
-#if 0  
-  cout.form("PIO: [%c] _ext_fn: A/O = %d, H/L = %d, mask = 0x%02x\n",
-            p, _irq_and_or[port], _irq_h_l[port], _irq_mask[port]);
-  cout.form("PIO: [%c] _ext_fn: old = %02x, _ext_fn = %02x\n",
-            p, old, _ext_fn[port]);
+#if 0
+  printf("PIO: [%c] _ext_fn: A/O = %d, H/L = %d, mask = 0x%02x\n",
+	 port, _irq_and_or[port], _irq_h_l[port], _irq_mask[port]);
+  printf("PIO: [%c] _ext_fn: old = %02x, _ext_fn = %02x\n",
+	 port, old, _ext_fn[port]);
 #endif
   
   if ((old == 0) && (_ext_fn[port] == 1))

@@ -35,6 +35,7 @@ kcemu_SOURCES = \
 	ctc.cc		\
 	ctc1.cc		\
 	ctc3.cc		\
+	ctc6.cc		\
 	ctc8.cc		\
 	ctc9.cc		\
 	ctc_fdc.cc	\
@@ -43,6 +44,7 @@ kcemu_SOURCES = \
 	keyb0.cc	\
 	keyb1.cc	\
 	keyb3.cc	\
+	keyb6.cc	\
 	keyb8.cc	\
 	keyb9.cc	\
 	memory.cc	\
@@ -51,6 +53,7 @@ kcemu_SOURCES = \
 	memory2.cc	\
 	memory3.cc	\
 	memory4.cc	\
+	memory6.cc	\
 	memory7.cc	\
 	memory8.cc	\
 	memory9.cc	\
@@ -72,11 +75,13 @@ kcemu_SOURCES = \
 	pio2.cc		\
 	pio3.cc		\
 	pio4.cc		\
+	pio6.cc		\
 	pio8.cc		\
 	pio9.cc		\
 	ports.cc	\
 	ports0.cc	\
 	ports4.cc	\
+	ports6.cc	\
 	module.cc	\
 	mod_ram.cc	\
 	mod_ram1.cc	\
@@ -98,6 +103,7 @@ kcemu_SOURCES = \
 	timer.cc	\
 	timer1.cc	\
 	timer3.cc	\
+	poly880.cc	\
 	z80.cc		\
 	z80_fdc.cc	\
 	wav.cc		\

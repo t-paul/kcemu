@@ -2,7 +2,7 @@
  *  KCemu -- the KC 85/3 and KC 85/4 Emulator
  *  Copyright (C) 1997-2001 Torsten Paul
  *
- *  $Id: ui_8.h,v 1.2 2002/10/31 01:02:43 torsten_paul Exp $
+ *  $Id$
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -19,23 +19,40 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-#ifndef __ui_generic_ui_8_h
-#define __ui_generic_ui_8_h
-
 #include "kc/system.h"
 
-#include "ui/generic/ui_led.h"
+#include "kc/kc.h"
+#include "kc/ports6.h"
 
-class UI_8 : public UI_LED
+#include "ui/generic/ui_6.h"
+
+UI_6::UI_6(void) : UI_LED(560, 112, 32, 64, 1, 2, 4, 128, 16, 8)
 {
- public:
-  UI_8(void);
-  virtual ~UI_8(void);
+}
 
-  virtual void generic_update(bool clear_cache = false);
+UI_6::~UI_6(void)
+{
+}
 
-  virtual int  generic_get_mode(void);
-  virtual void generic_set_mode(int mode);
-};
+void
+UI_6::generic_update(bool clear_cache)
+{
+  byte_t led_value;
 
-#endif /* __ui_generic_ui_8_h */
+  for (int a = 0;a < 8;a++)
+    {
+      led_value = ((Ports6 *)porti)->get_led_value(a);
+      generic_draw_digit(65 * a + 32, 12, a, led_value, clear_cache);
+    }
+}
+
+int
+UI_6::generic_get_mode(void)
+{
+  return 0;
+}
+
+void
+UI_6::generic_set_mode(int mode)
+{
+}

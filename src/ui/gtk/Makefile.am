@@ -9,6 +9,9 @@ pkgdata_DATA = \
 	kc854.key \
 	kc854_keyboard.xpm \
 	kc854_keyboard_pressed.xpm \
+	poly880.key \
+	poly880_keyboard.xpm \
+	poly880_keyboard_pressed.xpm \
 	lc80.key \
 	lc80_keyboard.xpm \
 	lc80_keyboard_pressed.xpm
@@ -27,6 +30,7 @@ libui_gtk_a_SOURCES = \
 	ui_gtk1.cc	\
 	ui_gtk3.cc	\
 	ui_gtk4.cc	\
+	ui_gtk6.cc	\
 	ui_gtk8.cc	\
 	ui_gtk9.cc	\
 	cmd.cc		\

@@ -200,6 +200,7 @@ Disk::attach(int disk_no, const char *filename, bool create)
 
 	  if (!floppy->attach(ptr))
 	    ret = DISK_ERROR;
+
 	  free(ptr);
 	}
     }

@@ -99,6 +99,7 @@ class Sound;
 class PortInterface;
 class GDC;
 class VIS;
+class Poly880;
 
 extern Z80             *z80;
 extern UI              *ui;
@@ -117,6 +118,7 @@ extern ModuleList      *module_list;
 extern CMD             *cmd;
 extern GDC             *gdc;
 extern VIS             *vis;
+extern Poly880         *poly880;
 
 extern Z80_FDC         *fdc_z80;     
 extern FloppyIO        *fdc_io;

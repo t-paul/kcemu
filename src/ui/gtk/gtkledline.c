@@ -31,6 +31,14 @@
 #define LED_LINE_DEFAULT_RADIUS (4)
 #define LED_LINE_DEFAULT_SPACING (2)
 
+#ifndef M_PI
+#define M_PI 3.14159265358979323846
+#endif /* M_PI */
+
+#ifndef M_PI
+#define M_PI 3.14159265358979323846
+#endif /* M_PI */
+
 /* Forward declararations */
 
 static void gtk_led_line_class_init               (GtkLedLineClass    *klass);

@@ -22,6 +22,9 @@
 #include <stdio.h>
 #include <string.h>
 
+#include <stdio.h>
+#include <string.h>
+
 #include "kc/system.h"
 
 #include "kc/kc.h"
@@ -34,7 +37,7 @@
 #include "ui/gtk/ui_gtk.h"
 #include "ui/gtk/keyboard.h"
 
-/* #define DEBUG_REGIONS 1 */
+// #define DEBUG_REGIONS 1
 
 static struct {
   const char *name;
@@ -388,6 +391,9 @@ KeyboardWindow::init_key_regions(void)
       break;
     case KC_TYPE_LC80:
       filename = "lc80.key";
+      break;
+    case KC_TYPE_POLY880:
+      filename = "poly880.key";
       break;
     case KC_TYPE_Z1013:
     case KC_TYPE_A5105:
