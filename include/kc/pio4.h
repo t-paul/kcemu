@@ -32,8 +32,8 @@ protected:
   virtual void change_B(byte_t changed, byte_t val);
   
 public:
-  PIO4(void) {}
-  virtual ~PIO4(void) {}
+  PIO4(void);
+  virtual ~PIO4(void);
   virtual byte_t in(word_t addr);
   virtual void out(word_t addr, byte_t val);
 

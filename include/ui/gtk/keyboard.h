@@ -46,13 +46,15 @@ class KeyboardWindow : public UI_Gtk_Window
     GtkWidget *separator;
     GtkWidget *close;
   } _w;
-  
+
   GdkPixbuf   *_pixbuf_normal;
   GdkPixbuf   *_pixbuf_pressed;
   gboolean     _key_active;
 
   struct _key_struct _keys[256];
   struct _key_struct *_key_pressed;
+
+  CMD *_cmd;
 
  protected:
   void init(void);

@@ -51,10 +51,10 @@ UI_1::UI_1(void)
 
 UI_1::~UI_1(void)
 {
-  delete _dirty;
-  delete _bitmap;
-  delete _pix_cache;
-  delete _col_cache;
+  delete[] _dirty;
+  delete[] _bitmap;
+  delete[] _pix_cache;
+  delete[] _col_cache;
 }
 
 int

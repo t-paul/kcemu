@@ -25,7 +25,7 @@
 #include "kc/module.h"
 #include "kc/memory.h"
 
-class Module192k : public ModuleInterface, public PortInterface, public InterfaceCircuit
+class Module192k : public ModuleInterface, public PortInterface
 {
  private:
   byte_t _val;
@@ -49,7 +49,6 @@ class Module192k : public ModuleInterface, public PortInterface, public Interfac
 
  protected:
   void init(void);
-  bool load_rom(const char *filename, byte_t *buf, int size);
 
  public:
   Module192k(Module192k &tmpl);
@@ -58,20 +57,13 @@ class Module192k : public ModuleInterface, public PortInterface, public Interfac
 
   virtual void m_out(word_t addr, byte_t val);
   virtual ModuleInterface * clone(void);
+  virtual void reset(bool power_on = false);
 
   /*
    *  PortInterface
    */
   virtual byte_t in(word_t addr);
   virtual void out(word_t addr, byte_t val);
-
-  /*
-   *  InterfaceCircuit
-   */
-  virtual void reti(void) {}
-  virtual void irqreq(void) {}
-  virtual word_t irqack() { return IRQ_NOT_ACK; }
-  virtual void reset(bool power_on = false);
 };
 
 #endif /* __kc_mod_192k_h */

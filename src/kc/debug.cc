@@ -393,6 +393,8 @@ byte_t DebugZ80(_Z80 *R)
 		   pio2->info();
 		 if (ctc)
 		   ctc->info();
+		 if (ctc2)
+		   ctc2->info();
                  if (ports)
 		   ports->info();
                  memory->info();

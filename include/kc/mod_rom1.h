@@ -28,14 +28,17 @@
 
 class ModuleROM1 : public ModuleInterface, public ROMDIInterface
 {
-private:
+ private:
   byte_t       *_rom;
   word_t        _addr;
   dword_t       _size;
   MemAreaGroup *_group;
   bool          _set_romdi;
   
-public:
+ protected:
+  void set_romdi(bool val);
+
+ public:
   ModuleROM1(ModuleROM1 &tmpl);
   ModuleROM1(const char *filename,
 	     const char *name,
@@ -44,8 +47,11 @@ public:
 	     bool set_romdi = false);
   virtual ~ModuleROM1(void);
 
+  virtual void set_active(bool active);
+
   virtual void m_out(word_t addr, byte_t val);
   virtual ModuleInterface * clone(void);
+  virtual void reset(bool power_on = false);
 
   /*
    *  ROMDIInterface

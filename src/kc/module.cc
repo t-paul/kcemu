@@ -50,7 +50,10 @@ ModuleInterface::~ModuleInterface(void)
 byte_t
 ModuleInterface::m_in(word_t addr)
 {
-  return get_id();
+  if (((addr >> 8) & 3) == 0)
+    return get_id();
+
+  return 0xff;
 }
 
 byte_t
@@ -93,6 +96,8 @@ Module::Module(void)
 
 Module::~Module(void)
 {
+  for (int a = 0;a < NR_MODULES;a++)
+    remove(a);
 }
 
 byte_t
@@ -101,11 +106,10 @@ Module::in(word_t addr)
   int a;
   byte_t id;
 
-  if ((addr & 0x300) != 0)
-    return 0xff;
   a = (addr >> 8);
   if (a < 8)
     return 0xff;
+
   a = (a - 8) / 4;
   if (_module[a])
     id = _module[a]->m_in(addr);
@@ -125,11 +129,10 @@ Module::out(word_t addr, byte_t val)
   int a;
   int slot;
 
-  if ((addr & 0x300) != 0)
-    return;
   a = (addr >> 8);
   if (a < 8)
     return;
+
   slot = (a - 8) / 4;
   if (_module[slot])
     {
@@ -162,4 +165,12 @@ Module::remove(byte_t slot)
               _module[slot]->get_name(), slot * 4 + 8, slot));
   delete _module[slot];
   _module[slot] = 0;
+}
+
+void
+Module::reset(bool power_on)
+{
+  for (int a = 0;a < NR_MODULES;a++)
+    if (_module[a])
+      _module[a]->reset(power_on);
 }

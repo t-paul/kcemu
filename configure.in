@@ -27,8 +27,8 @@ dnl ---------------------
 
 KCEMU_MAJOR_VERSION=0
 KCEMU_MINOR_VERSION=3
-KCEMU_MICRO_VERSION=7
-KCEMU_EXTRA_VERSION=
+KCEMU_MICRO_VERSION=8
+KCEMU_EXTRA_VERSION=beta1
 
 if test $KCEMU_MICRO_VERSION -eq 0
 then
@@ -52,6 +52,7 @@ PACKAGE=KCemu
 VERSION=$KCEMU_VERSION
 AM_INIT_AUTOMAKE($PACKAGE, $VERSION, no-define)
 AC_CANONICAL_HOST
+AC_CANONICAL_TARGET
 
 AC_SUBST(PACKAGE)
 AC_SUBST(VERSION)
@@ -205,11 +206,21 @@ AC_MSG_RESULT($use_included_getopt)
 dnl -----------------------------
 dnl  check for common libraries
 dnl -----------------------------
-AC_CHECK_LIB(z, crc32,,
-	AC_MSG_ERROR(Cannot link libz -- check CFLAGS/LDFLAGS))
+dnl
+dnl  on mingw the libz dll has to be linked
+dnl  with -lzdll instead of -lz
+dnl
+AC_CHECK_LIB(z, crc32, have_libz=-lz, have_libz=no)
+if test x$have_libz = xno; then
+   AC_CHECK_LIB(zdll, crc32, have_libz=-lzdll, have_libz=no)
+fi
+if test x$have_libz = xno; then
+   AC_MSG_ERROR(Cannot link libz -- check CFLAGS/LDFLAGS)
+else
+   LIBS="$LIBS $have_libz"
+fi
 
-AC_CHECK_LIB(m, pow,,
-	AC_MSG_WARN(Cannot link libm -- check CFLAGS/LDFLAGS))
+AC_CHECK_LIB(m, pow,,AC_MSG_WARN(Cannot link libm -- check CFLAGS/LDFLAGS))
 
 dnl ---------------------
 dnl  check for libsndfile
@@ -474,6 +485,8 @@ AC_OUTPUT([
 	Makefile
 	include/Makefile
 	include/kc/Makefile
+	include/kc/kramermc/Makefile
+	include/kc/muglerpc/Makefile
 	include/sys/Makefile
 	include/getopt/Makefile
 	include/cmd/Makefile
@@ -492,6 +505,8 @@ AC_OUTPUT([
 	include/z80core2/Makefile
 	src/Makefile
 	src/kc/Makefile
+	src/kc/kramermc/Makefile
+	src/kc/muglerpc/Makefile
 	src/sys/Makefile
 	src/sys/beos/Makefile
 	src/sys/mingw/Makefile

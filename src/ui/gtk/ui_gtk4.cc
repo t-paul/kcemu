@@ -128,6 +128,16 @@ UI_Gtk4::flash(bool enable)
   scanline.trigger(enable);
 }
 
+void
+UI_Gtk4::memory_read(word_t addr)
+{
+}
+
+void
+UI_Gtk4::memory_write(word_t addr)
+{
+}
+
 int
 UI_Gtk4::get_mode(void)
 {

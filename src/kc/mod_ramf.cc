@@ -208,6 +208,11 @@ ModuleRAMFloppy::clone(void)
   return new ModuleRAMFloppy(*this);
 }
 
+void
+ModuleRAMFloppy::reset(bool power_on)
+{
+}
+
 byte_t
 ModuleRAMFloppy::in(word_t addr)
 {

@@ -24,31 +24,33 @@ INCLUDES = \
 	$(SDL_CFLAGS)
 
 libui_gtk_a_SOURCES = \
-	gtkledline.c	\
-	ui_gtk.cc	\
-	ui_gtk0.cc	\
-	ui_gtk1.cc	\
-	ui_gtk3.cc	\
-	ui_gtk4.cc	\
-	ui_gtk6.cc	\
-	ui_gtk8.cc	\
-	ui_gtk9.cc	\
-	cmd.cc		\
-	window.cc	\
-	disk.cc		\
-	tape.cc		\
-	tapeadd.cc	\
-	info.cc		\
-	about.cc	\
-	color.cc	\
-	module.cc	\
-	keyboard.cc	\
-	debug.cc	\
-	copying.cc	\
-	fbrowse.cc	\
-	dialog.cc	\
-	image.cc	\
-	wav.cc		\
+	gtkledline.c		\
+	ui_gtk.cc		\
+	ui_gtk0.cc		\
+	ui_gtk1.cc		\
+	ui_gtk3.cc		\
+	ui_gtk4.cc		\
+	ui_gtk6.cc		\
+	ui_gtk8.cc		\
+	ui_gtk9.cc		\
+	ui_gtk_kramermc.cc	\
+	ui_gtk_muglerpc.cc	\
+	cmd.cc			\
+	window.cc		\
+	disk.cc			\
+	tape.cc			\
+	tapeadd.cc		\
+	info.cc			\
+	about.cc		\
+	color.cc		\
+	module.cc		\
+	keyboard.cc		\
+	debug.cc		\
+	copying.cc		\
+	fbrowse.cc		\
+	dialog.cc		\
+	image.cc		\
+	wav.cc			\
 	hedit.cc
 
 if TARGET_LINUX

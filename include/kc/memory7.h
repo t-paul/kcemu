@@ -27,6 +27,7 @@
 #include "kc/kc.h"
 #include "kc/romdi.h"
 #include "kc/memory.h"
+#include "kc/memoryif.h"
 
 class Memory7 : public Memory, public ROMDIInterface
 {
@@ -39,32 +40,24 @@ private:
   MemAreaGroup *_m_scr;    /* scratch memory */
   MemAreaGroup *_m_ram;    /* RAM   0000h - 3fffh */
   MemAreaGroup *_m_basic;  /* BASIC c000h - e7ffh */
-  MemAreaGroup *_m_irm;    /* IRM   e800h - efffh */
+  MemAreaGroup *_m_irm_e8; /* IRM   e800h - bfffh (color, readonly) */
+  MemAreaGroup *_m_irm_ec; /* IRM   ec00h - efffh (text) */
   MemAreaGroup *_m_os;     /* OS    f000h - ffffh */
 
   typedef std::list<ROMDIInterface *> romdi_list_t;
   romdi_list_t _romdi_list;
   bool _romdi;
 
+  typedef std::list<MemoryInterface *> memory_list_t;
+  memory_list_t _memory_list;
+
 public:
   Memory7(void);
   virtual ~Memory7(void);
   void dumpCore(void);
 
-#ifndef MEMORY_SLOW_ACCESS
-  inline byte_t memRead8(word_t addr)
-    {
-      return _memrptr[addr >> MemArea::PAGE_SHIFT][addr & MemArea::PAGE_MASK];
-    }
-  
-  inline void memWrite8(word_t addr, byte_t val)
-    {
-      _memwptr[addr >> MemArea::PAGE_SHIFT][addr & MemArea::PAGE_MASK] = val;
-    }
-#else /* MEMORY_SLOW_ACCESS */
   byte_t memRead8(word_t addr);
   void memWrite8(word_t addr, byte_t val);
-#endif /* MEMORY_SLOW_ACCESS */
   
   byte_t * get_irm(void);
   byte_t * get_char_rom(void);
@@ -72,6 +65,9 @@ public:
   void set_romdi(bool val);
   void register_romdi_handler(ROMDIInterface *handler);
   void unregister_romdi_handler(ROMDIInterface *handler);
+
+  void register_memory_handler(MemoryInterface *handler);
+  void unregister_memory_handler(MemoryInterface *handler);
 
   virtual void reset(bool power_on = false);
 

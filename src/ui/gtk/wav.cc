@@ -35,14 +35,14 @@ class CMD_ui_wav_window_toggle : public CMD
 {
 private:
   WavWindow *_w;
-  
+
 public:
   CMD_ui_wav_window_toggle(WavWindow *w) : CMD("ui-wav-window-toggle")
     {
       _w = w;
       register_cmd("ui-wav-window-toggle");
     }
-  
+
   void execute(CMD_Args *args, CMD_Context context)
     {
       _w->toggle();
@@ -53,7 +53,7 @@ class CMD_ui_wav_info : public CMD
 {
 private:
   WavWindow *_w;
-  
+
 public:
   CMD_ui_wav_info(WavWindow *w) : CMD("ui-wav-info")
     {
@@ -62,7 +62,7 @@ public:
       register_cmd("ui-wav-info", 2);
       register_cmd("ui-wav-file-selected", 3);
     }
-  
+
   void execute(CMD_Args *args, CMD_Context context)
     {
       switch (context)
@@ -94,18 +94,19 @@ WavWindow::sf_expose(GtkWidget *widget, GdkEvent *event, gpointer *data)
 
 WavWindow::WavWindow(void)
 {
-  init();
+  _cmd_wav_info = new CMD_ui_wav_info(this);
+  _cmd_wav_toggle = new CMD_ui_wav_window_toggle(this);
 }
 
 WavWindow::~WavWindow(void)
 {
+  delete _cmd_wav_info;
+  delete _cmd_wav_toggle;
 }
 
 void
 WavWindow::init(void)
 {
-  int x, y;
-
   /*
    *  wav window
    */
@@ -114,11 +115,11 @@ WavWindow::init(void)
   gtk_window_set_title(GTK_WINDOW(_window), _("KCemu: Audio Player"));
   gtk_window_position(GTK_WINDOW(_window), GTK_WIN_POS_MOUSE);
   gtk_signal_connect(GTK_OBJECT(_window), "delete_event",
-                     GTK_SIGNAL_FUNC(cmd_exec_sft),
-                     (char *)"ui-wav-window-toggle"); // FIXME:
+		     GTK_SIGNAL_FUNC(cmd_exec_sft),
+		     (char *)"ui-wav-window-toggle"); // FIXME:
 
   _w.tooltips = gtk_tooltips_new();
-  
+
   /*
    *  vbox
    */
@@ -187,8 +188,8 @@ WavWindow::init(void)
   //_w.open = gtk_button_new_with_label(_("Open"));
   _w.open = create_button_with_pixmap(_window, __xpm_open);
   gtk_signal_connect(GTK_OBJECT(_w.open), "clicked",
-                     GTK_SIGNAL_FUNC(cmd_exec_sf),
-                     (gpointer)"ui-wav-open");
+		     GTK_SIGNAL_FUNC(cmd_exec_sf),
+		     (gpointer)"ui-wav-open");
   gtk_box_pack_start(GTK_BOX(_w.hbox2), _w.open, FALSE, FALSE, 2);
   gtk_widget_show(_w.open);
 
@@ -200,8 +201,8 @@ WavWindow::init(void)
   //_w.stop = gtk_button_new_with_label(_("Stop"));
   _w.stop = create_button_with_pixmap(_window, __xpm_stop);
   gtk_signal_connect(GTK_OBJECT(_w.stop), "clicked",
-                     GTK_SIGNAL_FUNC(cmd_exec_sf),
-                     (gpointer)"kc-wav-stop");
+		     GTK_SIGNAL_FUNC(cmd_exec_sf),
+		     (gpointer)"kc-wav-stop");
   gtk_box_pack_start(GTK_BOX(_w.hbox2), _w.stop, FALSE, FALSE, 2);
   gtk_widget_show(_w.stop);
 
@@ -228,8 +229,8 @@ WavWindow::init(void)
   //_w.play = gtk_button_new_with_label(_("Play"));
   _w.play = create_button_with_pixmap(_window, __xpm_play);
   gtk_signal_connect(GTK_OBJECT(_w.play), "clicked",
-                     GTK_SIGNAL_FUNC(cmd_exec_sf),
-                     (gpointer)"kc-wav-play");
+		     GTK_SIGNAL_FUNC(cmd_exec_sf),
+		     (gpointer)"kc-wav-play");
   gtk_box_pack_start(GTK_BOX(_w.hbox2), _w.play, FALSE, FALSE, 2);
   gtk_widget_show(_w.play);
 
@@ -248,16 +249,12 @@ WavWindow::init(void)
    */
   _w.close = gtk_button_new_with_label(_("Close"));
   gtk_signal_connect(GTK_OBJECT(_w.close), "clicked",
-                     GTK_SIGNAL_FUNC(cmd_exec_sf),
-                     (gpointer)"ui-wav-window-toggle");
+		     GTK_SIGNAL_FUNC(cmd_exec_sf),
+		     (gpointer)"ui-wav-window-toggle");
   gtk_box_pack_start(GTK_BOX(_w.vbox), _w.close, FALSE, FALSE, 5);
   GTK_WIDGET_SET_FLAGS(_w.close, GTK_CAN_DEFAULT);
   gtk_widget_grab_default(_w.close);
   gtk_widget_show(_w.close);
-
-  CMD *cmd;
-  cmd = new CMD_ui_wav_info(this);
-  cmd = new CMD_ui_wav_window_toggle(this);
 
   _w.gc = NULL;
   _image_y = 0;
@@ -265,10 +262,6 @@ WavWindow::init(void)
 			  gdk_visual_get_system(),
 			  WINDOW_WIDTH,
 			  2 * WINDOW_HEIGHT);
-
-  for (y = 0;y < 2 * WINDOW_HEIGHT;y++)
-    for (x = 0;x < WINDOW_WIDTH;x++)
-      gdk_image_put_pixel(_image, x, y, 0xffffffff);
 }
 
 void
@@ -285,7 +278,17 @@ void
 WavWindow::expose(void)
 {
   if (_w.gc == NULL)
-    _w.gc = gdk_gc_new(GTK_WIDGET(_w.canvas)->window);
+    {
+      _w.gc = gdk_gc_new(GTK_WIDGET(_w.canvas)->window);
+
+      /*
+       * clear image not in initialization to decrease startup time
+       * instead we do it when receiving the first expose event
+       */
+      for (int y = 0;y < 2 * WINDOW_HEIGHT;y++)
+	for (int x = 0;x < WINDOW_WIDTH;x++)
+	  gdk_image_put_pixel(_image, x, y, 0xffffffff);
+    }
 
   gdk_draw_image(GTK_WIDGET(_w.canvas)->window,
 		 _w.gc, _image,
@@ -304,12 +307,15 @@ WavWindow::update(int gap)
     return;
 
   x = gap / 5;
+  if (x >= WINDOW_WIDTH)
+    return;
+
   gdk_image_put_pixel(_image, x, _image_y, 0);
   gdk_image_put_pixel(_image, x, _image_y + WINDOW_HEIGHT, 0);
 
   if (--cnt >= 0)
     return;
-  
+
   cnt = 80;
 
   _image_y++;
@@ -325,7 +331,7 @@ WavWindow::update(int gap)
   gdk_image_put_pixel(_image, 1000 / 5, _image_y + WINDOW_HEIGHT, 0x00ff00);
 
   expose();
-  
+
   if (_image_y >= WINDOW_HEIGHT)
     _image_y = 0;
 }

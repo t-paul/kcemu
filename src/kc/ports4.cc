@@ -36,7 +36,7 @@
 Ports4::Ports4(void)
 {
   for (int a = 0;a < NR_PORTS;a++)
-    inout[a] = 0xff;
+    inout[a] = -1;
 }
 
 Ports4::~Ports4(void)
@@ -80,9 +80,13 @@ Ports4::out(word_t addr, byte_t val)
   switch (a)
     {
     case 0x84:
+      if (inout[0x84] < 0)
+	inout[0x84] = ~val;
       change_0x84(inout[0x84] ^ val, val);
       break;
     case 0x86:
+      if (inout[0x86] < 0)
+	inout[0x86] = ~val;
       change_0x86(inout[0x86] ^ val, val);
       break;
     default:
@@ -125,31 +129,12 @@ Ports4::change_0x84(byte_t changed, byte_t val)
                   "Ports 0x84: high resolution %d\n",
                   (val >> 3) & 1));
     }
-  if (changed & 0x10)
+  if (changed & 0xf0)
     {
       DBG(2, form("KCemu/Ports/4/change/84",
-                  "Ports 0x84: access RAM8 block %d\n",
+                  "Ports 0x84: access RAM8 segment %d\n",
                   (val >> 4) & 1));
-      memory->enableRAM_8_1(val & 0x10);
-    }
-  if (changed & 0x20)
-    {
-      DBG(2, form("KCemu/Ports/4/change/84",
-                  "Ports 0x84: RAM8 on/off %d\n",
-                  (val >> 5) & 1));
-      memory->enableRAM_8(val & 0x20);
-    }
-  if (changed & 0x40)
-    {
-      DBG(2, form("KCemu/Ports/4/change/84",
-                  "Ports 0x84: reserved 0x40 %d\n",
-                  (val >> 6) & 1));
-    }
-  if (changed & 0x80)
-    {
-      DBG(2, form("KCemu/Ports/4/change/84",
-                  "Ports 0x84: reserved 0x80 %d\n",
-                  (val >> 7) & 1));
+      memory->selectRAM_8((val >> 4) & 0x0f);
     }
 }
 

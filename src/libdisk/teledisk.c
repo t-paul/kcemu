@@ -243,23 +243,23 @@ read_header(FILE *f)
 
   fread(&h, 19, 1, f);
 
-  printf("00: %02x, %3d\n", h.unknown00, h.unknown00);
-  printf("01: %02x, %3d\n", h.unknown01, h.unknown01);
-  printf("02: %02x, %3d\n", h.unknown02, h.unknown02);
-  printf("03: %02x, %3d\n", h.unknown03, h.unknown03);
-  printf("04: %02x, %3d\n", h.unknown04, h.unknown04);
-  printf("05: %02x, %3d\n", h.unknown05, h.unknown05);
-  printf("07: %02x, %3d\n", h.unknown07, h.unknown07);
-  printf("08: %02x, %3d\n", h.unknown08, h.unknown08);
-  printf("09: %02x, %3d\n", h.unknown09, h.unknown09);
-  printf("10: %02x, %3d\n", h.unknown10, h.unknown10);
-  printf("11: %02x, %3d\n", h.unknown11, h.unknown11);
-  printf("12: %02x, %3d\n", h.unknown12, h.unknown12);
-
-  printf("sides: %d\n", h.sides);
-  printf("date: %02d. %s %04d, %02d:%02d:%02d\n",
-	 h.day, month[h.month], h.year + 1900,
-	 h.hour, h.minute, h.second);
+//printf("00: %02x, %3d\n", h.unknown00, h.unknown00);
+//printf("01: %02x, %3d\n", h.unknown01, h.unknown01);
+//printf("02: %02x, %3d\n", h.unknown02, h.unknown02);
+//printf("03: %02x, %3d\n", h.unknown03, h.unknown03);
+//printf("04: %02x, %3d\n", h.unknown04, h.unknown04);
+//printf("05: %02x, %3d\n", h.unknown05, h.unknown05);
+//printf("07: %02x, %3d\n", h.unknown07, h.unknown07);
+//printf("08: %02x, %3d\n", h.unknown08, h.unknown08);
+//printf("09: %02x, %3d\n", h.unknown09, h.unknown09);
+//printf("10: %02x, %3d\n", h.unknown10, h.unknown10);
+//printf("11: %02x, %3d\n", h.unknown11, h.unknown11);
+//printf("12: %02x, %3d\n", h.unknown12, h.unknown12);
+//
+//printf("sides: %d\n", h.sides);
+//printf("date: %02d. %s %04d, %02d:%02d:%02d\n",
+//	 h.day, month[h.month], h.year + 1900,
+//	 h.hour, h.minute, h.second);
 
   /*
    *  read comment

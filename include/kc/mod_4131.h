@@ -48,6 +48,7 @@ class ModuleXY4131 : public ModuleInterface, public PIOCallbackInterface
    */
   virtual void m_out(word_t addr, byte_t val);
   virtual ModuleInterface * clone(void);
+  virtual void reset(bool power_on = false);
 };
 
 #endif /* __kc_mod_4131_h */

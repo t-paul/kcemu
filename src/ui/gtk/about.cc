@@ -34,14 +34,14 @@ class CMD_about_window_toggle : public CMD
 {
 private:
   AboutWindow *_w;
-  
+
 public:
   CMD_about_window_toggle(AboutWindow *w) : CMD("ui-about-window-toggle")
     {
       _w = w;
       register_cmd("ui-about-window-toggle");
     }
-  
+
   void execute(CMD_Args *args, CMD_Context context)
     {
       _w->toggle();
@@ -50,7 +50,7 @@ public:
 
 AboutWindow::AboutWindow(void)
 {
-  init();
+  _cmd = new CMD_about_window_toggle(this);
 }
 
 AboutWindow::~AboutWindow(void)
@@ -67,9 +67,9 @@ AboutWindow::init(void)
   gtk_window_set_resizable(GTK_WINDOW(_window), false);
   gtk_window_position(GTK_WINDOW(_window), GTK_WIN_POS_CENTER_ALWAYS);
   gtk_signal_connect(GTK_OBJECT(_window), "delete_event",
-                     GTK_SIGNAL_FUNC(cmd_exec_sft),
-                     (char *)"ui-about-window-toggle"); // FIXME:
-      
+		     GTK_SIGNAL_FUNC(cmd_exec_sft),
+		     (char *)"ui-about-window-toggle"); // FIXME:
+
   /*
    *  vbox
    */
@@ -89,7 +89,7 @@ AboutWindow::init(void)
   _w.pixmap = create_pixmap_widget(_window, __xpm_kcemu);
   gtk_box_pack_start(GTK_BOX(_w.vbox), _w.pixmap, FALSE, FALSE, 2);
   gtk_widget_show(_w.pixmap);
-  
+
   /*
    *  labels
    */
@@ -98,35 +98,33 @@ AboutWindow::init(void)
   _w.info = gtk_label_new("build: " __DATE__ " / " __TIME__);
   gtk_label_set_justify(GTK_LABEL(_w.copyright), GTK_JUSTIFY_CENTER);
   gtk_box_pack_start(GTK_BOX(_w.vbox), _w.name,
-                     FALSE, FALSE, 5);
+		     FALSE, FALSE, 5);
   gtk_box_pack_start(GTK_BOX(_w.vbox), _w.copyright,
-                     FALSE, FALSE, 5);
+		     FALSE, FALSE, 5);
   gtk_box_pack_start(GTK_BOX(_w.vbox), _w.info,
-                     FALSE, FALSE, 5);
+		     FALSE, FALSE, 5);
   gtk_widget_show(_w.name);
   gtk_widget_show(_w.copyright);
   gtk_widget_show(_w.info);
-  
+
   /*
    *  separator
    */
   _w.separator = gtk_hseparator_new();
   gtk_box_pack_start(GTK_BOX(_w.vbox), _w.separator,
-                     FALSE, FALSE, 5);
+		     FALSE, FALSE, 5);
   gtk_widget_show(_w.separator);
-  
+
   /*
    *  close button
    */
   _w.close = gtk_button_new_with_label(_("Close"));
   gtk_box_pack_start(GTK_BOX(_w.vbox), _w.close,
-                     FALSE, FALSE, 5);
+		     FALSE, FALSE, 5);
   gtk_signal_connect(GTK_OBJECT(_w.close), "clicked",
-                     GTK_SIGNAL_FUNC(cmd_exec_sf),
-                     (char *)"ui-about-window-toggle"); // FIXME:
+		     GTK_SIGNAL_FUNC(cmd_exec_sf),
+		     (char *)"ui-about-window-toggle"); // FIXME:
   GTK_WIDGET_SET_FLAGS(_w.close, GTK_CAN_DEFAULT);
   gtk_widget_grab_default(_w.close);
   gtk_widget_show(_w.close);
-
-  _cmd = new CMD_about_window_toggle(this);
 }

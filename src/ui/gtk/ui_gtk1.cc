@@ -115,6 +115,16 @@ UI_Gtk1::flash(bool enable)
 {
 }
 
+void
+UI_Gtk1::memory_read(word_t addr)
+{
+}
+
+void
+UI_Gtk1::memory_write(word_t addr)
+{
+}
+
 int
 UI_Gtk1::get_mode(void)
 {

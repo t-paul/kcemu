@@ -1,5 +1,7 @@
 ## Process this file with automake to produce Makefile.in
 
+SUBDIRS = kramermc muglerpc
+
 EXTRA_DIST = \
 	cb.h		\
 	ic.h		\
@@ -28,11 +30,13 @@ EXTRA_DIST = \
 	keyb9k.h	\
 	keys.h		\
 	memory.h	\
+	memoryif.h	\
 	memory0.h	\
 	memory1.h	\
 	memory2.h	\
 	memory3.h	\
 	memory4.h	\
+	memory5.h	\
 	memory6.h	\
 	memory7.h	\
 	memory8.h	\
@@ -55,6 +59,7 @@ EXTRA_DIST = \
 	gdc.h		\
 	vis.h		\
 	svg.h		\
+	gide.h		\
 	fdc.h		\
 	fdc0s.h		\
 	fdc4.h		\
@@ -69,8 +74,14 @@ EXTRA_DIST = \
 	mod_cpm.h	\
 	mod_ram8.h	\
 	mod_64k.h	\
+	mod_128k.h	\
+	mod_256k.h	\
+	mod_512k.h	\
+	mod_1m.h	\
+	mod_4m.h	\
 	mod_rom.h	\
 	mod_rom1.h	\
+	mod_romb.h	\
 	mod_192k.h	\
 	mod_ramf.h	\
 	mod_fdc.h	\
@@ -80,6 +91,8 @@ EXTRA_DIST = \
 	mod_v24.h	\
 	mod_js.h	\
 	mod_4131.h	\
+	mod_segm.h	\
+	mod_boot.h	\
 	mod_list.h	\
 	profile.h	\
 	tape.h		\
@@ -101,4 +114,6 @@ EXTRA_DIST = \
 	op.h		\
 	opcb.h		\
 	opxx.h		\
-	opxxxx.h
+	opxxxx.h	\
+	basicrun.h	\
+	basicrun.asm

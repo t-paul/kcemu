@@ -29,7 +29,7 @@ class ModuleRAM : public ModuleInterface
 {
 private:
   enum {
-    RAM_SIZE = 0x2000,
+    RAM_SIZE = 0x4000,
   };
   
   byte_t _val;
@@ -43,6 +43,7 @@ public:
 
   virtual void m_out(word_t addr, byte_t val);
   virtual ModuleInterface * clone(void);
+  virtual void reset(bool power_on = false);
 };
 
 #endif /* __kc_mod_ram_h */

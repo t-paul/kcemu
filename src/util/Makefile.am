@@ -8,7 +8,7 @@ noinst_PROGRAMS = disk-tool tape-tool tape-check tape-check-bc tape-merge tape-t
 
 LIBS=
 
-CPPFLAGS = \
+AM_CPPFLAGS = \
 	-DDEBUG
 
 INCLUDES = \

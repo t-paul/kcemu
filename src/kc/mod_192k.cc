@@ -25,7 +25,6 @@
 #include "kc/system.h"
 
 #include "kc/kc.h"
-#include "kc/z80.h"
 #include "kc/mod_192k.h"
 
 using namespace std;
@@ -36,8 +35,7 @@ using namespace std;
  *  http://vpohlers.tripod.com/192k_modul.htm
  */
 Module192k::Module192k(Module192k &tmpl) :
-  ModuleInterface(tmpl.get_name(), tmpl.get_id(), tmpl.get_type()),
-  InterfaceCircuit(tmpl.get_name())
+  ModuleInterface(tmpl.get_name(), tmpl.get_id(), tmpl.get_type())
 {
   init();
 
@@ -126,14 +124,11 @@ Module192k::Module192k(Module192k &tmpl) :
 
   _portg = ports->register_ports(get_name(), 0xff, 1, this, 0);
 
-  z80->register_ic(this);
-
   set_valid(true);
 }
 
 Module192k::Module192k(const char *d2, const char *d3, const char *d5, const char *name) :
-  ModuleInterface(name, 0, KC_MODULE_KC_85_1),
-  InterfaceCircuit(name)
+  ModuleInterface(name, 0, KC_MODULE_KC_85_1)
 {
   bool valid = true;
 
@@ -149,13 +144,13 @@ Module192k::Module192k(const char *d2, const char *d3, const char *d5, const cha
   memset(_rom_D3, 0, 32768);
   memset(_rom_D5, 0, 16384);
 
-  if (!load_rom(d2, _rom_D2, 65536))
+  if (!Memory::load_rom(d2, _rom_D2, 65536, false))
     valid = false;
-  if (!load_rom(d3, _rom_D3, 32768))
+  if (!Memory::load_rom(d3, _rom_D3, 32768, false))
     valid = false;
-  if (!load_rom(d5, _rom_D5, 8192))
+  if (!Memory::load_rom(d5, _rom_D5, 8192, false))
     valid = false;
-  if (!load_rom(d5, _rom_D5 + 8192, 8192))
+  if (!Memory::load_rom(d5, _rom_D5 + 8192, 8192, false))
     valid = false;
 
   if (!valid)
@@ -186,8 +181,6 @@ Module192k::~Module192k(void)
       if (_rom_D5)
 	delete[] _rom_D5;
     }
-  else
-    z80->unregister_ic(this);
 
   if (_m_4000)
     memory->unregister_memory(_m_4000);
@@ -226,28 +219,6 @@ Module192k::init(void)
   _m_a000 = NULL;
   for (int a = 0;a < 16;a++)
     _m_c000[a] = _m_e000[a] = NULL;
-}
-
-bool
-Module192k::load_rom(const char *filename, byte_t *buf, int size)
-{
-  int a, c;
-  ifstream is;
-
-  is.open(filename, ios::in | ios::binary);
-  if (!is)
-    return false;
-  
-  for (a = 0;a < size;a++)
-    {
-      c = is.get();
-      if (c == EOF)
-	return false;
-      
-      buf[a] = c;
-    }
-
-  return true;
 }
 
 void

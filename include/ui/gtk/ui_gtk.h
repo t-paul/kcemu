@@ -125,6 +125,7 @@ class UI_Gtk : public StatusListener, public ErrorListener, public UI
 
     void create_main_window(void);
     void create_header_window(void);
+    void setup_ui_defaults(void);
     void show_greeting(void);
     void tapeSelect(void);
     void hsv_to_gdk_color(double h, double s, double v, GdkColor *col);
@@ -191,6 +192,7 @@ class UI_Gtk : public StatusListener, public ErrorListener, public UI
     virtual void status_bar_toggle(void);
     virtual void menu_bar_toggle(void);
     virtual void speed_limit_toggle(void);
+    virtual void display_effects_toggle(void);
 
     virtual void allocate_colors(double saturation_fg,
 				 double saturation_bg,
@@ -202,11 +204,14 @@ class UI_Gtk : public StatusListener, public ErrorListener, public UI
     void gtk_sync(void);
     void gtk_resize(void);
     void gtk_zoom(int zoom);
+    void gtk_enable_display_effect(int effect);
     void gtk_update(byte_t *bitmap, byte_t *dirty, int dirty_size, int width, int height, bool full_update);
     void gtk_update_1(byte_t *bitmap, byte_t *dirty, int dirty_size, int width, int height);
     void gtk_update_2(byte_t *bitmap, byte_t *dirty, int dirty_size, int width, int height);
     void gtk_update_3(byte_t *bitmap, byte_t *dirty, int dirty_size, int width, int height);
     void gtk_update_1_debug(byte_t *bitmap, byte_t *dirty, int dirty_size, int width, int height);
+    void gtk_update_2_scanline(byte_t *bitmap, byte_t *dirty, int dirty_size, int width, int height);
+    void gtk_update_3_smooth(byte_t *bitmap, byte_t *dirty, int dirty_size, int width, int height);
 
     /*
      *  StatusListener

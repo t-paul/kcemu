@@ -48,32 +48,15 @@ ModuleROM::ModuleROM(ModuleROM &tmpl) :
 }
 
 ModuleROM::ModuleROM(const char *filename, const char *name,
-                     dword_t size, byte_t id, word_t addr) :
+		     dword_t size, byte_t id, word_t addr) :
   ModuleInterface(name, id, KC_MODULE_KC_85_3)
 {
-  int c;
-  ifstream is;
-  unsigned int a;
-
   _rom = new byte_t[size];
   _addr = addr;
   _size = size;
   _group = NULL;
 
-  a = 0;
-  is.open(filename, ios::in | ios::binary);
-  if (!is)
-    return;
-
-  for (a = 0;a < size;a++)
-    {
-      c = is.get();
-      if (c == EOF)
-	return;
-
-      _rom[a] = c;
-    }
-  set_valid(true);
+  set_valid(Memory::load_rom(filename, _rom, size, false));
 }
 
 ModuleROM::~ModuleROM(void)
@@ -86,10 +69,13 @@ ModuleROM::~ModuleROM(void)
 void
 ModuleROM::m_out(word_t addr, byte_t val)
 {
-  if (((_val & 1) ^ (val & 1)) != 1) return;
+  if (((_val & 1) ^ (val & 1)) != 1)
+    return;
   if (val & 1)
-    _group = memory->register_memory(get_name(), _addr, _size,
-                                     _rom, (addr >> 8), true);
+    {
+      _group = memory->register_memory(get_name(), _addr, _size,
+				       _rom, (addr >> 8), true);
+    }
   else
     {
       if (_group) memory->unregister_memory(_group);
@@ -103,4 +89,9 @@ ModuleInterface *
 ModuleROM::clone(void)
 {
   return new ModuleROM(*this);
+}
+
+void
+ModuleROM::reset(bool power_on)
+{
 }

@@ -130,6 +130,7 @@ private:
     void do_play(int edge);
     void do_play_bic(int edge);
     void do_play_z1013(int edge);
+    void do_play_basicode(int edge);
     void do_stop(void);
     void tape_signal(void);
     void tape_signal_bic(long diff);

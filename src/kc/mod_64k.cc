@@ -104,3 +104,10 @@ Module64k::clone(void)
 {
   return new Module64k(*this);
 }
+
+void
+Module64k::reset(bool power_on)
+{
+  if (power_on)
+    Memory::scratch_mem(_ram, RAM_SIZE);
+}

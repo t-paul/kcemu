@@ -33,6 +33,7 @@ class UI_4
   byte_t *_bitmap;
   byte_t *_pix_cache;
   byte_t *_col_cache;
+  byte_t *_scn_cache;
   int     _dirty_size;
 
  protected:
@@ -41,7 +42,7 @@ class UI_4
  public:
   UI_4(void);
   virtual ~UI_4(void);
-  
+
   virtual int get_real_width(void);
   virtual int get_real_height(void);
 

@@ -46,7 +46,7 @@ public:
       _w = w;
       register_cmd("ui-debug-window-toggle");
     }
-  
+
   void execute(CMD_Args *args, CMD_Context context)
     {
       _w->toggle();
@@ -64,7 +64,7 @@ public:
       _w = w;
       register_cmd("single-step-executed");
     }
-  
+
   void execute(CMD_Args *args, CMD_Context context)
     {
       _w->do_goto_int(z80->getPC());
@@ -102,85 +102,87 @@ DebugWindow::do_goto_string(const char *str)
 
 gint
 DebugWindow::key_press_func(GtkWidget *widget, GdkEventKey *event,
-                            gpointer data)
+			    gpointer data)
 {
-  int clear_op;
   DebugWindow *self;
 
-  clear_op = 0;
+  int clear_op = 0;
   self = (DebugWindow *)data;
   if (event->state & GDK_CONTROL_MASK)
     {
       switch (event->keyval)
-        {
-        case 'd':
-          self->_op = new debug_op_asm();
-          self->_op->activate(self);
-          break;
-        case 'm':
-          self->_op = new debug_op_mem();
-          self->_op->activate(self);
-          break;
-        case 'r':
-          self->_op = new debug_op_reg();
-          self->_op->activate(self);
-          break;
-        case 'g':
-          /* gtk_label_set_text(GTK_LABEL(self->_w.op), "go to: "); */
-          if (self->_op->can_go_to())
-            {
-              // gtk_widget_show(self->_w.op);
-              self->_minibuffer_active = true;
-              gtk_widget_set_sensitive(self->_w.op, true);
-              gtk_entry_select_region(GTK_ENTRY(self->_w.op), 0, -1);
-              gtk_widget_grab_focus(self->_w.op);
-            }
-          break;
+	{
+	case 'd':
+	  delete self->_op;
+	  self->_op = new debug_op_asm();
+	  self->_op->activate(self);
+	  break;
+	case 'm':
+	  delete self->_op;
+	  self->_op = new debug_op_mem();
+	  self->_op->activate(self);
+	  break;
+	case 'r':
+	  delete self->_op;
+	  self->_op = new debug_op_reg();
+	  self->_op->activate(self);
+	  break;
+	case 'g':
+	  /* gtk_label_set_text(GTK_LABEL(self->_w.op), "go to: "); */
+	  if (self->_op->can_go_to())
+	    {
+	      // gtk_widget_show(self->_w.op);
+	      self->_minibuffer_active = true;
+	      gtk_widget_set_sensitive(self->_w.op, true);
+	      gtk_entry_select_region(GTK_ENTRY(self->_w.op), 0, -1);
+	      gtk_widget_grab_focus(self->_w.op);
+	    }
+	  break;
 	case 'p':
 	case 'b':
-        case GDK_Up:
+	case GDK_Up:
 	case GDK_KP_Up:
-          self->_op->update(self, SCROLL_PREV_PAGE);
-          break;
+	  self->_op->update(self, SCROLL_PREV_PAGE);
+	  break;
 	case 'f':
 	case 'n':
-        case GDK_Down:
+	case GDK_Down:
 	case GDK_KP_Down:
-          self->_op->update(self, SCROLL_NEXT_PAGE);
-          break;
-        }
+	  self->_op->update(self, SCROLL_NEXT_PAGE);
+	  break;
+	}
     }
   else
     {
       switch (event->keyval)
-        {
-        case GDK_Return:
+	{
+	case GDK_Return:
 	case GDK_KP_Enter:
-          if (!GTK_WIDGET_VISIBLE(self->_w.op)) break;
-          self->do_goto_string(gtk_entry_get_text(GTK_ENTRY(self->_w.op)));
-          break;
-        case GDK_Escape:
-          clear_op = 1;
-          break;
-        case GDK_BackSpace:
-          break;
-        case GDK_Up:
+	  if (!GTK_WIDGET_VISIBLE(self->_w.op)) break;
+	  self->do_goto_string(gtk_entry_get_text(GTK_ENTRY(self->_w.op)));
+	  break;
+	case GDK_Escape:
+	  clear_op = 1;
+	  break;
+	case GDK_BackSpace:
+	  break;
+	case GDK_Up:
 	case GDK_KP_Up:
-          self->_op->update(self, SCROLL_BACKWARD);
-          break;
-        case GDK_Down:
+	  self->_op->update(self, SCROLL_BACKWARD);
+	  break;
+	case GDK_Down:
 	case GDK_KP_Down:
-          self->_op->update(self, SCROLL_FORWARD);
-          break;
-        case GDK_Page_Up:
+	  self->_op->update(self, SCROLL_FORWARD);
+	  break;
+	case GDK_Page_Up:
 	case GDK_KP_Page_Up:
-          self->_op->update(self, SCROLL_PREV_PAGE);
-          break;
-        case GDK_Page_Down:
+	  self->_op->update(self, SCROLL_PREV_PAGE);
+	  break;
+	case GDK_Page_Down:
 	case GDK_KP_Page_Down:
-          self->_op->update(self, SCROLL_NEXT_PAGE);
-          break;
-        }
+	  self->_op->update(self, SCROLL_NEXT_PAGE);
+	  break;
+	}
     }
 
   if (clear_op)
@@ -201,31 +203,8 @@ DebugWindow::DebugWindow(void)
 {
   _pc = 0xe000;
   _mem = 0xe000;
-  init();
-
-  (new debug_op_reg())->update(this);
-  (new debug_op_mem())->update(this);
-  _op = new debug_op_asm();
-  _op->update(this);
-  _op->activate(this);
 
   _minibuffer_active = false;
-
-  _cmd1 = new CMD_debug_window_toggle(this);
-  _cmd2 = new CMD_single_step_executed(this);
-}
-
-DebugWindow::~DebugWindow(void)
-{
-  delete _cmd1;
-  delete _cmd2;
-}
-
-void
-DebugWindow::init(void)
-{
-  int a;
-  GdkCursor *cursor;
 
   _font_desc = pango_font_description_new();
   pango_font_description_set_family(_font_desc, "Courier");
@@ -235,6 +214,23 @@ DebugWindow::init(void)
   pango_font_description_set_stretch(_font_desc, PANGO_STRETCH_NORMAL);
   pango_font_description_set_size(_font_desc, 8 * PANGO_SCALE);
 
+  _cmd1 = new CMD_debug_window_toggle(this);
+  _cmd2 = new CMD_single_step_executed(this);
+}
+
+DebugWindow::~DebugWindow(void)
+{
+  delete _cmd1;
+  delete _cmd2;
+  pango_font_description_free(_font_desc);
+}
+
+void
+DebugWindow::init(void)
+{
+  int a;
+  GdkCursor *cursor;
+
   /*
    *  window
    */
@@ -243,10 +239,10 @@ DebugWindow::init(void)
   gtk_window_set_title(GTK_WINDOW(_window), _("KCemu: Debugger"));
   gtk_widget_set_uposition(_window, 650, 50);
   gtk_signal_connect(GTK_OBJECT(_window), "delete_event",
-                     GTK_SIGNAL_FUNC(cmd_exec_sft),
-                     (char *)"ui-debug-window-toggle"); // FIXME:
+		     GTK_SIGNAL_FUNC(cmd_exec_sft),
+		     (char *)"ui-debug-window-toggle"); // FIXME:
   gtk_signal_connect(GTK_OBJECT(_window), "key_press_event",
-                     GTK_SIGNAL_FUNC(key_press_func), this);
+		     GTK_SIGNAL_FUNC(key_press_func), this);
 
   /*
    *  vbox
@@ -342,22 +338,22 @@ DebugWindow::init(void)
   _w.trace = gtk_toggle_button_new_with_label(_("Trace"));
   gtk_box_pack_start(GTK_BOX(_w.vbox), _w.trace, FALSE, TRUE, 0);
   gtk_signal_connect(GTK_OBJECT(_w.trace), "clicked",
-                     GTK_SIGNAL_FUNC(cmd_exec_sf),
-                     (char *)"z80-trace-toggle"); // FIXME:
+		     GTK_SIGNAL_FUNC(cmd_exec_sf),
+		     (char *)"z80-trace-toggle"); // FIXME:
   gtk_widget_show(_w.trace);
 
   _w.single_step = gtk_toggle_button_new_with_label(_("Single Step"));
   gtk_box_pack_start(GTK_BOX(_w.vbox), _w.single_step, FALSE, TRUE, 0);
   gtk_signal_connect(GTK_OBJECT(_w.single_step), "clicked",
-                     GTK_SIGNAL_FUNC(cmd_exec_sf),
-                     (char *)"z80-single-step-toggle"); // FIXME:
+		     GTK_SIGNAL_FUNC(cmd_exec_sf),
+		     (char *)"z80-single-step-toggle"); // FIXME:
   gtk_widget_show(_w.single_step);
 
   _w.execute_step = gtk_button_new_with_label(_("Execute Step"));
   gtk_box_pack_start(GTK_BOX(_w.vbox), _w.execute_step, FALSE, TRUE, 0);
   gtk_signal_connect(GTK_OBJECT(_w.execute_step), "clicked",
-                     GTK_SIGNAL_FUNC(cmd_exec_sf),
-                     (char *)"z80-execute-step"); // FIXME:
+		     GTK_SIGNAL_FUNC(cmd_exec_sf),
+		     (char *)"z80-execute-step"); // FIXME:
   gtk_widget_show(_w.execute_step);
 
   /*
@@ -400,6 +396,21 @@ DebugWindow::init(void)
       gtk_box_pack_start(GTK_BOX(_w.vbox_reg), _w.l_reg[a], FALSE, TRUE, 0);
       gtk_widget_show(_w.l_reg[a]);
     }
+
+  /*
+   *  initial display
+   */
+  _op = new debug_op_reg();
+  _op->update(this);
+  delete _op;
+
+  _op = new debug_op_mem();
+  _op->update(this);
+  delete _op;
+
+  _op = new debug_op_asm();
+  _op->update(this);
+  _op->activate(this);
 }
 
 void
@@ -441,32 +452,32 @@ debug_op_asm::update(DebugWindow *w, scroll_dir_t direction)
       newpc = disass(pc, &ptr);
       free(ptr);
       switch (direction)
-        {
-        case SCROLL_NONE:
-          done = 1;
-          break;
-        case SCROLL_FORWARD:
-          if ((pc <= w->_pc) && (newpc > w->_pc))
-            {
-              w->_pc = newpc;
-              done = 1;
-            }
-          break;
-        case SCROLL_BACKWARD:
-          if ((pc < w->_pc) && (newpc >= w->_pc))
-            {
-              w->_pc = pc;
-              done = 1;
-            }
-          break;
+	{
+	case SCROLL_NONE:
+	  done = 1;
+	  break;
+	case SCROLL_FORWARD:
+	  if ((pc <= w->_pc) && (newpc > w->_pc))
+	    {
+	      w->_pc = newpc;
+	      done = 1;
+	    }
+	  break;
+	case SCROLL_BACKWARD:
+	  if ((pc < w->_pc) && (newpc >= w->_pc))
+	    {
+	      w->_pc = pc;
+	      done = 1;
+	    }
+	  break;
 	default:
 	  break;
-        }
+	}
       if (++a > 22)
-        {
-          cerr << "ARGH! (" __FILE__ ":" << __LINE__ << ")" << endl;
-          return;
-        }
+	{
+	  cerr << "ARGH! (" __FILE__ ":" << __LINE__ << ")" << endl;
+	  return;
+	}
     }
   while (!done);
 
@@ -474,7 +485,7 @@ debug_op_asm::update(DebugWindow *w, scroll_dir_t direction)
   for (a = 0;a < DEBUG_NR_OF_ASM_LABELS;a++)
     {
       if (a == (DEBUG_NR_OF_ASM_LABELS - 2))
-        w->_pc_np = pc;
+	w->_pc_np = pc;
       pc = disass(pc, &ptr);
       gtk_label_set_text(GTK_LABEL(w->_w.l_asm[a]), ptr);
       free(ptr);
@@ -519,17 +530,17 @@ debug_op_mem::update(DebugWindow *w, scroll_dir_t direction)
     {
       sprintf(mem_str, "%04xh:", mem);
       for (b = 0;b < 16;b++)
-        {
-          sprintf(strchr(mem_str, 0), " %02x", memory->memRead8(mem + b));
-          if (b == 7) sprintf(strchr(mem_str, 0), " -");
-        }
+	{
+	  sprintf(strchr(mem_str, 0), " %02x", memory->memRead8(mem + b));
+	  if (b == 7) sprintf(strchr(mem_str, 0), " -");
+	}
       sprintf(strchr(mem_str, 0), " | ");
       for (b = 0;b < 16;b++)
-        {
-          c = memory->memRead8(mem + b);
-          sprintf(strchr(mem_str, 0), "%c", ((c >= 0x20) && (c < 0x80)) ? c : '.');
-          if (b == 7) sprintf(strchr(mem_str, 0), "-");
-        }
+	{
+	  c = memory->memRead8(mem + b);
+	  sprintf(strchr(mem_str, 0), "%c", ((c >= 0x20) && (c < 0x80)) ? c : '.');
+	  if (b == 7) sprintf(strchr(mem_str, 0), "-");
+	}
       mem += 16;
       gtk_label_set_text(GTK_LABEL(w->_w.l_mem[a]), mem_str);
     }
@@ -543,26 +554,26 @@ debug_op_reg::update(DebugWindow *w, scroll_dir_t direction)
 
   a = 0;
   sprintf(buf, "PC  = %04xh  SP  = %04xh",
-          z80->getPC(),
-          z80->getSP());
+	  z80->getPC(),
+	  z80->getSP());
   gtk_label_set_text(GTK_LABEL(w->_w.l_reg[a++]), buf);
   sprintf(buf, "AF  = %04xh  BC  = %04xh  DE  = %04xh  HL  = %04xh",
-          z80->getAF(),
-          z80->getBC(),
-          z80->getDE(),
-          z80->getHL());
+	  z80->getAF(),
+	  z80->getBC(),
+	  z80->getDE(),
+	  z80->getHL());
   gtk_label_set_text(GTK_LABEL(w->_w.l_reg[a++]), buf);
   sprintf(buf, "AF' = %04xh  BC' = %04xh  DE' = %04xh  HL' = %04xh",
-          z80->getAFs(),
-          z80->getBCs(),
-          z80->getDEs(),
-          z80->getHLs());
+	  z80->getAFs(),
+	  z80->getBCs(),
+	  z80->getDEs(),
+	  z80->getHLs());
   gtk_label_set_text(GTK_LABEL(w->_w.l_reg[a++]), buf);
   sprintf(buf, "IX  = %04xh  IY  = %04xh  IFF = %02xh    I   = %02xh",
-          z80->getIX(),
-          z80->getIY(),
-          z80->getIFF(),
-          z80->getI());
+	  z80->getIX(),
+	  z80->getIY(),
+	  z80->getIFF(),
+	  z80->getI());
   gtk_label_set_text(GTK_LABEL(w->_w.l_reg[a++]), buf);
   gtk_widget_queue_draw(w->_w.vbox_reg);
 }

@@ -96,14 +96,14 @@ class CMD_ui_keyboard_window_toggle : public CMD
 {
 private:
   KeyboardWindow *_w;
-  
+
 public:
   CMD_ui_keyboard_window_toggle(KeyboardWindow *w) : CMD("ui-keyboard-window-toggle")
     {
       _w = w;
       register_cmd("ui-keyboard-window-toggle");
     }
-  
+
   void execute(CMD_Args *args, CMD_Context context)
     {
       _w->toggle();
@@ -119,12 +119,12 @@ KeyboardWindow::KeyboardWindow(void)
   _pixbuf_normal = NULL;
   _pixbuf_pressed = NULL;
 
-  init_key_regions();
-  init();
+  _cmd = new CMD_ui_keyboard_window_toggle(this);
 }
 
 KeyboardWindow::~KeyboardWindow(void)
 {
+  delete _cmd;
 }
 
 gboolean
@@ -210,7 +210,7 @@ KeyboardWindow::sf_button_press(GtkWidget *widget, GdkEventButton *event, gpoint
 	      keyboard->keyPressed(KC_KEY_SHIFT, KC_KEY_SHIFT);
 	      break;
 	    }
-	  
+
 	  keyboard->keyPressed(self->_key_pressed->key_val, self->_key_pressed->key_val);
 	}
     }
@@ -241,7 +241,7 @@ KeyboardWindow::sf_button_release(GtkWidget *widget, GdkEventButton *event, gpoi
       keyboard->keyReleased(KC_KEY_SHIFT, KC_KEY_SHIFT);
       break;
     }
-  
+
   if (self->_key_pressed->key_val == KC_KEY_RESET)
     {
       CMD_EXEC("emu-reset");
@@ -388,6 +388,7 @@ KeyboardWindow::init_key_regions(void)
     case KC_TYPE_85_2:
     case KC_TYPE_85_3:
     case KC_TYPE_85_4:
+    case KC_TYPE_85_5:
       filename = "kc854.key";
       break;
     case KC_TYPE_85_1:
@@ -402,6 +403,8 @@ KeyboardWindow::init_key_regions(void)
       break;
     case KC_TYPE_Z1013:
     case KC_TYPE_A5105:
+    case KC_TYPE_KRAMERMC:
+    case KC_TYPE_MUGLERPC:
       break;
 
       /*
@@ -567,15 +570,19 @@ KeyboardWindow::init_key_regions(void)
 void
 KeyboardWindow::init(void)
 {
+  init_key_regions();
+
   _window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
   gtk_widget_set_name(_window, "KeyboardWindow");
   gtk_window_set_title(GTK_WINDOW(_window), _("KCemu: Keyboard"));
   gtk_window_set_resizable(GTK_WINDOW(_window), FALSE);
   gtk_signal_connect(GTK_OBJECT(_window), "delete_event",
-                     GTK_SIGNAL_FUNC(cmd_exec_sft),
-                     (char *)"ui-keyboard-window-toggle"); // FIXME:
-  gtk_signal_connect(GTK_OBJECT(_window), "key_press_event", GTK_SIGNAL_FUNC(sf_key_press), this);
-  gtk_signal_connect(GTK_OBJECT(_window), "key_release_event", GTK_SIGNAL_FUNC(sf_key_release), this);
+		     GTK_SIGNAL_FUNC(cmd_exec_sft),
+		     (char *)"ui-keyboard-window-toggle"); // FIXME:
+  gtk_signal_connect(GTK_OBJECT(_window), "key_press_event",
+		     GTK_SIGNAL_FUNC(sf_key_press), this);
+  gtk_signal_connect(GTK_OBJECT(_window), "key_release_event",
+		     GTK_SIGNAL_FUNC(sf_key_release), this);
 
   /*
    *  vbox
@@ -594,21 +601,25 @@ KeyboardWindow::init(void)
        *  eventbox
        */
       _w.eventbox = gtk_event_box_new();
-      gtk_signal_connect(GTK_OBJECT(_w.eventbox), "motion_notify_event", GTK_SIGNAL_FUNC(sf_motion_notify), this);
-      gtk_signal_connect(GTK_OBJECT(_w.eventbox), "button_press_event", GTK_SIGNAL_FUNC(sf_button_press), this);
-      gtk_signal_connect(GTK_OBJECT(_w.eventbox), "button_release_event", GTK_SIGNAL_FUNC(sf_button_release), this);
+      gtk_signal_connect(GTK_OBJECT(_w.eventbox), "motion_notify_event",
+			 GTK_SIGNAL_FUNC(sf_motion_notify), this);
+      gtk_signal_connect(GTK_OBJECT(_w.eventbox), "button_press_event",
+			 GTK_SIGNAL_FUNC(sf_button_press), this);
+      gtk_signal_connect(GTK_OBJECT(_w.eventbox), "button_release_event",
+			 GTK_SIGNAL_FUNC(sf_button_release), this);
       gtk_widget_set_events(_w.eventbox, (GDK_POINTER_MOTION_MASK |
 					  GDK_BUTTON_PRESS_MASK |
 					  GDK_BUTTON_RELEASE_MASK));
       gtk_box_pack_start(GTK_BOX(_w.vbox), _w.eventbox, FALSE, FALSE, 5);
       gtk_widget_show(_w.eventbox);
-      
+
       /*
        *  canvas
        */
       _w.canvas = gtk_drawing_area_new();
       gtk_widget_set_events(_w.canvas, GDK_EXPOSURE_MASK);
-      gtk_signal_connect(GTK_OBJECT(_w.canvas), "expose_event", GTK_SIGNAL_FUNC(sf_expose), this);
+      gtk_signal_connect(GTK_OBJECT(_w.canvas), "expose_event",
+			 GTK_SIGNAL_FUNC(sf_expose), this);
       gtk_container_add(GTK_CONTAINER(_w.eventbox), _w.canvas);
       gtk_widget_set_usize(_w.canvas,
 			   gdk_pixbuf_get_width(_pixbuf_normal),
@@ -629,19 +640,16 @@ KeyboardWindow::init(void)
   gtk_box_pack_start(GTK_BOX(_w.vbox), _w.separator,
 		     FALSE, FALSE, 5);
   gtk_widget_show(_w.separator);
-  
+
   /*
    *  close button
    */
   _w.close = gtk_button_new_with_label(_("Close"));
   gtk_box_pack_start(GTK_BOX(_w.vbox), _w.close, FALSE, FALSE, 5);
   gtk_signal_connect(GTK_OBJECT(_w.close), "clicked",
-                     GTK_SIGNAL_FUNC(cmd_exec_sf),
-                     (gpointer)"ui-keyboard-window-toggle");
+		     GTK_SIGNAL_FUNC(cmd_exec_sf),
+		     (gpointer)"ui-keyboard-window-toggle");
   GTK_WIDGET_SET_FLAGS(_w.close, GTK_CAN_DEFAULT);
   gtk_widget_grab_default(_w.close);
   gtk_widget_show(_w.close);
-
-  CMD *cmd;
-  cmd = new CMD_ui_keyboard_window_toggle(this);
 }

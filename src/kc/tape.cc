@@ -32,6 +32,7 @@
 #include "kc/z80.h"
 #include "kc/tape.h"
 #include "kc/memory.h"
+#include "kc/basicrun.h"
 
 #include "ui/ui.h"
 #include "ui/error.h"
@@ -60,6 +61,7 @@ public:
     {
       bool ret;
       istream *is;
+      word_t addr;
       const char *name, *shortname;
       char buf[100]; /* FIXME: */
       kct_file_props_t props;
@@ -107,18 +109,11 @@ public:
 		case KC_TYPE_87:
 		  /*
 		   *  write autostart routine into tape buffer
-		   *  (see MP 3/89, page 86)
 		   */
-		  memory->memWrite8(0x100, 0xcd); // CALL INITR
-		  memory->memWrite8(0x101, 0x69);
-		  memory->memWrite8(0x102, 0xc6);
-		  memory->memWrite8(0x103, 0xcd); // CALL NEW2
-		  memory->memWrite8(0x104, 0x4f);
-		  memory->memWrite8(0x105, 0xc6);
-		  memory->memWrite8(0x106, 0xc3); // JMP  RUNMOD
-		  memory->memWrite8(0x107, 0x54);
-		  memory->memWrite8(0x108, 0xc8);
-		  z80->jump(0x100);
+		  addr = 0x100;
+		  for (int a = 0;a < basicrun_len;a++)
+		    memory->memWrite8(addr + a, basicrun[a]);
+		  z80->jump(addr);
 		  break;
 		default:
 		  break;
@@ -960,6 +955,120 @@ Tape::do_play_z1013(int edge)
 }
 
 void
+Tape::do_play_basicode(int edge)
+{
+  static int idx;
+  static int bidx;
+  static int byte;
+  static int bytes;
+  static int checksum;
+  static int done;
+
+  if (_is == NULL)
+    return;
+
+  switch (_state)
+    {
+    case 0: // SYNC HEADER
+      if (_init > 0)
+	{
+	  _init = 0;
+	  idx = 12000;
+	}
+
+      z80->addCallback(BIT_0, this, (void *)1);
+      z80->addCallback(2 * BIT_0, this, (void *)0);
+
+      if (--idx == 0)
+	{
+	  idx = 20;
+	  byte = 0x82; // START BYTE
+	  bytes = 0;
+	  bidx = 0;
+	  checksum = 0;
+	  done = 0;
+	  _state++;
+	}
+      break;
+    case 1: // PROGRAM DATA
+      if (bidx == 11)
+	{
+	  if (done)
+	    {
+	      // END SYNC
+	      idx = 400;
+	      z80->addCallback(BIT_0, this, (void *)1);
+	      z80->addCallback(2 * BIT_0, this, (void *)0);
+	      _state = 3;
+	      return;
+	    }
+	  else if (byte == 0x83) // END BYTE
+	    {
+	      byte = checksum;
+	      done = 1;
+	    }
+	  else
+	    {
+	      byte = _is->get();
+	      if (byte == EOF)
+		byte = 0x83; // END BYTE
+	      else
+		byte ^= 0x80;
+	    }
+
+	  bytes++;
+	  bidx = 0;
+	}
+
+      switch (bidx)
+	{
+	case 0: // START BIT
+	  checksum ^= byte;
+	  z80->addCallback(BIT_1, this, (void *)1);
+	  z80->addCallback(2 * BIT_1, this, (void *)0);
+	  if ((bytes % 256) == 255)
+	    TAPE_IF()->tapeProgress((100 * bytes) / _file_size);
+	  break;
+	case 9: // STOP BITS
+	case 10:
+	  z80->addCallback(BIT_0, this, (void *)1);
+	  z80->addCallback(2 * BIT_0, this, (void *)0);
+	  break;
+	default: // DATA BITS 0 - 7
+	  if (byte & (1 << (bidx - 1)))
+	    {
+	      z80->addCallback(BIT_0, this, (void *)1);
+	      z80->addCallback(2 * BIT_0, this, (void *)0);
+	      _state++;
+	    }
+	  else
+	    {
+	      z80->addCallback(BIT_1, this, (void *)1);
+	      z80->addCallback(2 * BIT_1, this, (void *)0);
+	    }
+	  break;
+	}
+      
+      bidx++;
+
+      break;
+    case 2: // second wave for 1 bits
+      z80->addCallback(BIT_0, this, (void *)1);
+      z80->addCallback(2 * BIT_0, this, (void *)0);
+      _state--;
+      break;
+    case 3: // SYNC TRAILER
+      if (idx > 0)
+	{
+	  idx--;
+	  z80->addCallback(BIT_0, this, (void *)1);
+	  z80->addCallback(2 * BIT_0, this, (void *)0);
+	}
+      break;
+    }
+}
+
+void
 Tape::do_play(int edge)
 {
   int len;
@@ -986,6 +1095,12 @@ Tape::do_play(int edge)
 		  "Tape::play(): got first signal (power = %d)\n", _power));
       if (!_power)
 	return;
+    }
+
+  if (_file_type == KCT_TYPE_BASICODE)
+    {
+      do_play_basicode(edge);
+      return;
     }
 
   switch (get_kc_type())
@@ -1610,6 +1725,12 @@ Tape::add(const char *name)
 	  type = KCT_TYPE_BAS_P;
           DBG(0, form("KCemu/Tape/add",
                       "Tape::add(): '%s' [BAS_P]\n",
+                      (const char *)&ptr->name[0]));
+          break;
+        case FILEIO_TYPE_BASICODE:
+	  type = KCT_TYPE_BASICODE;
+          DBG(0, form("KCemu/Tape/add",
+                      "Tape::add(): '%s' [BASICODE]\n",
                       (const char *)&ptr->name[0]));
           break;
         default:

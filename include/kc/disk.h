@@ -43,6 +43,10 @@ class Disk
  private:
   CMD *_cmd;
 
+ protected:
+  bool create_disk_file(FILE *f);
+  bool write_sector(FILE *f, int c, int h, int s);
+
  public:
   Disk(void);
   virtual ~Disk(void);

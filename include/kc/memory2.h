@@ -48,18 +48,16 @@ public:
   virtual ~Memory2(void);
   void dumpCore(void);
 
-  inline byte_t memRead8(word_t addr)
-    {
-      return _memrptr[addr >> MemArea::PAGE_SHIFT][addr & MemArea::PAGE_MASK];
-    }
-  
-  inline void memWrite8(word_t addr, byte_t val)
-    {
-      _memwptr[addr >> MemArea::PAGE_SHIFT][addr & MemArea::PAGE_MASK] = val;
-    }
+  byte_t memRead8(word_t addr);
+  void memWrite8(word_t addr, byte_t val);
   
   byte_t * get_irm(void);
   byte_t * get_char_rom(void);
+
+  void enableCAOS(int v);
+  void enableIRM(int v);
+  void enableRAM(int v);
+  void protectRAM(int v);
 
   virtual void reset(bool power_on = false);
 };

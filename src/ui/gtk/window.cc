@@ -24,7 +24,12 @@
 void
 UI_Gtk_Window::show(void)
 {
-  if (_visible) return;
+  if (_visible)
+    return;
+
+  if (_window == NULL)
+    init();
+
   gtk_widget_show(_window);
   _visible = true;
 }
@@ -32,7 +37,9 @@ UI_Gtk_Window::show(void)
 void
 UI_Gtk_Window::hide(void)
 {
-  if (!_visible) return;
+  if (!_visible)
+    return;
+
   gtk_widget_hide(_window);
   _visible = false;
 }

@@ -51,15 +51,18 @@ private:
     GtkWidget *close;
   } _w;
 
+  CMD *_cmd;
+
 protected:
   void init(void);
+  void init2(void);
   void init_device(const char *name, int base, int active_slots);
   void init_device_1(const char *name, int nr_of_slots);
 
-  GtkWidget *create_menu(int slot);          
+  GtkWidget *create_menu(int slot);
   static void sf_activate(GtkWidget *widget, gpointer data);
   static void sf_color_expansion(GtkWidget *widget, gpointer data);
-  
+
  public:
   ModuleWindow(void);
   virtual ~ModuleWindow(void);

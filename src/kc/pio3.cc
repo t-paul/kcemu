@@ -35,14 +35,6 @@
 
 PIO3::PIO3(void)
 {
-    _irq[A]        = _irq[B]        = 0;
-    _value[A]      = _value[B]      = 0;
-    _irq_vector[A] = _irq_vector[B] = 0;
-    _ready[A]      = _ready[B]      = 1;
-    _strobe[A]     = _strobe[B]     = 0;
-
-    _irq_enable[A] = _irq_enable[B] = 0;
-    _irq_active[A] = _irq_active[B] = 0;
 }
 
 PIO3::~PIO3(void)

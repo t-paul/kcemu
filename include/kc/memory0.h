@@ -51,24 +51,12 @@ public:
   virtual ~Memory0(void);
   void dumpCore(void);
 
-#ifndef MEMORY_SLOW_ACCESS
-  inline byte_t memRead8(word_t addr)
-    {
-      return _memrptr[addr >> MemArea::PAGE_SHIFT][addr & MemArea::PAGE_MASK];
-    }
-  
-  inline void memWrite8(word_t addr, byte_t val)
-    {
-      _memwptr[addr >> MemArea::PAGE_SHIFT][addr & MemArea::PAGE_MASK] = val;
-    }
-#else /* MEMORY_SLOW_ACCESS */
   byte_t memRead8(word_t addr);
   void memWrite8(word_t addr, byte_t val);
-#endif /* MEMORY_SLOW_ACCESS */
-  
+
   byte_t * get_irm(void);
   byte_t * get_char_rom(void);
-  
+
   void port_04(byte_t changed, byte_t val);
 
   virtual void reset(bool power_on = false);

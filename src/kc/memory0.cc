@@ -79,31 +79,30 @@ Memory0::Memory0(void) : Memory()
     {
     case KC_VARIANT_Z1013_A2:
       strcpy(ptr + l, "/z1013_a2.rom");
-      loadROM(ptr, &_rom, 0x0800, 1);
+      load_rom(ptr, &_rom, 0x0800, true);
       break;
     case KC_VARIANT_Z1013_RB:
       strcpy(ptr + l, "/z1013_rb.rom");
-      loadROM(ptr, &_rom, 0x1000, 1);
+      load_rom(ptr, &_rom, 0x1000, true);
       break;
     case KC_VARIANT_Z1013_SURL:
       strcpy(ptr + l, "/z1013_ul.rom");
-      loadROM(ptr, &_rom, 0x0800, 1);
+      load_rom(ptr, &_rom, 0x0800, true);
       _portg = ports->register_ports("MEMORY0", 4, 1, this, 0);
       break;
     case KC_VARIANT_Z1013_BL4:
       strcpy(ptr + l, "/z1013_bl.rom");
-      //loadROM(ptr, &_rom, 2560, 1);
-      loadROM(ptr, &_rom, 2432, 1);
+      load_rom(ptr, &_rom, 2432, true);
       _portg = ports->register_ports("MEMORY0", 4, 1, this, 0);
       break;
     default:
       strcpy(ptr + l, "/z1013_20.rom");
-      loadROM(ptr, &_rom, 0x0800, 1);
+      load_rom(ptr, &_rom, 0x0800, true);
       break;
     }
 
   strcpy(ptr + l, "/z1013_zg.rom");
-  loadROM(ptr, &_chr, 0x1000, 1);
+  load_rom(ptr, &_chr, 0x1000, true);
 
   for (mptr = &m[0];mptr->name;mptr++)
     {
@@ -113,16 +112,16 @@ Memory0::Memory0(void) : Memory()
 	continue;
 
       *(mptr->group) = new MemAreaGroup(mptr->name,
-                                        mptr->addr,
-                                        mptr->size,
-                                        mptr->mem,
-                                        mptr->prio,
-                                        mptr->ro);
+					mptr->addr,
+					mptr->size,
+					mptr->mem,
+					mptr->prio,
+					mptr->ro);
       (*(mptr->group))->add(get_mem_ptr());
       if (mptr->active)
-        (*(mptr->group))->set_active(true);
+	(*(mptr->group))->set_active(true);
     }
-  
+
   reload_mem_ptr();
 
   reset(true);
@@ -137,19 +136,17 @@ Memory0::~Memory0(void)
   z80->unregister_ic(this);
 }
 
-#ifdef MEMORY_SLOW_ACCESS
 byte_t
 Memory0::memRead8(word_t addr)
 {
-  return _memrptr[addr >> PAGE_SHIFT][addr & PAGE_MASK];
+  return _memrptr[addr >> MemArea::PAGE_SHIFT][addr & MemArea::PAGE_MASK];
 }
 
 void
 Memory0::memWrite8(word_t addr, byte_t val)
 {
-  _memwptr[addr >> PAGE_SHIFT][addr & PAGE_MASK] = val;
+  _memwptr[addr >> MemArea::PAGE_SHIFT][addr & MemArea::PAGE_MASK] = val;
 }
-#endif /* MEMORY_SLOW_ACCESS */
 
 byte_t *
 Memory0::get_irm(void)

@@ -76,6 +76,30 @@ Display Scale: 1
 
 ##############################################################################
 #
+#  Anzeige mit Screen-Effekten bei vergrößerter Darstellung
+#  (Scanline-Effekt bei doppelter Größe und Antialiasing bei
+#  dreifacher Größe)
+#
+#  Werte:	0 = aus
+#		1 = an
+#
+Display Effect: 1
+
+##############################################################################
+#
+#  Emulation des Bildschirmflimmerns beim Zugriff auf den Bildwiederhol-
+#  speicher beim KC 85/2 und KC 85/3.
+#
+#  Achtung: Das Einschalten dieses Effektes bremst die Emulation erheblich,
+#  insbesondere bei vergrößerter Darstellung!
+#
+#  Werte:	0 = aus
+#		1 = an
+#
+IRM Memory Access: 1
+
+##############################################################################
+#
 #  Einschalten der Emulation des V24-Moduls über die serielle
 #  Schnittstelle (Die Emulation ist nicht vollständig und ziemlich
 #  fehlerbehaftet, daher sollte diese Option normalerweise auf

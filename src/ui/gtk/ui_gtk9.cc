@@ -126,6 +126,16 @@ UI_Gtk9::flash(bool enable)
 {
 }
 
+void
+UI_Gtk9::memory_read(word_t addr)
+{
+}
+
+void
+UI_Gtk9::memory_write(word_t addr)
+{
+}
+
 int
 UI_Gtk9::get_mode(void)
 {

@@ -78,6 +78,7 @@ FDC_CMD::FDC_CMD(FDC *fdc, int args, int results, const char *name)
 FDC_CMD::~FDC_CMD(void)
 {
   free(_name);
+  delete _sect;
 }
 
 const char * FDC_CMD::get_name(void)
@@ -445,9 +446,24 @@ FDC_CMD_READ_DATA::execute(void)
   if (f == 0)
     return;
 
+  _result[0] = get_fdc()->get_ST0();
+  _result[1] = get_fdc()->get_ST1();
+  _result[2] = get_fdc()->get_ST2();
+  _result[3] = _arg[2];
+  _result[4] = _arg[3];
+  _result[5] = _arg[4];
+  _result[6] = _arg[5];
+
   size = f->get_sector_size();
   if (size <= 0)
-    return;
+    {
+      get_fdc()->set_ST0(FDC::ST_0_IC_MASK, FDC::ST_0_IC_ABNORMAL_TERMINATION);
+      get_fdc()->set_ST1(FDC::ST_1_NO_DATE | FDC::ST_1_MISSING_ADDRESS_MARK,
+			 FDC::ST_1_NO_DATE | FDC::ST_1_MISSING_ADDRESS_MARK);
+      _result[0] = get_fdc()->get_ST0();
+      _result[1] = get_fdc()->get_ST1();
+      return;
+    }
 
   DBG(2, form("KCemu/FDC_CMD/READ_DATA_FORMAT",
               "FDC: READ DATA: heads:        %d\n"
@@ -465,8 +481,14 @@ FDC_CMD_READ_DATA::execute(void)
 
   len = f->read_sector(_buf, size);
   if (len != size)
-    /* FIXME: read error */
-    return;
+    {
+      get_fdc()->set_ST0(FDC::ST_0_IC_MASK, FDC::ST_0_IC_ABNORMAL_TERMINATION);
+      get_fdc()->set_ST1(FDC::ST_1_NO_DATE | FDC::ST_1_MISSING_ADDRESS_MARK,
+			 FDC::ST_1_NO_DATE | FDC::ST_1_MISSING_ADDRESS_MARK);
+      _result[0] = get_fdc()->get_ST0();
+      _result[1] = get_fdc()->get_ST1();
+      return;
+    }
 
   _idx = 0;
   _size = size;
@@ -494,14 +516,6 @@ FDC_CMD_READ_DATA::execute(void)
 		     FDC::ST_MAIN_READ_WRITE | FDC::ST_MAIN_RQM | FDC::ST_MAIN_DIO);
   get_fdc()->set_ST0(FDC::ST_0_IC_MASK | FDC::ST_0_SEEK_END,
 		     FDC::ST_0_IC_NORMAL_TERMINATION);
-
-  _result[0] = get_fdc()->get_ST0();
-  _result[1] = get_fdc()->get_ST1();
-  _result[2] = get_fdc()->get_ST2();
-  _result[3] = _arg[2];
-  _result[4] = _arg[3];
-  _result[5] = _arg[4];
-  _result[6] = _arg[5];
 
   _data_transfer = true;
 }

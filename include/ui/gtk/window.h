@@ -32,6 +32,9 @@ class UI_Gtk_Window : public UI_Window
   bool _visible;
  protected:
   GtkWidget *_window;
+
+  virtual void init(void) = 0;
+
  public:
   UI_Gtk_Window(void) { _window = 0; _visible = false; }
   virtual ~UI_Gtk_Window(void) {}

@@ -96,6 +96,8 @@ PIO::in_A_DATA(void) {
 
   if (_mode[A] == 3)
     {
+      if (cb >= 0)
+	_ext[A] = cb;
       ret = (_value[A] & ~_bit_mode[A]) | (_ext[A] & _bit_mode[A]);
       DBG(2, form("KCemu/PIO/A/in_DATA",
 		  "PIO::in():  port A DATA (mode %d): val = %02x, mask = %02x, ext = %02x\n",
@@ -125,6 +127,8 @@ PIO::in_B_DATA(void) {
 
   if (_mode[B] == 3)
     {
+      if (cb >= 0)
+	_ext[B] = cb;
       ret = (_value[B] & ~_bit_mode[B]) | (_ext[B] & _bit_mode[B]);
       DBG(2, form("KCemu/PIO/B/in_DATA",
 		  "PIO::in():  port B DATA (mode %d): val = %02x, mask = %02x, ext = %02x\n",

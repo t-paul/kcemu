@@ -110,6 +110,19 @@ class FDC : public InterfaceCircuit, public PortInterface
     ST_0_UNIT_SELECT_0             = 0x01,
 
     /*
+     *  STATUS REGISTER 1
+     */
+    ST_1_ALL_MASK                = 0xff,
+    ST_1_END_OF_CYLINDER           = 0x80,
+    ST_1_UNUSED1                   = 0x40,
+    ST_1_DATA_ERROR                = 0x20,
+    ST_1_OVER_RUN                  = 0x10,
+    ST_1_UNUSED2                   = 0x08,
+    ST_1_NO_DATE                   = 0x04,
+    ST_1_NOT_WRITEABLE             = 0x02,
+    ST_1_MISSING_ADDRESS_MARK      = 0x01,
+
+    /*
      *  STATUS REGISTER 3
      */
     ST_3_ALL_MASK                = 0xff,
@@ -128,6 +141,7 @@ class FDC : public InterfaceCircuit, public PortInterface
   fdc_state_t _state;
   FDC_CMD *_cmds[32];
   FDC_CMD *_cur_cmd;
+  Floppy *_floppy[NR_OF_FLOPPIES];
   FloppyState *_fstate[NR_OF_FLOPPIES];
   FloppyState *_cur_floppy;
   int _selected_unit;

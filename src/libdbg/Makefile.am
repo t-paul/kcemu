@@ -7,7 +7,7 @@ noinst_PROGRAMS = dbg-test
 INCLUDES = \
 	-I../../include
 
-CPPFLAGS = \
+AM_CPPFLAGS = \
 	-DVERSION=\"$(VERSION)\"
 
 libdbg_a_SOURCES = \

@@ -50,18 +50,19 @@ ModuleROM1::ModuleROM1(ModuleROM1 &tmpl) :
        * FIXME: make common base class for Memory1 and Memory7
        */
       if (_set_romdi)
-	switch (get_kc_type())
-	  {
-	  case KC_TYPE_85_1:
-	    ((Memory1 *)memory)->set_romdi(true);
-	    ((Memory1 *)memory)->register_romdi_handler(this);
-	    break;
-	  case KC_TYPE_87:
-	    ((Memory7 *)memory)->set_romdi(true);
-	    ((Memory7 *)memory)->register_romdi_handler(this);
-	    break;
-	  default: break;
-	  }
+	{
+	  set_romdi(true);
+	  switch (get_kc_type())
+	    {
+	    case KC_TYPE_85_1:
+	      ((Memory1 *)memory)->register_romdi_handler(this);
+	      break;
+	    case KC_TYPE_87:
+	      ((Memory7 *)memory)->register_romdi_handler(this);
+	      break;
+	    default: break;
+	    }
+	}
     }
 }
 
@@ -72,29 +73,13 @@ ModuleROM1::ModuleROM1(const char *filename,
 		       bool set_romdi) :
   ModuleInterface(name, 0, KC_MODULE_KC_85_1)
 {
-  int c;
-  ifstream is;
-  unsigned int a;
-
   _group = NULL;
   _addr = addr;
   _size = size;
   _set_romdi = set_romdi;
   _rom = new byte_t[_size];
 
-  is.open(filename, ios::in | ios::binary);
-  if (!is)
-    return;
-  
-  for (a = 0;a < size;a++)
-    {
-      c = is.get();
-      if (c == EOF)
-	return;
-      
-      _rom[a] = c;
-    }
-  set_valid(true);
+  set_valid(Memory::load_rom(filename, _rom, size, false));
 }
 
 ModuleROM1::~ModuleROM1(void)
@@ -103,23 +88,31 @@ ModuleROM1::~ModuleROM1(void)
    * FIXME: make common base class for Memory1 and Memory7
    */
   if (_set_romdi)
-    switch (get_kc_type())
-      {
-      case KC_TYPE_85_1:
-	((Memory1 *)memory)->set_romdi(false);
-	((Memory1 *)memory)->unregister_romdi_handler(this);
-	break;
-      case KC_TYPE_87:
-	((Memory7 *)memory)->set_romdi(false);
-	((Memory7 *)memory)->unregister_romdi_handler(this);
-	break;
-      default: break;
-      }
+    {
+      set_romdi(false);
+      switch (get_kc_type())
+	{
+	case KC_TYPE_85_1:
+	  ((Memory1 *)memory)->unregister_romdi_handler(this);
+	  break;
+	case KC_TYPE_87:
+	  ((Memory7 *)memory)->unregister_romdi_handler(this);
+	  break;
+	default: break;
+	}
+    }
 
   if (_group)
     memory->unregister_memory(_group);
 
   delete[] _rom;
+}
+
+void
+ModuleROM1::set_active(bool active)
+{
+  _group->set_active(active);
+  memory->reload_mem_ptr();
 }
 
 void
@@ -134,7 +127,29 @@ ModuleROM1::clone(void)
 }
 
 void
+ModuleROM1::reset(bool power_on)
+{
+  set_romdi(_set_romdi);
+}
+
+void
+ModuleROM1::set_romdi(bool val)
+{
+  _set_romdi = val;
+  switch (get_kc_type())
+    {
+    case KC_TYPE_85_1:
+      ((Memory1 *)memory)->set_romdi(val);
+      break;
+    case KC_TYPE_87:
+      ((Memory7 *)memory)->set_romdi(val);
+      break;
+    default:
+      break;
+    }
+}
+
+void
 ModuleROM1::romdi(bool val)
 {
-  _group->set_active(!val);
 }

@@ -109,6 +109,16 @@ UI_Gtk8::flash(bool enable)
 {
 }
 
+void
+UI_Gtk8::memory_read(word_t addr)
+{
+}
+
+void
+UI_Gtk8::memory_write(word_t addr)
+{
+}
+
 int
 UI_Gtk8::get_mode(void)
 {

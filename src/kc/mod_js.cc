@@ -362,6 +362,11 @@ ModuleJoystick::clone(void)
 }
 
 void
+ModuleJoystick::reset(bool power_on)
+{
+}
+
+void
 ModuleJoystick::m_out(word_t addr, byte_t val)
 {
 }

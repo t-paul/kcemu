@@ -86,6 +86,11 @@ ModuleFDC::clone(void)
   return new ModuleFDC(*this);
 }
 
+void
+ModuleFDC::reset(bool power_on)
+{
+}
+
 int
 ModuleFDC::get_count(void)
 {

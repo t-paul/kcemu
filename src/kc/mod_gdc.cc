@@ -84,6 +84,11 @@ ModuleGDC::clone(void)
   return new ModuleGDC(*this);
 }
 
+void
+ModuleGDC::reset(bool power_on)
+{
+}
+
 int
 ModuleGDC::get_count(void)
 {

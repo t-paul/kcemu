@@ -40,8 +40,12 @@ using namespace std;
 byte_t *MemArea::_scratch_r;
 byte_t *MemArea::_scratch_w;
 
+unsigned int Memory::seed_x; /* the seeds for...        */
+unsigned int Memory::seed_y; /* ...the pseudo random... */
+unsigned int Memory::seed_z; /* ...number generator     */
+
 MemArea::MemArea(MemAreaGroup *group, byte_t *mem,
-                 word_t addr, int prio, bool ro)
+		 word_t addr, int prio, bool ro)
 {
   if (!_scratch_r)
     {
@@ -49,11 +53,14 @@ MemArea::MemArea(MemAreaGroup *group, byte_t *mem,
       _scratch_w = new byte_t[PAGE_SIZE];
       memset(_scratch_r, 0xff, PAGE_SIZE);
     }
-  
+
   _group = group;
   _addr = addr;
   _prio = prio;
   _readonly = ro;
+
+  _read_through = false;
+  _write_through = false;
 
   _mem = mem;
   if (_mem)
@@ -77,16 +84,32 @@ MemArea::~MemArea(void)
 void
 MemArea::set_active(bool active)
 {
-  if (!_mem) return;
+  if (!_mem)
+    return;
+
   _active = active;
 }
 
 void
 MemArea::set_readonly(bool ro)
 {
-  if (!_mem) return;
+  if (!_mem)
+    return;
+
   _readonly = ro;
   _mem_w = ro ? _scratch_w : _mem;
+}
+
+void
+MemArea::set_read_through(bool rt)
+{
+  _read_through = rt;
+}
+
+void
+MemArea::set_write_through(bool wt)
+{
+  _write_through = wt;
 }
 
 const char *
@@ -108,7 +131,7 @@ MemArea::get_prio(void)
 }
 
 MemAreaGroup::MemAreaGroup(const char *name, word_t addr, dword_t size,
-                           byte_t *mem, int prio, bool ro)
+			   byte_t *mem, int prio, bool ro)
 {
   _active = false;
   _prio = prio;
@@ -127,6 +150,7 @@ MemAreaGroup::~MemAreaGroup(void)
 void
 MemAreaGroup::set_active(bool active)
 {
+  _active = active;
   for (mem_area_list_t::iterator it = _l.begin();it != _l.end();it++)
     (*it)->set_active(active);
 }
@@ -134,8 +158,25 @@ MemAreaGroup::set_active(bool active)
 void
 MemAreaGroup::set_readonly(bool ro)
 {
+  _readonly = ro;
   for (mem_area_list_t::iterator it = _l.begin();it != _l.end();it++)
     (*it)->set_readonly(ro);
+}
+
+void
+MemAreaGroup::set_read_through(bool rt)
+{
+  _read_through = rt;
+  for (mem_area_list_t::iterator it = _l.begin();it != _l.end();it++)
+    (*it)->set_read_through(rt);
+}
+
+void
+MemAreaGroup::set_write_through(bool wt)
+{
+  _write_through = wt;
+  for (mem_area_list_t::iterator it = _l.begin();it != _l.end();it++)
+    (*it)->set_write_through(wt);
 }
 
 void
@@ -174,7 +215,6 @@ MemAreaGroup::remove(MemAreaPtr *area_ptr[])
 
 MemAreaPtr::MemAreaPtr(void)
 {
-  _ptr = 0;
 }
 
 void
@@ -199,7 +239,7 @@ void
 MemAreaPtr::info(void)
 {
   mem_area_list_t::iterator it;
-  
+
   /*
    *  display registered memory areas but don't list the fallback
    *  entry that comes as the last entry
@@ -214,29 +254,35 @@ MemAreaPtr::info(void)
 }
 
 byte_t *
-MemAreaPtr::get_read_ptr_p(void)
+MemAreaPtr::get_read_ptr(void)
 {
   for (mem_area_list_t::iterator it = _l.begin();it != _l.end();it++)
     if ((*it)->is_active())
-      return (*it)->get_read_ptr();
+      if (!(*it)->is_read_through())
+	return (*it)->get_read_ptr();
 
   return 0;
 }
 
 byte_t *
-MemAreaPtr::get_write_ptr_p(void)
+MemAreaPtr::get_write_ptr(void)
 {
   for (mem_area_list_t::iterator it = _l.begin();it != _l.end();it++)
     if ((*it)->is_active())
-      return (*it)->get_write_ptr();
+      if (!(*it)->is_write_through())
+	return (*it)->get_write_ptr();
 
   return 0;
 }
 
 Memory::Memory(void) : InterfaceCircuit("Memory")
 {
+  unsigned int seed1 = time(NULL);
+  unsigned int seed2 = time(NULL) >> 3;
+  unsigned int seed3 = time(NULL) / 5;
+  mem_rand_seed(seed1, seed2, seed3);
   for (int a = 0;a < MemArea::PAGES;a++)
-    _mem_ptr[a] = new MemAreaPtr();            
+    _mem_ptr[a] = new MemAreaPtr();
 }
 
 Memory::~Memory(void)
@@ -245,25 +291,31 @@ Memory::~Memory(void)
     delete _mem_ptr[a];
 }
 
-void
-Memory::loadROM(const char *filename, void *buf, long len, int force)
+bool
+Memory::load_rom(const char *filename, void *buf, long len, bool force)
 {
-    ifstream is;
+  ifstream is;
 
-    is.open(filename, ios::in | ios::binary);
-    if (!is) {
-	if (!force) return;
-	cerr << "can't open file '" << filename << "'\n";
-	exit(1);
+  is.open(filename, ios::in | ios::binary);
+  if (!is)
+    {
+      if (!force)
+	return false;
+      cerr << "can't open file '" << filename << "'\n";
+      exit(1);
     }
-    is.read((char *)buf, len);
-    if (!is) {
-	if (force) {
-	    cerr << "error while reading '" << filename << "'\n";
-	    exit(1);
+
+  is.read((char *)buf, len);
+  if (!is)
+    {
+      if (force)
+	{
+	  cerr << "error while reading '" << filename << "'\n";
+	  exit(1);
 	}
     }
-    is.close();
+  is.close();
+  return !(!is); // ;-)
 }
 
 void
@@ -284,7 +336,7 @@ void
 Memory::loadRAM(const char *filename, word_t addr)
 {
   ifstream is;
-    
+
   is.open(filename, ios::in | ios::binary);
   if (!is)
     return;
@@ -368,23 +420,23 @@ Memory::loadRAM(istream *is, bool with_block_nr)
 	{
 	case KC_TYPE_85_1:
 	case KC_TYPE_87:
-          memWrite8(0x03d7, end_addr & 0xff);
-          memWrite8(0x03d8, end_addr >> 8);
+	  memWrite8(0x03d7, end_addr & 0xff);
+	  memWrite8(0x03d8, end_addr >> 8);
 	  break;
 
 	case KC_TYPE_85_2:
 	case KC_TYPE_85_3:
 	case KC_TYPE_85_4:
-          memWrite8(0x03d7, end_addr & 0xff);
-          memWrite8(0x03d8, end_addr >> 8);
-          memWrite8(0x03d9, end_addr & 0xff);
-          memWrite8(0x03da, end_addr >> 8);
-          memWrite8(0x03db, end_addr & 0xff);
-          memWrite8(0x03dc, end_addr >> 8);
+	  memWrite8(0x03d7, end_addr & 0xff);
+	  memWrite8(0x03d8, end_addr >> 8);
+	  memWrite8(0x03d9, end_addr & 0xff);
+	  memWrite8(0x03da, end_addr >> 8);
+	  memWrite8(0x03db, end_addr & 0xff);
+	  memWrite8(0x03dc, end_addr >> 8);
 	  break;
 	default:
 	  break;
-        }
+	}
 
       for (;a < 115;a++)
 	memWrite8(load_addr++, ptr[a + 13]);
@@ -400,15 +452,15 @@ Memory::loadRAM(istream *is, bool with_block_nr)
     {
       c = is->get();
       if (c == EOF)
-        break;
+	break;
       if ((!with_block_nr) || (idx > 0))
-        {
-          memWrite8(load_addr++, c);
-          a++;
-        }
+	{
+	  memWrite8(load_addr++, c);
+	  a++;
+	}
       idx++;
       if (idx == 129)
-        idx = 0;
+	idx = 0;
     }
 
   //cout << __PRETTY_FUNCTION__ << ": len = " << a << endl;
@@ -424,7 +476,7 @@ Memory::get_mem_ptr(void)
 
 MemAreaGroup *
 Memory::register_memory(const char *name, word_t addr, dword_t size,
-                        byte_t *mem, int prio, bool ro)
+			byte_t *mem, int prio, bool ro)
 {
   MemAreaGroup *group;
 
@@ -432,7 +484,7 @@ Memory::register_memory(const char *name, word_t addr, dword_t size,
   group->add(get_mem_ptr());
   group->set_active(true);
   reload_mem_ptr();
-  
+
   return group;
 }
 
@@ -447,9 +499,7 @@ Memory::unregister_memory(MemAreaGroup *group)
 void
 Memory::reload_mem_ptr(void)
 {
-  int a;
-  
-  for (a = 0;a < MemArea::PAGES;a++)
+  for (int a = 0;a < MemArea::PAGES;a++)
     {
       _memrptr[a] = _mem_ptr[a]->get_read_ptr();
       _memwptr[a] = _mem_ptr[a]->get_write_ptr();
@@ -473,9 +523,8 @@ Memory::get_page_addr_w(word_t addr)
 void
 Memory::scratch_mem(byte_t *ptr, int len)
 {
-  srand(time(NULL));
   while (len-- > 0)
-    *ptr++ = (byte_t)(256.0 * rand() / (RAND_MAX + 1.0));
+    *ptr++ = mem_rand();
 }
 
 void
@@ -510,22 +559,45 @@ Memory::dump(word_t addr)
 void
 Memory::info(void)
 {
-  int a;
-  word_t addr;
-  
   cerr << "  Memory:" << endl;
   cerr << "  -------" << endl << endl;
 
-  addr = 0;
-  for (a = 0;a < MemArea::PAGES;a++)
+  word_t addr = 0;
+  for (int a = 0;a < MemArea::PAGES;a++)
     {
       if (_mem_ptr[a]->size() > 1)
-        {
+	{
 	  cerr << "  " << hex << setw(4) << setfill('0') << addr << "h:";
-          _mem_ptr[a]->info();
+	  _mem_ptr[a]->info();
 	  cerr << endl;
-        }
+	}
       addr += MemArea::PAGE_SIZE;
     }
   cerr << endl << endl;
+}
+
+/*
+ * returns x(n) + z(n) where x(n) = x(n-1) + x(n-2) mod 2^32
+ * z(n) = 30903 * z(n-1) + carry mod 2^16
+ * Simple, fast, and very good. Period > 2^60
+ *
+ * http://remus.rutgers.edu/~rhoads/Code/code.html
+ */
+unsigned int
+Memory::mem_rand()
+{
+  unsigned int v = seed_x * seed_y;
+  seed_x = seed_y;
+  seed_y = v;
+  seed_z = (seed_z & 65535) * 30903 + (seed_z >> 16);
+  return (seed_y + (seed_z & 65535));
+}
+
+void
+Memory::mem_rand_seed(unsigned int seed1, unsigned int seed2, unsigned int seed3)
+{
+  seed_x = (seed1<<1) | 1;
+  seed_x = seed_x * 3 * seed_x;
+  seed_y = (seed2<<1) | 1;
+  seed_z = seed3;
 }

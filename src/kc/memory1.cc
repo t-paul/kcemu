@@ -47,64 +47,78 @@ Memory1::Memory1(void) : Memory()
     bool           ro;
     bool           active;
   } *mptr, m[] = {
-    { &_m_scr,   "-",     0x0000, 0x10000, 0,              256, 0, 1 },
-    { &_m_ram,   "RAM",   0x0000,  0x4000, &_ram[0],         0, 0, 1 },
-    { &_m_os,    "OS",    0xf000,  0x1000, &_rom_os[0],      0, 1, 1 },
-    { &_m_irm,   "IRM",   0xec00,  0x0400, &_irm[0x400],     1, 0, 1 },
-    /* dummy entry needed for get_irm() */
-    { &_m_irm,   "IRM -", 0xe800,  0x0400, &_irm[0],         1, 1, 1 },
+    { &_m_scr,   "-",     	0x0000, 0x10000, 0,              256, 0, 1 },
+    { &_m_ram,   "RAM",   	0x0000,  0x4000, &_ram[0],         0, 0, 1 },
+    { &_m_os,    "OS",    	0xf000,  0x1000, &_rom_os[0],      0, 1, 1 },
+    { &_m_irm_ec,"IRM (text)",  0xec00,  0x0400, &_irm[0x400],     1, 0, 1 },
+    /*
+     *  dummy entry needed for get_irm() if color
+     *  expansion is not installed
+     */
+    { &_m_irm_e8,"IRM (color)", 0xe800,  0x0400, &_irm[0],         1, 1, 1 },
     { 0, },
   };
-  
+
   l = strlen(kcemu_datadir);
   ptr = new char[l + 14];
   strcpy(ptr, kcemu_datadir);
-  
+
   strcpy(ptr + l, "/os____f0.851");
-  loadROM(ptr, &_rom_os, 0x1000, 1);
-  
+  load_rom(ptr, &_rom_os, 0x1000, true);
+
   memset(&_irm[0], 0x70, 0x400);
-  
+
   for (mptr = &m[0];mptr->name;mptr++)
     {
       *(mptr->group) = new MemAreaGroup(mptr->name,
-                                        mptr->addr,
-                                        mptr->size,
-                                        mptr->mem,
-                                        mptr->prio,
-                                        mptr->ro);
+					mptr->addr,
+					mptr->size,
+					mptr->mem,
+					mptr->prio,
+					mptr->ro);
       (*(mptr->group))->add(get_mem_ptr());
       if (mptr->active)
-        (*(mptr->group))->set_active(true);
+	(*(mptr->group))->set_active(true);
     }
-  
+
   reload_mem_ptr();
-  
+
   reset(true);
-  set_romdi(false);
-  register_romdi_handler(this);
   z80->register_ic(this);
+
+  register_romdi_handler(this);
+  set_romdi(false);
 }
 
 Memory1::~Memory1(void)
 {
   z80->unregister_ic(this);
   unregister_romdi_handler(this);
+
+  delete _m_scr;
+  delete _m_ram;
+  delete _m_os;
+  delete _m_irm_e8;
+  delete _m_irm_ec;
 }
 
-#ifdef MEMORY_SLOW_ACCESS
 byte_t
 Memory1::memRead8(word_t addr)
 {
-  return _memrptr[addr >> PAGE_SHIFT][addr & PAGE_MASK];
+  for (memory_list_t::iterator it = _memory_list.begin();it != _memory_list.end();it++)
+    (*it)->memory_read_byte(addr);
+
+  return _memrptr[addr >> MemArea::PAGE_SHIFT][addr & MemArea::PAGE_MASK];
 }
 
 void
 Memory1::memWrite8(word_t addr, byte_t val)
 {
-  _memwptr[addr >> PAGE_SHIFT][addr & PAGE_MASK] = val;
+  for (memory_list_t::iterator it = _memory_list.begin();it != _memory_list.end();it++)
+    (*it)->memory_write_byte(addr, val);
+
+  _memwptr[addr >> MemArea::PAGE_SHIFT][addr & MemArea::PAGE_MASK] = val;
 }
-#endif /* MEMORY_SLOW_ACCESS */
 
 byte_t *
 Memory1::get_irm(void)
@@ -116,16 +130,6 @@ byte_t *
 Memory1::get_char_rom(void)
 {
   return (byte_t *)0;
-}
-
-void
-Memory1::set_romdi(bool val)
-{
-  _romdi = val;
-  for (romdi_list_t::iterator it = _romdi_list.begin();it != _romdi_list.end();it++)
-    (*it)->romdi(val);
-
-  reload_mem_ptr();
 }
 
 void
@@ -141,18 +145,51 @@ Memory1::unregister_romdi_handler(ROMDIInterface *handler)
 }
 
 void
+Memory1::set_romdi(bool val)
+{
+  _romdi = val;
+  for (romdi_list_t::iterator it = _romdi_list.begin();it != _romdi_list.end();it++)
+    (*it)->romdi(val);
+
+  reload_mem_ptr();
+}
+
+void
+Memory1::romdi(bool val)
+{
+  _m_os->set_active(!val);
+}
+
+void
+Memory1::register_memory_handler(MemoryInterface *handler)
+{
+  _memory_list.push_back(handler);
+}
+
+void
+Memory1::unregister_memory_handler(MemoryInterface *handler)
+{
+  _memory_list.remove(handler);
+}
+
+void
 Memory1::reset(bool power_on)
 {
   if (!power_on)
     return;
 
-  //scratch_mem(&_ram[0], 0x4000);
-  memset(&_ram[0], 0, 0x4000);
+  scratch_mem(&_ram[0], 0x4000);
   scratch_mem(&_irm[0x0400], 0x0400);
   if (get_irm() != _irm)
     scratch_mem(&_irm[0x0], 0x0400);
   else
     memset(&_irm[0], 0x70, 0x400);
+
+  /*
+   *  Clear the first 1k of ram with the system variables.  This saves
+   *  some trouble with the initialization.
+   */
+  memset(&_ram[0], 0, 0x400);
 }
 
 void
@@ -174,9 +211,4 @@ Memory1::dumpCore(void)
 
   os.close();
   cerr << "Memory: done." << endl;
-}
-
-void
-Memory1::romdi(bool val)
-{
 }

@@ -32,7 +32,7 @@ public:
   };
   
 protected:
-  byte_t inout[NR_PORTS];
+  int inout[NR_PORTS];
 
 protected:
   virtual void change_0x84(byte_t changed, byte_t val);

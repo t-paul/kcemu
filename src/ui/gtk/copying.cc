@@ -38,30 +38,18 @@ public:
       register_cmd("ui-copying-window-toggle", 0);
       register_cmd("ui-warranty-window-toggle", 1);
     }
-  
+
   void execute(CMD_Args *args, CMD_Context context)
     {
       _w->toggle();
       if (context == 0)
-        _w->scroll_to_copying();
+	_w->scroll_to_copying();
       else
-        _w->scroll_to_warranty();
+	_w->scroll_to_warranty();
     }
 };
 
 CopyingWindow::CopyingWindow(void)
-{
-  init();
-  _cmd = new CMD_copying_window_toggle(this);
-}
-
-CopyingWindow::~CopyingWindow(void)
-{
-  delete _cmd;
-}
-
-void
-CopyingWindow::init(void)
 {
   _font_desc = pango_font_description_new();
   pango_font_description_set_family(_font_desc, "Courier");
@@ -71,6 +59,18 @@ CopyingWindow::init(void)
   pango_font_description_set_stretch(_font_desc, PANGO_STRETCH_NORMAL);
   pango_font_description_set_size(_font_desc, 8 * PANGO_SCALE);
 
+  _cmd = new CMD_copying_window_toggle(this);
+}
+
+CopyingWindow::~CopyingWindow(void)
+{
+  delete _cmd;
+  pango_font_description_free(_font_desc);
+}
+
+void
+CopyingWindow::init(void)
+{
   /*
    *  copying window
    */
@@ -79,9 +79,9 @@ CopyingWindow::init(void)
   gtk_window_set_title(GTK_WINDOW(_window), _("KCemu: Copying"));
   gtk_window_position(GTK_WINDOW(_window), GTK_WIN_POS_CENTER_ALWAYS);
   gtk_signal_connect(GTK_OBJECT(_window), "delete_event",
-                     GTK_SIGNAL_FUNC(cmd_exec_sft),
-                     (char *)"ui-copying-window-toggle"); // FIXME:
-  
+		     GTK_SIGNAL_FUNC(cmd_exec_sft),
+		     (char *)"ui-copying-window-toggle"); // FIXME:
+
   /*
    *  vbox
    */
@@ -122,8 +122,10 @@ CopyingWindow::init(void)
    *  scrolled window
    */
   _w.scrolled_window = gtk_scrolled_window_new(NULL, NULL);
-  gtk_scrolled_window_add_with_viewport(GTK_SCROLLED_WINDOW(_w.scrolled_window), _w.label_vbox);
-  gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(_w.scrolled_window), GTK_POLICY_NEVER, GTK_POLICY_AUTOMATIC);
+  gtk_scrolled_window_add_with_viewport(GTK_SCROLLED_WINDOW(_w.scrolled_window),
+					_w.label_vbox);
+  gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(_w.scrolled_window),
+				 GTK_POLICY_NEVER, GTK_POLICY_AUTOMATIC);
   gtk_box_pack_start(GTK_BOX(_w.vbox), _w.scrolled_window, TRUE, TRUE, 6);
   gtk_widget_set_usize(_w.scrolled_window, -1, 450);
   gtk_widget_show(_w.scrolled_window);
@@ -134,19 +136,19 @@ CopyingWindow::init(void)
   _w.separator = gtk_hseparator_new();
   gtk_box_pack_start(GTK_BOX(_w.vbox), _w.separator, FALSE, FALSE, 5);
   gtk_widget_show(_w.separator);
-  
+
   /*
    *  close button
    */
   _w.close = gtk_button_new_with_label(_("Close"));
   gtk_box_pack_start(GTK_BOX(_w.vbox), _w.close, FALSE, FALSE, 5);
   gtk_signal_connect(GTK_OBJECT(_w.close), "clicked",
-                     GTK_SIGNAL_FUNC(cmd_exec_sf),
-                     (char *)"ui-copying-window-toggle"); // FIXME:
+		     GTK_SIGNAL_FUNC(cmd_exec_sf),
+		     (char *)"ui-copying-window-toggle"); // FIXME:
   GTK_WIDGET_SET_FLAGS(_w.close, GTK_CAN_DEFAULT);
   gtk_widget_grab_default(_w.close);
   gtk_widget_show(_w.close);
-  
+
   /*
    *  force allocation calculation for this window; so we get
    *  the values for the label width

@@ -46,6 +46,9 @@ class Z80_FDC
   Z80_FDC(void);
   virtual ~Z80_FDC(void);
 
+  bool trace(void);
+  void trace(bool value);
+
   void execute(void);
   long long get_counter();
   byte_t trigger_irq(byte_t irq_vector);

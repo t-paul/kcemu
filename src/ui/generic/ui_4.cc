@@ -29,14 +29,16 @@
 
 UI_4::UI_4(void)
 {
-  int a, b;
+  int a, b, y;
 
-  b = (get_real_width() * get_real_height()) / 8;
-  _bitmap = new byte_t[get_real_width() * get_real_height()];
+  y = get_real_height();
+  b = (get_real_width() * y) / 8;
+  _bitmap = new byte_t[get_real_width() * y];
   _dirty_size = b / 8;
   _dirty = new byte_t[_dirty_size];
   _pix_cache = new byte_t[b];
   _col_cache = new byte_t[b];
+  _scn_cache = new byte_t[y];
 
   for (a = 0;a < _dirty_size;a++)
     _dirty[a] = 1;
@@ -46,6 +48,9 @@ UI_4::UI_4(void)
       _pix_cache[a] = 0;
       _col_cache[a] = 0;
     }
+
+  for (a = 0;a < y;a++)
+    _scn_cache[a] = 0;
 }
 
 UI_4::~UI_4(void)
@@ -54,6 +59,7 @@ UI_4::~UI_4(void)
   delete[] _dirty;
   delete[] _pix_cache;
   delete[] _col_cache;
+  delete[] _scn_cache;
 }
 
 int
@@ -102,7 +108,7 @@ UI_4::generic_update_hires(Scanline *scanline, byte_t *irm, bool clear_cache)
 {
   int x, y, yy, z, p;
   int yyadd, idx, val, col, changed;
-  
+
   p = 0;
   yy = 0;
   yyadd = get_real_width();
@@ -111,17 +117,17 @@ UI_4::generic_update_hires(Scanline *scanline, byte_t *irm, bool clear_cache)
       for (x = 0;x < 320;x += 8)
 	{
 	  changed = clear_cache;
-	  
+
 	  idx = 32 * x + y;
 	  val = irm[idx];
 	  col = irm[idx + 0x4000];
-	  
+
 	  if (val != _pix_cache[p])
 	    {
 	      changed++;
 	      _pix_cache[p] = val;
 	    }
-	  
+
 	  if (col != _col_cache[p])
 	    {
 	      changed++;
@@ -129,12 +135,12 @@ UI_4::generic_update_hires(Scanline *scanline, byte_t *irm, bool clear_cache)
 	    }
 
 	  p++;
-	  
+
 	  if (!changed)
 	    continue;
-	  
+
 	  _dirty[(y / 8) * (yyadd / 8) + (x / 8)] = 1;
-	  
+
 	  for (z = 0;z < 8;z++)
 	    {
 	      /*
@@ -164,6 +170,7 @@ UI_4::generic_update_lores(Scanline *scanline, byte_t *irm, bool clear_cache)
 {
   int x, y, p, s;
   int idx, changed;
+  bool scanline_changed;
   byte_t val, col, fg, bg;
 
   p = 0;
@@ -172,42 +179,50 @@ UI_4::generic_update_lores(Scanline *scanline, byte_t *irm, bool clear_cache)
       s = 0;
       if (scanline)
 	s = scanline->get_value(y);
-      
+
+      scanline_changed = false;
+      if (s != _scn_cache[y])
+	{
+	  _scn_cache[y] = s;
+	  scanline_changed = true;
+	}
+
       for (x = 0;x < 40;x++)
 	{
 	  changed = clear_cache;
-	  
+
 	  idx = 256 * x + y;
 	  val = irm[idx];
 	  col = irm[idx + 0x4000];
-	  
+
 	  if (val != _pix_cache[p])
 	    {
 	      changed++;
 	      _pix_cache[p] = val;
 	    }
-	  
+
 	  if (col != _col_cache[p])
 	    {
 	      changed++;
 	      _col_cache[p] = col;
 	    }
-	  
+
 	  bg = (col & 7) | 0x10;
 	  fg = (col >> 3) & 15;
-	  
+
 	  if (col & 128)
 	    {
-	      changed++;
+	      if (scanline_changed)
+		changed++;
 	      if (s)
 		fg = bg;
 	    }
 
 	  p++;
-	  
+
 	  if (!changed)
 	    continue;
-	  
+
 	  generic_put_pixels(8 * x, y, val, fg, bg);
 	}
     }

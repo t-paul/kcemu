@@ -44,7 +44,7 @@ public:
       _w = w;
       register_cmd("ui-info-window-toggle");
     }
-  
+
   void execute(CMD_Args *args, CMD_Context context)
     {
       _w->toggle();
@@ -62,7 +62,7 @@ InfoWindow::update(GtkWidget *w, InfoWindow *self)
 
 void
 InfoWindow::switch_page(GtkWidget *w, GtkNotebookPage *page,
-                        gint page_num, InfoWindow *self)
+			gint page_num, InfoWindow *self)
 {
   self->do_update(page_num);
 }
@@ -93,8 +93,8 @@ InfoWindow::do_update_cpu(void)
     { HL, "%04xh", "HL", &hl, 0, 0xffff },
     { PC, "%04xh", "PC", &pc, 0, 0xffff },
   };
-    
-  
+
+
   af = z80->getAF();
   bc = z80->getBC();
   de = z80->getDE();
@@ -112,16 +112,16 @@ InfoWindow::do_update_cpu(void)
       sprintf(buf, "%d", b);
       gtk_label_set(GTK_LABEL(_cpu.reg_ld[r[a].reg]), buf);
       if (r[a].mask == 0xffff)
-        {
-          m = ((memory->memRead8(b)) |
-               (memory->memRead8(b + 1) << 8));
-          sprintf(buf, "(%s) = %04xh", r[a].name, m);
-          gtk_label_set(GTK_LABEL(_cpu.reg_lp[r[a].reg]), buf);
-        }
+	{
+	  m = ((memory->memRead8(b)) |
+	       (memory->memRead8(b + 1) << 8));
+	  sprintf(buf, "(%s) = %04xh", r[a].name, m);
+	  gtk_label_set(GTK_LABEL(_cpu.reg_lp[r[a].reg]), buf);
+	}
       else
-        {
-          gtk_led_line_set_value(GTK_LED_LINE(_cpu.reg_led[r[a].reg]), b);
-        }
+	{
+	  gtk_led_line_set_value(GTK_LED_LINE(_cpu.reg_led[r[a].reg]), b);
+	}
     }
 }
 
@@ -142,7 +142,7 @@ InfoWindow::do_update_pio(void)
    */
   gtk_label_set(GTK_LABEL(_pio.mode_v[A]), mode[pio->getModeA()]);
   gtk_label_set(GTK_LABEL(_pio.irq_v[A]), (pio->getIRQA() ?
-                                          "enabled" : "disabled"));
+					   "enabled" : "disabled"));
   a = pio->getIRQVectorA();
   sprintf(buf, "%02xh (%d)", a, a);
   gtk_label_set(GTK_LABEL(_pio.irqvec_v[A]), buf);
@@ -152,7 +152,7 @@ InfoWindow::do_update_pio(void)
    */
   gtk_label_set(GTK_LABEL(_pio.mode_v[B]), mode[pio->getModeB()]);
   gtk_label_set(GTK_LABEL(_pio.irq_v[B]), (pio->getIRQB() ?
-                                          "enabled" : "disabled"));
+					   "enabled" : "disabled"));
   a = pio->getIRQVectorB();
   sprintf(buf, "%02xh (%d)", a, a);
   gtk_label_set(GTK_LABEL(_pio.irqvec_v[B]), buf);
@@ -167,8 +167,8 @@ InfoWindow::do_update_ctc(void)
   for (c = 0;c < 4;c++)
     {
       gtk_label_set(GTK_LABEL(_ctc.irq_v[c]), (ctc->getIRQ(c) ?
-                                               "enabled" :
-                                               "disabled"));
+					       "enabled" :
+					       "disabled"));
       a = ctc->getIRQVector(c);
       sprintf(buf, "%02xh (%d)", a, a);
       gtk_label_set(GTK_LABEL(_ctc.irqvec_v[c]), buf);
@@ -194,7 +194,6 @@ InfoWindow::do_update(int page)
 
 InfoWindow::InfoWindow(void)
 {
-  init();
   _cmd = new CMD_info_window_toggle(this);
 }
 
@@ -223,7 +222,7 @@ InfoWindow::create_reg(int reg, const char *frame_title, int led)
       _cpu.reg_lp[reg] = NULL;
       _cpu.reg_led[reg] = gtk_led_line_new(8);
       gtk_box_pack_start(GTK_BOX(_cpu.reg_v[reg]), _cpu.reg_led[reg],
-                         TRUE, TRUE, 0);
+			 TRUE, TRUE, 0);
       gtk_widget_show(_cpu.reg_led[reg]);
     }
   else
@@ -236,10 +235,10 @@ InfoWindow::create_reg(int reg, const char *frame_title, int led)
       gtk_misc_set_alignment(GTK_MISC(_cpu.reg_lp[reg]), 1, 0.5);
       gtk_misc_set_padding(GTK_MISC(_cpu.reg_lp[reg]), 4, 2);
       gtk_box_pack_start(GTK_BOX(_cpu.reg_v[reg]), _cpu.reg_lp[reg],
-                         TRUE, TRUE, 0);
+			 TRUE, TRUE, 0);
       gtk_widget_show(_cpu.reg_lp[reg]);
     }
-  
+
   /*
    *  hbox
    */
@@ -251,14 +250,14 @@ InfoWindow::create_reg(int reg, const char *frame_title, int led)
   gtk_misc_set_alignment(GTK_MISC(_cpu.reg_lh[reg]), 0, 0.5);
   gtk_misc_set_padding(GTK_MISC(_cpu.reg_lh[reg]), 4, 2);
   gtk_box_pack_start(GTK_BOX(_cpu.reg_h[reg]), _cpu.reg_lh[reg],
-                     TRUE, TRUE, 0);
+		     TRUE, TRUE, 0);
   gtk_widget_show(_cpu.reg_lh[reg]);
-  
+
   _cpu.reg_ld[reg] = gtk_label_new("");
   gtk_misc_set_alignment(GTK_MISC(_cpu.reg_ld[reg]), 1, 0.5);
   gtk_misc_set_padding(GTK_MISC(_cpu.reg_ld[reg]), 4, 2);
   gtk_box_pack_start(GTK_BOX(_cpu.reg_h[reg]), _cpu.reg_ld[reg],
-                     TRUE, TRUE, 0);
+		     TRUE, TRUE, 0);
   gtk_widget_show(_cpu.reg_ld[reg]);
 
   return _cpu.reg_f[reg];
@@ -288,7 +287,7 @@ InfoWindow::create_page_cpu(void)
     { IY, "IY", 1, 2, 4, 5, FALSE },
     { SP, "SP", 2, 3, 4, 5, FALSE },
   };
-  
+
   _cpu.table = gtk_table_new(5, 3, FALSE);
   gtk_container_border_width(GTK_CONTAINER(_cpu.table), 4);
   gtk_table_set_row_spacings(GTK_TABLE(_cpu.table), 2);
@@ -299,9 +298,10 @@ InfoWindow::create_page_cpu(void)
     {
       w = create_reg(r[a].reg, r[a].name, r[a].led);
       gtk_table_attach(GTK_TABLE(_cpu.table), w,
-                       r[a].r1, r[a].c1, r[a].r2, r[a].c2,
-                       (GtkAttachOptions)(GTK_EXPAND | GTK_FILL), (GtkAttachOptions)(GTK_EXPAND | GTK_FILL),
-                       0, 0);
+		       r[a].r1, r[a].c1, r[a].r2, r[a].c2,
+		       (GtkAttachOptions)(GTK_EXPAND | GTK_FILL),
+		       (GtkAttachOptions)(GTK_EXPAND | GTK_FILL),
+		       0, 0);
       gtk_widget_show(w);
     }
 
@@ -328,13 +328,17 @@ InfoWindow::create_channel_pio(int c, const char *frame_title)
   _pio.mode_l[c] = gtk_label_new(_("Mode:"));
   gtk_misc_set_alignment(GTK_MISC(_pio.mode_l[c]), 0, 0.5);
   gtk_table_attach(GTK_TABLE(_pio.table[c]), _pio.mode_l[c],
-                   0, 1, 0, 1, (GtkAttachOptions)(GTK_EXPAND | GTK_FILL), (GtkAttachOptions)0, 0, 0);
+		   0, 1, 0, 1,
+		   (GtkAttachOptions)(GTK_EXPAND | GTK_FILL),
+		   (GtkAttachOptions)0, 0, 0);
   gtk_widget_show(_pio.mode_l[c]);
 
   _pio.mode_v[c] = gtk_label_new("");
   gtk_misc_set_alignment(GTK_MISC(_pio.mode_v[c]), 0, 0.5);
   gtk_table_attach(GTK_TABLE(_pio.table[c]), _pio.mode_v[c],
-                   1, 2, 0, 1, (GtkAttachOptions)(GTK_EXPAND | GTK_FILL), (GtkAttachOptions)0, 0, 0);
+		   1, 2, 0, 1,
+		   (GtkAttachOptions)(GTK_EXPAND | GTK_FILL),
+		   (GtkAttachOptions)0, 0, 0);
   gtk_widget_show(_pio.mode_v[c]);
 
   /*
@@ -343,28 +347,36 @@ InfoWindow::create_channel_pio(int c, const char *frame_title)
   _pio.irq_l[c] = gtk_label_new(_("IRQ:"));
   gtk_misc_set_alignment(GTK_MISC(_pio.irq_l[c]), 0, 0.5);
   gtk_table_attach(GTK_TABLE(_pio.table[c]), _pio.irq_l[c],
-                   0, 1, 1, 2, (GtkAttachOptions)(GTK_EXPAND | GTK_FILL), (GtkAttachOptions)0, 0, 0);
+		   0, 1, 1, 2,
+		   (GtkAttachOptions)(GTK_EXPAND | GTK_FILL),
+		   (GtkAttachOptions)0, 0, 0);
   gtk_widget_show(_pio.irq_l[c]);
 
   _pio.irq_v[c] = gtk_label_new("");
   gtk_misc_set_alignment(GTK_MISC(_pio.irq_v[c]), 0, 0.5);
   gtk_table_attach(GTK_TABLE(_pio.table[c]), _pio.irq_v[c],
-                   1, 2, 1, 2, (GtkAttachOptions)(GTK_EXPAND | GTK_FILL), (GtkAttachOptions)0, 0, 0);
+		   1, 2, 1, 2,
+		   (GtkAttachOptions)(GTK_EXPAND | GTK_FILL),
+		   (GtkAttachOptions)0, 0, 0);
   gtk_widget_show(_pio.irq_v[c]);
-  
+
   /*
    *  irq vector
    */
   _pio.irqvec_l[c] = gtk_label_new(_("IRQ Vector:"));
   gtk_misc_set_alignment(GTK_MISC(_pio.irqvec_l[c]), 0, 0.5);
   gtk_table_attach(GTK_TABLE(_pio.table[c]), _pio.irqvec_l[c],
-                   0, 1, 2, 3, (GtkAttachOptions)(GTK_EXPAND | GTK_FILL), (GtkAttachOptions)0, 0, 0);
+		   0, 1, 2, 3,
+		   (GtkAttachOptions)(GTK_EXPAND | GTK_FILL),
+		   (GtkAttachOptions)0, 0, 0);
   gtk_widget_show(_pio.irqvec_l[c]);
 
   _pio.irqvec_v[c] = gtk_label_new("");
   gtk_misc_set_alignment(GTK_MISC(_pio.irqvec_v[c]), 0, 0.5);
   gtk_table_attach(GTK_TABLE(_pio.table[c]), _pio.irqvec_v[c],
-                   1, 2, 2, 3, (GtkAttachOptions)(GTK_EXPAND | GTK_FILL), (GtkAttachOptions)0, 0, 0);
+		   1, 2, 2, 3,
+		   (GtkAttachOptions)(GTK_EXPAND | GTK_FILL),
+		   (GtkAttachOptions)0, 0, 0);
   gtk_widget_show(_pio.irqvec_v[c]);
 
   return _pio.frame[c];
@@ -385,7 +397,7 @@ InfoWindow::create_page_pio()
   w = create_channel_pio(B, _("Channel B"));
   gtk_box_pack_start(GTK_BOX(_pio.hbox), w, TRUE, TRUE, 0);
   gtk_widget_show(w);
-  
+
   return _pio.hbox;
 }
 
@@ -409,33 +421,41 @@ InfoWindow::create_channel_ctc(int c, const char *frame_title)
   _ctc.irq_l[c] = gtk_label_new(_("IRQ:"));
   gtk_misc_set_alignment(GTK_MISC(_ctc.irq_l[c]), 0, 0.5);
   gtk_table_attach(GTK_TABLE(_ctc.table[c]), _ctc.irq_l[c],
-                   0, 1, 1, 2, (GtkAttachOptions)(GTK_EXPAND | GTK_FILL), (GtkAttachOptions)0, 0, 0);
+		   0, 1, 1, 2,
+		   (GtkAttachOptions)(GTK_EXPAND | GTK_FILL),
+		   (GtkAttachOptions)0, 0, 0);
   gtk_widget_show(_ctc.irq_l[c]);
 
   _ctc.irq_v[c] = gtk_label_new("");
   gtk_misc_set_alignment(GTK_MISC(_ctc.irq_v[c]), 0, 0.5);
   gtk_table_attach(GTK_TABLE(_ctc.table[c]), _ctc.irq_v[c],
-                   1, 2, 1, 2, (GtkAttachOptions)(GTK_EXPAND | GTK_FILL), (GtkAttachOptions)0, 0, 0);
+		   1, 2, 1, 2,
+		   (GtkAttachOptions)(GTK_EXPAND | GTK_FILL),
+		   (GtkAttachOptions)0, 0, 0);
   gtk_widget_show(_ctc.irq_v[c]);
-  
+
   /*
    *  irq vector
    */
   _ctc.irqvec_l[c] = gtk_label_new(_("IRQ Vector:"));
   gtk_misc_set_alignment(GTK_MISC(_ctc.irqvec_l[c]), 0, 0.5);
   gtk_table_attach(GTK_TABLE(_ctc.table[c]), _ctc.irqvec_l[c],
-                   0, 1, 2, 3, (GtkAttachOptions)(GTK_EXPAND | GTK_FILL), (GtkAttachOptions)0, 0, 0);
+		   0, 1, 2, 3,
+		   (GtkAttachOptions)(GTK_EXPAND | GTK_FILL),
+		   (GtkAttachOptions)0, 0, 0);
   gtk_widget_show(_ctc.irqvec_l[c]);
 
   _ctc.irqvec_v[c] = gtk_label_new("");
   gtk_misc_set_alignment(GTK_MISC(_ctc.irqvec_v[c]), 0, 0.5);
   gtk_table_attach(GTK_TABLE(_ctc.table[c]), _ctc.irqvec_v[c],
-                   1, 2, 2, 3, (GtkAttachOptions)(GTK_EXPAND | GTK_FILL), (GtkAttachOptions)0, 0, 0);
+		   1, 2, 2, 3,
+		   (GtkAttachOptions)(GTK_EXPAND | GTK_FILL),
+		   (GtkAttachOptions)0, 0, 0);
   gtk_widget_show(_ctc.irqvec_v[c]);
   return _ctc.frame[c];
 }
 
-  GtkWidget *
+GtkWidget *
 InfoWindow::create_page_ctc()
 {
   GtkWidget *w;
@@ -473,8 +493,8 @@ InfoWindow::init(void)
   gtk_window_set_title(GTK_WINDOW(_window), _("KCemu: Info"));
   gtk_widget_set_uposition(_window, 650, 50);
   gtk_signal_connect(GTK_OBJECT(_window), "delete_event",
-                     GTK_SIGNAL_FUNC(cmd_exec_sft),
-                     (char *)"ui-info-window-toggle"); // FIXME:
+		     GTK_SIGNAL_FUNC(cmd_exec_sft),
+		     (char *)"ui-info-window-toggle"); // FIXME:
 
   /*
    *  vbox
@@ -488,27 +508,27 @@ InfoWindow::init(void)
    */
   _w.notebook = gtk_notebook_new();
   gtk_box_pack_start(GTK_BOX(_w.vbox), _w.notebook,
-                     TRUE, TRUE, 0);
+		     TRUE, TRUE, 0);
   gtk_signal_connect(GTK_OBJECT(_w.notebook), "switch_page",
-                     GTK_SIGNAL_FUNC(switch_page), this);
+		     GTK_SIGNAL_FUNC(switch_page), this);
   gtk_widget_show(_w.notebook);
 
   gtk_notebook_append_page(GTK_NOTEBOOK(_w.notebook),
-                           create_page_cpu(),
-                           gtk_label_new(_("CPU")));
+			   create_page_cpu(),
+			   gtk_label_new(_("CPU")));
   gtk_notebook_append_page(GTK_NOTEBOOK(_w.notebook),
-                           create_page_pio(),
-                           gtk_label_new(_("PIO")));
+			   create_page_pio(),
+			   gtk_label_new(_("PIO")));
   gtk_notebook_append_page(GTK_NOTEBOOK(_w.notebook),
-                           create_page_ctc(),
-                           gtk_label_new(_("CTC")));
-  
+			   create_page_ctc(),
+			   gtk_label_new(_("CTC")));
+
   /*
    *  separator
    */
   _w.separator = gtk_hseparator_new();
   gtk_box_pack_start(GTK_BOX(_w.vbox), _w.separator,
-                     FALSE, FALSE, 5);
+		     FALSE, FALSE, 5);
   gtk_widget_show(_w.separator);
 
   /*
@@ -516,29 +536,29 @@ InfoWindow::init(void)
    */
   _w.bbox = gtk_hbutton_box_new();
   gtk_button_box_set_layout(GTK_BUTTON_BOX(_w.bbox),
-                            GTK_BUTTONBOX_END);
+			    GTK_BUTTONBOX_END);
   gtk_box_pack_start(GTK_BOX(_w.vbox), _w.bbox,
-                     FALSE, FALSE, 5);
+		     FALSE, FALSE, 5);
   gtk_widget_show(_w.bbox);
-  
+
   /*
    *  update button
    */
   _w.b_update = gtk_button_new_with_label(_("Update"));
   gtk_container_add(GTK_CONTAINER(_w.bbox), _w.b_update);
   gtk_signal_connect(GTK_OBJECT(_w.b_update), "clicked",
-                     GTK_SIGNAL_FUNC(update), this);
+		     GTK_SIGNAL_FUNC(update), this);
   GTK_WIDGET_SET_FLAGS(_w.b_update, GTK_CAN_DEFAULT);
   gtk_widget_show(_w.b_update);
-  
+
   /*
    *  close button
    */
   _w.b_close = gtk_button_new_with_label(_("Close"));
   gtk_container_add(GTK_CONTAINER(_w.bbox), _w.b_close);
   gtk_signal_connect(GTK_OBJECT(_w.b_close), "clicked",
-                     GTK_SIGNAL_FUNC(cmd_exec_sf),
-                     (char *)"ui-info-window-toggle"); // FIXME:
+		     GTK_SIGNAL_FUNC(cmd_exec_sf),
+		     (char *)"ui-info-window-toggle"); // FIXME:
   GTK_WIDGET_SET_FLAGS(_w.b_close, GTK_CAN_DEFAULT);
   gtk_widget_grab_default(_w.b_close);
   gtk_widget_show(_w.b_close);

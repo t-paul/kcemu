@@ -120,6 +120,9 @@ void Z80_GetRegs (Z80_Regs *Regs); /* Get registers                         */
 void Z80_SetRegs (Z80_Regs *Regs); /* Set registers                         */
 void Z80_Reset (void);             /* Reset registers to the initial values */
 int  Z80_Execute (void);           /* Execute IPeriod T-States              */
+int  Z80_ExecuteSingle (void);     /* Execute one instruction               */
+void Z80_InitTables (void);        /* Initialize system tables, must be     */
+                                   /* called when only using Z80_ExecuteSingle */
 #if 0
 word Z80 (void);                   /* Execute until Z80_Running==0          */
 #endif

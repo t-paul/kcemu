@@ -63,7 +63,8 @@ private:
   int _nr_of_bd;
   char *_init_mod[4 * MAX_BD + 2];
   ModuleListEntry *_color_expansion;
-  ModuleListEntry *_init_floppy_basis;
+  ModuleListEntry *_init_floppy_basis_f8;
+  ModuleListEntry *_init_floppy_basis_fc;
   ModuleListEntry *_init_color_expansion;
 
   typedef std::list<ModuleListEntry *> mod_list_t;

@@ -63,11 +63,15 @@ KCTDir::KCTDir(void)
 
 KCTDir::~KCTDir(void)
 {
+  clear();
 }
-  
+
 void
 KCTDir::clear(void)
 {
+  for (iterator it = begin();it != end();it++)
+    delete *it;
+
   erase(begin(), end());
 }
 
@@ -98,6 +102,7 @@ KCTFile::type_name(kct_file_type_t type)
     case KCT_TYPE_LIST:   return "LIST";
     case KCT_TYPE_BAS_P:  return "BASIC*";
     case KCT_TYPE_BIN:    return "BIN";
+    case KCT_TYPE_BASICODE: return "BASICODE";
     }
   return "???";
 }
@@ -532,6 +537,7 @@ KCTFile::list(void)
 	case KCT_TYPE_BAS:    type = "BAS";  break;
 	case KCT_TYPE_BAS_P:  type = "PBAS"; break;
 	case KCT_TYPE_BIN:    type = "BIN";  break;
+	case KCT_TYPE_BASICODE: type = "BAC";  break;
 	default:              type = "???";  break;
 	}
 

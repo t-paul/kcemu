@@ -9,6 +9,9 @@ EXTRA_DIST = \
 	ui_8.h		\
 	ui_9.h		\
 	ui_led.h	\
+	ui_kramermc.h	\
+	ui_muglerpc.h	\
 	tape.h		\
 	module.h	\
-	scanline.h
+	scanline.h	\
+	memaccess.h

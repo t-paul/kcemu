@@ -20,6 +20,7 @@
  */
 
 #include <ctype.h>
+#include <unistd.h>
 
 #include "kc/system.h"
 
@@ -711,6 +712,9 @@ TapeWindow::tapeAddFile(const char    *name,
     break;
   case KCT_TYPE_BIN:
     data[1] = "BIN";
+    break;
+  case KCT_TYPE_BASICODE:
+    data[1] = "BAC";
     break;
   default:
     data[1] = "???";

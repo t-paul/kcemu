@@ -1,3 +1,142 @@
+2004-08-14  Torsten Paul  <Torsten.Paul@gmx.de>
+
+	* src/kc/kc.cc: do some guessing for data and locale directory
+
+	* src/kc/keyb3.cc: ignore "AltGR" key; fix for keys that are
+	shifted on PC keyboard but not on KC keyboard (e.g. ':'); this
+	might not work correctly on keyboard layout different from german.
+
+	* src/ui/gtk/ui_gtk.cc (key_press_release): "AltGr" key returns
+	GDK_ISO_Level3_Shift.
+
+	* src/z80core2/Z80.c: added Z80_ExecuteSingle() method and made
+	InitTables() public with the new name Z80_InitTables().
+
+2004-06-11  Torsten Paul  <Torsten.Paul@gmx.de>
+
+	* include/kc/keyb3k.h: changed the code for the ENTER key from
+	7fh to 7eh; needed for CAOS 4.4
+
+	* src/z80core/CodesXCB.h: implemented undocumented opcodes
+	SET 7,(IX+4),A and RES 7,(IX+4),A that are used by CAOS 4.3 and
+	above
+
+	* src/kc/ports4.cc: force initial change for all bits
+
+2004-06-10  Torsten Paul  <Torsten.Paul@gmx.de>
+
+	* include/kc/mod_4m.h, src/kc/mod_4m.cc: added 4MB RAM module
+	(M035x4, logically 4 1MB modules in one slot)
+
+	* include/kc/mod_1m.h, src/kc/mod_1m.cc: added module 1MB
+	segmented RAM
+
+	* include/kc/mod_512k.h, src/kc/mod_512k.cc: added module 512k
+	segmented RAM
+
+	* include/kc/mod_256k.h, src/kc/mod_256k.cc: added module 256k
+	segmented RAM
+
+	* include/kc/mod_128k.h, src/kc/mod_128k.cc: added module 128k
+	segmented RAM
+
+	* include/kc/mod_segm.h, src/kc/mod_segm.cc: base class for
+	segmented RAM modules (kc85/4)
+
+	* src/kc/module.cc: pass all memory I/O calls to the module
+	interface not only the calls aligned at module addresses (with
+	((addr >> 8) & 3) == 0); this is needed for the M035x4 4MB module
+	that logically contains 4 1MB modules at all 4 module port
+	addresses of one slot
+
+	* src/kc/memory4.cc: modified reset routine to also initialize
+	internal state variables
+
+	* src/kc/memory4.cc: fixed memory segment handling problem for RAM8
+
+	* src/kc/mod_ram.cc: grmpf, module memory size was not 16k as it
+	should be but only 8k
+
+2004-03-20  Torsten Paul  <Torsten.Paul@gmx.de>
+
+	* src/kc/pio.cc: don't ignore callback return value in bit I/O mode
+
+2004-03-17  Torsten Paul  <Torsten.Paul@gmx.de>
+
+	* switched to automake-1.8
+
+2004-02-03  Torsten Paul  <Torsten.Paul@gmx.de>
+
+	* src/ui/gtk/ui_gtk.cc: fix keyboard handling resurrecting the key
+	accelerator in the menu bar; full support for main menu access by
+	keyboard
+
+2004-01-31  Torsten Paul  <Torsten.Paul@gmx.de>
+
+	* include/kc/basicrun.h: added basic run routine for starting
+	basic programs from both system and basic mode
+
+2004-01-17  Torsten Paul  <Torsten.Paul@gmx.de>
+
+	* src/ui/gtk/ui_gtk.cc: added menu entry to enable/disable
+	display effects for scaled screen
+
+2004-01-11  Torsten Paul  <Torsten.Paul@gmx.de>
+
+	* include/kc/mod_192k.h, src/kc/mod_192k.cc,
+	include/kc/mod_4131.h, src/kc/mod_4131.cc, include/kc/mod_64k.h,
+	src/kc/mod_64k.cc, include/kc/mod_cpm.h, src/kc/mod_cpm.cc,
+	include/kc/mod_fdc.h, src/kc/mod_fdc.cc, include/kc/mod_gdc.h,
+	src/kc/mod_gdc.cc, include/kc/mod_js.h, src/kc/mod_js.cc,
+	include/kc/mod_r64.h, src/kc/mod_r64.cc, include/kc/mod_ram.h,
+	src/kc/mod_ram.cc, include/kc/mod_ram1.h, src/kc/mod_ram1.cc,
+	include/kc/mod_ram8.h, src/kc/mod_ram8.cc, include/kc/mod_ramf.h,
+	src/kc/mod_ramf.cc, include/kc/mod_rom.h, src/kc/mod_rom.cc,
+	include/kc/mod_rom1.h, src/kc/mod_rom1.cc, include/kc/mod_rtc.h,
+	src/kc/mod_rtc.cc: implement reset() method
+	
+	* include/kc/module.h, src/kc/module.cc: added reset() method to
+	forward reset/power on event; made scratch_mem() static
+
+	* include/kc/kc.h, src/kc/kc.cc, src/ui/gtk/ui_gtk.cc: added
+	command line switch and config file entry to enable/disable
+	display effects for scaled screen
+
+2004-01-10  Torsten Paul  <Torsten.Paul@gmx.de>
+
+	* src/kc/fdc.cc, src/kc/fdc_cmd.cc, src/ui/gtk/debug.cc,
+	src/ui/gtk/copying.cc, src/kc/memory3.cc, src/kc/memory7.cc,
+	src/kc/module.cc, src/kc/mod_list.cc, src/cmd/cmdargs.cc,
+	src/kc/cb_list.cc, src/ui/gtk/ui_gtk.cc, src/libtape/kct.cc: fix
+	memory leaks
+
+	* include/ui/generic/memaccess.h, src/ui/generic/memaccess.cc:
+	simple implementation of the kc 85/2, kc85/3 display effect caused
+	by access to the screen memory
+
+	* src/kc/memory2.cc, src/kc/memory3.cc: call user interface when
+	reading or writing from/to IRM
+
+	* ROM/m006.rom, src/kc/mod_list.cc: fixed rom image, this module
+	is actually 16k and includes a new system rom!
+
+	* src/kc/memory2.cc, src/kc/pio2.cc: enables memory bank switching
+
+2003-12-24  Torsten Paul  <Torsten.Paul@gmx.de>
+
+	* src/ui/gtk/ui_gtk.cc: replaced deprecated gtk_window_set_policy()
+	with gtk_window_set_resizable()
+
+2003-11-23  Torsten Paul  <Torsten.Paul@gmx.de>
+
+	* src/kc/tape.cc (do_play_basicode): added play routine for
+	basicode files
+
+	* include/libtape/kct.h: support for basicode files
+
+	* src/fileio/load_BASICODE.c (loader_BASICODE_load): added loader
+	for basicode files (in ASCII format)
+
 2003-11-20  Torsten Paul  <Torsten.Paul@gmx.de>
 
 	* released version 0.3.7

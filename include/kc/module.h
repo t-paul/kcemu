@@ -51,6 +51,7 @@ public:
   virtual byte_t m_in(word_t addr);
   virtual void m_out(word_t addr, byte_t val) = 0;
   virtual ModuleInterface * clone(void) = 0;
+  virtual void reset(bool power_on = false) = 0;
 
   virtual byte_t get_id(void);
   virtual const char * get_name(void);
@@ -74,6 +75,7 @@ public:
   virtual void out(word_t addr, byte_t val);
   virtual void insert(byte_t slot, ModuleInterface *module);
   virtual void remove(byte_t slot);
+  virtual void reset(bool power_on = false);
 };
 
 #endif /* __kc_module_h */

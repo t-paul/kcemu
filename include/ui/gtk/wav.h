@@ -60,6 +60,9 @@ class WavWindow : public UI_Gtk_Window
   GdkImage *_image;
   int       _image_y;
 
+  CMD *_cmd_wav_info;
+  CMD *_cmd_wav_toggle;
+
  protected:
   static void sf_expose(GtkWidget *widget, GdkEvent *event, gpointer *data);
 

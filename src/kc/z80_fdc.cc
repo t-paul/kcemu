@@ -48,26 +48,26 @@ Z80_RDMEM(dword A)
 void
 Z80_WRMEM(dword A, byte V)
 {
+  fdc_mem[(A & 0xffff)] = V;
+
+#if 0
   Z80_Regs r;
   Z80_GetRegs(&r);
 
-  fdc_mem[(A & 0xffff)] = V;
-
-  /*
   cout << "W: "
        << hex << setw(4) << Z80_GetPC()
        << " - HL = " << r.HL.D
        << " (HL) = " << (int)fdc_mem[r.HL.D]
        << endl;
-  */
+#endif
 }
 
 void
 Z80_Out(byte Port, byte Value)
 {
   DBG(3, form("KCemu/Z80FDC/OutZ80",
-              "OutZ80(): %04x: %04x -> %02x\n",
-              Z80_GetPC(), Port, Value));
+	      "OutZ80(): %04x: %04x -> %02x\n",
+	      Z80_GetPC(), Port, Value));
   fdc_ports->out(Port, Value);
 }
 
@@ -78,8 +78,8 @@ Z80_In(byte Port)
 
   Value = fdc_ports->in(Port);
   DBG(3, form("KCemu/Z80FDC/InZ80",
-              "InZ80():  %04x: %04x -> %02x\n",
-              Z80_GetPC(), Port, Value));
+	      "InZ80():  %04x: %04x -> %02x\n",
+	      Z80_GetPC(), Port, Value));
   return Value;
 }
 
@@ -123,7 +123,7 @@ static void dump_core(void)
   if (f)
     {
       if (fwrite(fdc_mem, 0x10000, 1, f) == 1)
-        ok = 1;
+	ok = 1;
     }
   if (ok)
     printf("done.\n");
@@ -135,6 +135,7 @@ static void dump_core(void)
 Z80_FDC::Z80_FDC(void)
 {
   //atexit(dump_core);
+  Z80_InitTables();
 }
 
 Z80_FDC::~Z80_FDC(void)
@@ -144,17 +145,19 @@ Z80_FDC::~Z80_FDC(void)
 void
 Z80_FDC::do_execute(void)
 {
+#if 0
   Z80_Regs r;
   Z80_GetRegs(&r);
 
   if (r.PC.D == 0xf4c8)
     {
-      //cout << "PC: " << hex << setw(4) << setfill('0') << r.PC.D << endl;
-      //Z80_RegisterDump();
+      cout << "PC: " << hex << setw(4) << setfill('0') << r.PC.D << endl;
+      Z80_RegisterDump();
     }
-  
+#endif
+
   Z80_ICount = 0;
-  Z80_Execute();
+  Z80_ExecuteSingle();
   _counter -= Z80_ICount; // ICount is negative!
 }
 
@@ -163,7 +166,7 @@ Z80_FDC::execute(void)
 {
   static int x = 40000;
   static int calls = 8;
-  
+
   do_execute();
   do_execute();
 
@@ -231,4 +234,16 @@ void
 Z80_FDC::power_on()
 {
   reset(true);
+}
+
+bool
+Z80_FDC::trace(void)
+{
+  return Z80_Trace;
+}
+
+void
+Z80_FDC::trace(bool value)
+{
+  Z80_Trace = value;
 }

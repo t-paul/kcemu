@@ -83,3 +83,10 @@ ModuleRAM::clone(void)
 {
   return new ModuleRAM(*this);
 }
+
+void
+ModuleRAM::reset(bool power_on)
+{
+  if (power_on)
+    Memory::scratch_mem(_ram, RAM_SIZE);
+}

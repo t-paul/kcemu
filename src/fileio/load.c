@@ -45,6 +45,7 @@ fileio_init(void)
   loader_AF_init();
   loader_GPF_init();
   loader_BASIC_init();
+  loader_BASICODE_init();
   loader_SSS_init();
   loader_HS_init();
   loader_BIN_init();

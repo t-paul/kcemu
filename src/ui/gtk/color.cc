@@ -32,14 +32,14 @@ class CMD_color_window_toggle : public CMD
 {
 private:
   ColorWindow *_w;
-  
+
 public:
   CMD_color_window_toggle(ColorWindow *w) : CMD("ui-color-window-toggle")
     {
       _w = w;
       register_cmd("ui-color-window-toggle");
     }
-  
+
   void execute(CMD_Args *args, CMD_Context context)
     {
       _w->toggle();
@@ -53,10 +53,16 @@ ColorWindow::sf_adjustment_changed(GtkAdjustment *adj, double *data)
   CMD_EXEC("ui-update-colortable");
 }
 
-
 ColorWindow::ColorWindow(void)
 {
-  init();
+  _saturation_fg = RC::instance()->get_int("Foreground Saturation", 40) / 100.0;
+  _brightness_fg = RC::instance()->get_int("Foreground Brightness", 80) / 100.0;
+  _saturation_bg = RC::instance()->get_int("Background Saturation", 50) / 100.0;
+  _brightness_bg = RC::instance()->get_int("Background Brightness", 60) / 100.0;
+  _black_level   = RC::instance()->get_int("Black Value", 10) / 100.0;
+  _white_level   = RC::instance()->get_int("White Value", 90) / 100.0;
+
+  _cmd = new CMD_color_window_toggle(this);
 }
 
 ColorWindow::~ColorWindow(void)
@@ -67,20 +73,13 @@ ColorWindow::~ColorWindow(void)
 void
 ColorWindow::init(void)
 {
-  _saturation_fg = RC::instance()->get_int("Foreground Saturation", 40) / 100.0;
-  _brightness_fg = RC::instance()->get_int("Foreground Brightness", 80) / 100.0;
-  _saturation_bg = RC::instance()->get_int("Background Saturation", 50) / 100.0;
-  _brightness_bg = RC::instance()->get_int("Background Brightness", 60) / 100.0;
-  _black_level   = RC::instance()->get_int("Black Value", 10) / 100.0;
-  _white_level   = RC::instance()->get_int("White Value", 90) / 100.0;
-
   _window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
   gtk_widget_set_name(_window, "ColorWindow");
   gtk_window_set_title(GTK_WINDOW(_window), _("KCemu: Color Configuration"));
   gtk_window_position(GTK_WINDOW(_window), GTK_WIN_POS_MOUSE);
   gtk_signal_connect(GTK_OBJECT(_window), "delete_event",
-                     GTK_SIGNAL_FUNC(cmd_exec_sft),
-                     (char *)"ui-color-window-toggle"); // FIXME:
+		     GTK_SIGNAL_FUNC(cmd_exec_sft),
+		     (char *)"ui-color-window-toggle"); // FIXME:
 
   /*
    *  vbox
@@ -235,21 +234,19 @@ ColorWindow::init(void)
    */
   _w.separator = gtk_hseparator_new();
   gtk_box_pack_start(GTK_BOX(_w.vbox), _w.separator,
-                     FALSE, FALSE, 5);
+		     FALSE, FALSE, 5);
   gtk_widget_show(_w.separator);
-  
+
   /*
    *  close button
    */
   _w.close = gtk_button_new_with_label(_("Close"));
   gtk_box_pack_start(GTK_BOX(_w.vbox), _w.close,
-                     FALSE, FALSE, 5);
+		     FALSE, FALSE, 5);
   gtk_signal_connect(GTK_OBJECT(_w.close), "clicked",
-                     GTK_SIGNAL_FUNC(cmd_exec_sf),
-                     (char *)"ui-color-window-toggle"); // FIXME:
+		     GTK_SIGNAL_FUNC(cmd_exec_sf),
+		     (char *)"ui-color-window-toggle"); // FIXME:
   GTK_WIDGET_SET_FLAGS(_w.close, GTK_CAN_DEFAULT);
   gtk_widget_grab_default(_w.close);
   gtk_widget_show(_w.close);
-
-  _cmd = new CMD_color_window_toggle(this);
 }

@@ -25,6 +25,7 @@
 #include "kc/system.h"
 
 #include "ui/generic/scanline.h"
+#include "ui/generic/memaccess.h"
 
 class UI_3
 {
@@ -33,6 +34,7 @@ class UI_3
   byte_t *_bitmap;
   byte_t *_pix_cache;
   byte_t *_col_cache;
+  byte_t *_scan_cache;
   int     _dirty_size;
 
   int _bitswap1[256];
@@ -52,7 +54,7 @@ class UI_3
   virtual byte_t * get_dirty_buffer(void);
   virtual int get_dirty_buffer_size(void);
 
-  virtual void generic_update(Scanline *scanline, bool clear_cache = false);
+  virtual void generic_update(Scanline *scanline, MemAccess *memaccess, bool clear_cache = false);
 
   virtual int  generic_get_mode(void);
   virtual void generic_set_mode(int mode);

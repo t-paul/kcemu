@@ -2,7 +2,7 @@
 
 noinst_LIBRARIES = libaudio.a
 
-CPPFLAGS = \
+AM_CPPFLAGS = \
 	-DDEBUG -DLINUX
 
 INCLUDES = \

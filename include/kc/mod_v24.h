@@ -89,6 +89,9 @@ public:
 
   /*
    *  InterfaceCircuit functions
+   *
+   *  FIXME: reset() is inherited twice from both
+   *  FIXME: ModuleInterface and InterfaceCircuit
    */
   virtual void reti(void);
   virtual void irqreq(void) {}

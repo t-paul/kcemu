@@ -17,7 +17,7 @@ noinst_LIBRARIES = libui.a
 INCLUDES = \
 	-I../../include
 
-CPPFLAGS = \
+AM_CPPFLAGS = \
 	-DVERSION=\"$(VERSION)\"
 
 libui_a_SOURCES = \

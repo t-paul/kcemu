@@ -4,14 +4,19 @@ pkgdata_DATA = \
 	basic_c0.851	\
 	basic_c0.853    \
 	basic_c0.854    \
+	basic_c0.855    \
 	basic_c0.87a    \
 	basic_c0.87b    \
 	caos__c0.854    \
+	caos__c0.855    \
 	caos__e0.852    \
 	caos__e0.853    \
 	caos__e0.854	\
+	caos__e0.855	\
 	os____f0.851	\
 	os____f0.87b	\
+	os_rb20.rom	\
+	os_rb21.rom	\
 	idas__c0.851	\
 	bitex_c0.851	\
 	edas__c0.851	\
@@ -22,6 +27,7 @@ pkgdata_DATA = \
 	192k__d2.851	\
 	192k__d3.851	\
 	192k__d5.851	\
+	rom_bank.851	\
 	m006.rom	\
 	m012.rom	\
 	m026.rom	\
@@ -29,6 +35,8 @@ pkgdata_DATA = \
 	m900.rom	\
 	m901.rom	\
 	floppy.rom	\
+	floppyf8.rom	\
+	epromf8.rom	\
 	z1013_20.rom	\
 	z1013_a2.rom	\
 	z1013_rb.rom	\
@@ -41,6 +49,15 @@ pkgdata_DATA = \
 	k5651_60.rom	\
 	poly_880.rom	\
 	lc80__00.rom	\
-	lc80__08.rom
+	lc80__08.rom	\
+	ass.kmc		\
+	basic.kmc	\
+	chargen.kmc	\
+	debugger.kmc	\
+	editor.kmc	\
+	io-mon.kmc	\
+	reass.kmc	\
+	muglerpc.pcm	\
+	chargen.pcm
 
 EXTRA_DIST = $(pkgdata_DATA)

@@ -47,6 +47,18 @@ CallbackListEntry::alloc_entries(void)
     _free_list = ::new CallbackListEntry(0, 0, 0, _free_list);
 }
 
+void
+CallbackListEntry::free_entries(void)
+{
+  for (CallbackListEntry *ptr = _free_list;ptr != NULL;)
+    {
+      CallbackListEntry *tmp = ptr;
+      ptr = ptr->_next;
+      delete tmp;
+    }
+  _free_list = 0;
+}
+
 void *
 CallbackListEntry::operator new(size_t size)
 {
@@ -79,6 +91,7 @@ CallbackList::CallbackList()
 CallbackList::~CallbackList(void)
 {
   clear();
+  CallbackListEntry::free_entries();
 }
 
 void

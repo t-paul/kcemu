@@ -39,6 +39,8 @@ class UI_Gtk4 : public UI_Gtk, public UI_4
   virtual void update(bool full_update = false, bool clear_cache = false);
   virtual void callback(void *data);
   virtual void flash(bool enable);
+  virtual void memory_read(word_t addr);
+  virtual void memory_write(word_t addr);
   virtual int  get_mode(void);
   virtual void set_mode(int mode);
 

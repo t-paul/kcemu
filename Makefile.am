@@ -1,17 +1,16 @@
 ## Process this file with automake to produce Makefile.in
 
+docdir = $(datadir)/doc/kcemu
+
 SUBDIRS = include ROM PRG DISK intl src test images doc man debian po
 
-MINGW_EXTRA_DOCS=KCemuSetup.iss
-
-docdir = $(datadir)/doc/kcemu
 if TARGET_MINGW
-doc_DATA = README.de TODO THANKS COPYING COPYING.de $(MINGW_EXTRA_DOCS)
+e = README.de TODO THANKS COPYING COPYING.de KCemuSetup.iss
 else
-doc_DATA = README.de TODO THANKS COPYING COPYING.de
+e = README.de TODO THANKS COPYING COPYING.de
 endif
 
-EXTRA_DIST = $(doc_DATA) $(MINGW_EXTRA_DOCS)
+EXTRA_DIST = $(e)
 
 install-data-local:
 	$(mkinstalldirs) $(DESTDIR)$(docdir)

@@ -2317,7 +2317,7 @@ void Z80_Reset (void)
 /****************************************************************************/
 /* Initialise the various lookup tables used by the emulation code          */
 /****************************************************************************/
-static void InitTables (void)
+void Z80_InitTables (void)
 {
  static int InitTables_virgin=1;
  byte zs;
@@ -2442,7 +2442,7 @@ int Z80_Execute (void)
 {
  unsigned opcode;
  Z80_Running=1;
- InitTables ();
+ Z80_InitTables ();
  do
  {
 #ifdef TRACE
@@ -2462,6 +2462,32 @@ int Z80_Execute (void)
  }
  while (Z80_ICount>0);
  Z80_ICount+=Z80_IPeriod;
+ Interrupt (Z80_Interrupt());
+ return Z80_Running;
+}
+
+/****************************************************************************/
+/* Execute IPeriod T-States. Return 0 if emulation should be stopped        */
+/****************************************************************************/
+int Z80_ExecuteSingle (void)
+{
+ unsigned opcode;
+ Z80_Running=1;
+#ifdef TRACE
+ pc_trace[pc_count]=R.PC.D;
+ pc_count=(pc_count+1)&255;
+#endif
+#ifdef DEBUG
+ if (R.PC.D==Z80_Trap) Z80_Trace=1;
+ if (Z80_Trace) Z80_Debug(&R);
+ if (!Z80_Running)
+   return Z80_Running;
+#endif
+ ++R.R;
+ opcode=M_RDOP(R.PC.D);
+ R.PC.W.l++;
+ Z80_ICount-=cycles_main[opcode];
+ (*(opcode_main[opcode]))();
  Interrupt (Z80_Interrupt());
  return Z80_Running;
 }

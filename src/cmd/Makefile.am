@@ -5,7 +5,7 @@ noinst_LIBRARIES = libcmd.a
 INCLUDES = \
 	-I../../include
 
-CPPFLAGS = \
+AM_CPPFLAGS = \
 	-DVERSION=\"$(VERSION)\"
 
 libcmd_a_SOURCES = \

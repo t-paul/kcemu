@@ -55,13 +55,13 @@ Memory6::Memory6(void) : Memory()
     { &_m_ram,  "RAM",  0x4000,  0x0400, &_ram[0x0000],   0, 0, 1 },
     { 0, },
   };
-  
+
   l = strlen(kcemu_datadir);
   ptr = new char[l + 14];
   strcpy(ptr, kcemu_datadir);
-  
+
   strcpy(ptr + l, "/poly_880.rom");
-  loadROM(ptr, &_rom, 0x1000, 1);
+  load_rom(ptr, &_rom, 0x1000, true);
   free(ptr);
 
   /*
@@ -74,18 +74,18 @@ Memory6::Memory6(void) : Memory()
   for (mptr = &m[0];mptr->name;mptr++)
     {
       *(mptr->group) = new MemAreaGroup(mptr->name,
-                                        mptr->addr,
-                                        mptr->size,
-                                        mptr->mem,
-                                        mptr->prio,
-                                        mptr->ro);
+					mptr->addr,
+					mptr->size,
+					mptr->mem,
+					mptr->prio,
+					mptr->ro);
       (*(mptr->group))->add(get_mem_ptr());
       if (mptr->active)
-        (*(mptr->group))->set_active(true);
+	(*(mptr->group))->set_active(true);
     }
-  
+
   reload_mem_ptr();
-  
+
   reset(true);
   z80->register_ic(this);
 }

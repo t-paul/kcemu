@@ -55,6 +55,26 @@ using namespace std;
 
 static UI_Gtk *self;
 
+static const char * const
+cleanup_path(const char * const path)
+{
+  int len = strlen(path);
+  char *buffer = new char[len + 1];
+
+  char *dst = buffer;
+  const char * src = path;
+  for (int a = 0;a < len;a++)
+    {
+      if (*src == '_')
+	src++;
+      else
+	*dst++ = *src++;
+    }
+  *dst = '\0';
+
+  return buffer;
+}
+
 class CMD_ui_toggle : public CMD
 {
 private:
@@ -70,6 +90,7 @@ public:
       register_cmd("ui-zoom-1", 3);
       register_cmd("ui-zoom-2", 4);
       register_cmd("ui-zoom-3", 5);
+      register_cmd("ui-display-effects-toggle", 6);
     }
   
   void execute(CMD_Args *args, CMD_Context context)
@@ -89,6 +110,9 @@ public:
 	case 4:
 	case 5:
 	  _ui->gtk_zoom(context - 2);
+	  break;
+	case 6:
+	  _ui->display_effects_toggle();
 	  break;
 	}
     }
@@ -296,6 +320,7 @@ UI_Gtk::key_press_release(GdkEventKey *event, bool press)
     case GDK_Super_R:
     case GDK_Hyper_L:
     case GDK_Hyper_R:          c = KC_KEY_ALT;     break;
+    case GDK_ISO_Level3_Shift:
     case GDK_Mode_switch:      c = KC_KEY_ALT_GR;  break;
     case GDK_Shift_L:
     case GDK_Shift_R:          c = KC_KEY_SHIFT;   break;
@@ -357,6 +382,9 @@ UI_Gtk::key_press_release(GdkEventKey *event, bool press)
     case GDK_KP_Subtract:      c = '-';            break;
     case GDK_KP_Divide:        c = '/';            break;
     case GDK_KP_Enter:         c = 0x0d;           break;
+    case GDK_dead_circumflex:  c = '^';            break;
+    case GDK_dead_acute:       c = '\'';           break;
+    case GDK_dead_grave:       c = '\'';           break;
     default:
       c = event->keyval & 0xff;
       break;
@@ -380,8 +408,15 @@ UI_Gtk::sf_key_press(GtkWidget */*widget*/, GdkEventKey *event)
               "key_press:   keyval = %04x, keycode = %04x\n",
               event->keyval, event->hardware_keycode));
 
-  key_press_release(event, true);
+  /*
+   *  Don't handle the key event if the ALT modifier
+   *  is set. This allows for better handling of the
+   *  accelerator key in the menu bar.
+   */
+  if ((event->state & GDK_MOD1_MASK) == GDK_MOD1_MASK)
+    return FALSE;
 
+  key_press_release(event, true);
   return TRUE;
 }
 
@@ -392,8 +427,15 @@ UI_Gtk::sf_key_release(GtkWidget */*widget*/, GdkEventKey *event)
               "key_release: keyval = %04x, keycode = %04x\n",
               event->keyval, event->hardware_keycode));
 
-  key_press_release(event, false);
+  /*
+   *  Don't handle the key event if the ALT modifier
+   *  is set. This allows for better handling of the
+   *  accelerator key in the menu bar.
+   */
+  if ((event->state & GDK_MOD1_MASK) == GDK_MOD1_MASK)
+    return FALSE;
 
+  key_press_release(event, false);
   return TRUE;
 }
 
@@ -577,35 +619,37 @@ void
 UI_Gtk::create_main_window(void)
 {
   GtkItemFactoryEntry entries[] = {
-    { _("/_File"),                 NULL,     NULL,            0,                               "<Branch>" },
-    { _("/File/Run..."),           NULL,     CF(cmd_exec_mc), CD("kc-image-run"),              NULL },
-    { _("/File/Load..."),          "<alt>L", CF(cmd_exec_mc), CD("kc-image-load"),             NULL },
-    { _("/File/Tape..."),          "<alt>T", CF(cmd_exec_mc), CD("ui-tape-window-toggle"),     NULL },
-    { _("/File/Disk..."),          "<alt>D", CF(cmd_exec_mc), CD("ui-disk-window-toggle"),     NULL },
-    { _("/File/Module..."),        "<alt>M", CF(cmd_exec_mc), CD("ui-module-window-toggle"),   NULL },
-    { _("/File/Audio..."),         "<alt>A", CF(cmd_exec_mc), CD("ui-wav-window-toggle"),      NULL },
-    { _("/File/sep1"),             NULL,     NULL,            0,                               "<Separator>" },
-    { _("/File/Reset"),            "<alt>R", CF(cmd_exec_mc), CD("emu-reset"),                 NULL },
-    { _("/File/Power On"),         NULL,     CF(cmd_exec_mc), CD("emu-power-on"),              NULL },
-    { _("/File/sep2"),             NULL,     NULL,            0,                               "<Separator>" },
-    { _("/File/Quit Emulator"),    "<alt>Q", CF(cmd_exec_mc), CD("emu-quit"),                  NULL },
-    { _("/_View"),                 NULL,     NULL,            0,                               "<Branch>" },
-    { _("/View/Zoom x1"),          "<alt>1", CF(cmd_exec_mc), CD("ui-zoom-1"),                 NULL },
-    { _("/View/Zoom x2"),          "<alt>2", CF(cmd_exec_mc), CD("ui-zoom-2"),                 NULL },
-    { _("/View/Zoom x3"),          "<alt>3", CF(cmd_exec_mc), CD("ui-zoom-3"),                 NULL },
-    { _("/View/Keyboard"),         "<alt>K", CF(cmd_exec_mc), CD("ui-keyboard-window-toggle"), NULL },
-    { _("/View/Debugger"),         NULL,     CF(cmd_exec_mc), CD("ui-debug-window-toggle"),    NULL },
-    { _("/View/Info"),             "<alt>I", CF(cmd_exec_mc), CD("ui-info-window-toggle"),     NULL },
-    { _("/View/Menubar"),          NULL,     CF(cmd_exec_mc), CD("ui-menu-bar-toggle"),        NULL },
-    { _("/View/Statusbar"),        NULL,     CF(cmd_exec_mc), CD("ui-status-bar-toggle"),      NULL },
-    { _("/_Configuration"),        NULL,     NULL,            0,                               "<Branch>" },
-    { _("/Configuration/Colors"),  "<alt>C", CF(cmd_exec_mc), CD("ui-color-window-toggle"),    NULL },
-    { _("/Configuration/No Speed Limit"),NULL, CF(cmd_exec_mc), CD("ui-speed-limit-toggle"),     "<ToggleItem>" },
-    { _("/_Help"),                 NULL,     NULL,            0,                               "<LastBranch>" },
-    { _("/Help/About KCemu"),      NULL,     CF(cmd_exec_mc), CD("ui-about-window-toggle"),    NULL },
-    { _("/Help/sep3"),             NULL,     NULL,            0,                               "<Separator>" },
-    { _("/Help/KCemu Licence"),    NULL,     CF(cmd_exec_mc), CD("ui-copying-window-toggle"),  NULL },
-    { _("/Help/No Warranty!"),     NULL,     CF(cmd_exec_mc), CD("ui-warranty-window-toggle"), NULL },
+    { _("/_File"),                 		  NULL,     NULL,            0,                                       "<Branch>" },
+    { _("/File/_Run..."),           		  NULL,     CF(cmd_exec_mc), CD("kc-image-run"),                      NULL },
+    { _("/File/_Load..."),          		  "<alt>L", CF(cmd_exec_mc), CD("kc-image-load"),                     NULL },
+    { _("/File/_Tape..."),          		  "<alt>T", CF(cmd_exec_mc), CD("ui-tape-window-toggle"),             NULL },
+    { _("/File/_Disk..."),          		  "<alt>D", CF(cmd_exec_mc), CD("ui-disk-window-toggle"),             NULL },
+    { _("/File/_Module..."),        		  "<alt>M", CF(cmd_exec_mc), CD("ui-module-window-toggle"),           NULL },
+    { _("/File/_Audio..."),         		  "<alt>A", CF(cmd_exec_mc), CD("ui-wav-window-toggle"),              NULL },
+    { _("/File/sep1"),             		  NULL,     NULL,            0,                                       "<Separator>" },
+    { _("/File/R_eset"),            		  "<alt>R", CF(cmd_exec_mc), CD("emu-reset"),                         NULL },
+    { _("/File/_Power On"),         		  NULL,     CF(cmd_exec_mc), CD("emu-power-on"),                      NULL },
+    { _("/File/sep2"),             		  NULL,     NULL,            0,                                       "<Separator>" },
+    { _("/File/_Quit Emulator"),    		  "<alt>Q", CF(cmd_exec_mc), CD("emu-quit"),                          NULL },
+    { _("/_View"),                 		  NULL,     NULL,            0,                                       "<Branch>" },
+    { _("/View/Zoom x_1"),          		  "<alt>1", CF(cmd_exec_mc), CD("ui-zoom-1"),                         NULL },
+    { _("/View/Zoom x_2"),          		  "<alt>2", CF(cmd_exec_mc), CD("ui-zoom-2"),                         NULL },
+    { _("/View/Zoom x_3"),          		  "<alt>3", CF(cmd_exec_mc), CD("ui-zoom-3"),                         NULL },
+    { _("/View/_Keyboard"),         		  "<alt>K", CF(cmd_exec_mc), CD("ui-keyboard-window-toggle"),         NULL },
+    { _("/View/_Debugger"),         		  NULL,     CF(cmd_exec_mc), CD("ui-debug-window-toggle"),            NULL },
+    { _("/View/_Info"),             		  "<alt>I", CF(cmd_exec_mc), CD("ui-info-window-toggle"),             NULL },
+    { _("/View/_Menubar"),          		  NULL,     CF(cmd_exec_mc), CD("ui-menu-bar-toggle"),                NULL },
+    { _("/View/_Statusbar"),        		  NULL,     CF(cmd_exec_mc), CD("ui-status-bar-toggle"),              NULL },
+    { _("/_Configuration"),        		  NULL,     NULL,            0,                                       "<Branch>" },
+    { _("/Configuration/_Colors"),  		  "<alt>C", CF(cmd_exec_mc), CD("ui-color-window-toggle"),            NULL },
+    { _("/Configuration/_Display Effects"),       NULL,     CF(cmd_exec_mc), CD("ui-display-effects-toggle"),         "<ToggleItem>" },
+    { _("/Configuration/sep"),                    NULL,     NULL,            0,                                       "<Separator>" },
+    { _("/Configuration/No _Speed Limit"),        NULL,     CF(cmd_exec_mc), CD("ui-speed-limit-toggle"),             "<ToggleItem>" },
+    { _("/_Help"),                 		  NULL,     NULL,            0,                                       "<LastBranch>" },
+    { _("/Help/_About KCemu"),      		  NULL,     CF(cmd_exec_mc), CD("ui-about-window-toggle"),            NULL },
+    { _("/Help/sep3"),             		  NULL,     NULL,            0,                                       "<Separator>" },
+    { _("/Help/KCemu _Licence"),    		  NULL,     CF(cmd_exec_mc), CD("ui-copying-window-toggle"),          NULL },
+    { _("/Help/No _Warranty!"),     		  NULL,     CF(cmd_exec_mc), CD("ui-warranty-window-toggle"),         NULL },
   };
   GtkItemFactoryEntry entriesP[] = {
     { _("/_Run..."),               NULL,     CF(cmd_exec_mc), CD("kc-image-run"),              NULL },
@@ -616,16 +660,16 @@ UI_Gtk::create_main_window(void)
     { _("/_Audio..."),             NULL,     CF(cmd_exec_mc), CD("ui-wav-window-toggle"),      NULL },
     { _("/sep1"),                  NULL,     NULL,            0,                               "<Separator>" },
     { _("/_View"),                 NULL,     NULL,            0,                               "<Branch>" },
-    { _("/View/Keyboard"),         NULL,     CF(cmd_exec_mc), CD("ui-keyboard-window-toggle"), NULL },
-    { _("/View/Debugger"),         NULL,     NULL,            0,                               NULL },
-    { _("/View/Info"),             NULL,     NULL,            0,                               NULL },
-    { _("/View/Menubar"),          NULL,     CF(cmd_exec_mc), CD("ui-menu-bar-toggle"),        NULL },
-    { _("/View/Statusbar"),        NULL,     CF(cmd_exec_mc), CD("ui-status-bar-toggle"),      NULL },
+    { _("/View/_Keyboard"),        NULL,     CF(cmd_exec_mc), CD("ui-keyboard-window-toggle"), NULL },
+    { _("/View/_Debugger"),        NULL,     NULL,            0,                               NULL },
+    { _("/View/_Info"),            NULL,     NULL,            0,                               NULL },
+    { _("/View/_Menubar"),         NULL,     CF(cmd_exec_mc), CD("ui-menu-bar-toggle"),        NULL },
+    { _("/View/_Statusbar"),       NULL,     CF(cmd_exec_mc), CD("ui-status-bar-toggle"),      NULL },
     { _("/sep2"),                  NULL,     NULL,            0,                               "<Separator>" },
-    { _("/Reset"),                 NULL,     CF(cmd_exec_mc), CD("emu-reset"),                 NULL },
-    { _("/Power On"),              NULL,     CF(cmd_exec_mc), CD("emu-power-on"),              NULL },
+    { _("/R_eset"),                NULL,     CF(cmd_exec_mc), CD("emu-reset"),                 NULL },
+    { _("/_Power On"),             NULL,     CF(cmd_exec_mc), CD("emu-power-on"),              NULL },
     { _("/sep3"),                  NULL,     NULL,            0,                               "<Separator>" },
-    { _("/Quit Emulator"),         NULL,     CF(cmd_exec_mc), CD("emu-quit"),                  NULL },
+    { _("/_Quit Emulator"),        NULL,     CF(cmd_exec_mc), CD("emu-quit"),                  NULL },
   };
   static GtkTargetEntry targetlist[] = {
     { "STRING",        0, 1 },
@@ -739,6 +783,15 @@ UI_Gtk::create_main_window(void)
 }
 
 void
+UI_Gtk::setup_ui_defaults(void)
+{
+  const char *path = cleanup_path(_("/Configuration/_Display Effects"));
+  GtkWidget *widget = gtk_item_factory_get_widget(_main.ifact, path);
+  gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(widget), kcemu_ui_display_effect);
+  delete[] path;
+}
+
+void
 UI_Gtk::create_header_window(void)
 {
   _header.window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
@@ -759,14 +812,18 @@ UI_Gtk::~UI_Gtk(void)
   gtk_widget_destroy(_main.window);
         
   delete _about_window;
+  delete _color_window;
   delete _tape_window;
   delete _tape_add_window;
+  delete _disk_window;
   delete _module_window;
+  delete _keyboard_window;
   delete _copying_window;
   delete _debug_window;
   delete _info_window;
   delete _wav_window;
   delete _edit_header_window;
+  delete _dialog_window;
   delete _file_browser;
 }
 
@@ -927,6 +984,8 @@ UI_Gtk::init(int *argc, char ***argv)
   cmd = new CMD_ui_toggle(this);
   cmd = new CMD_update_colortable(this, _color_window);
 
+  setup_ui_defaults();
+
   init();
 }
 
@@ -935,7 +994,7 @@ UI_Gtk::show(void)
 {
   _init = true;
   gtk_resize();
-  gtk_window_set_policy(GTK_WINDOW(_main.window), FALSE, FALSE, TRUE);
+  gtk_window_set_resizable(GTK_WINDOW(_main.window), FALSE);
   show_greeting();
 }
 
@@ -951,6 +1010,29 @@ UI_Gtk::gtk_zoom(int zoom)
 
   gtk_resize();
   update(true, true);
+}
+
+void
+UI_Gtk::display_effects_toggle(void)
+{
+  /*
+   *  prevent early calls caused by setup_ui_defaults()
+   */
+  if (!_init) // set by show() function
+    return;
+
+  const char *path = cleanup_path(_("/Configuration/_Display Effects"));
+  GtkWidget *widget = gtk_item_factory_get_widget(_main.ifact, path);
+  delete[] path;
+  gboolean active = gtk_check_menu_item_get_active(GTK_CHECK_MENU_ITEM(widget));
+  kcemu_ui_display_effect = (active ? 1 : 0);
+  update(true, true);
+}
+
+void
+UI_Gtk::gtk_enable_display_effect(int effect)
+{
+  kcemu_ui_display_effect = effect;
 }
 
 void
@@ -1188,6 +1270,36 @@ UI_Gtk::gtk_update_2(byte_t *bitmap, byte_t *dirty, int dirty_size, int width, i
 		  gulong pix = _col[bitmap[z++]].pixel;
 		  gdk_image_put_pixel(_image, 2 * x + xx,     2 * y + yy    , pix);
 		  gdk_image_put_pixel(_image, 2 * x + xx + 1, 2 * y + yy    , pix);
+		  gdk_image_put_pixel(_image, 2 * x + xx    , 2 * y + yy + 1, pix);
+		  gdk_image_put_pixel(_image, 2 * x + xx + 1, 2 * y + yy + 1, pix);
+		}
+	      z += width - 8;
+	    }
+	}
+    }
+}
+
+void
+UI_Gtk::gtk_update_2_scanline(byte_t *bitmap, byte_t *dirty, int dirty_size, int width, int height)
+{
+  int d = -1;
+  for (int y = 0;y < height;y += 8)
+    {
+      for (int x = 0;x < width;x += 8)
+	{
+	  d++;
+	  if (!dirty[d])
+	    continue;
+	  
+	  int z = y * width + x;
+	  
+	  for (int yy = 0;yy < 16;yy += 2)
+	    {
+	      for (int xx = 0;xx < 16;xx += 2)
+		{
+		  gulong pix = _col[bitmap[z++]].pixel;
+		  gdk_image_put_pixel(_image, 2 * x + xx,     2 * y + yy    , pix);
+		  gdk_image_put_pixel(_image, 2 * x + xx + 1, 2 * y + yy    , pix);
 		  gdk_image_put_pixel(_image, 2 * x + xx    , 2 * y + yy + 1, darker_color(pix));
 		  gdk_image_put_pixel(_image, 2 * x + xx + 1, 2 * y + yy + 1, darker_color(pix));
 		}
@@ -1199,6 +1311,41 @@ UI_Gtk::gtk_update_2(byte_t *bitmap, byte_t *dirty, int dirty_size, int width, i
 
 void
 UI_Gtk::gtk_update_3(byte_t *bitmap, byte_t *dirty, int dirty_size, int width, int height)
+{
+  int d = -1;
+  for (int y = 0;y < height;y += 8)
+    {
+      for (int x = 0;x < width;x += 8)
+	{
+	  d++;
+	  if (!dirty[d])
+	    continue;
+
+	  int z = y * width + x;
+	  
+	  for (int yy = 0;yy < 24;yy += 3)
+	    {
+	      for (int xx = 0;xx < 24;xx += 3)
+		{
+		  gulong pix = _col[bitmap[z++]].pixel;
+		  gdk_image_put_pixel(_image, 3 * x + xx    , 3 * y + yy    , pix);
+		  gdk_image_put_pixel(_image, 3 * x + xx + 1, 3 * y + yy    , pix);
+		  gdk_image_put_pixel(_image, 3 * x + xx + 2, 3 * y + yy    , pix);
+		  gdk_image_put_pixel(_image, 3 * x + xx    , 3 * y + yy + 1, pix);
+		  gdk_image_put_pixel(_image, 3 * x + xx + 1, 3 * y + yy + 1, pix);
+		  gdk_image_put_pixel(_image, 3 * x + xx + 2, 3 * y + yy + 1, pix);
+		  gdk_image_put_pixel(_image, 3 * x + xx    , 3 * y + yy + 2, pix);
+		  gdk_image_put_pixel(_image, 3 * x + xx + 1, 3 * y + yy + 2, pix);
+		  gdk_image_put_pixel(_image, 3 * x + xx + 2, 3 * y + yy + 2, pix);
+		}
+	      z += width - 8;
+	    } 
+	}
+    }
+}
+
+void
+UI_Gtk::gtk_update_3_smooth(byte_t *bitmap, byte_t *dirty, int dirty_size, int width, int height)
 {
   int d = -1;
   byte_t dirty_buf[dirty_size];
@@ -1305,10 +1452,16 @@ UI_Gtk::gtk_update(byte_t *bitmap, byte_t *dirty, int dirty_size, int width, int
 	gtk_update_1(bitmap, dirty, dirty_size, width, height);
       break;
     case 2:
-      gtk_update_2(bitmap, dirty, dirty_size, width, height);
+      if (kcemu_ui_display_effect)
+	gtk_update_2_scanline(bitmap, dirty, dirty_size, width, height);
+      else
+	gtk_update_2(bitmap, dirty, dirty_size, width, height);
       break;
     case 3:
-      gtk_update_3(bitmap, dirty, dirty_size, width, height);
+      if (kcemu_ui_display_effect)
+	gtk_update_3_smooth(bitmap, dirty, dirty_size, width, height);
+      else
+	gtk_update_3(bitmap, dirty, dirty_size, width, height);
       break;
     }
 

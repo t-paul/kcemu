@@ -56,6 +56,7 @@ class CallbackListEntry
   static CallbackListEntry *_free_list;
 
   static void alloc_entries(void);
+  static void free_entries(void);
 
  public:
   CallbackListEntry(unsigned long long value,

@@ -33,7 +33,7 @@ class Memory9 : public Memory
   byte_t _rom_slot0[0x0a000];
   byte_t _rom_slot1[0x04000];
   byte_t _ram_slot2[0x10000];
-  
+
   MemAreaGroup *_m_scr;                /* scratch memory */
   MemAreaGroup *_m_rom_slot0_page0;    /* ROM Slot 1 0000h - 9fffh */
   MemAreaGroup *_m_rom_slot0_page1;    /* ROM Slot 1 0000h - 9fffh */
@@ -43,27 +43,15 @@ class Memory9 : public Memory
   MemAreaGroup *_m_ram_slot2_page1;    /* RAM Slot 2 4000h - 7fffh */
   MemAreaGroup *_m_ram_slot2_page2;    /* RAM Slot 2 8000h - bfffh */
   MemAreaGroup *_m_ram_slot2_page3;    /* RAM Slot 2 c000h - ffffh */
-  
+
  public:
   Memory9(void);
   virtual ~Memory9(void);
   void dumpCore(void);
 
-#ifndef MEMORY_SLOW_ACCESS
-  inline byte_t memRead8(word_t addr)
-    {
-      return _memrptr[addr >> MemArea::PAGE_SHIFT][addr & MemArea::PAGE_MASK];
-    }
-  
-  inline void memWrite8(word_t addr, byte_t val)
-    {
-      _memwptr[addr >> MemArea::PAGE_SHIFT][addr & MemArea::PAGE_MASK] = val;
-    }
-#else /* MEMORY_SLOW_ACCESS */
   byte_t memRead8(word_t addr);
   void memWrite8(word_t addr, byte_t val);
-#endif /* MEMORY_SLOW_ACCESS */
-  
+
   byte_t * get_irm(void);
   byte_t * get_char_rom(void);
 

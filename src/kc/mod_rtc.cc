@@ -73,6 +73,11 @@ ModuleRTC::clone(void)
   return new ModuleRTC(*this);
 }
 
+void
+ModuleRTC::reset(bool power_on)
+{
+}
+
 int
 ModuleRTC::get_count(void)
 {

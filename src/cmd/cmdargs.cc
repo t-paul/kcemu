@@ -257,6 +257,11 @@ CMD_Args::CMD_Args(void)
 
 CMD_Args::~CMD_Args(void)
 {
+  CMD_Args::arg_iterator it;
+
+  for (it = _arg_list.begin();it != _arg_list.end();it++)
+    delete (*it);
+  _arg_list.erase(_arg_list.begin(), _arg_list.end());
 }
 
 CMD_Arg *

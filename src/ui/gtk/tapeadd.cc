@@ -83,6 +83,11 @@ TapeAddWindow::cancel(GtkWidget *widget, gpointer *data)
 }
 
 void
+TapeAddWindow::init(void)
+{
+}
+
+void
 TapeAddWindow::init(const char *tapename, const char *text)
 {
   GtkWidget *w;

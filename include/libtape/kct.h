@@ -61,12 +61,13 @@
  */
 typedef enum
 {
-  KCT_TYPE_COM    = 0x00,
-  KCT_TYPE_BAS    = 0xd3,
-  KCT_TYPE_DATA   = 0xd4,
-  KCT_TYPE_LIST   = 0xd5,
-  KCT_TYPE_BAS_P  = 0xd7,
-  KCT_TYPE_BIN    = 0xff,
+  KCT_TYPE_COM      = 0x00,
+  KCT_TYPE_BASICODE = 0x31,
+  KCT_TYPE_BAS      = 0xd3,
+  KCT_TYPE_DATA     = 0xd4,
+  KCT_TYPE_LIST     = 0xd5,
+  KCT_TYPE_BAS_P    = 0xd7,
+  KCT_TYPE_BIN      = 0xff,
 } kct_file_type_t;
 
 /*

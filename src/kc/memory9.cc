@@ -66,16 +66,16 @@ Memory9::Memory9(void) : Memory()
   strcpy(ptr, kcemu_datadir);
 
   strcpy(ptr + l, "/k1505_00.rom");
-  loadROM(ptr, &_rom_slot0[0x0000], 0x8000, 1);
+  load_rom(ptr, &_rom_slot0[0x0000], 0x8000, true);
 
   strcpy(ptr + l, "/k1505_80.rom");
-  loadROM(ptr, &_rom_slot0[0x8000], 0x2000, 1);
+  load_rom(ptr, &_rom_slot0[0x8000], 0x2000, true);
 
   strcpy(ptr + l, "/k5651_40.rom");
-  loadROM(ptr, &_rom_slot1[0x0000], 0x2000, 1);
+  load_rom(ptr, &_rom_slot1[0x0000], 0x2000, true);
 
   strcpy(ptr + l, "/k5651_60.rom");
-  loadROM(ptr, &_rom_slot1[0x2000], 0x2000, 1);
+  load_rom(ptr, &_rom_slot1[0x2000], 0x2000, true);
 
   for (mptr = &m[0];mptr->name;mptr++)
     {
@@ -94,7 +94,7 @@ Memory9::Memory9(void) : Memory()
     }
 
   reload_mem_ptr();
-  
+
   reset(true);
   z80->register_ic(this);
 }
@@ -104,19 +104,17 @@ Memory9::~Memory9(void)
   z80->unregister_ic(this);
 }
 
-#ifdef MEMORY_SLOW_ACCESS
 byte_t
 Memory9::memRead8(word_t addr)
 {
-  return _memrptr[addr >> PAGE_SHIFT][addr & PAGE_MASK];
+  return _memrptr[addr >> MemArea::PAGE_SHIFT][addr & MemArea::PAGE_MASK];
 }
 
 void
 Memory9::memWrite8(word_t addr, byte_t val)
 {
-  _memwptr[addr >> PAGE_SHIFT][addr & PAGE_MASK] = val;
+  _memwptr[addr >> MemArea::PAGE_SHIFT][addr & MemArea::PAGE_MASK] = val;
 }
-#endif /* MEMORY_SLOW_ACCESS */
 
 byte_t *
 Memory9::get_irm(void)

@@ -109,6 +109,18 @@ ModuleRAM64::clone(void)
   return new ModuleRAM64(*this);
 }
 
+void
+ModuleRAM64::reset(bool power_on)
+{
+  if (!power_on)
+    return;
+
+  Memory::scratch_mem(_ram[0], 0x4000);
+  Memory::scratch_mem(_ram[1], 0x4000);
+  Memory::scratch_mem(_ram[2], 0x4000);
+  Memory::scratch_mem(_ram[3], 0x4000);
+}
+
 byte_t
 ModuleRAM64::in(word_t addr)
 {
@@ -139,7 +151,8 @@ ModuleRAM64::in_out(word_t addr)
       switch (get_kc_type())
 	{
 	case KC_TYPE_85_1:
-	  ((Memory1 *)memory)->set_romdi(addr & 1);
+	  // no romdi needed for kc85/1
+	  //((Memory1 *)memory)->set_romdi(addr & 1);
 	  break;
 	case KC_TYPE_87:
 	  ((Memory7 *)memory)->set_romdi(addr & 1);

@@ -5,7 +5,7 @@ noinst_LIBRARIES = libz80.a
 INCLUDES = \
 	-I../../include
 
-CPPFLAGS = \
+AM_CPPFLAGS = \
 	-DLSB_FIRST -DDEBUG
 
 libz80_a_SOURCES = \

@@ -71,3 +71,10 @@ ModuleRAM8::clone(void)
 {
   return new ModuleRAM8(*this);
 }
+
+void
+ModuleRAM8::reset(bool power_on)
+{
+  if (power_on)
+    Memory::scratch_mem(_ram, _size);
+}

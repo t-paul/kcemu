@@ -52,33 +52,34 @@ Memory3::Memory3(void) : Memory()
     { &_m_basic, "BASIC", 0xc000,  0x2000, &_rom_basic[0], 2, 1, 1 },
     { 0, },
   };
-  
+
   l = strlen(kcemu_datadir);
   ptr = new char[l + 14];
   strcpy(ptr, kcemu_datadir);
-  
+
   strcpy(ptr + l, "/caos__e0.853");
-  loadROM(ptr, &_rom_caos, 0x2000, 1);
+  load_rom(ptr, &_rom_caos, 0x2000, true);
   strcpy(ptr + l, "/basic_c0.853");
-  loadROM(ptr, &_rom_basic, 0x2000, 1);
-  
+  load_rom(ptr, &_rom_basic, 0x2000, true);
+  delete[] ptr;
+
   _access_color = false;
-  
+
   for (mptr = &m[0];mptr->name;mptr++)
     {
       *(mptr->group) = new MemAreaGroup(mptr->name,
-                                        mptr->addr,
-                                        mptr->size,
-                                        mptr->mem,
-                                        mptr->prio,
-                                        mptr->ro);
+					mptr->addr,
+					mptr->size,
+					mptr->mem,
+					mptr->prio,
+					mptr->ro);
       (*(mptr->group))->add(get_mem_ptr());
       if (mptr->active)
-        (*(mptr->group))->set_active(true);
+	(*(mptr->group))->set_active(true);
     }
-  
+
   reload_mem_ptr();
-  
+
   reset(true);
   z80->register_ic(this);
 }
@@ -88,19 +89,23 @@ Memory3::~Memory3(void)
   z80->unregister_ic(this);
 }
 
-#ifdef MEMORY_SLOW_ACCESS
 byte_t
 Memory3::memRead8(word_t addr)
 {
-  return _memrptr[addr >> PAGE_SHIFT][addr & PAGE_MASK];
+  if (_m_irm->is_active() && (addr >= 0x8000) && (addr <= 0xc000))
+    ui->memory_read(addr);
+
+  return _memrptr[addr >> MemArea::PAGE_SHIFT][addr & MemArea::PAGE_MASK];
 }
 
 void
 Memory3::memWrite8(word_t addr, byte_t val)
 {
-  _memwptr[addr >> PAGE_SHIFT][addr & PAGE_MASK] = val;
+  if (_m_irm->is_active() && (addr >= 0x8000) && (addr <= 0xc000))
+    ui->memory_write(addr);
+
+  _memwptr[addr >> MemArea::PAGE_SHIFT][addr & MemArea::PAGE_MASK] = val;
 }
-#endif /* MEMORY_SLOW_ACCESS */
 
 byte_t *
 Memory3::get_irm(void)

@@ -39,9 +39,9 @@ NullPort::in(word_t addr)
   byte_t val = 0xff;
 
   DBG(2, form("KCemu/Ports/NullPort/in",
-              "NullPort: in() addr = %04x (returning %02x)\n",
-              addr, val));
-  
+	      "NullPort: in() addr = %04x (returning %02x)\n",
+	      addr, val));
+
   return val;
 }
 
@@ -49,12 +49,12 @@ void
 NullPort::out(word_t addr, byte_t val)
 {
   DBG(2, form("KCemu/Ports/NullPort/out",
-              "NullPort: out() addr = %04x, val = %02x\n",
-              addr, val));
+	      "NullPort: out() addr = %04x, val = %02x\n",
+	      addr, val));
 }
 
 PortGroup::PortGroup(const char *name, PortInterface *p,
-                     byte_t start, word_t len, int prio)
+		     byte_t start, word_t len, int prio)
 {
   _p = p;
   _start = start;
@@ -72,11 +72,11 @@ PortGroup::~PortGroup(void)
 Ports::Ports(void)
 {
 }
-                                      
+
 Ports::~Ports(void)
 {
 }
-                                      
+
 void
 Ports::insert(port_list_t *l, PortGroup *group)
 {
@@ -91,12 +91,12 @@ Ports::insert(port_list_t *l, PortGroup *group)
 
 PortGroup *
 Ports::register_ports(const char *name,
-                      byte_t start, word_t len,
-                      PortInterface *p, int prio)
+		      byte_t start, word_t len,
+		      PortInterface *p, int prio)
 {
   int a;
   PortGroup *portg = new PortGroup(name, p, start, len, prio);
-  
+
   for (a = start;a < (len + start);a++)
     insert(&_port_list[a], portg);
   reload_prt_ptr();
@@ -108,7 +108,7 @@ void
 Ports::unregister_ports(PortGroup *p)
 {
   int a;
-  
+
   for (a = p->get_start();a < (p->get_len() + p->get_start());a++)
     _port_list[a].remove(p);
   reload_prt_ptr();
@@ -117,16 +117,17 @@ Ports::unregister_ports(PortGroup *p)
 void
 Ports::reload_prt_ptr(void)
 {
-  int a;
   port_list_t::iterator it;
-  
-  for (a = 0;a < NR_PORTS;a++)
-    for (it = _port_list[a].begin();it != _port_list[a].end();it++)
-      if ((*it)->is_active())
-        {
-          _port_ptr[a] = (*it)->get_port_if();
-          break;
-        }
+
+  for (int a = 0;a < NR_PORTS;a++)
+    {
+      for (it = _port_list[a].begin();it != _port_list[a].end();it++)
+	if ((*it)->is_active())
+	  {
+	    _port_ptr[a] = (*it)->get_port_if();
+	    break;
+	  }
+    }
 }
 
 byte_t
@@ -152,18 +153,18 @@ Ports::info(void)
   for (a = 0;a < NR_PORTS;a++)
     {
       if (_port_list[a].size() > 1)
-        {
+	{
 	  cerr << "  " << hex << setw(2) << setfill('0') << a << "h:";
-          /*
+	  /*
            *  display registered ports but don't list the fallback
            *  entry that comes as the last entry
            */
-          for (it = _port_list[a].begin();it != --(_port_list[a].end());it++)
+	  for (it = _port_list[a].begin();it != --(_port_list[a].end());it++)
 	    cerr << " [\"" << (*it)->get_name() << "\" "
 		 << ((*it)->is_active() ? 'A' : 'a')
 		 << " ]";
 
-          cout << endl;
-        }
+	  cout << endl;
+	}
     }
 }

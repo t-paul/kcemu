@@ -36,6 +36,7 @@ UI_3::UI_3(void)
   _dirty = new byte_t[_dirty_size];
   _pix_cache = new byte_t[b];
   _col_cache = new byte_t[b];
+  _scan_cache = new byte_t[b];
 
   for (a = 0;a < 256;a++)
     {
@@ -52,11 +53,22 @@ UI_3::UI_3(void)
 
   for (a = 0;a < _dirty_size;a++)
     _dirty[a] = 1;
+
+  for (a = 0;a < b;a++)
+    {
+      _pix_cache[a] = 0;
+      _col_cache[a] = 0;
+      _scan_cache[a] = 0;
+    }
 }
 
 UI_3::~UI_3(void)
 {
-  delete _bitmap;
+  delete[] _dirty;
+  delete[] _bitmap;
+  delete[] _pix_cache;
+  delete[] _col_cache;
+  delete[] _scan_cache;
 }
 
 int
@@ -101,7 +113,7 @@ UI_3::generic_put_pixels(int x, int y, byte_t val, byte_t fg, byte_t bg)
 }
 
 void
-UI_3::generic_update(Scanline *scanline, bool clear_cache)
+UI_3::generic_update(Scanline *scanline, MemAccess *memaccess, bool clear_cache)
 {
   int x, y;
   int changed;
@@ -142,11 +154,48 @@ UI_3::generic_update(Scanline *scanline, bool clear_cache)
           bg = (col & 7) | 0x10;
           fg = (col >> 3) & 15;
 
+	  if (memaccess)
+	    {
+	      byte_t m = memaccess->get_value(x, y);
+
+	      switch (m)
+		{
+		case 2:
+		  /*
+		   *  access in the current frame
+		   */
+		  if ((fg == bg) || (val == 0))
+		    {
+		      /*
+		       *  nothing to change so we don't need to
+		       *  update in the next frame
+		       */
+		      memaccess->set_value(x, y, 0);
+		    }
+		  else
+		    {
+		      fg = bg;
+		      changed++;
+		    }
+		  break;
+		case 1:
+		  /*
+		   *  access in the previous frame
+		   */
+		  changed++;
+		  break;
+		}
+	    }
+
 	  if (col & 128)
 	    {
-	      changed++;
-	      if (s)
-		fg = bg;
+	      if (_scan_cache[40 * y + x] != s)
+		{
+		  changed++;
+		  _scan_cache[40 * y + x] = s;
+		  if (s)
+		    fg = bg;
+		}
 	    }
 
           p++;
@@ -190,11 +239,48 @@ UI_3::generic_update(Scanline *scanline, bool clear_cache)
           bg = (col & 7) | 0x10;
           fg = (col >> 3) & 15;
 
+	  if (memaccess)
+	    {
+	      byte_t m = memaccess->get_value(32 + x, y);
+
+	      switch (m)
+		{
+		case 2:
+		  /*
+		   *  access in the current frame
+		   */
+		  if ((fg == bg) || (val == 0))
+		    {
+		      /*
+		       *  nothing to change so we don't need to
+		       *  update in the next frame
+		       */
+		      memaccess->set_value(32 + x, y, 0);
+		    }
+		  else
+		    {
+		      fg = bg;
+		      changed++;
+		    }
+		  break;
+		case 1:
+		  /*
+		   *  access in the previous frame
+		   */
+		  changed++;
+		  break;
+		}
+	    }
+
 	  if (col & 128)
 	    {
-	      changed++;
-	      if (s)
-		fg = bg;
+	      if (_scan_cache[40 * y + x + 32] != s)
+		{
+		  changed++;
+		  _scan_cache[40 * y + x + 32] = s;
+		  if (s)
+		    fg = bg;
+		}
 	    }
 
           p++;

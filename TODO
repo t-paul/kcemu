@@ -24,3 +24,4 @@
 - transparently handle gzipped files
 - fix do_dump() in kctape.cc to actually use the specified
   output file
+- fix method names in ModuleInterface (e.g. reset() -> module_reset())

@@ -64,9 +64,8 @@ Scanline::update(void)
 
   if (_idx < 255)
     {
-      if (_idx == 0)
-	c = _val;
-      else
+      c = _val;
+      if (_idx != 0)
         c = test_bit(_idx - 1, _v3);
 
       if (c)
@@ -195,6 +194,7 @@ Scanline::reset(bool enable)
 {
   _enabled = enable;
 
+  _val = 0;
   _idx = 0;
   _time = 0;
   _count = 0;

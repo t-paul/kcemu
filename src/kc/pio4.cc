@@ -33,6 +33,14 @@
 
 #define memory ((Memory4 *)memory)
 
+PIO4::PIO4(void)
+{
+}
+
+PIO4::~PIO4(void)
+{
+}
+
 byte_t
 PIO4::in(word_t addr)
 {

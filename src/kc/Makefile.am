@@ -1,5 +1,7 @@
 ## Process this file with automake to produce Makefile.in
 
+SUBDIRS = kramermc muglerpc
+
 bin_PROGRAMS = kcemu
 
 if TARGET_LINUX
@@ -15,7 +17,7 @@ INCLUDES = \
 
 localedir = $(prefix)/@DATADIRNAME@/locale
 
-CPPFLAGS = \
+AM_CPPFLAGS = \
 	-DKCEMU_PACKAGE=\"$(PACKAGE)\" \
 	-DKCEMU_DATADIR=\"$(pkgdatadir)\" \
 	-DKCEMU_LOCALEDIR=\"$(localedir)\" \
@@ -62,6 +64,7 @@ kcemu_SOURCES = \
 	gdc.cc		\
 	vis.cc		\
 	svg.cc		\
+	gide.cc		\
 	fdc.cc		\
 	fdc0s.cc	\
 	fdc4.cc		\
@@ -89,14 +92,23 @@ kcemu_SOURCES = \
 	mod_cpm.cc	\
 	mod_ram8.cc	\
 	mod_64k.cc	\
+	mod_segm.cc	\
+	mod_128k.cc	\
+	mod_256k.cc	\
+	mod_512k.cc	\
+	mod_1m.cc	\
+	mod_4m.cc	\
 	mod_rom.cc	\
 	mod_rom1.cc	\
+	mod_romb.cc	\
+	mod_boot.cc	\
 	mod_192k.cc	\
 	mod_ramf.cc	\
 	mod_fdc.cc	\
 	mod_gdc.cc	\
 	mod_rtc.cc	\
 	mod_disk.cc	\
+	$(EXTRA_kcemu_SOURCES) \
 	mod_list.cc	\
 	tape.cc		\
 	disk.cc		\
@@ -110,8 +122,7 @@ kcemu_SOURCES = \
 	sound.cc	\
 	sound3.cc	\
 	sound8.cc	\
-	disass.cc	\
-	$(EXTRA_kcemu_SOURCES)
+	disass.cc
 
 if TARGET_UI_GTK
 UILIBS_GTK = ../ui/gtk/libui_gtk.a
@@ -137,6 +148,8 @@ SYSLIBS_BEOS = ../sys/beos/libsys_beos.a -lbe
 endif
 
 kcemu_LDADD = \
+	kramermc/libkramermc.a		\
+	muglerpc/libmuglerpc.a		\
 	../z80core/libz80.a		\
 	../z80core2/libz80.a		\
 	../fileio/libfileio.a		\

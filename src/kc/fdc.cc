@@ -98,16 +98,29 @@ FDC::FDC(void) : InterfaceCircuit("FDC")
   _selected_unit = 0;
   _terminal_count = false;
 
-  _fstate[0] = new FloppyState(0, 0, 1, new Floppy("attach-1"));
-  _fstate[1] = new FloppyState(0, 0, 1, new Floppy("attach-2"));
-  _fstate[2] = new FloppyState(0, 0, 1, new Floppy("attach-3"));
-  _fstate[3] = new FloppyState(0, 0, 1, new Floppy("attach-4"));
+  _floppy[0] = new Floppy("attach-1");
+  _floppy[1] = new Floppy("attach-2");
+  _floppy[2] = new Floppy("attach-3");
+  _floppy[3] = new Floppy("attach-4");
+
+  _fstate[0] = new FloppyState(0, 0, 1, _floppy[0]);
+  _fstate[1] = new FloppyState(0, 0, 1, _floppy[1]);
+  _fstate[2] = new FloppyState(0, 0, 1, _floppy[2]);
+  _fstate[3] = new FloppyState(0, 0, 1, _floppy[3]);
 
   set_state(FDC_STATE_IDLE);
 }
 
 FDC::~FDC(void)
 {
+  for (int a = 0;a <= 0x1f;a++)
+    delete _cmds[a];
+
+  for (int a = 0;a < 4;a++)
+    {
+      delete _fstate[a];
+      delete _floppy[a];
+    }
 }
 
 /*
@@ -135,8 +148,8 @@ FDC::in(word_t addr)
       /* CS-FDC (Chipselect) */
       val = _MSR;
       DBG(2, form("KCemu/FDC/in_F0",
-                  "FDC::in(): %04xh addr = %04x, val = %02x [%c]\n",
-                  r.PC.D, addr, val, isprint(val) ? val : '.'));
+		  "FDC::in(): %04xh addr = %04x, val = %02x [%c]\n",
+		  r.PC.D, addr, val, isprint(val) ? val : '.'));
       break;
     case 0x41: // BIC
     case 0x99: // CPM-Z9 module (Data Register)
@@ -144,16 +157,16 @@ FDC::in(word_t addr)
     case 0xf1: // D004 (KC85/4)
       val = in_data(addr);
       DBG(2, form("KCemu/FDC/in_F1",
-                  "FDC::in(): %04xh addr = %04x, val = %02x [%c]\n",
-                  r.PC.D, addr, val, isprint(val) ? val : '.'));
+		  "FDC::in(): %04xh addr = %04x, val = %02x [%c]\n",
+		  r.PC.D, addr, val, isprint(val) ? val : '.'));
       break;
     case 0x42: // BIC
     case 0xf2: // D004 (KC85/4)
       /* DAK-FDC (DMA-Acknowledge) */
       val = read_byte();
       DBG(2, form("KCemu/FDC/in_F2",
-                  "FDC::in(): %04xh addr = %04x, val = %02x [%c]\n",
-                  r.PC.D, addr, val, isprint(val) ? val : '.'));
+		  "FDC::in(): %04xh addr = %04x, val = %02x [%c]\n",
+		  r.PC.D, addr, val, isprint(val) ? val : '.'));
       break;
     case 0x44: // BIC
     case 0xf4: // D004 (KC85/4)
@@ -167,32 +180,32 @@ FDC::in(word_t addr)
        */
       val = _INPUT_GATE;
       DBG(2, form("KCemu/FDC/in_F4",
-                  "FDC::in(): %04xh addr = %04x, val = %02x [%c]\n",
-                  r.PC.D, addr, val, isprint(val) ? val : '.'));
+		  "FDC::in(): %04xh addr = %04x, val = %02x [%c]\n",
+		  r.PC.D, addr, val, isprint(val) ? val : '.'));
       break;
     case 0x46: // BIC
     case 0xf6: // D004 (KC85/4)
       /* Select-Latch */
       val = 0x00;
       DBG(2, form("KCemu/FDC/in_F6",
-                  "FDC::in(): %04xh addr = %04x, val = %02x [%c]\n",
-                  r.PC.D, addr, val, isprint(val) ? val : '.'));
+		  "FDC::in(): %04xh addr = %04x, val = %02x [%c]\n",
+		  r.PC.D, addr, val, isprint(val) ? val : '.'));
       break;
     case 0x48: // BIC
     case 0xf8: // D004 (KC85/4)
       /* TC-FDC (Terminalcount) - End of DMA Transfer */
       val = 0x00;
       DBG(2, form("KCemu/FDC/in_F8",
-                  "FDC::in(): %04xh addr = %04x, val = %02x [%c]\n",
-                  r.PC.D, addr, val, isprint(val) ? val : '.'));
+		  "FDC::in(): %04xh addr = %04x, val = %02x [%c]\n",
+		  r.PC.D, addr, val, isprint(val) ? val : '.'));
       break;
     case 0xa0: // CPM-Z9 module
       break;
     }
 
   DBG(2, form("KCemu/FDC/in",
-              "FDC::in(): %04xh  addr = %04x, val = %02x\n",
-              r.PC.D, addr, val));
+	      "FDC::in(): %04xh  addr = %04x, val = %02x\n",
+	      r.PC.D, addr, val));
 
   return val;
 }
@@ -204,8 +217,8 @@ FDC::out(word_t addr, byte_t val)
 
   Z80_GetRegs(&r);
   DBG(2, form("KCemu/FDC/out",
-              "FDC::out(): %04xh (I=%02x): addr = %04x, val = %02x [%c]\n",
-              r.PC.D, r.I, addr, val, isprint(val) ? val : '.'));
+	      "FDC::out(): %04xh (I=%02x): addr = %04x, val = %02x [%c]\n",
+	      r.PC.D, r.I, addr, val, isprint(val) ? val : '.'));
 
   switch (addr & 0xff)
     {
@@ -213,8 +226,8 @@ FDC::out(word_t addr, byte_t val)
     case 0x99: // CPM-Z9 module (Status Register)
     case 0xf1: // D004 (KC85/4)
       DBG(2, form("KCemu/FDC/out_F1",
-                  "FDC::out(): %04xh addr = %04x, val = %02x [%c]\n",
-                  r.PC.D, addr, val, isprint(val) ? val : '.'));
+		  "FDC::out(): %04xh addr = %04x, val = %02x [%c]\n",
+		  r.PC.D, addr, val, isprint(val) ? val : '.'));
       out_data(addr, val);
 //      if (val == 0x45)
 //        Z80_Trace = 1;
@@ -223,21 +236,21 @@ FDC::out(word_t addr, byte_t val)
     case 0x98: // CPM-Z9 module (Data Register)
     case 0xf2: // D004 (KC85/4)
       DBG(2, form("KCemu/FDC/out_F2",
-                  "FDC::out(): %04xh addr = %04x, val = %02x [%c]\n",
-                  r.PC.D, addr, val, isprint(val) ? val : '.'));
+		  "FDC::out(): %04xh addr = %04x, val = %02x [%c]\n",
+		  r.PC.D, addr, val, isprint(val) ? val : '.'));
       write_byte(val);
       break;
     case 0x46: // BIC
     case 0xf6: // D004 (KC85/4)
       DBG(2, form("KCemu/FDC/out_F6",
-                  "FDC::out(): %04xh addr = %04x, val = %02x [%c]\n",
-                  r.PC.D, addr, val, isprint(val) ? val : '.'));
+		  "FDC::out(): %04xh addr = %04x, val = %02x [%c]\n",
+		  r.PC.D, addr, val, isprint(val) ? val : '.'));
       break;
     case 0x48: // BIC
     case 0xf8: // D004 (KC85/4)
       DBG(2, form("KCemu/FDC/out_F8",
-                  "FDC::out(): %04xh TC %02x\n",
-                  r.PC.D, val));
+		  "FDC::out(): %04xh TC %02x\n",
+		  r.PC.D, val));
       if (val == 0x00)
 	set_state(FDC_STATE_IDLE);
       if (val == 0x11)
@@ -259,8 +272,8 @@ FDC::out(word_t addr, byte_t val)
       break;
     default:
       DBG(2, form("KCemu/FDC/out_unhandled",
-                  "FDC::out(): %04xh addr = %04x, val = %02x [%c]\n",
-                  r.PC.D, addr, val, isprint(val) ? val : '.'));
+		  "FDC::out(): %04xh addr = %04x, val = %02x [%c]\n",
+		  r.PC.D, addr, val, isprint(val) ? val : '.'));
       break;
     }
 }
@@ -269,21 +282,21 @@ byte_t
 FDC::in_data(word_t addr)
 {
   byte_t val;
-  
+
   val = 0xff;
   switch (_state)
     {
     case FDC_STATE_RESULT:
       val = _cur_cmd->read_result();
       DBG(2, form("KCemu/FDC/in_F1",
-                 "FDC::in(): addr = %04x, val = %02x [%c] FDC_STATE_RESULT\n",
-                 addr, val, isprint(val) ? val : '.'));
+		  "FDC::in(): addr = %04x, val = %02x [%c] FDC_STATE_RESULT\n",
+		  addr, val, isprint(val) ? val : '.'));
       break;
     case FDC_STATE_DATA:
       val = read_byte();
       DBG(2, form("KCemu/FDC/in_F1",
-                 "FDC::in(): addr = %04x, val = %02x [%c] FDC_STATE_DATA\n",
-                 addr, val, isprint(val) ? val : '.'));
+		  "FDC::in(): addr = %04x, val = %02x [%c] FDC_STATE_DATA\n",
+		  addr, val, isprint(val) ? val : '.'));
       break;
     default:
       break;
@@ -350,8 +363,8 @@ void
 FDC::select_floppy(int floppy_nr)
 {
   DBG(2, form("KCemu/FDC/select_floppy",
-              "FDC::select_floppy(): selecting floppy %d\n",
-              floppy_nr));
+	      "FDC::select_floppy(): selecting floppy %d\n",
+	      floppy_nr));
   _selected_unit = floppy_nr;
   _cur_floppy = _fstate[floppy_nr];
 }
@@ -411,22 +424,22 @@ FDC::set_state(fdc_state_t state)
     case FDC_STATE_IDLE:
       _MSR |= ST_MAIN_RQM;
       DBG(2, form("KCemu/FDC/state",
-                  "FDC::set_state(): FDC_STATE_IDLE    -> MSR: %02x\n",
-                  _MSR));
+		  "FDC::set_state(): FDC_STATE_IDLE    -> MSR: %02x\n",
+		  _MSR));
       break;
     case FDC_STATE_COMMAND:
       _MSR |= ST_MAIN_READ_WRITE;
       _MSR |= ST_MAIN_RQM;
       DBG(2, form("KCemu/FDC/state",
-                  "FDC::set_state(): FDC_STATE_COMMAND -> MSR: %02x\n",
-                  _MSR));
+		  "FDC::set_state(): FDC_STATE_COMMAND -> MSR: %02x\n",
+		  _MSR));
       break;
     case FDC_STATE_EXECUTE:
       _MSR |= ST_MAIN_NON_DMA;
       _MSR |= ST_MAIN_DIO;
       DBG(2, form("KCemu/FDC/state",
-                  "FDC::set_state(): FDC_STATE_EXECUTE -> MSR: %02x\n",
-                  _MSR));
+		  "FDC::set_state(): FDC_STATE_EXECUTE -> MSR: %02x\n",
+		  _MSR));
       break;
     case FDC_STATE_DATA:
       _MSR |= ST_MAIN_READ_WRITE;
@@ -434,16 +447,16 @@ FDC::set_state(fdc_state_t state)
       _MSR |= ST_MAIN_DIO;
       _MSR |= ST_MAIN_RQM;
       DBG(2, form("KCemu/FDC/state",
-                  "FDC::set_state(): FDC_STATE_DATA    -> MSR: %02x\n",
-                  _MSR));
+		  "FDC::set_state(): FDC_STATE_DATA    -> MSR: %02x\n",
+		  _MSR));
       break;
     case FDC_STATE_RESULT:
       _MSR |= ST_MAIN_READ_WRITE;
       _MSR |= ST_MAIN_DIO;
       _MSR |= ST_MAIN_RQM;
       DBG(2, form("KCemu/FDC/state",
-                  "FDC::set_state(): FDC_STATE_RESULT  -> MSR: %02x\n",
-                  _MSR));
+		  "FDC::set_state(): FDC_STATE_RESULT  -> MSR: %02x\n",
+		  _MSR));
       break;
     }
 }
@@ -477,8 +490,8 @@ FDC::set_input_gate(byte_t mask, byte_t val)
 {
   _INPUT_GATE = ((_INPUT_GATE & ~mask) | (val & mask));
   DBG(2, form("KCemu/FDC/input_gate",
-              "FDC::set_input_gate(): INPUT_GATE: %02x\n",
-              _INPUT_GATE));
+	      "FDC::set_input_gate(): INPUT_GATE: %02x\n",
+	      _INPUT_GATE));
 }
 
 byte_t
@@ -492,8 +505,8 @@ FDC::set_msr(byte_t mask, byte_t val)
 {
   _MSR = ((_MSR & ~mask) | (val & mask));
   DBG(2, form("KCemu/FDC/msr",
-              "FDC::set_msr(): MSR: %02x\n",
-              _MSR));
+	      "FDC::set_msr(): MSR: %02x\n",
+	      _MSR));
 }
 
 /*
@@ -524,7 +537,7 @@ FDC::get_ST0(void)
 {
   set_ST0(ST_0_HEAD_ADDRESS, get_head() == 1 ? ST_0_HEAD_ADDRESS : 0);
   set_ST0(ST_0_UNIT_SELECT_MASK, _selected_unit);
-  
+
   return _ST0;
 } 
 

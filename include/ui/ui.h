@@ -43,6 +43,8 @@ class UI : public InterfaceCircuit, public Callback, public CMD_Caller
     virtual int  get_mode(void)                   = 0;
     virtual void set_mode(int mode)               = 0;
     virtual void flash(bool enable)               = 0;
+    virtual void memory_read(word_t addr)         = 0;
+    virtual void memory_write(word_t addr)        = 0;
     virtual void update(bool full_update = false, bool clear_cache = false) = 0;
 
     virtual void init(int *argc, char ***argv)    = 0;

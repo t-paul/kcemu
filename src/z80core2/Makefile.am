@@ -11,11 +11,8 @@ INCLUDES = \
 # LSB_FIRST             Compile for a low-endian machine
 # X86_ASM               Use inline 80x86 assembly (GCC only)
 #
-CPPFLAGS = \
+AM_CPPFLAGS = \
 	-DLSB_FIRST -DDEBUG
-
-CFLAGS = \
-	-Wall -O2 -fomit-frame-pointer
 
 libz80_a_SOURCES = \
 	Z80.c		\

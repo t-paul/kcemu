@@ -54,11 +54,11 @@ public:
       const char *text;
 
       if (!args)
-        return;
+	return;
 
       text = args->get_string_arg("text");
       if (!text)
-        return;
+	return;
       _k->replayString(text);
     }
 };
@@ -109,6 +109,8 @@ Keyboard3::keyPressed(int keysym, int keycode)
     case KC_KEY_CONTROL:
       _control = true;
       return;
+    case KC_KEY_ALT_GR:
+      return;
     default:
       break;
     }
@@ -123,6 +125,10 @@ Keyboard3::keyPressed(int keysym, int keycode)
   if ((key & 0x100) || _shift)
     key |= 1; /* set shift state if required for this key, see keyb3k.h */
 
+  if (key & 0x1000)
+    key &= ~1; /* force unshifted key if the key is shifted on pc keyboard
+		* but not on the kc keyboard */
+
   key &= 0xff;
 
   key ^= 1; /*
@@ -133,7 +139,7 @@ Keyboard3::keyPressed(int keysym, int keycode)
   DBG(2, form("KCemu/keyboard/3/key_press",
 	      "Keyboard::keyPressed():  <%03xh> %3d [%c] -> %02xh (%3d)\n",
 	      keysym & 0xfff, keysym, isprint(keysym) ? keysym : '.', key, key));
-  
+
   _release = 0;
   _keysym = keysym;
   // cerr.form("-> %3d, %3d [keyPressed]\n", _key, _lock);
@@ -156,7 +162,7 @@ Keyboard3::keyReleased(int keysym, int keycode)
   DBG(2, form("KCemu/keyboard/3/key_release",
 	      "Keyboard::keyReleased(): <%03xh> %3d [%c] - _keysym = %02xh\n",
 	      keysym & 0xfff, keysym, isprint(keysym) ? keysym : '.', _keysym));
-  
+
   switch (keysym)
     {
     case KC_KEY_SHIFT:
@@ -164,6 +170,8 @@ Keyboard3::keyReleased(int keysym, int keycode)
       return;
     case KC_KEY_CONTROL:
       _control = false;
+      return;
+    case KC_KEY_ALT_GR:
       return;
     default:
       break;
@@ -187,56 +195,57 @@ Keyboard3::replayString(const char *text)
 void
 Keyboard3::sendKey(void)
 {
-        int key;
-        int a, b;
-        int offset;
+  int key;
+  int a, b;
+  int offset;
 
-        //cerr.form("=> %3d, %3d [sendKey]\n", _key, _lock);
+  //cerr.form("=> %3d, %3d [sendKey]\n", _key, _lock);
 #ifdef KEYBOARD_ADD_CB_DEBUG
-	cerr.form("Keyboard: addCallback(): %8Ld, %8ld, %8ld\n",
-		  z80->getCounter(), 0, 0);
+  cerr.form("Keyboard: addCallback(): %8Ld, %8ld, %8ld\n",
+	    z80->getCounter(), 0, 0);
 #endif
-        offset = 0;
-        
-        z80->addCallback(offset, this, (void *)0);
-        
-        key = _key;
-        for (a = 1;a < 8;a++) {
-                b = (key & 1) ? KEY_CYCLES_BIT_1 : KEY_CYCLES_BIT_0;
-                offset += b;
-                key >>= 1;
+  offset = 0;
+
+  z80->addCallback(offset, this, (void *)0);
+
+  key = _key;
+  for (a = 1;a < 8;a++) {
+    b = (key & 1) ? KEY_CYCLES_BIT_1 : KEY_CYCLES_BIT_0;
+    offset += b;
+    key >>= 1;
 #ifdef KEYBOARD_ADD_CB_DEBUG
-		cerr.form("Keyboard: addCallback(): %8Ld, %8ld, %8ld\n",
-			  z80->getCounter() + offset, a, offset);
+    cerr.form("Keyboard: addCallback(): %8Ld, %8ld, %8ld\n",
+	      z80->getCounter() + offset, a, offset);
 #endif
-                z80->addCallback(offset, this, (void *)a);
-        }
-        
-        offset += KEY_CYCLES_T_W;
+    z80->addCallback(offset, this, (void *)a);
+  }
+
+  offset += KEY_CYCLES_T_W;
 #ifdef KEYBOARD_ADD_CB_DEBUG
-	cerr.form("Keyboard: addCallback(): %8Ld, %8ld, %8ld\n",
-		  z80->getCounter() + offset, 8, offset);
+  cerr.form("Keyboard: addCallback(): %8Ld, %8ld, %8ld\n",
+	    z80->getCounter() + offset, 8, offset);
 #endif
-        z80->addCallback(offset, this, (void *)8);
-        
-        key = _key;
-        for (a = 9;a < 16;a++) {
-                b = (key & 1) ? KEY_CYCLES_BIT_1 : KEY_CYCLES_BIT_0;
-                offset += b;
-                key >>= 1;
+  z80->addCallback(offset, this, (void *)8);
+
+  key = _key;
+  for (a = 9;a < 16;a++)
+    {
+      b = (key & 1) ? KEY_CYCLES_BIT_1 : KEY_CYCLES_BIT_0;
+      offset += b;
+      key >>= 1;
 #ifdef KEYBOARD_ADD_CB_DEBUG
-		cerr.form("Keyboard: addCallback(): %8Ld, %8ld, %8ld\n",
-			  z80->getCounter() + offset, a, offset);
+      cerr.form("Keyboard: addCallback(): %8Ld, %8ld, %8ld\n",
+		z80->getCounter() + offset, a, offset);
 #endif
-                z80->addCallback(offset, this, (void *)a);
-        }
-        
-        offset += KEY_CYCLES_T_DW;
+      z80->addCallback(offset, this, (void *)a);
+    }
+
+  offset += KEY_CYCLES_T_DW;
 #ifdef KEYBOARD_ADD_CB_DEBUG
-	cerr.form("Keyboard: addCallback(): %8Ld, %8ld, %8ld\n",
-		  z80->getCounter() + offset, 64, offset);
+  cerr.form("Keyboard: addCallback(): %8Ld, %8ld, %8ld\n",
+	    z80->getCounter() + offset, 64, offset);
 #endif
-        z80->addCallback(offset, this, (void *)64);
+  z80->addCallback(offset, this, (void *)64);
 }
 
 int
@@ -291,16 +300,16 @@ Keyboard3::callback(void *data)
 
 #ifdef KEYBOARD_CB_DEBUG
   static long long last = 0;
-  
+
   cerr.form("Keyboard:    callback(): %8Ld, %8ld, %8ld\n",
-            z80->getCounter(), val, z80->getCounter() - last);
+	    z80->getCounter(), val, z80->getCounter() - last);
   //switch (val) {
   //case 0:  cerr.form(" ### vvv\n"); break;
   //case 64: cerr.form(" ### ^^^\n"); break;
   //default: cerr.form("\n");         break;
   //}
   last = z80->getCounter();
-#endif	
+#endif
   // if (val == 0) cerr.form("\n");
   // cerr.form("[%02x] ", val);
   switch (val)
@@ -310,33 +319,33 @@ Keyboard3::callback(void *data)
       break;
     case 64:
       if (_lock != -1)
-        {
-          _key = _lock;
-          _lock = -1;
-        }
-      
+	{
+	  _key = _lock;
+	  _lock = -1;
+	}
+
       if (_release > 0)
-        {
+	{
 	  _release--;
-          if (_release == 0)
+	  if (_release == 0)
 	    _key = -1;
-        }
-      
+	}
+
       if (_key != -1)
 	sendKey();
       else
-        {
-          /*
-           *  triggering strobe here is most likely wrong!
+	{
+	  /*
+	   *  triggering strobe here is most likely wrong!
            */
-          //pio->strobe_B();
-          
+	  //pio->strobe_B();
+
 #ifdef KEYBOARD_ADD_CB_DEBUG
-          cerr.form("Keyboard: addCallback(): %8Ld, %8ld, %8ld\n",
-                    z80->getCounter() + _replay_offset, 128, _replay_offset);
+	  cerr.form("Keyboard: addCallback(): %8Ld, %8ld, %8ld\n",
+		    z80->getCounter() + _replay_offset, 128, _replay_offset);
 #endif
-          z80->addCallback(_replay_offset, this, (void *)128);
-        }
+	  z80->addCallback(_replay_offset, this, (void *)128);
+	}
       break;
     case 128:
       /*
@@ -351,9 +360,9 @@ Keyboard3::callback(void *data)
        *  characters to be ignored :-(
        */
       if (checkReplay() == 0x0d)
-        _replay_offset = 800 * 256;
+	_replay_offset = 800 * 256;
       else
-        _replay_offset = 100 * 256;
+	_replay_offset = 100 * 256;
       break;
     }
 }

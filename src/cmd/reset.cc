@@ -52,6 +52,7 @@ public:
 	    case KC_TYPE_85_2:
 	    case KC_TYPE_85_3:
 	    case KC_TYPE_85_4:
+	    case KC_TYPE_85_5:
 	      z80->reset(0xe000);
 	      break;
 	    default:
@@ -68,6 +69,7 @@ public:
 	    case KC_TYPE_85_2:
 	    case KC_TYPE_85_3:
 	    case KC_TYPE_85_4:
+	    case KC_TYPE_85_5:
 	    case KC_TYPE_Z1013:
 	      z80->power_on(0xf000);
 	      break;

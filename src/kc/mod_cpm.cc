@@ -75,6 +75,11 @@ ModuleCPMZ9::clone(void)
   return new ModuleCPMZ9(*this);
 }
 
+void
+ModuleCPMZ9::reset(bool power_on)
+{
+}
+
 byte_t
 ModuleCPMZ9::in(word_t addr)
 {

@@ -78,3 +78,10 @@ ModuleRAM1::clone(void)
 {
   return new ModuleRAM1(*this);
 }
+
+void
+ModuleRAM1::reset(bool power_on)
+{
+  if (power_on)
+    Memory::scratch_mem(_ram, _size);
+}

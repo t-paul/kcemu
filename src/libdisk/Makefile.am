@@ -4,7 +4,7 @@ bin_PROGRAMS = tdtodump
 
 noinst_LIBRARIES = libdisk.a
 
-CPPFLAGS = \
+AM_CPPFLAGS = \
 	-DDEBUG -DLINUX
 
 INCLUDES = \

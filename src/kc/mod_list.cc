@@ -1,6 +1,6 @@
 /*
  *  KCemu -- the KC 85/3 and KC 85/4 Emulator
- *  Copyright (C) 1997-2001 Torsten Paul
+ *  Copyright (C) 1997-2004 Torsten Paul
  *
  *  $Id: mod_list.cc,v 1.16 2002/10/31 01:46:35 torsten_paul Exp $
  *
@@ -45,12 +45,87 @@
  *  fbh: M027 Software: Development
  *  e3h: M029 DAU1
  *  ---: M030 EPROMmer
- *  ---: M032 256 KByte RAM
+ *  79h: M032 256 KByte RAM
  *  ---: M033 Software: TYPESTAR
+ *  7bh: M035 1 MByte RAM
+ *  7bh: M035 4 MByte RAM (intern 4 x 1MByte)
  *  ---: M036 128 KByte RAM
  *  ---: M040 USER PROM ? KByte
  *  ---: M053 RS 232
  *  ---: M125 USER ROM ? KByte
+ */
+
+/*
+ *  Modulübersicht für KC85
+ *  
+ *  von Mario Leubner
+ *  
+ *  (KC-News 2/95 - http://www.iee.et.tu-dresden.de/~kc-club/)
+ *  
+ *  Modul  Kenn.  Steuerb.  Bezeichnung
+ *  
+ *  D001     -       -      Grundgerät KC85/2 (PIO 88-8B, CTC 8C-8F)
+ *  D001     -       -      Grundgerät KC85/3 (PIO 88-8B, CTC 8C-8F)
+ *  D001     -       -      Grundgerät KC85/4 (OUT 84-87, PIO 88-8B, CTC 8C-8F)
+ *  D002     -       -      Busdriver für 4 Module (OUT 80 zur Modulsteuerung)
+ *  D003*    -       -      Programmer (ähnl. D002, ROM-Module brennen?)
+ *  D004    A7    xxAxxKxM  Floppy Disk Basis (Koppel-RAM F0-F3, OUT F4-F7)
+ *  D004     -       -      Floppy Disk Drive (Laufwerk K5601, 5 1/4")
+ *  D005                    Komfort-Tastatur fÜr KC85/4 (mit EMR UB8830)
+ *  
+ *  M000*   01              Spezial f. KC85/3: autom. Start in Schacht 8 ab 4000H
+ *  M001    EF    xxxxxxxM  Digital IN/OUT (CTC 00-03, PIO 04-07)
+ *  M002*   DA    xxxxxxxM  PIO 3 (PIO 10-13, PIO 14-17)
+ *  M003    EE    xxxxxxxM  V.24 (2 Kanäle, SIO 08-0B, CTC 0C-0F)
+ *  M005     -       -      USER-Leermodul (freie Ports: C0-CF, Kennbytes C0-D7)
+ *  M006    FC    AAxxxxxM  BASIC und CAOS 3.1 für KC85/2 (1 Block zu 16K ROM)
+ *  M007     -       -      Adapter (Busverlängerung für Modulschacht)
+ *  M008     -       -      Joystick (PIO 90-93)
+ *  M009*   ED    xxxxxxxM  TLCM (Spracheingabe- und Datenkompressionsmodul)
+ *  M010    E7    xxxxxxxM  ADU1: 4 Analogeingänge mit Multiplexer (PIO 40-43)
+ *  M011    F6    AAxxxxWM  64K RAM (1 Block zu 64K, rotierbar)
+ *  M012    FB    AAAxxxxM  Software: TEXOR + V.24-Treiber (1 Block ROM 8K)
+ *  M021*    -       -      Joystick + Centronics (PIO 90-93)
+ *  M022    F4    AAxxxxWM  Expander-RAM 16K (1 Block zu 16K)
+ *  M024*   F5    AAxxxxWM  32K RAM (1 Block zu 32K)
+ *  M025    F7    AAAxxxxM  USER PROM 8K (1 Block zu 8K, 4 Sockel für 2716)
+ *  M026    FB    AAAxxxxM  Software: FORTH (1 Block ROM 8K)
+ *  M027    FB    AAAxxxxM  Software: DEVELOPMENT+V.24-Treiber (1 Block ROM 8K)
+ *  M029    E3    xxxxxxxM  DAU1: 2 Analogausgänge + 1 Relais (OUT 44..47)
+ *  M030    D9              EPROMER ?
+ *  M030    DB    AAAxxxxM  EPROMER für 2-64K (8K EPROM, PIO D0-D3, PIO D4-D7)
+ *  M032    79    AxSSSSWM  256K segmented RAM (16 Blöcke je 16K, 4000 od. 8000)
+ *  M033    01    AA0SxxxM  Software: TYPESTAR+RAMDOS (2 Blöcke ROM zu je 8K)
+ *  M034    7A    ASSSSSWM  512K segmented RAM (32 Blöcke je 16K, 4000 od. 8000)
+ *  M035    7B    SSSSSSWM  1M segmented RAM (64 Blöcke je 16K, Adr. 8000)
+ *  M036    78    AxxSSSWM  128K segmented RAM (8 Blöcke je 16K, 4000 od. 8000)
+ *  M040    F8    AAxxxxxM  USER PROM 16K (1 Block zu 16KByte)
+ *  M045    70    AASSxxxM  32K segmented ROM (4 Blöcke je 8K)
+ *  M046    71    AASSxSxM  64K segmented ROM (8 Blöcke je 8K)
+ *  M047    72    AASSSSxM  128K segmented ROM (16 Blöcke je 8K)
+ *  M048*   73    AASSSSxM  256K segmented ROM (16 Blöcke je 16K)
+ *  M053    EE    xxxxxxxM  RS232: wie M003, jedoch 2. Kanal mit TTL-Pegel
+ *  M120*   F0    AAAxxxWM  8K CMOS-RAM (1 Block zu 8K)
+ *  M122*   F1    AAxxxxWM  16K CMOS-RAM (1 Block zu 16K)
+ *  M124*   F2    AAxxxxWM  32K CMOS-RAM (1 Block zu 32K)
+ *  
+ *  Im Steuerbyte bedeuten:
+ *  
+ *      A (Basis-)Adresse
+ *      K Kopplung ein/aus
+ *      S Segmentnummer
+ *      W Schreibfreigabe
+ *      M Modulschaltzustand
+ *      x nicht benutzt
+ *  
+ *  Verwendete Kennbytes
+ *  
+ *      01 Autostart-ROM
+ *      7x segmented Memory
+ *      Dx..Ex I/O-Module
+ *      Fx Memory
+ *  
+ *  Mit '*' gekennzeichnete Module kamen offenbar nicht in den Handel! 
  */
 
 #include <string.h>
@@ -65,8 +140,15 @@
 #include "kc/mod_cpm.h"
 #include "kc/mod_ram8.h"
 #include "kc/mod_64k.h"
+#include "kc/mod_128k.h"
+#include "kc/mod_256k.h"
+#include "kc/mod_512k.h"
+#include "kc/mod_1m.h"
+#include "kc/mod_4m.h"
 #include "kc/mod_rom.h"
 #include "kc/mod_rom1.h"
+#include "kc/mod_romb.h"
+#include "kc/mod_boot.h"
 #include "kc/mod_192k.h"
 #include "kc/mod_fdc.h"
 #include "kc/mod_gdc.h"
@@ -250,6 +332,9 @@ ModuleList::ModuleList(void)
   delete[] ptr;
   */
 
+  /*
+   *  192 KByte RAM/EPROM module (kc85/1)
+   */
   ptr = new char[strlen(kcemu_datadir) + 14];
   strcpy(ptr, kcemu_datadir);
   char * ptr_d2 = strcat(ptr, "/192k__d2.851");
@@ -266,9 +351,19 @@ ModuleList::ModuleList(void)
   delete[] ptr_d5;
 
   /*
+   *  128 KByte ROM bank module (kc85/1)
+   */
+  ptr = new char[strlen(kcemu_datadir) + 14];
+  strcpy(ptr, kcemu_datadir);
+  strcat(ptr, "/rom_bank.851");
+  m = new ModuleROMBank(ptr, "ROMBANK");
+  _mod_list.push_back(new ModuleListEntry(_("128k ROM Bank"), m, KC_TYPE_85_1_CLASS));
+  delete[] ptr;
+
+  /*
    *  IRM Expansion for color display (kc85/1)
    *
-   *  FIXME: check wheather to enable the color expansion by default shouldn't
+   *  FIXME: check whether to enable the color expansion by default shouldn't
    *  FIXME: go here!
    */
   m = new ModuleRAM1("IRMX", 0xe800, 0x0800);
@@ -296,7 +391,7 @@ ModuleList::ModuleList(void)
   ptr = new char[strlen(kcemu_datadir) + 14];
   strcpy(ptr, kcemu_datadir);
   strcat(ptr, "/cpmz9_c0.851");
-  m = new ModuleROM1(ptr, "CPM-Z9-BOOT", 0xc000, 0x0800, true);
+  m = new ModuleBOOT(ptr, "CPM-Z9-BOOT", 0xc000, 0x0800, true);
   _mod_list.push_back(new ModuleListEntry(_("CPM-Z9 BOOT (c000h-c7ffh)"), m, KC_TYPE_85_1_CLASS));
   delete[] ptr;
 
@@ -324,6 +419,16 @@ ModuleList::ModuleList(void)
     }
 
   /*
+   *  basic (kc85/2) (this is actually 16k and includes a new system rom!)
+   */
+  ptr = new char[strlen(kcemu_datadir) + 10];
+  strcpy(ptr, kcemu_datadir);
+  strcat(ptr, "/m006.rom");
+  m = new ModuleROM(ptr, "BASIC", 0x4000, 0xfb);
+  _mod_list.push_back(new ModuleListEntry(_("M006: Basic"), m, KC_TYPE_85_2_CLASS));
+  delete[] ptr;
+
+  /*
    *  RAM module 16k (kc85/2-4)
    */
   m = new ModuleJoystick("M008", 0xff);
@@ -331,27 +436,11 @@ ModuleList::ModuleList(void)
 #endif /* HOST_OS_LINUX */
 
   /*
-   *  RAM module 16k (kc85/2-4)
-   */
-  m = new ModuleRAM("M022", 0xf4);
-  _mod_list.push_back(new ModuleListEntry(_("M022: Expander RAM (16k)"), m, KC_TYPE_85_2_CLASS));
-
-  /*
    *  RAM module 64k (kc85/2-4)
    */
   m = new Module64k("M011", 0xf6);
   _mod_list.push_back(new ModuleListEntry(_("M011: 64k RAM"), m, KC_TYPE_85_2_CLASS));
   
-  /*
-   *  basic (kc85/2-4)
-   */
-  ptr = new char[strlen(kcemu_datadir) + 10];
-  strcpy(ptr, kcemu_datadir);
-  strcat(ptr, "/m006.rom");
-  m = new ModuleROM(ptr, "BASIC", 0x2000, 0xfb);
-  _mod_list.push_back(new ModuleListEntry(_("M006: Basic"), m, KC_TYPE_85_2_CLASS));
-  delete[] ptr;
-
   /*
    *  texor
    */
@@ -361,6 +450,12 @@ ModuleList::ModuleList(void)
   m = new ModuleROM(ptr, "M012", 0x2000, 0xfb);
   _mod_list.push_back(new ModuleListEntry(_("M012: Texor"), m, KC_TYPE_85_2_CLASS));
   delete[] ptr;
+
+  /*
+   *  RAM module 16k (kc85/2-4)
+   */
+  m = new ModuleRAM("M022", 0xf4);
+  _mod_list.push_back(new ModuleListEntry(_("M022: Expander RAM (16k)"), m, KC_TYPE_85_2_CLASS));
 
   /*
    *  forth
@@ -382,6 +477,36 @@ ModuleList::ModuleList(void)
   entry = new ModuleListEntry(_("M027: Development"), m, KC_TYPE_85_2_CLASS);
   _mod_list.push_back(entry);
   delete[] ptr;
+
+  /*
+   *  RAM module 256k (kc85/2-4)
+   */
+  m = new Module256k("M032", 0x79);
+  _mod_list.push_back(new ModuleListEntry(_("M032: 256k Segmented RAM"), m, KC_TYPE_85_2_CLASS));
+
+  /*
+   *  RAM module 512k (kc85/2-4)
+   */
+  m = new Module512k("M034", 0x7a);
+  _mod_list.push_back(new ModuleListEntry(_("M034: 512k Segmented RAM"), m, KC_TYPE_85_2_CLASS));
+
+  /*
+   *  RAM module 1M (kc85/2-4)
+   */
+  m = new Module1M("M035", 0x7b);
+  _mod_list.push_back(new ModuleListEntry(_("M035: 1M Segmented RAM"), m, KC_TYPE_85_2_CLASS));
+
+  /*
+   *  RAM module 4M (kc85/2-4)
+   */
+  m = new Module4M("M035x4", 0x7b);
+  _mod_list.push_back(new ModuleListEntry(_("M035x4: 4M RAM"), m, KC_TYPE_85_2_CLASS));
+
+  /*
+   *  RAM module 128k (kc85/2-4)
+   */
+  m = new Module128k("M036", 0x78);
+  _mod_list.push_back(new ModuleListEntry(_("M036: 128k Segmented RAM"), m, KC_TYPE_85_2_CLASS));
 
   /*
    *  wordpro ROM version for kc85/3
@@ -406,20 +531,36 @@ ModuleList::ModuleList(void)
   delete[] ptr;
 
   /*
-   *  Floppy Disk Basis ROM
+   *  Floppy Disk Basis Extension ROM (F8)
+   */
+  ptr = new char[strlen(kcemu_datadir) + 14];
+  strcpy(ptr, kcemu_datadir);
+  strcat(ptr, "/floppyf8.rom");
+  m = new ModuleDisk(ptr, "Floppy Disk Basis F8", 0x2000, 0xa7);
+  entry = new ModuleListEntry(_("Floppy Disk Basis F8"), m, KC_TYPE_NONE);
+  _mod_list.push_back(entry);
+  delete[] ptr;
+
+  _init_floppy_basis_f8 = 0;
+  if (get_kc_type() & KC_TYPE_85_2_CLASS)
+    if (RC::instance()->get_int("Floppy Disk Basis"))
+      _init_floppy_basis_f8 = entry;
+
+  /*
+   *  Floppy Disk Basis ROM (FC)
    */
   ptr = new char[strlen(kcemu_datadir) + 12];
   strcpy(ptr, kcemu_datadir);
   strcat(ptr, "/floppy.rom");
-  m = new ModuleDisk(ptr, "Floppy Disk Basis", 0x2000, 0xa7);
-  entry = new ModuleListEntry(_("Floppy Disk Basis"), m, KC_TYPE_NONE);
+  m = new ModuleDisk(ptr, "Floppy Disk Basis FC", 0x2000, 0xa7);
+  entry = new ModuleListEntry(_("Floppy Disk Basis FC"), m, KC_TYPE_NONE);
   _mod_list.push_back(entry);
   delete[] ptr;
 
-  _init_floppy_basis = 0;
+  _init_floppy_basis_fc = 0;
   if (get_kc_type() & KC_TYPE_85_2_CLASS)
     if (RC::instance()->get_int("Floppy Disk Basis"))
-      _init_floppy_basis = entry;
+      _init_floppy_basis_fc = entry;
 
   _nr_of_bd = RC::instance()->get_int("Busdrivers");
   if (_nr_of_bd < 0)
@@ -500,12 +641,11 @@ ModuleList::init_modules(int max_modules)
 
 ModuleList::~ModuleList(void)
 {
-  ModuleListEntry *entry;
   ModuleList::iterator it;
 
   for (it = module_list->begin();it != module_list->end();it++)
     {
-      entry = *it;
+      ModuleListEntry *entry = *it;
       delete entry->get_mod();
       delete entry;
     }
@@ -513,6 +653,8 @@ ModuleList::~ModuleList(void)
   for (int a = 0;a < 4 * MAX_BD + 2;a++)
     if (_init_mod[a])
       free(_init_mod[a]);
+
+  /* inserted clones of modules are freed in module.cc */
 }
 
 void
@@ -536,12 +678,20 @@ ModuleList::init(void)
             insert(a, *it);
         }
     }
-  if (_init_floppy_basis)
+  if (_init_floppy_basis_f8)
+    {
+      /*
+       *  floppy disk basis extension ROM is always in slot f8h!
+       */
+      insert(60, _init_floppy_basis_f8);
+    }
+
+  if (_init_floppy_basis_fc)
     {
       /*
        *  floppy disk basis ROM is always in slot fch!
        */
-      insert(61, _init_floppy_basis);
+      insert(61, _init_floppy_basis_fc);
     }
 
   if (_init_color_expansion)

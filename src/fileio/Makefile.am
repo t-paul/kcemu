@@ -9,7 +9,7 @@ noinst_LIBRARIES = libfileio.a
 INCLUDES = \
 	-I../../include
 
-CPPFLAGS = \
+AM_CPPFLAGS = \
 	-DVERSION=\"$(VERSION)\" \
 	-DFILEIO_DEBUG
 
@@ -22,6 +22,7 @@ libfileio_a_SOURCES = \
 	load_HS.c	\
 	load_TAPE.c	\
 	load_BASIC.c	\
+	load_BASICODE.c	\
 	load_UNKNOWN.c	\
 	save_IMG.c	\
 	save_TAP.c	\

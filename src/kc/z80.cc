@@ -141,10 +141,11 @@ void
 WrZ80(word_t Addr, byte_t Value)
 {
 #if 0
-  if ((Addr == 0xf27a) || (Addr == 0xf27b))
+  if ((Addr == 0x3d7) || (Addr == 0x3d8))
     {
       z80->printPC();
-      cout.form("%04x: %02x\n", Addr, Value);
+      printf("%04x: %02x\n", Addr, Value);
+      z80->debug(true);
     }
 #endif
   memory->memWrite8(Addr, Value);
@@ -211,10 +212,21 @@ Z80::Z80(void)
   _regs.IRequest = INT_NONE;
   ResetZ80(&_regs);
   
-  if ((get_kc_type() != KC_TYPE_LC80) &&
-      (get_kc_type() != KC_TYPE_A5105) &&
-      (get_kc_type() != KC_TYPE_POLY880))
-    _regs.PC.W = 0xf000;
+  switch (get_kc_type())
+    {
+    case KC_TYPE_87:
+    case KC_TYPE_85_1:
+    case KC_TYPE_85_2:
+    case KC_TYPE_85_3:
+    case KC_TYPE_85_4:
+    case KC_TYPE_85_5:
+    case KC_TYPE_Z1013:
+      _regs.PC.W = 0xf000;
+      break;
+    default:
+      _regs.PC.W = 0x0000;
+      break;
+    }
 
   /*
    *  FIXME: at least z1013 emulation breaks with the stackpointer
@@ -315,8 +327,8 @@ Z80::run(void)
       //if ((_regs.PC.W == 0xe0d5) && (RdZ80(0xe0d5) == 0xed) && (_regs.BC.W < 5))
       //debug(true);
 
-      //if (_regs.PC.W == 0xe9)
-      //z80->debug(true);
+      if (_regs.PC.W == 0xfbbe)
+	z80->debug(true);
 
       if (_singlestep)
 	{
@@ -448,6 +460,8 @@ void
 Z80::debug(bool value)
 {
   _debug = value;
+  if (_enable_floppy_cpu && fdc_z80)
+    fdc_z80->trace(value);
 }
 
 bool
@@ -477,9 +491,9 @@ Z80::reset(word_t pc, bool power_on)
   _cb_list.clear();
 
   for (ic_list_t::iterator it = _ic_list.begin();it != _ic_list.end();it++)
-    {
-      (*it)->reset(power_on);
-    }
+    (*it)->reset(power_on);
+
+  module->reset(power_on);
 
   ResetZ80(&_regs);
   _regs.PC.W = pc;

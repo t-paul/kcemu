@@ -1,6 +1,23 @@
-#
+##
 # $Id: NEWS,v 1.10 2002/10/31 16:39:53 torsten_paul Exp $
 #
+
+KCemu 0.3.8
+
+  * added segmented RAM memory modules M036 (128k), M032 (256k),
+    M034 (512k), M035 (1M) and M035x4 (4M)
+  * fixed 16k RAM module M022
+  * fixed memory bank switching of RAM8
+  * added config file entry and command line option to
+    enable/disable the display effects for scaled screen
+    output
+  * added emulation of the display effect caused by screen
+    memory access on KC85/2 and KC85/3
+  * fixed basic module for KC85/2
+  * added support for basicode files (incomplete, but it's
+    possible to add basicode files in ASCII format to a
+    tape archive and load them using the load function of
+    a bascoder)
 
 KCemu 0.3.7
 

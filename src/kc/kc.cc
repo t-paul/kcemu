@@ -1,6 +1,6 @@
 /*
  *  KCemu -- the KC 85/3 and KC 85/4 Emulator
- *  Copyright (C) 1997-2003 Torsten Paul
+ *  Copyright (C) 1997-2004 Torsten Paul
  *
  *  $Id: kc.cc,v 1.32 2002/10/31 01:46:35 torsten_paul Exp $
  *
@@ -74,6 +74,7 @@
 #include "kc/sound.h"
 #include "kc/ctc_fdc.h"
 #include "kc/z80_fdc.h"
+#include "kc/gide.h"
 #include "kc/poly880.h"
 
 #include "ui/log.h"
@@ -108,6 +109,8 @@
 #include "kc/ports4.h"
 #include "kc/memory4.h"
 
+#include "kc/memory5.h"
+
 #include "kc/ctc6.h"
 #include "kc/pio6.h"
 #include "kc/keyb6.h"
@@ -128,6 +131,16 @@
 #include "kc/keyb9.h"
 #include "kc/memory9.h"
 
+#include "kc/kramermc/pio.h"
+#include "kc/kramermc/memory.h"
+#include "kc/kramermc/keyboard.h"
+
+#include "kc/muglerpc/ctc.h"
+#include "kc/muglerpc/pio.h"
+#include "kc/muglerpc/ports.h"
+#include "kc/muglerpc/memory.h"
+#include "kc/muglerpc/keyboard.h"
+
 #ifdef USE_UI_GTK
 # include "ui/gtk/ui_gtk0.h"
 # include "ui/gtk/ui_gtk1.h"
@@ -136,6 +149,8 @@
 # include "ui/gtk/ui_gtk6.h"
 # include "ui/gtk/ui_gtk8.h"
 # include "ui/gtk/ui_gtk9.h"
+# include "ui/gtk/ui_gtk_kramermc.h"
+# include "ui/gtk/ui_gtk_muglerpc.h"
 # define UI_0 UI_Gtk0
 # define UI_1 UI_Gtk1
 # define UI_3 UI_Gtk3
@@ -143,6 +158,8 @@
 # define UI_6 UI_Gtk6
 # define UI_8 UI_Gtk8
 # define UI_9 UI_Gtk9
+# define UI_KramerMC UI_Gtk_KramerMC
+# define UI_MuglerPC UI_Gtk_MuglerPC
 #endif /* USE_UI_GTK */
 #ifdef USE_UI_SDL
 # include "ui/sdl/ui_sdl0.h"
@@ -170,6 +187,8 @@
 # define UI_8 UI_BeOS8
 #endif /* HOST_OS_BEOS */
 
+#include "libdbg/dbg.h"
+
 using namespace std;
 
 Z80        *z80;
@@ -179,6 +198,7 @@ Ports      *ports_fdc;
 Module     *module;
 Memory     *memory;
 CTC        *ctc;
+CTC        *ctc2;
 PIO        *pio;
 PIO        *pio2;
 Tape       *tape;
@@ -201,11 +221,13 @@ FloppySharedMem *fdc_shmem;
 Ports           *fdc_ports;
 FDC             *fdc_fdc;
 CTC             *fdc_ctc;
+GIDE            *fdc_gide;
 
 
 int   kcemu_ui_scale;
 int   kcemu_ui_debug;
 int   kcemu_ui_fullscreen;
+int   kcemu_ui_display_effect;
 char *kcemu_homedir;
 char *kcemu_datadir;
 char *kcemu_localedir;
@@ -292,7 +314,13 @@ static kc_variant_names_t kc_types[] = {
   },
   { "kc85/4",              4, KC_TYPE_85_4,  KC_VARIANT_NONE,
     N_("    KC 85/4 with 64k RAM, 64k screen memory, 12k system ROM with HC-CAOS 4.2\n"
-       "    and 4k BASIC ROM.\n")
+       "    and 8k BASIC ROM.\n")
+  },
+  { "kc85/5",              5, KC_TYPE_85_5,  KC_VARIANT_NONE,
+    N_("    Inofficial successor of the KC 85/4 with 256k RAM, 64k screen memory,\n"
+       "    16k system ROM with HC-CAOS 4.4, 8k BASIC ROM and 24k User ROM. It is\n"
+       "    intended to be used with a modified D004 floppy device with additional\n"
+       "    hard-disk support.\n")
   },
   { "poly880",             6, KC_TYPE_POLY880, KC_VARIANT_NONE,
     N_("    Polycomputer 880.\n")
@@ -325,6 +353,23 @@ static kc_variant_names_t kc_types[] = {
   { "a5105",               9, KC_TYPE_A5105, KC_VARIANT_A5105_A5105,
     N_("    BIC/A5105, the full system including the floppy device.\n")
   },
+  { "kramer-mc",          -1, KC_TYPE_KRAMERMC, KC_VARIANT_NONE,
+    N_("    Micro-Computer presented in the book \"Praktische Microcomputertechnik\"\n"
+       "    by Manfred Kramer.\n")
+  },
+  { "kramer",             -1, KC_TYPE_KRAMERMC, KC_VARIANT_NONE,
+    ">kramer-mc"
+  },
+  { "mugler-pc",          -1, KC_TYPE_MUGLERPC, KC_VARIANT_NONE,
+    N_("    CP/M based Micro-Computer presented in the magazine \"Funkamateur\"\n"
+       "    by A. Mugler and H. Mathes.\n")
+  },
+  { "mugler",             -1, KC_TYPE_MUGLERPC, KC_VARIANT_NONE,
+    ">mugler-pc"
+  },
+  { "pcm",                -1, KC_TYPE_MUGLERPC, KC_VARIANT_NONE,
+    ">mugler-pc"
+  },
   { NULL,                 -1, KC_TYPE_NONE,  KC_VARIANT_NONE,         NULL },
 };
 
@@ -354,6 +399,7 @@ usage(char *argv0)
 	    "  -2:              run in KC 85/2 mode\n"
 	    "  -3:              run in KC 85/3 mode\n"
 	    "  -4:              run in KC 85/4 mode (default)\n"
+	    "  -5:              run in KC 85/5 mode\n"
 	    "  -7:              run in KC 87 mode\n"
 	    "  -8:              run in LC 80 mode\n"
 	    "  -9:              run in BIC/A5105 mode\n"
@@ -368,6 +414,7 @@ usage(char *argv0)
 	    "  -V --viewlist:   view verbose list of available emulations\n"
 	    "  -H --home:       overwrite setting for home directory\n"
 	    "  -F --fullscreen: start in fullscreen mode (if supported by gui)\n"
+	    "  -E --effects:    enable display effects for scaled screen output\n"
 	    "  -L --license:    show license\n"
 	    "  -W --warranty:   show warranty\n");
 
@@ -997,7 +1044,7 @@ attach_disk(void)
       if (filename != NULL)
 	disk->attach(0, filename);
     }
-  
+
   filename = RC::instance()->get_string("Floppy Disk 2", NULL);
   if (filename != NULL)
     disk->attach(1, filename);
@@ -1009,6 +1056,38 @@ attach_disk(void)
   filename = RC::instance()->get_string("Floppy Disk 4", NULL);
   if (filename != NULL)
     disk->attach(3, filename);
+}
+
+char *
+get_kcemu_datadir(void)
+{
+  char *ptr = getenv("KCEMU_DATADIR");
+  if (ptr)
+    return strdup(ptr);
+
+  if (access("share/KCemu/caos__c0.854", F_OK) == 0)
+    return strdup("share/KCemu");
+
+  if (access("../share/KCemu/caos__c0.854", F_OK) == 0)
+    return strdup("../share/KCemu");
+
+  return strdup(KCEMU_DATADIR);
+}
+
+char *
+get_kcemu_localedir(void)
+{
+  char *ptr = getenv("KCEMU_LOCALEDIR");
+  if (ptr)
+    return strdup(ptr);
+
+  if (access("share/locale/de/LC_MESSAGES/KCemu.mo", F_OK) == 0)
+    return strdup("share/locale");
+
+  if (access("../share/locale/de/LC_MESSAGES/KCemu.mo", F_OK) == 0)
+    return strdup("../share/locale");
+
+  return strdup(KCEMU_LOCALEDIR);
 }
 
 #ifdef HOST_OS_MINGW
@@ -1028,14 +1107,14 @@ close_output(void)
     {
       f = fopen("NUL", "wb");
       if (f == NULL)
-        {
-          f = fopen("KCemu.log", "wb");
-        }
+	{
+	  f = fopen("KCemu.log", "wb");
+	}
     }
 
   if (f == NULL)
     return;
-   
+
   *stdout = *f;
   *stderr = *f;
 }
@@ -1079,10 +1158,6 @@ main(int argc, char **argv)
   PortGroup *portg = NULL;
   LOG *log;
 
-#ifdef HOST_OS_MINGW
-  close_output();
-#endif /* HOST_OS_MINGW */
-
 #ifdef __CALL_MTRACE
   /*
    *  memory debugging with glibc goes like this:
@@ -1111,10 +1186,9 @@ main(int argc, char **argv)
   kcemu_ui_scale = 0;
   kcemu_ui_debug = -1;
   kcemu_ui_fullscreen = 0;
-  ptr = getenv("KCEMU_DATADIR");
-  kcemu_datadir = (ptr) ? strdup(ptr) : strdup(KCEMU_DATADIR);
-  ptr = getenv("KCEMU_LOCALEDIR");
-  kcemu_localedir = (ptr) ? strdup(ptr) : strdup(KCEMU_LOCALEDIR);
+  kcemu_ui_display_effect = -1;
+  kcemu_datadir = get_kcemu_datadir();
+  kcemu_localedir = get_kcemu_localedir();
   ptr = getenv("HOME");
   kcemu_homedir = (ptr) ? strdup(ptr) : NULL;
 
@@ -1133,11 +1207,11 @@ main(int argc, char **argv)
   while (1)
     {
 #ifdef HAVE_GETOPT_LONG
-      c = getopt_long(argc, argv, "012346789hvDe:d:f:l:s:t:H:M:FLWV",
-                      long_options, &option_index);
+      c = getopt_long(argc, argv, "0123456789hvDEe:d:f:l:s:t:H:M:FLWV",
+		      long_options, &option_index);
 #else
 #ifdef HAVE_GETOPT
-      c = getopt(argc, argv, "012346789hvDe:d:f:l:s:H:M:FLWV");
+      c = getopt(argc, argv, "0123456789hvDEe:d:f:l:s:H:M:FLWV");
 #else
 #warning neither HAVE_GETOPT_LONG nor HAVE_GETOPT defined
 #warning commandline parsing disabled!
@@ -1149,28 +1223,31 @@ main(int argc, char **argv)
 	break;
 
       switch (c)
-        {
+	{
 	case '0':
 	  type = 0;
 	  break;
 	case '1':
 	  type = 1;
 	  break;
-        case '2':
-          type = 2;
-          break;
-        case '3':
-          type = 3;
-          break;
-        case '4':
-          type = 4;
-          break;
+	case '2':
+	  type = 2;
+	  break;
+	case '3':
+	  type = 3;
+	  break;
+	case '4':
+	  type = 4;
+	  break;
+	case '5':
+	  type = 5;
+	  break;
 	case '6':
 	  type = 6;
 	  break;
-        case '7':
-          type = 7;
-          break;
+	case '7':
+	  type = 7;
+	  break;
 	case '8':
 	  type = 8;
 	  break;
@@ -1180,14 +1257,14 @@ main(int argc, char **argv)
 	case '9':
 	  type = 9;
 	  break;
-        case 'd':
-          free(kcemu_datadir);
-          kcemu_datadir = strdup(optarg);
-          break;
-        case 'l':
-          free(kcemu_localedir);
-          kcemu_localedir = strdup(optarg);
-          break;
+	case 'd':
+	  free(kcemu_datadir);
+	  kcemu_datadir = strdup(optarg);
+	  break;
+	case 'l':
+	  free(kcemu_localedir);
+	  kcemu_localedir = strdup(optarg);
+	  break;
 	case 's':
 	  kcemu_ui_scale = strtoul(optarg, NULL, 0);
 	  break;
@@ -1196,6 +1273,9 @@ main(int argc, char **argv)
 	  break;
 	case 'f':
 	  kcemu_disk = strdup(optarg);
+	  break;
+	case 'E':
+	  kcemu_ui_display_effect = 1;
 	  break;
 	case 'F':
 	  kcemu_ui_fullscreen = 1;
@@ -1223,21 +1303,18 @@ main(int argc, char **argv)
 	case 'V':
 	  show_variants(argv[0]);
 	  break;
-        case ':':
-        case '?':
-        case 'h':
-        default:
-          usage(argv[0]);
-          break;
-        }
+	case ':':
+	case '?':
+	case 'h':
+	default:
+	  usage(argv[0]);
+	  break;
+	}
     }
 
-#ifdef MEMORY_SLOW_ACCESS
-  cout << "DEBUG: MEMORY_SLOW_ACCESS" << endl;
-#endif /* MEMORY_SLOW_ACCESS */
-#ifdef PROFILE_WINDOW
-  cout << "DEBUG: PROFILE_WINDOW" << endl;
-#endif /* PROFILE_WINDOW */
+#ifdef HOST_OS_MINGW
+  close_output();
+#endif /* HOST_OS_MINGW */
 
   RC::init();
 
@@ -1248,11 +1325,22 @@ main(int argc, char **argv)
    */
   if (kcemu_ui_scale == 0)
     kcemu_ui_scale = RC::instance()->get_int("Display Scale", 1);
-  
+
   if (kcemu_ui_scale < 1)
     kcemu_ui_scale = 1;
   if (kcemu_ui_scale > 3)
     kcemu_ui_scale = 3;
+
+  /*
+   *  check display effect
+   */
+  if (kcemu_ui_display_effect < 0)
+    kcemu_ui_display_effect = RC::instance()->get_int("Display Effect", 0);
+
+  if (kcemu_ui_display_effect < 0)
+    kcemu_ui_display_effect = 0;
+  if (kcemu_ui_display_effect > 1)
+    kcemu_ui_display_effect = 1;
 
   /*
    *  check display debug
@@ -1281,6 +1369,8 @@ main(int argc, char **argv)
       Keyboard0 *k0;
       Keyboard1 *k1;
       Keyboard8 *k8;
+      KeyboardKramerMC *k_kramer;
+      KeyboardMuglerPC *k_mugler;
 
       timer = NULL;
       memory = NULL;
@@ -1289,6 +1379,8 @@ main(int argc, char **argv)
       vis = NULL;
       svg = NULL;
       poly880 = NULL;
+      pio = pio2 = NULL;
+      ctc = ctc2 = NULL;
 
       switch (kcemu_kc_type)
 	{
@@ -1320,7 +1412,7 @@ main(int argc, char **argv)
 	case KC_TYPE_85_2:
 	  memory   = new Memory2;
 	  ui       = new UI_3;
-	  
+
 	  ctc      = new CTC3;
 	  tape     = new Tape(364, 729, 1458, 1);
 	  wav      = new WavPlayer(364, 729, 1458);
@@ -1332,7 +1424,7 @@ main(int argc, char **argv)
 	case KC_TYPE_85_3:
 	  memory   = new Memory3;
 	  ui       = new UI_3;
-	  
+
 	  p3       = new PIO3;
 	  ctc      = new CTC3;
 	  tape     = new Tape(364, 729, 1458, 1);
@@ -1342,6 +1434,7 @@ main(int argc, char **argv)
 	  pio = p3;
 	  break;
 	case KC_TYPE_85_4:
+	case KC_TYPE_85_5:
 	  memory   = new Memory4;
 	  ui       = new UI_4;
 	  porti    = new Ports4;
@@ -1380,7 +1473,7 @@ main(int argc, char **argv)
 	  tape     = new Tape(500, 1000, 2000, 0);
 	  wav      = new WavPlayer(500, 1000, 2000);
 	  pio      = p0;
-          keyboard = k0;
+	  keyboard = k0;
 	  tape->set_tape_callback(p0);
 	  pio->register_callback_B_in(k0);
 	  pio->register_callback_B_out(k0);
@@ -1407,13 +1500,39 @@ main(int argc, char **argv)
 	  keyboard = new Keyboard6;
 	  poly880  = new Poly880;
 	  pio->register_callback_B_in((Keyboard6 *)keyboard);
+	  break;
+	case KC_TYPE_KRAMERMC:
+	  ui       = new UI_KramerMC;
+	  pio      = new PIOKramerMC;
+	  memory   = new MemoryKramerMC;
+	  k_kramer = new KeyboardKramerMC;
+	  tape     = new Tape(500, 1000, 2000, 0); // FIXME: 
+	  keyboard = k_kramer;
+	  pio->register_callback_A_out(k_kramer);
+	  pio->register_callback_B_in(k_kramer);
+	  break;
+	case KC_TYPE_MUGLERPC:
+	  ui       = new UI_MuglerPC;
+	  pio      = new PIOMuglerPCSystem;
+	  pio2     = new PIOMuglerPCUser;
+	  ctc      = new CTCMuglerPCSystem;
+	  ctc2     = new CTCMuglerPCUser;
+	  porti    = new PortsMuglerPC;
+	  memory   = new MemoryMuglerPC;
+	  k_mugler = new KeyboardMuglerPC;
+	  tape     = new Tape(500, 1000, 2000, 0); // FIXME:
+	  keyboard = k_mugler;
+	  pio->register_callback_A_in(k_mugler);
+	  break;
 	default:
+	  DBG(0, form("KCemu/internal_error",
+		      "KCemu: setup with undefined system type\n"));
 	  break;
 	}
 
       module      = new Module;
       module_list = new ModuleList;
-      
+
       switch (kcemu_kc_type)
 	{
 	case KC_TYPE_87:
@@ -1423,15 +1542,15 @@ main(int argc, char **argv)
 	  portg = ports->register_ports("CTC",  0x80, 4, ctc,  10);
 	  portg = ports->register_ports("PIO1", 0x88, 4, pio,  10);
 	  portg = ports->register_ports("PIO2", 0x90, 4, pio2, 10);
-          /*
+	  /*
            *  build interrupt daisy chain
            */
 	  ctc->next(pio->get_first());
 	  pio->next(pio2->get_first());
-          pio2->next(0);
-          ctc->iei(1);
-          z80->daisy_chain_set_first(pio->get_first()); // highest priority
-          z80->daisy_chain_set_last(pio->get_last());  // lowest priority
+	  pio2->next(0);
+	  ctc->iei(1);
+	  z80->daisy_chain_set_first(pio->get_first()); // highest priority
+	  z80->daisy_chain_set_last(pio->get_last());  // lowest priority
 	  break;
 	case KC_TYPE_85_2:
 	case KC_TYPE_85_3:
@@ -1443,16 +1562,17 @@ main(int argc, char **argv)
 	  portg = ports->register_ports("Module", 0x80, 1, module, 10);
 	  portg = ports->register_ports("PIO",    0x88, 4, pio,    10);
 	  portg = ports->register_ports("CTC",    0x8c, 4, ctc,    10);
-          /*
+	  /*
            *  build interrupt daisy chain
            */
-          ctc->next(pio->get_first());
-          pio->next(0);
-          ctc->iei(1);
-          z80->daisy_chain_set_first(ctc->get_first()); // highest priority
-          z80->daisy_chain_set_last(ctc->get_last());  // lowest priority
+	  ctc->next(pio->get_first());
+	  pio->next(0);
+	  ctc->iei(1);
+	  z80->daisy_chain_set_first(ctc->get_first()); // highest priority
+	  z80->daisy_chain_set_last(ctc->get_last());  // lowest priority
 	  break;
 	case KC_TYPE_85_4:
+	case KC_TYPE_85_5:
 	  timer = new Timer3;
 	  sound = new Sound3;
 	  if (RC::instance()->get_int("Enable Sound"))
@@ -1463,14 +1583,14 @@ main(int argc, char **argv)
 	  portg = ports->register_ports("Port86", 0x86, 1, porti,  10);
 	  portg = ports->register_ports("PIO",    0x88, 4, pio,    10);
 	  portg = ports->register_ports("CTC",    0x8c, 4, ctc,    10);
-          /*
+	  /*
            *  build interrupt daisy chain
            */
-          ctc->next(pio->get_first());
-          pio->next(0);
-          ctc->iei(1);
-          z80->daisy_chain_set_first(ctc->get_first()); // highest priority
-          z80->daisy_chain_set_last(ctc->get_last());  // lowest priority
+	  ctc->next(pio->get_first());
+	  pio->next(0);
+	  ctc->iei(1);
+	  z80->daisy_chain_set_first(ctc->get_first()); // highest priority
+	  z80->daisy_chain_set_last(ctc->get_last());  // lowest priority
 	  break;
 	case KC_TYPE_LC80:
 	  sound = new Sound8;
@@ -1480,25 +1600,25 @@ main(int argc, char **argv)
 	  portg = ports->register_ports("CTC",  0xec, 4, ctc,  10);
 	  portg = ports->register_ports("PIO1", 0xf4, 4, pio,  10);
 	  portg = ports->register_ports("PIO2", 0xf8, 4, pio2, 10);
-          /*
+	  /*
            *  build interrupt daisy chain
            */
 	  ctc->next(pio->get_first());
 	  pio->next(pio2->get_first());
-          pio2->next(0);
-          ctc->iei(1);
-          z80->daisy_chain_set_first(pio->get_first()); // highest priority
-          z80->daisy_chain_set_last(pio->get_last());  // lowest priority
+	  pio2->next(0);
+	  ctc->iei(1);
+	  z80->daisy_chain_set_first(pio->get_first()); // highest priority
+	  z80->daisy_chain_set_last(pio->get_last());  // lowest priority
 	  break;
 	case KC_TYPE_Z1013:
 	  portg = ports->register_ports("PIO",    0x00, 4, pio,   10);
 	  portg = ports->register_ports("Port08", 0x08, 1, porti, 10);
-          /*
+	  /*
            *  build interrupt daisy chain
            */
-          pio->next(0);
-          z80->daisy_chain_set_first(pio->get_first()); // highest priority
-          z80->daisy_chain_set_last(pio->get_last());  // lowest priority
+	  pio->next(0);
+	  z80->daisy_chain_set_first(pio->get_first()); // highest priority
+	  z80->daisy_chain_set_last(pio->get_last());  // lowest priority
 	  break;
 	case KC_TYPE_A5105:
 	  gdc = new GDC;
@@ -1524,10 +1644,22 @@ main(int argc, char **argv)
 	  portg = ports->register_ports("CTC",    0x88, 4, ctc,   10);
 	  portg = ports->register_ports("PortFC", 0xfc, 1, porti, 10);
 	  break;
+	case KC_TYPE_KRAMERMC:
+	  portg = ports->register_ports("PIO",    0xfc, 4, pio,   10);
+	  break;
+	case KC_TYPE_MUGLERPC:
+	  portg = ports->register_ports("CTC (system)", 0x80, 4, ctc,   10);
+	  portg = ports->register_ports("PIO (system)", 0x84, 4, pio,   10);
+	  portg = ports->register_ports("CTC (user)",   0x8c, 4, ctc2,  10);
+	  portg = ports->register_ports("PIO (user)",   0x90, 4, pio2,  10);
+	  portg = ports->register_ports("Port 94h",     0x94, 4, porti, 10);
+	  break;
 	default:
+	  DBG(0, form("KCemu/internal_error",
+		      "KCemu: setup with undefined system type\n"));
 	  break;
 	}
-      
+
       if (get_kc_type() & KC_TYPE_85_2_CLASS)
 	if (RC::instance()->get_int("Floppy Disk Basis"))
 	  {
@@ -1538,15 +1670,17 @@ main(int argc, char **argv)
 	    fdc_shmem->set_memory(&fdc_mem[0xfc00]);
 	    fdc_fdc = new FDC4();
 	    fdc_ctc = new CTC_FDC();
-	    
+	    fdc_gide = new GIDE();
+
 	    fdc_ports->register_ports("-", 0, 0x100, new NullPort(), 256);
+	    fdc_ports->register_ports("GIDE", 0, 16, fdc_gide, 10);
 	    fdc_ports->register_ports("FDC", 0xf0, 12, fdc_fdc, 10);
 	    fdc_ports->register_ports("CTC", 0xfc, 4, fdc_ctc, 10);
-	    
+
 	    portg = ports->register_ports("FloppyIO", 0xf4, 1, fdc_io, 10);
 	    portg = ports->register_ports("FloppySHMEM", 0xf0, 4, fdc_shmem, 10);
 	  }
-      
+
       log = new LOG();
       ui->init(&argc, &argv);
       module_list->init();
@@ -1562,13 +1696,13 @@ main(int argc, char **argv)
 
       ui->show();
       do_quit = z80->run();
-      
+
       if (porti != NULL)
 	delete porti;
 
       if (timer != NULL)
 	delete timer;
-      
+
       delete module_list;
       delete module;
       delete keyboard;
@@ -1587,6 +1721,6 @@ main(int argc, char **argv)
 
   free(kcemu_datadir);
   free(kcemu_localedir);
-  
+
   return 0;
 }

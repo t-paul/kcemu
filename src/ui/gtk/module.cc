@@ -35,14 +35,14 @@ class CMD_ui_module_window_toggle : public CMD
 {
 private:
   ModuleWindow *_w;
-  
+
 public:
   CMD_ui_module_window_toggle(ModuleWindow *w) : CMD("ui-module-window-toggle")
     {
       _w = w;
       register_cmd("ui-module-window-toggle");
     }
-  
+
   void execute(CMD_Args *args, CMD_Context context)
     {
       _w->toggle();
@@ -52,11 +52,13 @@ public:
 
 ModuleWindow::ModuleWindow(void)
 {
-  init();
+  _cmd = new CMD_ui_module_window_toggle(this);
+  init2(); // FIXME: can't use delayed init()
 }
 
 ModuleWindow::~ModuleWindow(void)
 {
+  delete _cmd;
 }
 
 void
@@ -103,7 +105,7 @@ ModuleWindow::create_menu(int slot)
       menuitem = gtk_radio_menu_item_new_with_label(group, (*it)->get_name());
       gtk_object_set_user_data(GTK_OBJECT(menuitem), (*it));
       gtk_signal_connect(GTK_OBJECT(menuitem), "activate",
-                         GTK_SIGNAL_FUNC(sf_activate), (gpointer)slot);
+			 GTK_SIGNAL_FUNC(sf_activate), (gpointer)slot);
       group = gtk_radio_menu_item_group(GTK_RADIO_MENU_ITEM(menuitem));
       gtk_menu_append(GTK_MENU(menu), menuitem);
       gtk_widget_show(menuitem);
@@ -126,7 +128,7 @@ ModuleWindow::init_device(const char *name, int base, int active_slots)
   _w.frame[a] = gtk_frame_new(name);
   gtk_box_pack_start(GTK_BOX(_w.vbox), _w.frame[a], FALSE, FALSE, 0);
   gtk_widget_show(_w.frame[a]);
-  
+
   /*
    *  table
    */
@@ -137,7 +139,7 @@ ModuleWindow::init_device(const char *name, int base, int active_slots)
   gtk_table_set_col_spacing(GTK_TABLE(_w.table[a]), 2, 16);
   gtk_container_add(GTK_CONTAINER(_w.frame[a]), _w.table[a]);
   gtk_widget_show(_w.table[a]);
-      
+
   for (b = 0;b < 4;b++)
     {
       /*
@@ -147,12 +149,12 @@ ModuleWindow::init_device(const char *name, int base, int active_slots)
        */
       if ((active_slots & (1 << b)) == 0)
 	continue;
-      
+
       c = b ^ 3;
       slot = 16 * a + 4 * b;
       idx = slot / 4 - 2;
       sprintf(buf, "%X", 4 * b);
-      
+
       _w.l[idx] = gtk_label_new(buf);
       gtk_misc_set_alignment(GTK_MISC(_w.l[idx]), 0, 0.5);
       gtk_table_attach(GTK_TABLE(_w.table[a]), _w.l[idx],
@@ -161,7 +163,7 @@ ModuleWindow::init_device(const char *name, int base, int active_slots)
 		       GTK_FILL, GTK_FILL,
 		       0, 0);
       gtk_widget_show(_w.l[idx]);
-      
+
       _w.m[idx] = gtk_option_menu_new();
       gtk_option_menu_set_menu(GTK_OPTION_MENU(_w.m[idx]),
 			       create_menu(idx));
@@ -171,7 +173,7 @@ ModuleWindow::init_device(const char *name, int base, int active_slots)
 		       (GtkAttachOptions)(GTK_EXPAND | GTK_FILL), GTK_FILL,
 		       0, 0);
       gtk_widget_show(_w.m[idx]);
-      
+
       _w.led[idx] = gtk_led_line_new(1);
       gtk_table_attach(GTK_TABLE(_w.table[a]), _w.led[idx],
 		       3 * (c & 1) + 2, 3 * (c & 1) + 3,
@@ -195,7 +197,7 @@ ModuleWindow::init_device_1(const char *name, int nr_of_slots)
   _w.frame[0] = gtk_frame_new(name);
   gtk_box_pack_start(GTK_BOX(_w.vbox), _w.frame[0], FALSE, FALSE, 0);
   gtk_widget_show(_w.frame[0]);
-  
+
   /*
    *  table
    */
@@ -249,10 +251,11 @@ ModuleWindow::init_device_1(const char *name, int nr_of_slots)
       if (get_kc_type() == KC_TYPE_87)
 	if (get_kc_variant() != KC_VARIANT_87_10)
 	  color_expansion_active = true;
-      
+
       _w.color_exp = gtk_check_button_new_with_label(_("IRM Color Expansion"));
-      gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(_w.color_exp), color_expansion_active);
-      
+      gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(_w.color_exp),
+				   color_expansion_active);
+
       gtk_table_attach(GTK_TABLE(_w.table[0]), _w.color_exp,
 		       1, 2,
 		       4, 5,
@@ -266,6 +269,15 @@ ModuleWindow::init_device_1(const char *name, int nr_of_slots)
 
 void
 ModuleWindow::init(void)
+{
+  /*
+   *  can't use delayed init, need to fix the insert() and
+   *  activate() methods for this
+   */
+}
+
+void
+ModuleWindow::init2(void)
 {
   int a;
   char buf[100];
@@ -282,8 +294,8 @@ ModuleWindow::init(void)
   gtk_window_set_title(GTK_WINDOW(_window), _("KCemu: Module"));
   gtk_window_position(GTK_WINDOW(_window), GTK_WIN_POS_MOUSE);
   gtk_signal_connect(GTK_OBJECT(_window), "delete_event",
-                     GTK_SIGNAL_FUNC(cmd_exec_sft),
-                     (char *)"ui-module-window-toggle"); // FIXME:
+		     GTK_SIGNAL_FUNC(cmd_exec_sft),
+		     (char *)"ui-module-window-toggle"); // FIXME:
 
   /*
    *  vbox
@@ -317,7 +329,7 @@ ModuleWindow::init(void)
   gtk_box_pack_start(GTK_BOX(_w.vbox), _w.separator,
 		     FALSE, FALSE, 5);
   gtk_widget_show(_w.separator);
-  
+
   /*
    *  close button
    */
@@ -325,14 +337,11 @@ ModuleWindow::init(void)
   gtk_box_pack_start(GTK_BOX(_w.vbox), _w.close,
 		     FALSE, FALSE, 5);
   gtk_signal_connect(GTK_OBJECT(_w.close), "clicked",
-                     GTK_SIGNAL_FUNC(cmd_exec_sf),
-                     (gpointer)"ui-module-window-toggle");
+		     GTK_SIGNAL_FUNC(cmd_exec_sf),
+		     (gpointer)"ui-module-window-toggle");
   GTK_WIDGET_SET_FLAGS(_w.close, GTK_CAN_DEFAULT);
   gtk_widget_grab_default(_w.close);
   gtk_widget_show(_w.close);
-  
-  CMD *cmd;
-  cmd = new CMD_ui_module_window_toggle(this);
 }
 
 /*
@@ -345,7 +354,7 @@ ModuleWindow::insert(int slot, ModuleInterface *m)
   GSList *e;
   GtkObject *o;
   ModuleInterface *m2;
-  
+
   e = _w.g[slot];
   /*
    *  FIXME: This depends on the fact that the GSList used for
@@ -358,10 +367,10 @@ ModuleWindow::insert(int slot, ModuleInterface *m)
       o = GTK_OBJECT(e->data);
       m2 = ((ModuleListEntry *)gtk_object_get_user_data(o))->get_mod();
       if (m2 == m)
-        {
-          gtk_option_menu_set_history(GTK_OPTION_MENU(_w.m[slot]), a);
-          return;
-        }
+	{
+	  gtk_option_menu_set_history(GTK_OPTION_MENU(_w.m[slot]), a);
+	  return;
+	}
       a--;
       e = e->next;
     }

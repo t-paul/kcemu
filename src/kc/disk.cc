@@ -19,6 +19,8 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
+#include <unistd.h>
+
 #include "kc/system.h"
 
 #include "kc/rc.h"
@@ -157,6 +159,45 @@ Disk::~Disk()
   delete _cmd;
 }
 
+bool
+Disk::create_disk_file(FILE *f)
+{
+  for (int c = 0;c < 80;c++)
+    for (int h = 0;h < 2;h++)
+      for (int s = 1;s < 6;s++)
+	if (!write_sector(f, c, h, s))
+	  return false;
+
+  return true;
+}
+
+bool
+Disk::write_sector(FILE *f, int c, int h, int s)
+{
+  if (fputc(c, f) == EOF) // acyl
+    return false;
+  if (fputc(h, f) == EOF) // asid
+    return false;
+  if (fputc(c, f) == EOF) // lcyl
+    return false;
+  if (fputc(h, f) == EOF) // lsid
+    return false;
+  if (fputc(s, f) == EOF) // lsec
+    return false;
+  if (fputc(3, f) == EOF) // llen
+    return false;
+  if (fputc(0, f) == EOF) // count low
+    return false;
+  if (fputc(4, f) == EOF) // count high
+    return false;
+
+  for (int a = 0;a < 1024;a++)
+    if (fputc(0xe5, f) == EOF)
+      return false;
+
+  return true;
+}
+
 disk_error_t
 Disk::attach(int disk_no, const char *filename, bool create)
 {
@@ -174,35 +215,52 @@ Disk::attach(int disk_no, const char *filename, bool create)
   if (create)
     {
       DBG(1, form("KCemu/Disk/attach",
-                  "Disk::attach(): [disk %d] create (%s)\n",
-                  disk_no, filename));
+		  "Disk::attach(): [disk %d] create (%s)\n",
+		  disk_no, filename));
+
+      FILE *f = fopen(filename, "wb");
+      if (f == NULL)
+	return DISK_ERROR;
+
+      bool create_ok = create_disk_file(f);
+      fclose(f);
+
+      if (!create_ok)
+	return DISK_ERROR;
     }
-  else
+
+  DBG(1, form("KCemu/Disk/attach",
+	      "Disk::attach(): [disk %d] open (%s)\n",
+	      disk_no, filename));
+
+  Floppy *floppy = fdc_fdc->get_floppy(disk_no);
+  if (floppy != NULL)
     {
-      DBG(1, form("KCemu/Disk/attach",
-                  "Disk::attach(): [disk %d] open (%s)\n",
-                  disk_no, filename));
-
-      Floppy *floppy = fdc_fdc->get_floppy(disk_no);
-      if (floppy != NULL)
+      if (access(filename, R_OK) == 0)
 	{
-	  if (*filename == '/')
-	    {
-	      ptr = strdup(filename);
-	    }
-	  else
-	    {
-	      ptr = (char *)malloc(strlen(kcemu_datadir) + strlen(filename) + 2);
-	      strcpy(ptr, kcemu_datadir);
-	      strcat(ptr, "/");
-	      strcat(ptr, filename);
-	    }
+	  ptr = strdup(filename);
+	}
+      else
+	{
+	  ptr = (char *)malloc(strlen(kcemu_datadir) + strlen(filename) + 5);
+	  strcpy(ptr, kcemu_datadir);
+	  strcat(ptr, "/");
+	  strcat(ptr, filename);
+	  if (access(ptr, R_OK) != 0)
+	    strcat(ptr, ".gz");
+	}
 
+      if (access(ptr, R_OK) == 0)
+	{
 	  if (!floppy->attach(ptr))
 	    ret = DISK_ERROR;
-
-	  free(ptr);
 	}
+      else
+	{
+	  ret = DISK_NOENT;
+	}
+
+      free(ptr);
     }
 
   CMD_Args *args = new CMD_Args();

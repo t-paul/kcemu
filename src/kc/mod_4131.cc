@@ -270,3 +270,8 @@ ModuleXY4131::clone(void)
 {
   return new ModuleXY4131(*this);
 }
+
+void
+ModuleXY4131::reset(bool power_on)
+{
+}

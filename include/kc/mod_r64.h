@@ -41,6 +41,7 @@ class ModuleRAM64 : public ModuleInterface, public PortInterface
    *  ModuleInterface
    */
   virtual ModuleInterface * clone(void);
+  virtual void reset(bool power_on = false);
   virtual void m_out(word_t addr, byte_t val);
   virtual void in_out(word_t addr);
 

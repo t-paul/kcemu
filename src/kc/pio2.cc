@@ -103,28 +103,28 @@ PIO2::change_A(byte_t changed, byte_t val)
       DBG(2, form("KCemu/PIO/2/change/A",
                   "PIO A: CAOS ROM E [%d]\n",
                   (val & 1)));
-      //memory->enableCAOS_E(val & 0x01);
+      memory->enableCAOS(val & 0x01);
     }
   if (changed & 0x02)
     {
       DBG(2, form("KCemu/PIO/2/change/A",
                   "PIO A: RAM 0 [%d]\n",
                   ((val >> 1) & 1)));
-      //memory->enableRAM_0(val & 0x02);
+      memory->enableRAM(val & 0x02);
     }
   if (changed & 0x04)
     {
       DBG(2, form("KCemu/PIO/2/change/A",
                   "PIO A: IRM [%d]\n",
                   ((val >> 2) & 1)));
-      //memory->enableIRM(val & 0x04);
+      memory->enableIRM(val & 0x04);
     }
   if (changed & 0x08)
     {
       DBG(2, form("KCemu/PIO/2/change/A",
                   "PIO A: write protect RAM 0 [%d]\n",
                   ((val >> 3) & 1)));
-      //memory->protectRAM_0(val & 0x08);
+      memory->protectRAM(val & 0x08);
     }
   if (changed & 0x10)
     {
@@ -145,13 +145,6 @@ PIO2::change_A(byte_t changed, byte_t val)
 		   ((val >> 6) & 1)));
        tape->power((val >> 6) & 1);
      }
-  if (changed & 0x80)
-    {
-      DBG(2, form("KCemu/PIO/2/change/A",
-                  "PIO A: ROM C (BASIC) [%d]\n",
-                  ((val >> 7) & 1)));
-      //memory->enableBASIC_C(val & 0x80);
-    }
 }
 
 void PIO2::change_B(byte_t changed, byte_t val)

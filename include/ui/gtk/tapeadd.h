@@ -53,6 +53,8 @@ class TapeAddWindow : public UI_Gtk_Window, public CMD
   static void ok(GtkWidget *widget, gpointer *data);
   static void cancel(GtkWidget *widget, gpointer *data);
 
+  void init(void);
+
  public:
   TapeAddWindow(void);
   ~TapeAddWindow(void);

@@ -27,61 +27,55 @@
 
 class Memory4 : public Memory
 {
-private:
-  byte_t _ram_0[0x4000];
-  byte_t _ram_4[0x4000];
-  byte_t _ram_8a[0x4000];
-  byte_t _ram_8b[0x4000];
+ protected:
+  byte_t *_ram;
+  int _ram_size;
 
-  byte_t _rom_caosc[0x1000];
-  byte_t _rom_caose[0x2000];
-  byte_t _rom_basic[0x2000];
+  byte_t *_rom_caosc;
+  byte_t *_rom_caose;
+  byte_t *_rom_basic;
 
   byte_t _irm0[0x8000];
   byte_t _irm1[0x8000];
 
+  byte_t _block_ram_8;
+
   bool _caos_c;
   bool _caos_e;
   bool _enable_irm;
-  bool _access_ram_8_1;
   bool _access_color;
   bool _access_screen1;
   bool _display_screen1;
 
-  MemAreaGroup *_m_scr;     /* scratch memory */
-  MemAreaGroup *_m_caos_c;  /* CAOS  c000h - cfffh */
-  MemAreaGroup *_m_caos_e;  /* CAOS  e000h - ffffh */
-  MemAreaGroup *_m_basic;   /* BASIC c000h - dfffh */
-  MemAreaGroup *_m_ram_0;   /* RAM   0000h - 3fffh */
-  MemAreaGroup *_m_ram_4;   /* RAM   4000h - 7fffh */
-  MemAreaGroup *_m_ram_8a;  /* RAM   8000h - bfffh (page 0) */
-  MemAreaGroup *_m_ram_8b;  /* RAM   8000h - bfffh (page 1) */
-  MemAreaGroup *_m_irm_x0;  /* IRM   a800h - bfffh (shared) */
-  MemAreaGroup *_m_irm_x1;  /* IRM   a800h - bfffh (available on CAOS-C on, CAOS-E off) */
-  MemAreaGroup *_m_irm_0p;  /* IRM   8000h - a7ffh (screen 0/ pixel) */
-  MemAreaGroup *_m_irm_0c;  /* IRM   8000h - a7ffh (screen 0/ color) */
-  MemAreaGroup *_m_irm_1p;  /* IRM   8000h - a7ffh (screen 1/ pixel) */
-  MemAreaGroup *_m_irm_1c;  /* IRM   8000h - a7ffh (screen 1/ color) */
+  MemAreaGroup *_m_scr;       /* scratch memory */
+  MemAreaGroup *_m_caos_c;    /* CAOS  c000h - dfffh */
+  MemAreaGroup *_m_caos_e;    /* CAOS  e000h - ffffh */
+  MemAreaGroup *_m_basic;     /* BASIC c000h - dfffh */
+  MemAreaGroup *_m_ram_0;     /* RAM   0000h - 3fffh */
+  MemAreaGroup *_m_ram_4;     /* RAM   4000h - 7fffh */
+  MemAreaGroup *_m_ram_8[16]; /* RAM   8000h - bfffh (pages 0-15) */
+  MemAreaGroup *_m_irm_0p;    /* IRM   8000h - a7ffh (screen 0/ pixel) */
+  MemAreaGroup *_m_irm_0c;    /* IRM   8000h - a7ffh (screen 0/ color) */
+  MemAreaGroup *_m_irm_1p;    /* IRM   8000h - a7ffh (screen 1/ pixel) */
+  MemAreaGroup *_m_irm_1c;    /* IRM   8000h - a7ffh (screen 1/ color) */
+  MemAreaGroup *_m_irm_0px;   /* IRM   a800h - bfffh (screen 0 / pixel - shared) */
+  MemAreaGroup *_m_irm_0cx;   /* IRM   a800h - bfffh (screen 0 / color - when CAOS-C on, CAOS-E off) */
+  MemAreaGroup *_m_irm_1px;   /* IRM   a800h - bfffh (screen 1 / pixel - when CAOS-C on, CAOS-E off) */
+  MemAreaGroup *_m_irm_1cx;   /* IRM   a800h - bfffh (screen 1 / color - when CAOS-C on, CAOS-E off) */
 
-public:
+ protected:
+  virtual void init_4(void);
+  virtual void init_5(void);
+  virtual void configureRAM_8(void);
+  virtual void configureIRM(void);
+
+ public:
   Memory4(void);
   ~Memory4(void);
   void dumpCore(void);
 
-#ifndef MEMORY_SLOW_ACCESS
-  inline byte_t memRead8(word_t addr)
-    {
-      return _memrptr[addr >> MemArea::PAGE_SHIFT][addr & MemArea::PAGE_MASK];
-    }
-  
-  inline void memWrite8(word_t addr, byte_t val)
-    {
-      _memwptr[addr >> MemArea::PAGE_SHIFT][addr & MemArea::PAGE_MASK] = val;
-    }  
-#else /* MEMORY_SLOW_ACCESS */
   byte_t memRead8(word_t addr);
   void memWrite8(word_t addr, byte_t val);
-#endif /* MEMORY_SLOW_ACCESS */
   
   byte_t * get_irm(void);
   byte_t * get_char_rom(void);
@@ -89,13 +83,14 @@ public:
   void enableRAM_0(int v);
   void enableRAM_4(int v);
   void enableRAM_8(int v);
-  void enableRAM_8_1(int v);
   void enableCAOS_C(int v);
   void enableCAOS_E(int v);
   void enableBASIC_C(int v);
   void enableIRM(int v);
   void enableCOLOR(int v);
   void enableSCREEN_1(int v);
+
+  void selectRAM_8(int segment);
 
   void displaySCREEN_1(int v);
   
