@@ -1,8 +1,8 @@
 /*
  *  KCemu -- the KC 85/3 and KC 85/4 Emulator
- *  Copyright (C) 1997-1998 Torsten Paul
+ *  Copyright (C) 1997-2001 Torsten Paul
  *
- *  $Id: debug.cc,v 1.9 2001/01/05 18:26:29 tp Exp $
+ *  $Id: debug.cc,v 1.11 2001/04/29 22:01:49 tp Exp $
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -53,18 +53,51 @@ public:
     }
 };
 
-static int
-do_goto(char *str, long *val)
+class CMD_single_step_executed : public CMD
 {
+private:
+  DebugWindow *_w;
+
+public:
+  CMD_single_step_executed(DebugWindow *w) : CMD("single-step-executed")
+    {
+      _w = w;
+      register_cmd("single-step-executed");
+    }
+  
+  void execute(CMD_Args *args, CMD_Context context)
+    {
+      _w->do_goto(z80->getPC());
+    }
+};
+
+void
+DebugWindow::do_goto(int addr)
+{
+  _op->go_to(this, addr);
+  _op->update(this);
+  (new debug_op_reg())->update(this);
+}
+
+void
+DebugWindow::do_goto(char *str)
+{
+  long val;
   char *endptr;
 
-  if (str == NULL) return 0;
-  *val = strtol(str, &endptr, 16);
-  if ((*str != '\0') && (*endptr == '\0'))
-    if ((*val >= 0) && (*val <= 0xffff))
-      return 1;
-  *val = 0;
-  return 0;
+  if (str != NULL)
+    {
+      val = strtol(str, &endptr, 16);
+      if ((*str != '\0') && (*endptr == '\0'))
+	if ((val >= 0) && (val <= 0xffff))
+	  {
+	    do_goto(val);
+	    return;
+	  }
+    }
+
+  gdk_beep();
+  gtk_entry_select_region(GTK_ENTRY(_w.op), 0, -1);
 }
 
 gint
@@ -113,14 +146,7 @@ DebugWindow::key_press_func(GtkWidget *widget, GdkEventKey *event,
         {
         case GDK_Return: case GDK_KP_Enter:
           if (!GTK_WIDGET_VISIBLE(self->_w.op)) break;
-          clear_op = do_goto(gtk_entry_get_text(GTK_ENTRY(self->_w.op)), &val);
-          if (clear_op)
-            self->_op->go_to(self, val);
-          else
-            {
-              gdk_beep();
-              gtk_entry_select_region(GTK_ENTRY(self->_w.op), 0, -1);
-            }
+          self->do_goto(gtk_entry_get_text(GTK_ENTRY(self->_w.op)));
           break;
         case GDK_Escape:
           cerr.form("<esc>\n");
@@ -173,12 +199,14 @@ DebugWindow::DebugWindow(void)
 
   _minibuffer_active = false;
 
-  _cmd = new CMD_debug_window_toggle(this);
+  _cmd1 = new CMD_debug_window_toggle(this);
+  _cmd2 = new CMD_single_step_executed(this);
 }
 
 DebugWindow::~DebugWindow(void)
 {
-  delete _cmd;
+  delete _cmd1;
+  delete _cmd2;
 }
 
 void
@@ -294,6 +322,27 @@ DebugWindow::init(void)
   _w.vbox_reg = gtk_vbox_new(FALSE, 0);
   gtk_container_add(GTK_CONTAINER(_w.frame_reg), _w.vbox_reg);
   gtk_widget_show(_w.vbox_reg);
+
+  _w.trace = gtk_toggle_button_new_with_label(_("Trace"));
+  gtk_box_pack_start(GTK_BOX(_w.vbox), _w.trace, FALSE, TRUE, 0);
+  gtk_signal_connect(GTK_OBJECT(_w.trace), "clicked",
+                     GTK_SIGNAL_FUNC(cmd_exec_sf),
+                     (char *)"z80-trace-toggle"); // FIXME:
+  gtk_widget_show(_w.trace);
+
+  _w.single_step = gtk_toggle_button_new_with_label(_("Single Step"));
+  gtk_box_pack_start(GTK_BOX(_w.vbox), _w.single_step, FALSE, TRUE, 0);
+  gtk_signal_connect(GTK_OBJECT(_w.single_step), "clicked",
+                     GTK_SIGNAL_FUNC(cmd_exec_sf),
+                     (char *)"z80-single-step-toggle"); // FIXME:
+  gtk_widget_show(_w.single_step);
+
+  _w.execute_step = gtk_button_new_with_label(_("Execute Step"));
+  gtk_box_pack_start(GTK_BOX(_w.vbox), _w.execute_step, FALSE, TRUE, 0);
+  gtk_signal_connect(GTK_OBJECT(_w.execute_step), "clicked",
+                     GTK_SIGNAL_FUNC(cmd_exec_sf),
+                     (char *)"z80-execute-step"); // FIXME:
+  gtk_widget_show(_w.execute_step);
 
   /*
     _w.op = gtk_label_new("");

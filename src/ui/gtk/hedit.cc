@@ -1,8 +1,8 @@
 /*
  *  KCemu -- the KC 85/3 and KC 85/4 Emulator
- *  Copyright (C) 1997-1998 Torsten Paul
+ *  Copyright (C) 1997-2001 Torsten Paul
  *
- *  $Id: hedit.cc,v 1.2 2000/07/15 13:26:04 tp Exp $
+ *  $Id: hedit.cc,v 1.3 2001/04/14 15:16:56 tp Exp $
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by

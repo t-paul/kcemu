@@ -25,6 +25,7 @@ libui_gtk_a_SOURCES = \
 	tapeadd.cc	\
 	info.cc		\
 	about.cc	\
+	color.cc	\
 	module.cc	\
 	debug.cc	\
 	copying.cc	\

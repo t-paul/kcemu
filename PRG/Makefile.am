@@ -11,7 +11,7 @@ pkgdata_DATA = \
 EXTRA_DIST = \
 	$(pkgdata_DATA)			\
 	bennion_rbs_0x0200_0x46c0.prg	\
-	boulderdash_0x0400.prg	\
+	boulderdash_0x0400.prg		\
 	boulderdash_0x4000.scr
 
 tape:

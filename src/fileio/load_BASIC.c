@@ -1,8 +1,8 @@
 /*
  *  KCemu -- the KC 85/3 and KC 85/4 Emulator
- *  Copyright (C) 1997-1998 Torsten Paul
+ *  Copyright (C) 1997-2001 Torsten Paul
  *
- *  $Id: load_BASIC.c,v 1.2 2000/07/09 21:09:24 tp Exp $
+ *  $Id: load_BASIC.c,v 1.5 2001/04/14 15:15:50 tp Exp $
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -20,6 +20,7 @@
  */
 
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 
 #include "fileio/loadP.h"
@@ -35,7 +36,7 @@ loader_BASIC_check(const char *filename,
   if (size > 12)
     if ((data[0] == 0xd3) && (data[1] == 0xd3) && (data[2] == 0xd3))
       return 1;
-  
+
   /*
    *  protected BASIC
    */

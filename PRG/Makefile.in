@@ -1,4 +1,4 @@
-# Makefile.in generated automatically by automake 1.4 from Makefile.am
+# Makefile.in generated automatically by automake 1.4-p4 from Makefile.am
 
 # Copyright (C) 1994, 1995-8, 1999 Free Software Foundation, Inc.
 # This Makefile.in is free software; the Free Software Foundation
@@ -99,7 +99,7 @@ TAPENAME = files.kct
 pkgdata_DATA =  	files.kct 	basic.kct 	wordpro.kct
 
 
-EXTRA_DIST =  	$(pkgdata_DATA)				bennion_rbs_0x0200_0x46c0.prg		boulderdash_0x0400.prg		boulderdash_0x4000.scr
+EXTRA_DIST =  	$(pkgdata_DATA)				bennion_rbs_0x0200_0x46c0.prg		boulderdash_0x0400.prg			boulderdash_0x4000.scr
 
 mkinstalldirs = $(SHELL) $(top_srcdir)/mkinstalldirs
 CONFIG_HEADER = ../include/kc/config.h

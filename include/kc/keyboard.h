@@ -1,8 +1,8 @@
 /*
  *  KCemu -- the KC 85/3 and KC 85/4 Emulator
- *  Copyright (C) 1997-1998 Torsten Paul
+ *  Copyright (C) 1997-2001 Torsten Paul
  *
- *  $Id: keyboard.h,v 1.4 2000/05/21 17:33:56 tp Exp $
+ *  $Id: keyboard.h,v 1.6 2001/04/14 15:14:21 tp Exp $
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -24,8 +24,9 @@
 
 #include "kc/kc.h"
 #include "kc/cb.h"
+#include "kc/ic.h"
 
-class Keyboard : public Callback
+class Keyboard : public InterfaceCircuit, public Callback
 {
   public:
     Keyboard(void) : Callback("Keyboard") {}

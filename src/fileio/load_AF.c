@@ -1,8 +1,8 @@
 /*
  *  KCemu -- the KC 85/3 and KC 85/4 Emulator
- *  Copyright (C) 1997-1998 Torsten Paul
+ *  Copyright (C) 1997-2001 Torsten Paul
  *
- *  $Id: load_AF.c,v 1.2 2000/07/09 21:09:23 tp Exp $
+ *  $Id: load_AF.c,v 1.5 2001/04/22 22:24:05 tp Exp $
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -20,6 +20,7 @@
  */
 
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 
 #include "fileio/loadP.h"
@@ -54,6 +55,13 @@ set_type(unsigned char *data, fileio_prop_t *prop)
   if ((data[1] == 0xd3) && (data[2] == 0xd3) && (data[3] == 0xd3))
     {
       prop->type = FILEIO_TYPE_BAS;
+      prop->valid = FILEIO_V_NONE;
+      memcpy(prop->name, data + 4, 8);
+      prop->name[8] = '\0';
+    }
+  else if ((data[1] == 0xd4) && (data[2] == 0xd4) && (data[3] == 0xd4))
+    {
+      prop->type = FILEIO_TYPE_MINTEX;
       prop->valid = FILEIO_V_NONE;
       memcpy(prop->name, data + 4, 8);
       prop->name[8] = '\0';

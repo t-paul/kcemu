@@ -1,8 +1,8 @@
 /*
  *  KCemu -- the KC 85/3 and KC 85/4 Emulator
- *  Copyright (C) 1997-2000 Torsten Paul
+ *  Copyright (C) 1997-2001 Torsten Paul
  *
- *  $Id: pio.h,v 1.9 2001/01/21 23:06:03 tp Exp $
+ *  $Id: pio.h,v 1.11 2001/04/14 15:14:40 tp Exp $
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -137,6 +137,9 @@ class PIO : public InterfaceCircuit, public PortInterface
     virtual byte_t getIRQVectorA(void) { return _irq_vector[A]; }
     virtual byte_t getIRQVectorB(void) { return _irq_vector[B]; }
 
+    /*
+     *  InterfaceCircuit functions
+     */
     virtual void iei(byte_t val);
     virtual void reset(bool power_on = false);
     virtual void reti(void);

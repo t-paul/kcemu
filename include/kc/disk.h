@@ -1,8 +1,8 @@
 /*
  *  KCemu -- the KC 85/3 and KC 85/4 Emulator
- *  Copyright (C) 1997-1998 Torsten Paul
+ *  Copyright (C) 1997-2001 Torsten Paul
  *
- *  $Id: disk.h,v 1.1 2000/07/08 17:50:08 tp Exp $
+ *  $Id: disk.h,v 1.3 2001/04/22 22:25:59 tp Exp $
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -32,6 +32,13 @@ typedef enum
   DISK_ERROR,
 } disk_error_t;
 
+typedef enum {
+  DISK_TYPE_UNKNOWN,
+  DISK_TYPE_22DSK,
+  DISK_TYPE_CDM,
+  DISK_TYPE_KCD,
+} disk_type_t;
+
 class Disk
 {
  public:
@@ -42,6 +49,10 @@ class Disk
 			      const char *filename,
 			      bool create = false);
   virtual disk_error_t detach(int disk_no);
+
+  bool seek(int head, int cylinder, int sector);
+  int read_sector(byte_t *buf, int len);
+  int write_sector(byte_t *buf, int len);
 };
 
 #endif /* __kc_disk_h */

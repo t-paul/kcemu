@@ -1,8 +1,8 @@
 /*
  *  KCemu -- the KC 85/3 and KC 85/4 Emulator
- *  Copyright (C) 1997-1998 Torsten Paul
+ *  Copyright (C) 1997-2001 Torsten Paul
  *
- *  $Id: floppy.cc,v 1.1 2000/05/21 16:54:15 tp Exp $
+ *  $Id: floppy.cc,v 1.3 2001/04/14 15:16:04 tp Exp $
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -162,10 +162,10 @@ class CMD_floppy_attach : public CMD
 private:
   Floppy *_f;
 public:
-  CMD_floppy_attach(Floppy *f) : CMD("kc-floppy-attach")
+  CMD_floppy_attach(Floppy *f) : CMD("floppy-attach")
     {
       _f = f;
-      register_cmd("kc-floppy-attach");
+      register_cmd("floppy-attach");
     }
 
   void execute(CMD_Args *args, CMD_Context context)
@@ -175,7 +175,7 @@ public:
       if (!args)
         return;
 
-      filename = args->get_string_arg("floppy-filename");
+      filename = args->get_string_arg("filename");
       if (!filename)
         return;
 

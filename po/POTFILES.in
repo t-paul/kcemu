@@ -4,6 +4,7 @@ src/kc/mod_list.cc
 src/kc/tape.cc
 src/ui/error.cc
 src/ui/gtk/about.cc
+src/ui/gtk/color.cc
 src/ui/gtk/copying.cc
 src/ui/gtk/debug.cc
 src/ui/gtk/dialog.cc

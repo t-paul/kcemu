@@ -32,12 +32,12 @@ INCLUDES = `gtk-config --cflags`
 show_wav_SOURCES = \
 	show-wav.c
 show_wav_LDFLAGS = \
-	`gtk-config --libs` -lefence
+	`gtk-config --libs`
 
 ft_SOURCES = \
 	ft.c
 ft_LDADD = \
-	-lm -lefence
+	-lm
 
 disp_wav_SOURCES = \
 	disp-wav.c

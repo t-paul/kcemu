@@ -1,8 +1,8 @@
 /*
  *  KCemu -- the KC 85/3 and KC 85/4 Emulator
- *  Copyright (C) 1997-1998 Torsten Paul
+ *  Copyright (C) 1997-2001 Torsten Paul
  *
- *  $Id: load_TAPE.c,v 1.3 2000/09/30 18:56:14 tp Exp $
+ *  $Id: load_TAPE.c,v 1.6 2001/04/29 21:59:23 tp Exp $
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -20,6 +20,7 @@
  */
 
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 
 #include "fileio/loadP.h"
@@ -27,7 +28,6 @@
 static int
 check_addr(unsigned char *data, long size)
 {
-  int a;
   unsigned short load, end, start, x;
   
   /*
@@ -37,6 +37,7 @@ check_addr(unsigned char *data, long size)
   load  = data[17] | (data[18] << 8);
   end   = data[19] | (data[20] << 8);
   start = data[21] | (data[22] << 8);
+printf("load %d, end %d, start %d\n", load, end, start);
 
   if (load >= end)
     return 0;
@@ -73,19 +74,16 @@ loader_TAPE_check(const char *filename,
       for (a = 0;a < 8;a++)
         {
           if (data[a] == '\0')
-            {
-              if (a > 0)
-                return check_addr(data, size - 128);
-              else
-                break;
-            }
+	    break;
           if ((data[a] >= 'A') && (data[a] <= 'Z'))
             continue;
-          if (strchr(" &+", data[a]) != NULL)
+          if ((data[a] >= 'a') && (data[a] <= 'z'))
+            continue;
+          if (strchr(" .&+", data[a]) != NULL)
             continue;
           break;
         }
-      if (a == 8)
+      if (a > 0)
         return check_addr(data, size - 128);
     }
   
@@ -98,9 +96,7 @@ loader_TAPE_load(const char *filename,
                  long size,
                  fileio_prop_t **prop)
 {
-  int b;
-  long xsize, len;
-  char *sptr, *dptr;
+  long xsize;
 
   *prop = (fileio_prop_t *)malloc(sizeof(fileio_prop_t));
   if (*prop == NULL)
@@ -138,27 +134,28 @@ loader_TAPE_load(const char *filename,
   if ((*prop)->data == 0)
     return -1;
 
-  b = 0;
-  *(*prop)->data = b++;
+  *(*prop)->data = 0; // block number
   fill_header_COM((*prop)->data + 1, *prop);
 
-  sptr = data + 128;
-  dptr = (*prop)->data + 129;
-  size -= 128;
+  fileio_copy_blocks((*prop)->data + 129, data + 128, size - 128, 1);
 
-  while (size > 0)
-    {
-      if (size > 128)
-	*dptr = b++;
-      else
-	*dptr = 0xff;
+  //sptr = data + 128;
+  //dptr = (*prop)->data + 129;
+  //size -= 128;
 
-      len = (size > 128) ? 128 : size;
-      memcpy(dptr + 1, sptr, len);
-      dptr += 129;
-      sptr += 128;
-      size -= 128;
-    }
+//  while (size > 0)
+//    {
+//	if (size > 128)
+//	  *dptr = b++;
+//	else
+//	  *dptr = 0xff;
+//
+//	len = (size > 128) ? 128 : size;
+//	memcpy(dptr + 1, sptr, len);
+//	dptr += 129;
+//	sptr += 128;
+//	size -= 128;
+//    }
 
   return 0;
 }

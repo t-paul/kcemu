@@ -1,8 +1,8 @@
 /*
  *  KCemu -- the KC 85/3 and KC 85/4 Emulator
- *  Copyright (C) 1997-1998 Torsten Paul
+ *  Copyright (C) 1997-2001 Torsten Paul
  *
- *  $Id: tape.cc,v 1.15 2001/01/05 18:08:12 tp Exp $
+ *  $Id: tape.cc,v 1.20 2001/04/22 22:24:58 tp Exp $
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -163,6 +163,7 @@ public:
            */
         case 3:
           tape->detach();
+	  CMD_EXEC("ui-tape-detached");
           return;
         }
       
@@ -184,6 +185,7 @@ public:
                 }
               break;
             case TAPE_OK:
+	    case TAPE_OK_READONLY:
               shortname = strrchr(filename, '/');
               if (shortname)
                 shortname++;
@@ -191,6 +193,8 @@ public:
                 shortname = filename;
               sprintf(buf, _("tape-archive `%s' attached."), shortname);
               Status::instance()->setMessage(buf);
+	      /*  args should have 'filename' still set here! */
+	      CMD_EXEC_ARGS("ui-tape-attached", args);
               break;
             default:
               Status::instance()->setMessage(_("Can't attach tape-archive."));
@@ -429,7 +433,7 @@ Tape::Tape(int bit_0, int bit_1, int bit_s, int start_block) : Callback("Tape")
     _start_block = start_block;
 
     _record = false;
-    _power = 1; /* FIXME: */
+    _power = 0; /* FIXME: */
     _flip_flop = 0;
     _bits = -1;
     _state = 0;
@@ -452,17 +456,16 @@ Tape::power(bool val)
 {
   _power = val;
 
+  DBG(1, form("KCemu/Tape/power",
+	      "Tape::power(): Power %s\n",
+	      _power ? "on" : "off"));
+
   if (_power)
     {
-      // cout << "Tape: Power on\n";
       TAPE_IF()->tapePower(true);
-      if (_play)
-        {
-        }
     }
   else
     {
-      // cout << "Tape: Power off\n";
       do_stop();
       TAPE_IF()->tapePower(false);
     }
@@ -542,7 +545,6 @@ Tape::play(const char *name, int delay)
 
   _play = true;
   _record = false;
-  power(true);
 
   _init = 4000;
   _last_block = 0;
@@ -604,6 +606,10 @@ Tape::stop(void)
       if ((ptr[1] == 0xd3) && (ptr[2] == 0xd3) && (ptr[3] == 0xd3))
 	{
 	  type = KCT_TYPE_BAS;
+	}
+      else if ((ptr[1] == 0xd4) && (ptr[2] == 0xd4) && (ptr[3] == 0xd4))
+	{
+	  type = KCT_TYPE_MINTEX;
 	}
       else if ((ptr[1] == 0xd7) && (ptr[2] == 0xd7) && (ptr[3] == 0xd7))
 	{
@@ -696,9 +702,13 @@ Tape::do_play(int edge)
     {
       /*
        *  trigger signal to get everything running...
+       *  this comes from the automatic playing se we
+       *  ignore this if power is off
        */
       DBG(1, form("KCemu/Tape/play",
-		  "Tape::play(): got first signal\n"));
+		  "Tape::play(): got first signal (power = %d)\n", _power));
+      if (!_power)
+	return;
     }
 
   /*
@@ -1006,6 +1016,7 @@ Tape::attach(const char *filename, bool create)
       switch (err)
         {
         case KCT_OK:
+	case KCT_OK_READONLY:
           break;
         case KCT_ERROR_NOENT:
           return TAPE_NOENT;
@@ -1028,6 +1039,10 @@ Tape::attach(const char *filename, bool create)
 			     (*it)->uncompressed_size,
 			     (*it)->type);
     }
+
+  if (_kct_file.is_readonly())
+    return TAPE_OK_READONLY;
+  
   return TAPE_OK;
 }
 
@@ -1077,6 +1092,15 @@ Tape::add(const char *name)
                           ptr->data, ptr->size,
                           ptr->load_addr, ptr->start_addr,
                           KCT_TYPE_BAS, KCT_MACHINE_ALL);
+          break;
+        case FILEIO_TYPE_MINTEX:
+          DBG(0, form("KCemu/Tape/add",
+                      "Tape::add(): '%s' [MINTEX]\n",
+                      (const char *)&ptr->name[0]));
+          _kct_file.write((const char *)&ptr->name[0],
+                          ptr->data, ptr->size,
+                          ptr->load_addr, ptr->start_addr,
+                          KCT_TYPE_MINTEX, KCT_MACHINE_ALL);
           break;
         case FILEIO_TYPE_PROT_BAS:
           DBG(0, form("KCemu/Tape/add",
@@ -1200,7 +1224,7 @@ Tape::remove(const char *name)
 tape_error_t
 Tape::extract(const char *name, const char *filename)
 {
-  int c;
+  int a, c;
   fstream f;
   istream *is;
   kct_file_props_t props;
@@ -1212,13 +1236,21 @@ Tape::extract(const char *name, const char *filename)
   f.open(filename, ios::out | ios::noreplace | ios::bin);
   if (!f)
     return TAPE_ERROR;
-  
+
+  f.write("\xc3KC-TAPE by AF. ", 16);
+  a = 0;
   while (242)
     {
       c = is->get();
       if (c == EOF)
 	break;
+      a++;
       f.put(c);
+    }
+  while ((a % 129) != 0)
+    {
+      a++;
+      f.put('\0'); /* pad to block size */
     }
   
   f.close();

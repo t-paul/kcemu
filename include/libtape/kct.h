@@ -1,8 +1,8 @@
 /*
  *  KCemu -- the KC 85/3 and KC 85/4 Emulator
- *  Copyright (C) 1997-1998 Torsten Paul
+ *  Copyright (C) 1997-2001 Torsten Paul
  *
- *  $Id: kct.h,v 1.7 2000/06/24 03:39:36 tp Exp $
+ *  $Id: kct.h,v 1.9 2001/04/14 15:15:02 tp Exp $
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -88,6 +88,7 @@ typedef enum
  */
 typedef enum
 {
+  KCT_OK_READONLY       = -1,
   KCT_OK                =  0,
   KCT_ERROR_NOENT       =  2,
   KCT_ERROR_IO          =  5,
@@ -166,6 +167,7 @@ public:
   static const unsigned long DIRBLOCK_MAGIC;
   
 private:
+  bool           _readonly;
   fstream        _f;
   kct_header_t   _header;
   kct_bam_t      _bam;
@@ -207,6 +209,8 @@ public:
   const char * type_name(kct_file_type_t type);
   
   void list(void);
+  bool is_readonly(void);
+
   kct_error_t create(const char *filename);
   kct_error_t open(const char *filename);
   kct_error_t close(void);

@@ -1,4 +1,4 @@
-# Makefile.in generated automatically by automake 1.4 from Makefile.am
+# Makefile.in generated automatically by automake 1.4-p4 from Makefile.am
 
 # Copyright (C) 1994, 1995-8, 1999 Free Software Foundation, Inc.
 # This Makefile.in is free software; the Free Software Foundation
@@ -124,12 +124,12 @@ INCLUDES = `gtk-config --cflags`
 
 show_wav_SOURCES =  	show-wav.c
 
-show_wav_LDFLAGS =  	`gtk-config --libs` -lefence
+show_wav_LDFLAGS =  	`gtk-config --libs`
 
 
 ft_SOURCES =  	ft.c
 
-ft_LDADD =  	-lm -lefence
+ft_LDADD =  	-lm
 
 
 disp_wav_SOURCES =  	disp-wav.c
@@ -277,13 +277,11 @@ distdir: $(DISTFILES)
 	    || cp -p $$d/$$file $(distdir)/$$file || :; \
 	  fi; \
 	done
-audio2kc.o: audio2kc.c
 disp-wav.o: disp-wav.c
 ft.o: ft.c
 send_file.o: send_file.c
 show-wav.o: show-wav.c
 wav2kc.o: wav2kc.c
-wavtokc.o: wavtokc.c
 wavtokc2.o: wavtokc2.c
 
 info-am:

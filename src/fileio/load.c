@@ -1,8 +1,8 @@
 /*
  *  KCemu -- the KC 85/3 and KC 85/4 Emulator
- *  Copyright (C) 1997-1998 Torsten Paul
+ *  Copyright (C) 1997-2001 Torsten Paul
  *
- *  $Id: load.c,v 1.6 2001/01/05 17:55:37 tp Exp $
+ *  $Id: load.c,v 1.8 2001/04/14 15:15:48 tp Exp $
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -20,6 +20,8 @@
  */
 
 #include <stdio.h>
+#include <ctype.h>
+#include <stdlib.h>
 #include <unistd.h>
 #include <sys/stat.h>
 
@@ -132,7 +134,7 @@ fileio_free_prop(fileio_prop_t **prop)
 long
 fileio_get_image(fileio_prop_t *prop, unsigned char *buf)
 {
-  int a, b;
+  int a, b, len;
 
   b = 0;
   switch (prop->type)
@@ -140,14 +142,16 @@ fileio_get_image(fileio_prop_t *prop, unsigned char *buf)
     case FILEIO_TYPE_COM:
     case FILEIO_TYPE_UNKNOWN:
       a = 130;
+      len = prop->size - 128;
       break;
     case FILEIO_TYPE_BAS:
     case FILEIO_TYPE_PROT_BAS:
       a = 14;
+      len = prop->size - 13;
       break;
     }
 
-  while (a < prop->size)
+  while (len-- > 0)
     {
       buf[b] = prop->data[a];
       b++;
@@ -193,6 +197,26 @@ fill_header_COM(unsigned char *data,
 }
 
 void
+fileio_copy_blocks(char *dptr, const char * sptr, long size, int block)
+{
+  long len;
+
+  while (size > 0)
+    {
+      if (size > 128)
+	*dptr = block++;
+      else
+	*dptr = 0xff;
+
+      len = (size > 128) ? 128 : size;
+      memcpy(dptr + 1, sptr, len);
+      dptr += 129;
+      sptr += 128;
+      size -= 128;
+    }
+}
+
+void
 fileio_debug_dump(fileio_prop_t *prop, int write_file)
 {
   FILE *f;
@@ -213,12 +237,12 @@ fileio_debug_dump(fileio_prop_t *prop, int write_file)
         }
       
       printf("fileio: %-14s %-10s - ", ptr->name, type);
-      printf("%04x-%04x/",  ptr->load_addr, ptr->load_addr + ptr->size + 1);
+      printf("%04x-%04lx/",  ptr->load_addr, ptr->load_addr + ptr->size + 1);
       if (ptr->autostart)
         printf("%04x", ptr->start_addr);
       else
         printf(" -  ");
-      printf(" : %5d bytes", ptr->size);
+      printf(" : %5ld bytes", ptr->size);
 
       if (write_file)
         {

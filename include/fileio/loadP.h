@@ -1,8 +1,8 @@
 /*
  *  KCemu -- the KC 85/3 and KC 85/4 Emulator
- *  Copyright (C) 1997-1998 Torsten Paul
+ *  Copyright (C) 1997-2001 Torsten Paul
  *
- *  $Id: loadP.h,v 1.3 2000/07/15 13:16:41 tp Exp $
+ *  $Id: loadP.h,v 1.5 2001/04/14 15:14:03 tp Exp $
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -40,6 +40,11 @@ typedef struct file_loader
 
 void fill_header_COM(unsigned char *data,
                      fileio_prop_t *prop);
+void fileio_copy_blocks(char *dptr,
+			const char * sptr,
+			long size,
+			int block);
+int  fileio_register_loader(file_loader_t *loader);
 
 void loader_AF_init(void);
 void loader_GPF_init(void);

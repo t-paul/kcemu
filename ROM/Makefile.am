@@ -6,8 +6,10 @@ pkgdata_DATA = \
 	basic_c0.853    \
 	basic_c0.854    \
 	caos__c0.854    \
+	caos__e0.852    \
 	caos__e0.853    \
 	caos__e0.854	\
+	m006.rom	\
 	m012.rom	\
 	m026.rom	\
 	m027.rom	\

@@ -1,8 +1,8 @@
 /*
  *  KCemu -- the KC 85/3 and KC 85/4 Emulator
- *  Copyright (C) 1997-1998 Torsten Paul
+ *  Copyright (C) 1997-2001 Torsten Paul
  *
- *  $Id: keyb1.h,v 1.4 2001/01/21 23:06:02 tp Exp $
+ *  $Id: keyb1.h,v 1.6 2001/04/14 15:14:17 tp Exp $
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -43,16 +43,24 @@ class Keyboard1 : public Keyboard, public PIOCallbackInterface
   bool _in_callback;
 
  protected:
-  int decode_key(int keysym, bool press);
+  void init(void);
+  int  decode_key(int keysym, bool press);
 
  public:
   Keyboard1(void);
-  virtual ~Keyboard1(void) {}
+  virtual ~Keyboard1(void);
   virtual void keyPressed(int keysym, int keycode);
   virtual void keyReleased(int keysym, int keycode);
   virtual void replayString(const char *text);
   
   virtual void callback(void *data);
+
+  /*
+   *  InterfaceCircuit functions
+   */
+  virtual void iei(byte_t val);
+  virtual void reset(bool power_on = false);
+  virtual void reti(void);
   
   /*
    *  PIOCallbackInterface functions

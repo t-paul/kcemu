@@ -1,8 +1,8 @@
 /*
  *  KCemu -- the KC 85/3 and KC 85/4 Emulator
- *  Copyright (C) 1997-1998 Torsten Paul
+ *  Copyright (C) 1997-2001 Torsten Paul
  *
- *  $Id: z80.cc,v 1.24 2001/01/07 02:40:03 tp Exp $
+ *  $Id: z80.cc,v 1.28 2001/12/28 15:28:40 torsten_paul Exp $
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -48,6 +48,8 @@
 
 #include "z80core/z80.h"
 
+#include "cmd/cmd.h"
+
 #include "ui/ui.h"
 #include "ui/status.h"
 
@@ -56,6 +58,7 @@
 extern "C" {
 #include "z80core2/z80.h"
 }
+
 
 #define Z80_CB_DELAY_DEBUG
 /* #define Z80_CB_LOG */
@@ -226,6 +229,60 @@ void _callback_paranoia_check(unsigned long long clock, callback_list *list,
     }
 }
 #endif
+
+class CMD_single_step : public CMD
+{
+private:
+  Z80 *_z80;
+public:
+  CMD_single_step(Z80 *z80) : CMD("z80-single-step")
+    {
+      _z80 = z80;
+      register_cmd("z80-single-step-on", 0);
+      register_cmd("z80-single-step-off", 1);
+      register_cmd("z80-single-step-toggle", 2);
+      register_cmd("z80-execute-step", 3);
+      register_cmd("z80-trace-on", 4);
+      register_cmd("z80-trace-off", 5);
+      register_cmd("z80-trace-toggle", 6);
+      register_cmd("z80-trace-set-delay", 7);
+    }
+
+  void execute(CMD_Args *args, CMD_Context context)
+    {
+      switch (context)
+        {
+        case 0:
+	  z80->singlestep(true);
+	  break;
+        case 1:
+	  z80->singlestep(false);
+	  break;
+        case 2:
+	  z80->singlestep(!z80->singlestep());
+	  break;
+	case 3:
+	  z80->executestep();
+	  break;
+	case 4:
+	  z80->trace(true);
+	  break;
+	case 5:
+	  z80->trace(false);
+	  break;
+	case 6:
+	  z80->trace(!z80->trace());
+	  break;
+	case 7:
+	  if (args)
+	    {
+	      long delay = 1000 * args->get_int_arg("delay");
+	      z80->tracedelay(delay);
+	    }
+	  break;
+	}
+    }
+};
 
 byte_t
 RdZ80(word_t Addr)
@@ -459,6 +516,7 @@ Z80::Z80(void)
   
   _counter = 0;
   _callback_list = 0;
+  _tracedelay = 100000;
 
   _do_quit = false;
 }
@@ -481,6 +539,24 @@ print_regs(_Z80 *r)
 	    c2, isprint(c2) ? c2 : '.');
 }
 
+void
+Z80::executestep(void)
+{
+  _executestep = true;
+}
+
+void
+Z80::singlestep(bool value)
+{
+  _singlestep = value;
+}
+
+bool
+Z80::singlestep()
+{
+  return _singlestep;
+}
+
 bool
 Z80::run(void)
 {
@@ -490,6 +566,7 @@ Z80::run(void)
   long tdiff_old;
   long tick;  
   long tick_old;
+  CMD *cmd;
   callback_list *ptr;
 
 #ifdef MSDOS  
@@ -511,22 +588,54 @@ Z80::run(void)
 
   timer->start();
 
+  cmd = new CMD_single_step(this);
+
   a = 0;
   period = 4 * Z80_PERIOD;
   tdiff_old = 0;
   tick_old = get_time();
   while (!_do_quit)
     {
-      //if (_regs.PC.W == 0xbf70)
-      //_regs.Trace = 2;
-      
+      //if ((getSP() < 0x170) || (getSP() >= 0x200)) {
+      //	cout.form("trace at %04xh\n", getPC());
+      //_trace = true;
+      //}
+
       //if (_regs.PC.W == 0xe348)
       //cout.form("e348: a=%02xh\n", _regs.AF.B.l);
+
+      if (_singlestep)
+	{
+	  ui->processEvents();
+	  if (!_executestep)
+	    {
+	      usleep(100000);
+	      continue;
+	    }
+	  CMD_EXEC("single-step-executed");
+	  _executestep = false;
+	}
+      else
+	if (_trace)
+	  {
+	    ui->processEvents();
+	    ui->update();
+	    CMD_EXEC("single-step-executed");
+	    usleep(_tracedelay);
+	  }
       
       exec_trace[exec_trace_idx] = _regs.PC.W;
       exec_trace_idx = (exec_trace_idx + 1) % EXEC_TRACE_LEN;
 
-      if (_regs.Trace)
+      if (_debug)
+	{
+	  _regs.Trace = 2;
+	  if (!DebugZ80(&_regs))
+	    break;
+	  if (_regs.Trace == 0)
+	    debug(false);
+	}
+      if (_regs.Trace > 0)
 	if (!DebugZ80(&_regs))
 	  break;
 
@@ -738,17 +847,37 @@ Z80::addCallback(unsigned long long offset, Callback *cb, void *data)
     }
 }
 
-int
-Z80::trace(void)
+bool
+Z80::debug(void)
 {
-  return _regs.Trace;
+  return _debug;
 }
 
 void
-Z80::trace(int level)
+Z80::debug(bool value)
 {
-  if (level < 0) level = 0;
-  _regs.Trace = level;
+  _debug = value;
+}
+
+bool
+Z80::trace(void)
+{
+  return _trace;
+  //return _regs.Trace;
+}
+
+void
+Z80::trace(bool value)
+{
+  _trace = value;
+  //if (level < 0) level = 0;
+  //_regs.Trace = level;
+}
+
+void
+Z80::tracedelay(long delay)
+{
+  _tracedelay = delay;
 }
 
 void
@@ -866,5 +995,5 @@ signalHandler(int sig)
 {
   cout << "\n *** signal caught (" << sig << ") ***\n\n";
   signal(sig, signalHandler);
-  self->trace(2);
+  self->debug(true);
 }

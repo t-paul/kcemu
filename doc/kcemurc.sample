@@ -1,0 +1,194 @@
+#
+#  KCemu -- the KC 85/3 and KC 85/4 Emulator
+#  Copyright (C) 1997-1998 Torsten Paul
+#
+#  $Id: kcemurc.sample,v 1.2 2001/04/08 14:28:35 tp Exp $
+#
+#
+#  KCemu Konfigurationsdatei ($HOME/.kcemurc)
+#
+
+##############################################################################
+#
+#  Tape File, das beim Starten des Emulators ausgewählt wird.
+#
+#  Befindet sich die Datei im Datenverzeichnis des Emulators
+#  (Wenn nicht anders angegeben ist das /usr/local/share/KCemu)
+#  reicht der Dateiname, ansonsten muß ein absoluter Dateiname
+#  angegeben werden, also einer, der mit einem / beginnt
+#  (z.B. /home/tp/kc/Tape.kct)
+#
+#  Werte:	<Filename>
+#
+Tape File: files.kct
+
+##############################################################################
+#
+#  Liste von Tape Files, die im Tape Fenster direkt auswählbar sind
+#  (sozusagen Tape File Bookmarks :)
+#
+#  Werte:	<Filename>
+#
+Tape File List_00000000: /home/tp/projects/KCemu/PRG/files.kct
+Tape File List_00000001: /home/tp/projects/KCemu/PRG/test.kct
+Tape File List_00000002: /home/tp/projects/KCemu/PRG/wordpro.kct
+Tape File List_00000003: /home/tp/projects/KCemu/PRG/kc87.kct
+Tape File List_00000004: /home/tp/projects/KCemu/PRG/basic.kct
+Tape File List_00000005: /home/tp/projects/KCemu-TMP/z9001/z9001-b.kct
+Tape File List_00000006: /home/tp/projects/KCemu-TMP/z9001/z9001-c.kct
+Tape File List_00000007: /tmp/x.kct
+
+##############################################################################
+#
+#  KC-Modell, welches emuliert wird, wenn nichts explizit auf der
+#  Kommandozeile angegeben wurde
+#
+#  Werte:	1 = Z9001, KC85/1, KC87
+#		3 = KC85/3
+#		4 = KC85/4
+#
+Default KC Model: 4
+
+##############################################################################
+#
+#  Einschalten der Emulation des V24-Moduls über die serielle
+#  Schnittstelle (Die Emulation ist nicht vollständig und ziemlich
+#  fehlerbehaftet, daher sollte diese Option normalerweise auf
+#  "aus" stehen)
+#
+#  Werte: 	0 = aus
+#		1 = an
+#
+Enable V24-Module: 0
+
+##############################################################################
+#
+#  Device, das von der Emulation des V24-Moduls benutzt wird
+#
+#  Werte:	/dev/ttyS0 = 1. serielle Schnittstelle
+#		/dev/ttyS1 = 2. serielle Schnittstelle
+#		...
+#		FIFO	   = benutzt Fifo im /tmp Verzeichnis
+#		SOCKET	   = benutzt Socket im /tmp Verzeichnis
+#
+V24-Device: /dev/ttyS0
+
+##############################################################################
+#
+#  Geschwindigkeit für die serielle Schnittstelle
+#
+#  Werte:	9600
+#		19200
+#
+V24-Baudrate: 19200
+
+##############################################################################
+#
+#  Module, die beim Start des Emulators eingelegt sein sollen
+#
+#  Werte:	M003	V24-Modul
+#		M011	64k RAM
+#		M022	Expander RAM (16k)
+#		M012	Texor
+#		M026	Forth
+#		M027	Development
+#		M900	WordPro '86 (KC85/3)
+#		M901	WordPro '86 (KC85/4)
+#
+#		RAM4	RAM Module (16k/4000h) für KC85/1
+#		RAM8	RAM Module (16k/8000h) für KC85/1
+#		IRMX	IRM Color Expansion für KC85/1, KC87
+#
+Module_00000000: M011
+Module_00000001: M011
+
+##############################################################################
+#
+#  (relativ) exakte Unterstützung des Blinkes
+#
+#  Wird zur Zeit nur für KC85/4 unterstützt und benötigt relativ viel
+#  Rechenleistung, z.B. bei Digger, zeigt aber dafür das Farbscrolling
+#  in den Diamanten...
+#
+#  Werte:	0 = aus
+#		1 = an
+#
+Full Flash Support: 1
+
+##############################################################################
+#
+#  Finetuning für den Farbscroll-Effekt
+#
+#  Werte:	Default ist 50
+#
+Flash Offset: 50
+
+##############################################################################
+#
+#  Anzahl der zu überspringenden Frames bei der Anzeige (für langsame
+#  Rechner)
+#
+#  Werte:	0 = alle Frames anzeigen
+#		1 = jedes 2. Frame anzeigen
+#		2 = jedes 3. Frame anzeigen
+#		...
+#
+Frame Skip: 0
+
+##############################################################################
+#
+#  Aktivierung der Emulation des Floppy Disk Systems
+#
+#  Werte:	0 = aus
+#		1 = an
+#
+Floppy Disk Basis: 1
+
+##############################################################################
+#
+#  Im emulierten Diskettenlaufwerk eingelegte Diskette
+#
+#  Werte:	<Filename>
+#
+Floppy Disk: /home/tp/projects/KCemu/DISK/microdos.dump
+#Floppy Disk: /home/tp/projects/KCemu/DISK/caos.dump
+
+##############################################################################
+#
+#  Anzahl der zu emulierenden Bus-Treiber-Aufsätze
+#  (es werden maximal 4 Aufsätze emuliert)
+#
+#  Werte:	0 - 4
+#
+Busdrivers: 1
+
+##############################################################################
+#
+#  Soundunterstützung
+#  (funktioniert noch nicht - sollte ausgeschaltet sein!)
+#
+#  Werte:	0 = aus
+#		1 = an
+#
+Enable Sound: 0
+
+##############################################################################
+#
+#  Farbeinstellung
+#  (entspricht den Werten im Konfigurations-Menü * 100)
+#
+Foreground Saturation:	55
+Foreground Brightness:	85
+Background Saturation:	50
+Background Brightness:	60
+Black Value:		10
+White Value:		90
+
+##############################################################################
+#
+#  Laden eines Programmes beim Start des Emulators
+#  (Nur zum debuggen - funktioniert nur mit gepatchtem System-ROM,
+#  da der normale System-ROM beim Power-On-Reset den Speicher komplett
+#  löscht!)
+#
+Load On Init: /home/tp/projects/KCemu/test/a.out

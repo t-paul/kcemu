@@ -1,8 +1,8 @@
 /*
  *  KCemu -- the KC 85/3 and KC 85/4 Emulator
- *  Copyright (C) 1997-1998 Torsten Paul
+ *  Copyright (C) 1997-2001 Torsten Paul
  *
- *  $Id: keyb3.h,v 1.4 2001/01/06 15:11:37 tp Exp $
+ *  $Id: keyb3.h,v 1.6 2001/04/14 15:14:19 tp Exp $
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -62,38 +62,46 @@
  */
 class Keyboard3 : public Keyboard
 {
-  private:
-    int _lock;
-    int _key;
-    int _keysym;
-    int _release;
-    bool _shift;
-    bool _control;
-    int _replay_idx;
-    int _replay_offset;
-    GString *_replay_text;
+ private:
+  int _lock;
+  int _key;
+  int _keysym;
+  int _release;
+  bool _shift;
+  bool _control;
+  int _replay_idx;
+  int _replay_offset;
+  GString *_replay_text;
 
-    enum {
-      KEY_CYCLES_BIT_0 =  8960,
-      KEY_CYCLES_BIT_1 = 12544,
-      KEY_CYCLES_T_W   = 25088,
-      KEY_CYCLES_T_DW  = 34048,
-      KEY_CYCLES_T_TO  = 36608,
-    };
-
-  protected:
-    void sendKey(void);
-    int checkReplay(void);
-
-  public:
-    Keyboard3(void);
-    virtual ~Keyboard3(void) {}
-    
-    virtual void keyPressed(int keysym, int keycode);
-    virtual void keyReleased(int keysym, int keycode);
-    virtual void replayString(const char *text);
-
-    virtual void callback(void *data);
+  enum {
+    KEY_CYCLES_BIT_0 =  8960,
+    KEY_CYCLES_BIT_1 = 12544,
+    KEY_CYCLES_T_W   = 25088,
+    KEY_CYCLES_T_DW  = 34048,
+    KEY_CYCLES_T_TO  = 36608,
+  };
+  
+ protected:
+  void init(void);
+  void sendKey(void);
+  int  checkReplay(void);
+  
+ public:
+  Keyboard3(void);
+  virtual ~Keyboard3(void);
+  
+  virtual void keyPressed(int keysym, int keycode);
+  virtual void keyReleased(int keysym, int keycode);
+  virtual void replayString(const char *text);
+  
+  virtual void callback(void *data);
+  
+  /*
+   *  InterfaceCircuit functions
+   */
+  virtual void iei(byte_t val);
+  virtual void reset(bool power_on = false);
+  virtual void reti(void);
 };
 
 #endif /* __kc_keyb3_h */

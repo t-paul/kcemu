@@ -1,3 +1,24 @@
+/*
+ *  KCemu -- the KC 85/3 and KC 85/4 Emulator
+ *  Copyright (C) 1997-2001 Torsten Paul
+ *
+ *  $Id: sound.cc,v 1.3 2001/04/14 15:16:33 tp Exp $
+ *
+ *  This program is free software; you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation; either version 2 of the License, or
+ *  (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with this program; if not, write to the Free Software
+ *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+ */
+
 #include <math.h>
 #include <unistd.h>
 #include <string.h>
@@ -14,15 +35,19 @@
 #include "kc/ctc.h"
 #include "kc/sound.h"
 
+#include "libdbg/dbg.h"
+
 static double _sound_counter = 0;
 static double _sound_freq = 1000;
 static double _sound_init = 0;
 
 static long long _idx = 0;
 
-#define SOUND_BUFFER_SIZE (8192)
-#define SOUND_SAMPLE_FREQ (11025)
+#define SOUND_BUFFER_SIZE (512)
+#define SOUND_SAMPLE_FREQ (44100)
 #define SYNC_COUNTER (10)
+
+FILE *__f = NULL;
 
 void
 Sound::sound_callback(void *userdata, unsigned char *stream, int len)
@@ -48,15 +73,15 @@ Sound::sound_callback(void *userdata, unsigned char *stream, int len)
 	}
     }
 
-#if 0
-  if ((z80->getCounter() - _sound_counter) < 1300000)
+#if 1
+  if ((z80->getCounter() - _sound_counter) < 0)
     {
-      _sound_counter = z80->getCounter() - 1300000;
+      _sound_counter = z80->getCounter();
       printf("catching up...\n");
     }
-  if ((z80->getCounter() - _sound_counter) > 2600000)
+  if ((z80->getCounter() - _sound_counter) > 1300000)
     {
-      _sound_counter = z80->getCounter() - 2600000;
+      _sound_counter = z80->getCounter() - 1300000;
       printf("skipping sycles...\n");
     }
 #endif
@@ -79,38 +104,38 @@ Sound::sound_callback(void *userdata, unsigned char *stream, int len)
       x--;
       _idx++;
 
-      if (op != NULL)
+      while ((op != NULL) && (_sound_counter > op->_counter))
 	{
-	  if (_sound_counter > op->_counter)
+	  double f = op->_freq;
+	  long long c = op->_counter;
+	  delete op;
+	  self->_sndop_list.pop_front();
+	  //printf("* %Ld - %.2f (%Ld) => new sound op, freq = %.2f\n", z80->getCounter(), _sound_counter, c, f);
+	  //printf("* cnt: %10Ld - %12.2f - %d\n", _idx, _sound_freq, val);
+	  _idx = 0;
+	  
+	  if (f == 0)
 	    {
-	      double f = op->_freq;
-	      long long c = op->_counter;
-	      delete op;
-	      self->_sndop_list.pop_front();
-	      printf("* %Ld - %.2f (%Ld) => new sound op, freq = %.2f\n", z80->getCounter(), _sound_counter, c, f);
-	      printf("* cnt: %10Ld - %12.2f - %d\n", _idx, _sound_freq, val);
-	      _idx = 0;
-
-	      if (f == 0)
-		{
-		  val = 0;
-		  //self->_playing = false;
-		}
-	      else
-		{
-		  if (val == 0)
-		    val = 120;
-		  _sound_freq = f;
-		}
-	      
-	      op = NULL;
-	      if (self->_sndop_list.size() > 0)
-		op = (*(self->_sndop_list.begin()));
+	      val = 0;
+	      //self->_playing = false;
 	    }
+	  else
+	    {
+	      if (val == 0)
+		{
+		  x = -0.01;
+		  val = 120;
+		}
+	      _sound_freq = f;
+	    }
+	  
+	  op = NULL;
+	  if (self->_sndop_list.size() > 0)
+	    op = (*(self->_sndop_list.begin()));
 	}
     }
   
-#if 0
+#if 1
   if (first)
     {
       first = false;
@@ -123,19 +148,32 @@ Sound::sound_callback(void *userdata, unsigned char *stream, int len)
 	  double xxx = (double)(sum_counter / SYNC_COUNTER) / SOUND_BUFFER_SIZE;
 	  
 	  idx = SYNC_COUNTER;
-	  printf("%Ld - %.3f - %.3f = %Ld - %.2f\n",
-		 sum_counter / SYNC_COUNTER, inc, xxx,
-		 z80->getCounter(), _sound_counter);
+	  //printf("%Ld - %.3f - %.3f = %Ld - %.2f\n",
+	  // sum_counter / SYNC_COUNTER, inc, xxx,
+	  // z80->getCounter(), _sound_counter);
 	  inc += (xxx - inc) / 3.0;
 	  sum_counter = 0;
 	}
     }
   old_counter = z80->getCounter();
-  printf("- %Ld - %.2f\n", z80->getCounter(), _sound_counter);
+  //printf("- %Ld - %.2f\n", z80->getCounter(), _sound_counter);
 #endif
+
+  if (__f)
+    fwrite(stream, len, 1, __f);
 }
 
 Sound::Sound(void)
+{
+}
+
+Sound::~Sound(void)
+{
+  delete _dummy_sndop;
+}
+
+void
+Sound::init()
 {
   int ret;
   SDL_AudioSpec wanted, obtained;
@@ -164,11 +202,8 @@ Sound::Sound(void)
   _playing = false;
   _dummy_sndop = new sndop(0, 0);
   _last_sndop = _dummy_sndop;
-}
 
-Sound::~Sound(void)
-{
-  delete _dummy_sndop;
+  // __f = fopen("/tmp/kc-sound.wav", "wb+");
 }
 
 void
@@ -241,7 +276,7 @@ Sound::ctc_callback_TC(int channel, long tc)
     {
     case 0:
       freq = (1750000.0 / 2) / tc;
-      printf("Sound::cb_TC() - %10Ld - %12.2f\n", z80->getCounter(), freq);
+      printf("%04xh: Sound::cb_TC() - %10Ld - %12.2f\n", z80->getPC(), z80->getCounter(), freq);
       if (_last_sndop->_freq != freq)
 	{
 	  _last_sndop = new sndop(z80->getCounter(), freq);

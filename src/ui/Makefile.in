@@ -1,4 +1,4 @@
-# Makefile.in generated automatically by automake 1.4 from Makefile.am
+# Makefile.in generated automatically by automake 1.4-p4 from Makefile.am
 
 # Copyright (C) 1994, 1995-8, 1999 Free Software Foundation, Inc.
 # This Makefile.in is free software; the Free Software Foundation
@@ -103,7 +103,7 @@ INCLUDES =  	-I../../include
 CPPFLAGS =  	-DVERSION=\"$(VERSION)\"
 
 
-libui_a_SOURCES =  	log.cc			error.cc		status.cc		commands.cc
+libui_a_SOURCES =  	log.cc			error.cc		status.cc		commands.cc		hsv2rgb.cc
 
 mkinstalldirs = $(SHELL) $(top_srcdir)/mkinstalldirs
 CONFIG_HEADER = ../../include/kc/config.h
@@ -115,7 +115,7 @@ DEFS = @DEFS@ -I. -I$(srcdir) -I../../include/kc
 LDFLAGS = @LDFLAGS@
 LIBS = @LIBS@
 libui_a_LIBADD = 
-libui_a_OBJECTS =  log.o error.o status.o commands.o
+libui_a_OBJECTS =  log.o error.o status.o commands.o hsv2rgb.o
 AR = ar
 CXXFLAGS = @CXXFLAGS@
 CXXCOMPILE = $(CXX) $(DEFS) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS)
@@ -293,6 +293,9 @@ distdir: $(DISTFILES)
 	done
 commands.o: commands.cc
 error.o: error.cc ../../include/ui/error.h ../../include/ui/errorl.h
+hsv2rgb.o: hsv2rgb.cc ../../include/kc/config.h \
+	../../include/kc/system.h ../../include/ui/hsv2rgb.h \
+	../../include/libdbg/dbg.h
 log.o: log.cc ../../include/ui/log.h ../../include/ui/errorl.h \
 	../../include/ui/statusl.h ../../include/ui/status.h \
 	../../include/libdbg/dbg.h

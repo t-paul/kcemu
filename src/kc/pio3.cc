@@ -1,8 +1,8 @@
 /*
  *  KCemu -- the KC 85/3 and KC 85/4 Emulator
- *  Copyright (C) 1997-1998 Torsten Paul
+ *  Copyright (C) 1997-2001 Torsten Paul
  *
- *  $Id: pio3.cc,v 1.8 2000/07/09 21:13:34 tp Exp $
+ *  $Id: pio3.cc,v 1.10 2001/04/14 15:16:25 tp Exp $
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -157,37 +157,37 @@ void PIO3::change_B(byte_t changed, byte_t val)
 {
   if (changed & 0x01)
     {
-      DBG(2, form("KCemu/PIO/4/change/B",
+      DBG(2, form("KCemu/PIO/3/change/B",
 		  "PIO B: flip-flop [%d]\n",
 		  (val & 1)));
     }
   if (changed & 0x0e)
     {
-      DBG(2, form("KCemu/PIO/4/change/B",
+      DBG(2, form("KCemu/PIO/3/change/B",
 		  "PIO B: volume [%d]\n",
 		  ((val >> 1) & 7)));
     }
   if (changed & 0x10)
     {
-      DBG(2, form("KCemu/PIO/4/change/B",
+      DBG(2, form("KCemu/PIO/3/change/B",
 		  "PIO B: unused 0x10 [%d]\n",
 		  ((val >> 4) & 1)));
     }
   if (changed & 0x20)
     {
-      DBG(2, form("KCemu/PIO/4/change/B",
+      DBG(2, form("KCemu/PIO/3/change/B",
                   "PIO B: RAM 8 [%d]\n",
                   ((val >> 5) & 1)));
     }
   if (changed & 0x40)
     {
-      DBG(2, form("KCemu/PIO/4/change/B",
+      DBG(2, form("KCemu/PIO/3/change/B",
                   "PIO B: RAM 8 write protect [%d]\n",
                   ((val >> 6) & 1)));
     }
   if (changed & 0x80)
     {
-      DBG(2, form("KCemu/PIO/4/change/B",
+      DBG(2, form("KCemu/PIO/3/change/B",
 		  "PIO B: foreground blink [%d]\n",
 		  ((val >> 6) & 1)));
     }

@@ -1,8 +1,8 @@
 /*
  *  KCemu -- the KC 85/3 and KC 85/4 Emulator
- *  Copyright (C) 1997-1998 Torsten Paul
+ *  Copyright (C) 1997-2001 Torsten Paul
  *
- *  $Id: about.cc,v 1.7 2001/01/05 18:26:27 tp Exp $
+ *  $Id: about.cc,v 1.8 2001/04/14 15:16:47 tp Exp $
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -26,7 +26,7 @@
 #include "ui/gtk/about.h"
 
 char AboutWindow::APP_NAME[]      = ("KCemu v" KCEMU_VERSION);
-char AboutWindow::APP_COPYRIGHT[] = ("        (c) 1997-2000 Torsten Paul        \n"
+char AboutWindow::APP_COPYRIGHT[] = ("        (c) 1997-2001 Torsten Paul        \n"
 				     "<Torsten.Paul@gmx.de>");
 
 class CMD_about_window_toggle : public CMD

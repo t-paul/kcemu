@@ -29,6 +29,7 @@ kcemu_SOURCES = \
 	keyb3.cc	\
 	memory.cc	\
 	memory1.cc	\
+	memory2.cc	\
 	memory3.cc	\
 	memory4.cc	\
 	sh_mem.cc	\
@@ -38,6 +39,7 @@ kcemu_SOURCES = \
 	floppy.cc	\
 	pio.cc		\
 	pio1.cc		\
+	pio2.cc		\
 	pio3.cc		\
 	pio4.cc		\
 	ports.cc	\

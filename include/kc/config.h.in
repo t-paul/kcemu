@@ -1,4 +1,4 @@
-/* include/kc/config.h.in.  Generated automatically from configure.in by autoheader.  */
+/* include/kc/config.h.in.  Generated automatically from configure.in by autoheader 2.13.  */
 
 /* Define if using alloca.c.  */
 #undef C_ALLOCA
@@ -24,9 +24,6 @@
 
 /* Define to `long' if <sys/types.h> doesn't define.  */
 #undef off_t
-
-/* Define if you need to in order for stat and other things to work.  */
-#undef _POSIX_SOURCE
 
 /* Define as the return type of signal handlers (int or void).  */
 #undef RETSIGTYPE
@@ -88,6 +85,9 @@
 /* Define if you have the gettimeofday function.  */
 #undef HAVE_GETTIMEOFDAY
 
+/* Define if you have the mtrace function.  */
+#undef HAVE_MTRACE
+
 /* Define if you have the munmap function.  */
 #undef HAVE_MUNMAP
 
@@ -129,6 +129,9 @@
 
 /* Define if you have the <malloc.h> header file.  */
 #undef HAVE_MALLOC_H
+
+/* Define if you have the <mcheck.h> header file.  */
+#undef HAVE_MCHECK_H
 
 /* Define if you have the <nl_types.h> header file.  */
 #undef HAVE_NL_TYPES_H

@@ -1,8 +1,8 @@
 /*
  *  KCemu -- the KC 85/3 and KC 85/4 Emulator
- *  Copyright (C) 1997-1998 Torsten Paul
+ *  Copyright (C) 1997-2001 Torsten Paul
  *
- *  $Id: kc.cc,v 1.15 2001/01/21 23:07:03 tp Exp $
+ *  $Id: kc.cc,v 1.20 2001/04/29 21:57:27 tp Exp $
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -24,12 +24,23 @@
 #include <string.h>
 #include <iostream.h>
 
+#include "kc/config.h"
+#include "kc/system.h"
+
 #ifdef HAVE_LOCALE_H
 #include <locale.h>
 #endif
 
-#include "kc/config.h"
-#include "kc/system.h"
+#undef __CALL_MTRACE
+#ifdef HAVE_MCHECK_H
+#ifdef DBG_LEVEL
+#if DBG_LEVEL > 1
+#define __CALL_MTRACE 1
+#include <mcheck.h>
+#warning including mcheck.h
+#endif
+#endif
+#endif
 
 #include "kc/kc.h"
 #include "kc/rc.h"
@@ -57,6 +68,9 @@
 #include "kc/memory1.h"
 #include "kc/keyb1.h"
 #include "ui/gtk/ui_gtk1.h"
+
+#include "kc/pio2.h"
+#include "kc/memory2.h"
 
 #include "kc/pio3.h"
 #include "kc/ctc3.h"
@@ -120,8 +134,10 @@ usage(char *argv0)
        << "    ***  KC 85/4 Emulator  ***" << endl
        << "      (c) 1997  Torsten Paul  " << endl
        << endl
-       << "usage: " << argv0 << " [-34hdl]" << endl
+       << "usage: " << argv0 << " [-1234hdl]" << endl
        << endl
+       << "  -1:             run in Z9001 / KC 85/1 mode" << endl
+       << "  -2:             run in KC 85/2 mode" << endl
        << "  -3:             run in KC 85/3 mode" << endl
        << "  -4:             run in KC 85/4 mode (default)" << endl
        << "  -h --help:      display help" << endl
@@ -154,6 +170,26 @@ main(int argc, char **argv)
   Keyboard1 *k1;
   LOG *log;
 
+#ifdef __CALL_MTRACE
+  /*
+   *  memory debugging with glibc goes like this:
+   *
+   *  1) run the program with MALLOC_CHECK_=1 ./kcemu to enable
+   *     consistency checks (MALLOC_CHECK_=2 aborts immedately
+   *     when encountering problems)
+   *
+   *  2) call mtrace() at the very beginning of the program and
+   *     run it with MALLOC_TRACE=/tmp/mem.out ./kcemu to
+   *     generate a memory trace that can be analyzed with
+   *     mtrace ./kcemu /tmp/mem.out
+   *
+   *  The following mtrace is enababled if ./configure finds
+   *  the mcheck.h header file, the mtrace() function and
+   *  the debuglevel is set to a value greater than 1.
+   */
+  mtrace();
+#endif /* __CALL_MTRACE */
+
   ptr = getenv("KCEMU_DATADIR");
   kcemu_datadir = (ptr) ? strdup(ptr) : strdup(DATADIR);
   ptr = getenv("KCEMU_LOCALEDIR");
@@ -171,11 +207,11 @@ main(int argc, char **argv)
   while (1)
     {
 #ifdef HAVE_GETOPT_LONG
-      c = getopt_long(argc, argv, "134d:l:",
+      c = getopt_long(argc, argv, "1234d:l:",
                       long_options, &option_index);
 #else
 #ifdef HAVE_GETOPT
-      c = getopt(argc, argv, "134d:l:");
+      c = getopt(argc, argv, "1234d:l:");
 #else
 #warning neihter HAVE_GETOPT_LONG nor HAVE_GETOPT defined
 #warning commandline parsing disabled!
@@ -190,6 +226,9 @@ main(int argc, char **argv)
 	case '1':
 	  type = 1;
 	  break;
+        case '2':
+          type = 2;
+          break;
         case '3':
           type = 3;
           break;
@@ -223,7 +262,7 @@ main(int argc, char **argv)
   RC::init();
   if (type == 0)
     type = RC::instance()->get_int("Default KC Model", 4);
-  if (type == 0)
+  if ((type <= 0) || (type > 4))
     type = 4;
   __kc_type = type;
 
@@ -239,7 +278,6 @@ main(int argc, char **argv)
 	case 1:
 	  memory   = new Memory1;
 	  ui       = new UI_Gtk1;
-	  //porti    = new Ports1;
 	  pio      = new PIO1_1;
 	  ctc      = new CTC1;
 	  pio2     = new PIO1_2;
@@ -247,9 +285,29 @@ main(int argc, char **argv)
 	  disk     = NULL;
 	  k1       = new Keyboard1;
 	  
+	  //tape->setAutoplay(false);
 	  pio2->register_callback_A_in(k1);
 	  pio2->register_callback_B_in(k1);
 	  keyboard = k1;
+	  break;
+	case 2:
+	  memory   = new Memory2;
+#ifdef HAVE_UI_GTK
+	  ui       = new UI_Gtk3;
+#endif /* HAVE_UI_GTK */
+#ifdef HAVE_UI_DUMMY
+	  ui       = new UI_Dummy3;
+#endif /* HAVE_UI_DUMMY */
+#ifdef HAVE_UI_DOS
+	  ui       = new UI_Dos3;
+#endif /* HAVE_UI_DOS */
+	  porti    = new Ports3;
+	  
+	  pio      = new PIO2;
+	  ctc      = new CTC3;
+	  tape     = new Tape(364, 729, 1458, 1);
+	  disk     = new Disk;
+	  keyboard = new Keyboard3;
 	  break;
 	case 3:
 	  memory   = new Memory3;
@@ -267,7 +325,7 @@ main(int argc, char **argv)
 	  pio      = new PIO3;
 	  ctc      = new CTC3;
 	  tape     = new Tape(364, 729, 1458, 1);
-	  disk     = new Disk();
+	  disk     = new Disk;
 	  keyboard = new Keyboard3;
 	  break;
 	case 4:
@@ -285,7 +343,7 @@ main(int argc, char **argv)
 	  pio      = new PIO4;
 	  ctc      = new CTC3;
 	  tape     = new Tape(364, 729, 1458, 1);
-	  disk     = new Disk();
+	  disk     = new Disk;
 	  keyboard = new Keyboard3;
 	  break;
 	default:
@@ -294,6 +352,8 @@ main(int argc, char **argv)
 
 #if HAVE_LIBSDL
       sound       = new Sound;
+      if (RC::instance()->get_int("Enable Sound"))
+	sound->init();
 #endif /* HAVE_LIBSDL */
       wav         = new WavPlayer;
       timer       = new Timer;
@@ -307,6 +367,7 @@ main(int argc, char **argv)
 	  portg = ports->register_ports("PIO1", 0x88, 4, pio,  10);
 	  portg = ports->register_ports("PIO2", 0x90, 4, pio2, 10);
 	  break;
+	case 2:
 	case 3:
 	  portg = ports->register_ports("Module", 0x80, 1, module, 10);
 	  portg = ports->register_ports("PIO",    0x88, 4, pio,    10);
@@ -341,6 +402,9 @@ main(int argc, char **argv)
       log = new LOG();
       ui->init(&argc, &argv);
       module_list->init();
+
+      if (type == 1)
+	tape->power(true);
 
       //ctc->next(pio);
       //ctc->iei(1);

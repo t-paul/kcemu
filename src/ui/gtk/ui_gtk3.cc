@@ -1,8 +1,8 @@
 /*
  *  KCemu -- the KC 85/3 and KC 85/4 Emulator
- *  Copyright (C) 1997-1998 Torsten Paul
+ *  Copyright (C) 1997-2001 Torsten Paul
  *
- *  $Id: ui_gtk3.cc,v 1.7 2000/07/09 21:12:21 tp Exp $
+ *  $Id: ui_gtk3.cc,v 1.9 2001/04/14 15:17:06 tp Exp $
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -27,6 +27,7 @@
 
 #include "kc/memory.h"
 
+#include "ui/hsv2rgb.h"
 #include "ui/gtk/ui_gtk3.h"
 
 #include "libdbg/dbg.h"
@@ -128,7 +129,7 @@ UI_Gtk3::callback(void * /* data */)
   if (!_auto_skip)
     {
       processEvents();
-      update(false);
+      update();
     }
 
   gettimeofday(&tv, NULL);
@@ -167,56 +168,75 @@ put_pixels(GdkImage *image, int x, int y, byte_t val, gulong fg, gulong bg)
     }
 }
 
-void
-UI_Gtk3::allocate_colors(void)
+static inline void
+hsv_to_gdk_color(double h, double s, double v, GdkColor *col)
 {
-    int a;
-    char *color_names[] = {
-	"rgb:00/00/00",
-	"rgb:00/00/d0",
-	"rgb:d0/00/00",
-	"rgb:d0/00/d0",
-	"rgb:00/d0/00",
-	"rgb:00/d0/d0",
-	"rgb:d0/00/00",
-	"rgb:d0/d0/d0",
+  int r, g, b;
 
-	"rgb:00/00/00",
-	"rgb:60/00/a0",
-	"rgb:a0/60/00",
-	"rgb:a0/00/60",
-	"rgb:00/a0/60",
-	"rgb:00/60/a0",
-	"rgb:30/a0/30",
-	"rgb:d0/d0/d0",
-
-	"rgb:00/00/00",
-	"rgb:00/00/a0",
-	"rgb:a0/00/00",
-	"rgb:a0/00/a0",
-	"rgb:00/a0/00",
-	"rgb:00/a0/a0",
-	"rgb:a0/a0/00",
-	"rgb:a0/a0/a0"
-    };
-
-    _colormap = gdk_colormap_get_system();
-    for (a = 0;a < 24;a++) {
-	gdk_color_parse(color_names[a], &_col[a]);
-	gdk_color_alloc(_colormap, &_col[a]);
-    }
+  hsv2rgb(h, s, v, &r, &g, &b);
+  col->red   = r << 8;
+  col->green = g << 8;
+  col->blue  = b << 8;
 }
 
 void
-UI_Gtk3::update(bool force_update)
+UI_Gtk3::allocate_colors(double saturation_fg,
+			 double saturation_bg,
+			 double brightness_fg,
+			 double brightness_bg,
+			 double black_level,
+			 double white_level)
+{
+  int a;
+  
+  hsv_to_gdk_color(  0,             0,   black_level, &_col[ 0]); /* black */
+  hsv_to_gdk_color(240, saturation_fg, brightness_fg, &_col[ 1]); /* blue */
+  hsv_to_gdk_color(  0, saturation_fg, brightness_fg, &_col[ 2]); /* red */
+  hsv_to_gdk_color(300, saturation_fg, brightness_fg, &_col[ 3]); /* magenta */
+  hsv_to_gdk_color(120, saturation_fg, brightness_fg, &_col[ 4]); /* green */
+  hsv_to_gdk_color(180, saturation_fg, brightness_fg, &_col[ 5]); /* cyan */
+  hsv_to_gdk_color( 60, saturation_fg, brightness_fg, &_col[ 6]); /* yellow */
+  hsv_to_gdk_color(  0,             0,   white_level, &_col[ 7]); /* white */
+  
+  hsv_to_gdk_color(  0,             0,   black_level, &_col[ 8]); /* black */
+  hsv_to_gdk_color(270, saturation_fg, brightness_fg, &_col[ 9]); /* blue + 30° */
+  hsv_to_gdk_color( 30, saturation_fg, brightness_fg, &_col[10]); /* red + 30° */
+  hsv_to_gdk_color(330, saturation_fg, brightness_fg, &_col[11]); /* magenta + 30° */
+  hsv_to_gdk_color(150, saturation_fg, brightness_fg, &_col[12]); /* green + 30° */
+  hsv_to_gdk_color(210, saturation_fg, brightness_fg, &_col[13]); /* cyan + 30° */
+  hsv_to_gdk_color( 90, saturation_fg, brightness_fg, &_col[14]); /* yellow + 30° */
+  hsv_to_gdk_color(  0,             0,   white_level, &_col[15]); /* white */
+  
+  hsv_to_gdk_color(  0,             0,   black_level, &_col[16]); /* black */
+  hsv_to_gdk_color(240, saturation_bg, brightness_bg, &_col[17]); /* blue */
+  hsv_to_gdk_color(  0, saturation_bg, brightness_bg, &_col[18]); /* red */
+  hsv_to_gdk_color(300, saturation_bg, brightness_bg, &_col[19]); /* magenta */
+  hsv_to_gdk_color(120, saturation_bg, brightness_bg, &_col[20]); /* green */
+  hsv_to_gdk_color(180, saturation_bg, brightness_bg, &_col[21]); /* cyan */
+  hsv_to_gdk_color( 60, saturation_bg, brightness_bg, &_col[22]); /* yellow */
+  hsv_to_gdk_color(  0,             0, brightness_bg, &_col[23]); /* white */
+  
+  _colormap = gdk_colormap_get_system();
+  for (a = 0;a < 24;a++)
+    gdk_color_alloc(_colormap, &_col[a]);
+}
+
+void
+UI_Gtk3::update(bool full_update, bool clear_cache)
 {
   int c, x, y;
   gulong fg, bg;
   byte val, col;
   int p, pc, ys, yc;
   byte *irm = memory->getIRM();
+
+  if (clear_cache)
+    {
+      full_update = false;
+      memset(_dirty_buf, 0xff, 8192);
+    }
   
-  if (force_update)
+  if (full_update)
     {
       gdk_draw_image(GTK_WIDGET(_main.canvas)->window, _gc, _image,
                      0, 0, 0, 0, 320, 256);
@@ -238,6 +258,7 @@ UI_Gtk3::update(bool force_update)
 
           if (val != _pix_mem[p]) { changed++; _pix_mem[p] = val; }
           if (col != _col_mem[p]) { changed++; _col_mem[p] = col; }
+	  changed += clear_cache;
           p++;
           if (!changed) continue;
           
@@ -263,6 +284,7 @@ UI_Gtk3::update(bool force_update)
 
           if (val != _pix_mem[p]) { changed++; _pix_mem[p] = val; }
           if (col != _col_mem[p]) { changed++; _col_mem[p] = col; }
+	  changed += clear_cache;
           p++;
           if (!changed) continue;
           

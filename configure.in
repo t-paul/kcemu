@@ -4,17 +4,17 @@ AM_CONFIG_HEADER(include/kc/config.h)
 
 KCEMU_MAJOR_VERSION=0
 KCEMU_MINOR_VERSION=3
-KCEMU_MICRO_VERSION=0
+KCEMU_MICRO_VERSION=2
 
 if test $KCEMU_MICRO_VERSION -eq 0
 then
         KCEMU_VERSION=${KCEMU_MAJOR_VERSION}.${KCEMU_MINOR_VERSION}
 else
-        KCEMU_VERSION=${KCEMU_MAJOR_VERSION}.${KCEMU_MINOR_VERSION}pl${KCEMU_MICRO_VERSION}
+        KCEMU_VERSION=${KCEMU_MAJOR_VERSION}.${KCEMU_MINOR_VERSION}.${KCEMU_MICRO_VERSION}
 fi
 
 dnl declare options
-AC_ARG_ENABLE(sound,     [  --enable-sound          enable sound using libSDL [default=no]],,enable_sound=no)
+AC_ARG_ENABLE(sound,     [  --enable-sound          enable sound using libSDL (broken!) [default=no]],,enable_sound=no)
 AC_ARG_WITH(debug_level, [  --with-debug-level=L    set debug level to L (0..3) [default=1]])
 
 dnl Checks for programs.
@@ -87,7 +87,7 @@ AC_CHECK_LIB(z, crc32,,
 dnl Checks for header files.
 AC_PATH_X
 AC_HEADER_STDC
-AC_CHECK_HEADERS(sys/time.h unistd.h)
+AC_CHECK_HEADERS(sys/time.h unistd.h mcheck.h)
 
 dnl Checks for typedefs, structures, and compiler characteristics.
 AC_C_CONST
@@ -96,7 +96,7 @@ AC_HEADER_TIME
 
 dnl Checks for library functions.
 AC_TYPE_SIGNAL
-AC_CHECK_FUNCS(gettimeofday strstr strtol)
+AC_CHECK_FUNCS(gettimeofday strstr strtol mtrace)
 
 AC_OUTPUT([
 	Makefile
@@ -123,6 +123,8 @@ AC_OUTPUT([
 	src/z80core2/Makefile
 	ROM/Makefile
 	PRG/Makefile
+	DISK/Makefile
+	doc/Makefile
 	intl/Makefile
 	po/Makefile.in],
 	[sed -e "/POTFILES =/r po/POTFILES" po/Makefile.in > po/Makefile])

@@ -1,0 +1,227 @@
+-------------------------------------------------------------------------------
+$Id: README.de,v 1.1 2001/04/01 22:15:13 tp Exp $
+-------------------------------------------------------------------------------
+
+		       _  ______                     
+		      | |/ / ___|___ _ __ ___  _   _ 
+		      | ' / |   / _ \ '_ ` _ \| | | |
+		      | . \ |__|  __/ | | | | | |_| |
+		      |_|\_\____\___|_| |_| |_|\__,_|
+		     =================================
+
+                      Copyright (c) 1997 Torsten Paul
+                           Lommatzscher Str. 26
+                              01139 Dresden
+			   Torsten.Paul@gmx.de
+			 Alle Rechte Vorbehalten
+
+-------------------------------------------------------------------------------
+                                  README
+-------------------------------------------------------------------------------
+0. Inhalt
+
+    1. COPYRIGHT
+    2. Installation
+    3. Konfiguration
+    4. Das Programm 'kcemu-remote'
+    5. Das Floppy-System
+
+-------------------------------------------------------------------------------
+1. COPYRIGHT
+
+   This program is free software; you can redistribute it and/or modify
+   it under the terms of the GNU General Public License as published by
+   the Free Software Foundation; either version 2, or (at your option)
+   any later version.
+
+   This program is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+   GNU General Public License for more details.
+
+   You should have received a copy of the GNU General Public License
+   along with this program; if not, write to the Free Software
+   Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+
+-------------------------------------------------------------------------------
+2. Installation
+
+   Die Installation erfolgt normalerweise einfach durch:
+
+   ./configure
+   make
+   make install
+
+   Eventuell ist es für den letzten Schritt sich vorher als 'root' anzumelden.
+
+
+   Soll der Emulator nur für einen User und in dessen Verzeichnis installiert
+   werden, kann auch der folgende Aufruf genutzt werden.
+
+   ./configure --prefix=$HOME
+   make
+   make install
+
+   Damit wird der Emulator in das Verzeichnis "$HOME/bin" und die
+   Daten-Dateien in die Verzeichnisse "$HOME/share/KCemu" und
+   "$HOME/share/locale/..." installiert.
+
+-------------------------------------------------------------------------------
+3. Konfiguration
+
+   In der Datei .kcemurc können eine Reihe von Einstellungen vorgenommen
+   werden. Diese Datei muß im Homeverzeichnis des Benutzers liegen.
+   Eine Beispieldatei befindet sich mit dem Namen kcemurc.sample im
+   Verzeichnis doc des Programmarchivs. Diese Datei enhält auch die
+   Beschreibungen für die möglichen Einträge.
+
+   Jeder Eintrag in dieser Datei hat die Form:
+
+   <Name des Schlüssels>: <Wert>
+
+   z.B.:
+   Tape File: /tmp/x.kct
+
+   Zusätzlich gibt es noch die Möglichkeit für bestimmte Namen mehrere Werte
+   zuzuweisen. Dies geschieht indem an den eigentlichen Namen des Schlüssels
+   durch _ getrennt eine 8-stellige Dezimalzahl angehängt wird:
+
+   z.B.:
+   Tape File List_00000000: /home/tp/projects/KCemu/PRG/files.kct
+   Tape File List_00000001: /home/tp/projects/KCemu/PRG/test.kct
+   Tape File List_00000002: /home/tp/projects/KCemu/PRG/wordpro.kct
+
+   Zeilen, die mit einem # beginnen sind Kommentarzeilen und werden
+   beim Einlesen ignoriert.
+
+-------------------------------------------------------------------------------
+4. Das Programm 'kcemu-remote'
+
+   Mit dem Programm kcemu-remote kann der Emulator von außen gesteuert
+   werden. Die Kommunikation erfolgt über den X-Server, was bedeutet, daß
+   das Programm kcemu-remote nicht auf dem selben Rechner laufen muß, wie
+   der Emulator. Es muß jedoch auf das gleiche Display zugreifen (wird
+   normalerweise durch die Umgebungsvariable $DISPLAY gesteuert).
+
+   Laufen zwei Emulatoren gleichzeitig, wird einer zufällig ausgewählt.
+   Zur Zeit ist es noch nicht möglich, einen speziellen Emulator anzugeben.
+
+   Der Aufruf des Programms erfolgt mit:
+
+   kcemu-remote <Kommando> <Parametername>=<Wert> <Parametername>=<Wert> ...
+
+   Die wichtigsten Kommandos sind in der folgenden Tabelle aufgelistet
+   (Wenn Dateinamen als Parameter angegeben werden, müssen das zur Zeit
+   immer absolute Dateinamen sein!)
+
+   +------------------+-----------+-----------------------------------------+
+   | Kommando         | Parameter | Wert                                    |
+   +------------------+-----------+-----------------------------------------+
+   | emu-reset        | -         | Reset des Emulators                     |
+   |                  |           |                                         |
+   |                  |           | Entspricht dem Reset-Knopf des KCs,     |
+   |                  |           | Programme bleiben im Speicher.          |
+   +------------------+-----------+-----------------------------------------+
+   | emu-power-on     | -         | Power-On Reset des Emulators            |
+   |                  |           |                                         |
+   |                  |           | Entspricht dem Ausschalten und wieder   |
+   |                  |           | Einschalten des KCs, der komplette      |
+   |                  |           | Speicher wird gelöscht.                 |
+   +------------------+-----------+-----------------------------------------+
+   | emu-quit         | -         | Beenden des Emulators                   |
+   +------------------+-----------+-----------------------------------------+
+   | kc-image-load    | filename  | Dateiname der zu ladenden Datei         |
+   |                  |           | Die Datei wird nur geladen, ausführbare |
+   |                  |           | Programme werden nicht gestartet.       |
+   |                  |           |                                         |
+   |                  |           | (Entspricht dem Menüpunkt File/Load)    |
+   +------------------+-----------+-----------------------------------------+
+   | kc-image-run     | filename  | Dateiname der zu startenden Datei       |
+   |                  |           |                                         |
+   |                  |           | (Entspricht dem Menüpunkt File/Run)     |
+   +------------------+-----------+-----------------------------------------+
+   | floppy-attach    | filename  | Dateiname des Disketten-Images          |
+   |                  |           |                                         |
+   |                  |           | Es kann nur auf das physisch erste      |
+   |                  |           | Diskettenlaufwerk zugegriffen werden.   |
+   |                  |           |                                         |
+   |                  |           | (Da der Menüpunkt zum Einlegen von      |
+   |                  |           | Disketten noch nicht funktioniert, ist  |
+   |                  |           | das die einzige Möglichkeit Disketten   |
+   |                  |           | zu wechseln :-)                         |
+   +------------------+-----------+-----------------------------------------+
+   | keyboard-replay  | text      | Text der an den Emulator gesendet wird. |
+   |                  |           | Der Emulator tut dann so, als würden    |
+   |                  |           | die entsprechenden Zeichen über die     |
+   |                  |           | Tastatur eingegeben.                    |
+   +------------------+-----------+-----------------------------------------+
+ 
+-------------------------------------------------------------------------------
+5. Das Floppy-System
+
+   Der Start des Floppy-Systems erfolgt im CAOS-Menü über den Befehl JUMP.
+   Da der Modulschacht des Floppy-Systems immer auf FC festgelegt ist,
+   lautet der Befehl:
+
+   JUMP FC
+
+   Bei eingelegter CAOS-Erweiterungsdiskette erfolgt die Initialisierung des
+   Floppy-Systems und danach der Rücksprung ins CAOS-Menü. Dort existiert
+   nun ein neuer Menüpunkt FLOAD (KC85/3):
+
+   * HC-CAOS 3.1 *
+   %FLOAD
+   %BASIC
+   %REBASIC
+   %
+   %SWITCH
+   %JUMP
+   %MENU
+   %SAVE
+   %VERIFY
+   %LOAD
+   %COLOR
+   %MODIFY
+   %DISPLAY
+   %KEYLIST
+   %KEY
+
+   Mit diesem neuen Befehl können nun Dateien von Diskette geladen werden.
+   Die CAOS-Diskette enthält die folgenden Programme:
+
+   DEP.COM
+   FSAVE.KCC
+   FLOAD.KCC
+   SERVICE.KCC
+   BASEX.KCC
+   DEVEX.KCC
+   TEXOREX.KCC
+   FORTHEX.KCC
+   INITIAL.SUB
+
+   Erweiterte Funktionen erhält man durch Laden des Programms SERVICE:
+
+   %FLOAD
+   NAME :SERVICE
+
+   Danach gibt es die zusätzlichen Menüpunkte:
+
+   %FSAVE
+   %DIR
+   %STAT
+   %REN
+   %ERA
+   %SETRO
+   %SETWR
+
+   Weiterführende Hinweise gibt es in den Handbüchern zum Floppy-System D004,
+   die unter der folgenden Adresse des KC-Clubs erreichbar sind:
+
+   http://www.iee.et.tu-dresden.de/~kc-club/05/0500.HTML
+
+-------------------------------------------------------------------------------
+Have fun!
+
+--
+Torsten Paul
+Torsten.Paul@gmx.de

@@ -1,4 +1,4 @@
-# Makefile.in generated automatically by automake 1.4 from Makefile.am
+# Makefile.in generated automatically by automake 1.4-p4 from Makefile.am
 
 # Copyright (C) 1994, 1995-8, 1999 Free Software Foundation, Inc.
 # This Makefile.in is free software; the Free Software Foundation
@@ -93,7 +93,7 @@ USE_NLS = @USE_NLS@
 VERSION = @VERSION@
 l = @l@
 
-pkgdata_DATA =  	basic_c0.851		os____e0.851		basic_c0.853    	basic_c0.854    	caos__c0.854    	caos__e0.853    	caos__e0.854		m012.rom		m026.rom		m027.rom		m900.rom		m901.rom		floppy.rom
+pkgdata_DATA =  	basic_c0.851		os____e0.851		basic_c0.853    	basic_c0.854    	caos__c0.854    	caos__e0.852    	caos__e0.853    	caos__e0.854		m006.rom		m012.rom		m026.rom		m027.rom		m900.rom		m901.rom		floppy.rom
 
 
 EXTRA_DIST = $(pkgdata_DATA)

@@ -1,8 +1,8 @@
 /*
  *  KCemu -- the KC 85/3 and KC 85/4 Emulator
- *  Copyright (C) 1997-1998 Torsten Paul
+ *  Copyright (C) 1997-2001 Torsten Paul
  *
- *  $Id: z80.h,v 1.12 2001/01/06 15:12:16 tp Exp $
+ *  $Id: z80.h,v 1.14 2001/04/29 22:01:44 tp Exp $
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -56,6 +56,11 @@ class Z80
   public:
 	_Z80 _regs;
         bool _enable_floppy_cpu;
+	bool _debug;
+	bool _trace;
+	bool _singlestep;
+	bool _executestep;
+	long _tracedelay;
         
 	typedef list<InterfaceCircuit *> ic_list_t;
 
@@ -70,8 +75,16 @@ class Z80
 	Z80(void);
 	~Z80(void) {}
 	bool run(void);
-	int trace(void);
-	void trace(int level);
+
+	void executestep(void);
+	bool debug(void);
+	void debug(bool value);
+	bool trace(void);
+	void trace(bool value);
+	void tracedelay(long delay);
+	bool singlestep();
+	void singlestep(bool value);
+
 	void reset(word_t pc, bool power_on = false);
 	void power_on(word_t pc);
 	void jump(word_t pc);

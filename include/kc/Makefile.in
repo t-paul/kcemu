@@ -1,4 +1,4 @@
-# Makefile.in generated automatically by automake 1.4 from Makefile.am
+# Makefile.in generated automatically by automake 1.4-p4 from Makefile.am
 
 # Copyright (C) 1994, 1995-8, 1999 Free Software Foundation, Inc.
 # This Makefile.in is free software; the Free Software Foundation
@@ -93,7 +93,7 @@ USE_NLS = @USE_NLS@
 VERSION = @VERSION@
 l = @l@
 
-EXTRA_DIST =  	cb.h			ic.h			kc.h			rc.h			ctc.h			ctc1.h			ctc3.h			keyboard.h		keyb1.h			keyb1k.h		keyb3.h			keyb3k.h		keys.h			memory.h		memory1.h		memory3.h		memory4.h		pio.h			pio1.h			pio3.h			pio4.h			ports.h			ports1.h		ports3.h		ports4.h		sh_mem.h		disk_io.h		fdc.h			fdc_cmd.h		floppy.h		module.h		mod_ram.h		mod_ram1.h		mod_64k.h		mod_rom.h		mod_disk.h		mod_v24.h		mod_list.h		profile.h		tape.h			disk.h			timer.h			wav.h			sound.h			z80.h			system.h		disass.h		op.h			opcb.h			opxx.h			opxxxx.h
+EXTRA_DIST =  	cb.h			ic.h			kc.h			rc.h			ctc.h			ctc1.h			ctc3.h			keyboard.h		keyb1.h			keyb1k.h		keyb3.h			keyb3k.h		keys.h			memory.h		memory1.h		memory2.h		memory3.h		memory4.h		pio.h			pio1.h			pio2.h			pio3.h			pio4.h			ports.h			ports1.h		ports3.h		ports4.h		sh_mem.h		disk_io.h		fdc.h			fdc_cmd.h		floppy.h		module.h		mod_ram.h		mod_ram1.h		mod_64k.h		mod_rom.h		mod_disk.h		mod_v24.h		mod_list.h		profile.h		tape.h			disk.h			timer.h			wav.h			sound.h			z80.h			system.h		disass.h		op.h			opcb.h			opxx.h			opxxxx.h
 
 mkinstalldirs = $(SHELL) $(top_srcdir)/mkinstalldirs
 CONFIG_HEADER = config.h

@@ -1,0 +1,14 @@
+#
+# $Id: TODO,v 1.1 2001/12/28 15:36:51 torsten_paul Exp $
+#
+
+- don't use tempnam() in ModuleV24::socket_server():
+- fix interrupt handling, the hardware daisy chain is not
+  honored correctly which breaks some programs (e.g. PHARAO)
+- fix tape handling (the tape isn't stopped when the program
+  is loaded)
+- extend the configuration dialog and save the changed values
+- implement display scaling (hmm, maybe use SDL?)
+- implement user interface for floppy disks
+- implement sound output
+- implement wav file reading

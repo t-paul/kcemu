@@ -1,8 +1,8 @@
 /*
  *  KCemu -- the KC 85/3 and KC 85/4 Emulator
- *  Copyright (C) 1997-1998 Torsten Paul
+ *  Copyright (C) 1997-2001 Torsten Paul
  *
- *  $Id: ui_gtk3.h,v 1.8 2000/07/09 21:12:23 tp Exp $
+ *  $Id: ui_gtk3.h,v 1.10 2001/04/14 15:15:35 tp Exp $
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -37,12 +37,17 @@ class UI_Gtk3 : public UI_Gtk
   static int _bitswap3[256];
   
  protected:
-  virtual void allocate_colors(void);
+  virtual void allocate_colors(double saturation_fg,
+			       double saturation_bg,
+			       double brightness_fg,
+			       double brightness_bg,
+			       double black_level,
+			       double white_level);
   
  public:
   UI_Gtk3(void);
   virtual ~UI_Gtk3(void);
-  virtual void update(bool force_update);
+  virtual void update(bool full_update = false, bool clear_cache = false);
   virtual void memWrite(int addr, char val);
   virtual void callback(void *data);
   virtual void flash(bool enable);

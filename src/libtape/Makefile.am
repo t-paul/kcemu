@@ -2,11 +2,11 @@
 
 TESTS = test test.sh
 
-bin_PROGRAMS = kctape kcread2tap
+bin_PROGRAMS = kctape
 
 check_PROGRAMS = test
 
-noinst_PROGRAMS = show_tap
+noinst_PROGRAMS = show_tap kcread2tap
 
 noinst_LIBRARIES = libtape.a
 

@@ -15,6 +15,7 @@ EXTRA_DIST = \
 	info.h		\
 	debug.h		\
 	about.h		\
+	color.h		\
 	module.h	\
 	copying.h	\
 	window.h	\

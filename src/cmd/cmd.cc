@@ -1,8 +1,8 @@
 /*
  *  KCemu -- the KC 85/3 and KC 85/4 Emulator
- *  Copyright (C) 1997-1998 Torsten Paul
+ *  Copyright (C) 1997-2001 Torsten Paul
  *
- *  $Id: cmd.cc,v 1.1 2000/05/21 17:06:31 tp Exp $
+ *  $Id: cmd.cc,v 1.3 2001/04/14 15:15:41 tp Exp $
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -48,12 +48,18 @@ CMD::get_name(void)
 void
 CMD::register_cmd(const char *list_name, CMD_Context context)
 {
+  DBG(0, form("KCemu/CMD/register",
+	      "CMD: registering command '%s', context = %d\n",
+	      list_name, context));
   CMD_Repository::instance()->add_cmd(this, list_name, context);
 };
 
 void
 CMD::unregister_cmd(const char *list_name, CMD_Context context)
 {
+  DBG(0, form("KCemu/CMD/unregister",
+	      "CMD: unregistering command '%s', context = %d\n",
+	      list_name, context));
   CMD_Repository::instance()->remove_cmd(this, list_name, context);
 };
 

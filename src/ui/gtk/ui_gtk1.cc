@@ -1,8 +1,8 @@
 /*
  *  KCemu -- the KC 85/3 and KC 85/4 Emulator
- *  Copyright (C) 1997-1998 Torsten Paul
+ *  Copyright (C) 1997-2001 Torsten Paul
  *
- *  $Id: ui_gtk1.cc,v 1.4 2000/07/09 21:13:35 tp Exp $
+ *  $Id: ui_gtk1.cc,v 1.6 2001/04/14 15:17:05 tp Exp $
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -82,7 +82,7 @@ UI_Gtk1::callback(void * /* data */)
   if (!_auto_skip)
     {
       processEvents();
-      update(false);
+      update();
     }
 
   gettimeofday(&tv, NULL);
@@ -134,7 +134,12 @@ put_pixels(GdkImage *image, int x, int y, byte_t val, gulong fg, gulong bg)
 }
 
 void
-UI_Gtk1::allocate_colors(void)
+UI_Gtk1::allocate_colors(double saturation_fg,
+			 double saturation_bg,
+			 double brightness_fg,
+			 double brightness_bg,
+			 double black_level,
+			 double white_level)
 {
     int a;
     char *color_names[] = {
@@ -157,7 +162,7 @@ UI_Gtk1::allocate_colors(void)
 }
 
 void
-UI_Gtk1::update(bool force_update)
+UI_Gtk1::update(bool full_update, bool clear_cache)
 {
   byte_t c;
   int x, y, z, a;
@@ -165,7 +170,7 @@ UI_Gtk1::update(bool force_update)
   gulong fg, bg;
   byte *irm = memory->getIRM();
 
-  if (force_update)
+  if (full_update)
     {
       gdk_draw_image(GTK_WIDGET(_main.canvas)->window, _gc, _image,
                      0, 0, 0, 0, 320, 256);

@@ -14,4 +14,5 @@ EXTRA_DIST = \
 	statusl.h	\
 	commands.h	\
 	copying.h	\
-	window.h
+	window.h	\
+	hsv2rgb.h

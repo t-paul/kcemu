@@ -1,4 +1,4 @@
-# Makefile.in generated automatically by automake 1.4 from Makefile.am
+# Makefile.in generated automatically by automake 1.4-p4 from Makefile.am
 
 # Copyright (C) 1994, 1995-8, 1999 Free Software Foundation, Inc.
 # This Makefile.in is free software; the Free Software Foundation
@@ -95,11 +95,11 @@ l = @l@
 
 TESTS = test test.sh
 
-bin_PROGRAMS = kctape kcread2tap
+bin_PROGRAMS = kctape
 
 check_PROGRAMS = test
 
-noinst_PROGRAMS = show_tap
+noinst_PROGRAMS = show_tap kcread2tap
 
 noinst_LIBRARIES = libtape.a
 
@@ -140,10 +140,6 @@ PROGRAMS =  $(bin_PROGRAMS) $(noinst_PROGRAMS)
 kctape_OBJECTS =  kctape.o
 kctape_DEPENDENCIES =  libtape.a ../fileio/libfileio.a
 kctape_LDFLAGS = 
-kcread2tap_OBJECTS =  kcread2tap.o
-kcread2tap_LDADD = $(LDADD)
-kcread2tap_DEPENDENCIES = 
-kcread2tap_LDFLAGS = 
 test_SOURCES = test.c
 test_OBJECTS =  test.o
 test_LDADD = $(LDADD)
@@ -153,6 +149,10 @@ show_tap_OBJECTS =  show_tap.o
 show_tap_LDADD = $(LDADD)
 show_tap_DEPENDENCIES = 
 show_tap_LDFLAGS = 
+kcread2tap_OBJECTS =  kcread2tap.o
+kcread2tap_LDADD = $(LDADD)
+kcread2tap_DEPENDENCIES = 
+kcread2tap_LDFLAGS = 
 CXXFLAGS = @CXXFLAGS@
 CXXCOMPILE = $(CXX) $(DEFS) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS)
 CXXLD = $(CXX)
@@ -168,8 +168,8 @@ DISTFILES = $(DIST_COMMON) $(SOURCES) $(HEADERS) $(TEXINFOS) $(EXTRA_DIST)
 
 TAR = tar
 GZIP_ENV = --best
-SOURCES = $(libtape_a_SOURCES) $(kctape_SOURCES) $(kcread2tap_SOURCES) test.c $(show_tap_SOURCES)
-OBJECTS = $(libtape_a_OBJECTS) $(kctape_OBJECTS) $(kcread2tap_OBJECTS) test.o $(show_tap_OBJECTS)
+SOURCES = $(libtape_a_SOURCES) $(kctape_SOURCES) test.c $(show_tap_SOURCES) $(kcread2tap_SOURCES)
+OBJECTS = $(libtape_a_OBJECTS) $(kctape_OBJECTS) test.o $(show_tap_OBJECTS) $(kcread2tap_OBJECTS)
 
 all: all-redirect
 .SUFFIXES:
@@ -262,10 +262,6 @@ kctape: $(kctape_OBJECTS) $(kctape_DEPENDENCIES)
 	@rm -f kctape
 	$(CXXLINK) $(kctape_LDFLAGS) $(kctape_OBJECTS) $(kctape_LDADD) $(LIBS)
 
-kcread2tap: $(kcread2tap_OBJECTS) $(kcread2tap_DEPENDENCIES)
-	@rm -f kcread2tap
-	$(LINK) $(kcread2tap_LDFLAGS) $(kcread2tap_OBJECTS) $(kcread2tap_LDADD) $(LIBS)
-
 test: $(test_OBJECTS) $(test_DEPENDENCIES)
 	@rm -f test
 	$(LINK) $(test_LDFLAGS) $(test_OBJECTS) $(test_LDADD) $(LIBS)
@@ -273,6 +269,10 @@ test: $(test_OBJECTS) $(test_DEPENDENCIES)
 show_tap: $(show_tap_OBJECTS) $(show_tap_DEPENDENCIES)
 	@rm -f show_tap
 	$(LINK) $(show_tap_LDFLAGS) $(show_tap_OBJECTS) $(show_tap_LDADD) $(LIBS)
+
+kcread2tap: $(kcread2tap_OBJECTS) $(kcread2tap_DEPENDENCIES)
+	@rm -f kcread2tap
+	$(LINK) $(kcread2tap_LDFLAGS) $(kcread2tap_OBJECTS) $(kcread2tap_LDADD) $(LIBS)
 .cc.o:
 	$(CXXCOMPILE) -c $<
 

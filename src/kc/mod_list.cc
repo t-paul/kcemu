@@ -1,8 +1,8 @@
 /*
  *  KCemu -- the KC 85/3 and KC 85/4 Emulator
- *  Copyright (C) 1997-1998 Torsten Paul
+ *  Copyright (C) 1997-2001 Torsten Paul
  *
- *  $Id: mod_list.cc,v 1.8 2000/07/08 17:57:02 tp Exp $
+ *  $Id: mod_list.cc,v 1.11 2001/04/29 22:01:13 tp Exp $
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -103,6 +103,16 @@ ModuleList::ModuleList(void)
    */
   m = new ModuleRAM("M022", 0xf4);
   _mod_list.push_back(new ModuleListEntry(_("M022: Expander RAM (16k)"), m));
+
+  /*
+   *  basic
+   */
+  ptr = new char[strlen(kcemu_datadir) + 10];
+  strcpy(ptr, kcemu_datadir);
+  strcat(ptr, "/m006.rom");
+  m = new ModuleROM(ptr, "Basic", 0x2000, 0xfb);
+  _mod_list.push_back(new ModuleListEntry(_("M006: Basic"), m));
+  delete ptr;
 
   /*
    *  texor

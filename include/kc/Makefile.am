@@ -16,10 +16,12 @@ EXTRA_DIST = \
 	keys.h		\
 	memory.h	\
 	memory1.h	\
+	memory2.h	\
 	memory3.h	\
 	memory4.h	\
 	pio.h		\
 	pio1.h		\
+	pio2.h		\
 	pio3.h		\
 	pio4.h		\
 	ports.h		\

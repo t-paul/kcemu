@@ -1,8 +1,8 @@
 /*
  *  KCemu -- the KC 85/3 and KC 85/4 Emulator
- *  Copyright (C) 1997-1998 Torsten Paul
+ *  Copyright (C) 1997-2001 Torsten Paul
  *
- *  $Id: keyb3.cc,v 1.6 2001/01/06 15:05:05 tp Exp $
+ *  $Id: keyb3.cc,v 1.8 2001/04/14 15:16:07 tp Exp $
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -64,8 +64,18 @@ public:
     }
 };
 
-
 Keyboard3::Keyboard3(void)
+{
+  init();
+  CMD * cmd = new CMD_keyboard_replay(this);
+}
+
+Keyboard3::~Keyboard3(void)
+{
+}
+
+void
+Keyboard3::init(void)
 {
   _key = -1;
   _lock = -1;
@@ -73,8 +83,6 @@ Keyboard3::Keyboard3(void)
   _replay_idx = 0;
   _replay_text = NULL;
   _replay_offset = 50 * 256;
-  
-  CMD * cmd = new CMD_keyboard_replay(this);
 }
 
 /*
@@ -336,4 +344,21 @@ Keyboard3::callback(void *data)
         _replay_offset = 100 * 256;
       break;
     }
+}
+
+void
+Keyboard3::iei(byte_t val)
+{
+  ieo(val);
+}
+
+void
+Keyboard3::reset(bool power_on)
+{
+  init();
+}
+
+void
+Keyboard3::reti(void)
+{
 }

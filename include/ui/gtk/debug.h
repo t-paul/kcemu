@@ -1,8 +1,8 @@
 /*
  *  KCemu -- the KC 85/3 and KC 85/4 Emulator
- *  Copyright (C) 1997-1998 Torsten Paul
+ *  Copyright (C) 1997-2001 Torsten Paul
  *
- *  $Id: debug.h,v 1.7 2001/01/05 18:30:33 tp Exp $
+ *  $Id: debug.h,v 1.9 2001/04/29 22:01:45 tp Exp $
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -79,6 +79,9 @@ class DebugWindow : public UI_Gtk_Window, public DebugInterface
     GtkWidget *l_asm[DEBUG_NR_OF_ASM_LABELS];
     GtkWidget *l_mem[DEBUG_NR_OF_MEM_LABELS];
     GtkWidget *l_reg[DEBUG_NR_OF_REG_LABELS];
+    GtkWidget *trace;
+    GtkWidget *single_step;
+    GtkWidget *execute_step;
   } _w;
 
   int _pc;
@@ -86,10 +89,13 @@ class DebugWindow : public UI_Gtk_Window, public DebugInterface
   int _mem;
   bool _minibuffer_active;
 
-  CMD *_cmd;
+  CMD *_cmd1;
+  CMD *_cmd2;
 
  protected:
   void init(void);
+  void do_goto(char *str);
+
   static gint key_press_func(GtkWidget *widget, GdkEventKey *event,
                              gpointer data);
   debug_op_t *_op;
@@ -97,6 +103,8 @@ class DebugWindow : public UI_Gtk_Window, public DebugInterface
  public:
   DebugWindow(void);
   virtual ~DebugWindow(void);
+
+  void do_goto(int addr);
 
   virtual void debugTrace(void) {}
   virtual void debugSingleStep(void) {}

@@ -14,4 +14,5 @@ libui_a_SOURCES = \
 	log.cc		\
 	error.cc	\
 	status.cc	\
-	commands.cc
+	commands.cc	\
+	hsv2rgb.cc

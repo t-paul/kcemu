@@ -1,8 +1,8 @@
 /*
  *  KCemu -- the KC 85/3 and KC 85/4 Emulator
- *  Copyright (C) 1997-1998 Torsten Paul
+ *  Copyright (C) 1997-2001 Torsten Paul
  *
- *  $Id: load.h,v 1.2 2001/01/05 17:55:35 tp Exp $
+ *  $Id: load.h,v 1.4 2001/04/22 22:24:03 tp Exp $
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -41,6 +41,7 @@ typedef enum
   FILEIO_TYPE_COM,
   FILEIO_TYPE_BAS,
   FILEIO_TYPE_PROT_BAS,
+  FILEIO_TYPE_MINTEX,
 } fileio_type_t;
 
 typedef struct fileio_prop

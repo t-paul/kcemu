@@ -1,8 +1,8 @@
 /*
  *  KCemu -- the KC 85/3 and KC 85/4 Emulator
- *  Copyright (C) 1997-1998 Torsten Paul
+ *  Copyright (C) 1997-2001 Torsten Paul
  *
- *  $Id: kct.cc,v 1.9 2000/07/15 13:24:40 tp Exp $
+ *  $Id: kct.cc,v 1.11 2001/04/14 15:16:39 tp Exp $
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -431,6 +431,7 @@ KCTFile::open(const char *filename)
 {
   /* cerr << "KCTFile::open(): " << filename << endl; */
 
+  _readonly = false;
 #ifdef LINUX
   _f.open(filename, ios::in | ios::out | ios::nocreate | ios::bin);
 #endif
@@ -439,8 +440,18 @@ KCTFile::open(const char *filename)
 #endif
   if (!_f)
     {
-      /* cerr << "open error" << endl; */
-      return KCT_ERROR_NOENT;
+      /*
+       *  try to open read only
+       */
+      _readonly = true;
+#ifdef LINUX
+      _f.open(filename, ios::in | ios::nocreate | ios::bin);
+#endif
+#ifdef MSDOS
+      _f.open(filename, ios::bin);
+#endif
+      if (!_f)
+	return KCT_ERROR_NOENT;
     }
 
   if (header_read(_header, HEADER_OFFSET) == 0)
@@ -448,14 +459,21 @@ KCTFile::open(const char *filename)
   
   bam_read(_bam, BAM_OFFSET);
 
+  if (_readonly)
+    return KCT_OK_READONLY;
+
   return KCT_OK;
+}
+
+bool
+KCTFile::is_readonly(void)
+{
+  return _readonly;
 }
 
 kct_error_t
 KCTFile::close(void)
 {
-  /* cerr << "KCTFile::close():" << endl; */
-
   _f.close();
   return KCT_OK;
 }

@@ -1,8 +1,8 @@
 /*
  *  KCemu -- the KC 85/3 and KC 85/4 Emulator
- *  Copyright (C) 1997-1998 Torsten Paul
+ *  Copyright (C) 1997-2001 Torsten Paul
  *
- *  $Id: ui_gtk.cc,v 1.17 2001/01/05 18:25:10 tp Exp $
+ *  $Id: ui_gtk.cc,v 1.19 2001/04/14 15:17:04 tp Exp $
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -86,6 +86,32 @@ public:
 	  _ui->menu_bar_toggle();
 	  break;
 	}
+    }
+};
+
+class CMD_update_colortable : public CMD
+{
+private:
+  UI_Gtk *_ui;
+  ColorWindow *_colwin;
+
+public:
+  CMD_update_colortable(UI_Gtk *ui, ColorWindow *colwin) : CMD("ui-update-colortable")
+    {
+      _ui = ui;
+      _colwin = colwin;
+      register_cmd("ui-update-colortable");
+    }
+
+  void execute(CMD_Args *args, CMD_Context context)
+    {
+      _ui->allocate_colors(_colwin->get_saturation_fg(),
+			   _colwin->get_saturation_bg(),
+			   _colwin->get_brightness_fg(),
+			   _colwin->get_brightness_bg(),
+			   _colwin->get_black_level(),
+			   _colwin->get_white_level());
+      _ui->update(true, true);
     }
 };
 
@@ -384,45 +410,47 @@ UI_Gtk::create_main_window(void)
   GtkItemFactory *ifact, *ifactP;
   GtkAccelGroup *agroup, *agroupP;
   GtkItemFactoryEntry entries[] = {
-    { _("/_File"),              NULL,     NULL,            0,                               "<Branch>" },
-    { _("/File/Run..."),        NULL,     CF(cmd_exec_mc), CD("kc-image-run"),              NULL },
-    { _("/File/Load..."),       "<alt>L", CF(cmd_exec_mc), CD("kc-image-load"),             NULL },
-    { _("/File/Tape..."),       "<alt>T", CF(cmd_exec_mc), CD("ui-tape-window-toggle"),     NULL },
-    { _("/File/Disk..."),       "<alt>D", CF(cmd_exec_mc), CD("ui-disk-window-toggle"),     NULL },
-    { _("/File/Module..."),     "<alt>M", CF(cmd_exec_mc), CD("ui-module-window-toggle"),   NULL },
-    { _("/File/sep1"),          NULL,     NULL,            0,                               "<Separator>" },
-    { _("/File/Reset"),         "<alt>R", CF(cmd_exec_mc), CD("emu-reset"),                 NULL },
-    { _("/File/Power On"),      NULL,     CF(cmd_exec_mc), CD("emu-power-on"),              NULL },
-    { _("/File/sep2"),          NULL,     NULL,            0,                               "<Separator>" },
-    { _("/File/Quit Emulator"), "<alt>Q", CF(cmd_exec_mc), CD("emu-quit"),                  NULL },
-    { _("/_View"),              NULL,     NULL,            0,                               "<Branch>" },
-    { _("/View/Debugger"),      NULL,     CF(cmd_exec_mc), CD("ui-debug-window-toggle"),    NULL },
-    { _("/View/Info"),          "<alt>I", CF(cmd_exec_mc), CD("ui-info-window-toggle"),     NULL },
-    { _("/View/Menubar"),       NULL,     CF(cmd_exec_mc), CD("ui-menu-bar-toggle"),        NULL },
-    { _("/View/Statusbar"),     NULL,     CF(cmd_exec_mc), CD("ui-status-bar-toggle"),      NULL },
-    { _("/_Help"),              NULL,     NULL,            0,                               "<LastBranch>" },
-    { _("/Help/About KCemu"),   NULL,     CF(cmd_exec_mc), CD("ui-about-window-toggle"),    NULL },
-    { _("/Help/sep3"),          NULL,     NULL,            0,                               "<Separator>" },
-    { _("/Help/KCemu Licence"), NULL,     CF(cmd_exec_mc), CD("ui-copying-window-toggle"),  NULL },
-    { _("/Help/No Warranty!"),  NULL,     CF(cmd_exec_mc), CD("ui-warranty-window-toggle"), NULL },
+    { _("/_File"),                 NULL,     NULL,            0,                               "<Branch>" },
+    { _("/File/Run..."),           NULL,     CF(cmd_exec_mc), CD("kc-image-run"),              NULL },
+    { _("/File/Load..."),          "<alt>L", CF(cmd_exec_mc), CD("kc-image-load"),             NULL },
+    { _("/File/Tape..."),          "<alt>T", CF(cmd_exec_mc), CD("ui-tape-window-toggle"),     NULL },
+    { _("/File/Disk..."),          "<alt>D", CF(cmd_exec_mc), CD("ui-disk-window-toggle"),     NULL },
+    { _("/File/Module..."),        "<alt>M", CF(cmd_exec_mc), CD("ui-module-window-toggle"),   NULL },
+    { _("/File/sep1"),             NULL,     NULL,            0,                               "<Separator>" },
+    { _("/File/Reset"),            "<alt>R", CF(cmd_exec_mc), CD("emu-reset"),                 NULL },
+    { _("/File/Power On"),         NULL,     CF(cmd_exec_mc), CD("emu-power-on"),              NULL },
+    { _("/File/sep2"),             NULL,     NULL,            0,                               "<Separator>" },
+    { _("/File/Quit Emulator"),    "<alt>Q", CF(cmd_exec_mc), CD("emu-quit"),                  NULL },
+    { _("/_View"),                 NULL,     NULL,            0,                               "<Branch>" },
+    { _("/View/Debugger"),         NULL,     CF(cmd_exec_mc), CD("ui-debug-window-toggle"),    NULL },
+    { _("/View/Info"),             "<alt>I", CF(cmd_exec_mc), CD("ui-info-window-toggle"),     NULL },
+    { _("/View/Menubar"),          NULL,     CF(cmd_exec_mc), CD("ui-menu-bar-toggle"),        NULL },
+    { _("/View/Statusbar"),        NULL,     CF(cmd_exec_mc), CD("ui-status-bar-toggle"),      NULL },
+    { _("/_Configuration"),        NULL,     NULL,            0,                               "<Branch>" },
+    { _("/Configuration/Colors"),  "<alt>C", CF(cmd_exec_mc), CD("ui-color-window-toggle"),    NULL },
+    { _("/_Help"),                 NULL,     NULL,            0,                               "<LastBranch>" },
+    { _("/Help/About KCemu"),      NULL,     CF(cmd_exec_mc), CD("ui-about-window-toggle"),    NULL },
+    { _("/Help/sep3"),             NULL,     NULL,            0,                               "<Separator>" },
+    { _("/Help/KCemu Licence"),    NULL,     CF(cmd_exec_mc), CD("ui-copying-window-toggle"),  NULL },
+    { _("/Help/No Warranty!"),     NULL,     CF(cmd_exec_mc), CD("ui-warranty-window-toggle"), NULL },
   };
   GtkItemFactoryEntry entriesP[] = {
-    { _("/_Run..."),            NULL,     CF(cmd_exec_mc), CD("kc-image-run"),              NULL },
-    { _("/_Load..."),           NULL,     CF(cmd_exec_mc), CD("kc-image-load"),             NULL },
-    { _("/_Tape..."),           NULL,     CF(cmd_exec_mc), CD("ui-tape-window-toggle"),     NULL },
-    { _("/_Disk..."),           NULL,     CF(cmd_exec_mc), CD("ui-disk-window-toggle"),     NULL },
-    { _("/_Module..."),         NULL,     CF(cmd_exec_mc), CD("ui-module-window-toggle"),   NULL },
-    { _("/sep1"),               NULL,     NULL,            0,                               "<Separator>" },
-    { _("/_View"),              NULL,     NULL,            0,                               "<Branch>" },
-    { _("/View/Debugger"),      NULL,     NULL,            0,                               NULL },
-    { _("/View/Info"),          NULL,     NULL,            0,                               NULL },
-    { _("/View/Menubar"),       NULL,     CF(cmd_exec_mc), CD("ui-menu-bar-toggle"),        NULL },
-    { _("/View/Statusbar"),     NULL,     CF(cmd_exec_mc), CD("ui-status-bar-toggle"),      NULL },
-    { _("/sep2"),               NULL,     NULL,            0,                               "<Separator>" },
-    { _("/Reset"),              NULL,     CF(cmd_exec_mc), CD("emu-reset"),                 NULL },
-    { _("/Power On"),           NULL,     CF(cmd_exec_mc), CD("emu-power-on"),              NULL },
-    { _("/sep3"),               NULL,     NULL,            0,                               "<Separator>" },
-    { _("/Quit Emulator"),      NULL,     CF(cmd_exec_mc), CD("emu-quit"),                  NULL },
+    { _("/_Run..."),               NULL,     CF(cmd_exec_mc), CD("kc-image-run"),              NULL },
+    { _("/_Load..."),              NULL,     CF(cmd_exec_mc), CD("kc-image-load"),             NULL },
+    { _("/_Tape..."),              NULL,     CF(cmd_exec_mc), CD("ui-tape-window-toggle"),     NULL },
+    { _("/_Disk..."),              NULL,     CF(cmd_exec_mc), CD("ui-disk-window-toggle"),     NULL },
+    { _("/_Module..."),            NULL,     CF(cmd_exec_mc), CD("ui-module-window-toggle"),   NULL },
+    { _("/sep1"),                  NULL,     NULL,            0,                               "<Separator>" },
+    { _("/_View"),                 NULL,     NULL,            0,                               "<Branch>" },
+    { _("/View/Debugger"),         NULL,     NULL,            0,                               NULL },
+    { _("/View/Info"),             NULL,     NULL,            0,                               NULL },
+    { _("/View/Menubar"),          NULL,     CF(cmd_exec_mc), CD("ui-menu-bar-toggle"),        NULL },
+    { _("/View/Statusbar"),        NULL,     CF(cmd_exec_mc), CD("ui-status-bar-toggle"),      NULL },
+    { _("/sep2"),                  NULL,     NULL,            0,                               "<Separator>" },
+    { _("/Reset"),                 NULL,     CF(cmd_exec_mc), CD("emu-reset"),                 NULL },
+    { _("/Power On"),              NULL,     CF(cmd_exec_mc), CD("emu-power-on"),              NULL },
+    { _("/sep3"),                  NULL,     NULL,            0,                               "<Separator>" },
+    { _("/Quit Emulator"),         NULL,     CF(cmd_exec_mc), CD("emu-quit"),                  NULL },
   };
   static GtkTargetEntry targetlist[] = {
     { "STRING",        0, 1 },
@@ -661,6 +689,7 @@ UI_Gtk::init(int *argc, char ***argv)
   _main.window = NULL;
 
   _about_window       = new AboutWindow();
+  _color_window       = new ColorWindow();
   _tape_window        = new TapeWindow();
   _tape_add_window    = new TapeAddWindow();
   _disk_window        = new DiskWindow();
@@ -672,7 +701,12 @@ UI_Gtk::init(int *argc, char ***argv)
   _dialog_window      = new DialogWindow();
   _file_browser       = new FileBrowser();
 
-  allocate_colors();
+  allocate_colors(_color_window->get_saturation_fg(),
+		  _color_window->get_saturation_bg(),
+		  _color_window->get_brightness_fg(),
+		  _color_window->get_brightness_bg(),
+		  _color_window->get_black_level(),
+		  _color_window->get_white_level());
 #ifdef PROFILE_WINDOW
   create_profile_window();
 #endif
@@ -690,6 +724,7 @@ UI_Gtk::init(int *argc, char ***argv)
 
   CMD *cmd;
   cmd = new CMD_ui_toggle(this);
+  cmd = new CMD_update_colortable(this, _color_window);
 
   Status::instance()->setMessage(" KCemu v" VERSION);
 }

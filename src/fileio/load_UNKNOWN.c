@@ -1,8 +1,8 @@
 /*
  *  KCemu -- the KC 85/3 and KC 85/4 Emulator
- *  Copyright (C) 1997-1998 Torsten Paul
+ *  Copyright (C) 1997-2001 Torsten Paul
  *
- *  $Id: load_UNKNOWN.c,v 1.3 2000/09/30 18:55:12 tp Exp $
+ *  $Id: load_UNKNOWN.c,v 1.5 2001/04/14 15:15:54 tp Exp $
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -19,7 +19,9 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
+#include <ctype.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 
 #include "fileio/loadP.h"
@@ -37,7 +39,7 @@ str2int(const char *str)
 {
   int a;
   unsigned long value;
-  char *ptr, *endptr, buf[11];
+  char *endptr, buf[11];
 
   strncpy(buf, str, 10);
   buf[10] = '\0';
@@ -60,10 +62,12 @@ loader_UNKNOWN_load(const char *filename,
                     long size,
                     fileio_prop_t **prop)
 {
-  int a, b, c;
+  int a;
   const char *ptr;
-  unsigned long val;
+  unsigned long val, xsize;
   unsigned short load, start;
+
+  xsize = size + (size + 127) / 128;
 
   a = 0;
   load = 0;
@@ -115,6 +119,9 @@ loader_UNKNOWN_load(const char *filename,
     }
   (*prop)->autostart = (a == 2);
 
+  /*
+   *  guess a name for the kc file header and make it all upper case
+   */
   ptr = strrchr(filename, '/');
   if (ptr)
     ptr++;
@@ -126,13 +133,17 @@ loader_UNKNOWN_load(const char *filename,
   for (a = 0;a < 11;a++)
     (*prop)->name[a] = toupper((*prop)->name[a]);
 
+  /*
+   *  copy data...
+   */
   (*prop)->size  = size + 128;
-  (*prop)->data = (unsigned char *)malloc(size + 128);
+  (*prop)->data = (unsigned char *)malloc(xsize + 129);
   if ((*prop)->data == 0)
     return -1;
 
-  fill_header_COM((*prop)->data, *prop);
-  memcpy((*prop)->data + 128, data, size);
+  *(*prop)->data = 0; // block number
+  fill_header_COM((*prop)->data + 1, *prop);
+  fileio_copy_blocks((*prop)->data + 129, data, size, 1);
 
   return 0;
 }

@@ -1,8 +1,8 @@
 /*
  *  KCemu -- the KC 85/3 and KC 85/4 Emulator
- *  Copyright (C) 1997-1998 Torsten Paul
+ *  Copyright (C) 1997-2001 Torsten Paul
  *
- *  $Id: ctc.cc,v 1.11 2001/01/06 15:03:10 tp Exp $
+ *  $Id: ctc.cc,v 1.14 2001/05/06 21:21:33 tp Exp $
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -30,6 +30,8 @@
 #include "kc/ctc.h"
 #include "kc/z80.h"
 #include "kc/tape.h"
+
+#include "libdbg/dbg.h"
 
 #define PARANOIA_CHECK
 // #define CTC_IRQ_DEBUG 0xff
@@ -87,7 +89,8 @@ CTC::reti(void)
 {
   int a;
 
-  //cerr.form("CTC: reti\n");
+  DBG(2, form("KCemu/CTC/reti",
+	      "CTC::reti()\n"));
   
   for (a = 0;a < 4;a++)
     {
@@ -95,23 +98,24 @@ CTC::reti(void)
         {
           _irq_active[a] = 0;
         }
-      else
-        {
-          if (_irq_pending[a])
-            {
-              if (z80->triggerIrq(_irq_vector | a << 1))
-                {
-                  //cerr.form("CTC::reti() [%d] - irq ack\n", a);
-                  _irq_active[a] = 1;
-                  z80->handleIrq(_irq_vector | a << 1);
-                }
-              else
-                {
-                  //cerr.form("CTC::reti() [%d] - irq nack\n", a);
-                }
-              _irq_pending[a] = 0;
-            }
-        }
+
+      if (_irq_pending[a])
+	{
+	  DBG(2, form("KCemu/CTC/reti",
+		      "CTC::reti(): triggerIrq(): _irq_pending[a] = %d\n",
+		      _irq_pending[a]));
+	  if (z80->triggerIrq(_irq_vector | a << 1))
+	    {
+	      //cerr.form("CTC::reti() [%d] - irq ack\n", a);
+	      _irq_active[a] = 1;
+	      z80->handleIrq(_irq_vector | a << 1);
+	    }
+	  else
+	    {
+	      //cerr.form("CTC::reti() [%d] - irq nack\n", a);
+	    }
+	  _irq_pending[a] = 0;
+	}
     }
 }
 
@@ -127,10 +131,16 @@ CTC::trigger(byte_t channel)
   if (_value[c] > 0) return;
 
   _value[c] = _timer_value[c];
+
+  if (_irq_pending[c] == 1)
+    return;
+
+  DBG(2, form("KCemu/CTC/reti",
+	      "CTC::trigger(%d): triggerIrq(): _irq_pending = %d\n",
+	      channel, _irq_pending[c]));
   _irq_pending[c] = 1;
   if (z80->triggerIrq(_irq_vector | c << 1))
     {
-      _irq_pending[c] = 0;
       _irq_active[c] = 1;
       z80->handleIrq(_irq_vector | c << 1);
     }
@@ -161,15 +171,23 @@ CTC::callback(void *data)
   switch (c)
     {
     case 0:
+      DBG(2, form("KCemu/CTC/irq/0",
+		  "CTC::callback() : irq channel 0\n"));
       cont = irq_0();
       break;
     case 1:
+      DBG(2, form("KCemu/CTC/irq/1",
+		  "CTC::callback() : irq channel 1\n"));
       cont = irq_1();
       break;
     case 2:
+      DBG(2, form("KCemu/CTC/irq/2",
+		  "CTC::callback() : irq channel 2\n"));
       cont = irq_2();
       break;
     case 3:
+      DBG(2, form("KCemu/CTC/irq/3",
+		  "CTC::callback() : irq channel 3\n"));
       cont = irq_3();
       break;
     }
@@ -219,28 +237,25 @@ CTC::callback(void *data)
 #endif
   if ((_control[c] & IRQ) == IRQ_ENABLED)
     {
-      _irq_pending[c] = 1;
-      if (z80->triggerIrq(_irq_vector | c << 1))
-        {
-          _irq_pending[c] = 0;
-          _irq_active[c] = 1;
-          //cerr.form("CTC: [%d] - irq ack\n", c);
+      if (_irq_pending[c] == 0)
+	{
+	  DBG(2, form("KCemu/CTC/reti",
+		      "CTC::callback(): triggerIrq(): _irq_pending = %d\n",
+		      _irq_pending[c]));
+	  _irq_pending[c] = 1;
+	  if (z80->triggerIrq(_irq_vector | c << 1))
+	    {
+	      _irq_active[c] = 1;
+	      //cerr.form("CTC: [%d] - irq ack\n", c);
           z80->handleIrq(_irq_vector | c << 1);
-        }
-      else
-        {
-          //cerr.form("CTC: [%d] - irq nack\n", c);
-        }
-#ifdef CTC_CB_DEBUG
-      if ((c == CTC_CB_DEBUG) || (CTC_CB_DEBUG == 0xff))
-        {
-          cerr.form("CTC: addCallback [%d] - %d\n",
-                    c,
-                    _timer_value[c]);
-        }
-#endif
+	    }
+	  else
+	    {
+	      //cerr.form("CTC: [%d] - irq nack\n", c);
+	    }
+	}
       z80->addCallback(_timer_value[c],
-                       this, (void *)((long)val));
+		       this, (void *)((long)val));
     }
 }
 

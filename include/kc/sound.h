@@ -1,8 +1,8 @@
 /*
  *  KCemu -- the KC 85/3 and KC 85/4 Emulator
- *  Copyright (C) 1997-2000 Torsten Paul
+ *  Copyright (C) 1997-2001 Torsten Paul
  *
- *  $Id: sound.h,v 1.1 2001/01/21 23:07:50 tp Exp $
+ *  $Id: sound.h,v 1.3 2001/04/14 15:14:54 tp Exp $
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -61,6 +61,7 @@ class Sound : public PIOCallbackInterface, public CTCCallbackInterface
   Sound(void);
   virtual ~Sound(void);
 
+  virtual void init(void);
   virtual void start(void);
   virtual void stop(void);
 

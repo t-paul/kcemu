@@ -1,8 +1,8 @@
 /*
  *  KCemu -- the KC 85/3 and KC 85/4 Emulator
- *  Copyright (C) 1997-1998 Torsten Paul
+ *  Copyright (C) 1997-2001 Torsten Paul
  *
- *  $Id: ui_gtk.h,v 1.14 2001/01/05 18:34:44 tp Exp $
+ *  $Id: ui_gtk.h,v 1.16 2001/04/14 15:15:33 tp Exp $
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -42,6 +42,7 @@
 #include "ui/gtk/info.h"
 #include "ui/gtk/about.h"
 #include "ui/gtk/debug.h"
+#include "ui/gtk/color.h"
 #include "ui/gtk/module.h"
 #include "ui/gtk/copying.h"
 #include "ui/gtk/tapeadd.h"
@@ -66,6 +67,7 @@ class UI_Gtk : public UI, public StatusListener, public ErrorListener
     
     DebugWindow      *_debug_window;
     AboutWindow      *_about_window;
+    ColorWindow      *_color_window;
     CopyingWindow    *_copying_window;
     TapeWindow       *_tape_window;
     TapeAddWindow    *_tape_add_window;
@@ -153,10 +155,6 @@ class UI_Gtk : public UI, public StatusListener, public ErrorListener
                                     gint row, 
                                     gint column, 
                                     GdkEventButton * bevent);
-    // static void sf_toggle_menubar(void);
-    // static void sf_toggle_tape_add_window(void);
-    // static void sf_toggle_tape_window(void);
-    // static void sf_toggle_statusbar(void);
     static void sf_expose(void);
 
     static void sf_load(void);
@@ -165,16 +163,12 @@ class UI_Gtk : public UI, public StatusListener, public ErrorListener
     static void idle(void);
     static void sf_profile_event(GtkWidget *widget, GdkEventButton *event);
 
-    virtual void allocate_colors(void) = 0;
-
   public:
     UI_Gtk(void);
     virtual ~UI_Gtk(void);
     virtual void processEvents(void);
-    // virtual void putPixel(int x, int y, char val);
-    // virtual void putColor(int x, int y, char val);
     
-    virtual void update(bool force_update) = 0;
+    virtual void update(bool full_update = false, bool clear_cache = false) = 0;
     virtual void memWrite(int addr, char val) = 0;
     virtual void callback(void *data) = 0;
     virtual void flash(bool enable) = 0;
@@ -188,6 +182,13 @@ class UI_Gtk : public UI, public StatusListener, public ErrorListener
 
     virtual void status_bar_toggle(void);
     virtual void menu_bar_toggle(void);
+
+    virtual void allocate_colors(double saturation_fg,
+				 double saturation_bg,
+				 double brightness_fg,
+				 double brightness_bg,
+				 double black_level,
+				 double white_level) = 0;
     
     virtual UI_ModuleInterface * getModuleInterface(void);
     virtual TapeInterface  * getTapeInterface(void);
