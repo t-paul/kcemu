@@ -211,7 +211,7 @@ Z80::Z80(void)
   _regs.Trap = 0xffff;
   _regs.IRequest = INT_NONE;
   ResetZ80(&_regs);
-  
+
   switch (get_kc_type())
     {
     case KC_TYPE_87:
@@ -234,7 +234,7 @@ Z80::Z80(void)
    *  FIXME: overwrite it's own stack when clearing the screen :-(
    */
   _regs.SP.W = 0x0000;
-  
+
   _counter = 0;
 
   _debug = false;
@@ -349,7 +349,7 @@ Z80::run(void)
 	    CMD_EXEC("single-step-executed");
 	    sys_usleep(_tracedelay);
 	  }
-      
+
       if (_debug)
 	{
 	  _regs.Trace = 2;
@@ -358,10 +358,10 @@ Z80::run(void)
 	  if (_regs.Trace == 0)
 	    debug(false);
 	}
-      
+
       _regs.ICount = 0;
       ExecZ80(&_regs);
-      
+
       if (_enable_floppy_cpu && fdc_z80)
 	fdc_z80->execute();
 
@@ -371,7 +371,7 @@ Z80::run(void)
 	  iff_old = iff;
 	  //cout << hex << getPC() << "h irqs are now: " << (iff ? "on" : "off") << endl;
 	}
-      
+
       if ((_regs.IRequest != INT_NONE) || (_irq_line != 0))
 	{
 	  if(_regs.IFF & 0x20)
@@ -408,7 +408,7 @@ Z80::run(void)
 		}
 	    }
 	}
- 
+
       if (_regs.IFF & 0x80)
         {
           /*
@@ -505,8 +505,8 @@ Z80::reset(word_t pc, bool power_on)
    */
   _regs.SP.W = 0x0000;
 
-  halt_floppy_cpu();
-  
+  halt_floppy_cpu(power_on);
+
   if (timer)
     timer->start();
 }
@@ -637,7 +637,7 @@ Z80::triggerIrq(int vector)
    * if ((_regs.IFF & 1) == 0)
    *   return 0; // Interrupts are disabled!
    */
-  
+
   // Ok, no pending irq
   return 1;
 }
@@ -665,11 +665,11 @@ Z80::start_floppy_cpu(void)
 }
 
 void
-Z80::halt_floppy_cpu(void)
+Z80::halt_floppy_cpu(bool power_on)
 {
   if (fdc_z80)
     {
-      fdc_z80->reset();
+      fdc_z80->reset(power_on);
       _enable_floppy_cpu = false;
     }
 }

@@ -27,25 +27,32 @@
 int
 main(int argc, char **argv)
 {
+  int arg_idx = 1;
   fileio_prop_t *prop;
 
-  if (argc != 3)
+  if ((argc < 3) || (argc > 4))
     {
-      printf("usage: %s infile outfile\n", argv[0]);
+      printf("usage: %s [-1] infile outfile\n", argv[0]);
       exit(1);
     }
 
   fileio_init();
 
-  if (fileio_load_file(argv[1], &prop) < 0)
+  if (strcmp(argv[1], "-1") == 0)
     {
-      printf("can't load file '%s'\n", argv[1]);
+      fileio_set_kctype(FILEIO_KC85_1);
+      arg_idx++;
+    }
+
+  if (fileio_load_file(argv[arg_idx], &prop) < 0)
+    {
+      printf("can't load file '%s'\n", argv[arg_idx]);
       return 1;
     }
 
-  if (fileio_save_wav_prop(argv[2], prop) < 0)
+  if (fileio_save_wav_prop(argv[arg_idx + 1], prop) < 0)
     {
-      printf("can't save file '%s'\n", argv[2]);
+      printf("can't save file '%s'\n", argv[arg_idx + 1]);
       return 1;
     }
 

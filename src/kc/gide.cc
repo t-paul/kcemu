@@ -368,7 +368,7 @@ GIDE::out_command(byte_t val)
     case 0x90:
       DBG(2, form("KCemu/GIDE/out_command",
 		  "GIDE::out(): 90h: EXECUTE DIAGNOSTICS\n"));
-      _error = 1; // no error
+      _error = 0x81; // no error for first hd, no slave
       break;
     case 0xe1:
       DBG(2, form("KCemu/GIDE/out_command",

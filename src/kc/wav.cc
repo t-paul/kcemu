@@ -483,7 +483,7 @@ WavPlayer::do_play(void)
   CMD_EXEC_ARGS("ui-wav-info", &_info_args);
 
 #if 1
-  printf("%d / %d / %d - %d\n", _bit_0, _bit_1, _bit_s, (long)v);
+  printf("%d / %d / %d - %ld\n", _bit_0, _bit_1, _bit_s, (long)v);
   z80->addCallback((long long)v, this, (void *)0);
 #else
   if (v < 550)

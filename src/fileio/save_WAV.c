@@ -121,7 +121,7 @@ write_byte(FILE *out, unsigned char b, int *sync)
 }
 
 static long
-write_block(FILE *out, int block, unsigned char *buf)
+write_block(FILE *out, int block, unsigned char *buf, int sync_bits)
 {
   int a;
   int sync = -1;
@@ -130,11 +130,7 @@ write_block(FILE *out, int block, unsigned char *buf)
   
   //printf("[%02x] ", block); fflush(stdout);
 
-  if (block == 1)
-    flen += write_bits(out, BIT_1, 8000, &sync);
-  else
-    flen += write_bits(out, BIT_1, 200, &sync);
-
+  flen += write_bits(out, BIT_1, sync_bits, &sync);
   flen += write_bits(out, BIT_S, 1, &sync); // sync bit
   flen += write_byte(out, block, &sync); // block number
 
@@ -154,6 +150,7 @@ write_file(FILE *out, const unsigned char *data, int size)
 {
   long flen;
   int a, len;
+  int sync_bits;
   struct tape_buf *first, *buffer, *tmp;
   
   flen = 0;
@@ -187,9 +184,12 @@ write_file(FILE *out, const unsigned char *data, int size)
     }
   buffer->blockno = 0xff;
   
+  sync_bits = 8000;
   for (buffer = first;buffer != 0;buffer = buffer->next)
-    if (buffer->blockno >= _start_block)
-      flen += write_block(out, buffer->blockno, buffer->buf + 1);
+    {
+      flen += write_block(out, buffer->blockno, buffer->buf + 1, sync_bits);
+      sync_bits = 200;
+    }
   
   //printf("\n");
   
@@ -214,7 +214,7 @@ fileio_save_wav(const char *filename, const unsigned char *data, int size)
     case FILEIO_Z1013: // FIXME: not implemented
       return -1;
     }
-	
+
   header.MainChunkID    = 'R' | 'I' << 8 | 'F' << 16 | 'F' << 24;
   header.ChunkTypeID    = 'W' | 'A' << 8 | 'V' << 16 | 'E' << 24;
   header.SubChunkID     = 'f' | 'm' << 8 | 't' << 16 | ' ' << 24;

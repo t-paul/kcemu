@@ -24,6 +24,26 @@
 
 #include "libdisk/libdisk.h"
 
+typedef struct libdisk_dpb
+{
+  int spt;
+  int bsh;
+  int blm;
+  int exm;
+  int dsm;
+  int drm;
+  int al0;
+  int al1;
+  int cks;
+  int ofs;
+
+  int psh;
+  int phm;
+  int eot;
+  int gap;
+  int ntr;
+} libdisk_dpb_t;
+
 typedef struct libdisk_loader
 {
   const char * (*get_name)(void);

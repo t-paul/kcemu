@@ -39,6 +39,7 @@ class Memory4 : public Memory
   byte_t _irm1[0x8000];
 
   byte_t _block_ram_8;
+  byte_t _block_rom_c;
 
   bool _caos_c;
   bool _caos_e;
@@ -50,7 +51,8 @@ class Memory4 : public Memory
   MemAreaGroup *_m_scr;       /* scratch memory */
   MemAreaGroup *_m_caos_c;    /* CAOS  c000h - dfffh */
   MemAreaGroup *_m_caos_e;    /* CAOS  e000h - ffffh */
-  MemAreaGroup *_m_basic;     /* BASIC c000h - dfffh */
+  MemAreaGroup *_m_basic;     /* BASIC c000h - dfffh (for KC85/4) */
+  MemAreaGroup *_m_user[4];   /* BASIC c000h - dfffh (and USER0-2 for KC85/5) */
   MemAreaGroup *_m_ram_0;     /* RAM   0000h - 3fffh */
   MemAreaGroup *_m_ram_4;     /* RAM   4000h - 7fffh */
   MemAreaGroup *_m_ram_8[16]; /* RAM   8000h - bfffh (pages 0-15) */
@@ -67,6 +69,7 @@ class Memory4 : public Memory
   virtual void init_4(void);
   virtual void init_5(void);
   virtual void configureRAM_8(void);
+  virtual void configureROM_C(void);
   virtual void configureIRM(void);
 
  public:
@@ -76,7 +79,7 @@ class Memory4 : public Memory
 
   byte_t memRead8(word_t addr);
   void memWrite8(word_t addr, byte_t val);
-  
+
   byte_t * get_irm(void);
   byte_t * get_char_rom(void);
 
@@ -91,9 +94,10 @@ class Memory4 : public Memory
   void enableSCREEN_1(int v);
 
   void selectRAM_8(int segment);
+  void selectROM_C(int segment);
 
   void displaySCREEN_1(int v);
-  
+
   void protectRAM_0(int v);
   void protectRAM_4(int v);
   void protectRAM_8(int v);

@@ -4,6 +4,14 @@
 
 KCemu 0.3.8
 
+  * added emulation of the so called KC85/5 which is a KC85/4
+    with expanded RAM (replaced internal 64k system RAM with
+    256k) and ROM (16k CAOS, 32k BASIC+USER); it uses the new
+    CAOS 4.4
+  * fixed KC85/4 keyboard emulation
+  * added emulation of the Kramer Microcomputer (from the book
+    "Praktische Microcomputertechnik" and the Mugler PC (PC/M)
+    presented in the magazine "Funkamateur"
   * added segmented RAM memory modules M036 (128k), M032 (256k),
     M034 (512k), M035 (1M) and M035x4 (4M)
   * fixed 16k RAM module M022

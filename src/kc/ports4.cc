@@ -48,7 +48,7 @@ Ports4::in(word_t addr)
 {
   byte_t a = addr & 0xff;
   byte_t val = inout[a];
-  
+
   switch (a)
     {
     case 0x84:
@@ -64,7 +64,7 @@ Ports4::in(word_t addr)
   DBG(2, form("KCemu/Ports/4/in",
 	      "Ports4: in() addr = %04x (returning %02x)\n",
 	      addr, val));
-  
+
   return val;
 }
 
@@ -76,7 +76,7 @@ Ports4::out(word_t addr, byte_t val)
   DBG(2, form("KCemu/Ports/4/out",
               "Ports4: out() addr = %04x, val = %02x\n",
               addr, val));
-  
+
   switch (a)
     {
     case 0x84:
@@ -133,7 +133,7 @@ Ports4::change_0x84(byte_t changed, byte_t val)
     {
       DBG(2, form("KCemu/Ports/4/change/84",
                   "Ports 0x84: access RAM8 segment %d\n",
-                  (val >> 4) & 1));
+                  (val >> 4) & 0x0f));
       memory->selectRAM_8((val >> 4) & 0x0f);
     }
 }
@@ -173,17 +173,12 @@ Ports4::change_0x86(byte_t changed, byte_t val)
                   "Ports 0x86: unused 0x10 %d\n",
                   (val >> 4) & 1));
     }
-  if (changed & 0x20)
+  if (changed & 0x60)
     {
       DBG(2, form("KCemu/Ports/4/change/86",
-                  "Ports 0x86: reserved 0x20 %d\n",
-                  (val >> 5) & 1));
-    }
-  if (changed & 0x40)
-    {
-      DBG(2, form("KCemu/Ports/4/change/86",
-                  "Ports 0x86: reserved 0x40 %d\n",
-                  (val >> 6) & 1));
+                  "Ports 0x86: BASIC/USER ROM bank %d\n",
+                  (val >> 5) & 3));
+      memory->selectROM_C((val >> 5) & 3);
     }
   if (changed & 0x80)
     {

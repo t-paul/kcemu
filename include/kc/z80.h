@@ -136,7 +136,7 @@ class Z80
 	bool get_halt(void) { return _halt; }
 
         void start_floppy_cpu(void);
-        void halt_floppy_cpu(void);
+        void halt_floppy_cpu(bool power_on);
 };
 
 #endif /* __kc_z80_h */

@@ -35,7 +35,8 @@
 #include "kc/z80_fdc.h"
 #include "libdbg/dbg.h"
 
-byte_t fdc_mem[65536];
+#define MEM_SIZE (65536)
+byte_t fdc_mem[MEM_SIZE];
 int Z80_IRQ = Z80_IGNORE_INT;
 static int Z80_IRQ_VECTOR = Z80_IGNORE_INT;
 
@@ -219,7 +220,7 @@ Z80_FDC::reset(bool power_on)
   Z80_IRQ = Z80_IGNORE_INT;
 
   if (power_on)
-    memset(fdc_mem, 0, 0xfc00);
+    memset(fdc_mem, 0, MEM_SIZE);
 
   Z80_Reset();
   Z80_GetRegs(&r);

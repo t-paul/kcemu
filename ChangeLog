@@ -1,4 +1,10 @@
+2004-08-20  Torsten Paul  <tp@dali>
+
 2004-08-14  Torsten Paul  <Torsten.Paul@gmx.de>
+
+	* include/kc/disk.h, src/kc/disk.cc: added method to create new
+	empty disk files (always using AnaDisk Dump format with format
+	5x1024x2)
 
 	* src/kc/kc.cc: do some guessing for data and locale directory
 

@@ -200,7 +200,7 @@ read_header(FILE *f)
     unsigned char unknown01;
     unsigned char unknown02;
     unsigned char unknown03;
-    unsigned char unknown04;
+    unsigned char comment;
     unsigned char unknown05;
     unsigned char sides;
     unsigned char unknown07;
@@ -241,7 +241,18 @@ read_header(FILE *f)
   //for (a = 0;a < 19;a++)
   //c = fgetc(f);
 
-  fread(&h, 19, 1, f);
+  fread(&h, 9, 1, f); // first 9 bytes of header
+
+  // check for comment
+  if ((h.comment & 0x80) == 0)
+    {
+      buf = malloc(1);
+      buf[0] = 0;
+      return buf;
+    }
+
+  // argh...
+  fread(((char *)&h) + 9, 10, 1, f); // read next 10 bytes only if no comment ???
 
 //printf("00: %02x, %3d\n", h.unknown00, h.unknown00);
 //printf("01: %02x, %3d\n", h.unknown01, h.unknown01);

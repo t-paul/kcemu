@@ -104,7 +104,7 @@ FloppyIO::activate(int bit_nr)
       DBG(2, form("KCemu/FloppyIO/activate",
                   "FloppyIO::activate(): bit = %d, halt processor\n",
                   bit_nr));
-      z80->halt_floppy_cpu();
+      z80->halt_floppy_cpu(false);
       break;
     case 2:
       DBG(2, form("KCemu/FloppyIO/activate",
