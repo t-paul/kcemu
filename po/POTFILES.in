@@ -1,4 +1,5 @@
 src/cmd/image.cc
+src/kc/kc.cc
 src/kc/disk.cc
 src/kc/mod_list.cc
 src/kc/tape.cc

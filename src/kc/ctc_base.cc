@@ -2,7 +2,7 @@
  *  KCemu -- the KC 85/3 and KC 85/4 Emulator
  *  Copyright (C) 1997-2001 Torsten Paul
  *
- *  $Id: ctc_base.cc,v 1.2 2001/12/31 14:11:53 torsten_paul Exp $
+ *  $Id: ctc_base.cc,v 1.3 2002/01/20 13:39:30 torsten_paul Exp $
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -33,6 +33,7 @@
 CTC_Base::CTC_Base(void) : CTC()
 {
   z80->register_ic(this);
+  _z80_irq_mask = z80->daisy_chain_get_irqmask();
 }
 
 CTC_Base::~CTC_Base(void)
@@ -46,15 +47,66 @@ CTC_Base::get_counter()
   return z80->getCounter();
 }
 
-byte_t
-CTC_Base::trigger_irq(byte_t irq_vector)
+void
+CTC_Base::irqreq(void)
 {
-  if (z80->triggerIrq(irq_vector))
+  DBG(2, form("KCemu/CTC/reti",
+	      "CTC_Base::irqreq()\n"));
+  z80->set_irq_line(_z80_irq_mask);
+}
+
+word_t
+CTC_Base::irqack(void)
+{
+  int a, b;
+  int vector = IRQ_NOT_ACK;
+  
+  DBG(2, form("KCemu/CTC/reti",
+	      "CTC_Base::irqack(): active: %d %d %d %d - pending: %d %d %d %d\n",
+	      _irq_active[0],
+	      _irq_active[1],
+	      _irq_active[2],
+	      _irq_active[3],
+	      _irq_pending[0],
+	      _irq_pending[1],
+	      _irq_pending[2],
+	      _irq_pending[3]));
+
+  for (a = 0;a < 4;a++)
     {
-      z80->handleIrq(irq_vector);
-      return 1;
+      if (_irq_pending[a])
+	{
+	  _irq_active[a] = 1;
+	  _irq_pending[a] = 0;
+	  vector = getIRQVector(a);
+	  DBG(2, form("KCemu/CTC/reti",
+		      "CTC_Base::irqack(): channel = %d, irq_vector = %02xh\n",
+		      a, vector));
+	  break;
+	}
     }
-  return 0;
+
+  b = 0;
+  for (a = 0;a < 4;a++)
+    if (_irq_pending[a])
+      b++;
+
+  if (b == 0)
+    z80->reset_irq_line(_z80_irq_mask);
+
+  return vector;
+}
+
+void
+CTC_Base::trigger_irq(int channel)
+{
+  int a;
+
+  for (a = 0;a < channel;a++)
+    if (_irq_active[a])
+      return;
+
+  irq();
 }
 
 void

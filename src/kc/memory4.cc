@@ -2,7 +2,7 @@
  *  KCemu -- the KC 85/3 and KC 85/4 Emulator
  *  Copyright (C) 1997-2001 Torsten Paul
  *
- *  $Id: memory4.cc,v 1.14 2001/12/31 14:11:53 torsten_paul Exp $
+ *  $Id: memory4.cc,v 1.15 2002/01/20 13:39:30 torsten_paul Exp $
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -77,6 +77,7 @@ Memory4::Memory4(void) : Memory()
   strcpy(ptr + l, "/basic_c0.854");
   loadROM(ptr, &_rom_basic, 0x2000, 1);
 
+  _enable_irm = true;
   _access_ram_8_1 = false;
   _access_color = false;
   _access_screen1 = false;
@@ -176,15 +177,30 @@ Memory4::enableBASIC_C(int v)
 void
 Memory4::enableIRM(int v)
 {
+  _enable_irm = v;
   if (v)
     {
-      _m_irm_0p->set_active(!_access_color);
-      _m_irm_0c->set_active(_access_color);
+      if (_access_screen1)
+	{
+	  _m_irm_0p->set_active(false);
+	  _m_irm_0c->set_active(false);
+	  _m_irm_1p->set_active(!_access_color);
+	  _m_irm_1c->set_active(_access_color);
+	}
+      else
+	{
+	  _m_irm_0p->set_active(!_access_color);
+	  _m_irm_0c->set_active(_access_color);
+	  _m_irm_1p->set_active(false);
+	  _m_irm_1c->set_active(false);
+	}
     }
   else
     {
       _m_irm_0p->set_active(false);
       _m_irm_0c->set_active(false);
+      _m_irm_1p->set_active(false);
+      _m_irm_1c->set_active(false);
     }
   reload_mem_ptr();
 }
@@ -192,33 +208,21 @@ Memory4::enableIRM(int v)
 void
 Memory4::enableCOLOR(int v)
 {
-  int a;
-
   _access_color = v;
-  _m_irm_0p->set_active(!v);
-  _m_irm_0c->set_active(v);
-  reload_mem_ptr();
+  enableIRM(_enable_irm);
+}
+
+void
+Memory4::displaySCREEN_1(int v)
+{
+  _display_screen1 = (v != 0);
 }
 
 void
 Memory4::enableSCREEN_1(int v)
 {
   _access_screen1 = v;
-  if (v)
-    {
-      _m_irm_0p->set_active(false);
-      _m_irm_0c->set_active(false);
-      _m_irm_1p->set_active(!_access_color);
-      _m_irm_1c->set_active(_access_color);
-    }
-  else
-    {
-      _m_irm_0p->set_active(!_access_color);
-      _m_irm_0c->set_active(_access_color);
-      _m_irm_1p->set_active(false);
-      _m_irm_1c->set_active(false);
-    }
-  reload_mem_ptr();
+  enableIRM(_enable_irm);
 }
 
 void

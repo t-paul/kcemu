@@ -2,7 +2,7 @@
  *  KCemu -- the KC 85/3 and KC 85/4 Emulator
  *  Copyright (C) 1997-2001 Torsten Paul
  *
- *  $Id: ui_gtk.cc,v 1.21 2002/01/06 12:53:41 torsten_paul Exp $
+ *  $Id: ui_gtk.cc,v 1.22 2002/02/12 17:24:14 torsten_paul Exp $
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -712,13 +712,10 @@ UI_Gtk::init(int *argc, char ***argv)
   /* this _must_ come last due to some initialization for menus */
   create_main_window();
 
-  //UI_Cmds::init();
-
   _profile_hist_ptr = 0;
 
   _visual = gdk_visual_get_system();
-  _image  = gdk_image_new(GDK_IMAGE_FASTEST, _visual, CANVAS_WIDTH, CANVAS_HEIGHT);
-  _imageb = gdk_image_new(GDK_IMAGE_FASTEST, _visual, CANVAS_WIDTH, CANVAS_HEIGHT);
+  _image  = gdk_image_new(GDK_IMAGE_FASTEST, _visual, get_width(), get_height());
   _gc = gdk_gc_new(GTK_WIDGET(_main.canvas)->window);
 
   CMD *cmd;

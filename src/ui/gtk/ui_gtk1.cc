@@ -2,7 +2,7 @@
  *  KCemu -- the KC 85/3 and KC 85/4 Emulator
  *  Copyright (C) 1997-2001 Torsten Paul
  *
- *  $Id: ui_gtk1.cc,v 1.8 2002/01/06 12:53:41 torsten_paul Exp $
+ *  $Id: ui_gtk1.cc,v 1.9 2002/02/12 17:24:14 torsten_paul Exp $
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -40,6 +40,17 @@ UI_Gtk1::UI_Gtk1(void) : UI_Gtk()
 
 UI_Gtk1::~UI_Gtk1(void)
 {
+}
+
+int
+UI_Gtk1::get_width(void)
+{
+  return kcemu_ui_scale * 320;
+}
+
+int
+UI_Gtk1::get_height(void) {
+  return kcemu_ui_scale * 192;
 }
 
 void
@@ -125,17 +136,45 @@ UI_Gtk1::get_title(void)
 static inline void
 put_pixels(GdkImage *image, int x, int y, byte_t val, gulong fg, gulong bg)
 {
-  int c;
+  int a;
 
-  for (c = 0;c < 8;c++)
+  switch (kcemu_ui_scale)
     {
-      if (val & 1)
-        gdk_image_put_pixel(image, x, y, fg);
-      else
-        gdk_image_put_pixel(image, x, y, bg);
-
-      x++;
-      val >>= 1;
+    case 1:
+      for (a = 0;a < 8;a++)
+	{
+	  if (val & 1)
+	    gdk_image_put_pixel(image, x, y, fg);
+	  else
+	    gdk_image_put_pixel(image, x, y, bg);
+	  
+	  x++;
+	  val >>= 1;
+	}
+      break;
+    case 2:
+      x *= 2;
+      y *= 2;
+      for (a = 0;a < 8;a++)
+	{
+	  if (val & 1)
+	    {
+	      gdk_image_put_pixel(image, x,     y + 1, fg);
+	      gdk_image_put_pixel(image, x,     y,     fg);
+	      gdk_image_put_pixel(image, x + 1, y + 1, fg);
+	      gdk_image_put_pixel(image, x + 1, y,     fg);
+	    }
+	  else
+	    {
+	      gdk_image_put_pixel(image, x,     y + 1, bg);
+	      gdk_image_put_pixel(image, x,     y,     bg);
+	      gdk_image_put_pixel(image, x + 1, y + 1, bg);
+	      gdk_image_put_pixel(image, x + 1, y,     bg);
+	    }
+	  x += 2;
+	  val >>= 1;
+	}
+      break;
     }
 }
 
@@ -171,7 +210,7 @@ void
 UI_Gtk1::update(bool full_update, bool clear_cache)
 {
   byte_t c;
-  int x, y, z, a;
+  int x, y, z, a, yscale;
   byte_t col;
   gulong fg, bg;
   byte *irm = memory->getIRM();
@@ -179,7 +218,7 @@ UI_Gtk1::update(bool full_update, bool clear_cache)
   if (full_update)
     {
       gdk_draw_image(GTK_WIDGET(_main.canvas)->window, _gc, _image,
-                     0, 0, 0, 0, 320, 256);
+                     0, 0, 0, 0, get_width(), get_height());
       return;
     }
 
@@ -216,13 +255,14 @@ UI_Gtk1::update(bool full_update, bool clear_cache)
         }
     }
 
+  yscale = kcemu_ui_scale * 8;
   for (y = 0;y < 24;y++)
     {
       if (_changed[y])
         {
           _changed[y] = 0;
           gdk_draw_image(GTK_WIDGET(_main.canvas)->window, _gc, _image,
-                         0, 8 * y, 0, 8 * y, 320, 8);
+                         0, yscale * y, 0, yscale * y, get_width(), yscale);
         }
     }
 }

@@ -2,7 +2,7 @@
  *  KCemu -- the KC 85/3 and KC 85/4 Emulator
  *  Copyright (C) 1997-2001 Torsten Paul
  *
- *  $Id: ctc.cc,v 1.19 2002/01/06 12:53:40 torsten_paul Exp $
+ *  $Id: ctc.cc,v 1.21 2002/01/20 13:39:30 torsten_paul Exp $
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -32,7 +32,7 @@
 
 #include "libdbg/dbg.h"
 
-CTC::CTC(void) : Callback("CTC")
+CTC::CTC(void) : InterfaceCircuit("CTC"), Callback("CTC")
 {
   _irq_valid[0] = 0;
   _irq_valid[1] = 1;
@@ -51,9 +51,60 @@ CTC::~CTC(void)
 }
 
 void
-CTC::iei(byte_t val)
+CTC::reti(void)
 {
-  ieo(val);
+  int a, b;
+
+  b = 0;
+  for (a = 0;a < 4;a++)
+    {
+      if (_irq_active[a])
+	{
+	  b++;
+	  _irq_active[a] = 0;
+	}
+    }
+
+  if (b > 1)
+    DBG(2, form("KCemu/CTC/reti",
+		"CTC::reti(): more than one irq active!!!"));
+
+  if (b == 0)
+    return;
+
+  DBG(2, form("KCemu/CTC/reti",
+	      "CTC::reti(): active: %d %d %d %d - pending: %d %d %d %d\n",
+	      _irq_active[0],
+	      _irq_active[1],
+	      _irq_active[2],
+	      _irq_active[3],
+	      _irq_pending[0],
+	      _irq_pending[1],
+	      _irq_pending[2],
+	      _irq_pending[3]));
+
+  for (a = 0;a < 4;a++)
+    {
+      if (_irq_pending[a])
+	{
+	  DBG(2, form("KCemu/CTC/reti",
+		      "CTC::reti(): trigger_irq(): channel = %d\n",
+		      a));
+	  try_trigger_irq(a);
+	  break;
+	}
+    }
+}
+
+void
+CTC::irqreq(void)
+{
+}
+
+word_t
+CTC::irqack(void)
+{
+  return IRQ_NOT_ACK;
 }
 
 void
@@ -75,32 +126,6 @@ CTC::reset(bool power_on)
 }
 
 void
-CTC::reti(void)
-{
-  int a;
-
-  DBG(2, form("KCemu/CTC/reti",
-	      "CTC::reti()\n"));
-  
-  for (a = 0;a < 4;a++)
-    {
-      if (_irq_active[a])
-        {
-          _irq_active[a] = 0;
-        }
-
-      if (_irq_pending[a])
-	{
-	  DBG(2, form("KCemu/CTC/reti",
-		      "CTC::reti(): trigger_irq(): _irq_pending[a] = %d\n",
-		      _irq_pending[a]));
-	  _irq_active[a] |= trigger_irq(_irq_vector | a << 1);
-	  _irq_pending[a] = 0;
-	}
-    }
-}
-
-void
 CTC::trigger(byte_t channel)
 {
   byte_t c = channel & 3;
@@ -113,21 +138,7 @@ CTC::trigger(byte_t channel)
     return;
 
   _value[c] = _timer_value[c];
-
-  if ((_control[c] & IRQ) == IRQ_DISABLED)
-    return;
-
-  if (_irq_pending[c] == 1)
-    return;
-
-  DBG(2, form("KCemu/CTC/reti",
-	      "CTC::trigger(%d): trigger_irq(): _irq_pending = %d\n",
-	      channel, _irq_pending[c]));
-
-  _irq_pending[c] = 1;
-  _irq_active[c] |= trigger_irq(_irq_vector | c << 1);
-  if (_irq_active[c])
-    _irq_pending[c] = 0;
+  try_trigger_irq(c);
 }
 
 void
@@ -155,6 +166,19 @@ CTC::handle_counter_mode(int channel)
 }
 
 void
+CTC::try_trigger_irq(int channel)
+{
+  if ((_control[channel] & IRQ) == IRQ_DISABLED)
+    {
+      _irq_pending[channel] = 0;
+      return;
+    }
+
+  _irq_pending[channel] = 1;
+  trigger_irq(channel);
+}
+
+void
 CTC::callback(void *data)
 {
   long tmp;
@@ -164,6 +188,17 @@ CTC::callback(void *data)
 
   if (_irq_valid[c] != val)
     return;
+
+  DBG(2, form("KCemu/CTC/reti",
+	      "CTC::callback(): active: %d %d %d %d - pending: %d %d %d %d\n",
+	      _irq_active[0],
+	      _irq_active[1],
+	      _irq_active[2],
+	      _irq_active[3],
+	      _irq_pending[0],
+	      _irq_pending[1],
+	      _irq_pending[2],
+	      _irq_pending[3]));
 
   switch (c)
     {
@@ -200,18 +235,10 @@ CTC::callback(void *data)
 
   if ((_control[c] & IRQ) == IRQ_ENABLED)
     {
-      if (_irq_pending[c] == 0)
-	{
-	  DBG(2, form("KCemu/CTC/reti",
-		      "CTC::callback(): trigger_irq(): _irq_pending = %d\n",
-		      _irq_pending[c]));
-	  _irq_pending[c] = 1;
-	  _irq_active[c] |= trigger_irq(_irq_vector | c << 1);
-	  if (_irq_active[c])
-	    _irq_pending[c] = 0;
-	}
-      else
-	cout << "IRQ pending!" << endl;
+      DBG(2, form("KCemu/CTC/callback",
+		  "CTC::callback(): trigger_irq(): _irq_pending = %d\n",
+		  _irq_pending[c]));
+      try_trigger_irq(c);
     }
 
   add_callback(_timer_value[c], this, (void *)((long)val));

@@ -1,3 +1,15 @@
+kcemu (0.3.4-1) unstable; urgency=low
+
+  * new upstream version
+
+ -- Torsten Paul <Torsten.Paul@gmx.de>  Sun, 10 Feb 2002 22:54:14 +0100
+
+kcemu (0.3.3-3) unstable; urgency=low
+
+  * added disk-images to the list of files to compress on install
+
+ -- Torsten Paul <Torsten.Paul@gmx.de>  Mon,  7 Jan 2002 22:01:03 +0100
+
 kcemu (0.3.3-2) unstable; urgency=low
 
   * removed floppy cpu core dump on exit

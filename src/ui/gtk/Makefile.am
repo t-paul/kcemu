@@ -1,6 +1,7 @@
 ## Process this file with automake to produce Makefile.in
 
 GTK_CFLAGS = @GTK_CFLAGS@
+SDL_CFLAGS = @SDL_CFLAGS@
 
 bin_PROGRAMS = kcemu-remote
 
@@ -8,7 +9,8 @@ noinst_LIBRARIES = libui_gtk.a
 
 INCLUDES = \
 	-I../../../include \
-	$(GTK_CFLAGS)
+	$(GTK_CFLAGS) \
+	$(SDL_CFLAGS)
 
 CPPFLAGS = \
 	-DVERSION=\"$(VERSION)\" \

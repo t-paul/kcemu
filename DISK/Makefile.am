@@ -2,6 +2,7 @@
 
 pkgdata_DATA = \
 	caos.dump	\
+	tools.dump	\
 	microdos.dump
 
 EXTRA_DIST = $(pkgdata_DATA)

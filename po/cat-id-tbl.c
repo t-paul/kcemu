@@ -17,174 +17,568 @@ The file you selected contains more than one\n\
 program. Only the first program will be loaded.\n\
 If you want to access all the contained\n\
 programs add this file to a tape-archive!", 6},
-  {"Select disk...", 7},
-  {"create file?", 8},
+  {"\
+\n\
+KCemu comes with ABSOLUTELY NO WARRANTY; for details run `kcemu --\
+warranty'.\n\
+This is free software, and you are welcome to redistribute it\n\
+under certain conditions; run `kcemu --license' for details.\n\
+\n\
+usage: kcemu [-12347hdl]\n\
+  -1:             run in Z9001 / KC 85/1 mode\n\
+  -2:             run in KC 85/2 mode\n\
+  -3:             run in KC 85/3 mode\n\
+  -4:             run in KC 85/4 mode (default)\n\
+  -7:             run in KC 87 mode (= KC 85/1 with color expansion)\n\
+  -s --scale:     scale display (only values 1 and 2 allowed)\n\
+  -t --tape:      attach tape on startup\n\
+  -h --help:      display help\n\
+  -d --datadir:   set data directory (for ROM images)\n\
+  -l --localedir: set locale directory\n\
+  -L --license:   show license\n\
+  -W --warranty:  show warranty\n", 7},
+  {"\
+\n\
+\t\t    GNU GENERAL PUBLIC LICENSE\n\
+\t\t       Version 2, June 1991\n\
+\n\
+ Copyright (C) 1989, 1991 Free Software Foundation, Inc.\n\
+     59 Temple Place, Suite 330, Boston, MA  02111-1307  USA\n\
+ Everyone is permitted to copy and distribute verbatim copies\n\
+ of this license document, but changing it is not allowed.\n\
+\n\
+\t\t\t    Preamble\n\
+\n\
+  The licenses for most software are designed to take away your\n\
+freedom to share and change it.  By contrast, the GNU General Public\n\
+License is intended to guarantee your freedom to share and change free\n\
+software--to make sure the software is free for all its users.  This\n\
+General Public License applies to most of the Free Software\n\
+Foundation's software and to any other program whose authors commit to\n\
+using it.  (Some other Free Software Foundation software is covered by\n\
+the GNU Library General Public License instead.)  You can apply it to\n\
+your programs, too.\n\
+\n\
+  When we speak of free software, we are referring to freedom, not\n\
+price.  Our General Public Licenses are designed to make sure that you\n\
+have the freedom to distribute copies of free software (and charge for\n\
+this service if you wish), that you receive source code or can get it\n\
+if you want it, that you can change the software or use pieces of it\n\
+in new free programs; and that you know you can do these things.\n\
+\n\
+  To protect your rights, we need to make restrictions that forbid\n\
+anyone to deny you these rights or to ask you to surrender the rights.\n\
+These restrictions translate to certain responsibilities for you if you\n\
+distribute copies of the software, or if you modify it.\n\
+\n\
+  For example, if you distribute copies of such a program, whether\n\
+gratis or for a fee, you must give the recipients all the rights that\n\
+you have.  You must make sure that they, too, receive or can get the\n\
+source code.  And you must show them these terms so they know their\n\
+rights.\n\
+\n\
+  We protect your rights with two steps: (1) copyright the software, and\n\
+(2) offer you this license which gives you legal permission to copy,\n\
+distribute and/or modify the software.\n\
+\n\
+  Also, for each author's protection and ours, we want to make certain\n\
+that everyone understands that there is no warranty for this free\n\
+software.  If the software is modified by someone else and passed on, we\n\
+want its recipients to know that what they have is not the original, so\n\
+that any problems introduced by others will not reflect on the original\n\
+authors' reputations.\n\
+\n\
+  Finally, any free program is threatened constantly by software\n\
+patents.  We wish to avoid the danger that redistributors of a free\n\
+program will individually obtain patent licenses, in effect making the\n\
+program proprietary.  To prevent this, we have made it clear that any\n\
+patent must be licensed for everyone's free use or not licensed at all.\n\
+\n\
+  The precise terms and conditions for copying, distribution and\n\
+modification follow.\n\
+\n\
+\t\t    GNU GENERAL PUBLIC LICENSE\n\
+   TERMS AND CONDITIONS FOR COPYING, DISTRIBUTION AND MODIFICATION\n\
+\n\
+  0. This License applies to any program or other work which contains\n\
+a notice placed by the copyright holder saying it may be distributed\n\
+under the terms of this General Public License.  The \"Program\", below,\n\
+refers to any such program or work, and a \"work based on the Program\"\n\
+means either the Program or any derivative work under copyright law:\n\
+that is to say, a work containing the Program or a portion of it,\n\
+either verbatim or with modifications and/or translated into another\n\
+language.  (Hereinafter, translation is included without limitation in\n\
+the term \"modification\".)  Each licensee is addressed as \"you\".\n\
+\n\
+Activities other than copying, distribution and modification are not\n\
+covered by this License; they are outside its scope.  The act of\n\
+running the Program is not restricted, and the output from the Program\n\
+is covered only if its contents constitute a work based on the\n\
+Program (independent of having been made by running the Program).\n\
+Whether that is true depends on what the Program does.\n\
+\n\
+  1. You may copy and distribute verbatim copies of the Program's\n\
+source code as you receive it, in any medium, provided that you\n\
+conspicuously and appropriately publish on each copy an appropriate\n\
+copyright notice and disclaimer of warranty; keep intact all the\n\
+notices that refer to this License and to the absence of any warranty;\n\
+and give any other recipients of the Program a copy of this License\n\
+along with the Program.\n\
+\n\
+You may charge a fee for the physical act of transferring a copy, and\n\
+you may at your option offer warranty protection in exchange for a fee.\n\
+\n\
+  2. You may modify your copy or copies of the Program or any portion\n\
+of it, thus forming a work based on the Program, and copy and\n\
+distribute such modifications or work under the terms of Section 1\n\
+above, provided that you also meet all of these conditions:\n\
+\n\
+    a) You must cause the modified files to carry prominent notices\n\
+    stating that you changed the files and the date of any change.\n\
+\n\
+    b) You must cause any work that you distribute or publish, that in\n\
+    whole or in part contains or is derived from the Program or any\n\
+    part thereof, to be licensed as a whole at no charge to all third\n\
+    parties under the terms of this License.\n\
+\n\
+    c) If the modified program normally reads commands interactively\n\
+    when run, you must cause it, when started running for such\n\
+    interactive use in the most ordinary way, to print or display an\n\
+    announcement including an appropriate copyright notice and a\n\
+    notice that there is no warranty (or else, saying that you provide\n\
+    a warranty) and that users may redistribute the program under\n\
+    these conditions, and telling the user how to view a copy of this\n\
+    License.  (Exception: if the Program itself is interactive but\n\
+    does not normally print such an announcement, your work based on\n\
+    the Program is not required to print an announcement.)\n\
+\n\
+These requirements apply to the modified work as a whole.  If\n\
+identifiable sections of that work are not derived from the Program,\n\
+and can be reasonably considered independent and separate works in\n\
+themselves, then this License, and its terms, do not apply to those\n\
+sections when you distribute them as separate works.  But when you\n\
+distribute the same sections as part of a whole which is a work based\n\
+on the Program, the distribution of the whole must be on the terms of\n\
+this License, whose permissions for other licensees extend to the\n\
+entire whole, and thus to each and every part regardless of who wrote it.\n\
+\n\
+Thus, it is not the intent of this section to claim rights or contest\n\
+your rights to work written entirely by you; rather, the intent is to\n\
+exercise the right to control the distribution of derivative or\n\
+collective works based on the Program.\n\
+\n\
+In addition, mere aggregation of another work not based on the Program\n\
+with the Program (or with a work based on the Program) on a volume of\n\
+a storage or distribution medium does not bring the other work under\n\
+the scope of this License.\n\
+\n\
+  3. You may copy and distribute the Program (or a work based on it,\n\
+under Section 2) in object code or executable form under the terms of\n\
+Sections 1 and 2 above provided that you also do one of the following:\n\
+\n\
+    a) Accompany it with the complete corresponding machine-readable\n\
+    source code, which must be distributed under the terms of Sections\n\
+    1 and 2 above on a medium customarily used for software interchange; \
+or,\n\
+\n\
+    b) Accompany it with a written offer, valid for at least three\n\
+    years, to give any third party, for a charge no more than your\n\
+    cost of physically performing source distribution, a complete\n\
+    machine-readable copy of the corresponding source code, to be\n\
+    distributed under the terms of Sections 1 and 2 above on a medium\n\
+    customarily used for software interchange; or,\n\
+\n\
+    c) Accompany it with the information you received as to the offer\n\
+    to distribute corresponding source code.  (This alternative is\n\
+    allowed only for noncommercial distribution and only if you\n\
+    received the program in object code or executable form with such\n\
+    an offer, in accord with Subsection b above.)\n\
+\n\
+The source code for a work means the preferred form of the work for\n\
+making modifications to it.  For an executable work, complete source\n\
+code means all the source code for all modules it contains, plus any\n\
+associated interface definition files, plus the scripts used to\n\
+control compilation and installation of the executable.  However, as a\n\
+special exception, the source code distributed need not include\n\
+anything that is normally distributed (in either source or binary\n\
+form) with the major components (compiler, kernel, and so on) of the\n\
+operating system on which the executable runs, unless that component\n\
+itself accompanies the executable.\n\
+\n\
+If distribution of executable or object code is made by offering\n\
+access to copy from a designated place, then offering equivalent\n\
+access to copy the source code from the same place counts as\n\
+distribution of the source code, even though third parties are not\n\
+compelled to copy the source along with the object code.\n\
+\n\
+  4. You may not copy, modify, sublicense, or distribute the Program\n\
+except as expressly provided under this License.  Any attempt\n\
+otherwise to copy, modify, sublicense or distribute the Program is\n\
+void, and will automatically terminate your rights under this License.\n\
+However, parties who have received copies, or rights, from you under\n\
+this License will not have their licenses terminated so long as such\n\
+parties remain in full compliance.\n\
+\n\
+  5. You are not required to accept this License, since you have not\n\
+signed it.  However, nothing else grants you permission to modify or\n\
+distribute the Program or its derivative works.  These actions are\n\
+prohibited by law if you do not accept this License.  Therefore, by\n\
+modifying or distributing the Program (or any work based on the\n\
+Program), you indicate your acceptance of this License to do so, and\n\
+all its terms and conditions for copying, distributing or modifying\n\
+the Program or works based on it.\n\
+\n\
+  6. Each time you redistribute the Program (or any work based on the\n\
+Program), the recipient automatically receives a license from the\n\
+original licensor to copy, distribute or modify the Program subject to\n\
+these terms and conditions.  You may not impose any further\n\
+restrictions on the recipients' exercise of the rights granted herein.\n\
+You are not responsible for enforcing compliance by third parties to\n\
+this License.\n\
+\n\
+  7. If, as a consequence of a court judgment or allegation of patent\n\
+infringement or for any other reason (not limited to patent issues),\n\
+conditions are imposed on you (whether by court order, agreement or\n\
+otherwise) that contradict the conditions of this License, they do not\n\
+excuse you from the conditions of this License.  If you cannot\n\
+distribute so as to satisfy simultaneously your obligations under this\n\
+License and any other pertinent obligations, then as a consequence you\n\
+may not distribute the Program at all.  For example, if a patent\n\
+license would not permit royalty-free redistribution of the Program by\n\
+all those who receive copies directly or indirectly through you, then\n\
+the only way you could satisfy both it and this License would be to\n\
+refrain entirely from distribution of the Program.\n\
+\n\
+If any portion of this section is held invalid or unenforceable under\n\
+any particular circumstance, the balance of the section is intended to\n\
+apply and the section as a whole is intended to apply in other\n\
+circumstances.\n\
+\n\
+It is not the purpose of this section to induce you to infringe any\n\
+patents or other property right claims or to contest validity of any\n\
+such claims; this section has the sole purpose of protecting the\n\
+integrity of the free software distribution system, which is\n\
+implemented by public license practices.  Many people have made\n\
+generous contributions to the wide range of software distributed\n\
+through that system in reliance on consistent application of that\n\
+system; it is up to the author/donor to decide if he or she is willing\n\
+to distribute software through any other system and a licensee cannot\n\
+impose that choice.\n\
+\n\
+This section is intended to make thoroughly clear what is believed to\n\
+be a consequence of the rest of this License.\n\
+\n\
+  8. If the distribution and/or use of the Program is restricted in\n\
+certain countries either by patents or by copyrighted interfaces, the\n\
+original copyright holder who places the Program under this License\n\
+may add an explicit geographical distribution limitation excluding\n\
+those countries, so that distribution is permitted only in or among\n\
+countries not thus excluded.  In such case, this License incorporates\n\
+the limitation as if written in the body of this License.\n\
+\n\
+  9. The Free Software Foundation may publish revised and/or new versions\n\
+of the General Public License from time to time.  Such new versions will\n\
+be similar in spirit to the present version, but may differ in detail to\n\
+address new problems or concerns.\n\
+\n\
+Each version is given a distinguishing version number.  If the Program\n\
+specifies a version number of this License which applies to it and \"any\n\
+later version\", you have the option of following the terms and conditions\n\
+either of that version or of any later version published by the Free\n\
+Software Foundation.  If the Program does not specify a version number of\n\
+this License, you may choose any version ever published by the Free \
+Software\n\
+Foundation.\n\
+\n\
+  10. If you wish to incorporate parts of the Program into other free\n\
+programs whose distribution conditions are different, write to the author\n\
+to ask for permission.  For software which is copyrighted by the Free\n\
+Software Foundation, write to the Free Software Foundation; we sometimes\n\
+make exceptions for this.  Our decision will be guided by the two goals\n\
+of preserving the free status of all derivatives of our free software and\n\
+of promoting the sharing and reuse of software generally.\n\
+\n\
+\t\t\t    NO WARRANTY\n\
+\n\
+  11. BECAUSE THE PROGRAM IS LICENSED FREE OF CHARGE, THERE IS NO WARRANTY\n\
+FOR THE PROGRAM, TO THE EXTENT PERMITTED BY APPLICABLE LAW.  EXCEPT WHEN\n\
+OTHERWISE STATED IN WRITING THE COPYRIGHT HOLDERS AND/OR OTHER PARTIES\n\
+PROVIDE THE PROGRAM \"AS IS\" WITHOUT WARRANTY OF ANY KIND, EITHER \
+EXPRESSED\n\
+OR IMPLIED, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF\n\
+MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  THE ENTIRE RISK AS\n\
+TO THE QUALITY AND PERFORMANCE OF THE PROGRAM IS WITH YOU.  SHOULD THE\n\
+PROGRAM PROVE DEFECTIVE, YOU ASSUME THE COST OF ALL NECESSARY SERVICING,\n\
+REPAIR OR CORRECTION.\n\
+\n\
+  12. IN NO EVENT UNLESS REQUIRED BY APPLICABLE LAW OR AGREED TO IN WRITING\n\
+WILL ANY COPYRIGHT HOLDER, OR ANY OTHER PARTY WHO MAY MODIFY AND/OR\n\
+REDISTRIBUTE THE PROGRAM AS PERMITTED ABOVE, BE LIABLE TO YOU FOR DAMAGES,\n\
+INCLUDING ANY GENERAL, SPECIAL, INCIDENTAL OR CONSEQUENTIAL DAMAGES ARISING\n\
+OUT OF THE USE OR INABILITY TO USE THE PROGRAM (INCLUDING BUT NOT LIMITED\n\
+TO LOSS OF DATA OR DATA BEING RENDERED INACCURATE OR LOSSES SUSTAINED BY\n\
+YOU OR THIRD PARTIES OR A FAILURE OF THE PROGRAM TO OPERATE WITH ANY OTHER\n\
+PROGRAMS), EVEN IF SUCH HOLDER OR OTHER PARTY HAS BEEN ADVISED OF THE\n\
+POSSIBILITY OF SUCH DAMAGES.\n\
+\n\
+\t\t     END OF TERMS AND CONDITIONS\n\
+\n\
+\t    How to Apply These Terms to Your New Programs\n\
+\n\
+  If you develop a new program, and you want it to be of the greatest\n\
+possible use to the public, the best way to achieve this is to make it\n\
+free software which everyone can redistribute and change under these terms.\n\
+\n\
+  To do so, attach the following notices to the program.  It is safest\n\
+to attach them to the start of each source file to most effectively\n\
+convey the exclusion of warranty; and each file should have at least\n\
+the \"copyright\" line and a pointer to where the full notice is found.\n\
+\n\
+    <one line to give the program's name and a brief idea of what it does.>\n\
+    Copyright (C) <year>  <name of author>\n\
+\n\
+    This program is free software; you can redistribute it and/or modify\n\
+    it under the terms of the GNU General Public License as published by\n\
+    the Free Software Foundation; either version 2 of the License, or\n\
+    (at your option) any later version.\n\
+\n\
+    This program is distributed in the hope that it will be useful,\n\
+    but WITHOUT ANY WARRANTY; without even the implied warranty of\n\
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the\n\
+    GNU General Public License for more details.\n\
+\n\
+    You should have received a copy of the GNU General Public License\n\
+    along with this program; if not, write to the Free Software\n\
+    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  \
+USA\n\
+\n\
+\n\
+Also add information on how to contact you by electronic and paper mail.\n\
+\n\
+If the program is interactive, make it output a short notice like this\n\
+when it starts in an interactive mode:\n\
+\n\
+    Gnomovision version 69, Copyright (C) year  name of author\n\
+    Gnomovision comes with ABSOLUTELY NO WARRANTY; for details type `show \
+w'.\n\
+    This is free software, and you are welcome to redistribute it\n\
+    under certain conditions; type `show c' for details.\n\
+\n\
+The hypothetical commands `show w' and `show c' should show the appropriate\n\
+parts of the General Public License.  Of course, the commands you use may\n\
+be called something other than `show w' and `show c'; they could even be\n\
+mouse-clicks or menu items--whatever suits your program.\n\
+\n\
+You should also get your employer (if you work as a programmer) or your\n\
+school, if any, to sign a \"copyright disclaimer\" for the program, if\n\
+necessary.  Here is a sample; alter the names:\n\
+\n\
+  Yoyodyne, Inc., hereby disclaims all copyright interest in the program\n\
+  `Gnomovision' (which makes passes at compilers) written by James Hacker.\n\
+\n\
+  <signature of Ty Coon>, 1 April 1989\n\
+  Ty Coon, President of Vice\n\
+\n\
+This General Public License does not permit incorporating your program into\n\
+proprietary programs.  If your program is a subroutine library, you may\n\
+consider it more useful to permit linking proprietary applications with the\n\
+library.  If this is what you want to do, use the GNU Library General\n\
+Public License instead of this License.\n\
+\n", 8},
+  {"\
+\n\
+NO WARRANTY\n\
+\n\
+  11. BECAUSE THE PROGRAM IS LICENSED FREE OF CHARGE, THERE IS NO WARRANTY\n\
+FOR THE PROGRAM, TO THE EXTENT PERMITTED BY APPLICABLE LAW.  EXCEPT WHEN\n\
+OTHERWISE STATED IN WRITING THE COPYRIGHT HOLDERS AND/OR OTHER PARTIES\n\
+PROVIDE THE PROGRAM \"AS IS\" WITHOUT WARRANTY OF ANY KIND, EITHER \
+EXPRESSED\n\
+OR IMPLIED, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF\n\
+MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  THE ENTIRE RISK AS\n\
+TO THE QUALITY AND PERFORMANCE OF THE PROGRAM IS WITH YOU.  SHOULD THE\n\
+PROGRAM PROVE DEFECTIVE, YOU ASSUME THE COST OF ALL NECESSARY SERVICING,\n\
+REPAIR OR CORRECTION.\n\
+\n\
+  12. IN NO EVENT UNLESS REQUIRED BY APPLICABLE LAW OR AGREED TO IN WRITING\n\
+WILL ANY COPYRIGHT HOLDER, OR ANY OTHER PARTY WHO MAY MODIFY AND/OR\n\
+REDISTRIBUTE THE PROGRAM AS PERMITTED ABOVE, BE LIABLE TO YOU FOR DAMAGES,\n\
+INCLUDING ANY GENERAL, SPECIAL, INCIDENTAL OR CONSEQUENTIAL DAMAGES ARISING\n\
+OUT OF THE USE OR INABILITY TO USE THE PROGRAM (INCLUDING BUT NOT LIMITED\n\
+TO LOSS OF DATA OR DATA BEING RENDERED INACCURATE OR LOSSES SUSTAINED BY\n\
+YOU OR THIRD PARTIES OR A FAILURE OF THE PROGRAM TO OPERATE WITH ANY OTHER\n\
+PROGRAMS), EVEN IF SUCH HOLDER OR OTHER PARTY HAS BEEN ADVISED OF THE\n\
+POSSIBILITY OF SUCH DAMAGES.\n\
+\n", 9},
+  {"Select disk...", 10},
+  {"create file?", 11},
   {"\
 The file '%s' doesn't exist.\n\
-Do you want to create it?", 9},
-  {"disk-file `%s' attached.", 10},
-  {"Can't attach disk-file.", 11},
-  {"<no module>", 12},
-  {"M003: V24 (not working!)", 13},
-  {"M011: 64k RAM", 14},
-  {"RAM Module (16k/4000h)", 15},
-  {"RAM Module (16k/8000h)", 16},
-  {"IRM Color Expansion", 17},
-  {"M022: Expander RAM (16k)", 18},
-  {"M006: Basic", 19},
-  {"M012: Texor", 20},
-  {"M026: Forth", 21},
-  {"M027: Development", 22},
-  {"M900: WordPro '86 (KC85/3)", 23},
-  {"M901: WordPro '86 (KC85/4)", 24},
-  {"Floppy Disk Basis", 25},
-  {"File `%s' loaded.", 26},
-  {"Select tape-archive...", 27},
-  {"tape-archive `%s' attached.", 28},
-  {"Can't attach tape-archive.", 29},
-  {"Export As...", 30},
-  {"File `%s' saved.", 31},
-  {"Can't export file.", 32},
-  {"Select file...", 33},
-  {"About KCemu", 34},
-  {"Close", 35},
-  {"KCemu: Color Configuration", 36},
-  {"Foreground", 37},
-  {"Background", 38},
-  {"Saturation", 39},
-  {"Brightness", 40},
-  {"Black Level", 41},
-  {"White Level", 42},
-  {"KCemu: Copying", 43},
-  {"KCemu: Debugger", 44},
-  {"Trace", 45},
-  {"Single Step", 46},
-  {"Execute Step", 47},
-  {"???", 48},
-  {"OK", 49},
-  {"Yes", 50},
-  {"No", 51},
-  {"KCemu: Disk", 52},
-  {"Disk %d", 53},
-  {"Browse", 54},
-  {"Eject", 55},
-  {"Select File...", 56},
-  {"no tape-filename given!", 57},
-  {"no KC-filename given!", 58},
+Do you want to create it?", 12},
+  {"disk-file `%s' attached.", 13},
+  {"Can't attach disk-file.", 14},
+  {"<no module>", 15},
+  {"M003: V24 (not working!)", 16},
+  {"M011: 64k RAM", 17},
+  {"RAM Module (16k/4000h)", 18},
+  {"RAM Module (16k/8000h)", 19},
+  {"IRM Color Expansion", 20},
+  {"M022: Expander RAM (16k)", 21},
+  {"M006: Basic", 22},
+  {"M012: Texor", 23},
+  {"M026: Forth", 24},
+  {"M027: Development", 25},
+  {"M900: WordPro '86 (KC85/3)", 26},
+  {"M901: WordPro '86 (KC85/4)", 27},
+  {"Floppy Disk Basis", 28},
+  {"File `%s' loaded.", 29},
+  {"Select tape-archive...", 30},
+  {"tape-archive `%s' attached.", 31},
+  {"Can't attach tape-archive.", 32},
+  {"Export As...", 33},
+  {"File `%s' saved.", 34},
+  {"Can't export file.", 35},
+  {"Select file...", 36},
+  {"The format of the selected file is not recognized.", 37},
+  {"About KCemu", 38},
+  {"Close", 39},
+  {"KCemu: Color Configuration", 40},
+  {"Foreground", 41},
+  {"Background", 42},
+  {"Saturation", 43},
+  {"Brightness", 44},
+  {"Black Level", 45},
+  {"White Level", 46},
+  {"KCemu: Copying", 47},
+  {"KCemu: Debugger", 48},
+  {"Trace", 49},
+  {"Single Step", 50},
+  {"Execute Step", 51},
+  {"???", 52},
+  {"OK", 53},
+  {"Yes", 54},
+  {"No", 55},
+  {"KCemu: Disk", 56},
+  {"Disk %d", 57},
+  {"Browse", 58},
+  {"Eject", 59},
+  {"Select File...", 60},
+  {"no tape-filename given!", 61},
+  {"no KC-filename given!", 62},
   {"\
 error in given load address!\n\
 \n\
 valid addresses have to be in the range from 0 to 65535\n\
 hexadecimal values need to be prefixed with 0x (e.g. 0x1234),\n\
-octal values require a leading 0 (e.g. 0444)", 59},
-  {"error in given start address!", 60},
-  {"File Properties", 61},
-  {"Name in tape-directory:", 62},
-  {"Name in KC file-header:", 63},
-  {"Load address:", 64},
-  {"Start address:", 65},
-  {"autostart", 66},
-  {"Input Image Properties", 67},
+octal values require a leading 0 (e.g. 0444)", 63},
+  {"error in given start address!", 64},
+  {"File Properties", 65},
+  {"Name in tape-directory:", 66},
+  {"Name in KC file-header:", 67},
+  {"Load address:", 68},
+  {"Start address:", 69},
+  {"autostart", 70},
+  {"Input Image Properties", 71},
   {"\
 It was not possible to automatically determine the\n\
 type of the selected file. Thus I don't know at which\n\
 address the file should be loaded\n\
 \n\
 To load the file nevertheless you need to type in the\n\
-needed values yourself.", 68},
-  {"Start Program after Loading", 69},
-  {"Cancel", 70},
-  {"byte output", 71},
-  {"byte input", 72},
-  {"byte input/output", 73},
-  {"bit input/output", 74},
-  {"Mode:", 75},
-  {"IRQ:", 76},
-  {"IRQ Vector:", 77},
-  {"Channel A", 78},
-  {"Channel B", 79},
-  {"Channel 0", 80},
-  {"Channel 1", 81},
-  {"Channel 2", 82},
-  {"Channel 3", 83},
-  {"KCemu: Info", 84},
-  {"CPU", 85},
-  {"PIO", 86},
-  {"CTC", 87},
-  {"Update", 88},
-  {"KCemu: Module", 89},
-  {"D002: Busdriver [%02X]", 90},
-  {"Floppy Disk Basis [F0]", 91},
-  {"Basis Device", 92},
-  {"KCemu: Add File", 93},
-  {"Filename:", 94},
-  {"Tapename:", 95},
-  {"KC name:", 96},
-  {"load addr:", 97},
-  {"start addr:", 98},
-  {"Ok", 99},
-  {"no filename given!", 100},
-  {"need load address!", 101},
-  {"invalid value for load address!", 102},
-  {"invalid value for start address!", 103},
-  {"/_Run File", 104},
-  {"/_Load File", 105},
-  {"/_Export File", 106},
-  {"/sep1", 107},
-  {"/Edit _Header", 108},
-  {"/_Delete File", 109},
-  {"/sep2", 110},
-  {"/_Add File", 111},
-  {"Name", 112},
-  {"Type", 113},
-  {"Load", 114},
-  {"Start", 115},
-  {"Size", 116},
-  {"<TapeP>", 117},
-  {"/Run File", 118},
-  {"/Load File", 119},
-  {"/Edit Header", 120},
-  {"/Delete File", 121},
-  {"/Export File", 122},
-  {"KCemu: Tape", 123},
-  {"Tape:", 124},
-  {"Stop", 125},
-  {"Record", 126},
-  {"Play", 127},
-  {"Attach", 128},
-  {"Detach", 129},
-  {"/_File", 130},
-  {"/File/Run...", 131},
-  {"/File/Load...", 132},
-  {"/File/Tape...", 133},
-  {"/File/Disk...", 134},
-  {"/File/Module...", 135},
-  {"/File/sep1", 136},
-  {"/File/Reset", 137},
-  {"/File/Power On", 138},
-  {"/File/sep2", 139},
-  {"/File/Quit Emulator", 140},
-  {"/_View", 141},
-  {"/View/Debugger", 142},
-  {"/View/Info", 143},
-  {"/View/Menubar", 144},
-  {"/View/Statusbar", 145},
-  {"/_Configuration", 146},
-  {"/Configuration/Colors", 147},
-  {"/_Help", 148},
-  {"/Help/About KCemu", 149},
-  {"/Help/sep3", 150},
-  {"/Help/KCemu Licence", 151},
-  {"/Help/No Warranty!", 152},
-  {"/_Run...", 153},
-  {"/_Load...", 154},
-  {"/_Tape...", 155},
-  {"/_Disk...", 156},
-  {"/_Module...", 157},
-  {"/Reset", 158},
-  {"/Power On", 159},
-  {"/sep3", 160},
-  {"/Quit Emulator", 161},
+needed values yourself.", 72},
+  {"Start Program after Loading", 73},
+  {"Cancel", 74},
+  {"byte output", 75},
+  {"byte input", 76},
+  {"byte input/output", 77},
+  {"bit input/output", 78},
+  {"Mode:", 79},
+  {"IRQ:", 80},
+  {"IRQ Vector:", 81},
+  {"Channel A", 82},
+  {"Channel B", 83},
+  {"Channel 0", 84},
+  {"Channel 1", 85},
+  {"Channel 2", 86},
+  {"Channel 3", 87},
+  {"KCemu: Info", 88},
+  {"CPU", 89},
+  {"PIO", 90},
+  {"CTC", 91},
+  {"Update", 92},
+  {"KCemu: Module", 93},
+  {"Floppy Disk Basis [F0]", 94},
+  {"D002: Busdriver [%02X]", 95},
+  {"Basis Device", 96},
+  {"KCemu: Add File", 97},
+  {"Filename:", 98},
+  {"Tapename:", 99},
+  {"KC name:", 100},
+  {"load addr:", 101},
+  {"start addr:", 102},
+  {"Ok", 103},
+  {"no filename given!", 104},
+  {"need load address!", 105},
+  {"invalid value for load address!", 106},
+  {"invalid value for start address!", 107},
+  {"/_Run File", 108},
+  {"/_Load File", 109},
+  {"/_Export File", 110},
+  {"/sep1", 111},
+  {"/Edit _Header", 112},
+  {"/_Delete File", 113},
+  {"/sep2", 114},
+  {"/_Add File", 115},
+  {"Name", 116},
+  {"Type", 117},
+  {"Load", 118},
+  {"Start", 119},
+  {"Size", 120},
+  {"<TapeP>", 121},
+  {"/Run File", 122},
+  {"/Load File", 123},
+  {"/Edit Header", 124},
+  {"/Delete File", 125},
+  {"/Export File", 126},
+  {"KCemu: Tape", 127},
+  {"Tape:", 128},
+  {"Stop", 129},
+  {"Record", 130},
+  {"Play", 131},
+  {"Attach", 132},
+  {"Detach", 133},
+  {"/_File", 134},
+  {"/File/Run...", 135},
+  {"/File/Load...", 136},
+  {"/File/Tape...", 137},
+  {"/File/Disk...", 138},
+  {"/File/Module...", 139},
+  {"/File/sep1", 140},
+  {"/File/Reset", 141},
+  {"/File/Power On", 142},
+  {"/File/sep2", 143},
+  {"/File/Quit Emulator", 144},
+  {"/_View", 145},
+  {"/View/Debugger", 146},
+  {"/View/Info", 147},
+  {"/View/Menubar", 148},
+  {"/View/Statusbar", 149},
+  {"/_Configuration", 150},
+  {"/Configuration/Colors", 151},
+  {"/_Help", 152},
+  {"/Help/About KCemu", 153},
+  {"/Help/sep3", 154},
+  {"/Help/KCemu Licence", 155},
+  {"/Help/No Warranty!", 156},
+  {"/_Run...", 157},
+  {"/_Load...", 158},
+  {"/_Tape...", 159},
+  {"/_Disk...", 160},
+  {"/_Module...", 161},
+  {"/Reset", 162},
+  {"/Power On", 163},
+  {"/sep3", 164},
+  {"/Quit Emulator", 165},
 };
 
-int _msg_tbl_length = 161;
+int _msg_tbl_length = 165;

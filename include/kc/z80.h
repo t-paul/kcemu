@@ -2,7 +2,7 @@
  *  KCemu -- the KC 85/3 and KC 85/4 Emulator
  *  Copyright (C) 1997-2001 Torsten Paul
  *
- *  $Id: z80.h,v 1.16 2001/12/31 14:11:53 torsten_paul Exp $
+ *  $Id: z80.h,v 1.18 2002/01/20 13:39:29 torsten_paul Exp $
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -60,9 +60,13 @@ class Z80
 	bool _singlestep;
 	bool _executestep;
         bool _enable_floppy_cpu;
-
 	long _tracedelay;
-        
+
+	dword_t _irq_line;
+	dword_t _daisy_chain_irq_mask;
+	InterfaceCircuit *_daisy_chain_first;
+	InterfaceCircuit *_daisy_chain_last;
+
 	typedef list<InterfaceCircuit *> ic_list_t;
 
 	static const int I_PERIOD;
@@ -95,9 +99,17 @@ class Z80
 	void unregister_ic(InterfaceCircuit *h);
 	int triggerIrq(int vector);
 	void handleIrq(int vector);
+	bool irq_enabled(void);
 
 	void addCallback(unsigned long long offset, Callback *cb, void *data);
 	inline unsigned long long getCounter(void) { return _counter; }
+
+	void daisy_chain_set_first(InterfaceCircuit *ic);
+	void daisy_chain_set_last(InterfaceCircuit *ic);
+	dword_t daisy_chain_get_irqmask(void);
+	void set_irq_line(dword_t mask);
+	void reset_irq_line(dword_t mask);
+	word_t irq_ack(void);
 
         void printPC(void);
 

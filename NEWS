@@ -1,26 +1,38 @@
 #
-# $Id: NEWS,v 1.4 2002/01/06 12:53:40 torsten_paul Exp $
+# $Id: NEWS,v 1.7 2002/02/12 17:24:12 torsten_paul Exp $
 #
 
-Sat Jan  5 18:31:11 CET 2002
+KCemu 0.3.4
 
+  * new switch for kctape to add KC85/1 files (only needed
+    for COM files)
+  * bugfix for KC85/1 tape files
+  * simple sound emulation (still buggy, sound is sometimes
+    not turned off) -- requires libSDL
+  * implemented IRM switch for KC85/4
+  * changed interrupt code to handle daisy chaining
+    (makes pharao playable, but still with display errors)
+
+KCemu 0.3.3
+
+  * fixed bug in flash handling (diamonds in digger didn't
+    show correctly after reset)
+  * fixed tape handling, stop button working again
+  * fixed typo that prevented the busdrivers to show up
+    in the module window
+  * added disk image with CP/M tools from the KC-Club
+  * allow compressed disk images in 22DISK format
+  * fixed floppy selection when writing data, file copy
+    (e.g. from disk B: to disk C:) should now work correctly
   * disk emulation for unix directories (don't try
     to attach directories with many (e.g. > 100)
     or big files!)
-
-Wed Jan  2 01:13:43 CET 2002
-
   * emulate 4 disks now
   * disk handling partially functional
   * use cppunit for unit tests
 
-Sat Dec 29 04:29:33 CET 2001
+KCemu 0.3.2
 
   * released a debian binary package of KCemu v0.3.2
   * added manpages because the debian packaging system
     requires them
-
-Sat Dec 28 20:01:43 CET 2001
-
-  * released KCemu v0.3.2
-

@@ -2,7 +2,7 @@
  *  KCemu -- the KC 85/3 and KC 85/4 Emulator
  *  Copyright (C) 1997-2001 Torsten Paul
  *
- *  $Id: load_22dsk.c,v 1.1 2002/01/06 12:53:40 torsten_paul Exp $
+ *  $Id: load_22dsk.c,v 1.2 2002/01/12 23:03:56 torsten_paul Exp $
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -74,12 +74,15 @@
  *
  */
 
+#include <zlib.h>
 #include <stdio.h>
 
 #include "libdisk/libdiskP.h"
 
 typedef struct {
   FILE *f;
+  gzFile *gzf;
+  int read_only;
   int len;
   struct {
     int  head;
@@ -104,27 +107,104 @@ static libdisk_loader_t loader = {
   loader_22dsk_write_sector
 };
 
+static dsk_data_t *
+do_open(const char *path)
+{
+  int ro;
+  FILE *f;
+  gzFile *gzf;
+  char *filename;
+  dsk_data_t *data;
+
+  f = NULL;
+  gzf = NULL;
+
+  ro = 0;
+  f = fopen(path, "rb+");
+  if (f == NULL)
+    {
+      ro = 1;
+      f = fopen(path, "rb");
+      if (f == NULL)
+	{
+	  filename = (char *)malloc(strlen(path) + 4);
+	  if (filename == NULL)
+	    return NULL;
+
+	  strcpy(filename, path);
+	  strcat(filename, ".gz");
+	  gzf = gzopen(filename, "rb");
+	  free(filename);
+
+	  if (gzf == NULL)
+	    return NULL;
+	}
+    }
+
+  data = (dsk_data_t *)malloc(sizeof(dsk_data_t));
+  if (data == NULL)
+    return NULL;
+
+  data->f = f;
+  data->gzf = gzf;
+  data->read_only = ro;
+}
+
+static int
+do_seek(dsk_data_t *data, long offset)
+{
+  if (data->gzf != NULL)
+    return gzseek(data->gzf, offset, SEEK_SET);
+
+  return fseek(data->f, offset, SEEK_SET);
+}
+
+static int
+do_read(dsk_data_t *data, unsigned char *buf, int len)
+{
+  if (data->gzf != NULL)
+    return gzread(data->gzf, buf, len);
+
+  return fread(buf, 1, len, data->f);
+}
+
+static int
+do_write(dsk_data_t *data, unsigned char *buf, int len)
+{
+  if (data->gzf != NULL)
+    return gzwrite(data->gzf, buf, len);
+
+  return fwrite(buf, 1, len, data->f);
+}
+
+static int
+do_getc(dsk_data_t *data)
+{
+  if (data->gzf != NULL)
+    return gzgetc(data->gzf);
+
+  return fgetc(data->f);
+}
+
 static
 int read_offsets(dsk_data_t *data)
 {
-  FILE *f;
   long idx, offset;
   int a, acyl, asid, lcyl, lsid, lsec, llen, c, count;
 
   idx = 0;
-  f = data->f;
   data->len = 0;
   while (242)
     {
-      acyl = fgetc(f); idx++; if (acyl == EOF) return;
-      asid = fgetc(f); idx++; if (asid == EOF) return;
-      lcyl = fgetc(f); idx++; if (lcyl == EOF) return;
-      lsid = fgetc(f); idx++; if (lsid == EOF) return;
-      lsec = fgetc(f); idx++; if (lsec == EOF) return;
-      llen = fgetc(f); idx++; if (llen == EOF) return;
-      c    = fgetc(f); idx++; if (c    == EOF) return;
+      acyl = do_getc(data); idx++; if (acyl == EOF) return;
+      asid = do_getc(data); idx++; if (asid == EOF) return;
+      lcyl = do_getc(data); idx++; if (lcyl == EOF) return;
+      lsid = do_getc(data); idx++; if (lsid == EOF) return;
+      lsec = do_getc(data); idx++; if (lsec == EOF) return;
+      llen = do_getc(data); idx++; if (llen == EOF) return;
+      c    = do_getc(data); idx++; if (c    == EOF) return;
       count = c;
-      c    = fgetc(f); idx++; if (c    == EOF) return;
+      c    = do_getc(data); idx++; if (c    == EOF) return;
       count |= (c << 8);
 
       data->offset[data->len].head     = lsid;
@@ -136,7 +216,7 @@ int read_offsets(dsk_data_t *data)
 
       for (a = 0;a < count;a++)
         {
-          c = fgetc(f);
+          c = do_getc(data);
           idx++;
           if (c == EOF)
 	    return;
@@ -154,37 +234,24 @@ loader_22dsk_get_name(void)
 static int
 loader_22dsk_open(libdisk_prop_t *prop, const char *path)
 {
-  int ro;
-  FILE *f;
   dsk_data_t *data;
 
   if (prop == NULL)
     return -1;
 
-  ro = 0;
-  f = fopen(path, "rb+");
-  if (f == NULL)
-    {
-      ro = 1;
-      f = fopen(path, "rb");
-      if (f == NULL)
-	return -1;
-    }
-
-  data = (dsk_data_t *)malloc(sizeof(dsk_data_t));
+  data = do_open(path);
   if (data == NULL)
       return -1;
 
-  data->f = f;
   read_offsets(data);
 
-  prop->read_only = ro;
   prop->head_count = 2;
   prop->cylinder_count = 80;
   prop->sector_size = 1024;
   prop->sectors_per_cylinder = 5;
   prop->data = data;
   prop->loader = &loader;
+  prop->read_only = data->read_only;
 
   return 0;
 }
@@ -247,10 +314,11 @@ loader_22dsk_seek(libdisk_prop_t *prop)
 	  break;
         }
     }
+
   if (offset == -1)
     return -1;
 
-  if (fseek(data->f, offset, SEEK_SET) < 0)
+  if (do_seek(data, offset) < 0)
     return -1;
 
   return 0;
@@ -267,7 +335,7 @@ loader_22dsk_read_sector(libdisk_prop_t *prop, unsigned char *buf, int len)
 
   data = (dsk_data_t *)prop->data; // seek doesn't succeed if this would fail!
 
-  l = fread(buf, 1, len, data->f);
+  l = do_read(data, buf, len);
 
   if (l != len)
     return -1;
@@ -278,7 +346,7 @@ loader_22dsk_read_sector(libdisk_prop_t *prop, unsigned char *buf, int len)
 static int
 loader_22dsk_write_sector(libdisk_prop_t *prop, unsigned char *buf, int len)
 {
-  int l;
+  int a, l;
   dsk_data_t *data;
 
   if (loader_22dsk_seek(prop) < 0)
@@ -286,7 +354,8 @@ loader_22dsk_write_sector(libdisk_prop_t *prop, unsigned char *buf, int len)
 
   data = (dsk_data_t *)prop->data; // seek doesn't succeed if this would fail!
 
-  l = fwrite(buf, 1, len, data->f);
+  l = do_write(data, buf, len);
+
   if (l != len)
     return -1;
 

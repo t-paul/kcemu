@@ -555,7 +555,7 @@ fi
 
 KCEMU_MAJOR_VERSION=0
 KCEMU_MINOR_VERSION=3
-KCEMU_MICRO_VERSION=3
+KCEMU_MICRO_VERSION=4
 
 if test $KCEMU_MICRO_VERSION -eq 0
 then
@@ -5199,14 +5199,18 @@ echo "- host system:     $host"
 echo "- debug level:     $DBG_LEVEL"
 echo "- install prefix:  $prefix"
 echo "- user interface:  Gtk+ ($gtk_config_major_version.$gtk_config_minor_version.$gtk_config_micro_version)"
+if test x$enable_sound = xyes; then
+echo "- SDL library:     SDL ($sdl_major_version.$sdl_minor_version.$sdl_micro_version)"
+fi
 echo ""
-echo -n "* unit tests:      "
+echo "- optional components:"
+echo -n "  * unit tests:      "
 if test x$have_cppunit = xyes; then
 	echo "yes (Cppunit $cppunit_major_version.$cppunit_minor_version.$cppunit_micro_version)"
 else
 	echo "no (make check will fail!)"
 fi
-echo -n "* sound:           "
+echo -n "  * sound:           "
 if test x$enable_sound = xyes; then
 	echo "yes"
 else

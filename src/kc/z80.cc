@@ -2,7 +2,7 @@
  *  KCemu -- the KC 85/3 and KC 85/4 Emulator
  *  Copyright (C) 1997-2001 Torsten Paul
  *
- *  $Id: z80.cc,v 1.33 2002/01/06 12:53:40 torsten_paul Exp $
+ *  $Id: z80.cc,v 1.35 2002/01/20 13:39:30 torsten_paul Exp $
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -217,6 +217,10 @@ Z80::Z80(void)
 
   _tracedelay = 100000;
 
+  _daisy_chain_first = 0;
+  _daisy_chain_last = 0;
+  _daisy_chain_irq_mask = 1;
+
   _do_quit = false;
 }
 
@@ -266,6 +270,7 @@ Z80::run(void)
 {
   int a;
   CMD *cmd;
+  int iff, iff_old = 0;
   static int XXX = 0;
 
   signal(SIGINT, signalHandler);
@@ -281,7 +286,7 @@ Z80::run(void)
   while (!_do_quit)
     {
 #if 0
-      if (_regs.PC.W == 0xe03e)
+      if (_regs.PC.W == 0xe339)
 	XXX = 20000;
       if (XXX > 0)
 	{
@@ -289,9 +294,11 @@ Z80::run(void)
 	  cout << "%%% " << hex << _regs.PC.W << endl;
 	}
 #endif
+      //if (_regs.PC.W == 0xe339)
+      //cout << "entering ctc channel 3 irq routine" << endl;
       //if ((_regs.PC.W == 0xe0d5) && (RdZ80(0xe0d5) == 0xed) && (_regs.BC.W < 5))
       //debug(true);
-
+      
       if (_singlestep)
 	{
 	  ui->processEvents();
@@ -320,36 +327,56 @@ Z80::run(void)
 	  if (_regs.Trace == 0)
 	    debug(false);
 	}
-
+      
       _regs.ICount = 0;
       ExecZ80(&_regs);
-
+      
       if (_enable_floppy_cpu)
 	fdc_z80->execute();
 
-      if (_regs.IRequest != INT_NONE)
+      iff = _regs.IFF & 1;
+      if (iff_old != iff)
+	{
+	  iff_old = iff;
+	  //cout << hex << getPC() << "h irqs are now: " << (iff ? "on" : "off") << endl;
+	}
+      
+      if ((_regs.IRequest != INT_NONE) || (_irq_line != 0))
 	{
 	  if(_regs.IFF & 0x20)
 	    {
 	      /*
-	       *  after EI state (set by the EI instruction)
-	       *  this triggers irqs that are delayed due to a clear
-	       *  interrupt flag
+               *  after EI state (delay pending irq by one instruction)
+	       *
+	       * IntZ80(&_regs, _regs.IRequest);
+	       * _regs.IRequest = INT_NONE;
 	       */
-	      IntZ80(&_regs, _regs.IRequest);
-	      _regs.IRequest = INT_NONE;
 	      _regs.IFF &= 0xdf;
 	    }
-	  /*
-	   *  trigger pending irq if IFF is set (= irqs enabled)
-	   */
-	  if ((_regs.IFF & 1) != 0)
+	  else
 	    {
-	      IntZ80(&_regs, _regs.IRequest);
-	      _regs.IRequest = INT_NONE;
+	      /*
+	       *  trigger pending irq if IFF is set (= irqs enabled)
+	       */
+	      if ((_regs.IFF & 1) != 0)
+		{
+		  if (_irq_line)
+		    {
+		      word_t val = irq_ack();
+		      if (val != IRQ_NOT_ACK)
+			{
+			  IntZ80(&_regs, val);
+			}
+		    }
+		  else
+		    {
+		      IntZ80(&_regs, _regs.IRequest);
+		      _regs.IRequest = INT_NONE;
+		    }
+		}
 	    }
 	}
-
+ 
       if (_regs.IFF & 0x80)
         {
           /*
@@ -418,7 +445,9 @@ Z80::reset(word_t pc, bool power_on)
   _cb_list.clear();
 
   for (ic_list_t::iterator it = _ic_list.begin();it != _ic_list.end();it++)
-    (*it)->reset(power_on);
+    {
+      (*it)->reset(power_on);
+    }
 
   ResetZ80(&_regs);
   _regs.PC.W = pc;
@@ -450,13 +479,89 @@ Z80::unregister_ic(InterfaceCircuit *h)
   _ic_list.remove(h);
 }
 
+/**
+ *  return true if interrupts are enabled
+ */
+bool
+Z80::irq_enabled(void)
+{
+  return (_regs.IFF & 1) != 0;
+}
+
+void
+Z80::daisy_chain_set_first(InterfaceCircuit *ic)
+{
+  _daisy_chain_first = ic;
+}
+
+void
+Z80::daisy_chain_set_last(InterfaceCircuit *ic)
+{
+  _daisy_chain_last = ic;
+}
+
+dword_t
+Z80::daisy_chain_get_irqmask(void)
+{
+  dword_t val = _daisy_chain_irq_mask;
+
+  if (val == 0)
+    {
+      DBG(0, form("KCemu/warning",
+                  "daisy_chain_get_irqmask(): too many interrupt sources!\n"));
+    }
+
+  _daisy_chain_irq_mask <<= 1;
+
+  return val;
+}
+
+void
+Z80::set_irq_line(dword_t mask)
+{
+  _irq_line = _irq_line | mask;
+  DBG(2, form("KCemu/Z80/irq",
+              "set_irq_line():   %04x -> %04x\n",
+              mask, _irq_line));
+}
+
+void
+Z80::reset_irq_line(dword_t mask)
+{
+  _irq_line = _irq_line & (~mask);
+  DBG(2, form("KCemu/Z80/irq",
+              "reset_irq_line(): %04x -> %04x\n",
+              mask, _irq_line));
+}
+
+word_t
+Z80::irq_ack(void)
+{
+  if (_daisy_chain_last == 0)
+    {
+      return IRQ_NOT_ACK;
+    }
+
+  //_daisy_chain_first->debug();
+  word_t val = _daisy_chain_last->ack();
+  //_daisy_chain_first->debug();
+  //sleep(1);
+  return val;
+}
+
 void
 Z80::reti(void)
 {
   ic_list_t::iterator it;
 
-  for (it = _ic_list.begin();it != _ic_list.end();it++)
-    (*it)->reti();
+  if (_daisy_chain_last)
+    {
+      _daisy_chain_last->reti_ED();
+      _daisy_chain_last->reti_4D();
+    }
+
+  //for (it = _ic_list.begin();it != _ic_list.end();it++)
+  //(*it)->reti();
 }
 
 int

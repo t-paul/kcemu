@@ -1,3 +1,108 @@
+2002-02-11  Torsten Paul  <Torsten.Paul@gmx.de>
+
+	* src/kc/kc.cc (main): set fileio mode when emulating kc85/1
+
+	* src/libtape/kctape.cc (main): added switch to add kc85/1 files;
+	those need to be treated differently with respect to block
+	numbering
+
+	* include/fileio/load.h, src/fileio/load.c: added functions
+	to get/set the kc-type for the fileio handling
+
+2002-02-10  Torsten Paul  <Torsten.Paul@gmx.de>
+
+	* src/fileio/load_TAPE.c (loader_TAPE_load): don't use
+	fill_header_COM() to rewrite the first tape block; this function
+	doesn't handle the difference between kc85/1 and kc85/3 filenames
+	which are padded with '\0' or ' ' respectively
+
+2002-02-09  Torsten Paul  <Torsten.Paul@gmx.de>
+
+	* src/kc/kc.cc (main): fixed daisy chain for kc85/1 (tape
+	was broken due to missing interrupts from the first pio)
+
+2002-02-04  Torsten Paul  <Torsten.Paul@gmx.de>
+
+	* src/kc/kc.cc (license): changed startup banner, new command
+	line switches to display license and warranty
+
+2002-01-22  Torsten Paul  <Torsten.Paul@gmx.de>
+
+	* src/kc/sound.cc: simple sound emulation
+
+2002-01-21  Torsten Paul  <Torsten.Paul@gmx.de>
+
+	* added commandline option to scale the display by factor 2,
+	the rc file option is "Display Scale"
+
+2002-01-20  Torsten Paul  <Torsten.Paul@gmx.de>
+
+	* changed interrupt handling for ctc and pio, daisy chain
+	is now partially working (makes pharao playable, but still
+	with display errors)
+
+2002-01-19  Torsten Paul  <Torsten.Paul@gmx.de>
+
+	* src/kc/ports4.cc (change_0x84), src/kc/memory4.cc:
+	implemented IRM switch
+
+2002-01-18  Torsten Paul  <Torsten.Paul@gmx.de>
+
+	* src/kc/debug.cc (DebugZ80): fixed wrong formatting in
+	memory dump
+
+2002-01-09  Torsten Paul  <Torsten.Paul@gmx.de>
+
+	* src/ui/gtk/module.cc (init): moved floppy disk basis to
+	be the topmost device in the module window
+
+	* src/kc/mod_list.cc (ModuleList): fixed typo that prevented
+	the module dialog to show busdrivers even in KC 85/3 and
+	KC 85/4 mode
+
+	* .kcemurc: system config file now has only config option
+	"Default KC Model" set to 4
+
+	* src/kc/ctc3.cc (irq_2): config option "Full Flash Support"
+	is now on by default
+
+	* src/ui/gtk/ui_gtk3.cc, src/ui/gtk/ui_gtk4.cc: reset was
+	called twice because the ui class registered itself two
+	times via z80->register_ic() - fixes flash bug after reset in
+	KC 85/4 mode
+
+2002-01-08  Torsten Paul  <Torsten.Paul@gmx.de>
+
+	* src/ui/gtk/ui_gtk4.cc: changed the flash handling (display
+	of the diamonds in digger seems to be stable now if full
+	flash support is off)
+
+	* src/fileio/load_UNKNOWN.c (loader_UNKNOWN_load): set
+	start_addr to 0xffff if no real start address is found,
+	set type to COM if load and/or start address found
+
+	* src/kc/tape.cc (stop): don't change the power signal
+	when stopping the tape
+
+	* src/kc/kc.cc (main): fixed typo in statement to enable
+	tape power for KC 85/1 and KC 87
+
+2002-01-07  Torsten Paul  <Torsten.Paul@gmx.de>
+
+	* src/libdisk/load_22dsk.c: added (readonly) support for
+	disk images that are compressed with gzip, filename handling
+	needs some changes though
+
+	* src/ui/gtk/disk.cc: activated 3rd disk image (tools.dump)
+	as predefined image
+
+	* added disk-image tools.dump which contains some importent
+	CP/M programs (most are from the CP/M starter kit from the
+	KC-Club: www.iee.et.tu-dresden.de/~kc-club/DOWNLOAD/DISK001)
+	
+	* src/kc/fdc_cmd.cc (FDC_CMD_WRITE_DATA::execute): fixed
+	missing call to floppy device selection
+
 2002-01-06  Torsten Paul  <Torsten.Paul@gmx.de>
 
 	* released version 0.3.3

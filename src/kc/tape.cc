@@ -2,7 +2,7 @@
  *  KCemu -- the KC 85/3 and KC 85/4 Emulator
  *  Copyright (C) 1997-2001 Torsten Paul
  *
- *  $Id: tape.cc,v 1.21 2001/12/29 03:50:21 torsten_paul Exp $
+ *  $Id: tape.cc,v 1.22 2002/01/12 23:03:56 torsten_paul Exp $
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -39,6 +39,7 @@
 #include "fileio/load.h"
 
 #include "ui/ui.h"
+#include "ui/error.h"
 #include "ui/status.h"
 
 #include "libdbg/dbg.h"
@@ -463,15 +464,7 @@ Tape::power(bool val)
 	      "Tape::power(): Power %s\n",
 	      _power ? "on" : "off"));
 
-  if (_power)
-    {
-      TAPE_IF()->tapePower(true);
-    }
-  else
-    {
-      do_stop();
-      TAPE_IF()->tapePower(false);
-    }
+  TAPE_IF()->tapePower(_power);
 
 #if 0
   ofstream os;
@@ -530,7 +523,6 @@ Tape::record(void)
   
   _play = false;
   _record = true;
-  power(true);
 }
 
 void
@@ -585,7 +577,8 @@ Tape::stop(void)
 
   _play = false;
   _record = false;
-  power(false);
+
+  TAPE_IF()->tapeProgress(0);
 
   if (!_os)
     return;
@@ -672,20 +665,8 @@ Tape::callback(void *data)
 {
   int edge = (int)data;
   
-//  if (!_power)
-//    {
-//	DBG(2, form("KCemu/Tape/play",
-//		    "Tape::callback(): tape callback while power is off!\n"));
-//	return;
-//    }
-
-  do_play(edge);
-}
-
-void
-Tape::do_stop(void)
-{
-  TAPE_IF()->tapeProgress(0);
+  if (_play)
+    do_play(edge);
 }
 
 void
@@ -705,7 +686,7 @@ Tape::do_play(int edge)
     {
       /*
        *  trigger signal to get everything running...
-       *  this comes from the automatic playing se we
+       *  this comes (delayed) from the automatic playing so we
        *  ignore this if power is off
        */
       DBG(1, form("KCemu/Tape/play",
@@ -888,7 +869,8 @@ Tape::ctcSignal(void)
   else
     bit_type = 1;
 
-  if (!_power) return;
+  if (!_power)
+    return;
 
   if (_sync > 0)
     {
@@ -1115,12 +1097,14 @@ Tape::add(const char *name)
                           KCT_TYPE_BAS_P, KCT_MACHINE_ALL);
           break;
         default:
+	  Error::instance()->info(_("The format of the selected file is not recognized."));
+	  /*
           DBG(0, form("KCemu/Tape/add",
                       "Tape::add(): '%s' %04x/%04x [default]\n",
                       (const char *)&ptr->name[0],
                       ptr->load_addr, ptr->start_addr));
-          _kct_file.write((const char *)&ptr->name[0], ptr->data, ptr->size);
-          break;
+	  */
+          return TAPE_ERROR;
         }
     }
   update_tape_list();

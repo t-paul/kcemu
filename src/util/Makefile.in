@@ -257,12 +257,6 @@ distdir: $(DISTFILES)
 	  fi; \
 	done
 disk-tool.o: disk-tool.c
-disp-wav.o: disp-wav.c
-ft.o: ft.c
-send_file.o: send_file.c
-show-wav.o: show-wav.c
-wav2kc.o: wav2kc.c
-wavtokc2.o: wavtokc2.c
 
 info-am:
 info: info-am

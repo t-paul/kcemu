@@ -2,7 +2,7 @@
  *  KCemu -- the KC 85/3 and KC 85/4 Emulator
  *  Copyright (C) 1997-2001 Torsten Paul
  *
- *  $Id: ctc.h,v 1.16 2001/12/31 14:11:53 torsten_paul Exp $
+ *  $Id: ctc.h,v 1.18 2002/01/20 13:39:29 torsten_paul Exp $
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -42,7 +42,7 @@ class CTCCallbackInterface
 
 class CTC : public InterfaceCircuit, public PortInterface, public Callback
 {
- private:
+ protected:
   typedef list<CTCCallbackInterface *>cb_list_t;
   typedef cb_list_t::iterator iterator;
 
@@ -98,8 +98,10 @@ class CTC : public InterfaceCircuit, public PortInterface, public Callback
 
  protected:
   virtual long long get_counter() = 0;
-  virtual byte_t trigger_irq(byte_t irq_vector) = 0;
+  virtual void trigger_irq(int channel) = 0;
   virtual void add_callback(unsigned long long offset, Callback *cb, void *data) = 0;
+
+  virtual void try_trigger_irq(int channel);
 
  public:
   CTC(void);
@@ -120,8 +122,6 @@ class CTC : public InterfaceCircuit, public PortInterface, public Callback
   byte_t c_in(byte_t channel);
   void c_out(byte_t channel, byte_t val);
   
-  void iei(byte_t val);
-
   void trigger(byte_t channel);
   void callback(void *data);
 
@@ -146,8 +146,13 @@ class CTC : public InterfaceCircuit, public PortInterface, public Callback
       return ((_control[channel] & RESET) == RESET_ACTIVE);
     }
 
-  virtual void reset(bool power_on = false);
+  /*
+   *  InterfaceCircuit
+   */
   virtual void reti(void);
+  virtual void irqreq(void);
+  virtual word_t irqack(void);
+  virtual void reset(bool power_on = false);
 
   virtual void register_callback(int channel, CTCCallbackInterface *cbi);
   virtual void run_cb_start(int channel);

@@ -2,7 +2,7 @@
  *  KCemu -- the KC 85/3 and KC 85/4 Emulator
  *  Copyright (C) 1997-2001 Torsten Paul
  *
- *  $Id: kctape.cc,v 1.11 2001/12/29 03:50:21 torsten_paul Exp $
+ *  $Id: kctape.cc,v 1.12 2002/02/12 17:24:14 torsten_paul Exp $
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -43,7 +43,9 @@ dump(istream *s, int addr)
       return false;
     }
 
-  cout << "Block " << hex << setw(2) << (c & 0xff) << "h (" << dec << (c & 0xff) << ")" << endl;
+  cout << "Block " << hex << setw(2) << setfill('0')
+       << (c & 0xff) << "h (" << dec << (c & 0xff) << ")"
+       << endl;
 
   end = false;
   for (int a = 0;a < 8;a++)
@@ -51,7 +53,7 @@ dump(istream *s, int addr)
       int c;
       char buf[16];
 
-      cout << hex << setw(4) << (addr + a * 16) << ": ";
+      cout << hex << setw(4) << setfill('0') << (addr + a * 16) << "h: ";
       x = 16;
       for (int b = 0;b < 16;b++)
         {
@@ -66,17 +68,19 @@ dump(istream *s, int addr)
         }
       for (int b = 0;b < 16;b++)
         {
+	  if (b == 8)
+	    cout << "- ";
           if (b >= x)
             cout << "   ";
           else
-	    cout << hex << setw(2) << (buf[b] & 0xff) << " ";
+	    cout << hex << setw(2) << setfill('0') << (buf[b] & 0xff) << " ";
         }
       cout << "| ";
       for (int b = 0;b < 16;b++)
         {
           if (b >= x)
             break;
-          cout << ((char)isprint(buf[b]) ? buf[b] : '.');
+          cout << (char)(isprint(buf[b]) ? buf[b] : '.');
         }
       cout << endl;
       if (end)
@@ -268,25 +272,34 @@ int main(int argc, char **argv)
       (strcmp(argv[1], "-h") == 0) ||
       (strcmp(argv[1], "--help") == 0))
     {
-      cout << "*** kctape v0.2 ***" << endl
-           << "(c) 1998 Torsten Paul" << endl
-           << endl;
+      cout << "  _  ______ _\n"
+	   << " | |/ / ___| |_ __ _ _ __   ___                KCtape 0.2\n"
+	   << " | ' / |   | __/ _` | '_ \\ / _ \\       (c) 1997-2002 Torsten Paul\n"
+	   << " | . \\ |___| || (_| | |_) |  __/         <Torsten.Paul@gmx.de>\n"
+	   << " |_|\\_\\____|\\__\\__,_| .__/ \\___|      http://kcemu.sourceforge.net/\n"
+	   << "                    |_|\n"
+	   << "\n"
+	   << "KCtape is part of KCemu the KC 85/4 Emulator and comes with\n"
+	   << "ABSOLUTELY NO WARRANTY; for details run `kcemu --warranty'.\n"
+	   << "This is free software, and you are welcome to redistribute it\n"
+	   << "under certain conditions; run `kcemu --license' for details.\n"
+	   << "\n"
+	   << "usage: kctape tapefile [command [command_args]]\n"
+	   << "\n"
+           << " commands:\t\targuments:\n"
+           << "  -l|--list\n"
+           << "  -c|--create\n"
+           << "  -a|--add\t\tfilename [filename] ...\n"
+           << "  -1|--add1\t\tfilename [filename] ... (KC 85/1 mode)\n"
+	   << "  -A|--add-raw\t\tfilename tapename kcname loadaddr [startaddr]\n"
+	   << "  -x|--extract\t\ttapename\n"
+           << "  -r|--remove\t\tname\n"
+           << "  -d|--dump\n";
 
-      cout << "usage: kctape tapefile [command [command_args]]"
-	   << endl << endl
-           << "  commands:\t\targuments:" << endl
-           << "  ---------\t\t----------" << endl
-           << "  -l|--list" << endl
-           << "  -c|--create" << endl
-           << "  -a|--add\t\tfilename [filename] ..." << endl
-	   << "  -A|--add-raw\t\tfilename tapename kcname "
-              "loadaddr [startaddr]" << endl
-	   << "  -x|--extract\t\ttapename" << endl
-           << "  -r|--remove\t\tname" << endl
-           << "  -d|--dump" << endl
-           << "  -b|--print-bam" << endl
-           << "  -B|--print-block-list" << endl;
-      return 1;
+      //<< "  -b|--print-bam" << endl
+      //<< "  -B|--print-block-list" << endl;
+
+      return 0;
     }
 
   fileio_init();
@@ -320,9 +333,15 @@ int main(int argc, char **argv)
   /*
    *  ADD
    */
-  else if ((strcmp(argv[2], "-a") == 0) || (strcmp(argv[2], "--add") == 0))
+  else if ((strcmp(argv[2], "-a") == 0) ||
+	   (strcmp(argv[2], "-1") == 0) ||
+	   (strcmp(argv[2], "--add") == 0) ||
+	   (strcmp(argv[2], "--add1") == 0))
     {
       int idx, ret;
+
+      if ((strcmp(argv[2], "-1") == 0) || (strcmp(argv[2], "--add1") == 0))
+	fileio_set_kctype(FILEIO_KC85_1);
 
       if (argc < 4)
         {

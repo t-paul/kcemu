@@ -2,7 +2,7 @@
  *  KCemu -- the KC 85/3 and KC 85/4 Emulator
  *  Copyright (C) 1997-2001 Torsten Paul
  *
- *  $Id: load_TAPE.c,v 1.6 2001/04/29 21:59:23 tp Exp $
+ *  $Id: load_TAPE.c,v 1.8 2002/02/12 17:24:14 torsten_paul Exp $
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -37,7 +37,6 @@ check_addr(unsigned char *data, long size)
   load  = data[17] | (data[18] << 8);
   end   = data[19] | (data[20] << 8);
   start = data[21] | (data[22] << 8);
-printf("load %d, end %d, start %d\n", load, end, start);
 
   if (load >= end)
     return 0;
@@ -135,27 +134,24 @@ loader_TAPE_load(const char *filename,
     return -1;
 
   *(*prop)->data = 0; // block number
-  fill_header_COM((*prop)->data + 1, *prop);
 
-  fileio_copy_blocks((*prop)->data + 129, data + 128, size - 128, 1);
+  /*
+   *  FIXME: fill_header_COM() doesn't handle KC85/1 filenames correctly
+   */
+  //fill_header_COM((*prop)->data + 1, *prop);
+  //fileio_copy_blocks((*prop)->data + 129, data + 128, size - 128, 1);
 
-  //sptr = data + 128;
-  //dptr = (*prop)->data + 129;
-  //size -= 128;
-
-//  while (size > 0)
-//    {
-//	if (size > 128)
-//	  *dptr = b++;
-//	else
-//	  *dptr = 0xff;
-//
-//	len = (size > 128) ? 128 : size;
-//	memcpy(dptr + 1, sptr, len);
-//	dptr += 129;
-//	sptr += 128;
-//	size -= 128;
-//    }
+  switch (fileio_get_kctype())
+    {
+    case FILEIO_KC85_1:
+      printf("*** 85_1\n");
+      fileio_copy_blocks((*prop)->data, data, size, 0);
+      break;
+    case FILEIO_KC85_3:
+      printf("*** 85_3\n");
+      fileio_copy_blocks((*prop)->data, data, size, 1);
+      break;
+    }
 
   return 0;
 }

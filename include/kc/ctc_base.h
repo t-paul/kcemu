@@ -2,7 +2,7 @@
  *  KCemu -- the KC 85/3 and KC 85/4 Emulator
  *  Copyright (C) 1997-2001 Torsten Paul
  *
- *  $Id: ctc_base.h,v 1.2 2001/12/31 14:11:53 torsten_paul Exp $
+ *  $Id: ctc_base.h,v 1.3 2002/01/20 13:39:29 torsten_paul Exp $
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -28,10 +28,16 @@
 
 class CTC_Base : public CTC
 {
+ private:
+  dword_t _z80_irq_mask;
+
  protected:
   virtual long long get_counter();
-  virtual byte_t trigger_irq(byte_t irq_vector);
+  virtual void trigger_irq(int channel);
   virtual void add_callback(unsigned long long offset, Callback *cb, void *data);
+
+  virtual void irqreq(void);
+  virtual word_t irqack(void);
 
  public:
   CTC_Base(void);

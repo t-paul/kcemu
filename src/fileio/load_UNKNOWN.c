@@ -2,7 +2,7 @@
  *  KCemu -- the KC 85/3 and KC 85/4 Emulator
  *  Copyright (C) 1997-2001 Torsten Paul
  *
- *  $Id: load_UNKNOWN.c,v 1.5 2001/04/14 15:15:54 tp Exp $
+ *  $Id: load_UNKNOWN.c,v 1.6 2002/01/12 23:03:56 torsten_paul Exp $
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -103,8 +103,8 @@ loader_UNKNOWN_load(const char *filename,
 
   (*prop)->type = FILEIO_TYPE_UNKNOWN;
   (*prop)->valid = FILEIO_V_NONE;
-  (*prop)->start_addr = 0;
   (*prop)->load_addr  = 0;
+  (*prop)->start_addr = 0xffff;
   switch (a)
     {
     case 2:
@@ -115,6 +115,7 @@ loader_UNKNOWN_load(const char *filename,
     case 1:
       (*prop)->load_addr  = load;
       (*prop)->valid |= FILEIO_V_LOAD_ADDR;
+      (*prop)->type = FILEIO_TYPE_COM;
       break;
     }
   (*prop)->autostart = (a == 2);

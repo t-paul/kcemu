@@ -2,7 +2,7 @@
  *  KCemu -- the KC 85/3 and KC 85/4 Emulator
  *  Copyright (C) 1997-2001 Torsten Paul
  *
- *  $Id: disk.cc,v 1.4 2002/01/06 12:53:40 torsten_paul Exp $
+ *  $Id: disk.cc,v 1.5 2002/01/12 23:03:56 torsten_paul Exp $
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -244,7 +244,7 @@ DiskWindow::init(void)
 
     popdown = g_list_append(popdown, disk1);
     popdown = g_list_append(popdown, disk2);
-    //popdown = g_list_append(popdown, disk3);
+    popdown = g_list_append(popdown, disk3);
     _w.combo[a] = gtk_combo_new();
     gtk_table_attach_defaults(GTK_TABLE(_w.table), _w.combo[a],
 			      1, 2, a, a + 1);

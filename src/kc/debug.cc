@@ -486,7 +486,7 @@ byte_t DebugZ80(_Z80 *R)
             cout << hex << setw(4) << setfill('0') << Addr << ": ";
 
             for (I=0;I<16;I++,Addr++)
-	      cout << hex << setw(4) << setfill('0') << RdZ80(Addr)
+	      cout << hex << setw(2) << setfill('0') << (int)RdZ80(Addr)
 		   << (I == 7 ? " - " : " ");
 
             cout << "| ";

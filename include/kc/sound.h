@@ -2,7 +2,7 @@
  *  KCemu -- the KC 85/3 and KC 85/4 Emulator
  *  Copyright (C) 1997-2001 Torsten Paul
  *
- *  $Id: sound.h,v 1.3 2001/04/14 15:14:54 tp Exp $
+ *  $Id: sound.h,v 1.4 2002/02/12 17:24:14 torsten_paul Exp $
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -37,6 +37,7 @@ class sndop
 
   sndop(long long counter, double freq)
     {
+      //cout << "new sndop(): counter = " << counter << ", freq = " << freq << endl;
       _counter = counter;
       _freq = freq;
     }

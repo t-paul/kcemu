@@ -2,7 +2,7 @@
  *  KCemu -- the KC 85/3 and KC 85/4 Emulator
  *  Copyright (C) 1997-2001 Torsten Paul
  *
- *  $Id: ports4.cc,v 1.8 2001/04/14 15:16:30 tp Exp $
+ *  $Id: ports4.cc,v 1.9 2002/01/20 13:39:30 torsten_paul Exp $
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -114,6 +114,7 @@ Ports4::change_0x84(byte_t changed, byte_t val)
       DBG(2, form("KCemu/Ports/4/change/84",
                   "Ports 0x84: display screen %d\n",
                   val & 1));
+      memory->displaySCREEN_1(val & 0x01);
     }
   if (changed & 0x02)
     {

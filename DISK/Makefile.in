@@ -96,7 +96,7 @@ USE_NLS = @USE_NLS@
 VERSION = @VERSION@
 l = @l@
 
-pkgdata_DATA =  	caos.dump		microdos.dump
+pkgdata_DATA =  	caos.dump		tools.dump		microdos.dump
 
 
 EXTRA_DIST = $(pkgdata_DATA)

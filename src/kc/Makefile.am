@@ -22,6 +22,7 @@ kcemu_SOURCES = \
 	debug.cc	\
 	kc.cc		\
 	rc.cc		\
+	ic.cc		\
 	ctc.cc		\
 	ctc1.cc		\
 	ctc3.cc		\

@@ -2,7 +2,7 @@
  *  KCemu -- the KC 85/3 and KC 85/4 Emulator
  *  Copyright (C) 1997-2001 Torsten Paul
  *
- *  $Id: load.h,v 1.4 2001/04/22 22:24:03 tp Exp $
+ *  $Id: load.h,v 1.5 2002/02/12 17:24:14 torsten_paul Exp $
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -26,6 +26,11 @@
 extern "C" {
 #endif
 
+typedef enum
+{
+  FILEIO_KC85_1,
+  FILEIO_KC85_3 /* default */
+} fileio_kctype_t;
 
 typedef enum
 {
@@ -61,6 +66,16 @@ typedef struct fileio_prop
  *  initialize loader modules
  */
 void            fileio_init(void);
+
+/*
+ *  set the kc-type for the file io handling
+ */
+void            fileio_set_kctype(fileio_kctype_t type);
+
+/*
+ *  return the kc-type for the file io handling
+ */
+fileio_kctype_t fileio_get_kctype(void);
 
 /*
  *  load file(s) into memory

@@ -2,7 +2,7 @@
  *  KCemu -- the KC 85/3 and KC 85/4 Emulator
  *  Copyright (C) 1997-2001 Torsten Paul
  *
- *  $Id: ui_gtk1.h,v 1.5 2001/04/14 15:15:34 tp Exp $
+ *  $Id: ui_gtk1.h,v 1.6 2002/02/12 17:24:14 torsten_paul Exp $
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -51,8 +51,8 @@ class UI_Gtk1 : public UI_Gtk
   virtual void flash(bool enable);
   
   virtual const char * get_title(void);
-  virtual int get_width(void) { return 320; }
-  virtual int get_height(void) { return 192; }
+  virtual int get_width(void);
+  virtual int get_height(void);
 
   virtual void reset(bool power_on = false);
 };

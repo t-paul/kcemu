@@ -2,7 +2,7 @@
  *  KCemu -- the KC 85/3 and KC 85/4 Emulator
  *  Copyright (C) 1997-2001 Torsten Paul
  *
- *  $Id: module.cc,v 1.9 2002/01/06 12:53:40 torsten_paul Exp $
+ *  $Id: module.cc,v 1.10 2002/01/12 23:03:56 torsten_paul Exp $
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -194,14 +194,15 @@ ModuleWindow::init(void)
   gtk_container_add(GTK_CONTAINER(_window), _w.vbox);
   gtk_widget_show(_w.vbox);
 
+  if (RC::instance()->get_int("Floppy Disk Basis") && (get_kc_type() & KC_TYPE_85_2_CLASS))
+    init_device(_("Floppy Disk Basis [F0]"), 0xf0, 3);
+
   for (a = _nr_of_bd;a > 0;a--)
     {
       sprintf(buf, _("D002: Busdriver [%02X]"), 16 * a);
       init_device(buf, 16 * a, 15);
     }
 
-  if (RC::instance()->get_int("Floppy Disk Basis") && (get_kc_type() & KC_TYPE_85_2_CLASS))
-    init_device(_("Floppy Disk Basis [F0]"), 0xf0, 3);
   init_device(_("Basis Device"), 0, 12);
 
   /*

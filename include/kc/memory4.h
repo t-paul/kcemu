@@ -2,7 +2,7 @@
  *  KCemu -- the KC 85/3 and KC 85/4 Emulator
  *  Copyright (C) 1997-2001 Torsten Paul
  *
- *  $Id: memory4.h,v 1.8 2001/04/14 15:14:27 tp Exp $
+ *  $Id: memory4.h,v 1.9 2002/01/20 13:39:29 torsten_paul Exp $
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -40,6 +40,7 @@ private:
   byte_t _irm0[0x8000];
   byte_t _irm1[0x8000];
 
+  bool _enable_irm;
   bool _access_ram_8_1;
   bool _access_color;
   bool _access_screen1;
@@ -91,6 +92,8 @@ public:
   void enableIRM(int v);
   void enableCOLOR(int v);
   void enableSCREEN_1(int v);
+
+  void displaySCREEN_1(int v);
   
   void protectRAM_0(int v);
   void protectRAM_4(int v);

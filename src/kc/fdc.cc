@@ -2,7 +2,7 @@
  *  KCemu -- the KC 85/3 and KC 85/4 Emulator
  *  Copyright (C) 1997-2001 Torsten Paul
  *
- *  $Id: fdc.cc,v 1.7 2002/01/06 12:53:40 torsten_paul Exp $
+ *  $Id: fdc.cc,v 1.8 2002/01/20 13:39:30 torsten_paul Exp $
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -47,7 +47,7 @@ SectorDesc::SectorDesc(long size, byte_t *buf)
   _size = size;
 }
 
-FDC::FDC(void)
+FDC::FDC(void) : InterfaceCircuit("FDC")
 {
   _cmds[0x00] = new FDC_CMD_INVALID(this);
   _cmds[0x01] = new FDC_CMD_INVALID(this);
@@ -366,11 +366,6 @@ FDC::set_input_gate(byte_t mask, byte_t val)
   DBG(2, form("KCemu/FDC/input-gate",
               "FDC::set_input_gate(): INPUT_GATE: %02x\n",
               _INPUT_GATE));
-}
-
-void
-FDC::iei(byte_t val)
-{
 }
 
 void

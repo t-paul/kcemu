@@ -2,7 +2,7 @@
  *  KCemu -- the KC 85/3 and KC 85/4 Emulator
  *  Copyright (C) 1997-2001 Torsten Paul
  *
- *  $Id: mod_list.cc,v 1.12 2002/01/06 12:53:40 torsten_paul Exp $
+ *  $Id: mod_list.cc,v 1.13 2002/01/12 23:03:56 torsten_paul Exp $
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -192,7 +192,7 @@ ModuleList::ModuleList(void)
     _nr_of_bd = 0;
   if (_nr_of_bd > MAX_BD)
     _nr_of_bd = MAX_BD;
-  if (get_kc_type() | KC_TYPE_85_1_CLASS)
+  if (get_kc_type() & KC_TYPE_85_1_CLASS)
     _nr_of_bd = 0;
 
   for (a = 0;a < 4 * _nr_of_bd + 2;a++)

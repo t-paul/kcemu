@@ -2,7 +2,7 @@
  *  KCemu -- the KC 85/3 and KC 85/4 Emulator
  *  Copyright (C) 1997-2001 Torsten Paul
  *
- *  $Id: mod_v24.cc,v 1.11 2001/12/29 03:50:21 torsten_paul Exp $
+ *  $Id: mod_v24.cc,v 1.12 2002/01/20 13:39:30 torsten_paul Exp $
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -46,6 +46,7 @@
 static ModuleV24 *self;
 
 ModuleV24::ModuleV24(ModuleV24 &tmpl) :
+  InterfaceCircuit("ModuleV24"),
   ModuleInterface(tmpl.get_name(), tmpl.get_id(), tmpl.get_type())
 {
   _reg[A] = 0;
@@ -70,6 +71,7 @@ ModuleV24::ModuleV24(ModuleV24 &tmpl) :
 }
 
 ModuleV24::ModuleV24(const char *name, byte_t id) :
+  InterfaceCircuit("ModuleV24"),
   ModuleInterface(name, id, KC_MODULE_KC_85_3)
 {
   _reg[A] = 0;
@@ -321,12 +323,6 @@ ModuleInterface *
 ModuleV24::clone(void)
 {
   return new ModuleV24(*this);
-}
-
-void
-ModuleV24::iei(byte_t val)
-{
-  ieo(val);
 }
 
 void

@@ -2,7 +2,7 @@
  *  KCemu -- the KC 85/3 and KC 85/4 Emulator
  *  Copyright (C) 1997-2001 Torsten Paul
  *
- *  $Id: load.c,v 1.8 2001/04/14 15:15:48 tp Exp $
+ *  $Id: load.c,v 1.9 2002/02/12 17:24:14 torsten_paul Exp $
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -27,11 +27,13 @@
 
 #include "fileio/loadP.h"
 
+static fileio_kctype_t kctype;
 static file_loader_t *loaders[MAX_FILE_LOADERS];
 
 void
 fileio_init(void)
 {
+  fileio_set_kctype(FILEIO_KC85_3);
   memset(loaders, 0, sizeof(loaders));
 
   /*
@@ -45,6 +47,18 @@ fileio_init(void)
   loader_SSS_init();
   loader_TAPE_init();
   loader_UNKNOWN_init(); /* fallback */
+}
+
+fileio_kctype_t
+fileio_get_kctype(void)
+{
+  return kctype;
+}
+
+void
+fileio_set_kctype(fileio_kctype_t type)
+{
+  kctype = type;
 }
 
 int

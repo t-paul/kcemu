@@ -2,7 +2,7 @@
  *  KCemu -- the KC 85/3 and KC 85/4 Emulator
  *  Copyright (C) 1997-2001 Torsten Paul
  *
- *  $Id: fdc.h,v 1.4 2002/01/02 00:35:05 torsten_paul Exp $
+ *  $Id: fdc.h,v 1.5 2002/01/20 13:39:29 torsten_paul Exp $
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -124,10 +124,6 @@ class FDC : public InterfaceCircuit, public PortInterface
   FDC(void);
   virtual ~FDC(void);
 
-  virtual void iei(byte_t val);
-  virtual void reset(bool power_on = false);
-  virtual void reti(void);
-
   virtual byte_t in(word_t addr);
   virtual void out(word_t addr, byte_t val);
 
@@ -146,6 +142,14 @@ class FDC : public InterfaceCircuit, public PortInterface
   void set_state(fdc_state_t state);
   bool seek(byte_t head, byte_t cylinder, byte_t sector);
   void set_input_gate(byte_t mask, byte_t val);
+
+  /*
+   *  InterfaceCircuit
+   */
+  virtual void reti(void);
+  virtual void irqreq(void) {}
+  virtual word_t irqack() { return IRQ_NOT_ACK; }
+  virtual void reset(bool power_on = false);
 };
 
 #endif /* __kc_fdc_h */

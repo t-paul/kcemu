@@ -2,7 +2,7 @@
  *  KCemu -- the KC 85/3 and KC 85/4 Emulator
  *  Copyright (C) 1997-2001 Torsten Paul
  *
- *  $Id: ctc3.cc,v 1.6 2001/12/31 14:11:53 torsten_paul Exp $
+ *  $Id: ctc3.cc,v 1.7 2002/01/12 23:03:56 torsten_paul Exp $
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -98,7 +98,7 @@ CTC3::irq_1(void)
 bool
 CTC3::irq_2(void)
 {
-  static int b = RC::instance()->get_int("Full Flash Support", 0);
+  static int b = RC::instance()->get_int("Full Flash Support", 1);
 
   if (b || isCounter(2))
     ui->flash(true);

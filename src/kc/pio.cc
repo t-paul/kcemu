@@ -2,7 +2,7 @@
  *  KCemu -- the KC 85/3 and KC 85/4 Emulator
  *  Copyright (C) 1997-2001 Torsten Paul
  *
- *  $Id: pio.cc,v 1.13 2001/12/29 03:50:21 torsten_paul Exp $
+ *  $Id: pio.cc,v 1.15 2002/02/12 17:24:14 torsten_paul Exp $
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -35,7 +35,7 @@
 
 // #define PIO_OUT_CTRL_DEBUG
 
-PIO::PIO(void)
+PIO::PIO(void) : InterfaceCircuit("PIO")
 {
   _cb_a_in  = 0;
   _cb_a_out = 0;
@@ -43,19 +43,12 @@ PIO::PIO(void)
   _cb_b_out = 0;
   reset(true);
   z80->register_ic(this);
+  _z80_irq_mask = z80->daisy_chain_get_irqmask();
 }
 
 PIO::~PIO(void)
 {
   z80->unregister_ic(this);
-}
-
-void
-PIO::iei(byte_t val)
-{
-  _irq_enable[A] = val;
-  _irq_enable[B] = val;
-  ieo(val);
 }
 
 void
@@ -379,28 +372,8 @@ PIO::set_EXT(int port, byte_t mask, byte_t val)
             p, old, _ext_fn[port]);
 #endif
   
-  if (_irq_enable[port])
-    {
-      if ((old == 0) && (_ext_fn[port] == 1))
-        {
-          _strobe[port] = 1;
-          if (z80->triggerIrq(_irq_vector[port]))
-            {
-              // cout.form("PIO::set_EXT() - %c irq ack\n", p);
-              _strobe[port] = 0;
-              _irq_active[port] = 1;
-              z80->handleIrq(_irq_vector[port]);
-            }
-          else
-            {
-              // cout.form("PIO::set_EXT() - %c irq nack\n", p);
-            }
-        }
-      else
-        {
-          // cout.form("PIO::set_EXT() - %c IEI is low\n", p);
-        }
-    }
+  if ((old == 0) && (_ext_fn[port] == 1))
+    trigger_irq(port);
 }
 
 void
@@ -416,137 +389,79 @@ PIO::set_B_EXT(byte_t mask, byte_t val)
 }
 
 void
+PIO::trigger_irq(int port)
+{
+  if (_irq_enable[port])
+    {
+      _strobe[port] = 1;
+      irq();
+    }
+}
+
+void
+PIO::irqreq(void)
+{
+  DBG(2, form("KCemu/PIO/reti",
+	      "PIO::irqreq()\n"));
+  z80->set_irq_line(_z80_irq_mask);
+}
+
+word_t
+PIO::irqack(void)
+{
+  if (_strobe[A])
+    {
+      _strobe[A] = 0;
+      _irq_active[A] = 1;
+      z80->reset_irq_line(_z80_irq_mask);
+      return _irq_vector[A];
+    }
+
+  if (_irq_active[A])
+    return IRQ_NOT_ACK;
+
+  if (_strobe[B])
+    {
+      _strobe[B] = 0;
+      _irq_active[B] = 1;
+      z80->reset_irq_line(_z80_irq_mask);
+      return _irq_vector[B];
+    }
+
+  return IRQ_NOT_ACK;
+}
+
+void
 PIO::reti(void)
 {
   //cout.form("PIO: reti - A: %d, B: %d\n", _irq_active[a], _irq_active[B]);
   if (_irq_active[A])
-    {
-      _irq_active[A] = 0;
-    }
-  else
-    {
-      if (_strobe[A])
-        {
-          if (z80->triggerIrq(_irq_vector[A]))
-            {
-              //cout.form("PIO::reti() A - %04xh\n", z80->getPC());
-              //cout.form("PIO::reti() A - irq ack\n");
-              _irq_active[A] = 1;
-              z80->handleIrq(_irq_vector[A]);
-            }
-          else
-            {
-              //cout.form("PIO::reti() A - irq nack\n");
-            }
-          _strobe[A] = 0;
-          return;
-        }
-    }
-  
+    _irq_active[A] = 0;
   if (_irq_active[B])
-    {
       _irq_active[B] = 0;
-    }
-  else
+
+  if (_strobe[A])
     {
-      if (_strobe[B])
-        {
-          if (z80->triggerIrq(_irq_vector[B]))
-            {
-              //cout.form("PIO::reti() B - %04xh\n", z80->getPC());
-              //cout.form("PIO::reti() B - irq ack\n");
-              _irq_active[B] = 1;
-              z80->handleIrq(_irq_vector[B]);
-            }
-          else
-            {
-              //cout.form("PIO::reti() B - irq nack\n");
-            }
-          _strobe[B] = 0;
-        }
+      trigger_irq(A);
+      return;
     }
+
+  if (_strobe[B])
+    trigger_irq(B);
 }
 
 void
 PIO::strobe_A(void)
 {
-  long long cnt;
-  static long long ocnt = 0;
-
-  cnt = z80->getCounter();
-  DBG(2, form("KCemu/PIO/strobe/A/timing",
-              "PIO::strobe_A() : %10Ld - %Ld \n",
-              cnt, cnt - ocnt));
-  ocnt = cnt;
-
-  if (_irq_active[A])
-    {
-      DBG(2, form("KCemu/PIO/strobe/A/active",
-		  "PIO::strobe_A() : irq active!\n"));
-      return;
-    }
-  if (_irq_enable[A])
-    {
-      _strobe[A] = 1;
-      if (z80->triggerIrq(_irq_vector[A]))
-        {
-          //cout.form("PIO::strobe_A() - irq ack\n");
-          _strobe[A] = 0;
-          _irq_active[A] = 1;
-          z80->handleIrq(_irq_vector[A]);
-        }
-      else
-        {
-	  DBG(2, form("KCemu/PIO/strobe/A/nack",
-		      "PIO::strobe_A() : irq not acknowledged!\n"));
-        }
-    }
-  else
-    {
-      DBG(2, form("KCemu/PIO/strobe/A/iei",
-		  "PIO::strobe_A() : IEI is low!\n"));
-    }
+  _strobe[A] = 1;
+  trigger_irq(A);
 }
 
 void
 PIO::strobe_B(void)
 {
-  long long cnt;
-  static long long ocnt = 0;
-
-  cnt = z80->getCounter();
-  DBG(2, form("KCemu/PIO/strobe/B/timing",
-              "PIO::strobe_B() : %10Ld - %Ld \n",
-              cnt, cnt - ocnt));
-  ocnt = cnt;
-
-  if (_irq_active[B])
-    {
-      DBG(2, form("KCemu/PIO/strobe/B/active",
-		  "PIO::strobe_B() : irq active!\n"));
-      return;
-    }
-  if (_irq_enable[B])
-    {
-      _strobe[B] = 1;
-      if (z80->triggerIrq(_irq_vector[B]))
-        {
-          //cout.form("PIO::strobe_B() - irq ack\n");
-          _strobe[B] = 0;
-          _irq_active[B] = 1;
-          z80->handleIrq(_irq_vector[B]);
-        }
-      else
-        {
-	  DBG(2, form("KCemu/PIO/strobe/B/nack",
-		      "PIO::strobe_B() : irq not acknowledged!\n"));
-        }
-    }
-  else
-    {
-      DBG(2, form("KCemu/PIO/strobe/B/iei",
-		  "PIO::strobe_B() : IEI is low!\n"));
-    }
+  _strobe[B] = 1;
+  trigger_irq(B);
 }
 
 int

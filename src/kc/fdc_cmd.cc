@@ -2,7 +2,7 @@
  *  KCemu -- the KC 85/3 and KC 85/4 Emulator
  *  Copyright (C) 1997-2001 Torsten Paul
  *
- *  $Id: fdc_cmd.cc,v 1.4 2002/01/06 12:53:40 torsten_paul Exp $
+ *  $Id: fdc_cmd.cc,v 1.5 2002/01/12 23:03:56 torsten_paul Exp $
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -293,7 +293,7 @@ FDC_CMD_WRITE_DATA::execute(void)
               ((_arg[0] >> 7) & 1) ? "MFM Mode" : "FM Mode",
               ((_arg[0] >> 6) & 1) ? "yes" : "no",
               (_arg[1] >> 2) & 1,
-              _arg[1] & 2,
+              _arg[1] & 3,
               _arg[2],
               _arg[3],
               _arg[4],
@@ -301,6 +301,7 @@ FDC_CMD_WRITE_DATA::execute(void)
               _arg[6],
               _arg[7],
               _arg[8]));
+  get_fdc()->select_floppy(_arg[1] & 3);
   get_fdc()->set_input_gate(0x40, 0x40);
   _head = _arg[3];
   _cylinder = _arg[2];

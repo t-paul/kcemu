@@ -2,7 +2,7 @@
  *  KCemu -- the KC 85/3 and KC 85/4 Emulator
  *  Copyright (C) 1997-2001 Torsten Paul
  *
- *  $Id: cb_list.cc,v 1.1 2001/12/31 14:11:53 torsten_paul Exp $
+ *  $Id: cb_list.cc,v 1.2 2002/01/12 23:03:56 torsten_paul Exp $
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -149,14 +149,18 @@ CallbackList::add_callback(unsigned long long value,
 void
 CallbackList::run_callbacks(long long value)
 {
+  void *data;
+  Callback *cb;
   CallbackListEntry *ptr;
 
   while (_list && _list->_value <= value)
     {
       ptr = _list;
       _list = ptr->_next;
-      ptr->_cb->callback(ptr->_data);
+      cb = ptr->_cb;
+      data = ptr->_data;
       delete ptr;
+      cb->callback(data);
     }
 }
 

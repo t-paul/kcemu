@@ -2,7 +2,7 @@
  *  KCemu -- the KC 85/3 and KC 85/4 Emulator
  *  Copyright (C) 1997-2001 Torsten Paul
  *
- *  $Id: memory.cc,v 1.13 2002/01/06 12:53:40 torsten_paul Exp $
+ *  $Id: memory.cc,v 1.14 2002/01/20 13:39:30 torsten_paul Exp $
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -235,7 +235,7 @@ MemAreaPtr::get_write_ptr_p(void)
   return 0;
 }
 
-Memory::Memory(void)
+Memory::Memory(void) : InterfaceCircuit("Memory")
 {
   int a;
   

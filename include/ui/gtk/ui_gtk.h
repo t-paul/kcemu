@@ -2,7 +2,7 @@
  *  KCemu -- the KC 85/3 and KC 85/4 Emulator
  *  Copyright (C) 1997-2001 Torsten Paul
  *
- *  $Id: ui_gtk.h,v 1.16 2001/04/14 15:15:33 tp Exp $
+ *  $Id: ui_gtk.h,v 1.17 2002/02/12 17:24:14 torsten_paul Exp $
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -105,7 +105,6 @@ class UI_Gtk : public UI, public StatusListener, public ErrorListener
     GdkGC         *_gc;
     GdkVisual     *_visual;
     GdkImage      *_image;
-    GdkImage      *_imageb;
     GdkColormap   *_colormap;
     GdkColor       _col[24];
 

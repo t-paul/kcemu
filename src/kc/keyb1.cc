@@ -2,7 +2,7 @@
  *  KCemu -- the KC 85/3 and KC 85/4 Emulator
  *  Copyright (C) 1997-2001 Torsten Paul
  *
- *  $Id: keyb1.cc,v 1.5 2001/04/14 15:16:06 tp Exp $
+ *  $Id: keyb1.cc,v 1.6 2002/01/20 13:39:30 torsten_paul Exp $
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -222,12 +222,6 @@ Keyboard1::callback_B_in(void)
 #endif
   pio2->set_B_EXT(0xff, c);
   _in_callback = false;
-}
-
-void
-Keyboard1::iei(byte_t val)
-{
-  ieo(val);
 }
 
 void

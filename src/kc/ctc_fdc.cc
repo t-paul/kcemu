@@ -2,7 +2,7 @@
  *  KCemu -- the KC 85/3 and KC 85/4 Emulator
  *  Copyright (C) 1997-2001 Torsten Paul
  *
- *  $Id: ctc_fdc.cc,v 1.5 2002/01/02 00:35:05 torsten_paul Exp $
+ *  $Id: ctc_fdc.cc,v 1.6 2002/01/20 13:39:30 torsten_paul Exp $
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -65,11 +65,10 @@ CTC_FDC::get_counter()
   return fdc_z80->get_counter();
 }
 
-byte_t
-CTC_FDC::trigger_irq(byte_t irq_vector)
+void
+CTC_FDC::trigger_irq(int channel)
 {
-  fdc_z80->trigger_irq(irq_vector);
-  return 1;
+  fdc_z80->trigger_irq(getIRQVector(channel));
 }
 
 void

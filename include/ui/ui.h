@@ -2,7 +2,7 @@
  *  KCemu -- the KC 85/3 and KC 85/4 Emulator
  *  Copyright (C) 1997-2001 Torsten Paul
  *
- *  $Id: ui.h,v 1.13 2001/12/31 14:11:53 torsten_paul Exp $
+ *  $Id: ui.h,v 1.14 2002/01/20 13:39:29 torsten_paul Exp $
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -38,7 +38,7 @@
 class UI : public InterfaceCircuit, public Callback, public CMD_Caller
 {
   public:
-    UI(void) : Callback("UI") {}
+    UI(void) : InterfaceCircuit("UI"), Callback("UI") {}
     virtual ~UI(void) {}
     virtual void processEvents(void)              = 0;
     virtual void flash(bool enable)               = 0;
@@ -58,11 +58,12 @@ class UI : public InterfaceCircuit, public Callback, public CMD_Caller
     virtual DebugInterface * getDebugInterface(void) = 0;
 
     /*
-     *
+     *  InterfaceCircuit
      */
-    void iei(byte_t val) {}
-    virtual void reset(bool power_on = false) {}
     virtual void reti(void) {}
+    virtual void irqreq(void) {}
+    virtual word_t irqack() { return IRQ_NOT_ACK; }
+    virtual void reset(bool power_on = false) {}
 };
 
 #endif /* __ui_ui_h */

@@ -2,7 +2,7 @@
  *  KCemu -- the KC 85/3 and KC 85/4 Emulator
  *  Copyright (C) 1997-2001 Torsten Paul
  *
- *  $Id: keyb3.cc,v 1.8 2001/04/14 15:16:07 tp Exp $
+ *  $Id: keyb3.cc,v 1.9 2002/01/20 13:39:30 torsten_paul Exp $
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -344,12 +344,6 @@ Keyboard3::callback(void *data)
         _replay_offset = 100 * 256;
       break;
     }
-}
-
-void
-Keyboard3::iei(byte_t val)
-{
-  ieo(val);
 }
 
 void

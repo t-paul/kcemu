@@ -62,7 +62,9 @@ binary-arch: build install
 	dh_installchangelogs
 	dh_link
 	dh_strip
-	dh_compress
+	dh_compress usr/share/KCemu/microdos.dump \
+		    usr/share/KCemu/tools.dump \
+		    usr/share/KCemu/caos.dump
 	dh_fixperms
 #	dh_makeshlibs
 	dh_installdeb

@@ -2,7 +2,7 @@
  *  KCemu -- the KC 85/3 and KC 85/4 Emulator
  *  Copyright (C) 1997-2001 Torsten Paul
  *
- *  $Id: pio.h,v 1.11 2001/04/14 15:14:40 tp Exp $
+ *  $Id: pio.h,v 1.12 2002/01/20 13:39:29 torsten_paul Exp $
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -97,6 +97,11 @@ class PIO : public InterfaceCircuit, public PortInterface
     byte_t _value[2];
 
     /*
+     *  interrupt mask for daisy chain handling
+     */
+    dword_t _z80_irq_mask;
+
+    /*
      *  callbacks
      */
     PIOCallbackInterface *_cb_a_in;
@@ -106,6 +111,7 @@ class PIO : public InterfaceCircuit, public PortInterface
 
     void out_CTRL(int port, byte_t val);
     void set_EXT(int port, byte_t mask, byte_t val);
+    void trigger_irq(int port);
     
     virtual void change_A(byte_t changed, byte_t val) = 0;
     virtual void change_B(byte_t changed, byte_t val) = 0;
@@ -138,11 +144,12 @@ class PIO : public InterfaceCircuit, public PortInterface
     virtual byte_t getIRQVectorB(void) { return _irq_vector[B]; }
 
     /*
-     *  InterfaceCircuit functions
+     *  InterfaceCircuit
      */
-    virtual void iei(byte_t val);
-    virtual void reset(bool power_on = false);
     virtual void reti(void);
+    virtual void irqreq(void);
+    virtual word_t irqack(void);
+    virtual void reset(bool power_on = false);
 
     /*
      *  callback registering functions

@@ -2,7 +2,7 @@
  *  KCemu -- the KC 85/3 and KC 85/4 Emulator
  *  Copyright (C) 1997-2001 Torsten Paul
  *
- *  $Id: ui_gtk4.cc,v 1.10 2002/01/06 12:53:41 torsten_paul Exp $
+ *  $Id: ui_gtk4.cc,v 1.13 2002/02/12 17:24:14 torsten_paul Exp $
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -73,17 +73,31 @@ static inline int test_bit(int nr, const void * addr)
 UI_Gtk4::UI_Gtk4(void)
 {
   reset();
-  z80->register_ic(this);
+  // z80->register_ic(this); already done in base class!
 }
 
 UI_Gtk4::~UI_Gtk4(void)
 {
-  z80->unregister_ic(this);
+  // z80->unregister_ic(this); already done in base class!
+}
+
+int
+UI_Gtk4::get_width(void)
+{
+  return kcemu_ui_scale * 320;
+}
+
+int
+UI_Gtk4::get_height(void) {
+  return kcemu_ui_scale * 256;
 }
 
 void
 UI_Gtk4::callback(void * /* data */)
 {
+  long long ldiff;
+  static long long last = 0;
+
   static int count = -300;
   static bool first = true;
   static struct timeval tv;
@@ -136,10 +150,16 @@ UI_Gtk4::callback(void * /* data */)
 
   if (!_auto_skip)
     {
+#ifdef DISPLAY_DIRTY
+      cout << "\x1b[H\x1b[2J" << flush;
+#endif
       processEvents();
       handle_flash();
       update();
     }
+
+  ldiff = z80->getCounter() - last;
+  last = z80->getCounter();
 
   gettimeofday(&tv, NULL);
   d2 = (tv.tv_sec * 50) + tv.tv_usec / 20000;
@@ -166,19 +186,42 @@ pix_loop(register int x2, register int y2, byte_t val)
 {
   register int a;
 
-  /*
-   *  set pixels
-   */
-  // x2 = 8 * (xx + x1);
-  // y2 = yy + y1;
-  for (a = 0;a < 8;a++)
+  switch (kcemu_ui_scale)
     {
-      if (val & 0x80)
-	gdk_image_put_pixel(__image, x2, y2, __fg);
-      else
-	gdk_image_put_pixel(__image, x2, y2, __bg);
-      x2++;
-      val <<= 1;
+    case 1:
+      for (a = 0;a < 8;a++)
+	{
+	  if (val & 0x80)
+	    gdk_image_put_pixel(__image, x2, y2, __fg);
+	  else
+	    gdk_image_put_pixel(__image, x2, y2, __bg);
+	  x2++;
+	  val <<= 1;
+	}
+      break;
+    case 2:
+      x2 *= 2;
+      y2 *= 2;
+      for (a = 0;a < 8;a++)
+	{
+	  if (val & 0x80)
+	    {
+	      gdk_image_put_pixel(__image, x2,     y2 + 1, __fg);
+	      gdk_image_put_pixel(__image, x2,     y2,     __fg);
+	      gdk_image_put_pixel(__image, x2 + 1, y2 + 1, __fg);
+	      gdk_image_put_pixel(__image, x2 + 1, y2,     __fg);
+	    }
+	  else
+	    {
+	      gdk_image_put_pixel(__image, x2,     y2 + 1, __bg);
+	      gdk_image_put_pixel(__image, x2,     y2,     __bg);
+	      gdk_image_put_pixel(__image, x2 + 1, y2 + 1, __bg);
+	      gdk_image_put_pixel(__image, x2 + 1, y2,     __bg);
+	    }
+	  x2 += 2;
+	  val <<= 1;
+	}
+      break;
     }
 }
 
@@ -236,13 +279,12 @@ UI_Gtk4::allocate_colors(double saturation_fg,
 }
 
 void
-UI_Gtk4::render_tile(int x, int y, bool no_cache)
+UI_Gtk4::render_tile(byte_t *irm, int x, int y, bool no_cache)
 {
   int has_flash;
   int xx, yy, x1, y1, x2, y2;
   int a, b, c;
   byte_t val, col;
-  byte_t *irm;
   struct {
     int x, y;
     long long counter;
@@ -251,7 +293,7 @@ UI_Gtk4::render_tile(int x, int y, bool no_cache)
   } tile;
 
   __image = _image;
-  irm = memory->getIRM();
+
   has_flash = 0;
   xx = x * 2;
   yy = y * 16;
@@ -334,8 +376,23 @@ UI_Gtk4::render_tile(int x, int y, bool no_cache)
 void
 UI_Gtk4::update(bool full_update, bool clear_cache)
 {
-  int a, b, c, x, y, z;
+  byte_t *irm;
+  int a, b, c, x, y, z, scale;
+  static byte_t *irm_old = NULL;
   static int fs_val = RC::instance()->get_int("Frame Skip", 0);
+
+  scale = kcemu_ui_scale * 16;
+
+  irm = memory->getIRM();
+  if (irm != irm_old)
+    {
+      /*
+       *  on screen switch we need to ignore the
+       *  display cache
+       */
+      irm_old = irm;
+      clear_cache = true;
+    }  
 
   if (clear_cache)
     {
@@ -349,7 +406,7 @@ UI_Gtk4::update(bool full_update, bool clear_cache)
   if (full_update)
     {
       gdk_draw_image(GTK_WIDGET(_main.canvas)->window, _gc, _image,
-                     0, 0, 0, 0, 320, 256);
+                     0, 0, 0, 0, get_width(), get_height());
       return;
     }
   
@@ -359,16 +416,6 @@ UI_Gtk4::update(bool full_update, bool clear_cache)
       return;
     }
   __frame_skip = fs_val;
-
-  //a = 0;
-  //cout << "\x1b[H\x1b[2J" << flush;
-  //a |= _flash_v1[y] != _flash_v2[y];
-  //if (a) sleep(5);
-  
-#ifdef DISPLAY_DIRTY
-  //cout << "\x1b[H" << flush;
-  //cout << "\x1b[H\x1b[2J" << flush;
-#endif
 
   for (y = 0;y < 16;y++)
     {
@@ -392,7 +439,7 @@ UI_Gtk4::update(bool full_update, bool clear_cache)
 #ifdef DISPLAY_DIRTY_RENDER
               cout << '#';
 #endif
-              render_tile(x, y, clear_cache);
+              render_tile(irm, x, y, clear_cache);
               b += 16;
             }
           else
@@ -403,7 +450,7 @@ UI_Gtk4::update(bool full_update, bool clear_cache)
               if (b)
 		{
 		  gdk_draw_image(GTK_WIDGET(_main.canvas)->window, _gc, _image,
-				 16 * a, 16 * y, 16 * a, 16 * y, b, 16);
+				 scale * a, scale * y, scale * a, scale * y, kcemu_ui_scale*b, scale);
 		}
 #ifdef DISPLAY_DIRTY_DRAW
               if (b)
@@ -418,7 +465,7 @@ UI_Gtk4::update(bool full_update, bool clear_cache)
       if (b)
 	{
 	  gdk_draw_image(GTK_WIDGET(_main.canvas)->window, _gc, _image,
-			 16 * a, 16 * y, 16 * a, 16 * y, b, 16);
+			 scale * a, scale * y, scale * a, scale * y, kcemu_ui_scale*b, scale);
 	}
 #ifdef DISPLAY_DIRTY_DRAW
       if (b)
@@ -492,15 +539,36 @@ UI_Gtk4::handle_flash(void)
 
 /*
  *  Linefrequency: 15.625 kHz => 64µs/line => 112 cycles/line
+ *
+ *  This function is called by the CTC channel 2.
  */
 void
 UI_Gtk4::flash(bool enable)
 {
-  static long long t, diff, offset;
+  /*
+   *  time (clock counter) of the previous call to this function
+   */
+  static long long t = 0;
+  /*
+   *  floating time offset to fine tune the scrolling effect
+   *  that is caused by the interference between the flash
+   *  frequency and the crt refresh
+   */
+  static long long offset = 0;
+  /*
+   *  config value that is added to offset each time this function
+   *  is called
+   */
   static long long o = RC::instance()->get_int("Flash Offset", 50);
+  /*
+   *  difference between the current and the previous call to
+   *  this function in clock ticks
+   */
+  long long diff;
 
   if (!enable)
     {
+      _flash_enabled = true; // force reset of flash variables
       reset_flash(false);
       return;
     }
@@ -577,5 +645,5 @@ UI_Gtk4::reset(bool power_on)
   _cur_auto_skip = 0;
   _max_auto_skip = RC::instance()->get_int("Max Auto Skip", 6);
   reset_flash(true);
-  z80->addCallback(0, this, 0);
+  z80->addCallback(CB_OFFSET, this, 0);
 }

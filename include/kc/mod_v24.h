@@ -2,7 +2,7 @@
  *  KCemu -- the KC 85/3 and KC 85/4 Emulator
  *  Copyright (C) 1997-2001 Torsten Paul
  *
- *  $Id: mod_v24.h,v 1.7 2001/04/14 15:14:34 tp Exp $
+ *  $Id: mod_v24.h,v 1.8 2002/01/20 13:39:29 torsten_paul Exp $
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -88,9 +88,13 @@ public:
   virtual void out_reg(int channel, byte_t val);
   virtual ModuleInterface * clone(void);
 
-  void iei(byte_t val);
-  virtual void reset(bool power_on = false);
+  /*
+   *  InterfaceCircuit functions
+   */
   virtual void reti(void);
+  virtual void irqreq(void) {}
+  virtual word_t irqack() { return IRQ_NOT_ACK; }
+  virtual void reset(bool power_on = false);
 };
 
 #endif /* __kc_mod_v24_h */

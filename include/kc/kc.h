@@ -2,7 +2,7 @@
  *  KCemu -- the KC 85/3 and KC 85/4 Emulator
  *  Copyright (C) 1997-2001 Torsten Paul
  *
- *  $Id: kc.h,v 1.12 2002/01/06 12:53:40 torsten_paul Exp $
+ *  $Id: kc.h,v 1.13 2002/02/12 17:24:14 torsten_paul Exp $
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -80,6 +80,7 @@ extern FDC             *fdc_fdc;
 extern Sound           *sound;
 extern byte_t           fdc_mem[];
 
+extern int   kcemu_ui_scale;
 extern char *kcemu_datadir;
 extern char *kcemu_localedir;
 

@@ -2,7 +2,7 @@
  *  KCemu -- the KC 85/3 and KC 85/4 Emulator
  *  Copyright (C) 1997-2001 Torsten Paul
  *
- *  $Id: ui_gtk4.h,v 1.9 2001/04/14 15:15:36 tp Exp $
+ *  $Id: ui_gtk4.h,v 1.11 2002/02/12 17:24:14 torsten_paul Exp $
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -43,7 +43,7 @@ class UI_Gtk4 : public UI_Gtk
  protected:
   void handle_flash(void);
   void reset_flash(bool enable);
-  void render_tile(int x, int y, bool no_cache);
+  void render_tile(byte_t *irm, int x, int y, bool no_cache);
 
  protected:
   virtual void allocate_colors(double saturation_fg,
@@ -62,8 +62,8 @@ class UI_Gtk4 : public UI_Gtk
   virtual void flash(bool enable);
 
   virtual const char * get_title(void);
-  virtual int get_width(void) { return 320; }
-  virtual int get_height(void) { return 256; }
+  virtual int get_width(void);
+  virtual int get_height(void);
 
   virtual void reset(bool power_on = false);
 };
