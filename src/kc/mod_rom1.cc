@@ -82,7 +82,7 @@ ModuleROM1::ModuleROM1(const char *filename,
   _set_romdi = set_romdi;
   _rom = new byte_t[_size];
 
-  is.open(filename);
+  is.open(filename, ios::in | ios::binary);
   if (!is)
     return;
   

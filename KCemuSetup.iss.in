@@ -1,0 +1,75 @@
+[Setup]
+AppName=KCemu
+AppVerName=Kcemu @VERSION@
+AppPublisher=Torsten Paul
+AppPublisherURL=http://kcemu.sourceforge.net/
+AppCopyright=Copyright (C) 1997-2003 Torsten Paul
+DefaultDirName={pf}\KCemu
+DefaultGroupName=KCemu
+DisableStartupPrompt=yes
+WindowShowCaption=yes
+UninstallDisplayIcon={app}\kcemuuninstall.exe
+LicenseFile=share\doc\kcemu\COPYING
+Compression=bzip/9
+SourceDir=@SYS_INSTALL_BASE@
+OutputDir=.
+OutputBaseFilename=KCemu-@VERSION@
+ChangesAssociations=no
+
+[Languages]
+Name: "de"; MessagesFile: "compiler:German-2-4.0.5.isl"
+
+[Registry]
+; This adds the GTK+ libraries to KCemu.exe's path
+Root: HKLM; Subkey: "Software\Microsoft\Windows\CurrentVersion\App Paths\KCemu.exe"; Flags: uninsdeletekeyifempty
+Root: HKLM; Subkey: "Software\Microsoft\Windows\CurrentVersion\App Paths\KCemu.exe"; ValueType: string; ValueData: "{app}\KCemu.exe"; Flags: uninsdeletevalue
+Root: HKLM; Subkey: "Software\Microsoft\Windows\CurrentVersion\App Paths\KCemu.exe"; ValueType: string; ValueName: "Path"; ValueData: "{app};{code:GetGtkPath}\lib"; Flags: uninsdeletevalue
+
+[Files]
+Source: "bin\*.*";    DestDir: "{app}\bin";   Flags: recursesubdirs
+Source: "lib\*.*";    DestDir: "{app}\lib";   Flags: recursesubdirs
+Source: "man\*.*";    DestDir: "{app}\man";   Flags: recursesubdirs
+Source: "share\*.*";  DestDir: "{app}\share"; Flags: recursesubdirs
+
+[Icons]
+Name: "{group}\BIC";              Filename: "{app}\bin\kcemu.exe"; Parameters :"-9 -H {app} -l {app}\share\locale -d {app}\share\kcemu"; WorkingDir:"{app}"; IconFilename: "{app}\share\kcemu\kcemu-bic.ico"
+Name: "{group}\KC85 - 1";         Filename: "{app}\bin\kcemu.exe"; Parameters :"-1 -H {app} -l {app}\share\locale -d {app}\share\kcemu"; WorkingDir:"{app}"; IconFilename: "{app}\share\kcemu\kcemu-kc87.ico"
+Name: "{group}\KC85 - 2";         Filename: "{app}\bin\kcemu.exe"; Parameters :"-2 -H {app} -l {app}\share\locale -d {app}\share\kcemu"; WorkingDir:"{app}"; IconFilename: "{app}\share\kcemu\kcemu-kc85.ico"
+Name: "{group}\KC85 - 3";         Filename: "{app}\bin\kcemu.exe"; Parameters :"-3 -H {app} -l {app}\share\locale -d {app}\share\kcemu"; WorkingDir:"{app}"; IconFilename: "{app}\share\kcemu\kcemu-kc85.ico"
+Name: "{group}\KC85 - 4";         Filename: "{app}\bin\kcemu.exe"; Parameters :"-4 -H {app} -l {app}\share\locale -d {app}\share\kcemu"; WorkingDir:"{app}"; IconFilename: "{app}\share\kcemu\kcemu-kc85.ico"
+Name: "{group}\KC87";             Filename: "{app}\bin\kcemu.exe"; Parameters :"-7 -H {app} -l {app}\share\locale -d {app}\share\kcemu"; WorkingDir:"{app}"; IconFilename: "{app}\share\kcemu\kcemu-kc87.ico"
+Name: "{group}\LC80";             Filename: "{app}\bin\kcemu.exe"; Parameters :"-8 -H {app} -l {app}\share\locale -d {app}\share\kcemu"; WorkingDir:"{app}"; IconFilename: "{app}\share\kcemu\kcemu-lc80.ico"
+Name: "{group}\Polycomputer 880"; Filename: "{app}\bin\kcemu.exe"; Parameters :"-6 -H {app} -l {app}\share\locale -d {app}\share\kcemu"; WorkingDir:"{app}"; IconFilename: "{app}\share\kcemu\kcemu-poly880.ico"
+Name: "{group}\Z1013";            Filename: "{app}\bin\kcemu.exe"; Parameters :"-0 -H {app} -l {app}\share\locale -d {app}\share\kcemu"; WorkingDir:"{app}"; IconFilename: "{app}\share\kcemu\kcemu-z1013.ico"
+Name: "{group}\Z1013 - Bl4 ROM";  Filename: "{app}\bin\kcemu.exe"; Parameters :"-e z1013.bl4 -H {app} -l {app}\share\locale -d {app}\share\kcemu"; WorkingDir:"{app}"; IconFilename: "{app}\share\kcemu\kcemu-z1013.ico"
+
+Name: "{group}\Uninstall KCemu"; Filename: "{uninstallexe}"
+
+[CODE]
+
+var
+  Exists: Boolean;
+  GtkPath: String;
+
+function GetGtkInstalled (): Boolean;
+begin
+  Exists := RegQueryStringValue (HKLM, 'Software\GTK\2.0', 'Path', GtkPath);
+  if not Exists then begin
+    Exists := RegQueryStringValue (HKCU, 'Software\GTK\2.0', 'Path', GtkPath);
+  end;
+  Result := Exists
+end;
+
+function GetGtkPath (S: String): String;
+begin
+    Result := GtkPath;
+end;
+
+function InitializeSetup(): Boolean;
+begin
+  Result := GetGtkInstalled ();
+  if not Result then begin
+    MsgBox ('Please install the GTK+ 2.0 Runtime Environment before installing KCemu.  You can obtain GTK+ from http://www.dropline.net/gtk.', mbError, MB_OK);
+  end;
+end;
+

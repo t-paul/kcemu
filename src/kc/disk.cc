@@ -1,6 +1,6 @@
 /*
  *  KCemu -- the KC 85/3 and KC 85/4 Emulator
- *  Copyright (C) 1997-2001 Torsten Paul
+ *  Copyright (C) 1997-2003 Torsten Paul
  *
  *  $Id: disk.cc,v 1.5 2002/10/31 01:46:35 torsten_paul Exp $
  *

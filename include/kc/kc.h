@@ -140,4 +140,8 @@ kc_type_t get_kc_type(void);
 kc_variant_t get_kc_variant(void);
 const char * get_kc_variant_name(void);
 
+const char * kc_get_license(void);
+const char * kc_get_warranty(void);
+const char * kc_get_license_trailer(void);
+
 #endif /* __kc_kc_h */

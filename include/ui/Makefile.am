@@ -13,7 +13,6 @@ EXTRA_DIST = \
 	status.h	\
 	statusl.h	\
 	commands.h	\
-	copying.h	\
 	window.h	\
 	hsv2rgb.h	\
 	font0.h		\

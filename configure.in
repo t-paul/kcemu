@@ -28,7 +28,7 @@ dnl ---------------------
 KCEMU_MAJOR_VERSION=0
 KCEMU_MINOR_VERSION=3
 KCEMU_MICRO_VERSION=7
-KCEMU_EXTRA_VERSION=beta8
+KCEMU_EXTRA_VERSION=beta9
 
 if test $KCEMU_MICRO_VERSION -eq 0
 then
@@ -75,6 +75,8 @@ if test x$enable_ms_bitfields = xyes; then
 		  [AC_COMPILE_IFELSE([AC_LANG_PROGRAM()], [ac_cv_prog_cc_mms_bitfields=yes],
 	                                                  [ac_cv_prog_cc_mms_bitfields=no])])
 	if test $ac_cv_prog_cc_mms_bitfields = yes; then
+		LDFLAGS="$LDFLAGS $CFLAGS"
+		CXXFLAGS="$CXXFLAGS $CFLAGS"
 		CFLAGS="$ac_save_CFLAGS $CFLAGS"
 	else
 		CFLAGS="$ac_save_CFLAGS"
@@ -137,6 +139,7 @@ case "$host_os" in
 		HOST_OS_MINGW=1
 		AM_CONDITIONAL(TARGET_MINGW, true)
 		AC_DEFINE_UNQUOTED(HOST_OS_MINGW, $HOST_OS_MINGW, "host os is MinGW")
+		LDFLAGS="$LDFLAGS -mwindows"
 		;;
 
 	*)
@@ -522,7 +525,8 @@ AC_OUTPUT([
 	man/Makefile
 	man/man1/Makefile
 	debian/Makefile
-	po/Makefile.in],
+	po/Makefile.in
+	KCemuSetup.iss],
 	[sed -e "/POTFILES =/r po/POTFILES" po/Makefile.in > po/Makefile])
 
 

@@ -37,6 +37,8 @@
 #include "ui/gtk/ui_gtk.h"
 #include "ui/gtk/keyboard.h"
 
+#include "libdbg/dbg.h"
+
 // #define DEBUG_REGIONS 1
 
 static struct {
@@ -85,6 +87,8 @@ static struct {
   { "KC_KEY_SHIFT_LOCK", KC_KEY_SHIFT_LOCK },
   { "KC_KEY_RESET", KC_KEY_RESET },
   { "KC_KEY_NMI", KC_KEY_NMI },
+  { "KC_KEY_BREAK", KC_KEY_BREAK },
+  { "KC_KEY_CLEAR", KC_KEY_CLEAR },
   { NULL, -1 },
 };
 
@@ -188,9 +192,10 @@ KeyboardWindow::sf_button_press(GtkWidget *widget, GdkEventButton *event, gpoint
 
   for (a = 0;self->_keys[a].key != NULL;a++)
     {
-      if (gdk_region_point_in(self->_keys[a].region,
-			      (int)event->x - 1,
-			      (int)event->y - 1))
+      if (self->_keys[a].key_val < 0)
+	continue;
+
+      if (gdk_region_point_in(self->_keys[a].region, (int)event->x - 1, (int)event->y - 1))
 	{
 	  self->_key_active = TRUE;
 	  self->_key_pressed = &self->_keys[a];
@@ -521,6 +526,12 @@ KeyboardWindow::init_key_regions(void)
 	  a++;
 	  _keys[a].key = strdup(buf + 1);
 	  _keys[a].key_val = get_key_val(_keys[a].key);
+	  if (_keys[a].key_val < 0)
+	    {
+	      DBG(0, form("KCemu/warning",
+			  "Unknown key '%s' in file '%s'\n",
+			  _keys[a].key, filename));
+	    }
 	  state++;
 	  break;
 	case 1:
@@ -622,7 +633,7 @@ KeyboardWindow::init(void)
   /*
    *  close button
    */
-  _w.close = gtk_button_new_with_label("Close");
+  _w.close = gtk_button_new_with_label(_("Close"));
   gtk_box_pack_start(GTK_BOX(_w.vbox), _w.close, FALSE, FALSE, 5);
   gtk_signal_connect(GTK_OBJECT(_w.close), "clicked",
                      GTK_SIGNAL_FUNC(cmd_exec_sf),

@@ -177,6 +177,7 @@ DiskWindow::init(void)
   char *disk4;
   char *disk5;
   char *disk6;
+  char *disk7;
   GtkTooltips *tips;
 
   tips = gtk_tooltips_new();
@@ -244,8 +245,11 @@ DiskWindow::init(void)
     disk5 = new char[11];
     strcpy(disk5, "cpmz9.dump");
 
-    disk6 = new char[13];
+    disk6 = new char[14];
     strcpy(disk6, "z1013cpm.dump");
+
+    disk7 = new char[14];
+    strcpy(disk7, "z1013gdc.dump");
 
     popdown = g_list_append(popdown, disk1);
     popdown = g_list_append(popdown, disk2);
@@ -253,6 +257,7 @@ DiskWindow::init(void)
     popdown = g_list_append(popdown, disk4);
     popdown = g_list_append(popdown, disk5);
     popdown = g_list_append(popdown, disk6);
+    popdown = g_list_append(popdown, disk7);
     _w.combo[a] = gtk_combo_new();
     gtk_table_attach_defaults(GTK_TABLE(_w.table), _w.combo[a],
 			      1, 2, a, a + 1);

@@ -21,7 +21,8 @@
 
 #include "kc/system.h"
 
-#include "ui/copying.h"
+#include "kc/kc.h"
+
 #include "ui/gtk/cmd.h"
 #include "ui/gtk/copying.h"
 
@@ -98,7 +99,7 @@ CopyingWindow::init(void)
   /*
    *  label copying
    */
-  _w.label_copying = gtk_label_new(gnu_general_public_licence);
+  _w.label_copying = gtk_label_new(kc_get_license());
   gtk_box_pack_start(GTK_BOX(_w.label_vbox), _w.label_copying, FALSE, FALSE, 0);
   gtk_widget_modify_font(_w.label_copying, _font_desc);
   gtk_widget_show(_w.label_copying);
@@ -106,10 +107,16 @@ CopyingWindow::init(void)
   /*
    *  label warranty
    */
-  _w.label_warranty = gtk_label_new(gnu_general_public_licence_warranty);
+  const char *warranty = kc_get_warranty();
+  const char *trailer  = kc_get_license_trailer();
+  char *tmp = new char[strlen(warranty) + strlen(trailer) + 1];
+  strcpy(tmp, warranty);
+  strcat(tmp, trailer);
+  _w.label_warranty = gtk_label_new(tmp);
   gtk_box_pack_start(GTK_BOX(_w.label_vbox), _w.label_warranty, FALSE, FALSE, 0);
   gtk_widget_modify_font(_w.label_warranty, _font_desc);
   gtk_widget_show(_w.label_warranty);
+  delete[] tmp;
 
   /*
    *  scrolled window

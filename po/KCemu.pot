@@ -1,12 +1,14 @@
 # SOME DESCRIPTIVE TITLE.
-# Copyright (C) YEAR Free Software Foundation, Inc.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2003-07-04 15:26+0200\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2003-10-12 18:51+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -38,26 +40,26 @@ msgid ""
 "programs add this file to a tape-archive!"
 msgstr ""
 
-#: src/kc/kc.cc:223
+#: src/kc/kc.cc:226
 msgid ""
 "    Z1013 with 16k RAM and 2k ROM, running at 1MHz. This was the\n"
 "    first version with cheap circuits so the CPU was clocked at only 1MHz\n"
 "    The ROM containes the Z1013 monitor version 2.02.\n"
 msgstr ""
 
-#: src/kc/kc.cc:228
+#: src/kc/kc.cc:231
 msgid ""
 "    Z1013 with 1k sRAM and 2k ROM, running at 2MHz. Industry\n"
 "    version with only 1k static RAM. Monitor version 2.02.\n"
 msgstr ""
 
-#: src/kc/kc.cc:232
+#: src/kc/kc.cc:235
 msgid ""
 "    Z1013 with 16k RAM and 2k ROM, running at 2MHz. Successor of\n"
 "    the Z1013.01 but with industry grade circuits clocked at 2MHz.\n"
 msgstr ""
 
-#: src/kc/kc.cc:236
+#: src/kc/kc.cc:239
 msgid ""
 "    Z1013 with 64k RAM and 2x2k ROM, running at 2MHz. The ROM\n"
 "    contains two system images with 2k each. Loaded is the first\n"
@@ -65,7 +67,7 @@ msgid ""
 "    shipped by the manufacturer.\n"
 msgstr ""
 
-#: src/kc/kc.cc:242
+#: src/kc/kc.cc:245
 msgid ""
 "    Z1013 with 64k RAM and 2k ROM, running at 2MHz. The ROM\n"
 "    contains two system images with 2k each. Loaded is the second\n"
@@ -73,14 +75,14 @@ msgid ""
 "    8x8 matrix.\n"
 msgstr ""
 
-#: src/kc/kc.cc:248
+#: src/kc/kc.cc:251
 msgid ""
 "    Z1013 with 64k RAM and 4k ROM. The ROM is the extended\n"
 "    version tagged 2.028 RB that has a different keyboard driver for\n"
 "    the keyboard K7659.\n"
 msgstr ""
 
-#: src/kc/kc.cc:253
+#: src/kc/kc.cc:256
 msgid ""
 "    Z1013 with 64k RAM and 4k ROM. The ROM contains the 'Super\n"
 "    Ur-Lader 5.0' that can read arbitrary tape files as system monitor.\n"
@@ -88,79 +90,79 @@ msgid ""
 "    programs to switch off the system ROM.\n"
 msgstr ""
 
-#: src/kc/kc.cc:259
+#: src/kc/kc.cc:262
 msgid ""
 "    Z1013 with 64k RAM and 4k ROM. The ROM contains the Bootloader\n"
 "    BL4 that can load monitor images from floppy disk or can start the\n"
 "    CP/M system.\n"
 msgstr ""
 
-#: src/kc/kc.cc:267
+#: src/kc/kc.cc:270
 msgid ""
 "    Z9001 (later called KC 85/1) with monochrome display, no internal BASIC\n"
 "    ROM. This computer has 16k RAM and 4k ROM with the robotron z9001 "
 "system.\n"
 msgstr ""
 
-#: src/kc/kc.cc:271
+#: src/kc/kc.cc:274
 msgid "    Like the z9001.10 but with color extension card.\n"
 msgstr ""
 
-#: src/kc/kc.cc:283
+#: src/kc/kc.cc:286
 msgid ""
 "    HC900 (later called KC 85/2) with 16k RAM and 8k ROM. System is called\n"
 "    HC-CAOS 2.2 (home computer - cassette aided operating system). BASIC\n"
 "    is only available as external module.\n"
 msgstr ""
 
-#: src/kc/kc.cc:288
+#: src/kc/kc.cc:291
 msgid ""
 "    KC 85/3 with 16k RAM, 8k system ROM with HC-CAOS 3.1 and 8k BASIC ROM.\n"
 msgstr ""
 
-#: src/kc/kc.cc:291
+#: src/kc/kc.cc:294
 msgid ""
 "    KC 85/4 with 64k RAM, 64k screen memory, 12k system ROM with HC-CAOS "
 "4.2\n"
 "    and 4k BASIC ROM.\n"
 msgstr ""
 
-#: src/kc/kc.cc:295
+#: src/kc/kc.cc:298
 msgid "    Polycomputer 880.\n"
 msgstr ""
 
-#: src/kc/kc.cc:301
+#: src/kc/kc.cc:304
 msgid "    Like the KC 87.11 but without the color extension card.\n"
 msgstr ""
 
-#: src/kc/kc.cc:304
+#: src/kc/kc.cc:307
 msgid "    Successor of the Z9001 with internal 10k BASIC ROM.\n"
 msgstr ""
 
-#: src/kc/kc.cc:307
-msgid "    Like the KC 87.20 but without the color extension card.\n"
+#: src/kc/kc.cc:310
+msgid "    Like the KC 87.21 but without the color extension card.\n"
 msgstr ""
 
-#: src/kc/kc.cc:310
+#: src/kc/kc.cc:313
 msgid ""
 "    New series with extended BASIC ROM (still 10k but with some routines "
 "for\n"
 "    plotter support were added).\n"
 msgstr ""
 
-#: src/kc/kc.cc:314
+#: src/kc/kc.cc:317
 msgid "    Single board computer LC 80 with 1k RAM and 2k ROM.\n"
 msgstr ""
 
-#: src/kc/kc.cc:317
+#: src/kc/kc.cc:320
 msgid "    BIC/A5105, only the base device is emulated, no floppy device.\n"
 msgstr ""
 
-#: src/kc/kc.cc:323
+#: src/kc/kc.cc:326
 msgid "    BIC/A5105, the full system including the floppy device.\n"
 msgstr ""
 
-#: src/kc/kc.cc:342
+#: src/kc/kc.cc:345
 msgid ""
 "\n"
 "KCemu comes with ABSOLUTELY NO WARRANTY; for details run `kcemu --"
@@ -193,11 +195,11 @@ msgid ""
 "  -W --warranty:   show warranty\n"
 msgstr ""
 
-#: src/kc/kc.cc:430
+#: src/kc/kc.cc:433
 msgid "available emulations:"
 msgstr ""
 
-#: src/kc/kc.cc:490
+#: src/kc/kc.cc:496
 msgid ""
 "\n"
 "\t\t    GNU GENERAL PUBLIC LICENSE\n"
@@ -459,7 +461,12 @@ msgid ""
 "of preserving the free status of all derivatives of our free software and\n"
 "of promoting the sharing and reuse of software generally.\n"
 "\n"
-"\t\t\t    NO WARRANTY\n"
+msgstr ""
+
+#: src/kc/kc.cc:758
+msgid ""
+"\n"
+"NO WARRANTY\n"
 "\n"
 "  11. BECAUSE THE PROGRAM IS LICENSED FREE OF CHARGE, THERE IS NO WARRANTY\n"
 "FOR THE PROGRAM, TO THE EXTENT PERMITTED BY APPLICABLE LAW.  EXCEPT WHEN\n"
@@ -482,7 +489,13 @@ msgid ""
 "PROGRAMS), EVEN IF SUCH HOLDER OR OTHER PARTY HAS BEEN ADVISED OF THE\n"
 "POSSIBILITY OF SUCH DAMAGES.\n"
 "\n"
-"\t\t     END OF TERMS AND CONDITIONS\n"
+msgstr ""
+
+#: src/kc/kc.cc:785
+msgid ""
+"\n"
+"                     END OF TERMS AND CONDITIONS\n"
+"\n"
 "\n"
 "\t    How to Apply These Terms to Your New Programs\n"
 "\n"
@@ -496,7 +509,7 @@ msgid ""
 "the \"copyright\" line and a pointer to where the full notice is found.\n"
 "\n"
 "    <one line to give the program's name and a brief idea of what it does.>\n"
-"    Copyright (C) <year>  <name of author>\n"
+"    Copyright (C) 19yy  <name of author>\n"
 "\n"
 "    This program is free software; you can redistribute it and/or modify\n"
 "    it under the terms of the GNU General Public License as published by\n"
@@ -510,16 +523,14 @@ msgid ""
 "\n"
 "    You should have received a copy of the GNU General Public License\n"
 "    along with this program; if not, write to the Free Software\n"
-"    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  "
-"USA\n"
-"\n"
+"    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.\n"
 "\n"
 "Also add information on how to contact you by electronic and paper mail.\n"
 "\n"
 "If the program is interactive, make it output a short notice like this\n"
 "when it starts in an interactive mode:\n"
 "\n"
-"    Gnomovision version 69, Copyright (C) year  name of author\n"
+"    Gnomovision version 69, Copyright (C) 19yy name of author\n"
 "    Gnomovision comes with ABSOLUTELY NO WARRANTY; for details type `show "
 "w'.\n"
 "    This is free software, and you are welcome to redistribute it\n"
@@ -545,34 +556,6 @@ msgid ""
 "consider it more useful to permit linking proprietary applications with the\n"
 "library.  If this is what you want to do, use the GNU Library General\n"
 "Public License instead of this License.\n"
-"\n"
-msgstr ""
-
-#: src/kc/kc.cc:839
-msgid ""
-"\n"
-"NO WARRANTY\n"
-"\n"
-"  11. BECAUSE THE PROGRAM IS LICENSED FREE OF CHARGE, THERE IS NO WARRANTY\n"
-"FOR THE PROGRAM, TO THE EXTENT PERMITTED BY APPLICABLE LAW.  EXCEPT WHEN\n"
-"OTHERWISE STATED IN WRITING THE COPYRIGHT HOLDERS AND/OR OTHER PARTIES\n"
-"PROVIDE THE PROGRAM \"AS IS\" WITHOUT WARRANTY OF ANY KIND, EITHER "
-"EXPRESSED\n"
-"OR IMPLIED, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF\n"
-"MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  THE ENTIRE RISK AS\n"
-"TO THE QUALITY AND PERFORMANCE OF THE PROGRAM IS WITH YOU.  SHOULD THE\n"
-"PROGRAM PROVE DEFECTIVE, YOU ASSUME THE COST OF ALL NECESSARY SERVICING,\n"
-"REPAIR OR CORRECTION.\n"
-"\n"
-"  12. IN NO EVENT UNLESS REQUIRED BY APPLICABLE LAW OR AGREED TO IN WRITING\n"
-"WILL ANY COPYRIGHT HOLDER, OR ANY OTHER PARTY WHO MAY MODIFY AND/OR\n"
-"REDISTRIBUTE THE PROGRAM AS PERMITTED ABOVE, BE LIABLE TO YOU FOR DAMAGES,\n"
-"INCLUDING ANY GENERAL, SPECIAL, INCIDENTAL OR CONSEQUENTIAL DAMAGES ARISING\n"
-"OUT OF THE USE OR INABILITY TO USE THE PROGRAM (INCLUDING BUT NOT LIMITED\n"
-"TO LOSS OF DATA OR DATA BEING RENDERED INACCURATE OR LOSSES SUSTAINED BY\n"
-"YOU OR THIRD PARTIES OR A FAILURE OF THE PROGRAM TO OPERATE WITH ANY OTHER\n"
-"PROGRAMS), EVEN IF SUCH HOLDER OR OTHER PARTY HAS BEEN ADVISED OF THE\n"
-"POSSIBILITY OF SUCH DAMAGES.\n"
 "\n"
 msgstr ""
 
@@ -805,9 +788,9 @@ msgstr ""
 #.
 #. *  close button
 #.
-#: src/ui/gtk/about.cc:121 src/ui/gtk/color.cc:244 src/ui/gtk/copying.cc:134
-#: src/ui/gtk/disk.cc:303 src/ui/gtk/info.cc:537 src/ui/gtk/module.cc:324
-#: src/ui/gtk/tape.cc:459 src/ui/gtk/wav.cc:249
+#: src/ui/gtk/about.cc:121 src/ui/gtk/color.cc:244 src/ui/gtk/copying.cc:141
+#: src/ui/gtk/disk.cc:308 src/ui/gtk/info.cc:537 src/ui/gtk/module.cc:324
+#: src/ui/gtk/tape.cc:459 src/ui/gtk/keyboard.cc:636 src/ui/gtk/wav.cc:249
 msgid "Close"
 msgstr ""
 
@@ -857,23 +840,23 @@ msgstr ""
 msgid "White Level"
 msgstr ""
 
-#: src/ui/gtk/copying.cc:78
+#: src/ui/gtk/copying.cc:79
 msgid "KCemu: Copying"
 msgstr ""
 
-#: src/ui/gtk/debug.cc:224
+#: src/ui/gtk/debug.cc:243
 msgid "KCemu: Debugger"
 msgstr ""
 
-#: src/ui/gtk/debug.cc:323
+#: src/ui/gtk/debug.cc:342
 msgid "Trace"
 msgstr ""
 
-#: src/ui/gtk/debug.cc:330
+#: src/ui/gtk/debug.cc:349
 msgid "Single Step"
 msgstr ""
 
-#: src/ui/gtk/debug.cc:337
+#: src/ui/gtk/debug.cc:356
 msgid "Execute Step"
 msgstr ""
 
@@ -902,14 +885,14 @@ msgstr ""
 msgid "No"
 msgstr ""
 
-#: src/ui/gtk/disk.cc:190
+#: src/ui/gtk/disk.cc:191
 msgid "KCemu: Disk"
 msgstr ""
 
 #.
 #. *  label
 #.
-#: src/ui/gtk/disk.cc:217
+#: src/ui/gtk/disk.cc:218
 #, c-format
 msgid "Disk %d"
 msgstr ""
@@ -917,14 +900,14 @@ msgstr ""
 #.
 #. *  browse button
 #.
-#: src/ui/gtk/disk.cc:271
+#: src/ui/gtk/disk.cc:276
 msgid "Browse"
 msgstr ""
 
 #.
 #. *  eject button
 #.
-#: src/ui/gtk/disk.cc:284
+#: src/ui/gtk/disk.cc:289
 msgid "Eject"
 msgstr ""
 
@@ -1164,7 +1147,7 @@ msgstr ""
 msgid "/Export _Wav"
 msgstr ""
 
-#: src/ui/gtk/tape.cc:268 src/ui/gtk/ui_gtk.cc:608
+#: src/ui/gtk/tape.cc:268 src/ui/gtk/ui_gtk.cc:605
 msgid "/sep1"
 msgstr ""
 
@@ -1180,7 +1163,7 @@ msgstr ""
 msgid "/_Delete File"
 msgstr ""
 
-#: src/ui/gtk/tape.cc:272 src/ui/gtk/ui_gtk.cc:615
+#: src/ui/gtk/tape.cc:272 src/ui/gtk/ui_gtk.cc:612
 msgid "/sep2"
 msgstr ""
 
@@ -1266,11 +1249,11 @@ msgstr ""
 msgid "Detach"
 msgstr ""
 
-#: src/ui/gtk/keyboard.cc:561
+#: src/ui/gtk/keyboard.cc:572
 msgid "KCemu: Keyboard"
 msgstr ""
 
-#: src/ui/gtk/keyboard.cc:609
+#: src/ui/gtk/keyboard.cc:620
 msgid ""
 "\n"
 "  Sorry, keyboard display not configured.  \n"
@@ -1284,163 +1267,163 @@ msgstr ""
 msgid "Open"
 msgstr ""
 
-#: src/ui/gtk/ui_gtk.cc:571
+#: src/ui/gtk/ui_gtk.cc:568
 msgid "/_File"
 msgstr ""
 
-#: src/ui/gtk/ui_gtk.cc:572
+#: src/ui/gtk/ui_gtk.cc:569
 msgid "/File/Run..."
 msgstr ""
 
-#: src/ui/gtk/ui_gtk.cc:573
+#: src/ui/gtk/ui_gtk.cc:570
 msgid "/File/Load..."
 msgstr ""
 
-#: src/ui/gtk/ui_gtk.cc:574
+#: src/ui/gtk/ui_gtk.cc:571
 msgid "/File/Tape..."
 msgstr ""
 
-#: src/ui/gtk/ui_gtk.cc:575
+#: src/ui/gtk/ui_gtk.cc:572
 msgid "/File/Disk..."
 msgstr ""
 
-#: src/ui/gtk/ui_gtk.cc:576
+#: src/ui/gtk/ui_gtk.cc:573
 msgid "/File/Module..."
 msgstr ""
 
-#: src/ui/gtk/ui_gtk.cc:577
+#: src/ui/gtk/ui_gtk.cc:574
 msgid "/File/Audio..."
 msgstr ""
 
-#: src/ui/gtk/ui_gtk.cc:578
+#: src/ui/gtk/ui_gtk.cc:575
 msgid "/File/sep1"
 msgstr ""
 
-#: src/ui/gtk/ui_gtk.cc:579
+#: src/ui/gtk/ui_gtk.cc:576
 msgid "/File/Reset"
 msgstr ""
 
-#: src/ui/gtk/ui_gtk.cc:580
+#: src/ui/gtk/ui_gtk.cc:577
 msgid "/File/Power On"
 msgstr ""
 
-#: src/ui/gtk/ui_gtk.cc:581
+#: src/ui/gtk/ui_gtk.cc:578
 msgid "/File/sep2"
 msgstr ""
 
-#: src/ui/gtk/ui_gtk.cc:582
+#: src/ui/gtk/ui_gtk.cc:579
 msgid "/File/Quit Emulator"
 msgstr ""
 
-#: src/ui/gtk/ui_gtk.cc:583 src/ui/gtk/ui_gtk.cc:609
+#: src/ui/gtk/ui_gtk.cc:580 src/ui/gtk/ui_gtk.cc:606
 msgid "/_View"
 msgstr ""
 
-#: src/ui/gtk/ui_gtk.cc:584
+#: src/ui/gtk/ui_gtk.cc:581
 msgid "/View/Zoom x1"
 msgstr ""
 
-#: src/ui/gtk/ui_gtk.cc:585
+#: src/ui/gtk/ui_gtk.cc:582
 msgid "/View/Zoom x2"
 msgstr ""
 
-#: src/ui/gtk/ui_gtk.cc:586
+#: src/ui/gtk/ui_gtk.cc:583
 msgid "/View/Zoom x3"
 msgstr ""
 
-#: src/ui/gtk/ui_gtk.cc:587 src/ui/gtk/ui_gtk.cc:610
+#: src/ui/gtk/ui_gtk.cc:584 src/ui/gtk/ui_gtk.cc:607
 msgid "/View/Keyboard"
 msgstr ""
 
-#: src/ui/gtk/ui_gtk.cc:588 src/ui/gtk/ui_gtk.cc:611
+#: src/ui/gtk/ui_gtk.cc:585 src/ui/gtk/ui_gtk.cc:608
 msgid "/View/Debugger"
 msgstr ""
 
-#: src/ui/gtk/ui_gtk.cc:589 src/ui/gtk/ui_gtk.cc:612
+#: src/ui/gtk/ui_gtk.cc:586 src/ui/gtk/ui_gtk.cc:609
 msgid "/View/Info"
 msgstr ""
 
-#: src/ui/gtk/ui_gtk.cc:590 src/ui/gtk/ui_gtk.cc:613
+#: src/ui/gtk/ui_gtk.cc:587 src/ui/gtk/ui_gtk.cc:610
 msgid "/View/Menubar"
 msgstr ""
 
-#: src/ui/gtk/ui_gtk.cc:591 src/ui/gtk/ui_gtk.cc:614
+#: src/ui/gtk/ui_gtk.cc:588 src/ui/gtk/ui_gtk.cc:611
 msgid "/View/Statusbar"
 msgstr ""
 
-#: src/ui/gtk/ui_gtk.cc:592
+#: src/ui/gtk/ui_gtk.cc:589
 msgid "/_Configuration"
 msgstr ""
 
-#: src/ui/gtk/ui_gtk.cc:593
+#: src/ui/gtk/ui_gtk.cc:590
 msgid "/Configuration/Colors"
 msgstr ""
 
-#: src/ui/gtk/ui_gtk.cc:594
+#: src/ui/gtk/ui_gtk.cc:591
 msgid "/Configuration/No Speed Limit"
 msgstr ""
 
-#: src/ui/gtk/ui_gtk.cc:595
+#: src/ui/gtk/ui_gtk.cc:592
 msgid "/_Help"
 msgstr ""
 
-#: src/ui/gtk/ui_gtk.cc:596
+#: src/ui/gtk/ui_gtk.cc:593
 msgid "/Help/About KCemu"
 msgstr ""
 
-#: src/ui/gtk/ui_gtk.cc:597
+#: src/ui/gtk/ui_gtk.cc:594
 msgid "/Help/sep3"
 msgstr ""
 
-#: src/ui/gtk/ui_gtk.cc:598
+#: src/ui/gtk/ui_gtk.cc:595
 msgid "/Help/KCemu Licence"
 msgstr ""
 
-#: src/ui/gtk/ui_gtk.cc:599
+#: src/ui/gtk/ui_gtk.cc:596
 msgid "/Help/No Warranty!"
 msgstr ""
 
-#: src/ui/gtk/ui_gtk.cc:602
+#: src/ui/gtk/ui_gtk.cc:599
 msgid "/_Run..."
 msgstr ""
 
-#: src/ui/gtk/ui_gtk.cc:603
+#: src/ui/gtk/ui_gtk.cc:600
 msgid "/_Load..."
 msgstr ""
 
-#: src/ui/gtk/ui_gtk.cc:604
+#: src/ui/gtk/ui_gtk.cc:601
 msgid "/_Tape..."
 msgstr ""
 
-#: src/ui/gtk/ui_gtk.cc:605
+#: src/ui/gtk/ui_gtk.cc:602
 msgid "/_Disk..."
 msgstr ""
 
-#: src/ui/gtk/ui_gtk.cc:606
+#: src/ui/gtk/ui_gtk.cc:603
 msgid "/_Module..."
 msgstr ""
 
-#: src/ui/gtk/ui_gtk.cc:607
+#: src/ui/gtk/ui_gtk.cc:604
 msgid "/_Audio..."
 msgstr ""
 
-#: src/ui/gtk/ui_gtk.cc:616
+#: src/ui/gtk/ui_gtk.cc:613
 msgid "/Reset"
 msgstr ""
 
-#: src/ui/gtk/ui_gtk.cc:617
+#: src/ui/gtk/ui_gtk.cc:614
 msgid "/Power On"
 msgstr ""
 
-#: src/ui/gtk/ui_gtk.cc:618
+#: src/ui/gtk/ui_gtk.cc:615
 msgid "/sep3"
 msgstr ""
 
-#: src/ui/gtk/ui_gtk.cc:619
+#: src/ui/gtk/ui_gtk.cc:616
 msgid "/Quit Emulator"
 msgstr ""
 
-#: src/ui/gtk/ui_gtk.cc:770
+#: src/ui/gtk/ui_gtk.cc:767
 #, c-format
 msgid "%s (%s)"
 msgstr ""

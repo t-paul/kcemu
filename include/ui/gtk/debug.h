@@ -40,10 +40,12 @@ class debug_op_t;
 #define DEBUG_NR_OF_ASM_LABELS (12)
 #define DEBUG_NR_OF_MEM_LABELS (8)
 #define DEBUG_NR_OF_REG_LABELS (4)
-#define DEBUG_FONT             ("fixed")
-#define DEBUG_ASM              ("Disassembler (incomplete)")
-#define DEBUG_MEM              ("Memory")
-#define DEBUG_REG              ("Registers")
+#define DEBUG_ASM_NAME         _("Disassembler")
+#define DEBUG_MEM_NAME         _("Memory")
+#define DEBUG_REG_NAME         _("Registers")
+#define DEBUG_ASM_HEADLINE     _("Disassembler (incomplete, use CTRL-d to activate)")
+#define DEBUG_MEM_HEADLINE     _("Memory (use CTRL-m to activate)")
+#define DEBUG_REG_HEADLINE     _("Registers")
 
 class DebugWindow : public UI_Gtk_Window, public DebugInterface
 {
@@ -55,7 +57,6 @@ class DebugWindow : public UI_Gtk_Window, public DebugInterface
   //static const int    DEBUG_NR_OF_ASM_LABELS;
   //static const int    DEBUG_NR_OF_MEM_LABELS;
   //static const int    DEBUG_NR_OF_REG_LABELS;
-  //static       char * DEBUG_FONT;
   //static       char * DEBUG_ASM;
   //static       char * DEBUG_MEM;
   //static       char * DEBUG_REG;
@@ -91,6 +92,7 @@ class DebugWindow : public UI_Gtk_Window, public DebugInterface
 
   CMD *_cmd1;
   CMD *_cmd2;
+  PangoFontDescription *_font_desc;
 
  protected:
   void init(void);
@@ -138,6 +140,7 @@ class debug_op_t {
   virtual void go_to(DebugWindow *w, int addr) {}
   virtual void update(DebugWindow *w, scroll_dir_t d = SCROLL_NONE) {}
   virtual const char * get_name(void) = 0;
+  virtual const char * get_headline(void) = 0;
   virtual bool can_go_to(void) = 0;
 };
 
@@ -148,7 +151,10 @@ class debug_op_asm : public debug_op_t {
   virtual void go_to(DebugWindow *w, int addr);
   virtual void update(DebugWindow *w, scroll_dir_t d = SCROLL_NONE);
   virtual const char * get_name(void) {
-    return DEBUG_ASM;
+    return DEBUG_ASM_NAME;
+  }
+  virtual const char * get_headline(void) {
+    return DEBUG_ASM_HEADLINE;
   }
   __NEW_SINGLETON(debug_op_asm);
   __CAPABILITIES(true);
@@ -161,7 +167,10 @@ class debug_op_mem : public debug_op_t {
   virtual void go_to(DebugWindow *w, int addr);
   virtual void update(DebugWindow *w, scroll_dir_t d = SCROLL_NONE);
   virtual const char * get_name(void) {
-    return DEBUG_MEM;
+    return DEBUG_MEM_NAME;
+  }
+  virtual const char * get_headline(void) {
+    return DEBUG_MEM_HEADLINE;
   }
   __NEW_SINGLETON(debug_op_mem);
   __CAPABILITIES(true);
@@ -174,7 +183,10 @@ class debug_op_reg : public debug_op_t {
   //virtual void go_to(DebugWindow *w, int addr);
   virtual void update(DebugWindow *w, scroll_dir_t d = SCROLL_NONE);
   virtual const char * get_name(void) {
-    return DEBUG_REG;
+    return DEBUG_REG_NAME;
+  }
+  virtual const char * get_headline(void) {
+    return DEBUG_REG_HEADLINE;
   }
   __NEW_SINGLETON(debug_op_reg);
   __CAPABILITIES(false);

@@ -19,7 +19,6 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-#include <ctype.h>
 #include <stdio.h>
 #include <string.h>
 #include <gdk/gdkkeysyms.h>
@@ -137,13 +136,26 @@ DebugWindow::key_press_func(GtkWidget *widget, GdkEventKey *event,
               gtk_widget_grab_focus(self->_w.op);
             }
           break;
+	case 'p':
+	case 'b':
+        case GDK_Up:
+	case GDK_KP_Up:
+          self->_op->update(self, SCROLL_PREV_PAGE);
+          break;
+	case 'f':
+	case 'n':
+        case GDK_Down:
+	case GDK_KP_Down:
+          self->_op->update(self, SCROLL_NEXT_PAGE);
+          break;
         }
     }
   else
     {
       switch (event->keyval)
         {
-        case GDK_Return: case GDK_KP_Enter:
+        case GDK_Return:
+	case GDK_KP_Enter:
           if (!GTK_WIDGET_VISIBLE(self->_w.op)) break;
           self->do_goto_string(gtk_entry_get_text(GTK_ENTRY(self->_w.op)));
           break;
@@ -152,16 +164,20 @@ DebugWindow::key_press_func(GtkWidget *widget, GdkEventKey *event,
           break;
         case GDK_BackSpace:
           break;
-        case GDK_Up: case GDK_KP_Up:
+        case GDK_Up:
+	case GDK_KP_Up:
           self->_op->update(self, SCROLL_BACKWARD);
           break;
-        case GDK_Down: case GDK_KP_Down:
+        case GDK_Down:
+	case GDK_KP_Down:
           self->_op->update(self, SCROLL_FORWARD);
           break;
-        case GDK_Page_Up: case GDK_KP_Page_Up:
+        case GDK_Page_Up:
+	case GDK_KP_Page_Up:
           self->_op->update(self, SCROLL_PREV_PAGE);
           break;
-        case GDK_Page_Down: case GDK_KP_Page_Down:
+        case GDK_Page_Down:
+	case GDK_KP_Page_Down:
           self->_op->update(self, SCROLL_NEXT_PAGE);
           break;
         }
@@ -179,7 +195,6 @@ DebugWindow::key_press_func(GtkWidget *widget, GdkEventKey *event,
     gtk_signal_emit_stop_by_name(GTK_OBJECT(widget), "key_press_event");
 
   return FALSE;
-  // return TRUE;
 }
 
 DebugWindow::DebugWindow(void)
@@ -210,11 +225,15 @@ void
 DebugWindow::init(void)
 {
   int a;
-  GdkFont *font;
-  GtkStyle *style;
   GdkCursor *cursor;
-  
-  font = gdk_font_load(DEBUG_FONT);
+
+  _font_desc = pango_font_description_new();
+  pango_font_description_set_family(_font_desc, "Courier");
+  pango_font_description_set_style(_font_desc, PANGO_STYLE_NORMAL);
+  pango_font_description_set_variant(_font_desc, PANGO_VARIANT_NORMAL);
+  pango_font_description_set_weight(_font_desc, PANGO_WEIGHT_NORMAL);
+  pango_font_description_set_stretch(_font_desc, PANGO_STRETCH_NORMAL);
+  pango_font_description_set_size(_font_desc, 8 * PANGO_SCALE);
 
   /*
    *  window
@@ -267,7 +286,7 @@ DebugWindow::init(void)
   /*
    *  asm frame/ vbox
    */
-  _w.frame_asm = gtk_frame_new(DEBUG_ASM);
+  _w.frame_asm = gtk_frame_new(DEBUG_ASM_HEADLINE);
   gtk_container_add(GTK_CONTAINER(_w.evb_asm), _w.frame_asm);
   gtk_widget_show(_w.frame_asm);
   _w.vbox_asm = gtk_vbox_new(FALSE, 0);
@@ -290,7 +309,7 @@ DebugWindow::init(void)
   /*
    *  mem frame/ vbox
    */
-  _w.frame_mem = gtk_frame_new(DEBUG_MEM);
+  _w.frame_mem = gtk_frame_new(DEBUG_MEM_HEADLINE);
   gtk_container_add(GTK_CONTAINER(_w.evb_mem), _w.frame_mem);
   gtk_widget_show(_w.frame_mem);
   _w.vbox_mem = gtk_vbox_new(FALSE, 0);
@@ -313,7 +332,7 @@ DebugWindow::init(void)
   /*
    *  reg frame/ vbox
    */
-  _w.frame_reg = gtk_frame_new(DEBUG_REG);
+  _w.frame_reg = gtk_frame_new(DEBUG_REG_HEADLINE);
   gtk_container_add(GTK_CONTAINER(_w.evb_reg), _w.frame_reg);
   gtk_widget_show(_w.frame_reg);
   _w.vbox_reg = gtk_vbox_new(FALSE, 0);
@@ -360,9 +379,7 @@ DebugWindow::init(void)
   for (a = 0;a < DEBUG_NR_OF_ASM_LABELS;a++)
     {
       _w.l_asm[a] = gtk_label_new("");
-      style = gtk_widget_get_style(_w.l_asm[a]);
-      // style->font = font; // FIXME
-      gtk_widget_set_style(_w.l_asm[a], style);
+      gtk_widget_modify_font(_w.l_asm[a], _font_desc);
       gtk_misc_set_alignment(GTK_MISC(_w.l_asm[a]), 0, 0.5);
       gtk_box_pack_start(GTK_BOX(_w.vbox_asm), _w.l_asm[a], FALSE, TRUE, 0);
       gtk_widget_show(_w.l_asm[a]);
@@ -370,9 +387,7 @@ DebugWindow::init(void)
   for (a = 0;a < DEBUG_NR_OF_MEM_LABELS;a++)
     {
       _w.l_mem[a] = gtk_label_new("");
-      style = gtk_widget_get_style(_w.l_mem[a]);
-      // style->font = font; // FIXME
-      gtk_widget_set_style(_w.l_mem[a], style);
+      gtk_widget_modify_font(_w.l_mem[a], _font_desc);
       gtk_misc_set_alignment(GTK_MISC(_w.l_mem[a]), 0, 0.5);
       gtk_box_pack_start(GTK_BOX(_w.vbox_mem), _w.l_mem[a], FALSE, TRUE, 0);
       gtk_widget_show(_w.l_mem[a]);
@@ -380,9 +395,7 @@ DebugWindow::init(void)
   for (a = 0;a < DEBUG_NR_OF_REG_LABELS;a++)
     {
       _w.l_reg[a] = gtk_label_new("");
-      style = gtk_widget_get_style(_w.l_reg[a]);
-      // style->font = font; // FIXME
-      gtk_widget_set_style(_w.l_reg[a], style);
+      gtk_widget_modify_font(_w.l_reg[a], _font_desc);
       gtk_misc_set_alignment(GTK_MISC(_w.l_reg[a]), 0, 0.5);
       gtk_box_pack_start(GTK_BOX(_w.vbox_reg), _w.l_reg[a], FALSE, TRUE, 0);
       gtk_widget_show(_w.l_reg[a]);
@@ -479,7 +492,7 @@ debug_op_mem::go_to(DebugWindow *w, int addr)
 void
 debug_op_mem::update(DebugWindow *w, scroll_dir_t direction)
 {
-  char c;
+  int c;
   int a, b, mem;
   char mem_str[100];
 
@@ -514,7 +527,7 @@ debug_op_mem::update(DebugWindow *w, scroll_dir_t direction)
       for (b = 0;b < 16;b++)
         {
           c = memory->memRead8(mem + b);
-          sprintf(strchr(mem_str, 0), "%c", isprint(c) ? c : '.');
+          sprintf(strchr(mem_str, 0), "%c", ((c >= 0x20) && (c < 0x80)) ? c : '.');
           if (b == 7) sprintf(strchr(mem_str, 0), "-");
         }
       mem += 16;

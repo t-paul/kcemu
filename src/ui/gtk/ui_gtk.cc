@@ -513,10 +513,7 @@ UI_Gtk::gtk_sync(void)
     {
       if (frame > (timeframe + 1))
 	{
-	  // FIMXE: maybe replace with sys_usleep() but
-	  // FIXME: this needs a working sys_usleep() for
-	  // FIXME: the mingw system layer
-	  g_usleep(20000 * (frame - timeframe - 1));
+	  sys_usleep(20000 * (frame - timeframe - 1));
 	}
     }
   else
@@ -840,7 +837,20 @@ UI_Gtk::init(int *argc, char ***argv)
   _cur_auto_skip = 0;
   _max_auto_skip = RC::instance()->get_int("Max Auto Skip", 6);
 
-  gtk_set_locale();
+#ifdef ENABLE_NLS
+  /*
+   *  We need to get all text in UTF-8 because this is required
+   *  for GTK versions above 2.0 (more precisely it's required by
+   *  the Pango library).
+   *
+   *  And we do it here because this way it's possible to get the
+   *  help/usage messages still in the default locale of the user.
+   *  From this point all messages that are sent to the console are
+   *  encoded in UTF-8 too.
+   */
+  bind_textdomain_codeset(PACKAGE, "UTF-8");
+#endif /* ENABLE_NLS */
+
   gtk_init(argc, argv);
 
   /*

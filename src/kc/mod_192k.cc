@@ -234,7 +234,7 @@ Module192k::load_rom(const char *filename, byte_t *buf, int size)
   int a, c;
   ifstream is;
 
-  is.open(filename);
+  is.open(filename, ios::in | ios::binary);
   if (!is)
     return false;
   

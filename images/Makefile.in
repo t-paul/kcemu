@@ -114,13 +114,28 @@ am__include = @am__include@
 am__quote = @am__quote@
 install_sh = @install_sh@
 
-pkgdata_DATA = \
+ICONS = \
+	kcemu-bic.xpm \
 	kcemu-kc85.xpm \
 	kcemu-kc87.xpm \
-	kcemu-lc80.xpm
+	kcemu-lc80.xpm \
+	kcemu-poly880.xpm \
+	kcemu-z1013.xpm
 
 
-EXTRA_DIST = $(pkgdata_DATA)
+WINICONS = \
+	kcemu-bic.ico \
+	kcemu-kc85.ico \
+	kcemu-kc87.ico \
+	kcemu-lc80.ico \
+	kcemu-poly880.ico \
+	kcemu-z1013.ico
+
+
+@TARGET_LINUX_TRUE@pkgdata_DATA = $(ICONS)
+@TARGET_MINGW_TRUE@pkgdata_DATA = $(WINICONS)
+
+EXTRA_DIST = $(ICONS) $(WINICONS)
 subdir = images
 mkinstalldirs = $(SHELL) $(top_srcdir)/mkinstalldirs
 CONFIG_HEADER = $(top_builddir)/include/kc/config.h
@@ -261,6 +276,14 @@ uninstall-am: uninstall-info-am uninstall-pkgdataDATA
 	mostlyclean mostlyclean-generic uninstall uninstall-am \
 	uninstall-info-am uninstall-pkgdataDATA
 
+
+%.ico : %.xpm
+	xpmtoppm --alphaout /tmp/ico.alpha.1.$$$$ $< | ppmquant 256 > /tmp/ico.icon.$$$$ ; \
+	pnminvert /tmp/ico.alpha.1.$$$$ > /tmp/ico.alpha.2.$$$$ ; \
+	ppmtowinicon -andppms /tmp/ico.icon.$$$$ /tmp/ico.alpha.2.$$$$ > $@ ; \
+	rm -f /tmp/ico.icon.$$$$ /tmp/ico.alpha.1.$$$$ /tmp/ico.alpha.2.$$$$
+
+all : $(ICONS) $(WINICONS)
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.
 .NOEXPORT:

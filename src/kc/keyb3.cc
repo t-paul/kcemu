@@ -117,12 +117,12 @@ Keyboard3::keyPressed(int keysym, int keycode)
     if ((keysym >= 0x61) && (keysym <= 0x7a))
       keysym -= 0x60;
   key = __keys[keysym];
-  if (key == 0xff)
+  if (key == 0xffff)
     return;
 
-  if (key & 0x100)
-    if (_shift)
-      key ^= 1; /* change shift state if required for this key, see keyb3k.h */
+  if ((key & 0x100) || _shift)
+    key |= 1; /* set shift state if required for this key, see keyb3k.h */
+
   key &= 0xff;
 
   key ^= 1; /*

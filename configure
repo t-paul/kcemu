@@ -956,7 +956,7 @@ ac_abs_top_srcdir=`cd "$ac_dir" && cd $ac_top_srcdir && pwd`
     else
       echo "$as_me: WARNING: no configuration information is in $ac_dir" >&2
     fi
-    cd $ac_popdir
+    cd "$ac_popdir"
   done
 fi
 
@@ -1153,7 +1153,7 @@ _ASBOX
       echo "$as_me: caught signal $ac_signal"
     echo "$as_me: exit $exit_status"
   } >&5
-  rm -f core core.* *.core &&
+  rm -f core *.core &&
   rm -rf conftest* confdefs* conf$$* $ac_clean_files &&
     exit $exit_status
      ' 0
@@ -1380,7 +1380,7 @@ fi;
 KCEMU_MAJOR_VERSION=0
 KCEMU_MINOR_VERSION=3
 KCEMU_MICRO_VERSION=7
-KCEMU_EXTRA_VERSION=beta8
+KCEMU_EXTRA_VERSION=beta9
 
 if test $KCEMU_MICRO_VERSION -eq 0
 then
@@ -2921,6 +2921,8 @@ fi
 echo "$as_me:$LINENO: result: $ac_cv_prog_cc_mms_bitfields" >&5
 echo "${ECHO_T}$ac_cv_prog_cc_mms_bitfields" >&6
 	if test $ac_cv_prog_cc_mms_bitfields = yes; then
+		LDFLAGS="$LDFLAGS $CFLAGS"
+		CXXFLAGS="$CXXFLAGS $CFLAGS"
 		CFLAGS="$ac_save_CFLAGS $CFLAGS"
 	else
 		CFLAGS="$ac_save_CFLAGS"
@@ -3973,7 +3975,7 @@ sed 's/^/| /' conftest.$ac_ext >&5
 ( exit $ac_status )
 ac_cv_header_stdc=no
 fi
-rm -f core core.* *.core gmon.out bb.out conftest$ac_exeext conftest.$ac_objext conftest.$ac_ext
+rm -f core *.core gmon.out bb.out conftest$ac_exeext conftest.$ac_objext conftest.$ac_ext
 fi
 fi
 fi
@@ -4630,7 +4632,7 @@ sed 's/^/| /' conftest.$ac_ext >&5
 ( exit $ac_status )
 ac_cv_c_stack_direction=-1
 fi
-rm -f core core.* *.core gmon.out bb.out conftest$ac_exeext conftest.$ac_objext conftest.$ac_ext
+rm -f core *.core gmon.out bb.out conftest$ac_exeext conftest.$ac_objext conftest.$ac_ext
 fi
 fi
 echo "$as_me:$LINENO: result: $ac_cv_c_stack_direction" >&5
@@ -5032,7 +5034,7 @@ sed 's/^/| /' conftest.$ac_ext >&5
 ( exit $ac_status )
 ac_cv_func_mmap_fixed_mapped=no
 fi
-rm -f core core.* *.core gmon.out bb.out conftest$ac_exeext conftest.$ac_objext conftest.$ac_ext
+rm -f core *.core gmon.out bb.out conftest$ac_exeext conftest.$ac_objext conftest.$ac_ext
 fi
 fi
 echo "$as_me:$LINENO: result: $ac_cv_func_mmap_fixed_mapped" >&5
@@ -6523,6 +6525,7 @@ cat >>confdefs.h <<_ACEOF
 #define HOST_OS_MINGW $HOST_OS_MINGW
 _ACEOF
 
+		LDFLAGS="$LDFLAGS -mwindows"
 		;;
 
 	*)
@@ -7137,7 +7140,7 @@ sed 's/^/| /' conftest.$ac_ext >&5
 ( exit $ac_status )
 ac_cv_header_stdc=no
 fi
-rm -f core core.* *.core gmon.out bb.out conftest$ac_exeext conftest.$ac_objext conftest.$ac_ext
+rm -f core *.core gmon.out bb.out conftest$ac_exeext conftest.$ac_objext conftest.$ac_ext
 fi
 fi
 fi
@@ -9054,7 +9057,7 @@ sed 's/^/| /' conftest.$ac_ext >&5
 ( exit $ac_status )
 no_gtk=yes
 fi
-rm -f core core.* *.core gmon.out bb.out conftest$ac_exeext conftest.$ac_objext conftest.$ac_ext
+rm -f core *.core gmon.out bb.out conftest$ac_exeext conftest.$ac_objext conftest.$ac_ext
 fi
        CFLAGS="$ac_save_CFLAGS"
        LIBS="$ac_save_LIBS"
@@ -9381,7 +9384,7 @@ sed 's/^/| /' conftest.$ac_ext >&5
 ( exit $ac_status )
 no_sdl=yes
 fi
-rm -f core core.* *.core gmon.out bb.out conftest$ac_exeext conftest.$ac_objext conftest.$ac_ext
+rm -f core *.core gmon.out bb.out conftest$ac_exeext conftest.$ac_objext conftest.$ac_ext
 fi
        CFLAGS="$ac_save_CFLAGS"
        LIBS="$ac_save_LIBS"
@@ -9741,7 +9744,7 @@ echo "$as_me: WARNING:
 
 fi
 
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      ac_config_files="$ac_config_files Makefile include/Makefile include/kc/Makefile include/sys/Makefile include/getopt/Makefile include/cmd/Makefile include/ui/Makefile include/ui/gtk/Makefile include/ui/sdl/Makefile include/ui/sdlmtk/Makefile include/ui/beos/Makefile include/ui/generic/Makefile include/fileio/Makefile include/libdbg/Makefile include/libtape/Makefile include/libdisk/Makefile include/libaudio/Makefile include/z80core/Makefile include/z80core2/Makefile src/Makefile src/kc/Makefile src/sys/Makefile src/sys/beos/Makefile src/sys/mingw/Makefile src/sys/linux/Makefile src/getopt/Makefile src/cmd/Makefile src/ui/Makefile src/ui/gtk/Makefile src/ui/sdl/Makefile src/ui/sdlmtk/Makefile src/ui/beos/Makefile src/ui/generic/Makefile src/fileio/Makefile src/libdbg/Makefile src/libtape/Makefile src/libdisk/Makefile src/libaudio/Makefile src/util/Makefile src/z80core/Makefile src/z80core2/Makefile test/Makefile test/kc/Makefile test/libaudio/Makefile test/libaudio/data/Makefile ROM/Makefile PRG/Makefile DISK/Makefile images/Makefile doc/Makefile intl/Makefile man/Makefile man/man1/Makefile debian/Makefile po/Makefile.in"
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                ac_config_files="$ac_config_files Makefile include/Makefile include/kc/Makefile include/sys/Makefile include/getopt/Makefile include/cmd/Makefile include/ui/Makefile include/ui/gtk/Makefile include/ui/sdl/Makefile include/ui/sdlmtk/Makefile include/ui/beos/Makefile include/ui/generic/Makefile include/fileio/Makefile include/libdbg/Makefile include/libtape/Makefile include/libdisk/Makefile include/libaudio/Makefile include/z80core/Makefile include/z80core2/Makefile src/Makefile src/kc/Makefile src/sys/Makefile src/sys/beos/Makefile src/sys/mingw/Makefile src/sys/linux/Makefile src/getopt/Makefile src/cmd/Makefile src/ui/Makefile src/ui/gtk/Makefile src/ui/sdl/Makefile src/ui/sdlmtk/Makefile src/ui/beos/Makefile src/ui/generic/Makefile src/fileio/Makefile src/libdbg/Makefile src/libtape/Makefile src/libdisk/Makefile src/libaudio/Makefile src/util/Makefile src/z80core/Makefile src/z80core2/Makefile test/Makefile test/kc/Makefile test/libaudio/Makefile test/libaudio/data/Makefile ROM/Makefile PRG/Makefile DISK/Makefile images/Makefile doc/Makefile intl/Makefile man/Makefile man/man1/Makefile debian/Makefile po/Makefile.in KCemuSetup.iss"
           ac_config_commands="$ac_config_commands default"
 cat >confcache <<\_ACEOF
 # This file is a shell script that caches the results of configure
@@ -10424,6 +10427,7 @@ do
   "man/man1/Makefile" ) CONFIG_FILES="$CONFIG_FILES man/man1/Makefile" ;;
   "debian/Makefile" ) CONFIG_FILES="$CONFIG_FILES debian/Makefile" ;;
   "po/Makefile.in" ) CONFIG_FILES="$CONFIG_FILES po/Makefile.in" ;;
+  "KCemuSetup.iss" ) CONFIG_FILES="$CONFIG_FILES KCemuSetup.iss" ;;
   "depfiles" ) CONFIG_COMMANDS="$CONFIG_COMMANDS depfiles" ;;
   "default-1" ) CONFIG_COMMANDS="$CONFIG_COMMANDS default-1" ;;
   "default" ) CONFIG_COMMANDS="$CONFIG_COMMANDS default" ;;

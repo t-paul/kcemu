@@ -1,3 +1,58 @@
+2003-10-12  Torsten Paul  <Torsten.Paul@gmx.de>
+
+	* src/ui/gtk/disk.cc, src/ui/gtk/copying.cc: fixed memory
+	allocation problems pointed out by valgrind
+
+	* include/kc/keyb3k.h: added BRK, STOP, CLR and _ keys for use
+	with the keyboard window
+
+	* src/kc/keyb3.cc: fixes for shift handling
+
+2003-10-05  Torsten Paul  <Torsten.Paul@gmx.de>
+
+	* redirect output streams and pass -mwindows to gcc to prevent
+	the dos box from popping up under windows
+
+	* completed kc 85 keyboard window
+
+	* added generation of windows icon files
+
+	* generate KCemuSetup.iss from KCemuSetup.iss.in
+
+2003-10-03  Torsten Paul  <Torsten.Paul@gmx.de>
+
+	* added KCemuSetup.iss for use with Inno Setup (Windows
+	Setup compiler); contributed by Alexander Schön
+
+	* src/kc/mod_rom.cc, src/kc/mod_rom1.cc, src/kc/mod_192k.cc:
+	fix open() mode to use binary I/O
+
+	* src/sys/mingw/sys/sys_gettimeofday.c: fix microsecond
+	return value to actually return microseconds instead of
+	milliseconds
+
+	* src/sys/mingw/sys/sys_usleep.c: implemented using Sleep()
+	from the Win32 API
+
+2003-07-30  Torsten Paul  <Torsten.Paul@gmx.de>
+
+	* src/ui/gtk/debug.cc: fix font usage in debug window
+
+	* include/ui/copying.h: removed
+
+	* src/kc/disk.cc (detach): remove duplicated code
+
+	* src/kc/kc.cc: use gettext for help texts (before call to 
+	bind_textdomain_codeset() in ui initialization); splitted license
+	string for commandline and ui usage; added functions to return
+	translated license strings: kc_get_license(), kc_get_warranty(),
+	kc_get_license_trailer()
+
+	* src/ui/gtk/ui_gtk.cc (init): call bind_textdomain_codeset() to
+	force UTF-8 encoding which is required by the new GTK
+
+	* po/de.po: changed encoding to UTF-8
+
 2003-06-29  Torsten Paul  <Torsten.Paul@gmx.de>
 
 	* integrated emulation of the Polycomputer 880 from development

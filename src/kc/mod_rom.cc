@@ -61,7 +61,7 @@ ModuleROM::ModuleROM(const char *filename, const char *name,
   _group = NULL;
 
   a = 0;
-  is.open(filename);
+  is.open(filename, ios::in | ios::binary);
   if (!is)
     return;
 

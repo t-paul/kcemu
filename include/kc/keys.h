@@ -65,5 +65,7 @@
 #define KC_KEY_SHIFT_LOCK          (0x125)
 #define KC_KEY_RESET               (0x126)
 #define KC_KEY_NMI                 (0x127)
+#define KC_KEY_BREAK               (0x128)
+#define KC_KEY_CLEAR               (0x129)
 
 #endif /* __kc_keys_h */
