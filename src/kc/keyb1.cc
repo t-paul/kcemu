@@ -150,13 +150,15 @@ Keyboard1::callback(void *data)
 {
 }
 
-void
+int
 Keyboard1::callback_A_in(void)
 {
   int a, x;
   byte_t b, c;
 
-  if (_in_callback) return;
+  if (_in_callback)
+    return -1;
+
   _in_callback = true;
   b = ~pio2->in_B_DATA();
   x = 0;
@@ -184,15 +186,19 @@ Keyboard1::callback_A_in(void)
 #endif
   pio2->set_A_EXT(0xff, c);
   _in_callback = false;
+
+  return -1;
 }
 
-void
+int
 Keyboard1::callback_B_in(void)
 {
   int a, x;
   byte_t b, c;
 
-  if (_in_callback) return;
+  if (_in_callback)
+    return -1;
+
   _in_callback = true;
   b = ~pio2->in_A_DATA();
   x = 0;
@@ -220,6 +226,8 @@ Keyboard1::callback_B_in(void)
 #endif
   pio2->set_B_EXT(0xff, c);
   _in_callback = false;
+
+  return -1;
 }
 
 void

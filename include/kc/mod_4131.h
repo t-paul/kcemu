@@ -35,12 +35,17 @@ class ModuleXY4131 : public ModuleInterface, public PIOCallbackInterface
   ModuleXY4131(const char *name);
   virtual ~ModuleXY4131(void);
 
-  void callback_A_in(void);
-  void callback_A_out(byte_t val);
+  /*
+   *  PIOCallbackInterface
+   */
+  virtual int callback_A_in(void);
+  virtual int callback_B_in(void);
+  virtual void callback_A_out(byte_t val);
+  virtual void callback_B_out(byte_t val);
 
-  void callback_B_in(void);
-  void callback_B_out(byte_t val);
-
+  /*
+   *  ModuleInterface
+   */
   virtual void m_out(word_t addr, byte_t val);
   virtual ModuleInterface * clone(void);
 };

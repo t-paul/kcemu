@@ -119,9 +119,15 @@ Memory9::memWrite8(word_t addr, byte_t val)
 #endif /* MEMORY_SLOW_ACCESS */
 
 byte_t *
-Memory9::getIRM(void)
+Memory9::get_irm(void)
 {
   return (byte_t *)get_page_addr_r(0xec00);
+}
+
+byte_t *
+Memory9::get_char_rom(void)
+{
+  return (byte_t *)0;
 }
 
 void

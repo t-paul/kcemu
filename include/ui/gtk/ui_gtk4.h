@@ -39,6 +39,8 @@ class UI_Gtk4 : public UI_Gtk, public UI_4
   virtual void update(bool full_update = false, bool clear_cache = false);
   virtual void callback(void *data);
   virtual void flash(bool enable);
+  virtual int  get_mode(void);
+  virtual void set_mode(int mode);
 
   virtual void allocate_colors(double saturation_fg,
 			       double saturation_bg,
@@ -47,6 +49,7 @@ class UI_Gtk4 : public UI_Gtk, public UI_4
 			       double black_level,
 			       double white_level);
 
+  virtual void init(void);
   virtual const char * get_title(void);
   virtual int get_width(void);
   virtual int get_height(void);

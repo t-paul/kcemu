@@ -51,6 +51,9 @@ class UI_4
   virtual void generic_update(Scanline *scanline, bool clear_cache = false);
   virtual void generic_update_hires(Scanline *scanline, byte_t *irm, bool clear_cache);
   virtual void generic_update_lores(Scanline *scanline, byte_t *irm, bool clear_cache);
+
+  virtual int  generic_get_mode(void);
+  virtual void generic_set_mode(int mode);
 };
 
 #endif /* __ui_generic_ui_4_h */

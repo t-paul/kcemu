@@ -167,7 +167,8 @@ public:
   virtual void dumpCore(void)                     = 0;
   virtual byte_t memRead8(word_t addr)            = 0;
   virtual void memWrite8(word_t addr, byte_t val) = 0;
-  virtual byte_t * getIRM(void)                   = 0;
+  virtual byte_t * get_irm(void)                  = 0;
+  virtual byte_t * get_char_rom(void)             = 0;
 
   /*
    *  InterfaceCircuit

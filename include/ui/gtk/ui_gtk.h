@@ -101,6 +101,10 @@ class UI_Gtk : public StatusListener, public ErrorListener, public UI
       GtkWidget *st_fps;
       GtkWidget *st_statusbar;
       long       statusbar_sec;
+      GtkItemFactory *ifact;
+      GtkItemFactory *ifactP;
+      GtkAccelGroup  *agroup;
+      GtkAccelGroup  *agroupP;
     } _main;
 
     struct {
@@ -113,7 +117,9 @@ class UI_Gtk : public StatusListener, public ErrorListener, public UI
     GdkImage      *_image;
     GdkColormap   *_colormap;
     GdkColor       _col[24];
+    byte_t        *_dirty_old;
 
+    bool           _init;
     bool           _shift_lock;
     bool           _speed_limit;
 
@@ -172,8 +178,12 @@ class UI_Gtk : public StatusListener, public ErrorListener, public UI
     
     virtual void update(bool full_update = false, bool clear_cache = false) = 0;
     virtual void flash(bool enable) = 0;
+    virtual int  get_mode(void)     = 0;
+    virtual void set_mode(int mode) = 0;
 
     virtual void init(int *argc, char ***argv);
+    virtual void show(void);
+    virtual void init(void) = 0; // init subclasses after creation of main window
     virtual const char * get_title(void) = 0;
     virtual int get_width(void) = 0;
     virtual int get_height(void) = 0;
@@ -190,6 +200,8 @@ class UI_Gtk : public StatusListener, public ErrorListener, public UI
 				 double white_level) = 0;
 
     void gtk_sync(void);
+    void gtk_resize(void);
+    void gtk_zoom(int zoom);
     void gtk_update(byte_t *bitmap, byte_t *dirty, int dirty_size, int width, int height, bool full_update);
     void gtk_update_1(byte_t *bitmap, byte_t *dirty, int dirty_size, int width, int height);
     void gtk_update_2(byte_t *bitmap, byte_t *dirty, int dirty_size, int width, int height);

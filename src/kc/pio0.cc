@@ -56,9 +56,6 @@ PIO0::in(word_t addr)
       break;
     }
 
-  DBG(1, form("KCemu/PIO/0/in",
-              "PIO0::in():  addr = %04x, val = %02x\n",
-              addr, ret));
   DBG(2, form("KCemu/PIO/0/in",
               "PIO0::in():  addr = %04x, val = %02x\n",
               addr, ret));
@@ -69,10 +66,7 @@ PIO0::in(word_t addr)
 void
 PIO0::out(word_t addr, byte_t val)
 {
-  DBG(1, form("KCemu/PIO/0/out",
-              "PIO0::out(): addr = %04x, val = %02x\n",
-              addr, val));
-  DBG(3, form("KCemu/PIO/0/out",
+  DBG(2, form("KCemu/PIO/0/out",
               "PIO0::out(): addr = %04x, val = %02x\n",
               addr, val));
 

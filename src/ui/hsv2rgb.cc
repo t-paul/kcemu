@@ -107,5 +107,6 @@ hsv2rgb(double h, double s, double v, int *r, int *g, int *b)
 	*b = 0;
         DBG(1, form("KCemu/warning",
 	            "bad hsv to rgb color conversion"));
+	break;
     }
 }

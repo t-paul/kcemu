@@ -142,6 +142,8 @@ read_sectors(teledisk_prop_t *prop)
   s7 = fgetc(prop->f);
   s8 = fgetc(prop->f);
 
+  //printf("SECTOR: %02x %02x %02x %02x %02x %02x %02x %02x\n", s1, s2, s3, s4, s5, s6, s7, s8);
+
   t = prop->tracks;
   prop->tracks++;
 
@@ -176,6 +178,9 @@ read_tracks(teledisk_prop_t *prop)
   t3 = fgetc(prop->f);
   t4 = fgetc(prop->f);
 
+  if (t1 == 0xff) // end marker?
+    return 1;
+
   //printf("TRACK: %02x %02x %02x %02x\n", t1, t2, t3, t4);
 
   for (a = 0;a < t1;a++)
@@ -189,7 +194,31 @@ static char *
 read_header(FILE *f)
 {
   char *buf;
-  int a, c, cnt, idx, len;
+  int c, cnt, idx, len;
+  struct {
+    unsigned char unknown00;
+    unsigned char unknown01;
+    unsigned char unknown02;
+    unsigned char unknown03;
+    unsigned char unknown04;
+    unsigned char unknown05;
+    unsigned char sides;
+    unsigned char unknown07;
+    unsigned char unknown08;
+    unsigned char unknown09;
+    unsigned char unknown10;
+    unsigned char unknown11;
+    unsigned char unknown12;
+    unsigned char year;
+    unsigned char month;
+    unsigned char day;
+    unsigned char hour;
+    unsigned char minute;
+    unsigned char second;
+  } h;
+  const char *month[] = {
+    "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
+  };
 
   /*
    *  check file identifier
@@ -209,8 +238,28 @@ read_header(FILE *f)
   /*
    *  skip header
    */
-  for (a = 0;a < 19;a++)
-    c = fgetc(f);
+  //for (a = 0;a < 19;a++)
+  //c = fgetc(f);
+
+  fread(&h, 19, 1, f);
+
+  printf("00: %02x, %3d\n", h.unknown00, h.unknown00);
+  printf("01: %02x, %3d\n", h.unknown01, h.unknown01);
+  printf("02: %02x, %3d\n", h.unknown02, h.unknown02);
+  printf("03: %02x, %3d\n", h.unknown03, h.unknown03);
+  printf("04: %02x, %3d\n", h.unknown04, h.unknown04);
+  printf("05: %02x, %3d\n", h.unknown05, h.unknown05);
+  printf("07: %02x, %3d\n", h.unknown07, h.unknown07);
+  printf("08: %02x, %3d\n", h.unknown08, h.unknown08);
+  printf("09: %02x, %3d\n", h.unknown09, h.unknown09);
+  printf("10: %02x, %3d\n", h.unknown10, h.unknown10);
+  printf("11: %02x, %3d\n", h.unknown11, h.unknown11);
+  printf("12: %02x, %3d\n", h.unknown12, h.unknown12);
+
+  printf("sides: %d\n", h.sides);
+  printf("date: %02d. %s %04d, %02d:%02d:%02d\n",
+	 h.day, month[h.month], h.year + 1900,
+	 h.hour, h.minute, h.second);
 
   /*
    *  read comment
@@ -259,6 +308,7 @@ teledisk_prop_t *
 teledisk_open(const char *filename)
 {
   int a;
+  int ret;
   FILE *f;
   char *comment;
   teledisk_prop_t *prop;
@@ -284,11 +334,16 @@ teledisk_open(const char *filename)
   prop->filename = strdup(filename);
 
   for (a = 0;a < 160;a++)
-    if (read_tracks(prop) < 0)
-      {
-	teledisk_close(prop);
-	return NULL;
-      }
+    {
+      ret = read_tracks(prop);
+      if (ret > 0)
+	break;
+      if (ret < 0)
+	{
+	  teledisk_close(prop);
+	  return NULL;
+	}
+    }
 
   return prop;
 }

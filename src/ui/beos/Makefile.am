@@ -5,10 +5,6 @@ noinst_LIBRARIES = libui_beos.a
 INCLUDES = \
 	-I../../../include
 
-CPPFLAGS = \
-	-DVERSION=\"$(VERSION)\" \
-        -DDATADIR=\"$(pkgdatadir)\"
-
 libui_beos_a_SOURCES = \
 	ui_beos.cc	\
 	ui_beos1.cc	\

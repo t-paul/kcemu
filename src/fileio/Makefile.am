@@ -29,16 +29,16 @@ libfileio_a_SOURCES = \
 	save_RAW.c
 
 kc2img_SOURCES = kc2img.c
-kc2img_LDADD = libfileio.a
+kc2img_LDADD = libfileio.a $(INTLLIBS)
 
 kc2tap_SOURCES = kc2tap.c
-kc2tap_LDADD = libfileio.a
+kc2tap_LDADD = libfileio.a $(INTLLIBS)
 
 kc2wav_SOURCES = kc2wav.c
-kc2wav_LDADD = libfileio.a
+kc2wav_LDADD = libfileio.a $(INTLLIBS)
 
 kc2raw_SOURCES = kc2raw.c
-kc2raw_LDADD = libfileio.a
+kc2raw_LDADD = libfileio.a $(INTLLIBS)
 
 test_load_SOURCES = test_load.c
-test_load_LDADD = libfileio.a
+test_load_LDADD = libfileio.a $(INTLLIBS)

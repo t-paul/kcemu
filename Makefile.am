@@ -10,4 +10,5 @@ doc_DATA = README.de TODO THANKS
 EXTRA_DIST = $(pkgdata_DATA) $(doc_DATA)
 
 install-data-local:
+	$(mkinstalldirs) $(DESTDIR)$(docdir)
 	cp ChangeLog $(docdir)/changelog

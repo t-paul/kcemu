@@ -1,3 +1,4 @@
+#include "kc/config.h"
 #include "sys/sysdep.h"
 
 void

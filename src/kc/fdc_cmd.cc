@@ -172,8 +172,6 @@ FDC_CMD::read_byte(void)
               "FDC_CMD::read_byte() called! [current cmd is '%s']\n",
               get_name()));
 
-  sleep(1);
-
   return 0xff;
 }
 
@@ -714,11 +712,12 @@ FDC_CMD_READ_DELETED_DATA::execute(void)
 FDC_CMD_FORMAT_A_TRACK::FDC_CMD_FORMAT_A_TRACK(FDC *fdc)
   : FDC_CMD(fdc, 6, 7, "FORMAT A TRACK")
 {
+  _buf = NULL;
 }
 
 FDC_CMD_FORMAT_A_TRACK::~FDC_CMD_FORMAT_A_TRACK(void)
 {
-  if (_buf != 0)
+  if (_buf != NULL)
     delete _buf;
 }
 
@@ -748,11 +747,21 @@ FDC_CMD_FORMAT_A_TRACK::execute(void)
   _idx = 0;
   _cur_sector = 1;
   _sectors_per_track = _arg[3];
-  if (_buf != 0)
+  if (_buf != NULL)
     delete _buf;
   _sector_size = N_to_sector_size((_arg[0] >> 7) & 1, _arg[2]);
   _buf = new byte_t[_sector_size];
   memset(_buf, _arg[5], _sector_size);
+
+  _result[0] = get_fdc()->get_ST0();
+  _result[1] = get_fdc()->get_ST1();
+  _result[2] = get_fdc()->get_ST2();
+  _result[3] = get_fdc()->get_cylinder();
+  _result[4] = get_fdc()->get_head();
+  _result[5] = get_fdc()->get_sector();
+  _result[6] = _arg[2]; // N
+
+  _data_transfer = true;
 }
 
 void

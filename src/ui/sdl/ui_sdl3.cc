@@ -28,12 +28,12 @@
 UI_SDL3::UI_SDL3(void)
 {
   reset();
-  sdl_init(get_width(), get_height(), get_title());
-  allocate_colors(0.4, 0.5, 0.8, 0.6, 0.1, 0.9);
+  z80->register_ic(this);
 }
 
 UI_SDL3::~UI_SDL3(void)
 {
+  z80->unregister_ic(this);
 }
 
 void
@@ -81,7 +81,7 @@ UI_SDL3::update(bool full_update, bool clear_cache)
 {
   scanline.update();
   generic_update(&scanline, clear_cache);
-  sdl_update(_bitmap, 0, get_real_width(), get_real_height());
+  sdl_update(_bitmap, _dirty, get_real_width(), get_real_height(), clear_cache);
   sdl_sync();
 }
 
@@ -102,7 +102,10 @@ UI_SDL3::flash(bool enable)
 const char *
 UI_SDL3::get_title(void)
 {
-  return "KC 85/3";
+  if (get_kc_type() == KC_TYPE_85_2)
+    return _("KC 85/2 Emulator");
+
+  return _("KC 85/3 Emulator");
 }
 
 int
@@ -115,6 +118,22 @@ int
 UI_SDL3::get_height(void)
 {
   return kcemu_ui_scale * get_real_height();
+}
+
+int
+UI_SDL3::get_mode(void)
+{
+  return generic_get_mode();
+}
+
+void
+UI_SDL3::set_mode(int mode)
+{
+  if (generic_get_mode() != mode)
+    {
+      generic_set_mode(mode);
+      sdl_resize();
+    }
 }
 
 void

@@ -53,6 +53,9 @@ class UI_3
   virtual int get_dirty_buffer_size(void);
 
   virtual void generic_update(Scanline *scanline, bool clear_cache = false);
+
+  virtual int  generic_get_mode(void);
+  virtual void generic_set_mode(int mode);
 };
 
 #endif /* __ui_generic_ui_3_h */

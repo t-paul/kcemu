@@ -6,4 +6,5 @@ INCLUDES = \
 	-I../../../include
 
 libsys_beos_a_SOURCES = \
-	sys_usleep.c
+	sys_usleep.c \
+	sys_localtime.c

@@ -61,7 +61,7 @@ UI_Gtk4::get_height(void)
 const char *
 UI_Gtk4::get_title(void)
 {
-  return "KC 85/4 Emulator";
+  return _("KC 85/4 Emulator");
 }
 
 void
@@ -107,6 +107,11 @@ UI_Gtk4::allocate_colors(double saturation_fg,
 }
 
 void
+UI_Gtk4::init(void)
+{
+}
+
+void
 UI_Gtk4::update(bool full_update, bool clear_cache)
 {
   scanline.update();
@@ -121,6 +126,19 @@ void
 UI_Gtk4::flash(bool enable)
 {
   scanline.trigger(enable);
+}
+
+int
+UI_Gtk4::get_mode(void)
+{
+  return generic_get_mode();
+}
+
+void
+UI_Gtk4::set_mode(int mode)
+{
+  generic_set_mode(mode);
+  gtk_resize();
 }
 
 void

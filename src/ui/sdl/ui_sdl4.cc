@@ -28,12 +28,12 @@
 UI_SDL4::UI_SDL4(void)
 {
   reset();
-  sdl_init(get_width(), get_height(), get_title());
-  allocate_colors(0.4, 0.5, 0.8, 0.6, 0.1, 0.9);
+  z80->register_ic(this);
 }
 
 UI_SDL4::~UI_SDL4(void)
 {
+  z80->unregister_ic(this);
 }
 
 void
@@ -79,17 +79,18 @@ UI_SDL4::allocate_colors(double saturation_fg,
 void
 UI_SDL4::update(bool full_update, bool clear_cache)
 {
-  generic_update(NULL, clear_cache);
-  sdl_update(_bitmap, 0, get_real_width(), get_real_height());
+  scanline.update();
+  generic_update(&scanline, clear_cache);
+  sdl_update(_bitmap, _dirty, get_real_width(), get_real_height(), clear_cache);
   sdl_sync();
 }
 
 void
 UI_SDL4::callback(void *data)
 {
-  z80->addCallback(35000, this, 0);
   update();
   sdl_process_events();
+  z80->addCallback(35000, this, 0);
 }
 
 void
@@ -101,7 +102,7 @@ UI_SDL4::flash(bool enable)
 const char *
 UI_SDL4::get_title(void)
 {
-  return "KC 85/4";
+  return _("KC 85/4 Emulator");
 }
 
 int
@@ -114,6 +115,22 @@ int
 UI_SDL4::get_height(void)
 {
   return kcemu_ui_scale * get_real_height();
+}
+
+int
+UI_SDL4::get_mode(void)
+{
+  return generic_get_mode();
+}
+
+void
+UI_SDL4::set_mode(int mode)
+{
+  if (generic_get_mode() != mode)
+    {
+      generic_set_mode(mode);
+      sdl_resize();
+    }
 }
 
 void

@@ -31,6 +31,15 @@ extern "C" {
  */
 void sys_usleep(long microseconds);
 
+/*
+ *  return local time
+ *
+ *  works like localtime_r() as it copies the values into
+ *  a buffers supplied by the caller instead of returning
+ *  a pointer to some statically allocated memory
+ */
+void sys_localtime(int *year, int *month, int *day, int *hour, int *minute, int *second);
+
 #ifdef __cplusplus
 }
 #endif

@@ -25,12 +25,15 @@
 #include <string.h>
 #include <assert.h>
 #include <unistd.h>
+
+#include "libaudio/libaudioP.h"
+
+#ifdef HAVE_OSS
+
 #include <sys/stat.h>
 #include <sys/ioctl.h>
 #include <sys/types.h>
 #include <sys/soundcard.h>
-
-#include "libaudio/libaudioP.h"
 
 #define OSS_BUF_SIZE (1024)
 
@@ -203,3 +206,12 @@ loader_oss_init(void)
   if (libaudio_register_loader(&loader))
     self = &loader;
 }
+
+#else /* HAVE_OSS */
+
+void
+loader_oss_init(void)
+{
+}
+
+#endif /* HAVE_OSS */

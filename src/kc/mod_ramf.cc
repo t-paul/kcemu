@@ -126,7 +126,10 @@ ModuleRAMFloppy::init(void)
   DIR *dir;
   struct stat statbuf;
   struct dirent *entry;
-  char *home, *dirname, *filename;
+  char *dirname, *filename;
+
+  if (kcemu_homedir == NULL)
+    return;
 
   _addr = 0x0100;
 
@@ -134,13 +137,9 @@ ModuleRAMFloppy::init(void)
   _ram[1] = 0;
   _ram[2] = 0;
 
-  home = getenv("HOME");
-  if (home == NULL)
-    return;
-
-  len = strlen(home) + 21;
+  len = strlen(kcemu_homedir) + 21;
   dirname = new char[len];
-  snprintf(dirname, len, "%s/.z1013-ramfloppy_%02x", home, _port & 0xff);
+  snprintf(dirname, len, "%s/.z1013-ramfloppy_%02x", kcemu_homedir, _port & 0xff);
 
   dir = opendir(dirname);
   if (dir == NULL)

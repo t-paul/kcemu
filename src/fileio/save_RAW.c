@@ -36,7 +36,7 @@ make_filename(const char *filename, int load, int start)
     load = 0;
 
   buf = (char *)malloc(strlen(filename) + 20);
-  ptr = rindex(filename, '.');
+  ptr = strrchr(filename, '.');
   if (ptr == NULL)
     {
       strcpy(buf, filename);

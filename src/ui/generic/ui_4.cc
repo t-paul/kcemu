@@ -222,7 +222,7 @@ UI_4::generic_update(Scanline *scanline, bool clear_cache)
   static byte_t *irm_old = NULL;
   static int hires_old = -1;
 
-  irm = memory->getIRM();
+  irm = memory->get_irm();
   if (irm != irm_old)
     {
       /*
@@ -252,4 +252,15 @@ UI_4::generic_update(Scanline *scanline, bool clear_cache)
     generic_update_hires(scanline, irm, clear_cache);
   else
     generic_update_lores(scanline, irm, clear_cache);
+}
+
+int
+UI_4::generic_get_mode(void)
+{
+  return 0;
+}
+
+void
+UI_4::generic_set_mode(int mode)
+{
 }

@@ -119,9 +119,10 @@ Sound8::stop(void)
 {
 }
 
-void
+int
 Sound8::callback_A_in(void)
 {
+  return -1;
 }
 
 void
@@ -129,9 +130,10 @@ Sound8::callback_A_out(byte_t val)
 {
 }
 
-void
+int
 Sound8::callback_B_in(void)
 {
+  return -1;
 }
 
 void

@@ -5,6 +5,7 @@ pkgdata_DATA = \
 	tools.dump	\
 	cpmz9.dump	\
 	a5105sys.dump	\
-	microdos.dump
+	microdos.dump	\
+	z1013cpm.dump
 
 EXTRA_DIST = $(pkgdata_DATA)

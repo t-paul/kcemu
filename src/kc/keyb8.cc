@@ -75,12 +75,13 @@ Keyboard8::callback(void *data)
 {
 }
 
-void
+int
 Keyboard8::callback_A_in(void)
 {
+  return -1;
 }
 
-void
+int
 Keyboard8::callback_B_in(void)
 {
   byte_t b;
@@ -94,6 +95,7 @@ Keyboard8::callback_B_in(void)
     c = (~(_key & 0xf00) >> 4);
 
   pio2->set_B_EXT(0xf0, c);
+  return c;
 }
 
 void

@@ -1,6 +1,6 @@
 /*
  *  KCemu -- the KC 85/3 and KC 85/4 Emulator
- *  Copyright (C) 1997-2001 Torsten Paul
+ *  Copyright (C) 1997-2003 Torsten Paul
  *
  *  $Id: ui_sdl4.h,v 1.2 2002/10/31 01:16:25 torsten_paul Exp $
  *
@@ -38,6 +38,8 @@ class UI_SDL4 : public UI_SDL, public UI_4
   virtual void update(bool full_update = false, bool clear_cache = false);
   virtual void callback(void *data);
   virtual void flash(bool enable);
+  virtual int  get_mode(void);
+  virtual void set_mode(int mode);
 
   virtual void allocate_colors(double saturation_fg,
                                double saturation_bg,

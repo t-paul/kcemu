@@ -86,9 +86,15 @@ Memory2::~Memory2(void)
 }
 
 byte_t *
-Memory2::getIRM(void)
+Memory2::get_irm(void)
 {
   return (byte_t *)_irm;
+}
+
+byte_t *
+Memory2::get_char_rom(void)
+{
+  return (byte_t *)0;
 }
 
 void

@@ -67,6 +67,9 @@
 #include "kc/mod_64k.h"
 #include "kc/mod_rom.h"
 #include "kc/mod_rom1.h"
+#include "kc/mod_fdc.h"
+#include "kc/mod_gdc.h"
+#include "kc/mod_rtc.h"
 #include "kc/mod_ramf.h"
 #include "kc/mod_disk.h"
 #include "kc/mod_list.h"
@@ -82,9 +85,8 @@
 
 ModuleList::ModuleList(void)
 {
-  int a, cnt;
+  int cnt;
   char *ptr;
-  const char *mod;
   ModuleInterface *m;
   ModuleListEntry *entry;
   
@@ -118,6 +120,36 @@ ModuleList::ModuleList(void)
    */
   m = new ModuleRAMFloppy("RAMFLOPPY");
   _mod_list.push_back(new ModuleListEntry(_("256k RAM Floppy"), m, KC_TYPE_Z1013));
+
+  /*
+   *  FDC (schneider) (Z1013)
+   */
+  m = new ModuleFDC("FDC_SCHNEIDER", ModuleFDC::FDC_INTERFACE_SCHNEIDER);
+  _mod_list.push_back(new ModuleListEntry(_("FDC (Schneider)"), m, KC_TYPE_Z1013));
+
+  /*
+   *  FDC (kramer) (Z1013)
+   */
+  m = new ModuleFDC("FDC_KRAMER", ModuleFDC::FDC_INTERFACE_KRAMER);
+  _mod_list.push_back(new ModuleListEntry(_("FDC (Kramer)"), m, KC_TYPE_Z1013));
+
+  /*
+   *  GDC (Z1013)
+   */
+  m = new ModuleGDC("GDC");
+  _mod_list.push_back(new ModuleListEntry(_("GDC 82720"), m, KC_TYPE_Z1013));
+
+  /*
+   *  RTC (port 20h-2fh) (Z1013)
+   */
+  m = new ModuleRTC("RTC20", 0x20);
+  _mod_list.push_back(new ModuleListEntry(_("RTC (port 20h-2fh)"), m, KC_TYPE_Z1013));
+
+  /*
+   *  RTC (port 70h-7fh) (Z1013)
+   */
+  m = new ModuleRTC("RTC70", 0x70);
+  _mod_list.push_back(new ModuleListEntry(_("RTC (port 70h-7fh)"), m, KC_TYPE_Z1013));
 
   /*
    *  basic (kc85/1)
@@ -236,8 +268,10 @@ ModuleList::ModuleList(void)
   /*
    *  Plotter-Anschluﬂ
    */
+#ifdef TARGET_OS_LINUX
   m = new ModuleXY4131("XY4131");
   _mod_list.push_back(new ModuleListEntry(_("Plotter XY4131"), m, KC_TYPE_85_1_CLASS));
+#endif /* TARGET_OS_LINUX */
 
   /*
    *  CPM-Z9 boot rom module (kc85/1)
@@ -380,6 +414,9 @@ ModuleList::ModuleList(void)
     case KC_TYPE_87:
       cnt = 4;
       break;
+    case KC_TYPE_Z1013:
+      cnt = 8;
+      break;
     case KC_TYPE_85_2:
     case KC_TYPE_85_3:
     case KC_TYPE_85_4:
@@ -390,14 +427,52 @@ ModuleList::ModuleList(void)
       break;
     }
 
-  for (a = 0;a < 4 * MAX_BD + 2;a++)
+  init_modules(cnt);
+}
+
+void
+ModuleList::init_modules(int max_modules)
+{
+  int idx, mode;
+  const char *mod;
+  char *ptr, *buffer;
+
+  for (int a = 0;a < 4 * MAX_BD + 2;a++)
     _init_mod[a] = NULL;
 
-  for (a = 0;a < cnt;a++)
+  mode = 1;
+  ptr = kcemu_modules;
+  if (ptr)
     {
-      mod = RC::instance()->get_string_i(a, "Module");
-      _init_mod[a] = mod;
+      if (*ptr == '+')
+        ptr++;
+      else
+	mode = 0;
     }
+
+  idx = 0;
+  if (mode == 1)
+    for (int a = 0;a < max_modules;a++)
+      {
+	mod = RC::instance()->get_string_i(a, "Module");
+	if (mod)
+	  _init_mod[idx++] = strdup(mod);
+      }
+
+  if (kcemu_modules == NULL)
+    return;
+  
+  buffer = new char[strlen(ptr) + 1];
+  strcpy(buffer, ptr);
+
+  ptr = strtok(buffer, ",");
+  while (ptr != 0)
+    {
+      _init_mod[idx++] = strdup(ptr);
+      ptr = strtok(0, ",");
+    }
+
+  delete[] buffer;
 }
 
 ModuleList::~ModuleList(void)
@@ -411,6 +486,10 @@ ModuleList::~ModuleList(void)
       delete entry->get_mod();
       delete entry;
     }
+
+  for (int a = 0;a < 4 * MAX_BD + 2;a++)
+    if (_init_mod[a])
+      free(_init_mod[a]);
 }
 
 void

@@ -61,7 +61,7 @@ UI_Gtk8::get_height(void)
 const char *
 UI_Gtk8::get_title(void)
 {
-  return "LC80 Emulator";
+  return _("LC80 Emulator");
 }
 
 void
@@ -90,6 +90,11 @@ UI_Gtk8::allocate_colors(double saturation_fg,
 }
 
 void
+UI_Gtk8::init(void)
+{
+}
+
+void
 UI_Gtk8::update(bool full_update, bool clear_cache)
 {
   generic_update();
@@ -102,6 +107,19 @@ UI_Gtk8::update(bool full_update, bool clear_cache)
 void
 UI_Gtk8::flash(bool enable)
 {
+}
+
+int
+UI_Gtk8::get_mode(void)
+{
+  return generic_get_mode();
+}
+
+void
+UI_Gtk8::set_mode(int mode)
+{
+  generic_set_mode(mode);
+  gtk_resize();
 }
 
 void

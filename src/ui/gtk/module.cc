@@ -183,7 +183,7 @@ ModuleWindow::init_device(const char *name, int base, int active_slots)
 }
 
 void
-ModuleWindow::init_device_1(const char *name)
+ModuleWindow::init_device_1(const char *name, int nr_of_slots)
 {
   int a;
   char buf[10];
@@ -207,9 +207,9 @@ ModuleWindow::init_device_1(const char *name)
   gtk_container_add(GTK_CONTAINER(_w.frame[0]), _w.table[0]);
   gtk_widget_show(_w.table[0]);
 
-  for (a = 0;a < 4;a++)
+  for (a = 0;a < nr_of_slots;a++)
     {
-      snprintf(buf, 10, _("Slot %d"), 4 - a);
+      snprintf(buf, 10, _("Slot %d"), nr_of_slots - a);
 
       _w.l[a] = gtk_label_new(buf);
       gtk_misc_set_alignment(GTK_MISC(_w.l[a]), 0, 0.5);
@@ -303,8 +303,10 @@ ModuleWindow::init(void)
 	init_device(buf, 16 * a, 15);
       }
 
-  if ((get_kc_type() & KC_TYPE_85_1_CLASS) || (get_kc_type() == KC_TYPE_Z1013))
-    init_device_1(_("Basis Device"));
+  if (get_kc_type() & KC_TYPE_85_1_CLASS)
+    init_device_1(_("Basis Device"), 4);
+  else if (get_kc_type() == KC_TYPE_Z1013)
+    init_device_1(_("Basis Device"), 8);
   else
     init_device(_("Basis Device"), 0, 12);
 

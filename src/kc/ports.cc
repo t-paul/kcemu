@@ -38,7 +38,7 @@ NullPort::in(word_t addr)
 {
   byte_t val = 0xff;
 
-  DBG(1, form("KCemu/Ports/NullPort/in",
+  DBG(2, form("KCemu/Ports/NullPort/in",
               "NullPort: in() addr = %04x (returning %02x)\n",
               addr, val));
   
@@ -48,7 +48,7 @@ NullPort::in(word_t addr)
 void
 NullPort::out(word_t addr, byte_t val)
 {
-  DBG(1, form("KCemu/Ports/NullPort/out",
+  DBG(2, form("KCemu/Ports/NullPort/out",
               "NullPort: out() addr = %04x, val = %02x\n",
               addr, val));
 }

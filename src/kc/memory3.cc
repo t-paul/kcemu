@@ -103,9 +103,15 @@ Memory3::memWrite8(word_t addr, byte_t val)
 #endif /* MEMORY_SLOW_ACCESS */
 
 byte_t *
-Memory3::getIRM(void)
+Memory3::get_irm(void)
 {
   return (byte_t *)_irm;
+}
+
+byte_t *
+Memory3::get_char_rom(void)
+{
+  return (byte_t *)0;
 }
 
 void

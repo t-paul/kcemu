@@ -197,20 +197,6 @@ RetiZ80(void)
   z80->reti();
 }
 
-/*
- *
- */
-long
-get_time(void)
-{
-  struct timeval tv;
-  static long base = -1;
-
-  gettimeofday(&tv, NULL);
-  if (base < 0) base = tv.tv_sec;
-  return 1000 * (tv.tv_sec - base) + (tv.tv_usec / 1000);
-}
-
 const int Z80::I_PERIOD = 256;
 
 Z80::Z80(void)
@@ -226,6 +212,13 @@ Z80::Z80(void)
   
   if ((get_kc_type() != KC_TYPE_LC80) && (get_kc_type() != KC_TYPE_A5105))
     _regs.PC.W = 0xf000;
+
+  /*
+   *  FIXME: at least z1013 emulation breaks with the stackpointer
+   *  FIXME: initialized with 0xf000; the CP/M bootlader BL4 will
+   *  FIXME: overwrite it's own stack when clearing the screen :-(
+   */
+  _regs.SP.W = 0x0000;
   
   _counter = 0;
 
@@ -319,9 +312,7 @@ Z80::run(void)
       //if ((_regs.PC.W == 0xe0d5) && (RdZ80(0xe0d5) == 0xed) && (_regs.BC.W < 5))
       //debug(true);
 
-      //if (_regs.PC.W == 0x077c)
-      //z80->debug(true);
-      //if (_regs.PC.W == 0x079f)
+      //if (_regs.PC.W == 0xe046)
       //z80->debug(true);
 
       if (_singlestep)
@@ -483,6 +474,13 @@ Z80::reset(word_t pc, bool power_on)
 
   ResetZ80(&_regs);
   _regs.PC.W = pc;
+
+  /*
+   *  FIXME: at least z1013 emulation breaks with the stackpointer
+   *  FIXME: initialized with 0xf000; the CP/M bootlader BL4 will
+   *  FIXME: overwrite it's own stack when clearing the screen :-(
+   */
+  _regs.SP.W = 0x0000;
 
   halt_floppy_cpu();
   

@@ -40,10 +40,19 @@ UI_Gtk9::~UI_Gtk9(void)
 }
 
 void
-UI_Gtk9::callback(void * /* data */)
+UI_Gtk9::callback(void *data)
 {
-  z80->addCallback(CB_OFFSET, this, 0);
-  update();
+  if (data == (void *)1)
+    {
+      generic_signal_v_retrace(false);
+    }
+  else
+    {
+      update();
+      z80->addCallback(1000, this, (void *)1);
+      z80->addCallback(CB_OFFSET, this, 0);
+      generic_signal_v_retrace(true);
+    }
 }
 
 int
@@ -61,7 +70,7 @@ UI_Gtk9::get_height(void)
 const char *
 UI_Gtk9::get_title(void)
 {
-  return "A5105 Emulator";
+  return _("A5105 Emulator");
 }
 
 void
@@ -93,8 +102,13 @@ UI_Gtk9::allocate_colors(double saturation_fg,
   hsv_to_gdk_color(  0,             0,   white_level, &_col[15]); /* white */
   
   _colormap = gdk_colormap_get_system();
-  for (a = 0;a < 24;a++)
+  for (a = 0;a < 16;a++)
     gdk_color_alloc(_colormap, &_col[a]);
+}
+
+void
+UI_Gtk9::init(void)
+{
 }
 
 void
@@ -110,6 +124,19 @@ UI_Gtk9::update(bool full_update, bool clear_cache)
 void
 UI_Gtk9::flash(bool enable)
 {
+}
+
+int
+UI_Gtk9::get_mode(void)
+{
+  return generic_get_mode();
+}
+
+void
+UI_Gtk9::set_mode(int mode)
+{
+  generic_set_mode(mode);
+  gtk_resize();
 }
 
 void

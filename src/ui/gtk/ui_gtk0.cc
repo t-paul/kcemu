@@ -40,10 +40,19 @@ UI_Gtk0::~UI_Gtk0(void)
 }
 
 void
-UI_Gtk0::callback(void * /* data */)
+UI_Gtk0::callback(void * data)
 {
-  z80->addCallback(40000, this, 0);
-  update();
+  if (data == (void *)1)
+    {
+      generic_signal_v_retrace(false);
+    }
+  else
+    {
+      update();
+      z80->addCallback(1000, this, (void *)1);
+      z80->addCallback(40000, this, (void *)0);
+      generic_signal_v_retrace(true);
+    }
 }
 
 int
@@ -61,7 +70,7 @@ UI_Gtk0::get_height(void)
 const char *
 UI_Gtk0::get_title(void)
 {
-  return "Z1013 Emulator";
+  return _("Z1013 Emulator");
 }
 
 void
@@ -87,6 +96,11 @@ UI_Gtk0::allocate_colors(double saturation_fg,
 }
 
 void
+UI_Gtk0::init(void)
+{
+}
+
+void
 UI_Gtk0::update(bool full_update, bool clear_cache)
 {
   generic_update(clear_cache);
@@ -99,6 +113,19 @@ UI_Gtk0::update(bool full_update, bool clear_cache)
 void
 UI_Gtk0::flash(bool enable)
 {
+}
+
+int
+UI_Gtk0::get_mode(void)
+{
+  return generic_get_mode();
+}
+
+void
+UI_Gtk0::set_mode(int mode)
+{
+  generic_set_mode(mode);
+  gtk_resize();
 }
 
 void

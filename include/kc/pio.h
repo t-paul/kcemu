@@ -30,9 +30,9 @@
 class PIOCallbackInterface
 {
  public:
-  virtual void callback_A_in(void) = 0;
+  virtual int callback_A_in(void) = 0;
+  virtual int callback_B_in(void) = 0;
   virtual void callback_A_out(byte_t val) = 0;
-  virtual void callback_B_in(void) = 0;
   virtual void callback_B_out(byte_t val) = 0;
 };
 

@@ -24,7 +24,6 @@
 #include "kc/system.h"
 
 #include "kc/kc.h"
-#include "kc/z80.h" // DEBUG
 #include "kc/pio.h"
 #include "kc/keyb0.h"
 #include "kc/ports0.h"
@@ -70,7 +69,7 @@ Ports0::out(word_t addr, byte_t val)
 {
   byte_t a = addr & 0xff;
 
-  DBG(1, form("KCemu/Ports/0/out",
+  DBG(2, form("KCemu/Ports/0/out",
               "Ports0: out() addr = %04x, val = %02x\n",
               addr, val));
   

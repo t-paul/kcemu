@@ -76,9 +76,9 @@ class Sound8 : public Sound, public PIOCallbackInterface, public Callback
   /*
    *  PIOCallbackInterface functions
    */
-  virtual void callback_A_in(void);
+  virtual int callback_A_in(void);
+  virtual int callback_B_in(void);
   virtual void callback_A_out(byte_t val);
-  virtual void callback_B_in(void);
   virtual void callback_B_out(byte_t val);
 
   /*

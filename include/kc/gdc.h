@@ -36,6 +36,7 @@ class GDC : public PortInterface, public InterfaceCircuit
   int _ridx;
   int _mask;
   int _mask_c;
+  int _control;
   int _figs_dc;
   int _screen_on;
   int _nr_of_lines;
@@ -57,10 +58,8 @@ class GDC : public PortInterface, public InterfaceCircuit
   virtual byte_t in(word_t addr);
   virtual void out(word_t addr, byte_t val);
 
-  virtual long get_pram_SAD1(void);
-  virtual long get_pram_LEN1(void);
-  virtual long get_pram_SAD2(void);
-  virtual long get_pram_LEN2(void);
+  virtual long get_pram_SAD(int idx);
+  virtual long get_pram_LEN(int idx);
 
   virtual byte_t get_mem(int addr);
   virtual byte_t get_col(int addr);
@@ -68,6 +67,8 @@ class GDC : public PortInterface, public InterfaceCircuit
   virtual bool   get_cursor(int addr, int line);
   virtual int get_screen_on(void);
   virtual int get_nr_of_lines(void);
+
+  virtual void v_retrace(bool value);
   
   /*
    *  InterfaceCircuit

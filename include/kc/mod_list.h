@@ -61,10 +61,10 @@ private:
   };
 
   int _nr_of_bd;
+  char *_init_mod[4 * MAX_BD + 2];
   ModuleListEntry *_color_expansion;
   ModuleListEntry *_init_floppy_basis;
   ModuleListEntry *_init_color_expansion;
-  const char *_init_mod[4 * MAX_BD + 2];
 
   typedef std::list<ModuleListEntry *> mod_list_t;
 
@@ -73,6 +73,9 @@ public:
     
 private:
   mod_list_t _mod_list;
+
+protected:
+  virtual void init_modules(int max_modules);
 
 public:
   ModuleList(void);

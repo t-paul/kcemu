@@ -2,8 +2,10 @@
 
 EXTRA_DIST = \
 	ui_sdl.h	\
+	ui_sdl0.h	\
 	ui_sdl1.h	\
 	ui_sdl3.h	\
 	ui_sdl4.h	\
 	ui_sdl8.h	\
+	ui_sdl9.h	\
 	tape.h

@@ -174,6 +174,9 @@ DiskWindow::init(void)
   char *disk1;
   char *disk2;
   char *disk3;
+  char *disk4;
+  char *disk5;
+  char *disk6;
   GtkTooltips *tips;
 
   tips = gtk_tooltips_new();
@@ -226,24 +229,30 @@ DiskWindow::init(void)
      *  combo box
      */
     popdown = NULL;
-    disk1 = new char[strlen(DATADIR) + 15];
-    strcpy(disk1, DATADIR);
-    strcat(disk1, "/");
-    strcat(disk1, "microdos.dump");
+    disk1 = new char[14];
+    strcpy(disk1, "microdos.dump");
 
-    disk2 = new char[strlen(DATADIR) + 11];
-    strcpy(disk2, DATADIR);
-    strcat(disk2, "/");
-    strcat(disk2, "caos.dump");
+    disk2 = new char[10];
+    strcpy(disk2, "caos.dump");
 
-    disk3 = new char[strlen(DATADIR) + 12];
-    strcpy(disk3, DATADIR);
-    strcat(disk3, "/");
-    strcat(disk3, "tools.dump");
+    disk3 = new char[11];
+    strcpy(disk3, "tools.dump");
+
+    disk4 = new char[14];
+    strcpy(disk4, "a5105sys.dump");
+
+    disk5 = new char[11];
+    strcpy(disk5, "cpmz9.dump");
+
+    disk6 = new char[13];
+    strcpy(disk6, "z1013cpm.dump");
 
     popdown = g_list_append(popdown, disk1);
     popdown = g_list_append(popdown, disk2);
     popdown = g_list_append(popdown, disk3);
+    popdown = g_list_append(popdown, disk4);
+    popdown = g_list_append(popdown, disk5);
+    popdown = g_list_append(popdown, disk6);
     _w.combo[a] = gtk_combo_new();
     gtk_table_attach_defaults(GTK_TABLE(_w.table), _w.combo[a],
 			      1, 2, a, a + 1);

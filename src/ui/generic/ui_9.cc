@@ -28,9 +28,27 @@
 #include "kc/gdc.h"
 #include "kc/vis.h"
 
+#include "ui/ui.h"
 #include "ui/generic/ui_9.h"
 
 UI_9::UI_9(void)
+{
+  _dirty = NULL;
+  _bitmap = NULL;
+  _pix_cache = NULL;
+  _col_cache = NULL;
+
+  generic_set_mode(UI_GENERIC_MODE_LORES);
+  init();
+}
+
+UI_9::~UI_9(void)
+{
+  dispose();
+}
+
+void
+UI_9::init(void)
 {
   int a;
 
@@ -53,22 +71,29 @@ UI_9::UI_9(void)
     }
 }
 
-UI_9::~UI_9(void)
+void
+UI_9::dispose(void)
 {
-  delete[] _dirty;
-  delete[] _bitmap;
+  if (_dirty)
+    delete[] _dirty;
+  if (_bitmap)
+    delete[] _bitmap;
+  if (_pix_cache)
+    delete[] _pix_cache;
+  if (_col_cache)
+    delete[] _col_cache;
 }
 
 int
 UI_9::get_real_width(void)
 {
-  return 384;
+  return _width;
 }
 
 int
 UI_9::get_real_height(void)
 {
-  return 288;
+  return _height;
 }
 
 byte_t *
@@ -102,7 +127,7 @@ void
 UI_9::set_char(int x, int y, int c, int fg, int bg, int width, int lines)
 {
   byte_t *chr = vis->get_memory();
-  int xx, yy, pix, col_fg, col_bg, addr, wfix;
+  int xx, yy, pix, col_fg, col_bg, addr;
 
   addr = width * y + x;
 
@@ -112,8 +137,6 @@ UI_9::set_char(int x, int y, int c, int fg, int bg, int width, int lines)
   y += 20;
   if (lines < 10)
     y += (10 - lines) * 12;
-  
-  wfix = width / 40; // FIXME: ugly hack to simulate 80 chars per line
   
   for (yy = 0;yy < 8;yy++)
     {
@@ -133,9 +156,9 @@ UI_9::set_char(int x, int y, int c, int fg, int bg, int width, int lines)
       for (xx = 0;xx < 8;xx++)
 	{
 	  if (pix & (1 << xx))
-	    set_pixel((x + xx) / wfix + 32, y, col_fg);
+	    set_pixel(x + xx + 32, y, col_fg);
 	  else
-	    set_pixel((x + xx) / wfix + 32, y, col_bg);
+	    set_pixel(x + xx + 32, y, col_bg);
 	}
 
       y++;
@@ -171,13 +194,13 @@ UI_9::generic_update_text(int width, int height, int lines, bool clear_cache)
 {
   int x, y, z, p, c, fg, bg;
 
-  long offset = gdc->get_pram_SAD1();
+  long offset = gdc->get_pram_SAD(0);
 
   z = 0;
   for (y = 0;y < height;y++)
     {
-      if ((lines * y) == gdc->get_pram_LEN1())
-	offset = gdc->get_pram_SAD2() - z; // compensate value of loop variable!
+      if ((lines * y) == gdc->get_pram_LEN(0))
+	offset = gdc->get_pram_SAD(1) - z; // compensate value of loop variable!
 
       for (x = 0;x < width;x++)
 	{
@@ -222,7 +245,7 @@ UI_9::generic_update_graphic_2(bool clear_cache)
 {
   int a, x, y, col;
 
-  long offset = gdc->get_pram_SAD1();
+  long offset = gdc->get_pram_SAD(0);
 
   for (y = 0;y < 200;y++)
     for (x = 0;x < 320;x++)
@@ -239,7 +262,7 @@ UI_9::generic_update_graphic_3(bool clear_cache)
 {
   int a, x, y, col;
 
-  long offset = gdc->get_pram_SAD1();
+  long offset = gdc->get_pram_SAD(0);
 
   for (y = 0;y < 200;y++)
     for (x = 0;x < 320;x++)
@@ -256,7 +279,7 @@ UI_9::generic_update_graphic_5(bool clear_cache)
 {
   int a, x, y, mem, col, val;
 
-  long offset = gdc->get_pram_SAD1();
+  long offset = gdc->get_pram_SAD(0);
 
   for (y = 0;y < 200;y++)
     for (x = 0;x < 80;x++)
@@ -304,7 +327,21 @@ UI_9::generic_update(bool clear_cache)
   nr_of_lines = gdc->get_nr_of_lines();
 
   if (mode != old_mode)
-    clear_cache = true;
+    {
+      clear_cache = true;
+      switch (mode)
+	{
+	case 0:
+	case 2:
+	case 3:
+	  ui->set_mode(UI_GENERIC_MODE_LORES);
+	  break;
+	case 1:
+	case 5:
+	  ui->set_mode(UI_GENERIC_MODE_HIRES);
+	  break;
+	}
+    }
   if (border != old_border)
     clear_cache = true;
   if (nr_of_lines != old_nr_of_lines)
@@ -321,7 +358,7 @@ UI_9::generic_update(bool clear_cache)
       generic_update_border(border, nr_of_lines);
     }
 
-  switch (vis->get_mode())
+  switch (mode)
     {
     case 0:
       generic_update_text(40, 25, nr_of_lines + 1, clear_cache);
@@ -339,4 +376,37 @@ UI_9::generic_update(bool clear_cache)
       generic_update_graphic_5(clear_cache);
       break;
     }
+}
+
+void
+UI_9::generic_signal_v_retrace(bool value)
+{
+  gdc->v_retrace(value);
+}
+
+int
+UI_9::generic_get_mode(void)
+{
+  return _mode;
+}
+
+void
+UI_9::generic_set_mode(int mode)
+{
+  _mode = mode;
+
+  switch (_mode)
+    {
+    case UI_GENERIC_MODE_LORES:
+      _width = 384;
+      _height = 288;
+      break;
+    case UI_GENERIC_MODE_HIRES:
+      _width = 704;
+      _height = 288;
+      break;
+    }
+
+  dispose();
+  init();
 }

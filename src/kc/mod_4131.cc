@@ -23,6 +23,8 @@
 #include <unistd.h>
 #include <pthread.h>
 
+#include "kc/system.h"
+
 #include "kc/kc.h"
 #include "kc/z80.h"
 #include "kc/pio1.h"
@@ -160,9 +162,10 @@ ModuleXY4131::m_out(word_t addr, byte_t val)
 {
 }
 
-void
+int
 ModuleXY4131::callback_A_in(void)
 {
+  return -1;
 }
 
 void
@@ -170,10 +173,11 @@ ModuleXY4131::callback_A_out(byte_t val)
 {
 }
 
-void
+int
 ModuleXY4131::callback_B_in(void)
 {
   //inb(0x379);
+  return -1;
 }
 
 void

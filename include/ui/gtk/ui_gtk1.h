@@ -42,7 +42,10 @@ class UI_Gtk1 : public UI_Gtk, public UI_1
   virtual void update(bool full_update = false, bool clear_cache = false);
   virtual void callback(void *data);
   virtual void flash(bool enable);
+  virtual int  get_mode(void);
+  virtual void set_mode(int mode);
   
+  virtual void init(void);
   virtual const char * get_title(void);
   virtual int get_width(void);
   virtual int get_height(void);

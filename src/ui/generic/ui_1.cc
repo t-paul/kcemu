@@ -131,7 +131,7 @@ UI_1::generic_update_24(int width, int height, int fchg, byte_t flash, bool clea
   byte_t pix, col;
   int a, x, y, z, d;
 
-  byte_t *irm = memory->getIRM();
+  byte_t *irm = memory->get_irm();
   byte_t *ptr = _bitmap;
 
   z = -1;
@@ -181,7 +181,7 @@ UI_1::generic_update_20(int width, int height, int fchg, byte_t flash, bool clea
   byte_t pix, col;
   int a, x, y, z, d;
 
-  byte_t *irm = memory->getIRM();
+  byte_t *irm = memory->get_irm();
   byte_t *ptr = _bitmap;
 
   z = -1;
@@ -265,4 +265,15 @@ UI_1::generic_update(bool clear_cache)
     generic_update_20(width, height, fchg, flash, clear_cache);
   else
     generic_update_24(width, height, fchg, flash, clear_cache);
+}
+
+int
+UI_1::generic_get_mode(void)
+{
+  return 0;
+}
+
+void
+UI_1::generic_set_mode(int mode)
+{
 }

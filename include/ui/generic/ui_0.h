@@ -26,14 +26,28 @@
 
 class UI_0
 {
+ public:
+  enum {
+    UI_GENERIC_MODE_Z1013_32x32 = 0,
+    UI_GENERIC_MODE_Z1013_64x16 = 1,
+    UI_GENERIC_MODE_GDC         = 2,
+  };
+
  protected:
+  byte_t *_font;
   byte_t *_bitmap;
   byte_t *_dirty;
   byte_t *_pix_cache;
   byte_t *_col_cache;
   int     _dirty_size;
 
+  int     _mode;
+  int     _width;
+  int     _height;
+
  protected:
+  void init(void);
+  void dispose(void);
   inline void generic_put_pixels(byte_t *ptr, byte_t val, word_t color);
 
  public:
@@ -46,7 +60,14 @@ class UI_0
   virtual byte_t * get_dirty_buffer(void);
   virtual int get_dirty_buffer_size(void);
 
+  virtual void generic_signal_v_retrace(bool value);
   virtual void generic_update(bool clear_cache = false);
+  virtual void generic_update_gdc(byte_t *font, bool clear_cache);
+  virtual void generic_update_32x32(byte_t *font, bool clear_cache);
+  virtual void generic_update_64x16(byte_t *font, bool clear_cache);
+
+  virtual int  generic_get_mode(void);
+  virtual void generic_set_mode(int mode);
 };
 
 #endif /* __ui_generic_ui_0_h */

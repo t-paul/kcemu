@@ -37,17 +37,19 @@ class Keyboard0 : public Keyboard, public PIOCallbackInterface
   kc_variant_t _variant;
 
  private:
+  byte_t _ext;
   byte_t _value;
+  byte_t _pio_value;
 
+  bool _control;
   unsigned int _key;
   unsigned int _keysym;
-  unsigned int _keyval;
-  unsigned int _delay;
 
  protected:
   void init(void);
   void keyboard_handler(void);
   void keyboard_handler_rb(void);
+  void keyboard_handler_a2(void);
   void keyboard_handler_default(void);
 
  public:
@@ -76,10 +78,10 @@ class Keyboard0 : public Keyboard, public PIOCallbackInterface
   /*
    *  PIOCallbackInterface
    */
-  virtual void callback_A_in(void);
-  virtual void callback_A_out(byte_t val) {}
-  virtual void callback_B_in(void);
-  virtual void callback_B_out(byte_t val) {}
+  virtual int callback_A_in(void);
+  virtual int callback_B_in(void);
+  virtual void callback_A_out(byte_t val);
+  virtual void callback_B_out(byte_t val);
 };
 
 #endif /* __kc_keyb0_h */

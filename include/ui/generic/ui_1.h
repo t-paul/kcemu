@@ -53,6 +53,9 @@ class UI_1
   virtual int get_dirty_buffer_size(void);
 
   virtual void generic_update(bool clear_cache = false);
+
+  virtual int  generic_get_mode(void);
+  virtual void generic_set_mode(int mode);
 };
 
 #endif /* __ui_generic_ui_1_h */

@@ -58,7 +58,8 @@ public:
       _memwptr[addr >> MemArea::PAGE_SHIFT][addr & MemArea::PAGE_MASK] = val;
     }
   
-  byte_t * getIRM(void);
+  byte_t * get_irm(void);
+  byte_t * get_char_rom(void);
 
   virtual void reset(bool power_on = false);
 };

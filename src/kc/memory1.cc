@@ -51,7 +51,7 @@ Memory1::Memory1(void) : Memory()
     { &_m_ram,   "RAM",   0x0000,  0x4000, &_ram[0],         0, 0, 1 },
     { &_m_os,    "OS",    0xf000,  0x1000, &_rom_os[0],      0, 1, 1 },
     { &_m_irm,   "IRM",   0xec00,  0x0400, &_irm[0x400],     1, 0, 1 },
-    /* dummy entry needed for getIRM() */
+    /* dummy entry needed for get_irm() */
     { &_m_irm,   "IRM -", 0xe800,  0x0400, &_irm[0],         1, 1, 1 },
     { 0, },
   };
@@ -107,9 +107,15 @@ Memory1::memWrite8(word_t addr, byte_t val)
 #endif /* MEMORY_SLOW_ACCESS */
 
 byte_t *
-Memory1::getIRM(void)
+Memory1::get_irm(void)
 {
   return (byte_t *)get_page_addr_r(0xe800);
+}
+
+byte_t *
+Memory1::get_char_rom(void)
+{
+  return (byte_t *)0;
 }
 
 void
@@ -143,7 +149,7 @@ Memory1::reset(bool power_on)
   //scratch_mem(&_ram[0], 0x4000);
   memset(&_ram[0], 0, 0x4000);
   scratch_mem(&_irm[0x0400], 0x0400);
-  if (getIRM() != _irm)
+  if (get_irm() != _irm)
     scratch_mem(&_irm[0x0], 0x0400);
   else
     memset(&_irm[0], 0x70, 0x400);

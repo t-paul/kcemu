@@ -72,14 +72,14 @@ ModuleDisk::m_out(word_t addr, byte_t val)
   else
     _addr = 0xc000;
 
-  DBG(1, form("KCemu/ModuleDisk/out",
+  DBG(2, form("KCemu/ModuleDisk/out",
 	      "ModuleDisk::out(): addr = %04x, val = %02x, old val = %02x\n",
               addr, val, _val));
 
   reg = unreg = false;
   if ((_val & 0x20) ^ (val & 0x20))
     {
-      DBG(1, form("KCemu/ModuleDisk/out",
+      DBG(2, form("KCemu/ModuleDisk/out",
                   "ModuleDisk::out(): new map address is %04x\n",
                   _addr));
       reg = unreg = true;
@@ -87,7 +87,7 @@ ModuleDisk::m_out(word_t addr, byte_t val)
 
   if ((_val & 0x04) ^ (val & 0x04))
     {
-      DBG(1, form("KCemu/ModuleDisk/out",
+      DBG(2, form("KCemu/ModuleDisk/out",
                   "ModuleDisk::out(): shared memory is now %s\n",
                   (val & 0x04) ? "on" : "off"));
     }

@@ -62,9 +62,9 @@ const char *
 UI_Gtk1::get_title(void)
 {
   if (get_kc_type() == KC_TYPE_87)
-    return "KC 87 Emulator";
+    return _("KC 87 Emulator");
 
-  return "KC 85/1 Emulator";
+  return _("KC 85/1 Emulator");
 }
 
 void
@@ -96,6 +96,11 @@ UI_Gtk1::allocate_colors(double saturation_fg,
 }
 
 void
+UI_Gtk1::init(void)
+{
+}
+
+void
 UI_Gtk1::update(bool full_update, bool clear_cache)
 {
   generic_update(clear_cache);
@@ -108,6 +113,19 @@ UI_Gtk1::update(bool full_update, bool clear_cache)
 void
 UI_Gtk1::flash(bool enable)
 {
+}
+
+int
+UI_Gtk1::get_mode(void)
+{
+  return generic_get_mode();
+}
+
+void
+UI_Gtk1::set_mode(int mode)
+{
+  generic_set_mode(mode);
+  gtk_resize();
 }
 
 void

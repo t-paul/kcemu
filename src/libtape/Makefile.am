@@ -1,5 +1,9 @@
 ## Process this file with automake to produce Makefile.in
 
+if USE_INCLUDED_GETOPT
+GETOPTLIB = ../getopt/libgetopt.a
+endif
+
 TESTS = test test.sh
 
 bin_PROGRAMS = kctape
@@ -29,7 +33,7 @@ kcread2tap_SOURCES = \
 	kcread2tap.c
 
 kctape_LDADD = \
-	libtape.a ../fileio/libfileio.a ../libdbg/libdbg.a
+	libtape.a ../fileio/libfileio.a ../libdbg/libdbg.a $(GETOPTLIB) $(INTLLIBS)
 
 check:
 	rm -f test.kct testfile.1 testfile.2

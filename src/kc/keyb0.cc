@@ -24,7 +24,6 @@
 
 #include "kc/system.h"
 
-#include "kc/z80.h" // DEBUG
 #include "kc/keys.h"
 #include "kc/pio0.h"
 #include "kc/keyb0.h"
@@ -45,25 +44,40 @@ Keyboard0::~Keyboard0(void)
 void
 Keyboard0::init(void)
 {
+  _ext = 0;
   _key = 0;
-  _keyval = 0;
-  _delay = SHIFT_DELAY;
+  _keysym = 0;
   _variant = get_kc_variant();
 }
 
 void
 Keyboard0::keyPressed(int keysym, int keycode)
 {
-  _key = __keys[keysym];
+  switch (keysym)
+    {
+    case KC_KEY_CONTROL:
+      _control = true;
+      break;
+    default:
+      break;
+    }
+
   _keysym = keysym;
-  //cout << "keysym = " << keysym << ", keycode = " << keycode << " -> " << hex << _key << endl;
   keyboard_handler();
 }
 
 void
 Keyboard0::keyReleased(int keysym, int keycode)
 {
-  _key = 0;
+  switch (keysym)
+    {
+    case KC_KEY_CONTROL:
+      _control = false;
+      break;
+    default:
+      break;
+    }
+
   _keysym = 0;
   keyboard_handler();
 }
@@ -78,14 +92,31 @@ Keyboard0::callback(void *data)
 {
 }
 
-void
+int
 Keyboard0::callback_A_in(void)
+{
+  return -1;
+}
+
+int
+Keyboard0::callback_B_in(void)
+{
+  return _ext;
+}
+
+void
+Keyboard0::callback_A_out(byte_t val)
 {
 }
 
 void
-Keyboard0::callback_B_in(void)
+Keyboard0::callback_B_out(byte_t val)
 {
+  if (_pio_value != (val & 0x10))
+    {
+      _pio_value = val & 0x10;
+      keyboard_handler();
+    }
 }
 
 void
@@ -102,59 +133,115 @@ Keyboard0::reti(void)
 void
 Keyboard0::keyboard_handler_default(void)
 {
-  byte_t output = 0x01f;
+  _ext = 0x1f;
 
+  /*
+   *  latch key value only at start of keyboard scan to
+   *  prevent missing recognition of the shift keys
+   */
   if (_value == 0)
-    {
-      if (_key != _keyval)
-	{
-	  _delay = 5;
-	  _keyval = _key;
-	}
-    }
+    _key = __keys[_keysym];
 
-  if (_keyval == 0)
-    return;
+  if (_key == 0)
+    {
+      pio->set_B_EXT(0x1f, _ext);
+      return;
+    }
 
   /*
    *  shift level (S1 = 0, S2 = 1, S3 = 2, S4 = 3)
    */
-  int shift = ((_keyval >> 8) & 0xff) - 1;
+  int shift = ((_key >> 8) & 0xff) - 1;
 
   if (shift >= 0)
     if (_value == shift)
-      output &= ~8;
+      _ext &= ~8;
 
-  /*
-   *  short delay for the shift keys
-   */
-  if (_delay > 0)
+  if (_value == ((_key >> 4) & 0x0f))
+    _ext &= ~(_key & 0x0f);
+
+  pio->set_B_EXT(0x1f, _ext);
+}
+
+void
+Keyboard0::keyboard_handler_a2(void)
+{
+  _key = __keys_a2[_keysym];
+
+  if (_key == 0)
     {
-      if (_value == 0)
-	_delay--;
-    }
-  else
-    {
-      if (_value == ((_keyval >> 4) & 0x0f))
-	output &= ~(_keyval & 0x0f);
+      _ext = 0x0f;
+      pio->set_B_EXT(0x0f, _ext);
+      return;
     }
 
-  pio->set_B_EXT(0x1f, output);
+  int row1 = (_key & 0x0f) - 1;
+  int col1 = ((_key & 0xf0) >> 4);
+
+  int row2 = ((_key >> 8) & 0x0f) - 1;
+  int col2 = ((_key & 0xf000) >> 12);
+
+  _ext = 0x0f;
+
+  if (_value == row1)
+    {
+      int v = 1 << col1;
+
+      if (_pio_value)
+	v >>= 4;
+
+      _ext &= (v ^ 0xff);
+    }
+
+  if (_value == row2)
+    {
+      int v = 1 << col2;
+
+      if (_pio_value)
+	v >>= 4;
+
+      _ext &= (v ^ 0xff);
+    }
+
+  pio->set_B_EXT(0x0f, _ext);
 }
 
 void
 Keyboard0::keyboard_handler_rb(void)
 {
-  byte_t val = 0x0f;
+  _key = __keys_rb_k7659[_keysym];
 
-  if ((_keysym >= '0') && (_keysym <= '7'))
-    if ((_value == 14) || (_value == 15))
-      val = _keysym - '0';
+  if (_key == 0)
+    {
+      _ext = 0x0f;
+      pio->set_B_EXT(0x1f, _ext);
+      return;
+    }
 
-  bool l1 = (val == 0) || (val == 2) || (val == 4) || (val == 6);
-  bool l2 = (val == 1) || (val == 2) || (val == 5) || (val == 6);
-  bool l3 = (val == 3) || (val == 4) || (val == 5) || (val == 6);
-  bool l4 = (val == 7);
+  int row1 = (_key & 0x0f) - 1;
+  int col1 = ((_key & 0xf0) >> 4);
+
+  byte_t val = 0x00;
+  if ((_value == row1) || (_value == 15))
+    val = (1 << col1);
+
+  if (_key & 0xff00)
+    {
+      int row2 = ((_key >> 8) & 0x0f) - 1;
+      int col2 = ((_key & 0xf000) >> 12);
+
+      if ((_value == row2) || (_value == 15))
+	val |= (1 << col2);
+    }
+
+  if (_control)
+    if ((_value == 7) || (_value == 15))
+      val |= (1 << 7);
+
+  int l1 = (val & 0x01) || (val & 0x04) || (val & 0x10) || (val & 0x40);
+  int l2 = (val & 0x02) || (val & 0x04) || (val & 0x20) || (val & 0x40);
+  int l3 = (val & 0x08) || (val & 0x10) || (val & 0x20) || (val & 0x40);
+  int l4 = (val & 0x80);
 
   val = 0x1f;
   if (l1)
@@ -166,16 +253,32 @@ Keyboard0::keyboard_handler_rb(void)
   if (l4)
     val ^= 8;
 
-  pio->set_B_EXT(0x1f, val);
+  _ext = val;
+  pio->set_B_EXT(0x1f, _ext);
 }
 
 void
 Keyboard0::keyboard_handler(void)
 {
-  if (_variant == KC_VARIANT_Z1013_RB)
-    keyboard_handler_rb();
-  else
-    keyboard_handler_default();
+  switch (_variant)
+    {
+    case KC_VARIANT_Z1013_01:
+    case KC_VARIANT_Z1013_12:
+    case KC_VARIANT_Z1013_16:
+    case KC_VARIANT_Z1013_64:
+      keyboard_handler_default();
+      break;
+    case KC_VARIANT_Z1013_A2:
+      keyboard_handler_a2();
+      break;
+    case KC_VARIANT_Z1013_RB:
+    case KC_VARIANT_Z1013_BL4:
+    case KC_VARIANT_Z1013_SURL:
+      keyboard_handler_rb();
+      break;
+    default:
+      break;
+    }
 }
 
 void

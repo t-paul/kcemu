@@ -149,11 +149,8 @@ class FDC : public InterfaceCircuit, public PortInterface
   FDC(void);
   virtual ~FDC(void);
 
-  virtual byte_t in(word_t addr);
-  virtual void out(word_t addr, byte_t val);
-
-  virtual byte_t in_F1(word_t addr);
-  virtual void out_F1(word_t addr, byte_t val);
+  virtual byte_t in_data(word_t addr);
+  virtual void out_data(word_t addr, byte_t val);
 
   virtual byte_t read_byte(void);
   virtual void write_byte(byte_t val);
@@ -166,7 +163,9 @@ class FDC : public InterfaceCircuit, public PortInterface
   void select_floppy(int floppy_nr);
   void set_state(fdc_state_t state);
   bool seek(byte_t head, byte_t cylinder, byte_t sector);
+  byte_t get_input_gate(void);
   void set_input_gate(byte_t mask, byte_t val);
+  byte_t get_msr(void);
   void set_msr(byte_t mask, byte_t val);
   void set_terminal_count(bool val);
 
@@ -179,6 +178,12 @@ class FDC : public InterfaceCircuit, public PortInterface
   void set_ST1(byte_t mask, byte_t val);
   void set_ST2(byte_t mask, byte_t val);
   void set_ST3(byte_t mask, byte_t val);
+
+  /*
+   *  PortInterface
+   */
+  virtual byte_t in(word_t addr) = 0;
+  virtual void out(word_t addr, byte_t val) = 0;
 
   /*
    *  InterfaceCircuit

@@ -6,22 +6,25 @@ if TARGET_LINUX
 noinst_PROGRAMS = kcemu-send
 endif
 
+if USE_INCLUDED_GETOPT
+GETOPTLIB = ../getopt/libgetopt.a
+endif
+
 INCLUDES = \
 	-I../../include
 
 localedir = $(prefix)/@DATADIRNAME@/locale
 
 CPPFLAGS = \
-	-DVERSION=\"$(VERSION)\" \
-	-DDATADIR=\"$(pkgdatadir)\" \
-	-DPACKAGE=\"$(PACKAGE)\" \
-	-DLOCALEDIR=\"$(localedir)\" \
+	-DKCEMU_PACKAGE=\"$(PACKAGE)\" \
+	-DKCEMU_DATADIR=\"$(pkgdatadir)\" \
+	-DKCEMU_LOCALEDIR=\"$(localedir)\" \
 	-DDEBUG \
 	$(GTK_CFLAGS) \
 	$(SDL_CFLAGS)
 
 if TARGET_LINUX
-EXTRA_kcemu_SOURCES = mod_v24.cc wav.cc
+EXTRA_kcemu_SOURCES = mod_v24.cc mod_4131.cc
 endif
 
 kcemu_SOURCES = \
@@ -57,6 +60,10 @@ kcemu_SOURCES = \
 	vis.cc		\
 	svg.cc		\
 	fdc.cc		\
+	fdc0s.cc	\
+	fdc4.cc		\
+	fdc7.cc		\
+	fdc9.cc		\
 	fdc_cmd.cc	\
 	floppy.cc	\
 	pio.cc		\
@@ -80,7 +87,9 @@ kcemu_SOURCES = \
 	mod_rom.cc	\
 	mod_rom1.cc	\
 	mod_ramf.cc	\
-	mod_4131.cc	\
+	mod_fdc.cc	\
+	mod_gdc.cc	\
+	mod_rtc.cc	\
 	mod_disk.cc	\
 	mod_list.cc	\
 	tape.cc		\
@@ -90,15 +99,29 @@ kcemu_SOURCES = \
 	timer3.cc	\
 	z80.cc		\
 	z80_fdc.cc	\
+	wav.cc		\
 	sound.cc	\
 	sound3.cc	\
 	sound8.cc	\
 	disass.cc	\
 	$(EXTRA_kcemu_SOURCES)
 
+if TARGET_UI_GTK
+UILIBS_GTK = ../ui/gtk/libui_gtk.a
+endif
+
+if TARGET_UI_SDL
+UILIBS_SDL = ../ui/sdl/libui_sdl.a ../ui/sdlmtk/libsdlmtk.a -lSDL_ttf
+endif
+
 if TARGET_LINUX
-UILIBS_LINUX = ../ui/gtk/libui_gtk.a ../ui/sdl/libui_sdl.a
+UILIBS_LINUX = $(UILIBS_GTK) $(UILIBS_SDL)
 SYSLIBS_LINUX = ../sys/linux/libsys_linux.a
+endif
+
+if TARGET_MINGW
+UILIBS_MINGW = $(UILIBS_GTK) $(UILIBS_SDL)
+SYSLIBS_MINGW = ../sys/mingw/libsys_mingw.a
 endif
 
 if TARGET_BEOS
@@ -113,13 +136,13 @@ kcemu_LDADD = \
 	../libtape/libtape.a		\
 	../libdisk/libdisk.a		\
 	../libaudio/libaudio.a		\
-	$(UILIBS_LINUX)			\
 	$(UILIBS_BEOS)			\
+	$(UILIBS_MINGW)			\
+	$(UILIBS_LINUX)			\
 	../ui/generic/libui_generic.a	\
 	../ui/libui.a			\
 	../libdbg/libdbg.a		\
 	../cmd/*.o			\
-	$(INTLLIBS)			\
 	$(GTK_LIBS)			\
 	$(SDL_LIBS)			\
 	$(SNDFILE_LIBS)			\
@@ -127,11 +150,14 @@ kcemu_LDADD = \
 	$(MP3LAME_LIBS)			\
 	$(VORBIS_LIBS)			\
 	$(F_L_A_C_LIBS)			\
+	$(SYSLIBS_BEOS)			\
+	$(SYSLIBS_MINGW)		\
 	$(SYSLIBS_LINUX)		\
-	$(SYSLIBS_BEOS)
+	$(GETOPTLIB)			\
+	$(INTLLIBS)
 
 kcemu_send_SOURCES = \
 	kcemu-send.c
 
 kcemu_send_LDADD = \
-	-lncurses
+	-lncurses $(INTLLIBS)

@@ -2,7 +2,7 @@
 
 # bin_PROGRAMS = wav2kc
 
-noinst_PROGRAMS = disk-tool tape-tool tape-check tape-check-bc tape-merge tape-test tape-basicode tape-split tape-rename basic-decode make-font tp-type
+noinst_PROGRAMS = disk-tool tape-tool tape-check tape-check-bc tape-merge tape-test tape-basicode tape-split tape-rename basic-decode make-font tp-type dump2txt dump2img
 
 # send_file show-wav ft disp-wav wavtokc audio2kc
 

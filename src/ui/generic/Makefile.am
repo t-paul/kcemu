@@ -5,10 +5,6 @@ noinst_LIBRARIES = libui_generic.a
 INCLUDES = \
 	-I../../../include
 
-CPPFLAGS = \
-	-DVERSION=\"$(VERSION)\" \
-        -DDATADIR=\"$(pkgdatadir)\"
-
 libui_generic_a_SOURCES = \
 	ui_0.cc		\
 	ui_1.cc		\

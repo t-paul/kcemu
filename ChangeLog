@@ -1,3 +1,108 @@
+2003-04-01  Torsten Paul  <Torsten.Paul@gmx.de>
+
+	* some changes to allow compilation in the MinGW/MSYS environment
+	
+	* include/ui/sdlmtk/*, src/ui/sdlmtk/*: small toolkit for a simple
+	libSDL based user interface
+	
+	* src/libaudio/load_oss.c: made optional, added check for
+	necessary headerfile to configure.in
+
+	* src/kc/kc.cc: added command line switch for showing a verbose
+	listing of available emulations
+
+	* src/kc/keyb0.cc: latch key value only at start of keyboard scan
+	to prevent missing recognition of the shift keys
+
+	* src/kc/mod_rtc.cc: use sys_localtime() to fetch time
+
+	* src/kc/rc.cc: load rc-file from current working directory too
+	(order is $HOME/.kcemurc, $cwd/.kcemurc, DATADIR/.kcemurc)
+
+	* src/kc/wav.cc: define M_PI if not already defined
+
+2003-03-27  Torsten Paul  <Torsten.Paul@gmx.de>
+
+	* src/kc/kc.cc, src/kc/mod_list.cc: added command line switch to
+	set/add modules at startup
+
+2003-03-26  Torsten Paul  <Torsten.Paul@gmx.de>
+
+	* src/ui/gtk/ui_gtk.cc, src/kc/mod_ramf.cc, src/kc/rc.cc: don't
+	use environment variable for home directory but overwritable
+	global variable kcemu_homedir; src/libdbg/dbg.cc will still use
+	the environment
+
+	* src/kc/kc.cc: added command line switches for fullscreen mode
+	and overwriting the home directory
+
+2003-03-23  Torsten Paul  <Torsten.Paul@gmx.de>
+
+	* src/ui/sdl/ui_sdl.cc: hide cursor on key press and show it on
+	mouse move events
+
+	* src/sys/*/sys_localtime.c: added system dependend call to
+	retrieve the local time of the system (for the RTC module)
+
+	* src/kc/z80.cc: removed get_time()
+
+	* upgraded to automake 1.6, autoconf 2.57, gettext 0.10.40
+
+2003-03-12  Torsten Paul  <Torsten.Paul@gmx.de>
+
+	* src/ui/generic/ui_0.cc: use get_char_rom() instead of the hard
+	coded char set from font0.h
+
+	* src/kc/memory*.[h,cc]: changed getIRM() to get_irm() and added
+	get_char_rom()
+
+2003-03-10  Torsten Paul  <Torsten.Paul@gmx.de>
+
+	* src/ui/generic/ui_9.cc: change window size for hires modes
+	instead of crippling the characters to 4x8 pixels
+
+2003-03-08  Torsten Paul  <Torsten.Paul@gmx.de>
+
+	* include/kc/gdc.h, src/kc/gdc.cc: added function to emulate the
+	vertical retrace bit of the control register -- needed by the
+	Z1013 CP/M to prevent the status line from flickering
+
+	* include/kc/mod_rtc.h, src/kc/mod_rtc.cc: minimal RTC support to
+	allow date/time display for the Z1013 CP/M; the values are read
+	directly from the system clock and setting the RTC is not yet
+	supported
+
+	* src/kc/mod_list.cc, include/ui/gtk/module.h,
+	src/ui/gtk/module.cc: let the Z1013 have 8 module slots
+
+	* src/kc/fdc_cmd.cc: return almost correct result values for
+	FORMAT_A_TRACK; sector number is automatically incremented but for
+	now the returned sector is the one when starting the command; set
+	data transfer flag because the FDC needs to receive the sector
+	information after the FORMAT_A_TRACK command execution started
+
+2003-03-07  Torsten Paul  <Torsten.Paul@gmx.de>
+
+	* include/kc/gdc.h, src/kc/gdc.cc: support all four subscreens
+	that are possible in textmode; fixes the fancy scrolling routine
+	of the Z1013 CP/M which uses 3 subscreens -- two for screen
+	scrolling without the need to actually copy any data and one for
+	the status line
+
+2003-03-03  Torsten Paul  <Torsten.Paul@gmx.de>
+
+	* include/kc/keyb0k.h: added 8x8 keyboard matrix for A2 system rom
+
+2003-02-26  Torsten Paul  <Torsten.Paul@gmx.de>
+
+	* src/kc/fdc.cc: splitted i/o interface into separate classes for
+	the different systems
+
+2003-02-20  Torsten Paul  <Torsten.Paul@gmx.de>
+
+	* include/kc/pio.h: changed PIOCallbackInterface to allow return
+	values for the input callbacks
+
 2003-02-16  Torsten Paul  <Torsten.Paul@gmx.de>
 
 	* src/kc/disk.cc: check if FDC is available

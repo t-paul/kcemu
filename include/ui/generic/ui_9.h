@@ -26,6 +26,16 @@
 
 class UI_9
 {
+ public:
+  enum {
+    UI_GENERIC_MODE_LORES = 0,
+    UI_GENERIC_MODE_HIRES = 1,
+  };
+
+  int     _mode;
+  int     _width;
+  int     _height;
+
  protected:
   byte_t *_bitmap;
   byte_t *_dirty;
@@ -35,6 +45,8 @@ class UI_9
   int     _max_ptr;
 
  protected:
+  void init(void);
+  void dispose(void);
   void set_pixel(int x, int y, int color);
   void set_char(int x, int y, int c, int fg, int bg, int width, int lines);
   void generic_update_border(int border, int lines);
@@ -53,7 +65,11 @@ class UI_9
   virtual byte_t * get_dirty_buffer(void);
   virtual int get_dirty_buffer_size(void);
 
+  virtual void generic_signal_v_retrace(bool value);
   virtual void generic_update(bool clear_cache = false);
+
+  virtual int  generic_get_mode(void);
+  virtual void generic_set_mode(int mode);
 };
 
 #endif /* __ui_generic_ui_9_h */

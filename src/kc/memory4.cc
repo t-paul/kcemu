@@ -132,9 +132,15 @@ Memory4::memWrite8(word_t addr, byte_t val)
 #endif /* MEMORY_SLOW_ACCESS */
 
 byte_t *
-Memory4::getIRM(void)
+Memory4::get_irm(void)
 {
   return _display_screen1 ? &_irm1[0] : &_irm0[0];
+}
+
+byte_t *
+Memory4::get_char_rom(void)
+{
+  return (byte_t *)0;
 }
 
 void

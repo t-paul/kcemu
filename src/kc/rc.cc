@@ -63,7 +63,7 @@ RC::RC(void)
    *  key that is already present
    *  so we need to read the personal file first
    */
-  tmp = getenv("HOME");
+  tmp = kcemu_homedir;
   if (tmp)
     {
       filename = new char[strlen(tmp) + 10];
@@ -75,6 +75,14 @@ RC::RC(void)
   else
     cerr << "Warning: HOME not set! can't locate file `.kcemurc'" << endl;
 
+  /*
+   *  load .kcemurc from current directory
+   */
+  load_file(".kcemurc");
+
+  /*
+   *  load .kcemurc from data directory
+   */
   filename = new char [strlen(kcemu_datadir) + 10];
   strcpy(filename, kcemu_datadir);
   strcat(filename, "/.kcemurc");

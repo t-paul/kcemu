@@ -26,7 +26,7 @@
 #include "kc/system.h"
 
 #include "kc/kc.h"
-#include "kc/fdc.h"
+#include "kc/fdc7.h"
 #include "kc/mod_cpm.h"
 
 using namespace std;
@@ -34,7 +34,7 @@ using namespace std;
 ModuleCPMZ9::ModuleCPMZ9(ModuleCPMZ9 &tmpl) :
   ModuleInterface(tmpl.get_name(), tmpl.get_id(), tmpl.get_type())
 {
-  fdc_fdc = new FDC(); // FIXME: global variable in kc.cc !!!
+  fdc_fdc = new FDC7(); // FIXME: global variable in kc.cc !!!
 
   _portg1 = ports->register_ports(get_name(), 0x98, 2, fdc_fdc, 0);
   _portg2 = ports->register_ports(get_name(), 0xa0, 2, fdc_fdc, 0);
@@ -46,7 +46,6 @@ ModuleCPMZ9::ModuleCPMZ9(ModuleCPMZ9 &tmpl) :
 ModuleCPMZ9::ModuleCPMZ9(const char *name) :
   ModuleInterface(name, 0, KC_MODULE_KC_85_1)
 {
-  fdc_fdc = NULL;
   _portg1 = _portg2 = _portgX = NULL;
 }
 

@@ -4,6 +4,7 @@ src/kc/disk.cc
 src/kc/mod_list.cc
 src/kc/tape.cc
 src/ui/error.cc
+src/ui/status.cc
 src/ui/gtk/about.cc
 src/ui/gtk/color.cc
 src/ui/gtk/copying.cc
@@ -18,8 +19,17 @@ src/ui/gtk/module.cc
 src/ui/gtk/tapeadd.cc
 src/ui/gtk/tape.cc
 src/ui/gtk/wav.cc
+src/ui/gtk/ui_gtk.cc
+src/ui/gtk/ui_gtk0.cc
 src/ui/gtk/ui_gtk1.cc
 src/ui/gtk/ui_gtk3.cc
 src/ui/gtk/ui_gtk4.cc
-src/ui/gtk/ui_gtk.cc
-src/ui/status.cc
+src/ui/gtk/ui_gtk8.cc
+src/ui/gtk/ui_gtk9.cc
+src/ui/sdl/ui_sdl.cc
+src/ui/sdl/ui_sdl0.cc
+src/ui/sdl/ui_sdl1.cc
+src/ui/sdl/ui_sdl3.cc
+src/ui/sdl/ui_sdl4.cc
+src/ui/sdl/ui_sdl8.cc
+src/ui/sdl/ui_sdl9.cc

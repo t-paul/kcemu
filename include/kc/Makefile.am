@@ -51,6 +51,10 @@ EXTRA_DIST = \
 	vis.h		\
 	svg.h		\
 	fdc.h		\
+	fdc0s.h		\
+	fdc4.h		\
+	fdc7.h		\
+	fdc9.h		\
 	fdc_cmd.h	\
 	floppy.h	\
 	module.h	\
@@ -63,6 +67,9 @@ EXTRA_DIST = \
 	mod_rom.h	\
 	mod_rom1.h	\
 	mod_ramf.h	\
+	mod_fdc.h	\
+	mod_gdc.h	\
+	mod_rtc.h	\
 	mod_disk.h	\
 	mod_v24.h	\
 	mod_4131.h	\

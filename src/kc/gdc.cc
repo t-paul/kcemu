@@ -47,23 +47,21 @@ byte_t
 GDC::in(word_t addr)
 {
   byte_t val = 0xff;
-  static byte_t val_98 = 5;
 
-  switch (addr & 0xff)
+  switch (addr & 0x01)
     {
-    case 0x98:
+    case 0x00:
       /*
        *  status register
        *
        *  bit 0 (0x01): 0 not ready, 1 ready ? [17a1h]
        *  bit 1 (0x02): 0 ready, 1 not ready ? [1fa7h]
        *  bit 2 (0x04): 0 not ready, 1 ready ? [1797h]
-       *  bit 5 (0x20): alternating            [0each]
+       *  bit 5 (0x20): 1 while vertical retrace
        */
-      val = val_98;
-      val_98 ^= 0x20;
+      val = _control;
       break;
-    case 0x99:
+    case 0x01:
       if ((_cmd & 0xe4) == 0xa0)
 	{
 	  if ((_ridx & 1) == 0)
@@ -91,7 +89,7 @@ GDC::in(word_t addr)
 	val = _mem[_ptr];
 
       _ridx++;
-      DBG(2, form("KCemu/GDC/in_99",
+      DBG(2, form("KCemu/GDC/in_data",
 		  "GDC::in():  %04xh cmd = %02x, val = %02x\n",
 		  addr, _cmd, val));
     default:
@@ -108,12 +106,12 @@ GDC::in(word_t addr)
 void
 GDC::out(word_t addr, byte_t val)
 {
-  switch (addr & 0xff)
+  switch (addr & 0x01)
     {
-    case 0x98:
+    case 0x00:
       _arg[_idx++] = val;
       break;
-    case 0x99:
+    case 0x01:
       info();
       _idx = 0;
       _ridx = 0;
@@ -176,7 +174,7 @@ GDC::out(word_t addr, byte_t val)
   if (_cmd == 0x47) // PITCH
     ;
 
-  if (((_cmd & 0xe4) == 0x20) && (_idx > 0))
+  if (((_cmd & 0xe4) == 0x20) && (_idx > 0)) // WDAT
     {
       switch (_cmd & 0x18)
 	{
@@ -209,10 +207,21 @@ GDC::out(word_t addr, byte_t val)
 	}
     }
       
-  if ((_cmd == 0x4a) && (_idx == 2)) // MASK
+  if ((_cmd == 0x4a) && (_idx > 0)) // MASK
     {
-      _mask = _arg[0] | (_arg[1] << 8);
-      _mask_c = _arg[1];
+      if (_idx == 1)
+	{
+	  /*
+	   *  the z1013 gdc driver only loads the lower byte
+	   *  into the mask register :-(
+	   */
+	  _mask = _arg[0];
+	}
+      else
+	{
+	  _mask = _arg[0] | (_arg[1] << 8);
+	  _mask_c = _arg[1];
+	}
     }
 
   if ((_cmd == 0x4c) && (_idx > 2)) // FIGS
@@ -289,27 +298,30 @@ GDC::get_screen_on(void)
 }
 
 long
-GDC::get_pram_SAD1(void)
+GDC::get_pram_SAD(int idx)
 {
-  return _pram[0] | (_pram[1] << 8) | ((_pram[2] & 3) << 16);
+  if ((idx < 0) || (idx > 3))
+    return 0;
+
+  return _pram[4 * idx] | (_pram[4 * idx + 1] << 8) | ((_pram[4 * idx + 2] & 3) << 16);
 }
 
 long
-GDC::get_pram_LEN1(void)
+GDC::get_pram_LEN(int idx)
 {
-  return ((_pram[2] & 0xf0) >> 4) | ((_pram[3] & 0x3f) << 4);
+  if ((idx < 0) || (idx > 3))
+    return 0;
+
+  return ((_pram[4 * idx + 2] & 0xf0) >> 4) | ((_pram[4 * idx + 3] & 0x3f) << 4);
 }
 
-long
-GDC::get_pram_SAD2(void)
+void
+GDC::v_retrace(bool value)
 {
-  return _pram[4] | (_pram[5] << 8) | ((_pram[6] & 3) << 16);
-}
-
-long
-GDC::get_pram_LEN2(void)
-{
-  return ((_pram[6] & 0xf0) >> 4) | ((_pram[7] & 0x3f) << 4);
+  if (value)
+    _control |= 0x20;
+  else
+    _control &= ~0x20;
 }
 
 void
@@ -424,16 +436,14 @@ GDC::info(void)
 		  "GDC: PRAM register  4: %04x %04x %04x %04x\n"
 		  "GDC: PRAM register  8: %04x %04x %04x %04x\n"
 		  "GDC: PRAM register 12: %04x %04x %04x %04x\n"
-
-		  "GDC: PRAM SAD 1                 %010x\n"
-		  "GDC: PRAM LEN 1                 %010x\n"
-		  "GDC: PRAM WD 1                           %d\n"
-		  "GDC: PRAM IM 1                   %s\n"
-
-		  "GDC: PRAM SAD 2                 %010x\n"
-		  "GDC: PRAM LEN 2                 %010x\n"
-		  "GDC: PRAM WD 2                           %d\n"
-		  "GDC: PRAM IM 2                   %s\n"
+		  "GDC: PRAM SAD/LEN 1  %010x/%010x\n"
+		  "GDC: PRAM IM/WD 1              %s/%d\n"
+		  "GDC: PRAM SAD/LEN 2  %010x/%010x\n"
+		  "GDC: PRAM IM/WD 2              %s/%d\n"
+		  "GDC: PRAM SAD/LEN 3  %010x/%010x\n"
+		  "GDC: PRAM IM/WD 3              %s/%d\n"
+		  "GDC: PRAM SAD/LEN 4  %010x/%010x\n"
+		  "GDC: PRAM IM/WD 4              %s/%d\n"
 		  "GDC: PRAM --------------------------------\n",
 		  
 		  _cmd & 15,
@@ -444,13 +454,23 @@ GDC::info(void)
 		  
 		  _pram[0] | (_pram[1] << 8) | ((_pram[2] & 3) << 16),
 		  ((_pram[2] & 0xf0) >> 4) | ((_pram[3] & 0x3f) << 4),
-		  (_pram[3] & 0x80) >> 7,
 		  ((_pram[3] & 0x40) >> 6) ? "  graphic" : "character",
+		  (_pram[3] & 0x80) >> 7,
 		  
 		  _pram[4] | (_pram[5] << 8) | ((_pram[6] & 3) << 16),
 		  ((_pram[6] & 0xf0) >> 4) | ((_pram[7] & 0x3f) << 4),
+		  ((_pram[7] & 0x40) >> 6) ? "  graphic" : "character",
 		  (_pram[7] & 0x80) >> 7,
-		  ((_pram[7] & 0x40) >> 6) ? "  graphic" : "character"));
+		  
+		  _pram[8] | (_pram[9] << 8) | ((_pram[10] & 3) << 16),
+		  ((_pram[10] & 0xf0) >> 4) | ((_pram[11] & 0x3f) << 4),
+		  ((_pram[11] & 0x40) >> 6) ? "  graphic" : "character",
+		  (_pram[11] & 0x80) >> 7,
+		  
+		  _pram[12] | (_pram[13] << 8) | ((_pram[14] & 3) << 16),
+		  ((_pram[14] & 0xf0) >> 4) | ((_pram[15] & 0x3f) << 4),
+                  ((_pram[15] & 0x40) >> 6) ? "  graphic" : "character",
+		  (_pram[15] & 0x80) >> 7));
       break;
 
     case 0x47:
@@ -589,9 +609,14 @@ GDC::reset(bool power_on)
   _pptr = 0;
   _mask = 0;
   _mask_c = 0;
+  _control = 5;
   _figs_dc = 0;
   _screen_on = 0;
   _nr_of_lines = 0;
   _cursor_top = 1;
   _cursor_bottom = 0;
+
+  memset(_pram, 0, 16);
+  memset(_mem, 0x20, 65536); // FIXME: handle screen blanking
+  memset(_col, 0x00, 65536);
 }

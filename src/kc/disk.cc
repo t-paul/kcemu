@@ -37,6 +37,7 @@ class CMD_disk_attach : public CMD
 {
 private:
   Disk *_d;
+  static const char * _path;
 
 protected:
   int get_disk_no(CMD_Args *args)
@@ -79,6 +80,8 @@ public:
             {
               args->set_string_arg("ui-file-select-title",
                                    _("Select disk..."));
+	      if (_path)
+		args->set_string_arg("ui-file-select-path", _path);
               args->add_callback("ui-file-select-CB-ok", this, 1);
               CMD_EXEC_ARGS("ui-file-select", args);
               return;
@@ -110,6 +113,7 @@ public:
       
       if (filename)
         {
+	  _path = filename;
           err = _d->attach(get_disk_no(args), filename, create);
           switch (err)
             {
@@ -142,6 +146,8 @@ public:
         }
     }
 };
+
+const char * CMD_disk_attach::_path = NULL;
 
 Disk::Disk()
 {

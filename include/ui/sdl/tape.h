@@ -1,6 +1,6 @@
 /*
  *  KCemu -- the KC 85/3 and KC 85/4 Emulator
- *  Copyright (C) 1997-2001 Torsten Paul
+ *  Copyright (C) 1997-2003 Torsten Paul
  *
  *  $Id: tape.h,v 1.1 2002/06/09 14:24:33 torsten_paul Exp $
  *

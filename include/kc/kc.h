@@ -62,7 +62,7 @@ typedef enum
   KC_VARIANT_Z1013_A2    = 5,
   KC_VARIANT_Z1013_RB    = 6,
   KC_VARIANT_Z1013_SURL  = 7,
-  KC_VARIANT_Z1013_TEST  = 8,
+  KC_VARIANT_Z1013_BL4   = 8,
   KC_VARIANT_A5105_K1505 = 0,
   KC_VARIANT_A5105_A5105 = 1
 } kc_variant_t;
@@ -73,6 +73,7 @@ typedef struct
   int           type;
   kc_type_t     kc_type;
   kc_variant_t  kc_variant;
+  char         *desc;
 } kc_variant_names_t;
 
 class Z80;
@@ -125,6 +126,9 @@ extern byte_t           fdc_mem[];
 
 extern int   kcemu_ui_scale;
 extern int   kcemu_ui_debug;
+extern int   kcemu_ui_fullscreen;
+extern char *kcemu_modules;
+extern char *kcemu_homedir;
 extern char *kcemu_datadir;
 extern char *kcemu_localedir;
 

@@ -71,6 +71,9 @@ public:
       register_cmd("ui-status-bar-toggle", 0);
       register_cmd("ui-menu-bar-toggle", 1);
       register_cmd("ui-speed-limit-toggle", 2);
+      register_cmd("ui-zoom-1", 3);
+      register_cmd("ui-zoom-2", 4);
+      register_cmd("ui-zoom-3", 5);
     }
   
   void execute(CMD_Args *args, CMD_Context context)
@@ -85,6 +88,11 @@ public:
 	  break;
 	case 2:
 	  _ui->speed_limit_toggle();
+	  break;
+	case 3:
+	case 4:
+	case 5:
+	  _ui->gtk_zoom(context - 2);
 	  break;
 	}
     }
@@ -496,7 +504,7 @@ UI_Gtk::gtk_sync(void)
    */
   if (frame < (timeframe - 20))
     {
-      DBG(1, form("KCemu/UI/update",
+      DBG(2, form("KCemu/UI/update",
                   "counter = %lu, frame = %lu, timeframe = %lu\n",
                   (unsigned long)z80->getCounter(), frame, timeframe));
       frame = timeframe;
@@ -555,8 +563,6 @@ UI_Gtk::hsv_to_gdk_color(double h, double s, double v, GdkColor *col)
 void
 UI_Gtk::create_main_window(void)
 {
-  GtkItemFactory *ifact, *ifactP;
-  GtkAccelGroup *agroup, *agroupP;
   GtkItemFactoryEntry entries[] = {
     { _("/_File"),                 NULL,     NULL,            0,                               "<Branch>" },
     { _("/File/Run..."),           NULL,     CF(cmd_exec_mc), CD("kc-image-run"),              NULL },
@@ -571,6 +577,9 @@ UI_Gtk::create_main_window(void)
     { _("/File/sep2"),             NULL,     NULL,            0,                               "<Separator>" },
     { _("/File/Quit Emulator"),    "<alt>Q", CF(cmd_exec_mc), CD("emu-quit"),                  NULL },
     { _("/_View"),                 NULL,     NULL,            0,                               "<Branch>" },
+    { _("/View/Zoom x1"),          "<alt>1", CF(cmd_exec_mc), CD("ui-zoom-1"),                 NULL },
+    { _("/View/Zoom x2"),          "<alt>2", CF(cmd_exec_mc), CD("ui-zoom-2"),                 NULL },
+    { _("/View/Zoom x3"),          "<alt>3", CF(cmd_exec_mc), CD("ui-zoom-3"),                 NULL },
     { _("/View/Keyboard"),         "<alt>K", CF(cmd_exec_mc), CD("ui-keyboard-window-toggle"), NULL },
     { _("/View/Debugger"),         NULL,     CF(cmd_exec_mc), CD("ui-debug-window-toggle"),    NULL },
     { _("/View/Info"),             "<alt>I", CF(cmd_exec_mc), CD("ui-info-window-toggle"),     NULL },
@@ -654,26 +663,26 @@ UI_Gtk::create_main_window(void)
   /*
    *  menubar item factory
    */
-  agroup = gtk_accel_group_new();
-  ifact = gtk_item_factory_new(GTK_TYPE_MENU_BAR, "<KCemu>", agroup);
-  gtk_item_factory_create_items(ifact, nentries, entries, NULL);
-  gtk_accel_group_attach(agroup, GTK_OBJECT(_main.window));
+  _main.agroup = gtk_accel_group_new();
+  _main.ifact = gtk_item_factory_new(GTK_TYPE_MENU_BAR, "<KCemu>", _main.agroup);
+  gtk_item_factory_create_items(_main.ifact, nentries, entries, NULL);
+  gtk_accel_group_attach(_main.agroup, GTK_OBJECT(_main.window));
 
-  agroupP = gtk_accel_group_new();
-  ifactP = gtk_item_factory_new(GTK_TYPE_MENU, "<KCemuP>", agroupP);
-  gtk_item_factory_create_items(ifactP, nentriesP, entriesP, NULL);
+  _main.agroupP = gtk_accel_group_new();
+  _main.ifactP = gtk_item_factory_new(GTK_TYPE_MENU, "<KCemuP>", _main.agroupP);
+  gtk_item_factory_create_items(_main.ifactP, nentriesP, entriesP, NULL);
 
   /*
    *  main menu bar
    */
-  _main.menubar = gtk_item_factory_get_widget(ifact, "<KCemu>");
+  _main.menubar = gtk_item_factory_get_widget(_main.ifact, "<KCemu>");
   gtk_box_pack_start(GTK_BOX(_main.vbox), _main.menubar, FALSE, TRUE, 0);
   gtk_widget_show(_main.menubar);
 
   /*
    *  popup menu
    */
-  _main.menu = gtk_item_factory_get_widget(ifactP, "<KCemuP>");
+  _main.menu = gtk_item_factory_get_widget(_main.ifactP, "<KCemuP>");
 
   /*
    *  main canvas
@@ -713,13 +722,6 @@ UI_Gtk::create_main_window(void)
   gtk_box_pack_start(GTK_BOX(_main.st_hbox), _main.st_statusbar,
                      TRUE, TRUE, 0);
   gtk_widget_show(_main.st_statusbar);
-
-  /*
-   *
-   */
-  gtk_widget_show(_main.window);
-
-  gtk_window_set_policy(GTK_WINDOW(_main.window), FALSE, FALSE, TRUE);
 }
 
 void
@@ -733,6 +735,9 @@ UI_Gtk::create_header_window(void)
 
 UI_Gtk::UI_Gtk(void)
 {
+  _gc = NULL;
+  _image = NULL;
+  _init = false;
 }
 
 UI_Gtk::~UI_Gtk(void)
@@ -755,13 +760,66 @@ UI_Gtk::~UI_Gtk(void)
 void
 UI_Gtk::show_greeting(void)
 {
-  const char *msg = " KCemu v" VERSION;
+  const char *msg = " KCemu v" KCEMU_VERSION;
   const char *variant = get_kc_variant_name();
-  const char *fmt = _("%s (emulating %s)");
+  const char *fmt = _("%s (%s)");
   char *status = new char[strlen(msg) + strlen(variant) + strlen(fmt) + 10];
   sprintf(status, fmt, msg, variant);
   Status::instance()->setMessage(status);
   delete[] status;
+}
+
+void
+UI_Gtk::gtk_resize(void)
+{
+  /*
+   *  prevent early calls that my caused by module initialization
+   *  (e.g. Z1013 GDC module)
+   */
+  if (!_init) // set by show() function
+    return;
+
+  if (_image)
+    gdk_image_destroy(_image);
+  _image  = gdk_image_new(GDK_IMAGE_FASTEST, _visual, get_width(), get_height());
+
+  gtk_drawing_area_size(GTK_DRAWING_AREA(_main.canvas), get_width(), get_height());
+
+  if (!GTK_WIDGET_VISIBLE(_main.window))
+    gtk_widget_show(_main.window);
+
+  if (_gc)
+    gdk_gc_destroy(_gc);
+  _gc = gdk_gc_new(GTK_WIDGET(_main.canvas)->window);
+
+  _dirty_old = 0; // force reallocation of dirty buffer
+
+#if 0
+  switch (_visual->type)
+    {
+    case GDK_VISUAL_STATIC_GRAY:
+      cout << "GDK_VISUAL_STATIC_GRAY" << endl;
+      break;
+    case GDK_VISUAL_GRAYSCALE:
+      cout << "GDK_VISUAL_GRAYSCALE" << endl;
+      break;
+    case GDK_VISUAL_STATIC_COLOR:
+      cout << "GDK_VISUAL_STATIC_COLOR" << endl;
+      break;
+    case GDK_VISUAL_PSEUDO_COLOR:
+      cout << "GDK_VISUAL_PSEUDO_COLOR" << endl;
+      break;
+    case GDK_VISUAL_TRUE_COLOR:
+      cout << "GDK_VISUAL_TRUE_COLOR" << endl;
+      break;
+    case GDK_VISUAL_DIRECT_COLOR:
+      cout << "GDK_VISUAL_DIRECT_COLOR" << endl;
+      break;
+    default:
+      cout << "unknown visual type" << endl;
+      break;
+    }
+#endif
 }
 
 void
@@ -789,7 +847,7 @@ UI_Gtk::init(int *argc, char ***argv)
   gtk_rc_parse(filename);
   delete[] filename;
   
-  tmp = getenv("HOME");
+  tmp = kcemu_homedir;
   if (tmp)
     {
       filename = new char[strlen(tmp) + 14];
@@ -840,41 +898,35 @@ UI_Gtk::init(int *argc, char ***argv)
   create_main_window();
 
   _visual = gdk_visual_get_system();
-  _image  = gdk_image_new(GDK_IMAGE_FASTEST, _visual, get_width(), get_height());
-  _gc = gdk_gc_new(GTK_WIDGET(_main.canvas)->window);
 
   CMD *cmd;
   cmd = new CMD_ui_toggle(this);
   cmd = new CMD_update_colortable(this, _color_window);
 
-  show_greeting();
+  init();
+}
 
-  /*
-      switch (_visual->type)
-	{
-	case GDK_VISUAL_STATIC_GRAY:
-	  cout << "GDK_VISUAL_STATIC_GRAY" << endl;
-	  break;
-	case GDK_VISUAL_GRAYSCALE:
-	  cout << "GDK_VISUAL_GRAYSCALE" << endl;
-	  break;
-	case GDK_VISUAL_STATIC_COLOR:
-	  cout << "GDK_VISUAL_STATIC_COLOR" << endl;
-	  break;
-	case GDK_VISUAL_PSEUDO_COLOR:
-	  cout << "GDK_VISUAL_PSEUDO_COLOR" << endl;
-	  break;
-	case GDK_VISUAL_TRUE_COLOR:
-	  cout << "GDK_VISUAL_TRUE_COLOR" << endl;
-	  break;
-	case GDK_VISUAL_DIRECT_COLOR:
-	  cout << "GDK_VISUAL_DIRECT_COLOR" << endl;
-	  break;
-	default:
-	  cout << "unknown visual type" << endl;
-	  break;
-	}
-  */
+void
+UI_Gtk::show(void)
+{
+  _init = true;
+  gtk_resize();
+  gtk_window_set_policy(GTK_WINDOW(_main.window), FALSE, FALSE, TRUE);
+  show_greeting();
+}
+
+void
+UI_Gtk::gtk_zoom(int zoom)
+{
+  if (zoom < 1)
+    zoom = 1;
+  if (zoom > 3)
+    zoom = 3;
+
+  kcemu_ui_scale = zoom;
+
+  gtk_resize();
+  update(true, true);
 }
 
 void
@@ -1038,12 +1090,11 @@ void
 UI_Gtk::gtk_update_1_debug(byte_t *bitmap, byte_t *dirty, int dirty_size, int width, int height)
 {
   static int frame_delay;
-  static byte_t *dirty_old = 0;
 
-  if (dirty_old == 0)
+  if (_dirty_old == 0)
     {
-      dirty_old = new byte_t[dirty_size];
-      memset(dirty_old, 0, dirty_size);
+      _dirty_old = new byte_t[dirty_size];
+      memset(_dirty_old, 0, dirty_size);
       frame_delay = RC::instance()->get_int("DEBUG UI_Gtk Frame Delay", 50);
     }
 
@@ -1054,19 +1105,19 @@ UI_Gtk::gtk_update_1_debug(byte_t *bitmap, byte_t *dirty, int dirty_size, int wi
 	{
 	  d++;
 	  if (dirty[d])
-	    dirty_old[d] = frame_delay;
+	    _dirty_old[d] = frame_delay;
 	  
-	  if (dirty_old[d] == 0)
+	  if (_dirty_old[d] == 0)
 	    continue;
 
-	  if (dirty_old[d] > 0)
-	    dirty_old[d]--;
+	  if (_dirty_old[d] > 0)
+	    _dirty_old[d]--;
 
 	  dirty[d] = 1;
 	  
 	  int z = y * width + x;
 
-	  if (dirty_old[d])
+	  if (_dirty_old[d])
 	    {
 	      for (int yy = 0;yy < 8;yy++)
 		{

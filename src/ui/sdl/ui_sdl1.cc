@@ -28,12 +28,12 @@
 UI_SDL1::UI_SDL1(void)
 {
   reset();
-  sdl_init(get_width(), get_height(), get_title());
-  allocate_colors(0.4, 0.5, 0.8, 0.6, 0.1, 0.9);
+  z80->register_ic(this);
 }
 
 UI_SDL1::~UI_SDL1(void)
 {
+  z80->unregister_ic(this);
 }
 
 void
@@ -44,25 +44,25 @@ UI_SDL1::allocate_colors(double saturation_fg,
                          double black_level,
                          double white_level)
 {
-  SDL_Color colors[8] = {
-      { 0x00, 0x00, 0x00 },
-      { 0xd0, 0x00, 0x00 },
-      { 0x00, 0xd0, 0x00 },
-      { 0xd0, 0xd0, 0x00 },
-      { 0x00, 0x00, 0xd0 },
-      { 0xd0, 0x00, 0xd0 },
-      { 0x00, 0xd0, 0xd0 },
-      { 0xd0, 0xd0, 0xd0 }
-    };
+  SDL_Color col[8];
 
-  sdl_set_colors(colors, 8);
+  hsv_to_sdl_color(  0,             0,   black_level, &col[0]); /* black */
+  hsv_to_sdl_color(  0, saturation_fg, brightness_fg, &col[1]); /* red */
+  hsv_to_sdl_color(120, saturation_fg, brightness_fg, &col[2]); /* green */
+  hsv_to_sdl_color( 60, saturation_fg, brightness_fg, &col[3]); /* yellow */
+  hsv_to_sdl_color(240, saturation_fg, brightness_fg, &col[4]); /* blue */
+  hsv_to_sdl_color(300, saturation_fg, brightness_fg, &col[5]); /* magenta */
+  hsv_to_sdl_color(180, saturation_fg, brightness_fg, &col[6]); /* cyan */
+  hsv_to_sdl_color(  0,             0,   white_level, &col[7]); /* white */
+
+  sdl_set_colors(col, 8);
 }
 
 void
 UI_SDL1::update(bool full_update, bool clear_cache)
 {
-  generic_update();
-  sdl_update(_bitmap, _dirty, get_real_width(), get_real_height());
+  generic_update(clear_cache);
+  sdl_update(_bitmap, _dirty, get_real_width(), get_real_height(), clear_cache);
   sdl_sync();
 }
 
@@ -82,7 +82,10 @@ UI_SDL1::flash(bool enable)
 const char *
 UI_SDL1::get_title(void)
 {
-  return "KC 85/1";
+  if (get_kc_type() == KC_TYPE_87)
+    return _("KC 87 Emulator");
+
+  return _("KC 85/1 Emulator");
 }
 
 int
@@ -95,6 +98,22 @@ int
 UI_SDL1::get_height(void)
 {
   return kcemu_ui_scale * get_real_height();
+}
+
+int
+UI_SDL1::get_mode(void)
+{
+  return generic_get_mode();
+}
+
+void
+UI_SDL1::set_mode(int mode)
+{
+  if (generic_get_mode() != mode)
+    {
+      generic_set_mode(mode);
+      sdl_resize();
+    }
 }
 
 void

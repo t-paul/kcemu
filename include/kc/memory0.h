@@ -31,9 +31,11 @@
 class Memory0 : public Memory, public PortInterface
 {
 private:
+  byte_t _val;
   byte_t _irm[0x00400];
   byte_t _ram[0x10000];
   byte_t _rom[0x01000];
+  byte_t _chr[0x01000];
 
   MemAreaGroup *_m_scr;    /* scratch memory */
   MemAreaGroup *_m_ram;    /* RAM   0000h - efffh */
@@ -64,7 +66,10 @@ public:
   void memWrite8(word_t addr, byte_t val);
 #endif /* MEMORY_SLOW_ACCESS */
   
-  byte_t * getIRM(void);
+  byte_t * get_irm(void);
+  byte_t * get_char_rom(void);
+  
+  void port_04(byte_t changed, byte_t val);
 
   virtual void reset(bool power_on = false);
 

@@ -108,7 +108,7 @@ UI_3::generic_update(Scanline *scanline, bool clear_cache)
   int p, pc, ys, yc, s;
   byte_t val, col, fg, bg;
 
-  byte_t *irm = memory->getIRM();
+  byte_t *irm = memory->get_irm();
 
   p = 0;
   for (y = 0;y < 256;y++)
@@ -205,4 +205,15 @@ UI_3::generic_update(Scanline *scanline, bool clear_cache)
           generic_put_pixels(8 * x + 256, ys, val, fg, bg);
         }
     }
+}
+
+int
+UI_3::generic_get_mode(void)
+{
+  return 0;
+}
+
+void
+UI_3::generic_set_mode(int mode)
+{
 }

@@ -110,6 +110,14 @@ FDC::~FDC(void)
 {
 }
 
+/*
+CFDC	EQU	0F0H		;STEUERUNG FDC
+DFDC	EQU	0F1H		;DATEN FDC
+FDCRES  EQU	0FAH		;RESET FDC
+MOTON   EQU     0F6H            ;MOTOR EIN
+MOAUS   EQU     0F2H            ;MOTOR AUS
+TC      EQU     0F8H            ;TERMINAL COUNT
+ */
 byte_t
 FDC::in(word_t addr)
 {
@@ -134,7 +142,7 @@ FDC::in(word_t addr)
     case 0x99: // CPM-Z9 module (Data Register)
     case 0x11: // CPM-Z9 module (Data Register) ??
     case 0xf1: // D004 (KC85/4)
-      val = in_F1(addr);
+      val = in_data(addr);
       DBG(2, form("KCemu/FDC/in_F1",
                   "FDC::in(): %04xh addr = %04x, val = %02x [%c]\n",
                   r.PC.D, addr, val, isprint(val) ? val : '.'));
@@ -207,7 +215,7 @@ FDC::out(word_t addr, byte_t val)
       DBG(2, form("KCemu/FDC/out_F1",
                   "FDC::out(): %04xh addr = %04x, val = %02x [%c]\n",
                   r.PC.D, addr, val, isprint(val) ? val : '.'));
-      out_F1(addr, val);
+      out_data(addr, val);
 //      if (val == 0x45)
 //        Z80_Trace = 1;
       break;
@@ -236,6 +244,10 @@ FDC::out(word_t addr, byte_t val)
 	set_state(FDC_STATE_RESULT);
       if (val == 0xc0) // kc85/4
 	set_state(FDC_STATE_RESULT);
+
+      // FIXME: Z1013:
+      set_terminal_count(1); set_state(FDC_STATE_RESULT);
+
       set_input_gate(0x40, 0x00);
       break;
     case 0xa0: // CPM-Z9 module
@@ -254,7 +266,7 @@ FDC::out(word_t addr, byte_t val)
 }
 
 byte_t
-FDC::in_F1(word_t addr)
+FDC::in_data(word_t addr)
 {
   byte_t val;
   
@@ -306,7 +318,7 @@ FDC::write_byte(byte_t val)
  *  command output to floppy controller
  */
 void
-FDC::out_F1(word_t addr, byte_t val)
+FDC::out_data(word_t addr, byte_t val)
 {
   switch (_state)
     {
@@ -454,6 +466,12 @@ FDC::seek(byte_t head, byte_t cylinder, byte_t sector)
   return true;
 }
 
+byte_t
+FDC::get_input_gate(void)
+{
+  return _INPUT_GATE;
+}
+
 void
 FDC::set_input_gate(byte_t mask, byte_t val)
 {
@@ -461,6 +479,12 @@ FDC::set_input_gate(byte_t mask, byte_t val)
   DBG(2, form("KCemu/FDC/input_gate",
               "FDC::set_input_gate(): INPUT_GATE: %02x\n",
               _INPUT_GATE));
+}
+
+byte_t
+FDC::get_msr(void)
+{
+  return _MSR;
 }
 
 void

@@ -27,7 +27,7 @@ dnl ---------------------
 KCEMU_MAJOR_VERSION=0
 KCEMU_MINOR_VERSION=3
 KCEMU_MICRO_VERSION=7
-KCEMU_EXTRA_VERSION=beta4
+KCEMU_EXTRA_VERSION=beta5
 
 if test $KCEMU_MICRO_VERSION -eq 0
 then
@@ -41,11 +41,21 @@ then
 	KCEMU_VERSION=${KCEMU_VERSION}${KCEMU_EXTRA_VERSION}
 fi
 
-AC_DEFINE_UNQUOTED(KCEMU_MAJOR_VERSION, $KCEMU_MAJOR_VERSION)
-AC_DEFINE_UNQUOTED(KCEMU_MINOR_VERSION, $KCEMU_MINOR_VERSION)
-AC_DEFINE_UNQUOTED(KCEMU_MICRO_VERSION, $KCEMU_MICRO_VERSION)
-AC_DEFINE_UNQUOTED(KCEMU_EXTRA_VERSION, "$KCEMU_EXTRA_VERSION")
-AC_DEFINE_UNQUOTED(KCEMU_VERSION, "$KCEMU_VERSION")
+AC_DEFINE_UNQUOTED(KCEMU_MAJOR_VERSION, $KCEMU_MAJOR_VERSION,   "KCemu major version")
+AC_DEFINE_UNQUOTED(KCEMU_MINOR_VERSION, $KCEMU_MINOR_VERSION,   "KCemu minor version")
+AC_DEFINE_UNQUOTED(KCEMU_MICRO_VERSION, $KCEMU_MICRO_VERSION,   "KCemu micro version")
+AC_DEFINE_UNQUOTED(KCEMU_EXTRA_VERSION, "$KCEMU_EXTRA_VERSION", "KCemu extra version")
+AC_DEFINE_UNQUOTED(KCEMU_VERSION, "$KCEMU_VERSION", "KCemu version")
+
+PACKAGE=KCemu
+VERSION=$KCEMU_VERSION
+AM_INIT_AUTOMAKE($PACKAGE, $VERSION, no-define)
+AC_CANONICAL_HOST
+
+AC_SUBST(PACKAGE)
+AC_SUBST(VERSION)
+AC_DEFINE_UNQUOTED(PACKAGE, "$PACKAGE", "package name")
+AC_DEFINE_UNQUOTED(VERSION, "$VERSION", "package version")
 
 dnl ---------------------
 dnl  checks for programs
@@ -57,21 +67,7 @@ AC_PROG_INSTALL
 AC_PROG_LN_S
 AC_PROG_RANLIB
 
-dnl ----------
-dnl  automake
-dnl ----------
-
-PACKAGE=KCemu
-VERSION=$KCEMU_VERSION
-AC_DEFINE_UNQUOTED(PACKAGE, "$PACKAGE")
-AC_DEFINE_UNQUOTED(VERSION, "$VERSION")
-AC_SUBST(PACKAGE)
-AC_SUBST(VERSION)
-AC_ARG_PROGRAM
 AC_PROG_MAKE_SET
-
-AM_INIT_AUTOMAKE($PACKAGE, $VERSION, no-define)
-AC_CANONICAL_HOST
 
 dnl -------------------
 dnl  configure gettext
@@ -80,7 +76,7 @@ dnl -------------------
 ALL_LINGUAS="de"
 AM_GNU_GETTEXT
 if test "x$USE_INCLUDED_LIBINTL" = "xyes"; then
-	AC_DEFINE(USE_INCLUDED_LIBINTL)
+	AC_DEFINE(USE_INCLUDED_LIBINTL, 1, "use included libintl")
 fi
 
 dnl -------------------
@@ -99,31 +95,40 @@ elif test "x$with_debug_level" = "x3"; then
   DBG_LEVEL=3
 fi
 AC_MSG_RESULT($DBG_LEVEL)
-AC_DEFINE_UNQUOTED(DBG_LEVEL, $DBG_LEVEL)
+AC_DEFINE_UNQUOTED(DBG_LEVEL, $DBG_LEVEL, "debug level")
 
 dnl -----------------------------------
 dnl  check on which system we will run
 dnl -----------------------------------
+
+AM_CONDITIONAL(TARGET_BEOS,  false)
+AM_CONDITIONAL(TARGET_MINGW, false)
+AM_CONDITIONAL(TARGET_LINUX, false)
 
 case "$host_os" in
 	beos)
 		HOST_OS="BeOS"
 		HOST_OS_BEOS=1
 		AM_CONDITIONAL(TARGET_BEOS, true)
-		AM_CONDITIONAL(TARGET_LINUX, false)
-		AC_DEFINE_UNQUOTED(HOST_OS_BEOS, $HOST_OS_BEOS)
+		AC_DEFINE_UNQUOTED(HOST_OS_BEOS, $HOST_OS_BEOS, "host os is BeOS")
 		;;
 		
+	mingw32*)
+		HOST_OS="MinGW"
+		HOST_OS_MINGW=1
+		AM_CONDITIONAL(TARGET_MINGW, true)
+		AC_DEFINE_UNQUOTED(HOST_OS_MINGW, $HOST_OS_MINGW, "host os is MinGW")
+		;;
+
 	*)
 		HOST_OS="Linux"
 		HOST_OS_LINUX=1
-		AM_CONDITIONAL(TARGET_BEOS, false)
 		AM_CONDITIONAL(TARGET_LINUX, true)
-		AC_DEFINE_UNQUOTED(HOST_OS_LINUX, $HOST_OS_LINUX)
+		AC_DEFINE_UNQUOTED(HOST_OS_LINUX, $HOST_OS_LINUX, "host os is Linux")
 		;;
 esac
 
-AC_DEFINE_UNQUOTED(HOST_OS, "$HOST_OS")
+AC_DEFINE_UNQUOTED(HOST_OS, "$HOST_OS", "host os")
 
 dnl ---------------------------------------------------------------
 dnl  checks for typedefs, structures, and compiler characteristics
@@ -145,21 +150,34 @@ dnl ----------------------------------
 dnl  check for common C++ header files
 dnl ----------------------------------
 
-dnl autoconf 2.54
-dnl AC_LANG_PUSH(C++)
-dnl AC_LANG_POP(C++)
-dnl autoconf 2.13
-dnl AC_LANG_SAVE
-dnl AC_LANG_CPLUSPLUS
-dnl AC_LANG_RESTORE
+AC_LANG_PUSH(C++)
+AC_LANG_POP(C++)
 
 dnl --------------------------------------
 dnl  checks for various library functions
 dnl --------------------------------------
 AC_TYPE_SIGNAL
-AC_CHECK_FUNCS(gettimeofday strstr strtol mtrace)
-AC_CHECK_FUNC(getopt, AC_DEFINE(HAVE_GETOPT))
-AC_CHECK_FUNC(getopt_long, AC_DEFINE(HAVE_GETOPT_LONG))
+AC_CHECK_FUNCS(gettimeofday strstr strchr strrchr strtol mtrace)
+AC_CHECK_FUNC(localtime_r, AC_DEFINE(HAVE_LOCALTIME_R, 1, "localtime_r"))
+AC_CHECK_FUNC(localtime, AC_DEFINE(HAVE_LOCALTIME, 1, "localtime"))
+AC_CHECK_FUNC(getopt,
+	      have_getopt=yes
+	      AC_DEFINE(HAVE_GETOPT, 1, "getopt() available"))
+AC_CHECK_FUNC(getopt_long,
+	      have_getopt_long=yes
+	      AC_DEFINE(HAVE_GETOPT_LONG, 1, "getopt_long() available"))
+
+AC_MSG_CHECKING(whether to use the included getopt library)
+if test x$have_getopt = xyes -o x$have_getopt_long = xyes; then
+	use_included_getopt=no
+	AM_CONDITIONAL(USE_INCLUDED_GETOPT, false)
+else
+	use_included_getopt=yes
+	AM_CONDITIONAL(USE_INCLUDED_GETOPT, true)
+        AC_DEFINE(HAVE_GETOPT, 1, "getopt() available")
+        AC_DEFINE(HAVE_GETOPT_LONG, 1, "getopt_long() available")
+fi
+AC_MSG_RESULT($use_included_getopt)
 
 dnl -----------------------------
 dnl  check for common libraries
@@ -182,8 +200,8 @@ if test x$enable_libsndfile = xyes; then
 	if test x$have_libsndfile = xyes; then
 		SNDFILE_LIBS=-lsndfile
 		AC_SUBST(SNDFILE_LIBS)
-		AC_DEFINE(HAVE_LIBSNDFILE)
-		AC_DEFINE(HAVE_LIBSNDFILE_V0)
+		AC_DEFINE(HAVE_LIBSNDFILE, 1, "have libsndfile")
+		AC_DEFINE(HAVE_LIBSNDFILE_V0, 1, "have libsndfile version 0.0.x")
 	else
 		AC_CHECK_LIB(sndfile,
 			     sf_open,
@@ -192,15 +210,21 @@ if test x$enable_libsndfile = xyes; then
 		if test x$have_libsndfile = xyes; then
 			SNDFILE_LIBS=-lsndfile
 			AC_SUBST(SNDFILE_LIBS)
-			AC_DEFINE(HAVE_LIBSNDFILE)
-			AC_DEFINE(HAVE_LIBSNDFILE_V1)
+			AC_DEFINE(HAVE_LIBSNDFILE, 1, "have libsndfile")
+			AC_DEFINE(HAVE_LIBSNDFILE_V1, 1, "have libnsndfile version 1.0.x")
 		else
 			AC_MSG_WARN([
-			***
-			*** Unable to find sndfile library!
-			*** The audio loader module which requires this library
-			*** will be disabled.
-			***])
+***
+*** Unable to find sndfile library! The audio loader module which
+*** requires this library will be disabled.
+***
+*** This is NO ERROR. It only means you can't playback certain
+*** audio file types (e.g. .WAV, .PCM, .AU, .SND) in the emulated
+*** tape recorder.
+***
+*** If you are still annoyed by this warning you can tell ./configure
+*** not to check for this library by using --disable-libsndfile
+***])
 		fi
 	fi
 fi
@@ -214,14 +238,20 @@ if test x$enable_libaudiofile = xyes; then
 	if test x$have_libaudiofile = xyes; then
 		AUDIOFILE_LIBS=-laudiofile
 		AC_SUBST(AUDIOFILE_LIBS)
-		AC_DEFINE(HAVE_LIBAUDIOFILE)
+		AC_DEFINE(HAVE_LIBAUDIOFILE, 1, "have libaudiofile")
 	else
 		AC_MSG_WARN([
-	***
-	*** Unable to find audiofile library!
-	*** The audio loader module which requires this library
-	*** will be disabled.
-	***])
+***
+*** Unable to find audiofile library! The audio loader module which
+*** requires this library will be disabled.
+***
+*** This is NO ERROR. It only means you can't playback certain
+*** audio file types (e.g. .WAV, .AIFF, .AU) in the emulated
+*** tape recorder.
+***
+*** If you are still annoyed by this warning you can tell ./configure
+*** not to check for this library by using --disable-libaudiofile
+***])
 	fi
 fi
 
@@ -234,14 +264,19 @@ if test x$enable_libmp3lame = xyes; then
 	if test x$have_libmp3lame = xyes; then
 		MP3LAME_LIBS=-lmp3lame
 		AC_SUBST(MP3LAME_LIBS)
-		AC_DEFINE(HAVE_LIBMP3LAME)
+		AC_DEFINE(HAVE_LIBMP3LAME, 1, "have libmp3lame")
 	else
 		AC_MSG_WARN([
-	***
-	*** Unable to find libmp3lame (part of MP3 encoder LAME)!
-	*** The audio loader module which requires this library will
-	*** be disabled.
-	***])
+***
+*** Unable to find libmp3lame (part of MP3 encoder LAME)! The audio
+*** loader module which requires this library will be disabled.
+***
+*** This is NO ERROR. It only means you can't playback certain
+*** audio file types (e.g. .MP3) in the emulated tape recorder.
+***
+*** If you are still annoyed by this warning you can tell ./configure
+*** not to check for this library by using --disable-libmp3lame
+***])
 	fi
 fi
 
@@ -254,14 +289,19 @@ if test x$enable_libvorbis = xyes; then
 	if test x$have_libvorbis = xyes; then
 		VORBIS_LIBS="-lvorbisfile -lvorbis"
 		AC_SUBST(VORBIS_LIBS)
-		AC_DEFINE(HAVE_LIBVORBIS)
+		AC_DEFINE(HAVE_LIBVORBIS, 1, "have libvorbis")
 	else
 		AC_MSG_WARN([
-	***
-	*** Unable to find libvorbis!
-	*** The audio loader module which requires this library will
-	*** be disabled.
-	***])
+***
+*** Unable to find libvorbis library! The audio loader module which
+*** requires this library will be disabled.
+***
+*** This is NO ERROR. It only means you can't playback certain
+*** audio file types (e.g. .OGG) in the emulated tape recorder.
+***
+*** If you are still annoyed by this warning you can tell ./configure
+*** not to check for this library by using --disable-libvorbis
+***])
 	fi
 fi
 
@@ -280,14 +320,19 @@ if test x$enable_libflac = xyes; then
 	if test x$have_libflac = xyes; then
 		F_L_A_C_LIBS=-lFLAC
 		AC_SUBST(F_L_A_C_LIBS)
-		AC_DEFINE(HAVE_LIBFLAC)
+		AC_DEFINE(HAVE_LIBFLAC, 1, "have libFLAC")
 	else
 		AC_MSG_WARN([
-	***
-	*** Unable to find libFLAC!
-	*** The audio loader module which requires this library will
-	*** be disabled.
-	***])
+***
+*** Unable to find libFLAC library! The audio loader module which
+*** requires this library will be disabled.
+***
+*** This is NO ERROR. It only means you can't playback certain
+*** audio file types (e.g. .FLAC) in the emulated tape recorder.
+***
+*** If you are still annoyed by this warning you can tell ./configure
+*** not to check for this library by using --disable-libflac
+***])
 	fi
 fi
 
@@ -295,7 +340,26 @@ dnl -------------------------------------
 dnl  check for system specific libraries
 dnl -------------------------------------
 
-if test x"$HOST_OS" = "xLinux"; then
+if test x"$HOST_OS" = "xLinux" -o x"$HOST_OS" = "xMinGW"; then
+	dnl --------------
+	dnl  check for OSS
+	dnl --------------
+
+	AC_CHECK_HEADERS(sys/soundcard.h)
+	AC_CHECK_HEADERS(machine/soundcard.h)
+	if test x$ac_cv_header_sys_soundcard_h = xyes -o x$ac_cv_header_machine_soundcard_h = xyes; then
+		AC_DEFINE(HAVE_OSS, 1, "have oss")
+	else
+		AC_MSG_WARN([
+***
+*** Unable to find OSS header file soundcard.h! The audio loader
+*** module which requires OSS will be disabled.
+***
+*** This is NO ERROR. It only means you can't directly load programs
+*** by reading directly from the soundcard line input.
+***])
+	fi
+
 	dnl ------------------
 	dnl  check for libgtk
 	dnl ------------------
@@ -303,7 +367,7 @@ if test x"$HOST_OS" = "xLinux"; then
 	AM_PATH_GTK(1.2.0, have_libgtk=yes, have_libgtk=no)
 
 	if test x$have_libgtk = xyes; then
-		AC_DEFINE(HAVE_LIBGTK)
+		AC_DEFINE(HAVE_LIBGTK, 1, "have libgtk")
 	fi
 
 	dnl --------------------------------------
@@ -313,7 +377,7 @@ if test x"$HOST_OS" = "xLinux"; then
 	AM_PATH_SDL(1.2.0, have_libsdl=yes, have_libsdl=no)
 
 	if test x$have_libsdl = xyes; then
-		AC_DEFINE(HAVE_LIBSDL)
+		AC_DEFINE(HAVE_LIBSDL, 1, "have libSDL")
 	else
 		if test x$enable_sound = xyes; then
 			AC_MSG_WARN([
@@ -326,7 +390,7 @@ if test x"$HOST_OS" = "xLinux"; then
 	fi
 
 	if test x$enable_sound = xyes; then
-		AC_DEFINE(ENABLE_SOUND)
+		AC_DEFINE(ENABLE_SOUND, 1, "enable sound")
 	fi
 
 	dnl -----------------------------------
@@ -336,25 +400,30 @@ if test x"$HOST_OS" = "xLinux"; then
 	AC_MSG_CHECKING(which user interface to use)
 	if test x$have_libgtk = xyes -a \( "x$with_ui" = "xgtk" -o "x$with_ui" = "xauto" \); then
 		use_ui="GTK - The GIMP Toolkit"
-		AC_DEFINE(USE_UI_GTK)
+		AC_DEFINE(USE_UI_GTK, 1, "use UI GTK")
+		AM_CONDITIONAL(TARGET_UI_GTK, true)
+		AM_CONDITIONAL(TARGET_UI_SDL, false)
 	elif test x$have_libsdl = xyes -a \( "x$with_ui" = "xsdl" -o "x$with_ui" = "xauto" \); then
 		use_ui="SDL - Simple DirectMedia Layer"
-		AC_DEFINE(USE_UI_SDL)
+		AC_DEFINE(USE_UI_SDL, 1, "use UI SDL")
+		AM_CONDITIONAL(TARGET_UI_GTK, false)
+		AM_CONDITIONAL(TARGET_UI_SDL, true)
 	else
 		if test "x$with_ui" = "xauto"; then
 			AC_MSG_ERROR([
 ***
-*** Couldn't find any user interface library
+*** Couldn't find any user interface library! Currently it's
+*** possible to use GTK (www.gtk.org) or libSDL (www.libsdl.org).
 ***])
 		else
 			AC_MSG_ERROR([
 ***
 *** Specified user interface library is not valid: '$with_ui'.
-*** Please use gtk or sdl.
+*** Please use --with-ui=gtk or --with-ui=sdl.
 ***])
 		fi
 	fi
-	AC_DEFINE_UNQUOTED(USE_UI, "$use_ui")
+	AC_DEFINE_UNQUOTED(USE_UI, "$use_ui", "user interface")
 	AC_MSG_RESULT($use_ui)
 
 	dnl ------------------------------------------------------------
@@ -364,6 +433,10 @@ if test x"$HOST_OS" = "xLinux"; then
 	AM_PATH_CPPUNIT(1.6.2,have_cppunit=yes,AC_MSG_WARN([
 ***
 *** Cppunit not found. Unit test disabled
+***
+*** This is NO ERROR. It only means you can't execute some checks
+*** that verify some parts of the emulator. If you are not a
+*** developer you can safely ignore this warning.
 ***]))
 fi
 
@@ -372,10 +445,12 @@ AC_OUTPUT([
 	include/Makefile
 	include/kc/Makefile
 	include/sys/Makefile
+	include/getopt/Makefile
 	include/cmd/Makefile
 	include/ui/Makefile
 	include/ui/gtk/Makefile
 	include/ui/sdl/Makefile
+	include/ui/sdlmtk/Makefile
 	include/ui/beos/Makefile
 	include/ui/generic/Makefile
 	include/fileio/Makefile
@@ -389,11 +464,14 @@ AC_OUTPUT([
 	src/kc/Makefile
 	src/sys/Makefile
 	src/sys/beos/Makefile
+	src/sys/mingw/Makefile
 	src/sys/linux/Makefile
+	src/getopt/Makefile
 	src/cmd/Makefile
 	src/ui/Makefile
 	src/ui/gtk/Makefile
 	src/ui/sdl/Makefile
+	src/ui/sdlmtk/Makefile
 	src/ui/beos/Makefile
 	src/ui/generic/Makefile
 	src/fileio/Makefile

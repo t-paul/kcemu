@@ -112,10 +112,11 @@ PIO::in_A_DATA(void) {
 
 byte_t
 PIO::in_B_DATA(void) {
+  int cb;
   byte_t ret;
 
   if (_cb_b_in)
-    _cb_b_in->callback_B_in();
+    cb = _cb_b_in->callback_B_in();
 
   if (_mode[B] == 3)
     {
@@ -127,6 +128,8 @@ PIO::in_B_DATA(void) {
   else
     {
       ret = _value[B];
+      if (cb >= 0)
+	ret = cb;
       DBG(2, form("KCemu/PIO/B/in_DATA",
 		  "PIO::in():  port B DATA (mode %d): val = %02x\n",
 		  _mode[B], ret));
@@ -579,5 +582,13 @@ PIO::info(void)
     cout << "\tvalue:           " << hex << setfill('0') << setw(2)
 	 << (int)_value[A]
          << "h           " << hex << setfill('0') << setw(2)
-	 << (int)_value[B] << "h" << endl << endl;
+	 << (int)_value[B] << "h" << endl;
+    cout << "\text_mask:        " << hex << setfill('0') << setw(2)
+	 << (int)_bit_mode[A]
+         << "h           " << hex << setfill('0') << setw(2)
+	 << (int)_bit_mode[B] << "h" << endl;
+    cout << "\text:             " << hex << setfill('0') << setw(2)
+	 << (int)_ext[A]
+         << "h           " << hex << setfill('0') << setw(2)
+	 << (int)_ext[B] << "h" << endl << endl;
 }

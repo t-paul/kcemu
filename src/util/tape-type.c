@@ -62,7 +62,7 @@ check_file_type(char *name, char *type, unsigned char *buf)
       name[8] = '\0';
     }
   if ((buf[9] == '\0') && (buf[10] == '\0') && (buf[11] == '\0'))
-    if (index("ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789", buf[1]) != NULL)
+    if (strchr("ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789", buf[1]) != NULL)
       {
 	t = "(none)";
 	memcpy(name, &buf[1], 8);

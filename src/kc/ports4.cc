@@ -73,7 +73,7 @@ Ports4::out(word_t addr, byte_t val)
 {
   byte_t a = addr & 0xff;
 
-  DBG(1, form("KCemu/Ports/4/out",
+  DBG(2, form("KCemu/Ports/4/out",
               "Ports4: out() addr = %04x, val = %02x\n",
               addr, val));
   

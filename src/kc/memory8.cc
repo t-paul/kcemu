@@ -100,7 +100,13 @@ Memory8::memWrite8(word_t addr, byte_t val)
 #endif /* MEMORY_SLOW_ACCESS */
 
 byte_t *
-Memory8::getIRM(void)
+Memory8::get_irm(void)
+{
+  return (byte_t *)0;
+}
+
+byte_t *
+Memory8::get_char_rom(void)
 {
   return (byte_t *)0;
 }

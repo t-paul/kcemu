@@ -83,8 +83,9 @@ public:
   void memWrite8(word_t addr, byte_t val);
 #endif /* MEMORY_SLOW_ACCESS */
   
-  byte_t * getIRM(void);
-  
+  byte_t * get_irm(void);
+  byte_t * get_char_rom(void);
+
   void enableRAM_0(int v);
   void enableRAM_4(int v);
   void enableRAM_8(int v);

@@ -65,7 +65,8 @@ public:
   void memWrite8(word_t addr, byte_t val);
 #endif /* MEMORY_SLOW_ACCESS */
   
-  byte_t * getIRM(void);
+  byte_t * get_irm(void);
+  byte_t * get_char_rom(void);
 
   void enableCAOS_E(int v);
   void enableBASIC_C(int v);

@@ -121,9 +121,10 @@ libdisk_read_sector(libdisk_prop_t **prop, unsigned char *buf, int len)
     return -1;
 
   p = (*prop);
-  if (p->loader != NULL)
-    if (p->loader->read_sector != NULL)
-      return p->loader->read_sector(p, buf, len);
+  if (p)
+    if (p->loader != NULL)
+      if (p->loader->read_sector != NULL)
+	return p->loader->read_sector(p, buf, len);
 
   return 0;
 }
@@ -137,9 +138,10 @@ libdisk_write_sector(libdisk_prop_t **prop, unsigned char *buf, int len)
     return -1;
 
   p = (*prop);
-  if (p->loader != NULL)
-    if (p->loader->write_sector != NULL)
-      return p->loader->write_sector(p, buf, len);
+  if (p)
+    if (p->loader != NULL)
+      if (p->loader->write_sector != NULL)
+	return p->loader->write_sector(p, buf, len);
   
   return 0;  
 }
