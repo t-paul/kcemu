@@ -203,7 +203,11 @@ TapeWindow::sf_tape_archive_select(GtkWidget *widget, gpointer data)
   CMD_Args *args;
   const gchar *filename;
 
+  /* for some reason this is called twice */
   filename = gtk_entry_get_text(GTK_ENTRY(GTK_COMBO(data)->entry));
+  if (strlen(filename) == 0)
+    return;
+
   args = (new CMD_Args())->set_string_arg("filename", (const char *)filename);
   CMD_EXEC_ARGS("tape-attach", args);
 }
@@ -250,13 +254,11 @@ TapeWindow::sf_power_expose(TapeWindow *self)
 void
 TapeWindow::init(void)
 {
-  //int a;
-  //GList *popdown;
-  //const char *fname;
-  GtkTooltips *tips;
-
-  tips = gtk_tooltips_new();
-  gtk_tooltips_enable(tips);
+  /*
+    GtkTooltips *tips;
+    tips = gtk_tooltips_new();
+    gtk_tooltips_enable(tips);
+  */
 
   GtkItemFactory *ifactP;
   GtkAccelGroup *agroupP;
@@ -326,33 +328,33 @@ TapeWindow::init(void)
   /*
    *  combo hbox, combo label, combo box
    */
-//  _w.combo_hbox = gtk_hbox_new(FALSE, 0);
-//  gtk_container_add(GTK_CONTAINER(_w.vbox), _w.combo_hbox);
-//  gtk_widget_show(_w.combo_hbox);
-//
-//  _w.combo_label = gtk_label_new(_("Tape:"));
-//  gtk_box_pack_start(GTK_BOX(_w.combo_hbox), _w.combo_label, FALSE, FALSE, 6);
-//  gtk_widget_show(_w.combo_label);
-//
-//  popdown = NULL;
-//  for (a = 0;;a++)
-//    {
-//      fname = RC::instance()->get_string_i(a, "Tape File List");
-//      if (fname == NULL)
-//	break;
-//      popdown = g_list_append(popdown, (void *)fname);
-//    }
-//  _w.combo = gtk_combo_new();
-//  gtk_box_pack_start(GTK_BOX(_w.combo_hbox), _w.combo, TRUE, TRUE, 0);
-//  gtk_combo_set_value_in_list(GTK_COMBO(_w.combo), FALSE, TRUE);
-//  gtk_combo_set_use_arrows(GTK_COMBO(_w.combo), TRUE);
-//  gtk_entry_set_editable(GTK_ENTRY(GTK_COMBO(_w.combo)->entry), FALSE);
-//  if (popdown)
-//    gtk_combo_set_popdown_strings(GTK_COMBO(_w.combo), popdown);
-//  gtk_signal_connect(GTK_OBJECT(GTK_COMBO(_w.combo)->entry), "changed",
-//		     GTK_SIGNAL_FUNC(sf_tape_archive_select), _w.combo);
-//  fname = RC::instance()->get_string_i(a, "Tape File List");
-//  gtk_widget_show(_w.combo);
+  _w.combo_hbox = gtk_hbox_new(FALSE, 0);
+  gtk_container_add(GTK_CONTAINER(_w.vbox), _w.combo_hbox);
+  gtk_widget_show(_w.combo_hbox);
+
+  _w.combo_label = gtk_label_new(_("Tape:"));
+  gtk_box_pack_start(GTK_BOX(_w.combo_hbox), _w.combo_label, FALSE, FALSE, 6);
+  gtk_widget_show(_w.combo_label);
+
+  GList *popdown = NULL;
+  for (int a = 0;;a++)
+    {
+      const char *fname = RC::instance()->get_string_i(a, "Tape File List");
+      if (fname == NULL)
+	break;
+      if (access(fname, R_OK) == 0)
+	popdown = g_list_append(popdown, (void *)fname);
+    }
+  _w.combo = gtk_combo_new();
+  gtk_box_pack_start(GTK_BOX(_w.combo_hbox), _w.combo, TRUE, TRUE, 0);
+  gtk_combo_set_value_in_list(GTK_COMBO(_w.combo), FALSE, TRUE);
+  gtk_combo_set_use_arrows(GTK_COMBO(_w.combo), FALSE);
+  gtk_entry_set_editable(GTK_ENTRY(GTK_COMBO(_w.combo)->entry), FALSE);
+  if (popdown)
+    gtk_combo_set_popdown_strings(GTK_COMBO(_w.combo), popdown);
+  gtk_signal_connect(GTK_OBJECT(GTK_COMBO(_w.combo)->entry), "changed",
+		     GTK_SIGNAL_FUNC(sf_tape_archive_select), _w.combo);
+  gtk_widget_show(_w.combo);
 
   /*
    *  tape list

@@ -49,6 +49,14 @@ const unsigned long  KCTFile::DIRBLOCK_OFFSET_MASK = 0xffffff00;
 const unsigned long  KCTFile::DIRBLOCK_INDEX_MASK  = 0x000000ff;
 const unsigned long  KCTFile::DIRBLOCK_MAGIC       = 0x6564434b;
 
+static ostream& cout_write(int width, char fill, ios::fmtflags justify)
+{
+  cout.width(width);
+  cout.fill(fill);
+  cout.setf(justify, ios::left | ios::right | ios::internal);
+  return cout;
+}
+
 KCTDir::KCTDir(void)
 {
 }
@@ -527,38 +535,27 @@ KCTFile::list(void)
 	default:              type = "???";  break;
 	}
 
+      cout_write(32, ' ', ios::left) << (*it)->name << " ";
       if (com && ((*it)->start_addr == 0xffff))
 	{
-	  cout.setf(ios::left);
-          cout << setw(32) << setfill(' ') << (*it)->name << " "
-               << setw(5)  << setfill(' ') << type << " 0x";
-	  cout.setf(ios::right);
-	  cout << setw(4)  << hex << setfill('0') << (*it)->load_addr << " -      0x"
-	       << setw(8)  << hex << setfill('0') << (*it)->compressed_size << " 0x"
-	       << setw(8)  << hex << setfill('0') << (*it)->uncompressed_size
-	       << endl;
+	  cout_write( 5, ' ', ios::left) << type << " 0x";
+	  cout_write( 4, '0', ios::right) << hex << (*it)->load_addr << " -      0x";
+	  cout_write( 8, '0', ios::right) << hex << (*it)->compressed_size << " 0x";
+	  cout_write( 8, '0', ios::right) << hex << (*it)->uncompressed_size << endl;
 	}
       else if (com)
 	{
-	  cout.setf(ios::left);
-          cout << setw(32) << setfill(' ') << (*it)->name << " "
-	       << setw(5)  << setfill(' ') << type << " 0x";
-	  cout.setf(ios::right);
-	  cout << setw(4)  << hex << setfill('0') << (*it)->load_addr << " 0x"
-	       << setw(4)  << hex << setfill('0') << (*it)->start_addr << " 0x"
-	       << setw(8)  << hex << setfill('0') << (*it)->compressed_size << " 0x"
-	       << setw(8)  << hex << setfill('0') << (*it)->uncompressed_size
-	       << endl;
+	  cout_write( 5, ' ', ios::left) << type << " 0x";
+	  cout_write( 4, '0', ios::right) << hex << (*it)->load_addr << " 0x";
+	  cout_write( 4, '0', ios::right) << hex << (*it)->start_addr << " 0x";
+	  cout_write( 8, '0', ios::right) << hex << (*it)->compressed_size << " 0x";
+	  cout_write( 8, '0', ios::right) << hex << (*it)->uncompressed_size << endl;
         }
       else
 	{
-	  cout.setf(ios::left);
-          cout << setw(32) << setfill(' ') << (*it)->name << " "
-	       << setw(5)  << setfill(' ') << type << " -      -      0x";
-	  cout.setf(ios::right);
-	  cout << setw(8)  << hex << setfill('0') << (*it)->compressed_size << " 0x"
-	       << setw(8)  << hex << setfill('0') << (*it)->uncompressed_size
-	       << endl;
+	  cout_write( 5, ' ', ios::left) << type << " -      -      0x";
+	  cout_write( 8, '0', ios::right) << hex << (*it)->compressed_size << " 0x";
+	  cout_write( 8, '0', ios::right) << hex << (*it)->uncompressed_size << endl;
 	}
       count++;
       c_total += (*it)->compressed_size;

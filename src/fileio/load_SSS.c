@@ -49,7 +49,7 @@ loader_SSS_check(const char *filename,
 
   if (len > size)
     return 0;
-  if ((len + 127) < size)
+  if ((len + 129) < size)
     return 0;
 
   if (data[3] != 4)

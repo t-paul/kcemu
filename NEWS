@@ -4,6 +4,8 @@
 
 KCemu 0.3.7
 
+  * Windows Port using GTK-Win32
+  * added emulation of the Polycomputer 880
   * upgrade to GTK+-2.2.1
   * fixed display cache handling
   * fixed keyboard reset bug

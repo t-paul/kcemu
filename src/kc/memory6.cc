@@ -62,6 +62,7 @@ Memory6::Memory6(void) : Memory()
   
   strcpy(ptr + l, "/poly_880.rom");
   loadROM(ptr, &_rom, 0x1000, 1);
+  free(ptr);
 
   /*
    *  The content of the poly880 rom is stored inverted. We use

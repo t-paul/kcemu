@@ -1,6 +1,6 @@
 [Setup]
 AppName=KCemu
-AppVerName=Kcemu 0.3.7beta9
+AppVerName=Kcemu 0.3.7
 AppPublisher=Torsten Paul
 AppPublisherURL=http://kcemu.sourceforge.net/
 AppCopyright=Copyright (C) 1997-2003 Torsten Paul
@@ -13,7 +13,7 @@ LicenseFile=share\doc\kcemu\COPYING
 Compression=bzip/9
 SourceDir=@SYS_INSTALL_BASE@
 OutputDir=.
-OutputBaseFilename=KCemu-0.3.7beta9
+OutputBaseFilename=KCemu-0.3.7
 ChangesAssociations=no
 
 [Languages]

@@ -178,10 +178,12 @@ DiskWindow::init(void)
   char *disk5;
   char *disk6;
   char *disk7;
-  GtkTooltips *tips;
 
-  tips = gtk_tooltips_new();
-  gtk_tooltips_enable(tips);
+  /*
+    GtkTooltips *tips;
+    tips = gtk_tooltips_new();
+    gtk_tooltips_enable(tips);
+  */
   
   /*
    *  disk window

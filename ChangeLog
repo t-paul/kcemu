@@ -1,3 +1,24 @@
+2003-11-20  Torsten Paul  <Torsten.Paul@gmx.de>
+
+	* released version 0.3.7
+
+	* src/fileio/load_SSS.c (loader_SSS_check): relaxed the file checking again;
+	now checks if (basic_length_specified_in_file + 129) < size_of_file; previous
+	value was +127 which was too small for some file floating around
+
+	* src/libtape/kct.cc (list): change stream modifiers to be gcc3 compatible
+
+2003-11-16  Torsten Paul  <Torsten.Paul@gmx.de>
+
+	* src/ui/gtk/tape.cc (init): enabled combo box for tape files; now
+	only files that are readable will be included in the combo box
+
+2003-10-15  Torsten Paul  <Torsten.Paul@gmx.de>
+
+	* src/kc/memory6.cc (Memory6), src/ui/gtk/tape.cc (init),
+	src/ui/gtk/disk.cc (init), src/ui/gtk/ui_gtk.cc (property_change):
+	fix memory leaks
+
 2003-10-12  Torsten Paul  <Torsten.Paul@gmx.de>
 
 	* src/ui/gtk/disk.cc, src/ui/gtk/copying.cc: fixed memory

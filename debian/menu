@@ -6,6 +6,27 @@
   command="/usr/X11R6/bin/kcemu -4"
 
 ?package(kcemu):\
+  title="KCemu (KC85/3)"\
+  section="Apps/Emulators"\
+  icon="/usr/share/pixmaps/kcemu-kc85.xpm"\
+  needs="X11"\
+  command="/usr/X11R6/bin/kcemu -3"
+
+?package(kcemu):\
+  title="KCemu (KC85/2)"\
+  section="Apps/Emulators"\
+  icon="/usr/share/pixmaps/kcemu-kc85.xpm"\
+  needs="X11"\
+  command="/usr/X11R6/bin/kcemu -2"
+
+?package(kcemu):\
+  title="KCemu (KC85/1)"\
+  section="Apps/Emulators"\
+  icon="/usr/share/pixmaps/kcemu-kc87.xpm"\
+  needs="X11"\
+  command="/usr/X11R6/bin/kcemu -1"
+
+?package(kcemu):\
   title="KCemu (KC87)"\
   section="Apps/Emulators"\
   icon="/usr/share/pixmaps/kcemu-kc87.xpm"\
@@ -18,3 +39,31 @@
   icon="/usr/share/pixmaps/kcemu-lc80.xpm"\
   needs="X11"\
   command="/usr/X11R6/bin/kcemu -8"
+
+?package(kcemu):\
+  title="KCemu (Poly880)"\
+  section="Apps/Emulators"\
+  icon="/usr/share/pixmaps/kcemu-poly880.xpm"\
+  needs="X11"\
+  command="/usr/X11R6/bin/kcemu -6"
+
+?package(kcemu):\
+  title="KCemu (BIC/A5105)"\
+  section="Apps/Emulators"\
+  icon="/usr/share/pixmaps/kcemu-bic.xpm"\
+  needs="X11"\
+  command="/usr/X11R6/bin/kcemu -9"
+
+?package(kcemu):\
+  title="KCemu (Z1013)"\
+  section="Apps/Emulators"\
+  icon="/usr/share/pixmaps/kcemu-z1013.xpm"\
+  needs="X11"\
+  command="/usr/X11R6/bin/kcemu -0"
+
+?package(kcemu):\
+  title="KCemu (Z1013/BL4)"\
+  section="Apps/Emulators"\
+  icon="/usr/share/pixmaps/kcemu-z1013.xpm"\
+  needs="X11"\
+  command="/usr/X11R6/bin/kcemu -e z1013.bl4"

@@ -3,7 +3,7 @@ Section: otherosfs
 Priority: optional
 Maintainer: Torsten Paul <Torsten.Paul@gmx.de>
 Build-Depends: debhelper (>> 3.0.0)
-Standards-Version: 3.5.2
+Standards-Version: 3.5.10
 
 Package: kcemu
 Architecture: any

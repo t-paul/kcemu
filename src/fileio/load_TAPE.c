@@ -56,8 +56,6 @@ loader_TAPE_check(const char *filename,
                   unsigned char *data,
                   long size)
 {
-  int a;
-  
   /*
    *  standard kc tape image (128 bytes/block no checksum)
    *  This is somewhat tricky because we don't have a simple

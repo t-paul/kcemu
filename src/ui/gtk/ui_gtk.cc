@@ -137,6 +137,7 @@ UI_Gtk::property_change(GtkWidget *widget,
                         GdkEventProperty *event,
                         gpointer data)
 {
+  gboolean ret;
   guchar *prop_data;
   char *ptr, *val, *atom;
   GdkAtom actual_property_type;
@@ -151,47 +152,58 @@ UI_Gtk::property_change(GtkWidget *widget,
   atom = gdk_atom_name(event->atom);
   if (atom == NULL)
     return TRUE;
-
+  
   if (strcmp(atom, "_KCEMU_REMOTE_COMMAND") == 0)
     {
       DBG(1, form("KCemu/UI/remote",
                   "property_change: %s\n",
-                  gdk_atom_name(event->atom)));
-      gdk_property_get(self->_main.window->window,
-                       event->atom, GDK_TARGET_STRING,
-                       0, (65536 / sizeof(long)), FALSE,
-                       &actual_property_type,
-                       &actual_format, &actual_length,
-                       &prop_data);
-      if (*prop_data == '\0')
-        {
-          DBG(1, form("KCemu/UI/remote",
-                      "empty property!\n"));
-          return TRUE;
-        }
+                  atom));
       
-      ptr = (char *)prop_data;
-      DBG(1, form("KCemu/UI/remote",
-                  " command: %s'\n",
-                  ptr));
-      args = new CMD_Args();
-      while (242)
-        {
-          ptr += strlen(ptr) + 1;
-          if ((ptr - (char *)prop_data) >= actual_length)
-            break;
-          val = strchr(ptr, '=');
-          if (!val)
-            continue;
-          *val++ = '\0';
-          DBG(1, form("KCemu/UI/remote",
-                      " arg: %s -> '%s'\n",
-                      ptr, val));
-          args->set_string_arg(ptr, val);
-        }
+      prop_data = NULL;
+      ret = gdk_property_get(self->_main.window->window,
+			     event->atom, GDK_TARGET_STRING,
+			     0, (65536 / sizeof(long)), FALSE,
+			     &actual_property_type,
+			     &actual_format, &actual_length,
+			     &prop_data);
       
-      CMD_EXEC_ARGS((const char *)prop_data, args);
+      if (!ret || (*prop_data == '\0'))
+	{
+	  DBG(1, form("KCemu/UI/remote",
+		      "empty or invalid property!\n"));
+	}
+      else
+	{
+	  ptr = (char *)prop_data;
+	  DBG(1, form("KCemu/UI/remote",
+		      "command: %s'\n",
+		      ptr));
+	  args = new CMD_Args();
+	  while (242)
+	    {
+	      ptr += strlen(ptr) + 1;
+	      if ((ptr - (char *)prop_data) >= actual_length)
+		break;
+	      val = strchr(ptr, '=');
+	      if (!val)
+		continue;
+	      *val++ = '\0';
+	      DBG(1, form("KCemu/UI/remote",
+			  " arg: %s -> '%s'\n",
+			  ptr, val));
+	      args->set_string_arg(ptr, val);
+	    }
+	  
+	  CMD_EXEC_ARGS((const char *)prop_data, args);
+	}
+      
+      if (prop_data != NULL)
+	g_free(prop_data);
+      
     }
+  
+  g_free(atom);
+
   return TRUE;
 }
 
@@ -630,7 +642,6 @@ UI_Gtk::create_main_window(void)
   _main.window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
   gtk_widget_set_name(_main.window, "MainWindow");
   gtk_window_set_title(GTK_WINDOW(_main.window), get_title());
-  gtk_widget_set_uposition(_main.window, 650, 50);
   gtk_signal_connect(GTK_OBJECT(_main.window), "delete_event",
                      GTK_SIGNAL_FUNC(cmd_exec_sft), (gpointer)"emu-quit");
   gtk_signal_connect(GTK_OBJECT(_main.window), "property_notify_event",

@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: KCemu v0.3.7\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2003-10-12 18:51+0200\n"
-"PO-Revision-Date: 2003-07-30 21:25+0200\n"
+"POT-Creation-Date: 2003-11-16 17:31+0100\n"
+"PO-Revision-Date: 2003-11-16 17:32+0100\n"
 "Last-Translator: Torsten Paul <Torsten.Paul@gmx.de>\n"
 "Language-Team: German <Torsten.Paul@gmx.de>\n"
 "MIME-Version: 1.0\n"
@@ -1392,8 +1392,8 @@ msgstr "Über den KC-Emulator"
 #. *  close button
 #.
 #: src/ui/gtk/about.cc:121 src/ui/gtk/color.cc:244 src/ui/gtk/copying.cc:141
-#: src/ui/gtk/disk.cc:308 src/ui/gtk/info.cc:537 src/ui/gtk/module.cc:324
-#: src/ui/gtk/tape.cc:459 src/ui/gtk/keyboard.cc:636 src/ui/gtk/wav.cc:249
+#: src/ui/gtk/disk.cc:310 src/ui/gtk/info.cc:537 src/ui/gtk/module.cc:324
+#: src/ui/gtk/tape.cc:461 src/ui/gtk/keyboard.cc:636 src/ui/gtk/wav.cc:249
 msgid "Close"
 msgstr "Schließen"
 
@@ -1488,14 +1488,14 @@ msgstr "Ja"
 msgid "No"
 msgstr "Nein"
 
-#: src/ui/gtk/disk.cc:191
+#: src/ui/gtk/disk.cc:193
 msgid "KCemu: Disk"
 msgstr "KCemu: Diskette"
 
 #.
 #. *  label
 #.
-#: src/ui/gtk/disk.cc:218
+#: src/ui/gtk/disk.cc:220
 #, c-format
 msgid "Disk %d"
 msgstr "Diskette %d"
@@ -1503,14 +1503,14 @@ msgstr "Diskette %d"
 #.
 #. *  browse button
 #.
-#: src/ui/gtk/disk.cc:276
+#: src/ui/gtk/disk.cc:278
 msgid "Browse"
 msgstr "Durchsuchen"
 
 #.
 #. *  eject button
 #.
-#: src/ui/gtk/disk.cc:289
+#: src/ui/gtk/disk.cc:291
 msgid "Eject"
 msgstr "Auswerfen"
 
@@ -1745,121 +1745,125 @@ msgstr "Ok"
 msgid "Please enter the new name for the file."
 msgstr "Bitte den Namen für die neue Datei eingeben."
 
-#: src/ui/gtk/tape.cc:264
+#: src/ui/gtk/tape.cc:266
 msgid "/_Run File"
 msgstr "/Datei _Ausführen"
 
-#: src/ui/gtk/tape.cc:265
+#: src/ui/gtk/tape.cc:267
 msgid "/_Load File"
 msgstr "/Datei _Laden"
 
-#: src/ui/gtk/tape.cc:266
+#: src/ui/gtk/tape.cc:268
 msgid "/_Export File"
 msgstr "/Datei _Exportieren"
 
-#: src/ui/gtk/tape.cc:267
+#: src/ui/gtk/tape.cc:269
 msgid "/Export _Wav"
 msgstr "/WAV Exportieren"
 
-#: src/ui/gtk/tape.cc:268 src/ui/gtk/ui_gtk.cc:605
+#: src/ui/gtk/tape.cc:270 src/ui/gtk/ui_gtk.cc:617
 msgid "/sep1"
 msgstr "/sep1"
 
-#: src/ui/gtk/tape.cc:269
+#: src/ui/gtk/tape.cc:271
 msgid "/Edit _Header"
 msgstr "/_Header Ändern"
 
-#: src/ui/gtk/tape.cc:270
+#: src/ui/gtk/tape.cc:272
 msgid "/Re_name File"
 msgstr "/Datei _Umbenennen"
 
-#: src/ui/gtk/tape.cc:271
+#: src/ui/gtk/tape.cc:273
 msgid "/_Delete File"
 msgstr "/_Datei Löschen"
 
-#: src/ui/gtk/tape.cc:272 src/ui/gtk/ui_gtk.cc:612
+#: src/ui/gtk/tape.cc:274 src/ui/gtk/ui_gtk.cc:624
 msgid "/sep2"
 msgstr "/sep2"
 
-#: src/ui/gtk/tape.cc:273
+#: src/ui/gtk/tape.cc:275
 msgid "/_Add File"
 msgstr "/Datei _Hinzufügen"
 
-#: src/ui/gtk/tape.cc:278
+#: src/ui/gtk/tape.cc:280
 msgid "Name"
 msgstr "Name"
 
-#: src/ui/gtk/tape.cc:279
+#: src/ui/gtk/tape.cc:281
 msgid "Type"
 msgstr "Typ"
 
-#: src/ui/gtk/tape.cc:280
+#: src/ui/gtk/tape.cc:282
 msgid "Load"
 msgstr "Load"
 
-#: src/ui/gtk/tape.cc:281
+#: src/ui/gtk/tape.cc:283
 msgid "Start"
 msgstr "Start"
 
-#: src/ui/gtk/tape.cc:282
+#: src/ui/gtk/tape.cc:284
 msgid "Size"
 msgstr "Größe"
 
 #.
 #. *  popup menu
 #.
-#: src/ui/gtk/tape.cc:294 src/ui/gtk/tape.cc:300
+#: src/ui/gtk/tape.cc:296 src/ui/gtk/tape.cc:302
 msgid "<TapeP>"
 msgstr "<TapeP>"
 
-#: src/ui/gtk/tape.cc:301
+#: src/ui/gtk/tape.cc:303
 msgid "/Run File"
 msgstr "/Datei Ausführen"
 
-#: src/ui/gtk/tape.cc:302
+#: src/ui/gtk/tape.cc:304
 msgid "/Load File"
 msgstr "/Datei Laden"
 
-#: src/ui/gtk/tape.cc:303
+#: src/ui/gtk/tape.cc:305
 msgid "/Edit Header"
 msgstr "/Header Ändern"
 
-#: src/ui/gtk/tape.cc:304
+#: src/ui/gtk/tape.cc:306
 msgid "/Delete File"
 msgstr "/Datei Löschen"
 
-#: src/ui/gtk/tape.cc:305
+#: src/ui/gtk/tape.cc:307
 msgid "/Rename File"
 msgstr "/Datei Umbenennen"
 
-#: src/ui/gtk/tape.cc:306
+#: src/ui/gtk/tape.cc:308
 msgid "/Export File"
 msgstr "/Datei Exportieren"
 
-#: src/ui/gtk/tape.cc:313
+#: src/ui/gtk/tape.cc:315
 msgid "KCemu: Tape"
 msgstr "KCemu: Kassetten-Archiv"
+
+#: src/ui/gtk/tape.cc:335
+msgid "Tape:"
+msgstr "Tape:"
 
 #.
 #. *  buttons
 #.
-#: src/ui/gtk/tape.cc:424 src/ui/gtk/wav.cc:208
+#: src/ui/gtk/tape.cc:426 src/ui/gtk/wav.cc:208
 msgid "Stop"
 msgstr "Stop"
 
-#: src/ui/gtk/tape.cc:431
+#: src/ui/gtk/tape.cc:433
 msgid "Record"
 msgstr "Aufnahme"
 
-#: src/ui/gtk/tape.cc:438 src/ui/gtk/wav.cc:236
+#: src/ui/gtk/tape.cc:440 src/ui/gtk/wav.cc:236
 msgid "Play"
 msgstr "Abspielen"
 
-#: src/ui/gtk/tape.cc:445
+#: src/ui/gtk/tape.cc:447
 msgid "Attach"
 msgstr "Aktivieren"
 
-#: src/ui/gtk/tape.cc:452
+#: src/ui/gtk/tape.cc:454
 msgid "Detach"
 msgstr "Deaktivieren"
 
@@ -1883,163 +1887,163 @@ msgstr "KCemu: Audio Player"
 msgid "Open"
 msgstr "Öffnen"
 
-#: src/ui/gtk/ui_gtk.cc:568
+#: src/ui/gtk/ui_gtk.cc:580
 msgid "/_File"
 msgstr "/_Datei"
 
-#: src/ui/gtk/ui_gtk.cc:569
+#: src/ui/gtk/ui_gtk.cc:581
 msgid "/File/Run..."
 msgstr "/Datei/Ausführen..."
 
-#: src/ui/gtk/ui_gtk.cc:570
+#: src/ui/gtk/ui_gtk.cc:582
 msgid "/File/Load..."
 msgstr "/Datei/Laden..."
 
-#: src/ui/gtk/ui_gtk.cc:571
+#: src/ui/gtk/ui_gtk.cc:583
 msgid "/File/Tape..."
 msgstr "/Datei/Kassette..."
 
-#: src/ui/gtk/ui_gtk.cc:572
+#: src/ui/gtk/ui_gtk.cc:584
 msgid "/File/Disk..."
 msgstr "/Datei/Diskette..."
 
-#: src/ui/gtk/ui_gtk.cc:573
+#: src/ui/gtk/ui_gtk.cc:585
 msgid "/File/Module..."
 msgstr "/Datei/Modul..."
 
-#: src/ui/gtk/ui_gtk.cc:574
+#: src/ui/gtk/ui_gtk.cc:586
 msgid "/File/Audio..."
 msgstr "/Datei/Audio..."
 
-#: src/ui/gtk/ui_gtk.cc:575
+#: src/ui/gtk/ui_gtk.cc:587
 msgid "/File/sep1"
 msgstr "/Datei/sep1"
 
-#: src/ui/gtk/ui_gtk.cc:576
+#: src/ui/gtk/ui_gtk.cc:588
 msgid "/File/Reset"
 msgstr "/Datei/Reset"
 
-#: src/ui/gtk/ui_gtk.cc:577
+#: src/ui/gtk/ui_gtk.cc:589
 msgid "/File/Power On"
 msgstr "/Datei/Einschalten"
 
-#: src/ui/gtk/ui_gtk.cc:578
+#: src/ui/gtk/ui_gtk.cc:590
 msgid "/File/sep2"
 msgstr "/Datei/sep2"
 
-#: src/ui/gtk/ui_gtk.cc:579
+#: src/ui/gtk/ui_gtk.cc:591
 msgid "/File/Quit Emulator"
 msgstr "/Datei/Emulator beenden"
 
-#: src/ui/gtk/ui_gtk.cc:580 src/ui/gtk/ui_gtk.cc:606
+#: src/ui/gtk/ui_gtk.cc:592 src/ui/gtk/ui_gtk.cc:618
 msgid "/_View"
 msgstr "/_Ansicht"
 
-#: src/ui/gtk/ui_gtk.cc:581
+#: src/ui/gtk/ui_gtk.cc:593
 msgid "/View/Zoom x1"
 msgstr "/Ansicht/Zoom x1"
 
-#: src/ui/gtk/ui_gtk.cc:582
+#: src/ui/gtk/ui_gtk.cc:594
 msgid "/View/Zoom x2"
 msgstr "/Ansicht/Zoom x2"
 
-#: src/ui/gtk/ui_gtk.cc:583
+#: src/ui/gtk/ui_gtk.cc:595
 msgid "/View/Zoom x3"
 msgstr "/Ansicht/Zoom x3"
 
-#: src/ui/gtk/ui_gtk.cc:584 src/ui/gtk/ui_gtk.cc:607
+#: src/ui/gtk/ui_gtk.cc:596 src/ui/gtk/ui_gtk.cc:619
 msgid "/View/Keyboard"
 msgstr "/Ansicht/Tastatur"
 
-#: src/ui/gtk/ui_gtk.cc:585 src/ui/gtk/ui_gtk.cc:608
+#: src/ui/gtk/ui_gtk.cc:597 src/ui/gtk/ui_gtk.cc:620
 msgid "/View/Debugger"
 msgstr "/Ansicht/Debugger"
 
-#: src/ui/gtk/ui_gtk.cc:586 src/ui/gtk/ui_gtk.cc:609
+#: src/ui/gtk/ui_gtk.cc:598 src/ui/gtk/ui_gtk.cc:621
 msgid "/View/Info"
 msgstr "/Ansicht/Information"
 
-#: src/ui/gtk/ui_gtk.cc:587 src/ui/gtk/ui_gtk.cc:610
+#: src/ui/gtk/ui_gtk.cc:599 src/ui/gtk/ui_gtk.cc:622
 msgid "/View/Menubar"
 msgstr "/Ansicht/Menüleiste"
 
-#: src/ui/gtk/ui_gtk.cc:588 src/ui/gtk/ui_gtk.cc:611
+#: src/ui/gtk/ui_gtk.cc:600 src/ui/gtk/ui_gtk.cc:623
 msgid "/View/Statusbar"
 msgstr "/Ansicht/Statusleiste"
 
-#: src/ui/gtk/ui_gtk.cc:589
+#: src/ui/gtk/ui_gtk.cc:601
 msgid "/_Configuration"
 msgstr "/Konfiguration"
 
-#: src/ui/gtk/ui_gtk.cc:590
+#: src/ui/gtk/ui_gtk.cc:602
 msgid "/Configuration/Colors"
 msgstr "/Konfiguration/Farben"
 
-#: src/ui/gtk/ui_gtk.cc:591
+#: src/ui/gtk/ui_gtk.cc:603
 msgid "/Configuration/No Speed Limit"
 msgstr "/Konfiguration/Maximale Geschwindigkeit"
 
-#: src/ui/gtk/ui_gtk.cc:592
+#: src/ui/gtk/ui_gtk.cc:604
 msgid "/_Help"
 msgstr "/_Hilfe"
 
-#: src/ui/gtk/ui_gtk.cc:593
+#: src/ui/gtk/ui_gtk.cc:605
 msgid "/Help/About KCemu"
 msgstr "/Hilfe/Über KCemu"
 
-#: src/ui/gtk/ui_gtk.cc:594
+#: src/ui/gtk/ui_gtk.cc:606
 msgid "/Help/sep3"
 msgstr "/Hilfe/sep3"
 
-#: src/ui/gtk/ui_gtk.cc:595
+#: src/ui/gtk/ui_gtk.cc:607
 msgid "/Help/KCemu Licence"
 msgstr "/Hilfe/KCemu Lizenz"
 
-#: src/ui/gtk/ui_gtk.cc:596
+#: src/ui/gtk/ui_gtk.cc:608
 msgid "/Help/No Warranty!"
 msgstr "/Hilfe/Keine Gewährleistung!"
 
-#: src/ui/gtk/ui_gtk.cc:599
+#: src/ui/gtk/ui_gtk.cc:611
 msgid "/_Run..."
 msgstr "/_Ausführen..."
 
-#: src/ui/gtk/ui_gtk.cc:600
+#: src/ui/gtk/ui_gtk.cc:612
 msgid "/_Load..."
 msgstr "/_Laden..."
 
-#: src/ui/gtk/ui_gtk.cc:601
+#: src/ui/gtk/ui_gtk.cc:613
 msgid "/_Tape..."
 msgstr "/_Kassette..."
 
-#: src/ui/gtk/ui_gtk.cc:602
+#: src/ui/gtk/ui_gtk.cc:614
 msgid "/_Disk..."
 msgstr "/_Diskette..."
 
-#: src/ui/gtk/ui_gtk.cc:603
+#: src/ui/gtk/ui_gtk.cc:615
 msgid "/_Module..."
 msgstr "/_Modul..."
 
-#: src/ui/gtk/ui_gtk.cc:604
+#: src/ui/gtk/ui_gtk.cc:616
 msgid "/_Audio..."
 msgstr "/_Audio..."
 
-#: src/ui/gtk/ui_gtk.cc:613
+#: src/ui/gtk/ui_gtk.cc:625
 msgid "/Reset"
 msgstr "/Reset"
 
-#: src/ui/gtk/ui_gtk.cc:614
+#: src/ui/gtk/ui_gtk.cc:626
 msgid "/Power On"
 msgstr "/Einschalten"
 
-#: src/ui/gtk/ui_gtk.cc:615
+#: src/ui/gtk/ui_gtk.cc:627
 msgid "/sep3"
 msgstr "/sep3"
 
-#: src/ui/gtk/ui_gtk.cc:616
+#: src/ui/gtk/ui_gtk.cc:628
 msgid "/Quit Emulator"
 msgstr "/Emulator beenden"
 
-#: src/ui/gtk/ui_gtk.cc:767
+#: src/ui/gtk/ui_gtk.cc:778
 #, c-format
 msgid "%s (%s)"
 msgstr "%s (%s)"

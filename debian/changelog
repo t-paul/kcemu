@@ -1,3 +1,9 @@
+kcemu (0.3.7) unstable; urgency=low
+
+  * new upstream version
+
+ -- Torsten Paul <Torsten.Paul@gmx.de>  Sun, 16 Nov 2003 17:34:13 +0100
+
 kcemu (0.3.6-3) unstable; urgency=low
 
   * added manpages for converter programs

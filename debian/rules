@@ -68,7 +68,10 @@ binary-arch: build install
 	dh_compress usr/share/KCemu/microdos.dump \
 		    usr/share/KCemu/a5105sys.dump \
 		    usr/share/KCemu/tools.dump \
-		    usr/share/KCemu/caos.dump
+		    usr/share/KCemu/caos.dump \
+		    usr/share/KCemu/cpmz9.dump \
+		    usr/share/KCemu/z1013cpm.dump \
+		    usr/share/KCemu/z1013gdc.dump
 	dh_fixperms
 	dh_installdeb
 	dh_shlibdeps

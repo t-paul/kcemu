@@ -18,9 +18,8 @@ WINICONS = \
 
 %.ico : %.xpm
 	xpmtoppm --alphaout /tmp/ico.alpha.1.$$$$ $< | ppmquant 256 > /tmp/ico.icon.$$$$ ; \
-	pnminvert /tmp/ico.alpha.1.$$$$ > /tmp/ico.alpha.2.$$$$ ; \
-	ppmtowinicon -andppms /tmp/ico.icon.$$$$ /tmp/ico.alpha.2.$$$$ > $@ ; \
-	rm -f /tmp/ico.icon.$$$$ /tmp/ico.alpha.1.$$$$ /tmp/ico.alpha.2.$$$$
+	ppmtowinicon -andppms /tmp/ico.icon.$$$$ /tmp/ico.alpha.1.$$$$ > $@ ; \
+	rm -f /tmp/ico.icon.$$$$ /tmp/ico.alpha.1.$$$$
 
 if TARGET_LINUX
 pkgdata_DATA = $(ICONS)
