@@ -56,7 +56,7 @@ UI_SDL8::allocate_colors(double saturation_fg,
 }
 
 void
-UI_SDL8::update(bool full_update = false, bool clear_cache = false)
+UI_SDL8::update(bool full_update, bool clear_cache)
 {
   generic_update();
   sdl_update(_bitmap, 0, get_real_width(), get_real_height());
@@ -95,7 +95,7 @@ UI_SDL8::get_height(void)
 }
 
 void
-UI_SDL8::reset(bool power_on = false)
+UI_SDL8::reset(bool power_on)
 {
   z80->addCallback(35000, this, 0);
 }

@@ -22,7 +22,7 @@
 #ifndef __kc_ports_h
 #define __kc_ports_h
 
-#include <list.h>
+#include <list>
 
 #include "kc/system.h"
 
@@ -71,7 +71,7 @@ public:
   };
 
 private:
-  typedef list<PortGroup *> port_list_t;
+  typedef std::list<PortGroup *> port_list_t;
 
   port_list_t _port_list[NR_PORTS];
   PortInterface *_port_ptr[NR_PORTS];

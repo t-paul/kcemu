@@ -51,6 +51,7 @@ typedef struct mp3_data
   mp3data_struct mp3data;
 } mp3_data_t;
 
+static char loader_name[1024];
 static libaudio_loader_t *self = NULL;
 
 static int
@@ -242,7 +243,7 @@ loader_mp3_get_type(void)
 static const char *
 loader_mp3_get_name(void)
 {
-  return "loader for mp3 files (using libmp3lame)";
+  return loader_name;
 }
 
 static libaudio_loader_t loader = {
@@ -258,6 +259,11 @@ static libaudio_loader_t loader = {
 void
 loader_mp3_init(void)
 {
+  snprintf(loader_name,
+	   sizeof(loader_name),
+	   "loader for mp3 files (using libmp3lame %s)",
+	   get_lame_short_version());
+
   if (libaudio_register_loader(&loader))
     self = &loader;
 }

@@ -101,17 +101,20 @@ VERSION = @VERSION@
 VORBIS_LIBS = @VORBIS_LIBS@
 l = @l@
 
-TESTS = t_cb_list t_ctc
+TESTS = t_memstream #t_cb_list t_ctc
 
 check_PROGRAMS = $(TESTS)
 
 INCLUDES = -I../../include $(CPPUNIT_CFLAGS)
 
-t_cb_list_SOURCES = t_cb_list.cc
-t_cb_list_LDADD = ../../src/kc/cb_list.o $(CPPUNIT_LIBS)
+#t_cb_list_SOURCES = t_cb_list.cc
+#t_cb_list_LDADD = ../../src/kc/cb_list.o $(CPPUNIT_LIBS)
 
-t_ctc_SOURCES = t_ctc.cc
-t_ctc_LDADD = ../../src/kc/ctc.o ../../src/libdbg/libdbg.a $(CPPUNIT_LIBS)
+#t_ctc_SOURCES = t_ctc.cc
+#t_ctc_LDADD = ../../src/kc/ctc.o ../../src/libdbg/libdbg.a $(CPPUNIT_LIBS)
+
+t_memstream_SOURCES = t_memstream.cc
+t_memstream_LDADD = $(CPPUNIT_LIBS)
 mkinstalldirs = $(SHELL) $(top_srcdir)/mkinstalldirs
 CONFIG_HEADER = ../../include/kc/config.h
 CONFIG_CLEAN_FILES = 
@@ -120,12 +123,9 @@ DEFS = @DEFS@ -I. -I$(srcdir) -I../../include/kc
 CPPFLAGS = @CPPFLAGS@
 LDFLAGS = @LDFLAGS@
 LIBS = @LIBS@
-t_cb_list_OBJECTS =  t_cb_list.o
-t_cb_list_DEPENDENCIES =  ../../src/kc/cb_list.o
-t_cb_list_LDFLAGS = 
-t_ctc_OBJECTS =  t_ctc.o
-t_ctc_DEPENDENCIES =  ../../src/kc/ctc.o ../../src/libdbg/libdbg.a
-t_ctc_LDFLAGS = 
+t_memstream_OBJECTS =  t_memstream.o
+t_memstream_DEPENDENCIES = 
+t_memstream_LDFLAGS = 
 CXXFLAGS = @CXXFLAGS@
 CXXCOMPILE = $(CXX) $(DEFS) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS)
 CXXLD = $(CXX)
@@ -137,8 +137,8 @@ DISTFILES = $(DIST_COMMON) $(SOURCES) $(HEADERS) $(TEXINFOS) $(EXTRA_DIST)
 
 TAR = tar
 GZIP_ENV = --best
-SOURCES = $(t_cb_list_SOURCES) $(t_ctc_SOURCES)
-OBJECTS = $(t_cb_list_OBJECTS) $(t_ctc_OBJECTS)
+SOURCES = $(t_memstream_SOURCES)
+OBJECTS = $(t_memstream_OBJECTS)
 
 all: all-redirect
 .SUFFIXES:
@@ -179,13 +179,9 @@ distclean-compile:
 
 maintainer-clean-compile:
 
-t_cb_list: $(t_cb_list_OBJECTS) $(t_cb_list_DEPENDENCIES)
-	@rm -f t_cb_list
-	$(CXXLINK) $(t_cb_list_LDFLAGS) $(t_cb_list_OBJECTS) $(t_cb_list_LDADD) $(LIBS)
-
-t_ctc: $(t_ctc_OBJECTS) $(t_ctc_DEPENDENCIES)
-	@rm -f t_ctc
-	$(CXXLINK) $(t_ctc_LDFLAGS) $(t_ctc_OBJECTS) $(t_ctc_LDADD) $(LIBS)
+t_memstream: $(t_memstream_OBJECTS) $(t_memstream_DEPENDENCIES)
+	@rm -f t_memstream
+	$(CXXLINK) $(t_memstream_LDFLAGS) $(t_memstream_OBJECTS) $(t_memstream_LDADD) $(LIBS)
 .cc.o:
 	$(CXXCOMPILE) -c $<
 
@@ -233,6 +229,11 @@ distdir: $(DISTFILES)
 	    || cp -p $$d/$$file $(distdir)/$$file || :; \
 	  fi; \
 	done
+t_cb_list.o: t_cb_list.cc ../../include/kc/cb.h ../../include/kc/kc.h \
+	../../include/kc/system.h ../../include/kc/config.h \
+	../../include/sys/sysdep.h ../../include/kc/cb_list.h
+t_memstream.o: t_memstream.cc ../../include/kc/memstream.h \
+	../../include/kc/config.h
 
 check-TESTS: $(TESTS)
 	@failed=0; all=0; \

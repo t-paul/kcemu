@@ -24,16 +24,18 @@
 #include <stdlib.h>
 #include <string.h>
 #include <malloc.h>
-#include <fstream.h>
+#include <fstream>
 
-#include <iostream.h>
-#include <iomanip.h>
+#include <iostream>
+#include <iomanip>
 
 #include "kc/system.h"
 
 #include "kc/kc.h"
 #include "kc/memory.h"
 #include "ui/status.h"
+
+using namespace std;
 
 byte_t *MemArea::_scratch_r;
 byte_t *MemArea::_scratch_w;

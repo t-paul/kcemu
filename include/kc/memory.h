@@ -22,8 +22,8 @@
 #ifndef __kc_memory_h
 #define __kc_memory_h
 
-#include <list.h>
-#include <iostream.h>
+#include <list>
+#include <iostream>
 
 #include "kc/system.h"
 
@@ -75,7 +75,7 @@ public:
 class MemAreaGroup
 {
 private:
-  typedef list<MemArea *> mem_area_list_t;
+  typedef std::list<MemArea *> mem_area_list_t;
 
 private:
   int _prio;
@@ -102,7 +102,7 @@ public:
 class MemAreaPtr
 {
 private:
-  typedef list<MemArea *> mem_area_list_t;
+  typedef std::list<MemArea *> mem_area_list_t;
 
   mem_area_list_t _l;
   MemArea *_ptr;
@@ -152,7 +152,7 @@ public:
     
   virtual void dump(word_t addr);
   virtual void loadRAM(const char *filename);
-  virtual bool loadRAM(istream *is, bool with_block_nr = false);
+  virtual bool loadRAM(std::istream *is, bool with_block_nr = false);
   virtual void scratch_mem(byte_t *ptr, int len);
   virtual void info(void);
   virtual MemAreaPtr ** get_mem_ptr(void);

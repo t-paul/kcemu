@@ -22,6 +22,8 @@
 #ifndef __kc_sound8_h
 #define __kc_sound8_h
 
+#include <list>
+
 #include "kc/system.h"
 
 #include "kc/cb.h"
@@ -44,7 +46,7 @@ class sndop8
 class Sound8 : public Sound, public PIOCallbackInterface, public Callback
 {
  private:
-  typedef list<sndop8 *>sndop_list_t;
+  typedef std::list<sndop8 *>sndop_list_t;
 
  public:
   enum {

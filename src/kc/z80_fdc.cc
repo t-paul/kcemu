@@ -23,8 +23,8 @@
 #include <ctype.h>
 #include <signal.h>
 #include <unistd.h>
-#include <iostream.h>
-#include <iomanip.h>
+#include <iostream>
+#include <iomanip>
 #include <sys/time.h>
 
 #include "kc/system.h"

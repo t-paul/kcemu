@@ -101,7 +101,7 @@ VERSION = @VERSION@
 VORBIS_LIBS = @VORBIS_LIBS@
 l = @l@
 
-EXTRA_DIST =  	libdisk.h 	libdiskP.h
+EXTRA_DIST =  	libdisk.h 	libdiskP.h 	teledisk.h
 
 mkinstalldirs = $(SHELL) $(top_srcdir)/mkinstalldirs
 CONFIG_HEADER = ../../include/kc/config.h

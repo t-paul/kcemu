@@ -1,3 +1,91 @@
+2002-11-30  Torsten Paul  <Torsten.Paul@gmx.de>
+
+	* src/libaudio/load_*.c: display version of the used sound
+	library if available
+	
+	* src/libaudio/load_als.c: audio loader for ALSA line input;
+	not enabled yet
+
+	* configure.in: added check for libsndfile 1.0.x
+
+	* added support for libsndfile 1.0.x which has a different
+	api compared with version 0.0.x
+	
+	* src/libdisk/tdtodump.c: simple program to convert TeleDisk
+	images to uncompressed disk dumps
+
+	* include/libdisk/teledisk.h, src/libdisk/teledisk.c,
+	src/libdisk/load_td0.c: added loader for disk images produced
+	by the Sydex TeleDisk program (only normal compression for now)
+
+2002-11-22  Torsten Paul  <Torsten.Paul@gmx.de>
+
+	* src/ui/gtk/module.cc: show the toggle button for the color
+	expansion for all kc85/1 and kc87 variants but enable it only
+	for some of those
+
+	* src/kc/mod_list.cc: differentiate kc85/1 and kc87 variants with
+	and without the color expansion; this should move to a more
+	appropriate place
+
+2002-11-21  Torsten Paul  <Torsten.Paul@gmx.de>
+
+	* src/kc/tape.cc (do_play): tape now functional with the new
+	memstream; still needs some workarounds because of problems
+	with the memstream class
+
+2002-11-20  Torsten Paul  <Torsten.Paul@gmx.de>
+
+	* lots of compile fixes for g++-3.2; updated names of include files;
+	removed default parameter values from some functions in the *.cc
+	files; replaced the deprecated strstream
+	
+	* src/kc/kc.cc (set_kc_type): added the notion of computer
+	variants to allow to differentiate between e.g. the kc87.11 and
+	kc87.21 model
+
+2002-11-19  Torsten Paul  <Torsten.Paul@gmx.de>
+
+	* src/kc/mod_rom1.cc (ModuleROM1): added missing initialization;
+	fixes crash on exit
+
+	* src/libtape/kct.cc: using memstream now
+
+	* include/kc/memstream.h: new memory based input/output stream
+	working on a byte array; can't use istringstream to replace
+	istrstream because it truncates on '\0'
+
+2002-11-17  Torsten Paul  <Torsten.Paul@gmx.de>
+
+	* ROM/os____f0.87b, basic_c0.87b: dumped system and basic rom of
+	a kc87.21; both roms are different from the kc87.11
+	
+	* src/kc/memory1.cc (dumpCore): implemented coredump function
+
+	* src/kc/memory7.cc (dumpCore): implemented coredump function
+
+2002-11-07  Torsten Paul  <Torsten.Paul@gmx.de>
+
+	* src/kc/memory1.cc (reset), src/kc/memory7.cc (reset): don't call
+	scratch_mem() for the first ram block at address 0000h this breaks
+	the initialization -- how this is working in the real machine is
+	quite obscure; fixes MAZOGS
+
+	* src/kc/ctc1.cc (irq_2): output pin of timer channel 2 is connected
+	to channel 3 trigger input pin; fixes system time
+
+2002-11-03  Torsten Paul  <Torsten.Paul@gmx.de>
+
+	* src/cmd/dbg.cc: added command reload-debug-config to reload
+	the debug config
+
+	* include/libdbg/dbg.h, src/libdbg/dbg.cc: added function to
+	reload the config file while the application is running
+
+2002-10-31  Torsten Paul  <Torsten.Paul@gmx.de>
+
+	* released version 0.3.6
+
 2002-10-16  Torsten Paul  <Torsten.Paul@gmx.de>
 
 	* src/kc/z80.cc: timer is not available for all computer types

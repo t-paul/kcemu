@@ -2,4 +2,5 @@
 
 EXTRA_DIST = \
 	libdisk.h \
-	libdiskP.h
+	libdiskP.h \
+	teledisk.h

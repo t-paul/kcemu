@@ -1,5 +1,5 @@
 #include <stdio.h>
-#include <fstream.h>
+#include <fstream>
 
 #include "libdbg/dbg.h"
 
@@ -106,22 +106,40 @@ p_tree::check_path(const char *data)
 }
 
 void
-p_tree::dump(ostream& os, p_map *map, int level) const
+p_tree::clear()
+{
+  clear(_map);
+}
+
+void
+p_tree::clear(p_map *map)
+{
+  for (p_map::iterator it = map->begin();it != map->end();it++)
+    clear((*it).second);
+
+  map->clear();
+
+  if (_map != map) // don't free top level object
+    delete map;
+}
+
+void
+p_tree::dump(std::ostream& os, p_map *map, int level) const
 {
   for (int a = 0;a < level;a++)
     os << "  ";
   os << map->get_name();
   if (map->get_allow_subkeys())
     os << " <*>";
-  os << endl;
+  os << std::endl;
 
   for (p_map::iterator it = map->begin();it != map->end();it++)
     dump(os, (*it).second, level + 1);
 }
 
-ostream& operator<< (ostream& os, const p_tree& t)
+std::ostream& operator<< (std::ostream& os, const p_tree& t)
 {
-  os << "p_tree:" << endl;
+  os << "p_tree:" << std::endl;
   t.dump(os, t._map, 0);
   return os;
 }
@@ -130,23 +148,13 @@ DBG_class *DBG_class::_singleton = 0;
 
 DBG_class::DBG_class(void)
 {
-  char *filename, *tmp;
-  
-  tmp = getenv("HOME");
-  if (tmp)
-    {
-      filename = new char[strlen(tmp) + 8];
-      strcpy(filename, tmp);
-      strcat(filename, "/.debug");
-      load_file(filename);
-      delete[] filename;
-    }
-  
-  _o = &cout;
+  _o = &std::cout;
+  load_config();
 }
 
 DBG_class::~DBG_class(void)
 {
+  _tree.clear();
 }
 
 DBG_class *
@@ -158,9 +166,33 @@ DBG_class::instance(void)
 }
 
 void
+DBG_class::clear(void)
+{
+  _tree.clear();
+}
+
+void
+DBG_class::load_config(void)
+{
+  char *filename, *tmp;
+
+  clear();
+  
+  tmp = getenv("HOME");
+  if (tmp)
+    {
+      filename = new char[strlen(tmp) + 8];
+      strcpy(filename, tmp);
+      strcat(filename, "/.debug");
+      load_file(filename);
+      delete[] filename;
+    }
+}
+
+void
 DBG_class::load_file(const char *filename)
 {
-  ifstream is;
+  std::ifstream is;
   char line[4096];
 
   is.open(filename);
@@ -215,7 +247,7 @@ DBG_class::println(const char *path, const char *msg)
   if (!_tree.check_path(path))
     return;
 
-  *_o << "DEBUG: " << path << " - " << msg << endl;
+  *_o << "DEBUG: " << path << " - " << msg << std::endl;
 }
 
 bool
@@ -224,9 +256,9 @@ DBG_class::check(const char *path)
   return _tree.check_path(path);
 }
 
-ostream& operator<< (ostream& os, const DBG_class& dbg)
+std::ostream& operator<< (std::ostream& os, const DBG_class& dbg)
 {
-  os << "DBG:" << endl;
+  os << "DBG:" << std::endl;
   os << dbg._tree;
   return os;
 }

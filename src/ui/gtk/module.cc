@@ -187,6 +187,7 @@ ModuleWindow::init_device_1(const char *name)
 {
   int a;
   char buf[10];
+  gboolean color_expansion_active;
 
   /*
    *  frame
@@ -239,18 +240,25 @@ ModuleWindow::init_device_1(const char *name)
       gtk_widget_show(_w.led[a]);
     }
 
-  if (get_kc_type() & KC_TYPE_85_1)
-    {
-      _w.color_exp = gtk_check_button_new_with_label(_("IRM Color Expansion"));
-      gtk_table_attach(GTK_TABLE(_w.table[0]), _w.color_exp,
-		       1, 2,
-		       4, 5,
-		       (GtkAttachOptions)(GTK_EXPAND | GTK_FILL), GTK_FILL,
-		       0, 0);
-      gtk_signal_connect(GTK_OBJECT(_w.color_exp), "toggled",
-                         GTK_SIGNAL_FUNC(sf_color_expansion), NULL);
-      gtk_widget_show(_w.color_exp);
-    }
+  color_expansion_active = false;
+  if (get_kc_type() == KC_TYPE_85_1)
+    if (get_kc_variant() == KC_VARIANT_85_1_11)
+      color_expansion_active = true;
+  if (get_kc_type() == KC_TYPE_87)
+    if (get_kc_variant() != KC_VARIANT_87_10)
+      color_expansion_active = true;
+
+  _w.color_exp = gtk_check_button_new_with_label(_("IRM Color Expansion"));
+  gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(_w.color_exp), color_expansion_active);
+  
+  gtk_table_attach(GTK_TABLE(_w.table[0]), _w.color_exp,
+		   1, 2,
+		   4, 5,
+		   (GtkAttachOptions)(GTK_EXPAND | GTK_FILL), GTK_FILL,
+		   0, 0);
+  gtk_signal_connect(GTK_OBJECT(_w.color_exp), "toggled",
+		     GTK_SIGNAL_FUNC(sf_color_expansion), NULL);
+  gtk_widget_show(_w.color_exp);
 }
 
 void

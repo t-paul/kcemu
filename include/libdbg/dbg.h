@@ -23,29 +23,30 @@
 #define __libdbg_dbg_h
 
 #include <string.h>
-#include <iostream.h>
 #include <stdarg.h>
+#include <iostream>
 
-#include <map.h>
-#include <vector.h>
+#include <map>
+#include <vector>
+#include <functional>
 
-struct str_cmp_func : public binary_function<const char *, const char *, bool>{
+struct str_cmp_func : public std::binary_function<const char *, const char *, bool>{
   bool operator()(const char *x, const char *y) const
-    {
-      return strcmp(x, y) < 0;
-    }
+  {
+    return strcmp(x, y) < 0;
+  }
 };
 
-class p_map : public map<const char *, p_map *, str_cmp_func>
+class p_map : public std::map<const char *, p_map *, str_cmp_func>
 {
-private:
+ private:
   char *_name;
   bool _allow_subkeys;
-
-public:
+  
+ public:
   p_map(const char *name, bool allow_subkeys);
   virtual ~p_map(void);
-
+  
   const char * get_name(void);
   void set_allow_subkeys(bool allow_subkeys);
   bool get_allow_subkeys(void);
@@ -53,18 +54,21 @@ public:
 
 class p_tree
 {
-private:
+ private:
   p_map *_map;
-
-public:
+  
+ protected:
+  void clear(p_map *map);
+  void dump(std::ostream& os, p_map *map, int level) const;
+  friend std::ostream& operator<< (std::ostream& os, const p_tree& t);
+  
+ public:
   p_tree(void);
   virtual ~p_tree(void);
-
-  void add(const char *data, bool allow_subkeys);
+  
+  void clear();
   bool check_path(const char *data);
-
-  void dump(ostream& os, p_map *map, int level) const;
-  friend ostream& operator<< (ostream& os, const p_tree& t);
+  void add(const char *data, bool allow_subkeys);
 };
   
 class DBG_class
@@ -73,7 +77,7 @@ class DBG_class
   static DBG_class *_singleton;
 
   p_tree _tree;
-  ostream *_o;
+  std::ostream *_o;
 
  protected:
   DBG_class(void);
@@ -83,6 +87,9 @@ class DBG_class
 
  public:
   static DBG_class * instance(void);
+
+  void clear();
+  void load_config(void);
   
   void add_path(const char *path, bool allow_subkeys = false);
   void print(const char *path, const char *msg);
@@ -90,7 +97,7 @@ class DBG_class
   void form(const char *path, const char *format ...);
   bool check(const char *path);
 
-  friend ostream& operator<< (ostream& os, const DBG_class &dbg);
+  friend std::ostream& operator<< (std::ostream& os, const DBG_class &dbg);
 };
 
 #define DBGI() DBG_class::instance()
@@ -127,5 +134,7 @@ class DBG_class
 #define DBG_add_path_t(x) do { DBGI()->add_path(x, true); } while (0)
 #define DBG_print(x,y)    do { DBGI()->print(x,y);        } while (0)
 #define DBG_println(x,y)  do { DBGI()->println(x,y);      } while (0)
+#define DBG_clear()       do { DBGI()->clear();           } while (0)
+#define DBG_load_config() do { DBGI()->load_config();     } while (0)
 
 #endif /* __libdbg_dbg_h */

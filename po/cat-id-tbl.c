@@ -602,6 +602,7 @@ needed values yourself.", 83},
   {"/Power On", 177},
   {"/sep3", 178},
   {"/Quit Emulator", 179},
+  {"%s (emulating %s)", 180},
 };
 
-int _msg_tbl_length = 179;
+int _msg_tbl_length = 180;

@@ -32,6 +32,8 @@
 #include "ui/gtk/cmd.h"
 #include "ui/gtk/debug.h"
 
+using namespace std;
+
 extern "C" int disass(int, char **); /* FIXME */
 
 class CMD_debug_window_toggle : public CMD
@@ -403,7 +405,7 @@ debug_op_asm::go_to(DebugWindow *w, int addr)
 }
 
 void
-debug_op_asm::update(DebugWindow *w, scroll_dir_t direction = SCROLL_NONE)
+debug_op_asm::update(DebugWindow *w, scroll_dir_t direction)
 {
   int a;
   int done;
@@ -475,7 +477,7 @@ debug_op_mem::go_to(DebugWindow *w, int addr)
 }
 
 void
-debug_op_mem::update(DebugWindow *w, scroll_dir_t direction = SCROLL_NONE)
+debug_op_mem::update(DebugWindow *w, scroll_dir_t direction)
 {
   char c;
   int a, b, mem;

@@ -20,8 +20,8 @@
  */
 
 #include <string.h>
-#include <fstream.h>
-#include <iostream.h>
+#include <fstream>
+#include <iostream>
 
 #include "kc/system.h"
 
@@ -29,6 +29,8 @@
 #include "kc/mod_rom.h"
 
 #include "libdbg/dbg.h"
+
+using namespace std;
 
 ModuleROM::ModuleROM(ModuleROM &tmpl) :
   ModuleInterface(tmpl.get_name(), tmpl.get_id(), tmpl.get_type())

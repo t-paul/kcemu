@@ -26,6 +26,7 @@
 
 #include "libaudio/libaudioP.h"
 
+static char loader_name[1024];
 static libaudio_loader_t *self = NULL;
 
 static int
@@ -122,7 +123,7 @@ loader_raw_get_type(void)
 static const char *
 loader_raw_get_name(void)
 {
-  return "loader for raw files (44100kHz 8bit mono samples)";
+  return loader_name;
 }
 
 static libaudio_loader_t loader = {
@@ -138,6 +139,10 @@ static libaudio_loader_t loader = {
 void
 loader_raw_init(void)
 {
+  snprintf(loader_name,
+	   sizeof(loader_name),
+	   "loader for raw files (44100kHz 8bit mono samples)");
+
   if (libaudio_register_loader(&loader))
     self = &loader;
 }

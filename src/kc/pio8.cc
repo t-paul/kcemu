@@ -20,8 +20,8 @@
  */
 
 #include <stdio.h>
-#include <iostream.h>
-#include <iomanip.h>
+#include <iostream>
+#include <iomanip>
 
 #include "kc/system.h"
 
@@ -35,6 +35,8 @@
 #include "cmd/cmd.h" // FIXME: DEBUG
 
 #define memory ((Memory1 *)memory)
+
+using namespace std;
 
 static byte_t head0[] = { 0x00, 0x00, 0x00, 0x20, 0x26, 0x20, 0xd1 };
 static byte_t prog0[] = {

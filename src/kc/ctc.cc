@@ -19,8 +19,8 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-#include <iostream.h>
-#include <iomanip.h>
+#include <iostream>
+#include <iomanip>
 
 #include "kc/system.h"
 
@@ -30,6 +30,8 @@
 #include "kc/tape.h"
 
 #include "libdbg/dbg.h"
+
+using namespace std;
 
 CTC::CTC(void) : InterfaceCircuit("CTC"), Callback("CTC")
 {

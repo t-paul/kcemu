@@ -172,7 +172,7 @@ Disk::~Disk()
 }
 
 disk_error_t
-Disk::attach(int disk_no, const char *filename, bool create = false)
+Disk::attach(int disk_no, const char *filename, bool create)
 {
   if (create)
     {

@@ -38,6 +38,24 @@ typedef enum
   KC_TYPE_ALL        = KC_TYPE_85_1_CLASS | KC_TYPE_85_2_CLASS | KC_TYPE_LC80,
 } kc_type_t;
 
+typedef enum
+{
+  KC_VARIANT_NONE    = 0,
+  KC_VARIANT_85_1_10 = 0,
+  KC_VARIANT_85_1_11 = 1,
+  KC_VARIANT_87_10   = 0,
+  KC_VARIANT_87_11   = 1,
+  KC_VARIANT_87_21   = 2,
+} kc_variant_t;
+
+typedef struct
+{
+  char         *name;
+  int           type;
+  kc_type_t     kc_type;
+  kc_variant_t  kc_variant;
+} kc_variant_names_t;
+
 class Z80;
 class Z80_FDC;
 class UI;
@@ -86,5 +104,7 @@ extern char *kcemu_datadir;
 extern char *kcemu_localedir;
 
 kc_type_t get_kc_type(void);
+kc_variant_t get_kc_variant(void);
+const char * get_kc_variant_name(void);
 
 #endif /* __kc_kc_h */

@@ -20,12 +20,12 @@
  */
 
 #include <string.h>
-#include <strstream.h>
-
-#include <iostream.h>
-#include <iomanip.h>
+#include <iostream>
+#include <iomanip>
 
 #include <zlib.h>
+
+#include "kc/memstream.h"
 
 #include "libtape/kct.h"
 
@@ -35,6 +35,8 @@
         (((buffer)[0] & 0xff) == (byte) && \
          ((buffer)[1] & 0xff) == (byte) && \
          ((buffer)[2] & 0xff) == (byte))
+
+using namespace std;
 
 const unsigned short KCTFile::KCT_VERSION          = __KCT_VERSION__;
 const unsigned long  KCTFile::BLOCK_SIZE           = 256;
@@ -378,15 +380,24 @@ KCTFile::dirent_allocate(const char        *filename,
 kct_error_t
 KCTFile::create(const char *filename)
 {
-#warning no ios::noreplace with gcc-3.0.x ???
+  bool can_open;
+
   close();
+
+  /*
+   *  FIXME: find better way to check if the file already exists
+   */
+  _f = new fstream(filename, ios::in | ios::binary);
+  can_open = !_f->fail();
+  _f->close();
+  delete _f;
+
+  if (can_open)
+    return KCT_ERROR_EXIST;
 
   _f = new fstream(filename, ios::in | ios::out | ios::binary);
   if (_f->fail())
-    {
-      /* cerr << "open error" << endl; */
-      return KCT_ERROR_EXIST;
-    }
+    return KCT_ERROR_IO;
 
   memset(&_header, 0, sizeof(kct_header_t));
   strcpy(_header.id, "KCemu tape file\032");
@@ -610,7 +621,6 @@ KCTFile::read(int idx, kct_file_props_t *props)
   unsigned long offset;
   kct_data_t data;
   unsigned char *cbuf, *ubuf, *ptr;
-  istrstream *is;
   
   idx = translate_index(idx);
 
@@ -660,8 +670,7 @@ KCTFile::read(int idx, kct_file_props_t *props)
   else
     cerr << "kct_props: NULL!" << endl;
 
-  is = new istrstream((const char *)ubuf, usize);
-  return is;
+  return new memstream((unsigned char *)ubuf, usize);
 }
 
 istream *
@@ -694,7 +703,7 @@ KCTFile::write(const char *filename,
                unsigned short load_addr,
                unsigned short start_addr,
                kct_file_type_t type,
-               kct_machine_type_t machine = KCT_MACHINE_ALL)
+               kct_machine_type_t machine)
 {
   int ret;
   unsigned int a;

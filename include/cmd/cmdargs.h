@@ -22,7 +22,7 @@
 #ifndef __cmd_cmdargs_h
 #define __cmd_cmdargs_h
 
-#include <list.h>
+#include <list>
 
 class CMD_Change_Listener
 {
@@ -58,7 +58,7 @@ class CMD_ListEntry
 class CMD_List
 {
  private:
-  typedef list<CMD_ListEntry *>cmd_list_t;
+  typedef std::list<CMD_ListEntry *>cmd_list_t;
   
  public:
   typedef cmd_list_t::iterator iterator;
@@ -106,9 +106,9 @@ class CMD_Arg
 
 class CMD_Args {
  private:
-  typedef list<CMD_Arg *> arg_list_t;
-  typedef list<CMD_Change_Listener *> cl_list_t;
-  typedef list<CMD_ListEntry *> cb_list_t;
+  typedef std::list<CMD_Arg *> arg_list_t;
+  typedef std::list<CMD_Change_Listener *> cl_list_t;
+  typedef std::list<CMD_ListEntry *> cb_list_t;
   
  public:
   typedef cl_list_t::iterator cl_iterator;

@@ -233,7 +233,7 @@ int read_offsets(dsk_data_t *data)
 static const char *
 loader_22dsk_get_name(void)
 {
-  return "disk loader for Sydex ANADISK disk-dumps";
+  return "disk loader for Sydex AnaDisk disk-dumps";
 }
 
 static int

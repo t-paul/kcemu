@@ -22,7 +22,7 @@
 #ifndef __ui_status_h
 #define __ui_status_h
 
-#include <list.h>
+#include <list>
 
 #include "ui/statusl.h"
 
@@ -30,7 +30,7 @@ class Status;
 
 class Status
 {
-  typedef list<StatusListener *> status_list_t;
+  typedef std::list<StatusListener *> status_list_t;
   
  private:
   static Status *_instance;

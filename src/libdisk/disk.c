@@ -22,6 +22,7 @@
 #include <stdio.h>
 #include <ctype.h>
 #include <stdlib.h>
+#include <string.h>
 #include <unistd.h>
 #include <sys/stat.h>
 
@@ -41,6 +42,7 @@ libdisk_init(void)
    */
   loader_dir_init();
   loader_cdm_init();
+  loader_td0_init();
   loader_22dsk_init();
 }
 

@@ -1,6 +1,8 @@
 #define DBG_LEVEL 3
 #include "libdbg/dbg.h"
 
+using namespace std;
+
 int
 main(void)
 {
@@ -8,6 +10,8 @@ main(void)
   cout << *DBGI();
   DBG_add_path("test/path/s2");
   cout << *DBGI();
+
+  DBG_clear();
 
   DBG_add_path("test/path2/s3");
   cout << *DBGI();

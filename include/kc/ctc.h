@@ -22,7 +22,7 @@
 #ifndef __kc_ctc_h
 #define __kc_ctc_h
 
-#include <list.h>
+#include <list>
 
 #include "kc/system.h"
 
@@ -42,7 +42,7 @@ class CTCCallbackInterface
 class CTC : public InterfaceCircuit, public PortInterface, public Callback
 {
  protected:
-  typedef list<CTCCallbackInterface *>cb_list_t;
+  typedef std::list<CTCCallbackInterface *>cb_list_t;
   typedef cb_list_t::iterator iterator;
 
   enum {

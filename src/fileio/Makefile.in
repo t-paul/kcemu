@@ -342,9 +342,6 @@ save_TAP.o: save_TAP.c ../../include/fileio/loadP.h \
 	../../include/fileio/load.h
 save_WAV.o: save_WAV.c ../../include/fileio/loadP.h \
 	../../include/fileio/load.h
-save_wav.o: save_wav.c ../../include/fileio/loadP.h \
-	../../include/fileio/load.h
-tap2wav.o: tap2wav.c ../../include/fileio/load.h
 test_load.o: test_load.c ../../include/fileio/load.h
 
 info-am:

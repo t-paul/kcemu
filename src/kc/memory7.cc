@@ -21,7 +21,7 @@
 
 #include <string.h>
 #include <stdlib.h>
-#include <fstream.h>
+#include <fstream>
 
 #include "kc/system.h"
 
@@ -30,6 +30,8 @@
 #include "kc/memory7.h"
 
 #include "ui/ui.h"
+
+using namespace std;
 
 Memory7::Memory7(void) : Memory()
 {
@@ -58,11 +60,21 @@ Memory7::Memory7(void) : Memory()
   l = strlen(kcemu_datadir);
   ptr = new char[l + 14];
   strcpy(ptr, kcemu_datadir);
-  
-  strcpy(ptr + l, "/os____f0.851");
-  loadROM(ptr, &_rom_os, 0x1000, 1);
-  strcpy(ptr + l, "/basic_c0.87");
-  loadROM(ptr, &_rom_basic, 0x2800, 1);
+
+  if (get_kc_variant() == KC_VARIANT_87_21)
+    {
+      strcpy(ptr + l, "/os____f0.87b");
+      loadROM(ptr, &_rom_os, 0x1000, 1);
+      strcpy(ptr + l, "/basic_c0.87b");
+      loadROM(ptr, &_rom_basic, 0x2800, 1);
+    }
+  else
+    {
+      strcpy(ptr + l, "/os____f0.851");
+      loadROM(ptr, &_rom_os, 0x1000, 1);
+      strcpy(ptr + l, "/basic_c0.87a");
+      loadROM(ptr, &_rom_basic, 0x2800, 1);
+    }
   
   memset(&_irm[0], 0x70, 0x400);
   
@@ -116,7 +128,8 @@ Memory7::reset(bool power_on)
   if (!power_on)
     return;
 
-  scratch_mem(&_ram[0], 0x4000);
+  //scratch_mem(&_ram[0], 0x4000);
+  memset(&_ram[0], 0, 0x4000);
   scratch_mem(&_irm[0x0400], 0x0400);
   if (getIRM() != _irm)
     scratch_mem(&_irm[0x0], 0x0400);
@@ -127,4 +140,20 @@ Memory7::reset(bool power_on)
 void
 Memory7::dumpCore(void)
 {
+  ofstream os;
+
+  os.open("core.z80");
+
+  cerr << "Memory: dumping core..." << endl;
+  if (!os)
+    {
+      cerr << "Memory: can't write 'core.z80'" << endl;
+      return;
+    }
+
+  for (int a = 0;a < 0x10000;a++)
+    os.put(memRead8(a));
+
+  os.close();
+  cerr << "Memory: done." << endl;
 }

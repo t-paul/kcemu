@@ -23,8 +23,8 @@
 #include <ctype.h>
 #include <signal.h>
 #include <unistd.h>
-#include <iostream.h>
-#include <iomanip.h>
+#include <iostream>
+#include <iomanip>
 #include <sys/time.h>
 
 #include "kc/system.h"
@@ -50,6 +50,8 @@
 extern "C" {
 #include "z80core2/z80.h"
 }
+
+using namespace std;
 
 static byte_t _z80_reg_r = 0;
 static Z80 *self; // for the signal handler
@@ -138,8 +140,11 @@ void
 WrZ80(word_t Addr, byte_t Value)
 {
   /*
-    if ((Addr == 0x4000) || (Addr == 0xB7B0))
-    z80->printPC(); cout.form("%04x: %02x\n", Addr, Value);
+  if ((Addr == 0x1d) || (Addr == 0x1e) || (Addr == 0x1f))
+    {
+      z80->printPC();
+      cout.form("%04x: %02x\n", Addr, Value);
+    }
   */
   memory->memWrite8(Addr, Value);
 }
@@ -350,7 +355,7 @@ Z80::run(void)
       _regs.ICount = 0;
       ExecZ80(&_regs);
       
-      if (_enable_floppy_cpu)
+      if (_enable_floppy_cpu && fdc_z80)
 	fdc_z80->execute();
 
       iff = _regs.IFF & 1;
@@ -630,15 +635,21 @@ Z80::printPC(void)
 void
 Z80::start_floppy_cpu(void)
 {
-  fdc_z80->reset();
-  _enable_floppy_cpu = true;
+  if (fdc_z80)
+    {
+      fdc_z80->reset();
+      _enable_floppy_cpu = true;
+    }
 }
 
 void
 Z80::halt_floppy_cpu(void)
 {
-  fdc_z80->reset();
-  _enable_floppy_cpu = false;
+  if (fdc_z80)
+    {
+      fdc_z80->reset();
+      _enable_floppy_cpu = false;
+    }
 }
 
 static void

@@ -22,9 +22,9 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
-#include <fstream.h>
+#include <fstream>
 
-#include <algo.h>
+#include <algorithm>
 
 #include "kc/system.h"
 
@@ -32,6 +32,8 @@
 #include "kc/rc.h"
 
 #include "libdbg/dbg.h"
+
+using namespace std;
 
 RC *RC::_instance = 0;
 

@@ -22,7 +22,7 @@
 #ifndef __kc_rc_h
 #define __kc_rc_h
 
-#include <map.h>
+#include <map>
 
 struct rc_key_compare
 {
@@ -35,7 +35,7 @@ struct rc_key_compare
 class RC
 {
   private:
-  typedef map<const char *, const char *, rc_key_compare> item_map_t;
+  typedef std::map<const char *, const char *, rc_key_compare> item_map_t;
   
   static RC *_instance;
   item_map_t _map;

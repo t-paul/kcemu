@@ -129,7 +129,7 @@ show_tap_SOURCES =  	show_tap.c
 kcread2tap_SOURCES =  	kcread2tap.c
 
 
-kctape_LDADD =  	libtape.a ../fileio/libfileio.a
+kctape_LDADD =  	libtape.a ../fileio/libfileio.a ../libdbg/libdbg.a
 
 mkinstalldirs = $(SHELL) $(top_srcdir)/mkinstalldirs
 CONFIG_HEADER = ../../include/kc/config.h
@@ -146,7 +146,8 @@ AR = ar
 PROGRAMS =  $(bin_PROGRAMS) $(noinst_PROGRAMS)
 
 kctape_OBJECTS =  kctape.o
-kctape_DEPENDENCIES =  libtape.a ../fileio/libfileio.a
+kctape_DEPENDENCIES =  libtape.a ../fileio/libfileio.a \
+../libdbg/libdbg.a
 kctape_LDFLAGS = 
 test_SOURCES = test.c
 test_OBJECTS =  test.o
@@ -329,13 +330,12 @@ distdir: $(DISTFILES)
 	  fi; \
 	done
 kcread2tap.o: kcread2tap.c
-kct.o: kct.cc ../../include/libtape/kct.h ../../include/libdbg/dbg.h
+kct.o: kct.cc ../../include/kc/memstream.h ../../include/kc/config.h \
+	../../include/libtape/kct.h ../../include/libdbg/dbg.h
 kctape.o: kctape.cc ../../include/kc/system.h ../../include/kc/config.h \
 	../../include/sys/sysdep.h ../../include/libtape/kct.h \
 	../../include/fileio/load.h
 show_tap.o: show_tap.c
-test.o: test.c
-wav.o: wav.c
 
 check-TESTS: $(TESTS)
 	@failed=0; all=0; \

@@ -7,6 +7,7 @@ man_MANS = \
 	kc2img.1	\
 	kc2tap.1	\
 	kc2wav.1	\
+	tdtodump.1	\
 	kcemu-remote.1
 
 EXTRA_DIST = $(man_MANS)

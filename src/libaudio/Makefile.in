@@ -109,7 +109,7 @@ CPPFLAGS =  	-DDEBUG -DLINUX
 INCLUDES =  	-I../../include
 
 
-libaudio_a_SOURCES =  	load.c 	load_oss.c 	load_snd.c 	load_aud.c 	load_mp3.c 	load_ogg.c 	load_flc.c 	load_wav.c 	load_raw.c
+libaudio_a_SOURCES =  	load.c 	load_oss.c 	load_als.c 	load_snd.c 	load_aud.c 	load_mp3.c 	load_ogg.c 	load_flc.c 	load_wav.c 	load_raw.c
 
 mkinstalldirs = $(SHELL) $(top_srcdir)/mkinstalldirs
 CONFIG_HEADER = ../../include/kc/config.h
@@ -121,8 +121,8 @@ DEFS = @DEFS@ -I. -I$(srcdir) -I../../include/kc
 LDFLAGS = @LDFLAGS@
 LIBS = @LIBS@
 libaudio_a_LIBADD = 
-libaudio_a_OBJECTS =  load.o load_oss.o load_snd.o load_aud.o load_mp3.o \
-load_ogg.o load_flc.o load_wav.o load_raw.o
+libaudio_a_OBJECTS =  load.o load_oss.o load_als.o load_snd.o load_aud.o \
+load_mp3.o load_ogg.o load_flc.o load_wav.o load_raw.o
 AR = ar
 CFLAGS = @CFLAGS@
 COMPILE = $(CC) $(DEFS) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS)
@@ -227,6 +227,8 @@ distdir: $(DISTFILES)
 	  fi; \
 	done
 load.o: load.c ../../include/libaudio/libaudioP.h \
+	../../include/kc/config.h ../../include/libaudio/libaudio.h
+load_als.o: load_als.c ../../include/libaudio/libaudioP.h \
 	../../include/kc/config.h ../../include/libaudio/libaudio.h
 load_aud.o: load_aud.c ../../include/libaudio/libaudioP.h \
 	../../include/kc/config.h ../../include/libaudio/libaudio.h

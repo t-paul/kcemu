@@ -22,7 +22,7 @@
 #include <math.h>
 #include <fcntl.h>
 #include <unistd.h>
-#include <iostream.h>
+#include <iostream>
 
 #include "kc/system.h"
 

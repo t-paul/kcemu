@@ -119,6 +119,7 @@ class UI_Gtk : public StatusListener, public ErrorListener, public UI
 
     void create_main_window(void);
     void create_header_window(void);
+    void show_greeting(void);
     void tapeSelect(void);
     void hsv_to_gdk_color(double h, double s, double v, GdkColor *col);
     gulong get_col(byte_t *bitmap, int which, int idx, int width);

@@ -20,21 +20,23 @@
  */
 
 #include <string.h>
-#include <fstream.h>
-#include <iostream.h>
+#include <fstream>
+#include <iostream>
 
 #include "kc/system.h"
 
 #include "kc/kc.h"
 #include "kc/mod_rom1.h"
 
+using namespace std;
+
 ModuleROM1::ModuleROM1(ModuleROM1 &tmpl) :
   ModuleInterface(tmpl.get_name(), tmpl.get_id(), tmpl.get_type())
 {
   _group = NULL;
+  _addr = tmpl._addr;
   _size = tmpl._size;
   _rom = new byte_t[_size];
-  _addr = tmpl._addr;
   if (_rom)
     {
       memcpy(_rom, tmpl._rom, _size);
@@ -50,9 +52,10 @@ ModuleROM1::ModuleROM1(const char *filename, const char *name, word_t addr, dwor
   ifstream is;
   unsigned int a;
 
-  _rom = new byte_t[size];
+  _group = NULL;
   _addr = addr;
   _size = size;
+  _rom = new byte_t[_size];
 
   is.open(filename);
   if (!is)

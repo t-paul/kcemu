@@ -17,8 +17,8 @@
 #include <ctype.h>
 #include <string.h>
 
-#include <iostream.h>
-#include <iomanip.h>
+#include <iostream>
+#include <iomanip>
 
 #include "kc/system.h"
 
@@ -29,6 +29,8 @@
 #include "kc/memory.h"
 
 #include "ui/ui.h"
+
+using namespace std;
 
 static char *Mnemonics[256] =
 {
@@ -385,10 +387,15 @@ byte_t DebugZ80(_Z80 *R)
       case '\0': return(1);
       case 'S':  puts("\nEmulator state:");
 	         puts("===============\n");
-	         pio->info();
-                 ctc->info();
+		 if (pio)
+		   pio->info();
+		 if (pio2)
+		   pio2->info();
+		 if (ctc)
+		   ctc->info();
+                 if (ports)
+		   ports->info();
                  memory->info();
-                 ports->info();
                  break;
       case '=':  if(strlen(S)>=2)
                  { sscanf(S+1,"%hX",&(R->Trap));R->Trace=0;return(1); }

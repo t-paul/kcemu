@@ -37,7 +37,7 @@
  *  'union pair' is changed to 'union reg_pair'
  */
 
-#include <list.h>
+#include <list>
 
 #include "kc/system.h"
 
@@ -67,7 +67,7 @@ class Z80
 	InterfaceCircuit *_daisy_chain_first;
 	InterfaceCircuit *_daisy_chain_last;
 
-	typedef list<InterfaceCircuit *> ic_list_t;
+	typedef std::list<InterfaceCircuit *> ic_list_t;
 
 	static const int I_PERIOD;
 

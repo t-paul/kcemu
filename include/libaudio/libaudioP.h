@@ -55,6 +55,7 @@ struct libaudio_prop
 int libaudio_register_loader(libaudio_loader_t *loader);
 
 void loader_oss_init(void);
+void loader_als_init(void);
 void loader_snd_init(void);
 void loader_aud_init(void);
 void loader_mp3_init(void);

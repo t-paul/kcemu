@@ -22,7 +22,7 @@
 #ifndef __cmd_cmd_h
 #define __cmd_cmd_h
 
-#include <list.h>
+#include <list>
 #include <stdio.h>
 
 #include "cmd/cmdargs.h"
@@ -59,7 +59,7 @@ class CMD_Repository
 {
  private:
   static CMD_Repository *_singleton;
-  typedef list<CMD_List *>cmd_llist_t;
+  typedef std::list<CMD_List *>cmd_llist_t;
 
  public:
   typedef cmd_llist_t::iterator iterator;

@@ -14,4 +14,5 @@ libcmd_a_SOURCES = \
 	quit.cc		\
 	reset.cc	\
 	image.cc	\
-	load.cc
+	load.cc		\
+	dbg.cc

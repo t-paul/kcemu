@@ -19,8 +19,8 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-#include <iostream.h>
-#include <iomanip.h>
+#include <iostream>
+#include <iomanip>
 
 #include "kc/system.h"
 
@@ -113,6 +113,7 @@ CTC1::irq_1(void)
 bool
 CTC1::irq_2(void)
 {
+  trigger(3);
   return false;
 }
 

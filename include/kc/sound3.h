@@ -22,6 +22,8 @@
 #ifndef __kc_sound3_h
 #define __kc_sound3_h
 
+#include <list>
+
 #include "kc/system.h"
 
 #include "kc/pio.h"
@@ -44,7 +46,7 @@ class sndop
 class Sound3 : public Sound, public PIOCallbackInterface, public CTCCallbackInterface
 {
  private:
-  typedef list<sndop *>sndop_list_t;
+  typedef std::list<sndop *>sndop_list_t;
   typedef sndop_list_t::iterator iterator;
 
  private:

@@ -23,10 +23,11 @@
 #include <string.h>
 #include <ctype.h>
 
-#include <iostream.h>
-#include <iomanip.h>
+#include <iostream>
+#include <iomanip>
 
 #include "kc/system.h"
+#include "kc/memstream.h"
 
 #include "kc/z80.h"
 #include "kc/tape.h"
@@ -39,6 +40,8 @@
 #include "libdbg/dbg.h"
 
 #define TAPE_IF() (ui->getTapeInterface())
+
+using namespace std;
 
 class CMD_tape_load : public CMD
 {
@@ -531,12 +534,13 @@ Tape::record(void)
   _sync = 2;
   _sync_count = 200;
   _flip_flop = 0;
-  _os = new ostrstream;
   _byte_counter = 0;
   _state = 0;
   
   _play = false;
   _record = true;
+
+  _os = new memstream();
 }
 
 void
@@ -596,20 +600,21 @@ Tape::stop(void)
 
   if (!_os)
     return;
-  if (_os->pcount() == 0)
+  if (((memstream *)_os)->size() == 0)
     return;
+
+  cout << "Tape::stop(): stream size = " << ((memstream *)_os)->size() << endl;
 
   os.open("/tmp/kcemu.output", ios::out | ios::binary);
   if (!os)
     cout << "Tape::stop(): can't open output file" << endl;
   else
     {
-      _os->freeze(1);
-      ptr = (byte_t *)_os->str();
+      ptr = (byte_t *)((memstream *)_os)->str();
       DBG(1, form("KCemu/Tape/write",
 		  "Tape::stop(): writing output file (%d bytes)\n",
-		  _os->pcount()));
-      os.write((char *)ptr, _os->pcount());
+		  ((memstream *)_os)->size()));
+      os.write((char *)ptr, ((memstream *)_os)->size());
 
       load = 0;
       start = 0;
@@ -636,12 +641,11 @@ Tape::stop(void)
 		  "Tape::stop(): type = %s, load = %04xh, start = %04xh\n",
 		  _kct_file.type_name(type), load, start));
       _kct_file.write((const char *)"new file",
-                      ptr, _os->pcount(), load, start,
+                      ptr, ((memstream *)_os)->size(), load, start,
                       type, KCT_MACHINE_ALL);
 
       update_tape_list();
       os.close();
-      _os->freeze(0);
     }
   delete _os;
   _os = NULL;
@@ -686,6 +690,8 @@ Tape::callback(void *data)
 void
 Tape::do_play(int edge)
 {
+  int len;
+
   if (_tape_cb)
     _tape_cb->tape_callback(edge);
 
@@ -752,7 +758,8 @@ Tape::do_play(int edge)
 	  return;
 	}
 
-      _bytes_read = _is->tellg();
+      _bytes_read = ((memstream *)_is)->tellg(); // FIXME: bug in memstream
+
       /*
        *  start_block is 0 for KC 85/1, KC 87 .COM files
        *                 1 for KC 85/1, KC 87 basic files
@@ -765,9 +772,22 @@ Tape::do_play(int edge)
       //_block += _start_block;
 
       _byte_counter = 0;
+
       memset(_buf, 0, 129);
-      _is->read((char *)_buf, 129);
-      //dump_buf((char *)_buf, _buf[0]);
+
+      /*
+       *  use get() for now; read() / gcount() is broken for
+       *  the current memstream class
+       */
+      len = 0;
+      while (len < 129)
+	{
+	  int c = _is->get();
+	  if (c == EOF)
+	    break;
+	  _buf[len++] = c;
+	}
+
       _block = _buf[0];
       TAPE_IF()->tapeProgress((100 * _bytes_read) / _file_size);
 
@@ -776,14 +796,15 @@ Tape::do_play(int edge)
       else
         _init = 4000;
       
-      if ((_is->gcount() != 129) || (_is->peek() == EOF))
+      int peek = ((memstream *)_is)->peek(); // FIXME: bug in memstream
+      if ((len != 129) || (peek == EOF))
         {
           /*
            *  last block
            */
           DBG(1, form("KCemu/Tape/play",
-		      "Tape::play(): gcount() = %d, peek() = %d\n",
-		      _is->gcount(), _is->peek()));
+		      "Tape::play(): len = %d, peek() = %d\n",
+		      len, peek));
 	  
           _last_block = 1;
 	  delete _is;
@@ -1246,7 +1267,7 @@ Tape::remove(const char *name)
 {
   int idx;
 
-  cout << "Tape::remove(): [1] " << name << endl;
+  //cout << "Tape::remove(): [1] " << name << endl;
 
   // FIXME: using the index internal to the user interface
   // is kinda ugly
@@ -1258,7 +1279,7 @@ Tape::remove(const char *name)
         return TAPE_ERROR;
     }
 
-  cout << "Tape::remove(): [2] " << name << endl;
+  //cout << "Tape::remove(): [2] " << name << endl;
 
   _kct_file.remove(name);
   TAPE_IF()->tapeRemoveFile(idx);

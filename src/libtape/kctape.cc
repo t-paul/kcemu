@@ -25,8 +25,8 @@
 #include <getopt.h>
 #include <unistd.h>
 
-#include <iostream.h>
-#include <iomanip.h>
+#include <iostream>
+#include <iomanip>
 
 #ifdef HAVE_GETOPT
 #include <getopt.h>
@@ -36,6 +36,8 @@
 
 #include "libtape/kct.h"
 #include "fileio/load.h"
+
+using namespace std;
 
 typedef enum {
   ADD_MODE_NONE    = 0,

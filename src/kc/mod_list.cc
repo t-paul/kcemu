@@ -211,13 +211,20 @@ ModuleList::ModuleList(void)
 
   /*
    *  IRM Expansion for color display (kc85/1)
+   *
+   *  FIXME: check wheather to enable the color expansion by default shouldn't
+   *  FIXME: go here!
    */
   m = new ModuleRAM1("IRMX", 0xe800, 0x0800);
   _color_expansion = new ModuleListEntry(_("IRM Color Expansion"), m, KC_TYPE_NONE);
   _mod_list.push_back(_color_expansion);
   _init_color_expansion = 0;
+  if (get_kc_type() == KC_TYPE_85_1)
+    if (get_kc_variant() == KC_VARIANT_85_1_11)
+      _init_color_expansion = _color_expansion;
   if (get_kc_type() == KC_TYPE_87)
-    _init_color_expansion = _color_expansion;
+    if (get_kc_variant() != KC_VARIANT_87_10)
+      _init_color_expansion = _color_expansion;
 
   /*
    *  RAM module 16k (kc85/3)

@@ -101,7 +101,7 @@ VERSION = @VERSION@
 VORBIS_LIBS = @VORBIS_LIBS@
 l = @l@
 
-EXTRA_DIST =  	cb.h			ic.h			kc.h			rc.h			ctc.h			ctc1.h			ctc3.h			ctc8.h			ctc_fdc.h		ctc_base.h		cb_list.h		keyboard.h		keyb1.h			keyb1k.h		keyb3.h			keyb3k.h		keyb8.h			keyb8k.h		keys.h			memory.h		memory1.h		memory2.h		memory3.h		memory4.h		memory7.h		memory8.h		pio.h			pio1.h			pio2.h			pio3.h			pio4.h			pio8.h			ports.h			ports4.h		sh_mem.h		disk_io.h		fdc.h			fdc_cmd.h		floppy.h		module.h		mod_ram.h		mod_ram1.h		mod_ram8.h		mod_64k.h		mod_rom.h		mod_rom1.h		mod_disk.h		mod_v24.h		mod_list.h		profile.h		tape.h			disk.h			timer.h			timer1.h		timer3.h		wav.h			sound.h			sound3.h		sound8.h		z80.h			z80_fdc.h		system.h		disass.h		op.h			opcb.h			opxx.h			opxxxx.h
+EXTRA_DIST =  	cb.h			ic.h			kc.h			rc.h			ctc.h			ctc1.h			ctc3.h			ctc8.h			ctc_fdc.h		ctc_base.h		cb_list.h		keyboard.h		keyb1.h			keyb1k.h		keyb3.h			keyb3k.h		keyb8.h			keyb8k.h		keys.h			memory.h		memory1.h		memory2.h		memory3.h		memory4.h		memory7.h		memory8.h		pio.h			pio1.h			pio2.h			pio3.h			pio4.h			pio8.h			ports.h			ports4.h		sh_mem.h		disk_io.h		fdc.h			fdc_cmd.h		floppy.h		module.h		mod_ram.h		mod_ram1.h		mod_ram8.h		mod_64k.h		mod_rom.h		mod_rom1.h		mod_disk.h		mod_v24.h		mod_list.h		profile.h		tape.h			disk.h			timer.h			timer1.h		timer3.h		wav.h			sound.h			sound3.h		sound8.h		z80.h			z80_fdc.h		system.h		memstream.h		disass.h		op.h			opcb.h			opxx.h			opxxxx.h
 
 mkinstalldirs = $(SHELL) $(top_srcdir)/mkinstalldirs
 CONFIG_HEADER = config.h

@@ -728,14 +728,6 @@ pio8.o: pio8.cc ../../include/kc/system.h ../../include/kc/config.h \
 ports.o: ports.cc ../../include/kc/system.h ../../include/kc/config.h \
 	../../include/sys/sysdep.h ../../include/kc/ports.h \
 	../../include/libdbg/dbg.h
-ports1.o: ports1.cc ../../include/kc/system.h ../../include/kc/config.h \
-	../../include/sys/sysdep.h ../../include/kc/kc.h \
-	../../include/kc/ports1.h ../../include/kc/ports.h \
-	../../include/libdbg/dbg.h
-ports3.o: ports3.cc ../../include/kc/system.h ../../include/kc/config.h \
-	../../include/sys/sysdep.h ../../include/kc/kc.h \
-	../../include/kc/ports3.h ../../include/kc/ports.h \
-	../../include/libdbg/dbg.h
 ports4.o: ports4.cc ../../include/kc/system.h ../../include/kc/config.h \
 	../../include/sys/sysdep.h ../../include/kc/kc.h \
 	../../include/kc/ports4.h ../../include/kc/ports.h \
@@ -768,19 +760,19 @@ sound8.o: sound8.cc ../../include/kc/system.h ../../include/kc/config.h \
 	../../include/kc/pio.h ../../include/kc/ports.h \
 	../../include/kc/sound.h
 tape.o: tape.cc ../../include/kc/system.h ../../include/kc/config.h \
-	../../include/sys/sysdep.h ../../include/kc/z80.h \
-	../../include/z80core/z80.h ../../include/kc/ic.h \
-	../../include/kc/cb.h ../../include/kc/kc.h \
-	../../include/kc/cb_list.h ../../include/kc/tape.h \
-	../../include/cmd/cmd.h ../../include/cmd/cmdargs.h \
-	../../include/libtape/kct.h ../../include/fileio/load.h \
-	../../include/kc/memory.h ../../include/ui/ui.h \
-	../../include/kc/profile.h ../../include/ui/tape.h \
-	../../include/ui/debug.h ../../include/ui/module.h \
-	../../include/kc/module.h ../../include/kc/ports.h \
-	../../include/ui/error.h ../../include/ui/errorl.h \
-	../../include/ui/status.h ../../include/ui/statusl.h \
-	../../include/libdbg/dbg.h
+	../../include/sys/sysdep.h ../../include/kc/memstream.h \
+	../../include/kc/z80.h ../../include/z80core/z80.h \
+	../../include/kc/ic.h ../../include/kc/cb.h \
+	../../include/kc/kc.h ../../include/kc/cb_list.h \
+	../../include/kc/tape.h ../../include/cmd/cmd.h \
+	../../include/cmd/cmdargs.h ../../include/libtape/kct.h \
+	../../include/fileio/load.h ../../include/kc/memory.h \
+	../../include/ui/ui.h ../../include/kc/profile.h \
+	../../include/ui/tape.h ../../include/ui/debug.h \
+	../../include/ui/module.h ../../include/kc/module.h \
+	../../include/kc/ports.h ../../include/ui/error.h \
+	../../include/ui/errorl.h ../../include/ui/status.h \
+	../../include/ui/statusl.h ../../include/libdbg/dbg.h
 timer.o: timer.cc ../../include/kc/system.h ../../include/kc/config.h \
 	../../include/sys/sysdep.h ../../include/kc/timer.h \
 	../../include/kc/kc.h ../../include/kc/cb.h

@@ -22,7 +22,7 @@
 #ifndef __kc_mod_list_h
 #define __kc_mod_list_h
 
-#include <list.h>
+#include <list>
 #include <string.h>
 
 #include "kc/system.h"
@@ -66,7 +66,7 @@ private:
   ModuleListEntry *_init_color_expansion;
   const char *_init_mod[4 * MAX_BD + 2];
 
-  typedef list<ModuleListEntry *> mod_list_t;
+  typedef std::list<ModuleListEntry *> mod_list_t;
 
 public:
   typedef mod_list_t::iterator iterator;

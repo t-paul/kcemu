@@ -21,14 +21,16 @@
 
 #include <string.h>
 
-#include <iostream.h>
-#include <iomanip.h>
+#include <iostream>
+#include <iomanip>
 
 #include "kc/system.h"
 
 #include "kc/ports.h"
 
 #include "libdbg/dbg.h"
+
+using namespace std;
 
 byte_t
 NullPort::in(word_t addr)

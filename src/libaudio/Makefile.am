@@ -11,6 +11,7 @@ INCLUDES = \
 libaudio_a_SOURCES = \
 	load.c \
 	load_oss.c \
+	load_als.c \
 	load_snd.c \
 	load_aud.c \
 	load_mp3.c \

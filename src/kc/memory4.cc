@@ -21,7 +21,7 @@
 
 #include <string.h>
 #include <stdlib.h>
-#include <fstream.h>
+#include <fstream>
 
 #include "kc/system.h"
 
@@ -34,6 +34,8 @@
 #include "ui/ui.h"
 
 #include "libdbg/dbg.h"
+
+using namespace std;
 
 Memory4::Memory4(void) : Memory()
 {

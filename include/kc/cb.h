@@ -24,7 +24,7 @@
 
 #include <string.h>
 #include <stdlib.h>
-#include <iostream.h>
+#include <iostream>
 
 #include "kc/kc.h"
 

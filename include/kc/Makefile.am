@@ -63,6 +63,7 @@ EXTRA_DIST = \
 	z80.h		\
 	z80_fdc.h	\
 	system.h	\
+	memstream.h	\
 	disass.h	\
 	op.h		\
 	opcb.h		\

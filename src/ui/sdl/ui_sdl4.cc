@@ -117,7 +117,7 @@ UI_SDL4::get_height(void)
 }
 
 void
-UI_SDL4::reset(bool power_on = false)
+UI_SDL4::reset(bool power_on)
 {
   z80->addCallback(35000, this, 0);
 }

@@ -23,6 +23,7 @@
 #include <ctype.h>
 #include <stdlib.h>
 #include <unistd.h>
+#include <string.h>
 #include <sys/stat.h>
 
 #include "fileio/loadP.h"
@@ -249,7 +250,7 @@ fileio_debug_dump(fileio_prop_t *prop, int write_file)
         case FILEIO_TYPE_COM:      type = "(COM)"; break;
         case FILEIO_TYPE_BAS:      type = "(BASIC)"; break;
         case FILEIO_TYPE_PROT_BAS: type = "(BASIC*)"; break;
-        default:                   type = "(???)"; break;
+        default:                   type = "(?)"; break;
         }
       
       printf("fileio: %-14s %-10s - ", ptr->name, type);

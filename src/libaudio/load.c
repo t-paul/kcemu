@@ -43,6 +43,8 @@ libaudio_init(int l)
    */
   if ((l & LIBAUDIO_TYPE_OSS) != 0)
     loader_oss_init();
+  if ((l & LIBAUDIO_TYPE_ALS) != 0)
+    loader_als_init();
   if ((l & LIBAUDIO_TYPE_SND) != 0)
     loader_snd_init();
   if ((l & LIBAUDIO_TYPE_AUD) != 0)

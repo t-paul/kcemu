@@ -21,7 +21,7 @@
 
 #include <string.h>
 #include <stdlib.h>
-#include <fstream.h>
+#include <fstream>
 
 #include "kc/system.h"
 
@@ -30,6 +30,8 @@
 #include "kc/memory1.h"
 
 #include "ui/ui.h"
+
+using namespace std;
 
 Memory1::Memory1(void) : Memory()
 {
@@ -113,7 +115,8 @@ Memory1::reset(bool power_on)
   if (!power_on)
     return;
 
-  scratch_mem(&_ram[0], 0x4000);
+  //scratch_mem(&_ram[0], 0x4000);
+  memset(&_ram[0], 0, 0x4000);
   scratch_mem(&_irm[0x0400], 0x0400);
   if (getIRM() != _irm)
     scratch_mem(&_irm[0x0], 0x0400);
@@ -124,4 +127,20 @@ Memory1::reset(bool power_on)
 void
 Memory1::dumpCore(void)
 {
+  ofstream os;
+
+  os.open("core.z80");
+
+  cerr << "Memory: dumping core..." << endl;
+  if (!os)
+    {
+      cerr << "Memory: can't write 'core.z80'" << endl;
+      return;
+    }
+
+  for (int a = 0;a < 0x10000;a++)
+    os.put(memRead8(a));
+
+  os.close();
+  cerr << "Memory: done." << endl;
 }

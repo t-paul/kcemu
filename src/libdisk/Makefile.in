@@ -101,6 +101,8 @@ VERSION = @VERSION@
 VORBIS_LIBS = @VORBIS_LIBS@
 l = @l@
 
+bin_PROGRAMS = tdtodump
+
 noinst_LIBRARIES = libdisk.a
 
 CPPFLAGS =  	-DDEBUG -DLINUX
@@ -109,7 +111,13 @@ CPPFLAGS =  	-DDEBUG -DLINUX
 INCLUDES =  	-I../../include
 
 
-libdisk_a_SOURCES =  	disk.c 	load_dir.c 	load_cdm.c 	load_22dsk.c
+libdisk_a_SOURCES =  	disk.c 	teledisk.c 	load_dir.c 	load_cdm.c 	load_td0.c 	load_22dsk.c
+
+
+tdtodump_SOURCES =  	tdtodump.c
+
+
+tdtodump_LDADD =  	libdisk.a
 
 mkinstalldirs = $(SHELL) $(top_srcdir)/mkinstalldirs
 CONFIG_HEADER = ../../include/kc/config.h
@@ -121,8 +129,14 @@ DEFS = @DEFS@ -I. -I$(srcdir) -I../../include/kc
 LDFLAGS = @LDFLAGS@
 LIBS = @LIBS@
 libdisk_a_LIBADD = 
-libdisk_a_OBJECTS =  disk.o load_dir.o load_cdm.o load_22dsk.o
+libdisk_a_OBJECTS =  disk.o teledisk.o load_dir.o load_cdm.o load_td0.o \
+load_22dsk.o
 AR = ar
+PROGRAMS =  $(bin_PROGRAMS)
+
+tdtodump_OBJECTS =  tdtodump.o
+tdtodump_DEPENDENCIES =  libdisk.a
+tdtodump_LDFLAGS = 
 CFLAGS = @CFLAGS@
 COMPILE = $(CC) $(DEFS) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS)
 CCLD = $(CC)
@@ -134,8 +148,8 @@ DISTFILES = $(DIST_COMMON) $(SOURCES) $(HEADERS) $(TEXINFOS) $(EXTRA_DIST)
 
 TAR = tar
 GZIP_ENV = --best
-SOURCES = $(libdisk_a_SOURCES)
-OBJECTS = $(libdisk_a_OBJECTS)
+SOURCES = $(libdisk_a_SOURCES) $(tdtodump_SOURCES)
+OBJECTS = $(libdisk_a_OBJECTS) $(tdtodump_OBJECTS)
 
 all: all-redirect
 .SUFFIXES:
@@ -180,6 +194,35 @@ libdisk.a: $(libdisk_a_OBJECTS) $(libdisk_a_DEPENDENCIES)
 	-rm -f libdisk.a
 	$(AR) cru libdisk.a $(libdisk_a_OBJECTS) $(libdisk_a_LIBADD)
 	$(RANLIB) libdisk.a
+
+mostlyclean-binPROGRAMS:
+
+clean-binPROGRAMS:
+	-test -z "$(bin_PROGRAMS)" || rm -f $(bin_PROGRAMS)
+
+distclean-binPROGRAMS:
+
+maintainer-clean-binPROGRAMS:
+
+install-binPROGRAMS: $(bin_PROGRAMS)
+	@$(NORMAL_INSTALL)
+	$(mkinstalldirs) $(DESTDIR)$(bindir)
+	@list='$(bin_PROGRAMS)'; for p in $$list; do \
+	  if test -f $$p; then \
+	    echo "  $(INSTALL_PROGRAM) $$p $(DESTDIR)$(bindir)/`echo $$p|sed 's/$(EXEEXT)$$//'|sed '$(transform)'|sed 's/$$/$(EXEEXT)/'`"; \
+	     $(INSTALL_PROGRAM) $$p $(DESTDIR)$(bindir)/`echo $$p|sed 's/$(EXEEXT)$$//'|sed '$(transform)'|sed 's/$$/$(EXEEXT)/'`; \
+	  else :; fi; \
+	done
+
+uninstall-binPROGRAMS:
+	@$(NORMAL_UNINSTALL)
+	list='$(bin_PROGRAMS)'; for p in $$list; do \
+	  rm -f $(DESTDIR)$(bindir)/`echo $$p|sed 's/$(EXEEXT)$$//'|sed '$(transform)'|sed 's/$$/$(EXEEXT)/'`; \
+	done
+
+tdtodump: $(tdtodump_OBJECTS) $(tdtodump_DEPENDENCIES)
+	@rm -f tdtodump
+	$(LINK) $(tdtodump_LDFLAGS) $(tdtodump_OBJECTS) $(tdtodump_LDADD) $(LIBS)
 
 tags: TAGS
 
@@ -233,6 +276,11 @@ load_cdm.o: load_cdm.c ../../include/libdisk/libdiskP.h \
 	../../include/libdisk/libdisk.h
 load_dir.o: load_dir.c ../../include/libdisk/libdiskP.h \
 	../../include/libdisk/libdisk.h
+load_td0.o: load_td0.c ../../include/libdisk/teledisk.h \
+	../../include/libdisk/libdiskP.h \
+	../../include/libdisk/libdisk.h
+tdtodump.o: tdtodump.c ../../include/libdisk/teledisk.h
+teledisk.o: teledisk.c ../../include/libdisk/teledisk.h
 
 info-am:
 info: info-am
@@ -242,7 +290,7 @@ check-am: all-am
 check: check-am
 installcheck-am:
 installcheck: installcheck-am
-install-exec-am:
+install-exec-am: install-binPROGRAMS
 install-exec: install-exec-am
 
 install-data-am:
@@ -251,13 +299,14 @@ install-data: install-data-am
 install-am: all-am
 	@$(MAKE) $(AM_MAKEFLAGS) install-exec-am install-data-am
 install: install-am
-uninstall-am:
+uninstall-am: uninstall-binPROGRAMS
 uninstall: uninstall-am
-all-am: Makefile $(LIBRARIES)
+all-am: Makefile $(LIBRARIES) $(PROGRAMS)
 all-redirect: all-am
 install-strip:
 	$(MAKE) $(AM_MAKEFLAGS) AM_INSTALL_PROGRAM_FLAGS=-s install
 installdirs:
+	$(mkinstalldirs)  $(DESTDIR)$(bindir)
 
 
 mostlyclean-generic:
@@ -270,23 +319,26 @@ distclean-generic:
 
 maintainer-clean-generic:
 mostlyclean-am:  mostlyclean-noinstLIBRARIES mostlyclean-compile \
-		mostlyclean-tags mostlyclean-generic
+		mostlyclean-binPROGRAMS mostlyclean-tags \
+		mostlyclean-generic
 
 mostlyclean: mostlyclean-am
 
-clean-am:  clean-noinstLIBRARIES clean-compile clean-tags clean-generic \
-		mostlyclean-am
+clean-am:  clean-noinstLIBRARIES clean-compile clean-binPROGRAMS \
+		clean-tags clean-generic mostlyclean-am
 
 clean: clean-am
 
 distclean-am:  distclean-noinstLIBRARIES distclean-compile \
-		distclean-tags distclean-generic clean-am
+		distclean-binPROGRAMS distclean-tags distclean-generic \
+		clean-am
 
 distclean: distclean-am
 
 maintainer-clean-am:  maintainer-clean-noinstLIBRARIES \
-		maintainer-clean-compile maintainer-clean-tags \
-		maintainer-clean-generic distclean-am
+		maintainer-clean-compile maintainer-clean-binPROGRAMS \
+		maintainer-clean-tags maintainer-clean-generic \
+		distclean-am
 	@echo "This command is intended for maintainers to use;"
 	@echo "it deletes files that may require special tools to rebuild."
 
@@ -295,9 +347,11 @@ maintainer-clean: maintainer-clean-am
 .PHONY: mostlyclean-noinstLIBRARIES distclean-noinstLIBRARIES \
 clean-noinstLIBRARIES maintainer-clean-noinstLIBRARIES \
 mostlyclean-compile distclean-compile clean-compile \
-maintainer-clean-compile tags mostlyclean-tags distclean-tags \
-clean-tags maintainer-clean-tags distdir info-am info dvi-am dvi check \
-check-am installcheck-am installcheck install-exec-am install-exec \
+maintainer-clean-compile mostlyclean-binPROGRAMS distclean-binPROGRAMS \
+clean-binPROGRAMS maintainer-clean-binPROGRAMS uninstall-binPROGRAMS \
+install-binPROGRAMS tags mostlyclean-tags distclean-tags clean-tags \
+maintainer-clean-tags distdir info-am info dvi-am dvi check check-am \
+installcheck-am installcheck install-exec-am install-exec \
 install-data-am install-data install-am install uninstall-am uninstall \
 all-redirect all-am all installdirs mostlyclean-generic \
 distclean-generic clean-generic maintainer-clean-generic clean \

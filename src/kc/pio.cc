@@ -19,8 +19,8 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-#include <iostream.h>
-#include <iomanip.h>
+#include <iostream>
+#include <iomanip>
 
 #include "kc/system.h"
 
@@ -33,6 +33,8 @@
 #include "libdbg/dbg.h"
 
 // #define PIO_OUT_CTRL_DEBUG
+
+using namespace std;
 
 PIO::PIO(void) : InterfaceCircuit("PIO")
 {
@@ -58,6 +60,7 @@ PIO::reset(bool power_on)
   _irq_vector[A] = _irq_vector[B] = 0;
   _ready[A]      = _ready[B]      = 1;
   _strobe[A]     = _strobe[B]     = 0;
+  _mode[A]       = _mode[B]       = 0;
 
   _irq_enable[A] = _irq_enable[B] = 0;
   _irq_active[A] = _irq_active[B] = 0;
@@ -85,50 +88,72 @@ PIO::reset(bool power_on)
 byte_t
 PIO::in_A_DATA(void) {
   byte_t ret;
-#if 0
-  cout << "PIO A: in DATA: 0x" << hex << setfill('0') << setw(2)
-       << (int)_value[A] << endl;
-#endif
 
-  if (_cb_a_in) _cb_a_in->callback_A_in();
+  if (_cb_a_in)
+    _cb_a_in->callback_A_in();
+
+  ret = _value[A];
   if (_mode[A] == 3)
-    {
-      ret = (_value[A] & ~_bit_mode[A]) | (_ext[A] & _bit_mode[A]);
-      // cout.form("PIO: [A] in while in mode 3 -> 0x%02x\n", ret);
-      return ret;
-    }
-  return _value[A];
+    ret = (_value[A] & ~_bit_mode[A]) | (_ext[A] & _bit_mode[A]);
+
+  DBG(2, form("KCemu/PIO/A/in_DATA",
+              "PIO::in():  port A DATA (mode %d): val = %02x\n",
+              _mode[A], ret));
+
+  return ret;
 }
 
 byte_t
 PIO::in_B_DATA(void) {
   byte_t ret;
-#if 0
-  cout << "PIO B: in DATA: 0x" << hex << setfill('0') << setw(2)
-       << (int)_value[B] << "\n";
-#endif
 
-  if (_cb_b_in) _cb_b_in->callback_B_in();
+  if (_cb_b_in)
+    _cb_b_in->callback_B_in();
+
+  ret = _value[B];
   if (_mode[B] == 3)
-    {
-      ret = (_value[B] & ~_bit_mode[B]) | (_ext[B] & _bit_mode[B]);
-      // cout.form("PIO: [B] in while in mode 3 -> 0x%02x\n", ret);
-      return ret;
-    }
-  return _value[B];
+    ret = (_value[B] & ~_bit_mode[B]) | (_ext[B] & _bit_mode[B]);
+
+  DBG(2, form("KCemu/PIO/B/in_DATA",
+              "PIO::in():  port B DATA (mode %d): val = %02x\n",
+              _mode[B], ret));
+
+  return ret;
 }
 
 byte_t
-PIO::in_A_CTRL(void) { return 0xff; } /* fixme: */
+PIO::in_A_CTRL(void) {
+  byte_t ret = 0xff;
+
+  DBG(2, form("KCemu/PIO/A/in_CTRL",
+              "PIO::in():  port A CTRL (mode %d): val = %02x\n",
+              _mode[A], ret));
+
+  return ret; /* FIXME: */
+}
+
 byte_t
-PIO::in_B_CTRL(void) { return 0xff; } /* fixme: */
+PIO::in_B_CTRL(void) {
+  byte_t ret = 0xff;
+
+  DBG(2, form("KCemu/PIO/B/in_CTRL",
+              "PIO::in():  port B CTRL (mode %d): val = %02x\n",
+              _mode[B], ret));
+
+  return ret; /* FIXME: */
+}
 
 void
 PIO::out_A_DATA(byte_t val)
 {
+  DBG(2, form("KCemu/PIO/A/out_DATA",
+              "PIO::out(): port A DATA (mode %d): val = %02x\n",
+              _mode[B], val));
+
   change_A(_value[A] ^ val, val);
   _value[A] = val;
   _ready[A] = 1;
+
   if (_cb_a_out)
     _cb_a_out->callback_A_out(val);
 }
@@ -136,10 +161,15 @@ PIO::out_A_DATA(byte_t val)
 void
 PIO::out_B_DATA(byte_t val)
 {
+  DBG(2, form("KCemu/PIO/B/out_DATA",
+              "PIO::out(): port B DATA (mode %d): val = %02x\n",
+              _mode[B], val));
+
   change_B(_value[B] ^ val, val);
   _value[B]   = val;
   _irq[B]     = 1;
   _ready[B]   = 1;
+
   if (_cb_b_out)
     _cb_b_out->callback_B_out(val);
 }
@@ -148,6 +178,19 @@ void
 PIO::out_CTRL(int port, byte_t val)
 {
   char p = (port == A) ? 'A' : 'B';
+
+  if (port == A)
+    {
+      DBG(2, form("KCemu/PIO/A/out_CTRL",
+		  "PIO::out(): port A CTRL (mode %d): val = %02x\n",
+		  p, _mode[A], val));
+    }
+  else
+    {
+      DBG(2, form("KCemu/PIO/B/out_CTRL",
+		  "PIO::out(): port A CTRL (mode %d): val = %02x\n",
+		  p, _mode[B], val));
+    }
 
   /*
    *  bit mode
@@ -160,6 +203,7 @@ PIO::out_CTRL(int port, byte_t val)
     {
       _bit_mode[port] = val;
       _bit_mode_follows[port] = false;
+
 #ifdef PIO_OUT_CTRL_DEBUG
       cout.form("PIO: [%c] new bit mode: %02x (0 = out/ 1 = in)\n", p, _bit_mode[port]);
 #endif

@@ -33,6 +33,7 @@
 #define BUF_SIZE (1024)
 
 static int af_error;
+static char loader_name[1024];
 static libaudio_loader_t *self = NULL;
 
 typedef struct audio_data
@@ -204,7 +205,7 @@ loader_aud_get_type(void)
 static const char *
 loader_aud_get_name(void)
 {
-  return "loader for audio files supported by libaudiofile";
+  return loader_name;
 }
 
 static libaudio_loader_t loader = {
@@ -220,6 +221,12 @@ static libaudio_loader_t loader = {
 void
 loader_aud_init(void)
 {
+  snprintf(loader_name,
+	   sizeof(loader_name),
+	   "loader for audio files supported by libaudiofile v%d.%d",
+	   LIBAUDIOFILE_MAJOR_VERSION,
+	   LIBAUDIOFILE_MINOR_VERSION);
+
   if (libaudio_register_loader(&loader))
     self = &loader;
 }

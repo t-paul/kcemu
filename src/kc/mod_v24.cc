@@ -39,6 +39,8 @@
 
 #include "libdbg/dbg.h"
 
+using namespace std;
+
 static ModuleV24 *self;
 
 ModuleV24::ModuleV24(ModuleV24 &tmpl) :

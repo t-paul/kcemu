@@ -118,7 +118,7 @@ UI_SDL3::get_height(void)
 }
 
 void
-UI_SDL3::reset(bool power_on = false)
+UI_SDL3::reset(bool power_on)
 {
   z80->addCallback(35000, this, 0);
 }

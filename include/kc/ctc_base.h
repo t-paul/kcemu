@@ -22,8 +22,6 @@
 #ifndef __kc_ctc_base_h
 #define __kc_ctc_base_h
 
-#include <list.h>
-
 #include "kc/ctc.h"
 
 class CTC_Base : public CTC

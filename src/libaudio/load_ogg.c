@@ -30,6 +30,7 @@
 
 #include <vorbis/vorbisfile.h>
 
+static char loader_name[1024];
 static libaudio_loader_t *self = NULL;
 
 #define BUF_SIZE (4096)
@@ -192,7 +193,7 @@ loader_ogg_get_type(void)
 static const char *
 loader_ogg_get_name(void)
 {
-  return "loader for OggVorbis audio files";
+  return loader_name;
 }
 
 static libaudio_loader_t loader = {
@@ -208,6 +209,10 @@ static libaudio_loader_t loader = {
 void
 loader_ogg_init(void)
 {
+  snprintf(loader_name,
+	   sizeof(loader_name),
+	   "loader for OggVorbis audio files");
+
   if (libaudio_register_loader(&loader))
     self = &loader;
 }

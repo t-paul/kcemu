@@ -5,7 +5,6 @@ TAPENAME=files.kct
 
 pkgdata_DATA = \
 	files.kct \
-	basic.kct \
 	wordpro.kct
 
 EXTRA_DIST = \

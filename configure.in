@@ -26,7 +26,8 @@ dnl ---------------------
 
 KCEMU_MAJOR_VERSION=0
 KCEMU_MINOR_VERSION=3
-KCEMU_MICRO_VERSION=6
+KCEMU_MICRO_VERSION=7
+KCEMU_EXTRA_VERSION=beta2
 
 if test $KCEMU_MICRO_VERSION -eq 0
 then
@@ -35,9 +36,15 @@ else
         KCEMU_VERSION=${KCEMU_MAJOR_VERSION}.${KCEMU_MINOR_VERSION}.${KCEMU_MICRO_VERSION}
 fi
 
+if test x"$KCEMU_EXTRA_VERSION" != x
+then
+	KCEMU_VERSION=${KCEMU_VERSION}${KCEMU_EXTRA_VERSION}
+fi
+
 AC_DEFINE_UNQUOTED(KCEMU_MAJOR_VERSION, $KCEMU_MAJOR_VERSION)
 AC_DEFINE_UNQUOTED(KCEMU_MINOR_VERSION, $KCEMU_MINOR_VERSION)
 AC_DEFINE_UNQUOTED(KCEMU_MICRO_VERSION, $KCEMU_MICRO_VERSION)
+AC_DEFINE_UNQUOTED(KCEMU_EXTRA_VERSION, "$KCEMU_EXTRA_VERSION")
 AC_DEFINE_UNQUOTED(KCEMU_VERSION, "$KCEMU_VERSION")
 
 dnl ---------------------
@@ -132,7 +139,19 @@ dnl -------------------------------
 
 AC_PATH_X
 AC_HEADER_STDC
-AC_CHECK_HEADERS(sys/time.h unistd.h mcheck.h)
+AC_CHECK_HEADERS(sys/time.h mcheck.h)
+
+dnl ----------------------------------
+dnl  check for common C++ header files
+dnl ----------------------------------
+
+dnl autoconf 2.54
+dnl AC_LANG_PUSH(C++)
+dnl AC_LANG_POP(C++)
+dnl autoconf 2.13
+dnl AC_LANG_SAVE
+dnl AC_LANG_CPLUSPLUS
+dnl AC_LANG_RESTORE
 
 dnl --------------------------------------
 dnl  checks for various library functions
@@ -156,18 +175,33 @@ dnl  check for libsndfile
 dnl ---------------------
 
 if test x$enable_libsndfile = xyes; then
-	AC_CHECK_LIB(sndfile, sf_open_read, have_libsndfile=yes, have_libsndfile=no)
+	AC_CHECK_LIB(sndfile,
+		     sf_open_read,
+		     have_libsndfile=yes,
+		     have_libsndfile=no)
 	if test x$have_libsndfile = xyes; then
 		SNDFILE_LIBS=-lsndfile
 		AC_SUBST(SNDFILE_LIBS)
 		AC_DEFINE(HAVE_LIBSNDFILE)
+		AC_DEFINE(HAVE_LIBSNDFILE_V0)
 	else
-		AC_MSG_WARN([
-	***
-	*** Unable to find sndfile library!
-	*** The audio loader module which requires this library
-	*** will be disabled.
-	***])
+		AC_CHECK_LIB(sndfile,
+			     sf_open,
+			     have_libsndfile=yes,
+			     have_libsndfile=no)
+		if test x$have_libsndfile = xyes; then
+			SNDFILE_LIBS=-lsndfile
+			AC_SUBST(SNDFILE_LIBS)
+			AC_DEFINE(HAVE_LIBSNDFILE)
+			AC_DEFINE(HAVE_LIBSNDFILE_V1)
+		else
+			AC_MSG_WARN([
+			***
+			*** Unable to find sndfile library!
+			*** The audio loader module which requires this library
+			*** will be disabled.
+			***])
+		fi
 	fi
 fi
 

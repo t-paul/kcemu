@@ -21,7 +21,7 @@
 
 #include <stdlib.h>
 #include <string.h>
-#include <iostream.h>
+#include <iostream>
 
 #include "kc/system.h"
 
@@ -129,6 +129,8 @@
 # define UI_8 UI_BeOS8
 #endif /* HOST_OS_BEOS */
 
+using namespace std;
+
 Z80        *z80;
 UI         *ui;
 Ports      *ports;
@@ -160,8 +162,29 @@ int   kcemu_ui_debug;
 char *kcemu_datadir;
 char *kcemu_localedir;
 char *kcemu_tape;
+char *kcemu_emulate;
 
-static kc_type_t  kcemu_kc_type;
+static kc_type_t     kcemu_kc_type;
+static kc_variant_t  kcemu_kc_variant;
+static const char   *kcemu_kc_variant_name;
+
+static kc_variant_names_t kc_types[] = {
+  { "z9001",    -1, KC_TYPE_85_1, KC_VARIANT_85_1_10 },
+  { "z9001.10", -1, KC_TYPE_85_1, KC_VARIANT_85_1_10 },
+  { "z9001.11", -1, KC_TYPE_85_1, KC_VARIANT_85_1_11 },
+  { "kc85/1",    1, KC_TYPE_85_1, KC_VARIANT_85_1_10 },
+  { "hc900",    -1, KC_TYPE_85_2, KC_VARIANT_NONE    },
+  { "hc-900",   -1, KC_TYPE_85_2, KC_VARIANT_NONE    },
+  { "kc85/2",    2, KC_TYPE_85_2, KC_VARIANT_NONE    },
+  { "kc85/3",    3, KC_TYPE_85_3, KC_VARIANT_NONE    },
+  { "kc85/4",    4, KC_TYPE_85_4, KC_VARIANT_NONE    },
+  { "kc87",     -1, KC_TYPE_87,   KC_VARIANT_87_11   },
+  { "kc87.10",  -1, KC_TYPE_87,   KC_VARIANT_87_10   },
+  { "kc87.11",   7, KC_TYPE_87,   KC_VARIANT_87_11   },
+  { "kc87.21",  -1, KC_TYPE_87,   KC_VARIANT_87_21   },
+  { "lc80",      8, KC_TYPE_LC80, KC_VARIANT_NONE    },
+  { NULL,       -1, KC_TYPE_NONE, KC_VARIANT_NONE    },
+};
 
 static void
 banner(void)
@@ -600,6 +623,84 @@ get_kc_type(void)
   return kcemu_kc_type;
 }
 
+kc_variant_t
+get_kc_variant(void)
+{
+  return kcemu_kc_variant;
+}
+
+const char *
+get_kc_variant_name(void)
+{
+  return kcemu_kc_variant_name;
+}
+
+void
+set_kc_type(int type, const char *variant)
+{
+  int a;
+
+  /*
+   *  if no model type switch (-1, -2, ...) and no name (-e kc85/1) on
+   *  the command line we use the value from the config file
+   */
+  if ((type < 0) && (variant == NULL))
+    {
+      /*
+       *  for historical reasons we check for an integer value first
+       *  as this was defined for older emulator versions
+       *  if it's not an integer we take it to be the model name of
+       *  the computer to emulate
+       */
+      type = RC::instance()->get_int("Default KC Model", -1);
+      if (type < 0)
+	variant = RC::instance()->get_string("Default KC Model", NULL);
+    }
+
+  /*
+   *  check model names
+   */
+  if (variant != NULL)
+    {
+      for (a = 0;kc_types[a].name != NULL;a++)
+	{
+	  if (strcasecmp(variant, kc_types[a].name) == 0)
+	    {
+	      kcemu_kc_type = kc_types[a].kc_type;
+	      kcemu_kc_variant = kc_types[a].kc_variant;
+	      kcemu_kc_variant_name = kc_types[a].name;
+	      return;
+	    }
+	}
+    }
+
+  /*
+   *  if no name is given or the name is unknown check type switch;
+   *  default is type 4
+   */
+  if (type < 0)
+    type = 4;
+
+  for (a = 0;kc_types[a].name != NULL;a++)
+    {
+      if (kc_types[a].type == type)
+	{
+	  kcemu_kc_type = kc_types[a].kc_type;
+	  kcemu_kc_variant = kc_types[a].kc_variant;
+	  kcemu_kc_variant_name = kc_types[a].name;
+	  return;
+	}
+    }
+
+  /*
+   *  we should never come to this point but just in case default
+   *  to kc85/4
+   */
+  kcemu_kc_type = KC_TYPE_85_4;
+  kcemu_kc_variant = KC_VARIANT_NONE;
+  kcemu_kc_variant_name = "kc85/4";
+}
+
 int
 main(int argc, char **argv)
 {
@@ -615,11 +716,13 @@ main(int argc, char **argv)
     { "help", 0, 0, 'h' },
     { "tape", 1, 0, 't' },
     { "scale", 1, 0, 's' },
+    { "emulate", 1, 0, 'e' },
     { "datadir", 1, 0, 'd' },
     { "localedir", 1, 0, 'l' },
     { "license", 0, 0, 'L' },
     { "warranty", 0, 0, 'W' },
     { "version", 0, 0, 'v' },
+    { "display-debug", 0, 0, 'D' },
     { 0, 0, 0, 0 }
   };
 #endif /* HAVE_GETOPT_LONG */
@@ -647,9 +750,11 @@ main(int argc, char **argv)
   mtrace();
 #endif /* __CALL_MTRACE */
 
+  type = -1;
   kcemu_tape = 0;
+  kcemu_emulate = 0;
   kcemu_ui_scale = 0;
-  kcemu_ui_debug = 0;
+  kcemu_ui_debug = -1;
   ptr = getenv("KCEMU_DATADIR");
   kcemu_datadir = (ptr) ? strdup(ptr) : strdup(DATADIR);
   ptr = getenv("KCEMU_LOCALEDIR");
@@ -667,15 +772,14 @@ main(int argc, char **argv)
   libdisk_init();
   libaudio_init(LIBAUDIO_TYPE_ALL);
 
-  type = 0;
   while (1)
     {
 #ifdef HAVE_GETOPT_LONG
-      c = getopt_long(argc, argv, "123478hvd:l:s:t:LW",
+      c = getopt_long(argc, argv, "123478hvDe:d:l:s:t:LW",
                       long_options, &option_index);
 #else
 #ifdef HAVE_GETOPT
-      c = getopt(argc, argv, "123478hvd:l:s:LW");
+      c = getopt(argc, argv, "123478hvDe:d:l:s:LW");
 #else
 #warning neither HAVE_GETOPT_LONG nor HAVE_GETOPT defined
 #warning commandline parsing disabled!
@@ -683,7 +787,8 @@ main(int argc, char **argv)
 #endif /* HAVE_GETOPT */
 #endif /* #ifdef HAVE_GETOPT_LONG */
 
-      if (c == -1) break;
+      if (c == -1)
+	break;
 
       switch (c)
         {
@@ -705,6 +810,9 @@ main(int argc, char **argv)
 	case '8':
 	  type = 8;
 	  break;
+	case 'e':
+	  kcemu_emulate = strdup(optarg);
+	  break;
         case 'd':
           free(kcemu_datadir);
           kcemu_datadir = strdup(optarg);
@@ -724,6 +832,9 @@ main(int argc, char **argv)
 	  break;
 	case 'W':
 	  warranty(argv[0]);
+	  break;
+	case 'D':
+	  kcemu_ui_debug = 1;
 	  break;
 	case 'v':
 	  show_version(argv[0]);
@@ -746,21 +857,7 @@ main(int argc, char **argv)
 
   RC::init();
 
-  /*
-   *  determine which kc version we will run
-   */
-  if (type == 0)
-    type = RC::instance()->get_int("Default KC Model", 4);
-  
-  switch (type)
-    {
-    case 1:  kcemu_kc_type = KC_TYPE_85_1; break;
-    case 2:  kcemu_kc_type = KC_TYPE_85_2; break;
-    case 3:  kcemu_kc_type = KC_TYPE_85_3; break;
-    case 7:  kcemu_kc_type = KC_TYPE_87;   break;
-    case 8:  kcemu_kc_type = KC_TYPE_LC80; break;
-    default: kcemu_kc_type = KC_TYPE_85_4; break;
-    }
+  set_kc_type(type, kcemu_emulate);
 
   /*
    *  check display scale
@@ -776,7 +873,8 @@ main(int argc, char **argv)
   /*
    *  check display debug
    */
-  kcemu_ui_debug = RC::instance()->get_int("Display Debug", 0);
+  if (kcemu_ui_debug < 0)
+    kcemu_ui_debug = RC::instance()->get_int("Display Debug", 0);
 
   do
     {
@@ -795,6 +893,8 @@ main(int argc, char **argv)
 
       timer = NULL;
       memory = NULL;
+      fdc_z80 = NULL;
+      disk = NULL;
 
       switch (kcemu_kc_type)
 	{
@@ -811,7 +911,6 @@ main(int argc, char **argv)
 	  pio2     = new PIO1_2;
 	  tape     = new Tape(500, 1000, 2000, 0);
 	  wav      = new WavPlayer(500, 1000, 2000);
-	  disk     = NULL;
 
 	  p1 = new PIO1_1;
 	  k1 = new Keyboard1;
@@ -868,7 +967,6 @@ main(int argc, char **argv)
 	  ctc      = new CTC8;
 	  tape     = new Tape(500, 1000, 2000, 0);
 	  wav      = new WavPlayer(500, 1000, 2000);
-	  disk     = NULL;
 
 	  k8       = new Keyboard8;
 	  pio2->register_callback_A_in(k8);
@@ -963,26 +1061,27 @@ main(int argc, char **argv)
 	default:
 	  break;
 	}
-
-      if (RC::instance()->get_int("Floppy Disk Basis"))
-        {
-	  fdc_z80 = new Z80_FDC();
-          fdc_ports = new Ports();
-          fdc_io = new FloppyIO();
-          fdc_shmem = new FloppySharedMem();
-          fdc_shmem->set_memory(&fdc_mem[0xfc00]);
-          fdc_fdc = new FDC();
-	  fdc_ctc = new CTC_FDC();
-
-          fdc_ports->register_ports("-", 0, 0x100, new NullPort(), 256);
-          fdc_ports->register_ports("FDC", 0xf0, 12, fdc_fdc, 10);
-	  fdc_ports->register_ports("CTC", 0xfc, 4, fdc_ctc, 10);
-
-          portg = ports->register_ports("FloppyIO", 0xf4, 1, fdc_io, 10);
-          portg = ports->register_ports("FloppySHMEM", 0xf0, 4, fdc_shmem, 10);
-
-	  disk = new Disk();
-        }
+      
+      if (get_kc_type() & KC_TYPE_85_2_CLASS)
+	if (RC::instance()->get_int("Floppy Disk Basis"))
+	  {
+	    fdc_z80 = new Z80_FDC();
+	    fdc_ports = new Ports();
+	    fdc_io = new FloppyIO();
+	    fdc_shmem = new FloppySharedMem();
+	    fdc_shmem->set_memory(&fdc_mem[0xfc00]);
+	    fdc_fdc = new FDC();
+	    fdc_ctc = new CTC_FDC();
+	    
+	    fdc_ports->register_ports("-", 0, 0x100, new NullPort(), 256);
+	    fdc_ports->register_ports("FDC", 0xf0, 12, fdc_fdc, 10);
+	    fdc_ports->register_ports("CTC", 0xfc, 4, fdc_ctc, 10);
+	    
+	    portg = ports->register_ports("FloppyIO", 0xf4, 1, fdc_io, 10);
+	    portg = ports->register_ports("FloppySHMEM", 0xf0, 4, fdc_shmem, 10);
+	    
+	    disk = new Disk();
+	  }
       
       log = new LOG();
       ui->init(&argc, &argv);

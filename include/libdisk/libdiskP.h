@@ -40,6 +40,7 @@ int  libdisk_register_loader(libdisk_loader_t *loader);
 
 void loader_dir_init(void);
 void loader_cdm_init(void);
+void loader_td0_init(void);
 void loader_22dsk_init(void);
 
 #endif /* __libdisk_libdiskp_h */

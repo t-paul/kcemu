@@ -20,8 +20,8 @@
  */
 
 #include <string.h>
-#include <fstream.h>
-#include <iostream.h>
+#include <fstream>
+#include <iostream>
 
 #include "kc/system.h"
 

@@ -43,6 +43,7 @@ typedef struct wav_header
   unsigned long  DataLength;
 } wav_header_t;
 
+static char loader_name[1024];
 static libaudio_loader_t *self = NULL;
 
 static int
@@ -171,7 +172,7 @@ loader_wav_get_type(void)
 static const char *
 loader_wav_get_name(void)
 {
-  return "loader for wav files";
+  return loader_name;
 }
 
 static libaudio_loader_t loader = {
@@ -187,6 +188,10 @@ static libaudio_loader_t loader = {
 void
 loader_wav_init(void)
 {
+  snprintf(loader_name,
+	   sizeof(loader_name),
+	   "loader for wav files");
+
   if (libaudio_register_loader(&loader))
     self = &loader;
 }

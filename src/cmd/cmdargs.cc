@@ -28,6 +28,8 @@
 
 #include "libdbg/dbg.h"
 
+using namespace std;
+
 /*
  *  class CMD_ListEntry
  */

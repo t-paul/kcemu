@@ -39,9 +39,8 @@
 #ifndef __libtape_format_h
 #define __libtape_format_h
 
-#include <list.h>
-
-#include <fstream.h>
+#include <list>
+#include <fstream>
 
 #define __KCT_VERSION__ (0x0102)
 
@@ -143,7 +142,7 @@ typedef struct
   unsigned char data[252];
 } kct_data_t;
 
-class KCTDir : public list<kct_dirent_t *>
+class KCTDir : public std::list<kct_dirent_t *>
 {
 public:
   KCTDir(void);
@@ -168,7 +167,7 @@ public:
   
 private:
   bool           _readonly;
-  fstream        *_f;
+  std::fstream  *_f;
   kct_header_t   _header;
   kct_bam_t      _bam;
   kct_dirblock_t _dirblock;
@@ -228,9 +227,9 @@ public:
                     unsigned short start_addr,
                     kct_file_type_t type,
                     kct_machine_type_t machine = KCT_MACHINE_ALL);
-  istream *   read(int idx,
+  std::istream *   read(int idx,
                    kct_file_props_t *props = NULL);
-  istream *   read(const char *name,
+  std::istream *   read(const char *name,
                    kct_file_props_t *props = NULL);
   KCTDir *    readdir(void);
 

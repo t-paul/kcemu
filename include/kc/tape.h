@@ -22,8 +22,7 @@
 #ifndef __kc_tape_h
 #define __kc_tape_h
 
-#include <fstream.h>
-#include <strstream.h>
+#include <fstream>
 
 #include "kc/system.h"
 
@@ -101,8 +100,8 @@ private:
     long _bytes_read;
     kct_file_type_t _file_type;
     
-    ostrstream *_os;
-    istream *_is;
+    std::ostream *_os;
+    std::istream *_is;
 
     KCTFile _kct_file;
 
@@ -154,7 +153,7 @@ private:
 				    const char *filename);
     virtual tape_error_t export_wav(const char *name,
 				    const char *filename);
-    virtual istream * read(const char *name,
+    virtual std::istream * read(const char *name,
 			   kct_file_props_t *props = NULL);
 };
 

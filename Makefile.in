@@ -103,7 +103,7 @@ l = @l@
 
 SUBDIRS = include ROM PRG DISK intl src test images doc man debian po
 
-pkgdata_DATA = .kcemurc .kcemurc.gtk
+pkgdata_DATA = 
 
 docdir = $(datadir)/doc/kcemu
 doc_DATA = README.de TODO THANKS

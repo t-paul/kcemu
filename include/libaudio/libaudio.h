@@ -31,12 +31,13 @@ typedef enum
   LIBAUDIO_TYPE_ALL     = 0xffffffff,
   LIBAUDIO_TYPE_UNKNOWN = (1 << 0),
   LIBAUDIO_TYPE_OSS     = (1 << 1),
-  LIBAUDIO_TYPE_SND     = (1 << 2),
-  LIBAUDIO_TYPE_AUD     = (1 << 3),
-  LIBAUDIO_TYPE_MP3     = (1 << 4),
-  LIBAUDIO_TYPE_OGG     = (1 << 5),
-  LIBAUDIO_TYPE_FLC     = (1 << 6),
-  LIBAUDIO_TYPE_WAV     = (1 << 7),
+  LIBAUDIO_TYPE_ALS     = (1 << 2),
+  LIBAUDIO_TYPE_SND     = (1 << 3),
+  LIBAUDIO_TYPE_AUD     = (1 << 4),
+  LIBAUDIO_TYPE_MP3     = (1 << 5),
+  LIBAUDIO_TYPE_OGG     = (1 << 6),
+  LIBAUDIO_TYPE_FLC     = (1 << 7),
+  LIBAUDIO_TYPE_WAV     = (1 << 8),
 } libaudio_type_t;
   
 typedef struct libaudio_prop libaudio_prop_t;

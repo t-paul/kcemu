@@ -30,6 +30,7 @@
 
 #include <FLAC/file_decoder.h>
 
+static char loader_name[1024];
 static libaudio_loader_t *self = NULL;
 
 typedef struct flc_data
@@ -295,7 +296,7 @@ loader_flc_get_type(void)
 static const char *
 loader_flc_get_name(void)
 {
-  return "loader for FLAC compressed audio files";
+  return loader_name;
 }
 
 static libaudio_loader_t loader = {
@@ -311,6 +312,10 @@ static libaudio_loader_t loader = {
 void
 loader_flc_init(void)
 {
+  snprintf(loader_name,
+	   sizeof(loader_name),
+	   "loader for FLAC compressed audio files");
+
   if (libaudio_register_loader(&loader))
     self = &loader;
 }

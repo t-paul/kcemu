@@ -21,7 +21,7 @@
 
 #include <string.h>
 #include <malloc.h>
-#include <iostream.h>
+#include <iostream>
 
 #include "kc/system.h"
 

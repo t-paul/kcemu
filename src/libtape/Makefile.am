@@ -29,7 +29,7 @@ kcread2tap_SOURCES = \
 	kcread2tap.c
 
 kctape_LDADD = \
-	libtape.a ../fileio/libfileio.a
+	libtape.a ../fileio/libfileio.a ../libdbg/libdbg.a
 
 check:
 	rm -f test.kct testfile.1 testfile.2

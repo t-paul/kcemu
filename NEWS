@@ -2,6 +2,25 @@
 # $Id: NEWS,v 1.10 2002/10/31 16:39:53 torsten_paul Exp $
 #
 
+KCemu 0.3.7
+
+  * work with both libsndfile-0.0.x and libsndfile-1.0.x
+  * added simple program to convert TeleDisk images to
+    uncompressed disk dumps
+  * added loader for disk images produced by the Sydex
+    TeleDisk program (only normal compression for now)
+  * lots of compile fixes for gcc-3.2
+  * added the notion of computer variants to allow to
+    differentiate between e.g. the kc87.11 and kc87.21
+    model (which have different basic and system ROMs)
+  * fixed memory initialization for kc85/1 and kc87
+    (fixes MAZOGS)
+  * output pin of timer channel 2 is connected to channel 3
+    trigger input pin in kc85/1 mode; fixes system time
+    calculation
+  * added missing initialization for kc85/1 rom module;
+    fixes core dump on exit
+
 KCemu 0.3.6
 
   * added emulation of screen border and 20 line display

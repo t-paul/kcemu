@@ -36,6 +36,8 @@
 #include "ui/generic/tape.h"
 #include "ui/generic/module.h"
 
+using namespace std;
+
 UI_SDL::UI_SDL(void)
 {
 }

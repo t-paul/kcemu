@@ -32,6 +32,7 @@
 
 #define MAX_CHANNELS (16)
 
+static char loader_name[1024];
 static libaudio_loader_t *self = NULL;
 
 typedef struct snd_data
@@ -49,9 +50,28 @@ loader_snd_check(const char *filename, unsigned char *data, long size)
   SF_INFO info;
   SNDFILE *sndfile;
 
+#if HAVE_LIBSNDFILE_V0
   sndfile = sf_open_read(filename, &info);
+#else /* HAVE_LIBSNDFILE_V0 */
+  sndfile = sf_open(filename, SFM_READ, &info);
+#endif /* HAVE_LIBSNDFILE_V0 */
   if (sndfile == NULL)
     return 0;
+
+#if HAVE_LIBSNDFILE_V0
+  if ((info.pcmbitwidth != 8) && (info.pcmbitwidth != 16))
+    return 0;
+#else /* HAVE_LIBSNDFILE_V0 */
+  switch (info.format & SF_FORMAT_SUBMASK)
+    {
+    case SF_FORMAT_PCM_U8:
+    case SF_FORMAT_PCM_S8:
+    case SF_FORMAT_PCM_16:
+      break;
+    default:
+      return 0;
+    }
+#endif /* HAVE_LIBSNDFILE_V0 */
 
   if (info.channels > MAX_CHANNELS)
     return 0;
@@ -71,7 +91,11 @@ loader_snd_open_prop(const char *filename, libaudio_prop_t *prop)
   if (data == NULL)
     return NULL;
 
+#if HAVE_LIBSNDFILE_V0
   sndfile = sf_open_read(filename, &info);
+#else /* HAVE_LIBSNDFILE_V0 */
+  sndfile = sf_open(filename, SFM_READ, &info);
+#endif /* HAVE_LIBSNDFILE_V0 */
   if (sndfile == NULL)
     {
       free(data);
@@ -88,7 +112,24 @@ loader_snd_open_prop(const char *filename, libaudio_prop_t *prop)
   prop->loader_data = data;
 
   prop->sample_freq = info.samplerate;
+#if HAVE_LIBSNDFILE_V0
   prop->sample_size = info.pcmbitwidth; /* hmm, deprecated but quite useful... */
+#else /* HAVE_LIBSNDFILE_V0 */
+  switch (info.format & SF_FORMAT_SUBMASK)
+    {
+    case SF_FORMAT_PCM_U8:
+    case SF_FORMAT_PCM_S8:
+      prop->sample_size = 8;
+      break;
+    case SF_FORMAT_PCM_16:
+      prop->sample_size = 16;
+      break;
+    default:
+      /* should not be reached; blocked by loader_snd_check() */
+      return NULL;
+    }
+#endif /* HAVE_LIBSNDFILE_V0 */
+
   prop->channels = info.channels;
 
   return prop;
@@ -184,7 +225,7 @@ loader_snd_get_type(void)
 static const char *
 loader_snd_get_name(void)
 {
-  return "loader for audio files supported by libsndfile";
+  return loader_name;
 }
 
 static libaudio_loader_t loader = {
@@ -200,6 +241,19 @@ static libaudio_loader_t loader = {
 void
 loader_snd_init(void)
 {
+  char buffer[1024];
+
+#if HAVE_LIBSNDFILE_V0
+  sf_get_lib_version(buffer, sizeof(buffer));
+#else /* HAVE_LIBSNDFILE_V0 */
+  sf_command(NULL, SFC_GET_LIB_VERSION, buffer, sizeof(buffer));
+#endif /* HAVE_LIBSNDFILE_V0 */
+
+  snprintf(loader_name,
+	   sizeof(loader_name),
+	   "loader for audio files supported by %s",
+	   buffer);
+
   if (libaudio_register_loader(&loader))
     self = &loader;
 }

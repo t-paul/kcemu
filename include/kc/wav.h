@@ -22,7 +22,7 @@
 #ifndef __kc_wav_h
 #define __kc_wav_h
 
-#include <fstream.h>
+#include <fstream>
 
 #include "kc/system.h"
 

@@ -50,8 +50,10 @@ InterfaceCircuit::get_ic_name(void)
 void
 InterfaceCircuit::debug(void)
 {
-  cout.form("%s: iei = %d - ieo = %d - irqreq = %d - irqactive = %d\n",
-	    _name, _iei, ieo(), _irqreq, _irqactive);
+   DBG(2, form("KCemu/IC/irq",
+               "%s: iei = %d - ieo = %d - irqreq = %d - irqactive = %d\n",
+	       _name, _iei, ieo(), _irqreq, _irqactive));
+
   if (_next)
     _next->debug();
 }
@@ -206,6 +208,6 @@ InterfaceCircuit::reti_4D(void)
 }
 
 void
-InterfaceCircuit::reset(bool power_on = false)
+InterfaceCircuit::reset(bool power_on)
 {
 }

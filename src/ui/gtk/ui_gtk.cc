@@ -19,8 +19,8 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-#include <iostream.h>
-#include <iomanip.h>
+#include <iostream>
+#include <iomanip>
 
 #include <signal.h> /* FIXME: only for testing */
 #include <string.h>
@@ -56,6 +56,8 @@
 #include "libdbg/dbg.h"
 
 #define MAX_DIRTY_SIZE (1536) // FIXME:
+
+using namespace std;
 
 static UI_Gtk *self;
 
@@ -753,6 +755,18 @@ UI_Gtk::~UI_Gtk(void)
 }
 
 void
+UI_Gtk::show_greeting(void)
+{
+  const char *msg = " KCemu v" VERSION;
+  const char *variant = get_kc_variant_name();
+  const char *fmt = _("%s (emulating %s)");
+  char *status = new char[strlen(msg) + strlen(variant) + strlen(fmt) + 10];
+  sprintf(status, fmt, msg, variant);
+  Status::instance()->setMessage(status);
+  delete[] status;
+}
+
+void
 UI_Gtk::init(int *argc, char ***argv)
 {
   char *filename, *tmp;
@@ -835,7 +849,7 @@ UI_Gtk::init(int *argc, char ***argv)
   cmd = new CMD_ui_toggle(this);
   cmd = new CMD_update_colortable(this, _color_window);
 
-  Status::instance()->setMessage(" KCemu v" VERSION);
+  show_greeting();
 
   /*
       switch (_visual->type)

@@ -22,7 +22,7 @@
 #ifndef __ui_error_h
 #define __ui_error_h
 
-#include <list.h>
+#include <list>
 
 #include "ui/errorl.h"
 
@@ -30,7 +30,7 @@ class Error;
 
 class Error
 {
-  typedef list<ErrorListener *> error_list_t;
+  typedef std::list<ErrorListener *> error_list_t;
   
  private:
   static Error *_instance;
