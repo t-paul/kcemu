@@ -6,6 +6,7 @@ EXTRA_DIST = \
 	ui_gtk3.h	\
 	ui_gtk4.h	\
 	ui_gtk8.h	\
+	ui_gtk9.h	\
 	cmd.h		\
 	cmds.h		\
 	util.h		\

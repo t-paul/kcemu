@@ -66,7 +66,14 @@ set_type(unsigned char *data, fileio_prop_t *prop)
     }
   else if ((data[1] == 0xd4) && (data[2] == 0xd4) && (data[3] == 0xd4))
     {
-      prop->type = FILEIO_TYPE_MINTEX;
+      prop->type = FILEIO_TYPE_DATA;
+      prop->valid = FILEIO_V_NONE;
+      memcpy(prop->name, data + 4, 8);
+      prop->name[8] = '\0';
+    }
+  else if ((data[1] == 0xd5) && (data[2] == 0xd5) && (data[3] == 0xd5))
+    {
+      prop->type = FILEIO_TYPE_LIST;
       prop->valid = FILEIO_V_NONE;
       memcpy(prop->name, data + 4, 8);
       prop->name[8] = '\0';

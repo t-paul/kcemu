@@ -60,7 +60,7 @@ ModuleDisk::~ModuleDisk(void)
  *  
  */
 void
-ModuleDisk::out(word_t addr, byte_t val)
+ModuleDisk::m_out(word_t addr, byte_t val)
 {
   bool unreg, reg;
 

@@ -41,7 +41,7 @@ public:
             dword_t size, byte_t id, word_t addr = 0xc000);
   virtual ~ModuleROM(void);
 
-  virtual void out(word_t addr, byte_t val);
+  virtual void m_out(word_t addr, byte_t val);
   virtual ModuleInterface * clone(void);
 };
 

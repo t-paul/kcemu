@@ -109,7 +109,7 @@ INCLUDES =  	-I../../../include
 CPPFLAGS =  	-DVERSION=\"$(VERSION)\"         -DDATADIR=\"$(pkgdatadir)\"
 
 
-libui_generic_a_SOURCES =  	ui_1.cc			ui_3.cc			ui_4.cc			ui_8.cc			scanline.cc		module.cc		tape.cc
+libui_generic_a_SOURCES =  	ui_1.cc			ui_3.cc			ui_4.cc			ui_8.cc			ui_9.cc			scanline.cc		module.cc		tape.cc
 
 mkinstalldirs = $(SHELL) $(top_srcdir)/mkinstalldirs
 CONFIG_HEADER = ../../../include/kc/config.h
@@ -121,7 +121,7 @@ DEFS = @DEFS@ -I. -I$(srcdir) -I../../../include/kc
 LDFLAGS = @LDFLAGS@
 LIBS = @LIBS@
 libui_generic_a_LIBADD = 
-libui_generic_a_OBJECTS =  ui_1.o ui_3.o ui_4.o ui_8.o scanline.o \
+libui_generic_a_OBJECTS =  ui_1.o ui_3.o ui_4.o ui_8.o ui_9.o scanline.o \
 module.o tape.o
 AR = ar
 CXXFLAGS = @CXXFLAGS@
@@ -275,6 +275,11 @@ ui_8.o: ui_8.cc ../../../include/kc/system.h \
 	../../../include/cmd/cmd.h ../../../include/cmd/cmdargs.h \
 	../../../include/libtape/kct.h ../../../include/fileio/load.h \
 	../../../include/ui/generic/ui_8.h
+ui_9.o: ui_9.cc ../../../include/kc/system.h \
+	../../../include/kc/config.h ../../../include/sys/sysdep.h \
+	../../../include/kc/kc.h ../../../include/kc/gdc.h \
+	../../../include/kc/ic.h ../../../include/kc/ports.h \
+	../../../include/kc/vis.h ../../../include/ui/generic/ui_9.h
 
 info-am:
 info: info-am

@@ -725,3 +725,8 @@ ModuleV24::close_device(void)
 
   z80->unregister_ic(this);
 }
+
+void
+ModuleV24::m_out(word_t addr, byte_t val)
+{
+}

@@ -9,6 +9,7 @@ EXTRA_DIST = \
 	ctc1.h		\
 	ctc3.h		\
 	ctc8.h		\
+	ctc9.h		\
 	ctc_fdc.h	\
 	ctc_base.h	\
 	cb_list.h	\
@@ -19,6 +20,8 @@ EXTRA_DIST = \
 	keyb3k.h	\
 	keyb8.h		\
 	keyb8k.h	\
+	keyb9.h		\
+	keyb9k.h	\
 	keys.h		\
 	memory.h	\
 	memory1.h	\
@@ -27,28 +30,36 @@ EXTRA_DIST = \
 	memory4.h	\
 	memory7.h	\
 	memory8.h	\
+	memory9.h	\
 	pio.h		\
 	pio1.h		\
 	pio2.h		\
 	pio3.h		\
 	pio4.h		\
 	pio8.h		\
+	pio9.h		\
 	ports.h		\
 	ports4.h	\
 	sh_mem.h	\
 	disk_io.h	\
+	gdc.h		\
+	vis.h		\
+	svg.h		\
 	fdc.h		\
 	fdc_cmd.h	\
 	floppy.h	\
 	module.h	\
 	mod_ram.h	\
 	mod_ram1.h	\
+	mod_r64.h	\
+	mod_cpm.h	\
 	mod_ram8.h	\
 	mod_64k.h	\
 	mod_rom.h	\
 	mod_rom1.h	\
 	mod_disk.h	\
 	mod_v24.h	\
+	mod_4131.h	\
 	mod_list.h	\
 	profile.h	\
 	tape.h		\
@@ -62,6 +73,7 @@ EXTRA_DIST = \
 	sound8.h	\
 	z80.h		\
 	z80_fdc.h	\
+	romdi.h		\
 	system.h	\
 	memstream.h	\
 	disass.h	\

@@ -46,9 +46,11 @@ class FDC_CMD
  protected:
   byte_t _arg[MAX_ARGS];
   byte_t _result[MAX_RESULTS];
+  bool   _data_transfer;
   
   virtual void execute(void) = 0;
   virtual void execute_cmd(void);
+  virtual void finish_cmd(void);
 
  public:
   FDC_CMD(FDC *fdc, int args, int results, const char *name);
@@ -62,7 +64,9 @@ class FDC_CMD
   virtual byte_t read_result(void);
 
   virtual byte_t read_byte(void);
+  virtual int get_read_idx(void);
   virtual void write_byte(byte_t val);
+  virtual int get_write_idx(void);
 };
 
 class FDC_CMD_INVALID : public FDC_CMD

@@ -229,11 +229,6 @@ distdir: $(DISTFILES)
 	    || cp -p $$d/$$file $(distdir)/$$file || :; \
 	  fi; \
 	done
-t_cb_list.o: t_cb_list.cc ../../include/kc/cb.h ../../include/kc/kc.h \
-	../../include/kc/system.h ../../include/kc/config.h \
-	../../include/sys/sysdep.h ../../include/kc/cb_list.h
-t_memstream.o: t_memstream.cc ../../include/kc/memstream.h \
-	../../include/kc/config.h
 
 check-TESTS: $(TESTS)
 	@failed=0; all=0; \

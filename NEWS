@@ -4,6 +4,14 @@
 
 KCemu 0.3.7
 
+  * added BIC/A5105 emulation
+  * added CPM-Z9 emulation (CP/M for KC87 using a floppy
+    and a 64k RAM module
+  * started emulation of the plotter XY4131
+  * handle BASIC DATA files (signature 0xd4, 0xd4, 0xd4)
+    produced by CSAVE*"FILENAME";ARRAYNAME and BASIC
+    LIST files (signature 0xd5, 0xd5, 0xd5) produced
+    by LIST#1"FILENAME"
   * work with both libsndfile-0.0.x and libsndfile-1.0.x
   * added simple program to convert TeleDisk images to
     uncompressed disk dumps

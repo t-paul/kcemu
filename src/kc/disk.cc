@@ -145,30 +145,12 @@ public:
 
 Disk::Disk()
 {
-  CMD *cmd;
-  const char *filename;
-
-  cmd = new CMD_disk_attach(this);
-
-  filename = RC::instance()->get_string("Floppy Disk 1", NULL);
-  if (filename != NULL)
-    attach(0, filename);
-  
-  filename = RC::instance()->get_string("Floppy Disk 2", NULL);
-  if (filename != NULL)
-    attach(1, filename);
-
-  filename = RC::instance()->get_string("Floppy Disk 3", NULL);
-  if (filename != NULL)
-    attach(2, filename);
-
-  filename = RC::instance()->get_string("Floppy Disk 4", NULL);
-  if (filename != NULL)
-    attach(3, filename);
+  _cmd = new CMD_disk_attach(this);
 }
 
 Disk::~Disk()
 {
+  delete _cmd;
 }
 
 disk_error_t

@@ -5,6 +5,7 @@ EXTRA_DIST = \
 	ui_3.h		\
 	ui_4.h		\
 	ui_8.h		\
+	ui_9.h		\
 	tape.h		\
 	module.h	\
 	scanline.h

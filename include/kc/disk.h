@@ -40,6 +40,9 @@ typedef enum {
 
 class Disk
 {
+ private:
+  CMD *_cmd;
+
  public:
   Disk(void);
   virtual ~Disk(void);

@@ -14,6 +14,7 @@ libui_generic_a_SOURCES = \
 	ui_3.cc		\
 	ui_4.cc		\
 	ui_8.cc		\
+	ui_9.cc		\
 	scanline.cc	\
 	module.cc	\
 	tape.cc

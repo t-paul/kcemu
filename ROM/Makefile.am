@@ -18,6 +18,7 @@ pkgdata_DATA = \
 	zsid__c0.851	\
 	r80___c0.851	\
 	zm30__c0.851	\
+	cpmz9_c0.851	\
 	m006.rom	\
 	m012.rom	\
 	m026.rom	\
@@ -25,6 +26,10 @@ pkgdata_DATA = \
 	m900.rom	\
 	m901.rom	\
 	floppy.rom	\
+	k1505_00.rom	\
+	k1505_80.rom	\
+	k5651_40.rom	\
+	k5651_60.rom	\
 	lc80__00.rom	\
 	lc80__08.rom
 

@@ -46,6 +46,7 @@ fileio_init(void)
   loader_GPF_init();
   loader_BASIC_init();
   loader_SSS_init();
+  loader_BIN_init();
   loader_TAPE_init();
   loader_UNKNOWN_init(); /* fallback */
 }
@@ -162,7 +163,8 @@ fileio_get_image(fileio_prop_t *prop, unsigned char *buf)
       break;
     case FILEIO_TYPE_BAS:
     case FILEIO_TYPE_PROT_BAS:
-    case FILEIO_TYPE_MINTEX:
+    case FILEIO_TYPE_DATA:
+    case FILEIO_TYPE_LIST:
       a = 14;
       len = prop->size - 13;
       break;

@@ -18,6 +18,7 @@ libfileio_a_SOURCES = \
 	load_AF.c	\
 	load_GPF.c	\
 	load_SSS.c	\
+	load_BIN.c	\
 	load_TAPE.c	\
 	load_BASIC.c	\
 	load_UNKNOWN.c	\

@@ -224,7 +224,7 @@ Z80::Z80(void)
   _regs.IRequest = INT_NONE;
   ResetZ80(&_regs);
   
-  if (get_kc_type() != KC_TYPE_LC80)
+  if ((get_kc_type() != KC_TYPE_LC80) && (get_kc_type() != KC_TYPE_A5105))
     _regs.PC.W = 0xf000;
   
   _counter = 0;
@@ -322,6 +322,9 @@ Z80::run(void)
 
       //if ((_regs.PC.W == 0xe0d5) && (RdZ80(0xe0d5) == 0xed) && (_regs.BC.W < 5))
       //debug(true);
+
+      //if (_regs.PC.W == 0x2d48)
+        //debug(true);
 
       if (_singlestep)
 	{

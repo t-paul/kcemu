@@ -82,11 +82,10 @@ public:
   ModuleV24(const char *name, byte_t id);
   virtual ~ModuleV24(void);
 
-  virtual byte_t in(word_t addr);
-  virtual void out(word_t addr, byte_t val);
+  virtual void m_out(word_t addr, byte_t val);
+  virtual ModuleInterface * clone(void);
   virtual byte_t in_reg(int channel);
   virtual void out_reg(int channel, byte_t val);
-  virtual ModuleInterface * clone(void);
 
   /*
    *  InterfaceCircuit functions
@@ -95,6 +94,12 @@ public:
   virtual void irqreq(void) {}
   virtual word_t irqack() { return IRQ_NOT_ACK; }
   virtual void reset(bool power_on = false);
+
+  /*
+   *  PortInterface
+   */
+  virtual byte_t in(word_t addr);
+  virtual void out(word_t addr, byte_t val);
 };
 
 #endif /* __kc_mod_v24_h */

@@ -482,47 +482,6 @@ Tape::power(bool val)
 	      _power ? "on" : "off"));
 
   TAPE_IF()->tapePower(_power);
-
-#if 0
-  ofstream os;
-
-  _bits = -1;
-  _sync = 2;
-  _block = 0;
-  _last_val = 0;
-  _last_block = 0;
-  _init = 0;
-
-  z80->addCallback(BIT_1, this, (void *)1);
-  z80->addCallback(2 * BIT_1, this, (void *)0);
-
-  if (_record && (_os != NULL))
-    {
-      cout << "Tape::stop(): writing output" << endl;
-      //_os.close();
-      os.open("/tmp/kcemu.output", ios::out | ios::bin);
-      if (!os)
-        cout << "Tape::stop(): can't open output file" << endl;
-      else
-        {
-          _os->freeze(1);
-          os.write(_os->str(), _os->pcount());
-          os.close();
-          _os->freeze(0);
-        }
-      delete _os;
-      _os = NULL;
-    }
-  else
-    {
-      if (_is != NULL)
-        {
-          delete _is;
-          _is = NULL;
-        }
-    }
-  _record = false;
-#endif
 }
 
 void
@@ -530,7 +489,6 @@ Tape::record(void)
 {
   cout << "Tape::record()\n";
   _record = true;
-  _old_bit = -1;
   _sync = 2;
   _sync_count = 200;
   _flip_flop = 0;
@@ -624,7 +582,11 @@ Tape::stop(void)
 	}
       else if ((ptr[1] == 0xd4) && (ptr[2] == 0xd4) && (ptr[3] == 0xd4))
 	{
-	  type = KCT_TYPE_MINTEX;
+	  type = KCT_TYPE_DATA;
+	}
+      else if ((ptr[1] == 0xd5) && (ptr[2] == 0xd5) && (ptr[3] == 0xd5))
+	{
+	  type = KCT_TYPE_LIST;
 	}
       else if ((ptr[1] == 0xd7) && (ptr[2] == 0xd7) && (ptr[3] == 0xd7))
 	{
@@ -688,6 +650,86 @@ Tape::callback(void *data)
 }
 
 void
+Tape::do_play_bic(int edge)
+{
+  static int bit;
+  static byte_t byte;
+  static int bytes;
+
+  if (_state == 0)
+    {
+      _state++;
+      bytes = 0;
+    }
+
+  if (_init > 0)
+    {
+      _init--;
+      z80->addCallback(600, this, (void *)1);
+      z80->addCallback(1200, this, (void *)0);
+      return;
+    }
+
+  if (_init == 0)
+    {
+      bit = 0;
+      _init = -1;
+      z80->addCallback(1300, this, (void *)1);
+      z80->addCallback(2600, this, (void *)0);
+      return;
+    }
+
+  if (_is == NULL)
+    return;
+
+  if (bit == 0)
+    {
+      bytes++;
+      byte = _is->get();
+      int peek = ((memstream *)_is)->peek(); // FIXME: bug in memstream
+      if (peek == EOF)
+	return;
+    }
+
+  if (bit < 8)
+    {
+      if (byte & (1 << bit))
+	{
+	  z80->addCallback( 600, this, (void *)1);
+	  z80->addCallback(1200, this, (void *)1);
+	  z80->addCallback(1800, this, (void *)1);
+	  z80->addCallback(2400, this, (void *)0);
+	}
+      else
+	{
+	  z80->addCallback(1300, this, (void *)1);
+	  z80->addCallback(2600, this, (void *)0);
+	}
+    }
+  else
+    {
+      z80->addCallback( 600, this, (void *)1);
+      z80->addCallback(1200, this, (void *)1);
+      z80->addCallback(1800, this, (void *)1);
+      z80->addCallback(2400, this, (void *)0);
+    }
+
+  bit++;
+
+  if (bit == 10)
+    {
+      bit = 0;
+      _init = 0;
+
+      if (bytes == 16)
+	_init = 4000;
+    }
+
+  if ((bytes % 128) == 127)
+    TAPE_IF()->tapeProgress((100 * bytes) / _file_size);
+}
+
+void
 Tape::do_play(int edge)
 {
   int len;
@@ -714,6 +756,12 @@ Tape::do_play(int edge)
 		  "Tape::play(): got first signal (power = %d)\n", _power));
       if (!_power)
 	return;
+    }
+
+  if (get_kc_type() == KC_TYPE_A5105)
+    {
+      do_play_bic(edge);
+      return;
     }
 
   /*
@@ -792,9 +840,15 @@ Tape::do_play(int edge)
       TAPE_IF()->tapeProgress((100 * _bytes_read) / _file_size);
 
       if (_block > _start_block)
-        _init = 200;
+	{
+	  _init = 200;
+	  if (_file_type == KCT_TYPE_LIST)
+	    _init = 2000;
+	}
       else
-        _init = 4000;
+	{
+	  _init = 4000;
+	}
       
       int peek = ((memstream *)_is)->peek(); // FIXME: bug in memstream
       if ((len != 129) || (peek == EOF))
@@ -881,11 +935,82 @@ Tape::do_play(int edge)
 }
 
 void
+Tape::tape_signal_bic(long diff)
+{
+  int bit_type;
+  static int byte, obit;
+
+  if (diff > 1000)
+    bit_type = 0;
+  else
+    bit_type = 1;
+
+  if (_sync > 0)
+    {
+      if (bit_type == 1)
+	_sync--;
+      else
+	_sync = 100;
+      return;
+    }
+
+  if ((_sync == 0) && (bit_type == 1))
+    {
+      _bits = 11;
+      _byte_counter = 0;
+      return;
+    }
+
+  _sync = -1;
+
+  if (_flip_flop == 0)
+    _flip_flop++;
+  else if (obit == bit_type)
+    _flip_flop++;
+  
+  if ((bit_type == 0) && (_flip_flop == 2))
+    {
+      byte >>= 1;
+      _flip_flop = 0;
+      byte &= 0x3ff;
+      _bits--;
+    }
+  else if ((bit_type == 1) && (_flip_flop == 4))
+    {
+      byte >>= 1;
+      _flip_flop = 0;
+      byte |= 0x400;
+      _bits--;
+    }
+
+  if (_bits == 0)
+    {
+      _bits = 11;
+      if (byte & 1)
+	{
+	  _sync = 100;
+	  cout << "SYNC" << endl;
+	}
+      else
+	{
+	  _byte = (byte >> 1) & 0xff;
+	  cout << "byte: " << hex << (int)_byte << " - " << (int)byte << endl;
+	  _os->write((const char *)&_byte, 1);
+	}
+    }
+
+  obit = bit_type;
+}
+
+void
 Tape::tape_signal(void)
 {
   long diff;
   int bit_type;
   static unsigned long long c_old, c_new;
+
+  if (!_power)
+    return;
 
   /*
    *  abort if no output stream
@@ -900,15 +1025,18 @@ Tape::tape_signal(void)
   diff = c_new - c_old;
   c_old = c_new;
 
+  if (get_kc_type() == KC_TYPE_A5105)
+    {
+      tape_signal_bic(diff);
+      return;
+    }
+
   if (diff < ((BIT_0 + BIT_1) / 2))
     bit_type = 0;
   else if (diff > ((BIT_S + BIT_1) / 2))
     bit_type = 2;
   else
     bit_type = 1;
-
-  if (!_power)
-    return;
 
   if (_sync > 0)
     {
@@ -1010,8 +1138,6 @@ Tape::tape_signal(void)
 	    }
 	}
     }
-  
-  _old_bit = bit_type;
 }
 
 tape_error_t
@@ -1111,10 +1237,16 @@ Tape::add(const char *name)
                       "Tape::add(): '%s' [BAS]\n",
                       (const char *)&ptr->name[0]));
           break;
-        case FILEIO_TYPE_MINTEX:
-	  type = KCT_TYPE_MINTEX;
+        case FILEIO_TYPE_DATA:
+	  type = KCT_TYPE_DATA;
           DBG(0, form("KCemu/Tape/add",
-                      "Tape::add(): '%s' [MINTEX]\n",
+                      "Tape::add(): '%s' [DATA]\n",
+                      (const char *)&ptr->name[0]));
+          break;
+        case FILEIO_TYPE_LIST:
+	  type = KCT_TYPE_LIST;
+          DBG(0, form("KCemu/Tape/add",
+                      "Tape::add(): '%s' [LIST]\n",
                       (const char *)&ptr->name[0]));
           break;
         case FILEIO_TYPE_PROT_BAS:

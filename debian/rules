@@ -66,6 +66,7 @@ binary-arch: build install
 	dh_link
 	dh_strip
 	dh_compress usr/share/KCemu/microdos.dump \
+		    usr/share/KCemu/a5105sys.dump \
 		    usr/share/KCemu/tools.dump \
 		    usr/share/KCemu/caos.dump
 	dh_fixperms

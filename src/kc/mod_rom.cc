@@ -84,7 +84,7 @@ ModuleROM::~ModuleROM(void)
 }
 
 void
-ModuleROM::out(word_t addr, byte_t val)
+ModuleROM::m_out(word_t addr, byte_t val)
 {
   if (((_val & 1) ^ (val & 1)) != 1) return;
   if (val & 1)

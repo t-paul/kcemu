@@ -33,19 +33,25 @@ typedef enum
   KC_TYPE_85_4 	     = (1 << 3),
   KC_TYPE_87         = (1 << 4),
   KC_TYPE_LC80 	     = (1 << 5),
+  KC_TYPE_A5105      = (1 << 7),
   KC_TYPE_85_1_CLASS = KC_TYPE_85_1 | KC_TYPE_87,
   KC_TYPE_85_2_CLASS = KC_TYPE_85_2 | KC_TYPE_85_3 | KC_TYPE_85_4,
-  KC_TYPE_ALL        = KC_TYPE_85_1_CLASS | KC_TYPE_85_2_CLASS | KC_TYPE_LC80,
+  KC_TYPE_ALL        = (KC_TYPE_85_1_CLASS |
+                       KC_TYPE_85_2_CLASS |
+                       KC_TYPE_LC80 |
+                       KC_TYPE_A5105)
 } kc_type_t;
 
 typedef enum
 {
-  KC_VARIANT_NONE    = 0,
-  KC_VARIANT_85_1_10 = 0,
-  KC_VARIANT_85_1_11 = 1,
-  KC_VARIANT_87_10   = 0,
-  KC_VARIANT_87_11   = 1,
-  KC_VARIANT_87_21   = 2,
+  KC_VARIANT_NONE    	 = 0,
+  KC_VARIANT_85_1_10 	 = 0,
+  KC_VARIANT_85_1_11 	 = 1,
+  KC_VARIANT_87_10   	 = 0,
+  KC_VARIANT_87_11   	 = 1,
+  KC_VARIANT_87_21   	 = 2,
+  KC_VARIANT_A5105_K1505 = 0,
+  KC_VARIANT_A5105_A5105 = 1
 } kc_variant_t;
 
 typedef struct
@@ -74,10 +80,14 @@ class FloppySharedMem;
 class FloppyIO;
 class FDC;
 class Sound;
+class PortInterface;
+class GDC;
+class VIS;
 
 extern Z80             *z80;
 extern UI              *ui;
 extern Ports           *ports;
+extern PortInterface   *porti;
 extern Module          *module;
 extern Memory          *memory;
 extern CTC 	       *ctc;
@@ -89,6 +99,8 @@ extern Timer           *timer;
 extern Keyboard        *keyboard;
 extern ModuleList      *module_list;
 extern CMD             *cmd;
+extern GDC             *gdc;
+extern VIS             *vis;
 
 extern Z80_FDC         *fdc_z80;     
 extern FloppyIO        *fdc_io;

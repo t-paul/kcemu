@@ -61,12 +61,15 @@
 #include "kc/rc.h"
 #include "kc/mod_ram.h"
 #include "kc/mod_ram1.h"
+#include "kc/mod_r64.h"
+#include "kc/mod_cpm.h"
 #include "kc/mod_ram8.h"
 #include "kc/mod_64k.h"
 #include "kc/mod_rom.h"
 #include "kc/mod_rom1.h"
 #include "kc/mod_disk.h"
 #include "kc/mod_list.h"
+#include "kc/mod_4131.h"
 
 #ifdef TARGET_OS_LINUX
 #include "kc/mod_v24.h"
@@ -78,7 +81,7 @@
 
 ModuleList::ModuleList(void)
 {
-  int a;
+  int a, cnt;
   char *ptr;
   const char *mod;
   ModuleInterface *m;
@@ -138,6 +141,21 @@ ModuleList::ModuleList(void)
   delete[] ptr;
 
   /*
+   *  plotter module (kc85/1, kc87.10, kc87.11)
+   *
+   *  The ROM of this module is identical with the internal ROM BASIC of the KC87.21
+   *  that already includes the extensions to interface to an external plotter unit
+   *  like the XY4131. To actually use the plotter an additional driver is needed
+   *  though.
+   */
+  ptr = new char[strlen(kcemu_datadir) + 14];
+  strcpy(ptr, kcemu_datadir);
+  strcat(ptr, "/basic_c0.87b");
+  m = new ModuleROM1(ptr, "PLOTTER", 0xc000, 0x2800);
+  _mod_list.push_back(new ModuleListEntry(_("Plotter Module (c000h-e7ffh)"), m, KC_TYPE_85_1));
+  delete[] ptr;
+
+  /*
    *  RAM modules 16k at 4000h and 8000h (kc85/1)
    */
   m = new ModuleRAM1("RAM4", 0x4000, 0x4000);
@@ -151,7 +169,7 @@ ModuleList::ModuleList(void)
   ptr = new char[strlen(kcemu_datadir) + 14];
   strcpy(ptr, kcemu_datadir);
   strcat(ptr, "/zm30__c0.851");
-  m = new ModuleROM1(ptr, "ZM30", 0xc000, 0x1c00);
+  m = new ModuleROM1(ptr, "ZM30", 0xc000, 0x1c00, true);
   _mod_list.push_back(new ModuleListEntry(_("ZM30 (c000h-ccffh)"), m, KC_TYPE_85_1_CLASS));
   delete[] ptr;
 
@@ -161,7 +179,7 @@ ModuleList::ModuleList(void)
   ptr = new char[strlen(kcemu_datadir) + 14];
   strcpy(ptr, kcemu_datadir);
   strcat(ptr, "/edas__c0.851");
-  m = new ModuleROM1(ptr, "EDAS", 0xc000, 0x2800);
+  m = new ModuleROM1(ptr, "EDAS", 0xc000, 0x2800, true);
   _mod_list.push_back(new ModuleListEntry(_("EDAS (c000h-e7ffh)"), m, KC_TYPE_85_1_CLASS));
   delete[] ptr;
 
@@ -171,7 +189,7 @@ ModuleList::ModuleList(void)
   ptr = new char[strlen(kcemu_datadir) + 14];
   strcpy(ptr, kcemu_datadir);
   strcat(ptr, "/idas__c0.851");
-  m = new ModuleROM1(ptr, "IDAS", 0xc000, 0x2800);
+  m = new ModuleROM1(ptr, "IDAS", 0xc000, 0x2800, true);
   _mod_list.push_back(new ModuleListEntry(_("IDAS / ZM (c000h-e7ffh)"), m, KC_TYPE_85_1_CLASS));
   delete[] ptr;
 
@@ -181,7 +199,7 @@ ModuleList::ModuleList(void)
   ptr = new char[strlen(kcemu_datadir) + 14];
   strcpy(ptr, kcemu_datadir);
   strcat(ptr, "/bitex_c0.851");
-  m = new ModuleROM1(ptr, "BITEX", 0xc000, 0x1800);
+  m = new ModuleROM1(ptr, "BITEX", 0xc000, 0x1800, true);
   _mod_list.push_back(new ModuleListEntry(_("BITEX (c000h-d7ffh)"), m, KC_TYPE_85_1_CLASS));
   delete[] ptr;
 
@@ -192,7 +210,7 @@ ModuleList::ModuleList(void)
   ptr = new char[strlen(kcemu_datadir) + 14];
   strcpy(ptr, kcemu_datadir);
   strcat(ptr, "/zsid__c0.851");
-  m = new ModuleROM1(ptr, "ZSID", 0xc000, 0x2800);
+  m = new ModuleROM1(ptr, "ZSID", 0xc000, 0x2800, true);
   _mod_list.push_back(new ModuleListEntry(_("ZSID (c000h-e7ffh)"), m, KC_TYPE_85_1_CLASS));
   delete[] ptr;
   */
@@ -204,7 +222,7 @@ ModuleList::ModuleList(void)
   ptr = new char[strlen(kcemu_datadir) + 14];
   strcpy(ptr, kcemu_datadir);
   strcat(ptr, "/r80___c0.851");
-  m = new ModuleROM1(ptr, "R80", 0xc000, 0x1c00);
+  m = new ModuleROM1(ptr, "R80", 0xc000, 0x1c00, true);
   _mod_list.push_back(new ModuleListEntry(_("R80 (c000h-dbffh)"), m, KC_TYPE_85_1_CLASS));
   delete[] ptr;
   */
@@ -225,6 +243,34 @@ ModuleList::ModuleList(void)
   if (get_kc_type() == KC_TYPE_87)
     if (get_kc_variant() != KC_VARIANT_87_10)
       _init_color_expansion = _color_expansion;
+
+  /*
+   *  Plotter-Anschluß
+   */
+  m = new ModuleXY4131("XY4131");
+  _mod_list.push_back(new ModuleListEntry(_("Plotter XY4131"), m, KC_TYPE_85_1_CLASS));
+
+  /*
+   *  CPM-Z9 boot rom module (kc85/1)
+   */
+  ptr = new char[strlen(kcemu_datadir) + 14];
+  strcpy(ptr, kcemu_datadir);
+  strcat(ptr, "/cpmz9_c0.851");
+  m = new ModuleROM1(ptr, "CPM-Z9-BOOT", 0xc000, 0x0800, true);
+  _mod_list.push_back(new ModuleListEntry(_("CPM-Z9 BOOT (c000h-c7ffh)"), m, KC_TYPE_85_1_CLASS));
+  delete[] ptr;
+
+  /*
+   *  CPM-Z9 floppy module (kc85/1)
+   */
+  m = new ModuleCPMZ9("CPM-Z9-FLOPPY");
+  _mod_list.push_back(new ModuleListEntry(_("CPM-Z9 Floppy"), m, KC_TYPE_85_1_CLASS));
+
+  /*
+   *  CPM-Z9 64k ram module
+   */
+  m = new ModuleRAM64("CPM-Z9-RAM64");
+  _mod_list.push_back(new ModuleListEntry(_("CPM-Z9 64k RAM"), m, KC_TYPE_85_1_CLASS));
 
   /*
    *  RAM module 16k (kc85/3)
@@ -304,12 +350,12 @@ ModuleList::ModuleList(void)
   m = new ModuleDisk(ptr, "Floppy Disk Basis", 0x2000, 0xa7);
   entry = new ModuleListEntry(_("Floppy Disk Basis"), m, KC_TYPE_NONE);
   _mod_list.push_back(entry);
-  _init_floppy_basis = 0;
-  if (RC::instance()->get_int("Floppy Disk Basis"))
-    {
-      _init_floppy_basis = entry;
-    }
   delete[] ptr;
+
+  _init_floppy_basis = 0;
+  if (get_kc_type() & KC_TYPE_85_2_CLASS)
+    if (RC::instance()->get_int("Floppy Disk Basis"))
+      _init_floppy_basis = entry;
 
   _nr_of_bd = RC::instance()->get_int("Busdrivers");
   if (_nr_of_bd < 0)
@@ -321,7 +367,26 @@ ModuleList::ModuleList(void)
   if (get_kc_type() & KC_TYPE_LC80)
     _nr_of_bd = 1;
 
-  for (a = 0;a < 4 * _nr_of_bd + 2;a++)
+  switch (get_kc_type())
+    {
+    case KC_TYPE_85_1:
+    case KC_TYPE_87:
+      cnt = 4;
+      break;
+    case KC_TYPE_85_2:
+    case KC_TYPE_85_3:
+    case KC_TYPE_85_4:
+      cnt = 4 * _nr_of_bd + 2;
+      break;
+    default:
+      cnt = 0;
+      break;
+    }
+
+  for (a = 0;a < 4 * MAX_BD + 2;a++)
+    _init_mod[a] = NULL;
+
+  for (a = 0;a < cnt;a++)
     {
       mod = RC::instance()->get_string_i(a, "Module");
       _init_mod[a] = mod;
@@ -348,13 +413,16 @@ ModuleList::init(void)
   ModuleInterface *m;
   ModuleList::iterator it;
 
-  for (a = 0;a < 4 * _nr_of_bd + 2;a++)
+  for (a = 0;a < 4 * MAX_BD + 2;a++)
     {
-      if (!_init_mod[a]) continue;
+      if (!_init_mod[a])
+	continue;
+
       for (it = module_list->begin();it != module_list->end();it++)
         {
           m = (*it)->get_mod();
-          if (!m) continue;
+          if (!m)
+	    continue;
           if (strcmp(m->get_name(), _init_mod[a]) == 0)
             insert(a, *it);
         }

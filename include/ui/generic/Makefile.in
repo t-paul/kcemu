@@ -101,7 +101,7 @@ VERSION = @VERSION@
 VORBIS_LIBS = @VORBIS_LIBS@
 l = @l@
 
-EXTRA_DIST =  	ui_1.h			ui_3.h			ui_4.h			ui_8.h			tape.h			module.h		scanline.h
+EXTRA_DIST =  	ui_1.h			ui_3.h			ui_4.h			ui_8.h			ui_9.h			tape.h			module.h		scanline.h
 
 mkinstalldirs = $(SHELL) $(top_srcdir)/mkinstalldirs
 CONFIG_HEADER = ../../../include/kc/config.h

@@ -111,7 +111,8 @@ UI_Gtk4::update(bool full_update, bool clear_cache)
 {
   scanline.update();
   generic_update(&scanline, clear_cache);
-  gtk_update(_bitmap, get_dirty_buffer(), get_real_width(), get_real_height(), full_update);
+  gtk_update(_bitmap, get_dirty_buffer(), get_dirty_buffer_size(),
+	     get_real_width(), get_real_height(), full_update);
   processEvents();  
   gtk_sync();
 }

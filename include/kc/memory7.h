@@ -25,9 +25,10 @@
 #include "kc/system.h"
 
 #include "kc/kc.h"
+#include "kc/romdi.h"
 #include "kc/memory.h"
 
-class Memory7 : public Memory
+class Memory7 : public Memory, public ROMDIInterface
 {
 private:
   byte_t _ram[0x4000];
@@ -40,6 +41,10 @@ private:
   MemAreaGroup *_m_basic;  /* BASIC c000h - e7ffh */
   MemAreaGroup *_m_irm;    /* IRM   e800h - efffh */
   MemAreaGroup *_m_os;     /* OS    f000h - ffffh */
+
+  typedef std::list<ROMDIInterface *> romdi_list_t;
+  romdi_list_t _romdi_list;
+  bool _romdi;
 
 public:
   Memory7(void);
@@ -63,7 +68,16 @@ public:
   
   byte_t * getIRM(void);
 
+  void set_romdi(bool val);
+  void register_romdi_handler(ROMDIInterface *handler);
+  void unregister_romdi_handler(ROMDIInterface *handler);
+
   virtual void reset(bool power_on = false);
+
+  /*
+   *  ROMDIInterface
+   */
+  void romdi(bool val);
 };
 
 #endif /* __kc_memory7_h */

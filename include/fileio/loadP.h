@@ -51,6 +51,7 @@ void loader_AF_init(void);
 void loader_GPF_init(void);
 void loader_SSS_init(void);
 void loader_BASIC_init(void);
+void loader_BIN_init(void);
 void loader_TAPE_init(void);
 void loader_UNKNOWN_init(void);
 

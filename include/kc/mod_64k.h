@@ -45,7 +45,7 @@ public:
   Module64k(const char *name, byte_t id);
   virtual ~Module64k(void);
 
-  virtual void out(word_t addr, byte_t val);
+  virtual void m_out(word_t addr, byte_t val);
   virtual ModuleInterface * clone(void);
 };
 

@@ -113,7 +113,7 @@ INCLUDES =  	-I../../include
 CPPFLAGS =  	-DVERSION=\"$(VERSION)\" 	-DFILEIO_DEBUG
 
 
-libfileio_a_SOURCES =  	load.c			load_AF.c		load_GPF.c		load_SSS.c		load_TAPE.c		load_BASIC.c		load_UNKNOWN.c		save_IMG.c		save_TAP.c		save_WAV.c		save_RAW.c
+libfileio_a_SOURCES =  	load.c			load_AF.c		load_GPF.c		load_SSS.c		load_BIN.c		load_TAPE.c		load_BASIC.c		load_UNKNOWN.c		save_IMG.c		save_TAP.c		save_WAV.c		save_RAW.c
 
 
 kc2img_SOURCES = kc2img.c
@@ -140,7 +140,7 @@ DEFS = @DEFS@ -I. -I$(srcdir) -I../../include/kc
 LDFLAGS = @LDFLAGS@
 LIBS = @LIBS@
 libfileio_a_LIBADD = 
-libfileio_a_OBJECTS =  load.o load_AF.o load_GPF.o load_SSS.o \
+libfileio_a_OBJECTS =  load.o load_AF.o load_GPF.o load_SSS.o load_BIN.o \
 load_TAPE.o load_BASIC.o load_UNKNOWN.o save_IMG.o save_TAP.o \
 save_WAV.o save_RAW.o
 AR = ar
@@ -325,6 +325,8 @@ load.o: load.c ../../include/fileio/loadP.h ../../include/fileio/load.h
 load_AF.o: load_AF.c ../../include/fileio/loadP.h \
 	../../include/fileio/load.h
 load_BASIC.o: load_BASIC.c ../../include/fileio/loadP.h \
+	../../include/fileio/load.h
+load_BIN.o: load_BIN.c ../../include/fileio/loadP.h \
 	../../include/fileio/load.h
 load_GPF.o: load_GPF.c ../../include/fileio/loadP.h \
 	../../include/fileio/load.h

@@ -26,6 +26,8 @@
 #include "kc/system.h"
 
 #include "kc/kc.h"
+#include "kc/memory1.h"
+#include "kc/memory7.h"
 #include "kc/mod_rom1.h"
 
 using namespace std;
@@ -36,16 +38,38 @@ ModuleROM1::ModuleROM1(ModuleROM1 &tmpl) :
   _group = NULL;
   _addr = tmpl._addr;
   _size = tmpl._size;
+  _set_romdi = tmpl._set_romdi;
   _rom = new byte_t[_size];
   if (_rom)
     {
       memcpy(_rom, tmpl._rom, _size);
       set_valid(true);
-      _group = memory->register_memory(get_name(), _addr, _size, _rom, 0, 0);
+      _group = memory->register_memory(get_name(), _addr, _size, _rom, 0, true);
+
+      /*
+       * FIXME: make common base class for Memory1 and Memory7
+       */
+      if (_set_romdi)
+	switch (get_kc_type())
+	  {
+	  case KC_TYPE_85_1:
+	    ((Memory1 *)memory)->set_romdi(true);
+	    ((Memory1 *)memory)->register_romdi_handler(this);
+	    break;
+	  case KC_TYPE_87:
+	    ((Memory7 *)memory)->set_romdi(true);
+	    ((Memory7 *)memory)->register_romdi_handler(this);
+	    break;
+	  default: break;
+	  }
     }
 }
 
-ModuleROM1::ModuleROM1(const char *filename, const char *name, word_t addr, dword_t size) :
+ModuleROM1::ModuleROM1(const char *filename,
+		       const char *name,
+		       word_t addr,
+		       dword_t size,
+		       bool set_romdi) :
   ModuleInterface(name, 0, KC_MODULE_KC_85_1)
 {
   int c;
@@ -55,6 +79,7 @@ ModuleROM1::ModuleROM1(const char *filename, const char *name, word_t addr, dwor
   _group = NULL;
   _addr = addr;
   _size = size;
+  _set_romdi = set_romdi;
   _rom = new byte_t[_size];
 
   is.open(filename);
@@ -77,11 +102,28 @@ ModuleROM1::~ModuleROM1(void)
   if (_group)
     memory->unregister_memory(_group);
 
+  /*
+   * FIXME: make common base class for Memory1 and Memory7
+   */
+  if (_set_romdi)
+    switch (get_kc_type())
+      {
+      case KC_TYPE_85_1:
+	((Memory1 *)memory)->set_romdi(false);
+	((Memory1 *)memory)->unregister_romdi_handler(this);
+	break;
+      case KC_TYPE_87:
+	((Memory7 *)memory)->set_romdi(false);
+	((Memory7 *)memory)->unregister_romdi_handler(this);
+	break;
+      default: break;
+      }
+
   delete[] _rom;
 }
 
 void
-ModuleROM1::out(word_t addr, byte_t val)
+ModuleROM1::m_out(word_t addr, byte_t val)
 {
 }
 
@@ -89,4 +131,10 @@ ModuleInterface *
 ModuleROM1::clone(void)
 {
   return new ModuleROM1(*this);
+}
+
+void
+ModuleROM1::romdi(bool val)
+{
+  _group->set_active(!val);
 }

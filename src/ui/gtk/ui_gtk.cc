@@ -55,8 +55,6 @@
 
 #include "libdbg/dbg.h"
 
-#define MAX_DIRTY_SIZE (1536) // FIXME:
-
 using namespace std;
 
 static UI_Gtk *self;
@@ -1011,7 +1009,7 @@ darker_color(gulong col)
 }
 
 void
-UI_Gtk::gtk_update_1(byte_t *bitmap, byte_t *dirty, int width, int height)
+UI_Gtk::gtk_update_1(byte_t *bitmap, byte_t *dirty, int dirty_size, int width, int height)
 {
   int d = -1;
   for (int y = 0;y < height;y += 8)
@@ -1037,15 +1035,15 @@ UI_Gtk::gtk_update_1(byte_t *bitmap, byte_t *dirty, int width, int height)
 }
 
 void
-UI_Gtk::gtk_update_1_debug(byte_t *bitmap, byte_t *dirty, int width, int height)
+UI_Gtk::gtk_update_1_debug(byte_t *bitmap, byte_t *dirty, int dirty_size, int width, int height)
 {
   static int frame_delay;
   static byte_t *dirty_old = 0;
 
   if (dirty_old == 0)
     {
-      dirty_old = new byte_t[MAX_DIRTY_SIZE];
-      memset(dirty_old, 0, MAX_DIRTY_SIZE);
+      dirty_old = new byte_t[dirty_size];
+      memset(dirty_old, 0, dirty_size);
       frame_delay = RC::instance()->get_int("DEBUG UI_Gtk Frame Delay", 50);
     }
 
@@ -1095,7 +1093,7 @@ UI_Gtk::gtk_update_1_debug(byte_t *bitmap, byte_t *dirty, int width, int height)
 }
 
 void
-UI_Gtk::gtk_update_2(byte_t *bitmap, byte_t *dirty, int width, int height)
+UI_Gtk::gtk_update_2(byte_t *bitmap, byte_t *dirty, int dirty_size, int width, int height)
 {
   int d = -1;
   for (int y = 0;y < height;y += 8)
@@ -1125,12 +1123,12 @@ UI_Gtk::gtk_update_2(byte_t *bitmap, byte_t *dirty, int width, int height)
 }
 
 void
-UI_Gtk::gtk_update_3(byte_t *bitmap, byte_t *dirty, int width, int height)
+UI_Gtk::gtk_update_3(byte_t *bitmap, byte_t *dirty, int dirty_size, int width, int height)
 {
   int d = -1;
-  byte_t dirty_buf[MAX_DIRTY_SIZE]; // FIXME -- check length!
+  byte_t dirty_buf[dirty_size];
 
-  memcpy(dirty_buf, dirty, MAX_DIRTY_SIZE); // FIXME -- check length!
+  memcpy(dirty_buf, dirty, dirty_size);
 
   for (int y = 0;y < height;y += 8)
     {
@@ -1217,11 +1215,11 @@ UI_Gtk::gtk_update_3(byte_t *bitmap, byte_t *dirty, int width, int height)
 	}
     }
 
-  memcpy(dirty, dirty_buf, MAX_DIRTY_SIZE); // FIXME -- check length!
+  memcpy(dirty, dirty_buf, dirty_size);
 }
 
 void
-UI_Gtk::gtk_update(byte_t *bitmap, byte_t *dirty, int width, int height, bool full_update)
+UI_Gtk::gtk_update(byte_t *bitmap, byte_t *dirty, int dirty_size, int width, int height, bool full_update)
 {
   if (full_update)
     {
@@ -1234,15 +1232,15 @@ UI_Gtk::gtk_update(byte_t *bitmap, byte_t *dirty, int width, int height, bool fu
     {
     case 1:
       if (kcemu_ui_debug)
-	gtk_update_1_debug(bitmap, dirty, width, height);
+	gtk_update_1_debug(bitmap, dirty, dirty_size, width, height);
       else
-	gtk_update_1(bitmap, dirty, width, height);
+	gtk_update_1(bitmap, dirty, dirty_size, width, height);
       break;
     case 2:
-      gtk_update_2(bitmap, dirty, width, height);
+      gtk_update_2(bitmap, dirty, dirty_size, width, height);
       break;
     case 3:
-      gtk_update_3(bitmap, dirty, width, height);
+      gtk_update_3(bitmap, dirty, dirty_size, width, height);
       break;
     }
 

@@ -24,6 +24,7 @@
 #include <iomanip>
 
 #include <zlib.h>
+#include <unistd.h>
 
 #include "kc/memstream.h"
 
@@ -85,7 +86,8 @@ KCTFile::type_name(kct_file_type_t type)
     {
     case KCT_TYPE_COM:    return "COM";
     case KCT_TYPE_BAS:    return "BASIC";
-    case KCT_TYPE_MINTEX: return "MINTEX";
+    case KCT_TYPE_DATA  : return "DATA";
+    case KCT_TYPE_LIST  : return "LIST";
     case KCT_TYPE_BAS_P:  return "BASIC*";
     }
   return "???";
@@ -380,24 +382,18 @@ KCTFile::dirent_allocate(const char        *filename,
 kct_error_t
 KCTFile::create(const char *filename)
 {
-  bool can_open;
-
   close();
 
-  /*
-   *  FIXME: find better way to check if the file already exists
-   */
-  _f = new fstream(filename, ios::in | ios::binary);
-  can_open = !_f->fail();
-  _f->close();
-  delete _f;
-
-  if (can_open)
+  if (access(filename, F_OK) == 0)
     return KCT_ERROR_EXIST;
 
   _f = new fstream(filename, ios::in | ios::out | ios::binary);
   if (_f->fail())
-    return KCT_ERROR_IO;
+    {
+      delete _f;
+      _f = 0;
+      return KCT_ERROR_IO;
+    }
 
   memset(&_header, 0, sizeof(kct_header_t));
   strcpy(_header.id, "KCemu tape file\032");
@@ -435,18 +431,23 @@ KCTFile::open(const char *filename)
 
   close();
 
-  _readonly = false;
-  _f = new fstream(filename, ios::in | ios::out | ios::binary);
-  if (_f->fail())
+  if (access(filename, R_OK | W_OK) == 0)
     {
-      /*
-       *  try to open read only
-       */
+      _readonly = false;
+      _f = new fstream(filename, ios::in | ios::out | ios::binary);
+    }
+  else if (access(filename, R_OK) == 0)
+    {
       _readonly = true;
       _f = new fstream(filename, ios::in | ios::binary);
-      if (_f->fail())
-	return KCT_ERROR_NOENT;
     }
+  else
+    {
+      return KCT_ERROR_NOENT;
+    }
+
+  if (_f->fail())
+    return KCT_ERROR_NOENT;
 
   if (header_read(_header, HEADER_OFFSET) == 0)
     return KCT_ERROR_IO;
@@ -504,7 +505,8 @@ KCTFile::list(void)
       switch ((*it)->type)
 	{
 	case KCT_TYPE_COM:    type = "COM"; com = 1; break;
-	case KCT_TYPE_MINTEX: type = "MTEX"; break;
+	case KCT_TYPE_DATA:   type = "DATA"; break;
+	case KCT_TYPE_LIST:   type = "LIST"; break;
 	case KCT_TYPE_BAS:    type = "BAS";  break;
 	case KCT_TYPE_BAS_P:  type = "PBAS"; break;
 	default:              type = "???";  break;

@@ -1,6 +1,6 @@
 /*
  *  KCemu -- the KC 85/3 and KC 85/4 Emulator
- *  Copyright (C) 1997-2001 Torsten Paul
+ *  Copyright (C) 1997-2003 Torsten Paul
  *
  *  $Id: kc.cc,v 1.32 2002/10/31 01:46:35 torsten_paul Exp $
  *
@@ -95,16 +95,26 @@
 #include "kc/sound8.h"
 #include "kc/memory8.h"
 
+#include "kc/gdc.h"
+#include "kc/vis.h"
+#include "kc/svg.h"
+#include "kc/ctc9.h"
+#include "kc/pio9.h"
+#include "kc/keyb9.h"
+#include "kc/memory9.h"
+
 #ifdef HOST_OS_LINUX
 # ifdef USE_UI_GTK
 #  include "ui/gtk/ui_gtk1.h"
 #  include "ui/gtk/ui_gtk3.h"
 #  include "ui/gtk/ui_gtk4.h"
 #  include "ui/gtk/ui_gtk8.h"
+#  include "ui/gtk/ui_gtk9.h"
 #  define UI_1 UI_Gtk1
 #  define UI_3 UI_Gtk3
 #  define UI_4 UI_Gtk4
 #  define UI_8 UI_Gtk8
+#  define UI_9 UI_Gtk9
 # endif /* USE_UI_GTK */
 # ifdef USE_UI_SDL
 #  include "ui/sdl/ui_sdl1.h"
@@ -148,6 +158,10 @@ ModuleList *module_list;
 CMD        *cmd;
 Sound      *sound;
 WavPlayer  *wav;
+PortInterface *porti;
+GDC           *gdc;
+VIS           *vis;
+SVG           *svg;
 
 Z80_FDC         *fdc_z80;
 FloppyIO        *fdc_io;
@@ -162,6 +176,7 @@ int   kcemu_ui_debug;
 char *kcemu_datadir;
 char *kcemu_localedir;
 char *kcemu_tape;
+char *kcemu_disk;
 char *kcemu_emulate;
 
 static kc_type_t     kcemu_kc_type;
@@ -169,21 +184,24 @@ static kc_variant_t  kcemu_kc_variant;
 static const char   *kcemu_kc_variant_name;
 
 static kc_variant_names_t kc_types[] = {
-  { "z9001",    -1, KC_TYPE_85_1, KC_VARIANT_85_1_10 },
-  { "z9001.10", -1, KC_TYPE_85_1, KC_VARIANT_85_1_10 },
-  { "z9001.11", -1, KC_TYPE_85_1, KC_VARIANT_85_1_11 },
-  { "kc85/1",    1, KC_TYPE_85_1, KC_VARIANT_85_1_10 },
-  { "hc900",    -1, KC_TYPE_85_2, KC_VARIANT_NONE    },
-  { "hc-900",   -1, KC_TYPE_85_2, KC_VARIANT_NONE    },
-  { "kc85/2",    2, KC_TYPE_85_2, KC_VARIANT_NONE    },
-  { "kc85/3",    3, KC_TYPE_85_3, KC_VARIANT_NONE    },
-  { "kc85/4",    4, KC_TYPE_85_4, KC_VARIANT_NONE    },
-  { "kc87",     -1, KC_TYPE_87,   KC_VARIANT_87_11   },
-  { "kc87.10",  -1, KC_TYPE_87,   KC_VARIANT_87_10   },
-  { "kc87.11",   7, KC_TYPE_87,   KC_VARIANT_87_11   },
-  { "kc87.21",  -1, KC_TYPE_87,   KC_VARIANT_87_21   },
-  { "lc80",      8, KC_TYPE_LC80, KC_VARIANT_NONE    },
-  { NULL,       -1, KC_TYPE_NONE, KC_VARIANT_NONE    },
+  { "z9001",    -1, KC_TYPE_85_1,  KC_VARIANT_85_1_10     },
+  { "z9001.10", -1, KC_TYPE_85_1,  KC_VARIANT_85_1_10     },
+  { "z9001.11", -1, KC_TYPE_85_1,  KC_VARIANT_85_1_11     },
+  { "kc85/1",    1, KC_TYPE_85_1,  KC_VARIANT_85_1_10     },
+  { "hc900",    -2, KC_TYPE_85_2,  KC_VARIANT_NONE        },
+  { "hc-900",   -2, KC_TYPE_85_2,  KC_VARIANT_NONE        },
+  { "kc85/2",    2, KC_TYPE_85_2,  KC_VARIANT_NONE        },
+  { "kc85/3",    3, KC_TYPE_85_3,  KC_VARIANT_NONE        },
+  { "kc85/4",    4, KC_TYPE_85_4,  KC_VARIANT_NONE        },
+  { "kc87",     -7, KC_TYPE_87,    KC_VARIANT_87_11       },
+  { "kc87.10",  -7, KC_TYPE_87,    KC_VARIANT_87_10       },
+  { "kc87.11",   7, KC_TYPE_87,    KC_VARIANT_87_11       },
+  { "kc87.21",  -8, KC_TYPE_87,    KC_VARIANT_87_21       },
+  { "lc80",      8, KC_TYPE_LC80,  KC_VARIANT_NONE        },
+  { "bic",      -9, KC_TYPE_A5105, KC_VARIANT_A5105_K1505 },
+  { "k1505",    -9, KC_TYPE_A5105, KC_VARIANT_A5105_K1505 },
+  { "a5105",     9, KC_TYPE_A5105, KC_VARIANT_A5105_A5105 },
+  { NULL,       -1, KC_TYPE_NONE,  KC_VARIANT_NONE        },
 };
 
 static void
@@ -191,7 +209,7 @@ banner(void)
 {
   cout << ("   _  ______\n"
 	   "  | |/ / ___|___ _ __ ___  _   _               KCemu " KCEMU_VERSION "\n"
-	   "  | ' / |   / _ \\ '_ ` _ \\| | | |      (c) 1997-2002 Torsten Paul\n"
+	   "  | ' / |   / _ \\ '_ ` _ \\| | | |      (c) 1997-2003 Torsten Paul\n"
 	   "  | . \\ |__|  __/ | | | | | |_| |        <Torsten.Paul@gmx.de>\n"
 	   "  |_|\\_\\____\\___|_| |_| |_|\\__,_|     http://kcemu.sourceforge.net/\n");
 }
@@ -205,16 +223,19 @@ usage(char *argv0)
 	    "This is free software, and you are welcome to redistribute it\n"
 	    "under certain conditions; run `kcemu --license' for details.\n"
 	    "\n"
-	    "usage: kcemu [-123478sthdlvLW]\n"
+	    "usage: kcemu [-1234789esthdlvLW]\n"
 	    "\n"
 	    "  -1:             run in Z9001 / KC 85/1 mode\n"
 	    "  -2:             run in KC 85/2 mode\n"
 	    "  -3:             run in KC 85/3 mode\n"
 	    "  -4:             run in KC 85/4 mode (default)\n"
-	    "  -7:             run in KC 87 mode (= KC 85/1 with color expansion)\n"
+	    "  -7:             run in KC 87 mode\n"
 	    "  -8:             run in LC 80 mode\n"
+	    "  -9:             run in BIC/A5105 mode\n"
+	    "  -e --emulate:   emulate the specified system (use -v to list types)\n"
 	    "  -s --scale:     scale display (allowed values: 1, 2 and 3)\n"
 	    "  -t --tape:      attach tape on startup\n"
+	    "  -f --floppy:    attach disk on startup\n"
 	    "  -h --help:      display help\n"
 	    "  -d --datadir:   set data directory (for ROM images)\n"
 	    "  -l --localedir: set locale directory\n"
@@ -226,9 +247,46 @@ usage(char *argv0)
 }
 
 static void
+show_types(void)
+{
+  int a, type;
+  kc_type_t kc_type, old_type;
+
+  cout << "available emulations:";
+
+  a = 0;
+  old_type = KC_TYPE_NONE;
+  while (242) {
+    type = kc_types[a].type >= 0 ? kc_types[a].type : -kc_types[a].type;
+    kc_type = kc_types[a].kc_type;
+
+    if (old_type != kc_type)
+      cout << endl << "  ";
+    else
+      cout << ", ";
+
+    if (kc_type == KC_TYPE_NONE)
+      break;
+
+    if (old_type != kc_type)
+      cout << type << ": ";
+
+    cout << kc_types[a].name;
+
+    if (kc_types[a].type >= 0)
+      cout << "*";
+
+    old_type = kc_type;
+    a++;
+  }
+}
+
+static void
 show_version(char *argv0)
 {
   banner();
+  cout << endl;
+  show_types();
   cout << endl;
   fileio_show_config();
   cout << endl;
@@ -701,6 +759,70 @@ set_kc_type(int type, const char *variant)
   kcemu_kc_variant_name = "kc85/4";
 }
 
+void
+attach_tape(void)
+{
+  char *ptr;
+  const char *tmp;
+
+  if (kcemu_tape != 0)
+    {
+      tape->attach(kcemu_tape);
+      free(kcemu_tape);
+    }
+  else
+    {
+      tmp = RC::instance()->get_string("Tape File", "files.kct");
+      if (tmp)
+	{
+	  ptr = (char *)malloc(strlen(kcemu_datadir) + strlen(tmp) + 2);
+	  if (tmp[0] == '/')
+	    strcpy(ptr, tmp);
+	  else
+	    {
+	      strcpy(ptr, kcemu_datadir);
+	      strcat(ptr, "/");
+	      strcat(ptr, tmp);
+	    }
+	  tape->attach(ptr);
+	  free(ptr);
+	}
+    }
+}
+
+void
+attach_disk(void)
+{
+  const char *filename;
+
+  if (disk == NULL)
+    return;
+
+  if (kcemu_disk != NULL)
+    {
+      disk->attach(0, kcemu_disk);
+      free(kcemu_disk);
+    }
+  else
+    {
+      filename = RC::instance()->get_string("Floppy Disk 1", NULL);
+      if (filename != NULL)
+	disk->attach(0, filename);
+    }
+  
+  filename = RC::instance()->get_string("Floppy Disk 2", NULL);
+  if (filename != NULL)
+    disk->attach(1, filename);
+
+  filename = RC::instance()->get_string("Floppy Disk 3", NULL);
+  if (filename != NULL)
+    disk->attach(2, filename);
+
+  filename = RC::instance()->get_string("Floppy Disk 4", NULL);
+  if (filename != NULL)
+    disk->attach(3, filename);
+}
+
 int
 main(int argc, char **argv)
 {
@@ -708,26 +830,25 @@ main(int argc, char **argv)
   int type;
   char *ptr;
   bool do_quit;
-  const char *tmp;
   int option_index;
 #ifdef HAVE_GETOPT_LONG
   static struct option long_options[] =
   {
-    { "help", 0, 0, 'h' },
-    { "tape", 1, 0, 't' },
-    { "scale", 1, 0, 's' },
-    { "emulate", 1, 0, 'e' },
-    { "datadir", 1, 0, 'd' },
-    { "localedir", 1, 0, 'l' },
-    { "license", 0, 0, 'L' },
-    { "warranty", 0, 0, 'W' },
-    { "version", 0, 0, 'v' },
+    { "help",          0, 0, 'h' },
+    { "tape",          1, 0, 't' },
+    { "scale",         1, 0, 's' },
+    { "emulate",       1, 0, 'e' },
+    { "datadir",       1, 0, 'd' },
+    { "floppy",        1, 0, 'f' },
+    { "localedir",     1, 0, 'l' },
+    { "license",       0, 0, 'L' },
+    { "warranty",      0, 0, 'W' },
+    { "version",       0, 0, 'v' },
     { "display-debug", 0, 0, 'D' },
-    { 0, 0, 0, 0 }
+    { 0,               0, 0, 0   }
   };
 #endif /* HAVE_GETOPT_LONG */
   PortGroup *portg = NULL;
-  PortInterface *porti = NULL;
   LOG *log;
 
 #ifdef __CALL_MTRACE
@@ -752,6 +873,7 @@ main(int argc, char **argv)
 
   type = -1;
   kcemu_tape = 0;
+  kcemu_disk = 0;
   kcemu_emulate = 0;
   kcemu_ui_scale = 0;
   kcemu_ui_debug = -1;
@@ -775,11 +897,11 @@ main(int argc, char **argv)
   while (1)
     {
 #ifdef HAVE_GETOPT_LONG
-      c = getopt_long(argc, argv, "123478hvDe:d:l:s:t:LW",
+      c = getopt_long(argc, argv, "1234789hvDe:d:f:l:s:t:LW",
                       long_options, &option_index);
 #else
 #ifdef HAVE_GETOPT
-      c = getopt(argc, argv, "123478hvDe:d:l:s:LW");
+      c = getopt(argc, argv, "1234789hvDe:d:f:l:s:LW");
 #else
 #warning neither HAVE_GETOPT_LONG nor HAVE_GETOPT defined
 #warning commandline parsing disabled!
@@ -813,6 +935,9 @@ main(int argc, char **argv)
 	case 'e':
 	  kcemu_emulate = strdup(optarg);
 	  break;
+	case '9':
+	  type = 9;
+	  break;
         case 'd':
           free(kcemu_datadir);
           kcemu_datadir = strdup(optarg);
@@ -826,6 +951,9 @@ main(int argc, char **argv)
 	  break;
 	case 't':
 	  kcemu_tape = strdup(optarg);
+	  break;
+	case 'f':
+	  kcemu_disk = strdup(optarg);
 	  break;
 	case 'L':
 	  license(argv[0]);
@@ -888,6 +1016,7 @@ main(int argc, char **argv)
       PIO3 *p3;
       PIO4 *p4;
       PIO8_1 *p8;
+      PIO9 *p9;
       Keyboard1 *k1;
       Keyboard8 *k8;
 
@@ -895,6 +1024,9 @@ main(int argc, char **argv)
       memory = NULL;
       fdc_z80 = NULL;
       disk = NULL;
+      gdc = NULL;
+      vis = NULL;
+      svg = NULL;
 
       switch (kcemu_kc_type)
 	{
@@ -975,6 +1107,16 @@ main(int argc, char **argv)
 	  keyboard = k8;
 	  pio = p8;
 	  break;
+	case KC_TYPE_A5105:
+	  ui       = new UI_9;
+	  p9       = new PIO9;
+	  ctc      = new CTC9;
+	  memory   = new Memory9;
+	  keyboard = new Keyboard9;
+	  tape     = new Tape(500, 1000, 2000, 0);
+	  wav      = new WavPlayer(781, 1562, 3125);
+	  tape->set_tape_callback(p9);
+	  pio      = p9;
 	default:
 	  break;
 	}
@@ -1058,6 +1200,25 @@ main(int argc, char **argv)
           z80->daisy_chain_set_first(pio->get_first()); // highest priority
           z80->daisy_chain_set_last(pio->get_last());  // lowest priority
 	  break;
+	case KC_TYPE_A5105:
+	  gdc = new GDC;
+	  vis = new VIS;
+	  svg = new SVG;
+	  fdc_fdc = new FDC();
+	  disk = new Disk();
+	  portg = ports->register_ports("FDC", 0x40, 12, fdc_fdc, 10);
+	  portg = ports->register_ports("CTC", 0x80,  4, ctc,     10);
+	  portg = ports->register_ports("PIO", 0x90,  4, pio,     10);
+	  portg = ports->register_ports("GDC", 0x98,  2, gdc,     10);
+	  portg = ports->register_ports("VIS", 0x9c,  3, vis,     10);
+	  portg = ports->register_ports("SVG", 0xa0, 12, svg,     10);
+
+	  ctc->next(pio->get_first());
+	  pio->next(0);
+	  ctc->iei(1);
+	  z80->daisy_chain_set_first(ctc->get_first()); // highest priority
+	  z80->daisy_chain_set_last(ctc->get_last());  // lowest priority
+	  break;
 	default:
 	  break;
 	}
@@ -1092,29 +1253,8 @@ main(int argc, char **argv)
 	  (kcemu_kc_type == KC_TYPE_LC80))
 	tape->power(true);
 
-      if (kcemu_tape != 0)
-	{
-	  tape->attach(kcemu_tape);
-	  free(kcemu_tape);
-	}
-      else
-	{
-	  tmp = RC::instance()->get_string("Tape File", "files.kct");
-	  if (tmp)
-	    {
-	      ptr = (char *)malloc(strlen(kcemu_datadir) + strlen(tmp) + 2);
-	      if (tmp[0] == '/')
-		strcpy(ptr, tmp);
-	      else
-		{
-		  strcpy(ptr, kcemu_datadir);
-		  strcat(ptr, "/");
-		  strcat(ptr, tmp);
-		}
-	      tape->attach(ptr);
-	      free(ptr);
-	    }
-	}
+      attach_tape();
+      attach_disk();
 
       do_quit = z80->run();
       
@@ -1139,7 +1279,7 @@ main(int argc, char **argv)
   while (0); // (!do_quit);
 
   RC::done();
-      
+
   free(kcemu_datadir);
   free(kcemu_localedir);
   

@@ -41,8 +41,9 @@ using namespace std;
 
 typedef enum {
   ADD_MODE_NONE    = 0,
-  ADD_MODE_KC85_1  = 1,
-  ADD_MODE_KC85_3  = 2,
+  ADD_MODE_RAW     = 1,
+  ADD_MODE_KC85_1  = 2,
+  ADD_MODE_KC85_3  = 3,
 } add_mode_t;
 
 static add_mode_t _add_mode    	    = ADD_MODE_NONE;
@@ -64,7 +65,7 @@ banner(void)
 {
   cout << ("   _  ______ _\n"
 	   "  | |/ / ___| |_ __ _ _ __   ___                KCtape 0.3\n"
-	   "  | ' / |   | __/ _` | '_ \\ / _ \\       (c) 1997-2002 Torsten Paul\n"
+	   "  | ' / |   | __/ _` | '_ \\ / _ \\       (c) 1997-2003 Torsten Paul\n"
 	   "  | . \\ |___| || (_| | |_) |  __/         <Torsten.Paul@gmx.de>\n"
 	   "  |_|\\_\\____|\\__\\__,_| .__/ \\___|      http://kcemu.sourceforge.net/\n"
 	   "                     |_|\n");
@@ -92,6 +93,7 @@ usage(char *argv0, int exit_value)
 	    "  -c|--create            create tape archive if it doesn't exist\n"
 	    "  -a|--add               add files (KC85/3 mode)\n"
 	    "  -1|--add1              add files (KC85/1 mode)\n"
+	    "  -A|--add-raw           add image files (will get type BASIC)\n"
 	    "  -r|--remove            remove file from tape archive\n"
 	    "  -x|--extract           extract file from tape archive\n"
 	    "  -d|--dump              hexdump file\n"
@@ -205,6 +207,30 @@ add_one_file(KCTFile &f, fileio_prop_t *prop, kct_file_type_t type)
       else
 	cout << "  - can't add file `" << prop->name << "'" << endl;
     }
+
+  return err;
+}
+
+static kct_error_t
+add_raw(KCTFile &kct_file, char *filename)
+{
+  FILE *f;
+  int len;
+  kct_error_t err;
+  byte_t buf[65536];
+
+  if (_verbose > 0)
+    cout << "* processing raw file `" << filename << "'...\n";
+
+  f = fopen(filename, "rb");
+  if (f == NULL)
+    return KCT_ERROR_IO;
+
+  len = fread(buf, 1, 65536, f);
+  fclose(f);
+
+  err = kct_file.write(filename, buf, len, 0x0000, 0x0000,
+		       KCT_TYPE_BAS, KCT_MACHINE_ALL);
 
   return err;
 }
@@ -400,7 +426,14 @@ do_add(KCTFile &f, int idx, int argc, char **argv)
       fileio_set_kctype(FILEIO_KC85_3);
       break;
 
-    case ADD_MODE_NONE:
+    case ADD_MODE_RAW:
+      for (a = idx;a < argc;a++)
+	{
+	  if (add_raw(kct_file, argv[a]) != KCT_OK)
+	    printf("ERROR\n");
+	}
+      return;
+
     default:
       return;
     }
@@ -426,6 +459,7 @@ main(int argc, char **argv)
     { "create",  	  0, 0, 'c' },
     { "add",     	  0, 0, 'a' },
     { "add1",    	  0, 0, '1' },
+    { "add-raw",          0, 0, 'A' },
     { "print-bam",        0, 0, 'b' },
     { "print-block-list", 0, 0, 'B' },
     { "verbose",          0, 0, 'v' },
@@ -446,11 +480,11 @@ main(int argc, char **argv)
   while (242)
     {
 #ifdef HAVE_GETOPT_LONG
-      c = getopt_long(argc, argv, "hlca1bBvt:x:r:d:o:",
+      c = getopt_long(argc, argv, "hlca1AbBvt:x:r:d:o:",
                       long_options, &option_index);
 #else
 #ifdef HAVE_GETOPT
-      c = getopt(argc, argv, "hlca1bBvt:x:r:d:o:");
+      c = getopt(argc, argv, "hlca1AbBvt:x:r:d:o:");
 #else
 #error neither HAVE_GETOPT_LONG nor HAVE_GETOPT defined
 #endif /* HAVE_GETOPT */
@@ -479,6 +513,11 @@ main(int argc, char **argv)
 	case 'a':
 	  idx++;
 	  _add_mode = ADD_MODE_KC85_3;
+	  break;
+
+	case 'A':
+	  idx++;
+	  _add_mode = ADD_MODE_RAW;
 	  break;
 
 	case 'b':

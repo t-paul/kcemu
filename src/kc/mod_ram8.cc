@@ -62,7 +62,7 @@ ModuleRAM8::~ModuleRAM8(void)
 }
 
 void
-ModuleRAM8::out(word_t addr, byte_t val)
+ModuleRAM8::m_out(word_t addr, byte_t val)
 {
 }
 

@@ -22,24 +22,35 @@
 #ifndef __kc_mod_rom1_h
 #define __kc_mod_rom1_h
 
+#include "kc/romdi.h"
 #include "kc/module.h"
 #include "kc/memory.h"
 
-class ModuleROM1 : public ModuleInterface
+class ModuleROM1 : public ModuleInterface, public ROMDIInterface
 {
 private:
   byte_t       *_rom;
   word_t        _addr;
   dword_t       _size;
   MemAreaGroup *_group;
+  bool          _set_romdi;
   
 public:
   ModuleROM1(ModuleROM1 &tmpl);
-  ModuleROM1(const char *filename, const char *name, word_t addr, dword_t size = 0x4000);
+  ModuleROM1(const char *filename,
+	     const char *name,
+	     word_t addr,
+	     dword_t size = 0x4000,
+	     bool set_romdi = false);
   virtual ~ModuleROM1(void);
 
-  virtual void out(word_t addr, byte_t val);
+  virtual void m_out(word_t addr, byte_t val);
   virtual ModuleInterface * clone(void);
+
+  /*
+   *  ROMDIInterface
+   */
+  void romdi(bool val);
 };
 
 #endif /* __kc_mod_rom1_h */

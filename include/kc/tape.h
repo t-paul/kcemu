@@ -87,7 +87,6 @@ private:
     int _block;
     int _byte_counter;
     int _init;
-    int _old_bit;
 
     byte_t _byte;
     byte_t _crc;
@@ -126,8 +125,10 @@ private:
     void stop(void);
     void seek(int percent);
     void do_play(int edge);
+    void do_play_bic(int edge);
     void do_stop(void);
     void tape_signal(void);
+    void tape_signal_bic(long diff);
     long get_delay(int seconds);
 
     virtual void set_tape_callback(TapeCallback *tape_cb);

@@ -53,10 +53,8 @@ public:
 	    case KC_TYPE_85_4:
 	      z80->reset(0xe000);
 	      break;
-	    case KC_TYPE_LC80:
-	      z80->reset(0x0000);
-	      break;
 	    default:
+	      z80->reset(0x0000);
 	      break;
 	    }
           break;
@@ -64,11 +62,15 @@ public:
           Status::instance()->setMessage("*** POWER ON ***");
 	  switch (get_kc_type())
 	    {
-	    case KC_TYPE_LC80:
-	      z80->power_on(0x0000);
+	    case KC_TYPE_87:
+	    case KC_TYPE_85_1:
+	    case KC_TYPE_85_2:
+	    case KC_TYPE_85_3:
+	    case KC_TYPE_85_4:
+	      z80->power_on(0xf000);
 	      break;
 	    default:
-	      z80->power_on(0xf000);
+	      z80->power_on(0x0000);
 	      break;
 	    }
 	  break;

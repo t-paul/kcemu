@@ -44,12 +44,24 @@ Tape File List_00000007: /tmp/x.kct
 ##############################################################################
 #
 #  KC-Modell, welches emuliert wird, wenn nichts explizit auf der
-#  Kommandozeile angegeben wurde
+#  Kommandozeile angegeben wurde.
+#  Es kann sowohl die Nummer als auch der Name angegeben werden,
+#  wobei über die Namen auch spezielle Varianten eines KC-Modells
+#  zur Emulation gewählt werden können. Über die Nummer wird die
+#  Variante gewählt, die mit einem * gekennzeichnet ist (Der Stern
+#  gehört dabei natürlich _nicht_ zum Namen der Variante).
 #
-#  Werte:	1 = Z9001, KC85/1
-#		3 = KC85/3
-#		4 = KC85/4
-#		7 = KC87
+#  Die aktuelle Liste kann mit dem Aufruf 'kcemu -v' ausgegeben werden.
+#
+#  Werte:       1 = z9001, z9001.10, z9001.11, kc85/1*
+#               2 = hc900, hc-900, kc85/2*
+#               3 = kc85/3*
+#               4 = kc85/4*
+#               7=  kc87, kc87.10, kc87.11*, kc87.21
+#               8 = lc80*
+#               9 = bic, k1505*, a5105
+#
+#  Default ist bei unbekannten Werten kc85/4.
 #
 Default KC Model: 4
 

@@ -46,7 +46,8 @@ typedef enum
   FILEIO_TYPE_COM,
   FILEIO_TYPE_BAS,
   FILEIO_TYPE_PROT_BAS,
-  FILEIO_TYPE_MINTEX,
+  FILEIO_TYPE_DATA,     /* produced with CSAVE*"FILENAME";ARRAYNAME */
+  FILEIO_TYPE_LIST,     /* produced with LIST#1"FILENAME" */
 } fileio_type_t;
 
 typedef struct fileio_prop

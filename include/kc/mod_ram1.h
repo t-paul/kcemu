@@ -38,7 +38,7 @@ public:
   ModuleRAM1(const char *name, word_t addr, dword_t size = 0x4000);
   virtual ~ModuleRAM1(void);
 
-  virtual void out(word_t addr, byte_t val);
+  virtual void m_out(word_t addr, byte_t val);
   virtual ModuleInterface * clone(void);
 };
 

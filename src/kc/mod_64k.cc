@@ -69,7 +69,7 @@ Module64k::~Module64k(void)
 }
 
 void
-Module64k::out(word_t addr, byte_t val)
+Module64k::m_out(word_t addr, byte_t val)
 {
   int a;
   word_t mem;

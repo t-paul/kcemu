@@ -69,7 +69,7 @@ ModuleRAM1::~ModuleRAM1(void)
 }
 
 void
-ModuleRAM1::out(word_t addr, byte_t val)
+ModuleRAM1::m_out(word_t addr, byte_t val)
 {
 }
 

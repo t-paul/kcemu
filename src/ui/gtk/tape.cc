@@ -692,8 +692,11 @@ TapeWindow::tapeAddFile(const char    *name,
   case KCT_TYPE_BAS:
     data[1] = "BAS";
     break;
-  case KCT_TYPE_MINTEX:
-    data[1] = "MINTEX";
+  case KCT_TYPE_DATA:
+    data[1] = "DATA";
+    break;
+  case KCT_TYPE_LIST:
+    data[1] = "LIST";
     break;
   case KCT_TYPE_BAS_P:
     data[1] = "BAS*";

@@ -190,11 +190,11 @@ class UI_Gtk : public StatusListener, public ErrorListener, public UI
 				 double white_level) = 0;
 
     void gtk_sync(void);
-    void gtk_update(byte_t *bitmap, byte_t *dirty, int width, int height, bool full_update);
-    void gtk_update_1(byte_t *bitmap, byte_t *dirty, int width, int height);
-    void gtk_update_2(byte_t *bitmap, byte_t *dirty, int width, int height);
-    void gtk_update_3(byte_t *bitmap, byte_t *dirty, int width, int height);
-    void gtk_update_1_debug(byte_t *bitmap, byte_t *dirty, int width, int height);
+    void gtk_update(byte_t *bitmap, byte_t *dirty, int dirty_size, int width, int height, bool full_update);
+    void gtk_update_1(byte_t *bitmap, byte_t *dirty, int dirty_size, int width, int height);
+    void gtk_update_2(byte_t *bitmap, byte_t *dirty, int dirty_size, int width, int height);
+    void gtk_update_3(byte_t *bitmap, byte_t *dirty, int dirty_size, int width, int height);
+    void gtk_update_1_debug(byte_t *bitmap, byte_t *dirty, int dirty_size, int width, int height);
 
     /*
      *  StatusListener

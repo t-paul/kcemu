@@ -52,6 +52,8 @@ class FloppyState
   
  public:
   FloppyState(byte_t head, byte_t cylinder, byte_t sector, Floppy *floppy);
+  virtual ~FloppyState(void);
+
   byte_t get_head(void) { return _head; }
   byte_t get_cylinder(void) { return _cylinder; }
   byte_t get_sector(void) { return _sector; }
@@ -71,8 +73,10 @@ class FDC : public InterfaceCircuit, public PortInterface
 {
  public:
   typedef enum {
+    FDC_STATE_IDLE,
     FDC_STATE_COMMAND,
     FDC_STATE_EXECUTE,
+    FDC_STATE_DATA,
     FDC_STATE_RESULT
   } fdc_state_t;
 
@@ -83,25 +87,41 @@ class FDC : public InterfaceCircuit, public PortInterface
     ST_MAIN_FDD1_BUSY = 0x02, /* FDD number 1 is in the seek mode */
     ST_MAIN_FDD2_BUSY = 0x04, /* FDD number 2 is in the seek mode */
     ST_MAIN_FDD3_BUSY = 0x08, /* FDD number 3 is in the seek mode */
-    ST_MAIN_FDD4_BUSY = 0x10, /* read or write command in progress */
+    ST_MAIN_READ_WRITE = 0x10, /* read or write command in progress */
     ST_MAIN_NON_DMA   = 0x20, /* FDC is in NON-DMA mode */
     ST_MAIN_DIO       = 0x40, /* direction of data transfer */
     ST_MAIN_RQM       = 0x80, /* Data Register ready */
   
-    ST_0_IC_MASK = 0xc0, /* Interrupt Code */
-    ST_0_IC_NT     = 0x00, /* Normal Termination of Command */
-    ST_0_IC_AT     = 0x40, /* Abnormal Tremination of Command */
-    ST_0_IC_IC     = 0x80, /* Invalid Command issued */
-    ST_0_IC_FDD    = 0xc0, /* Abnormal Termination, not ready */
-    ST_0_SE        = 0x20, /* Seek End */
-    ST_0_EC        = 0x10, /* Equipment Check */
-    ST_0_NR        = 0x08, /* Not Ready */
-    ST_0_HD        = 0x04, /* Head Address */
-    ST_0_US_MASK = 0x03, /* Unit Select */
-    ST_0_US0       = 0x00, /* Unit Select 0 */
-    ST_0_US1       = 0x01, /* Unit Select 1 */
-    ST_0_US2       = 0x02, /* Unit Select 2 */
-    ST_0_US3       = 0x03, /* Unit Select 3 */
+    /*
+     *  STATUS REGISTER 0
+     */
+    ST_0_ALL_MASK                = 0xff,
+    ST_0_IC_MASK                 = 0xc0,   /* Interrupt Code */
+    ST_0_IC_NORMAL_TERMINATION     = 0x00, /* Normal Termination of Command */
+    ST_0_IC_ABNORMAL_TERMINATION   = 0x40, /* Abnormal Tremination of Command */
+    ST_0_IC_INVALID_COMMAND        = 0x80, /* Invalid Command issued */
+    ST_0_IC_FDD_NOT_READY          = 0xc0, /* Abnormal Termination, not ready */
+    ST_0_SEEK_END                  = 0x20, /* Seek End */
+    ST_0_EC                        = 0x10, /* Equipment Check */
+    ST_0_NR                        = 0x08, /* Not Ready */
+    ST_0_HEAD_ADDRESS              = 0x04, /* Head Address */
+    ST_0_UNIT_SELECT_MASK        = 0x03,
+    ST_0_UNIT_SELECT_1             = 0x02,
+    ST_0_UNIT_SELECT_0             = 0x01,
+
+    /*
+     *  STATUS REGISTER 3
+     */
+    ST_3_ALL_MASK                = 0xff,
+    ST_3_FAULT                     = 0x80,
+    ST_3_WRITE_PROTECTED           = 0x40,
+    ST_3_READY                     = 0x20,
+    ST_3_TRACK_0                   = 0x10,
+    ST_3_TWO_SIDE                  = 0x08,
+    ST_3_HEAD_ADDRESS              = 0x04, /* side select signal */
+    ST_3_UNIT_SELECT_MASK        = 0x03,
+    ST_3_UNIT_SELECT_1             = 0x02,
+    ST_3_UNIT_SELECT_0             = 0x01,
   };
 
  private:
@@ -110,9 +130,14 @@ class FDC : public InterfaceCircuit, public PortInterface
   FDC_CMD *_cur_cmd;
   FloppyState *_fstate[NR_OF_FLOPPIES];
   FloppyState *_cur_floppy;
+  int _selected_unit;
   
   byte_t _MSR; /* Main Status Register */
   byte_t _INPUT_GATE;
+  byte_t _ST0;
+  byte_t _ST1;
+  byte_t _ST2;
+  byte_t _ST3;
   byte_t _head;
   byte_t _cylinder;
   byte_t _sector;
@@ -141,6 +166,17 @@ class FDC : public InterfaceCircuit, public PortInterface
   void set_state(fdc_state_t state);
   bool seek(byte_t head, byte_t cylinder, byte_t sector);
   void set_input_gate(byte_t mask, byte_t val);
+  void set_msr(byte_t mask, byte_t val);
+
+  byte_t get_ST0(void);
+  byte_t get_ST1(void);
+  byte_t get_ST2(void);
+  byte_t get_ST3(void);
+
+  void set_ST0(byte_t mask, byte_t val);
+  void set_ST1(byte_t mask, byte_t val);
+  void set_ST2(byte_t mask, byte_t val);
+  void set_ST3(byte_t mask, byte_t val);
 
   /*
    *  InterfaceCircuit

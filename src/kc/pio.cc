@@ -32,7 +32,7 @@
 
 #include "libdbg/dbg.h"
 
-// #define PIO_OUT_CTRL_DEBUG
+//#define PIO_OUT_CTRL_DEBUG
 
 using namespace std;
 
@@ -65,8 +65,8 @@ PIO::reset(bool power_on)
   _irq_enable[A] = _irq_enable[B] = 0;
   _irq_active[A] = _irq_active[B] = 0;
 
-  _ext[A] = 0xff;
-  _ext[B] = 0xff;
+  _ext[A] = 0x0; // DEBUG
+  _ext[B] = 0x0; // DEBUG
   _ext_fn[A] = 0;
   _ext_fn[B] = 0;
 
@@ -92,13 +92,20 @@ PIO::in_A_DATA(void) {
   if (_cb_a_in)
     _cb_a_in->callback_A_in();
 
-  ret = _value[A];
   if (_mode[A] == 3)
-    ret = (_value[A] & ~_bit_mode[A]) | (_ext[A] & _bit_mode[A]);
-
-  DBG(2, form("KCemu/PIO/A/in_DATA",
-              "PIO::in():  port A DATA (mode %d): val = %02x\n",
-              _mode[A], ret));
+    {
+      ret = (_value[A] & ~_bit_mode[A]) | (_ext[A] & _bit_mode[A]);
+      DBG(2, form("KCemu/PIO/A/in_DATA",
+		  "PIO::in():  port A DATA (mode %d): val = %02x, mask = %02x, ext = %02x\n",
+		  _mode[A], ret, _bit_mode[A], _ext[A]));
+    }
+  else
+    {
+      ret = _value[A];
+      DBG(2, form("KCemu/PIO/A/in_DATA",
+		  "PIO::in():  port A DATA (mode %d): val = %02x\n",
+		  _mode[A], ret));
+    }
 
   return ret;
 }
@@ -110,13 +117,20 @@ PIO::in_B_DATA(void) {
   if (_cb_b_in)
     _cb_b_in->callback_B_in();
 
-  ret = _value[B];
   if (_mode[B] == 3)
-    ret = (_value[B] & ~_bit_mode[B]) | (_ext[B] & _bit_mode[B]);
-
-  DBG(2, form("KCemu/PIO/B/in_DATA",
-              "PIO::in():  port B DATA (mode %d): val = %02x\n",
-              _mode[B], ret));
+    {
+      ret = (_value[B] & ~_bit_mode[B]) | (_ext[B] & _bit_mode[B]);
+      DBG(2, form("KCemu/PIO/B/in_DATA",
+		  "PIO::in():  port B DATA (mode %d): val = %02x, mask = %02x, ext = %02x\n",
+		  _mode[B], ret, _bit_mode[B], _ext[B]));
+    }
+  else
+    {
+      ret = _value[B];
+      DBG(2, form("KCemu/PIO/B/in_DATA",
+		  "PIO::in():  port B DATA (mode %d): val = %02x\n",
+		  _mode[B], ret));
+    }
 
   return ret;
 }
@@ -188,7 +202,7 @@ PIO::out_CTRL(int port, byte_t val)
   else
     {
       DBG(2, form("KCemu/PIO/B/out_CTRL",
-		  "PIO::out(): port A CTRL (mode %d): val = %02x\n",
+		  "PIO::out(): port B CTRL (mode %d): val = %02x\n",
 		  p, _mode[B], val));
     }
 

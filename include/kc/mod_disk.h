@@ -33,7 +33,7 @@ class ModuleDisk : public ModuleROM
              dword_t size, byte_t id);
   virtual ~ModuleDisk(void);
 
-  virtual void out(word_t addr, byte_t val);
+  virtual void m_out(word_t addr, byte_t val);
   virtual ModuleInterface * clone(void);
 };
 

@@ -43,10 +43,10 @@ public:
   ModuleInterface(const char *name, byte_t id, mod_type_t mod_type);
   virtual ~ModuleInterface(void);
 
-  virtual void out(word_t addr, byte_t val) = 0;
+  virtual byte_t m_in(word_t addr);
+  virtual void m_out(word_t addr, byte_t val) = 0;
   virtual ModuleInterface * clone(void) = 0;
 
-  virtual byte_t in(word_t addr);
   virtual byte_t get_id(void);
   virtual const char * get_name(void);
   virtual mod_type_t get_type(void);

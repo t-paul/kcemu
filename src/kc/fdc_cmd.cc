@@ -98,11 +98,22 @@ FDC_CMD::execute_cmd(void)
               get_name()));
   
   _fdc->set_state(FDC::FDC_STATE_EXECUTE);
+  _data_transfer = false;
+
   execute();
+  if (_data_transfer)
+    _fdc->set_state(FDC::FDC_STATE_DATA);
+  else 
+    finish_cmd();
+}
+
+void
+FDC_CMD::finish_cmd(void)
+{
   if (_results > 0)
     _fdc->set_state(FDC::FDC_STATE_RESULT);
-  else 
-    _fdc->set_state(FDC::FDC_STATE_COMMAND);
+  else
+    _fdc->set_state(FDC::FDC_STATE_IDLE);
 }
 
 void
@@ -110,11 +121,14 @@ FDC_CMD::start(byte_t val)
 {
   _w_idx = 0;
   _r_idx = 0;
+  _arg[_w_idx++] = val;
+
+  _fdc->set_state(FDC::FDC_STATE_COMMAND);
+
   DBG(2, form("KCemu/FDC_CMD/command/start",
               "FDC: --> start   '%s' [%02x] %d/%d\n",
               get_name(), val, _w_idx, _args));
 
-  _arg[_w_idx++] = val;
   if (_args == 1)
     execute_cmd();
 }
@@ -145,7 +159,7 @@ FDC_CMD::read_result(void)
               get_name(), val, _r_idx, _results));
 
   if (_r_idx >= _results)
-    _fdc->set_state(FDC::FDC_STATE_COMMAND);
+    _fdc->set_state(FDC::FDC_STATE_IDLE);
 
   return val;
 }
@@ -165,6 +179,18 @@ FDC_CMD::write_byte(byte_t val)
   DBG(1, form("KCemu/warning",
               "FDC_CMD::write_byte() called! [%s] (value = 0x%02x)\n",
               get_name(), val));
+}
+
+int
+FDC_CMD::get_read_idx(void)
+{
+  return _r_idx;
+}
+
+int
+FDC_CMD::get_write_idx(void)
+{
+  return _w_idx;
 }
 
 /*
@@ -187,6 +213,10 @@ FDC_CMD_INVALID::execute(void)
               "FDC: INVALID: code = %02x\n"
               "FDC: INVALID: ------------------------------------\n",
               _arg[0]));
+
+  get_fdc()->set_ST0(FDC::ST_0_ALL_MASK, FDC::ST_0_IC_INVALID_COMMAND);
+
+  _result[0] = get_fdc()->get_ST0();
 }
 
 /********************************************************************
@@ -254,7 +284,16 @@ FDC_CMD_SENSE_DRIVE_STATUS::execute(void)
 {
   DBG(2, form("KCemu/FDC_CMD/SENSE_DRIVE_STATUS",
               "FDC: SENSE DRIVE STATUS: -------------------------\n"
-              "FDC: SENSE DRIVE STATUS: -------------------------\n"));
+              "FDC: SENSE DRIVE STATUS: Head Select        = %d\n"
+              "FDC: SENSE DRIVE STATUS: Drive Select       = %d\n"
+              "FDC: SENSE DRIVE STATUS: -------------------------\n",
+              (_arg[1] >> 2) & 1,
+              _arg[1] & 3));
+
+  get_fdc()->select_floppy(_arg[1] & 3);
+  get_fdc()->set_input_gate(0x40, 0x40);
+
+  _result[0] = get_fdc()->get_ST3();
 }
 
 /********************************************************************
@@ -393,6 +432,10 @@ FDC_CMD_READ_DATA::execute(void)
   if (f == 0)
     return;
 
+  size = f->get_sector_size();
+  if (size <= 0)
+    return;
+
   DBG(2, form("KCemu/FDC_CMD/READ_DATA_FORMAT",
               "FDC: READ DATA: heads:        %d\n"
               "FDC: READ DATA: cylinders:    %d\n"
@@ -402,10 +445,6 @@ FDC_CMD_READ_DATA::execute(void)
               f->get_cylinder_count(),
               size,
               f->get_sectors_per_cylinder()));
-
-  size = f->get_sector_size();
-  if (size <= 0)
-    return;
 
   if (_buf != 0)
     delete _buf;
@@ -438,16 +477,20 @@ FDC_CMD_READ_DATA::execute(void)
 	      _buf[0x38], _buf[0x39], _buf[0x3a], _buf[0x3b], _buf[0x3c], _buf[0x3d], _buf[0x3e], _buf[0x3f]));
 
 
-  /*
-  _result[0] = _ST0;
-  _result[1] = _ST1;
-  _result[2] = _ST2;
-  */
+  get_fdc()->set_msr(FDC::ST_MAIN_READ_WRITE | FDC::ST_MAIN_RQM | FDC::ST_MAIN_DIO,
+		     FDC::ST_MAIN_READ_WRITE | FDC::ST_MAIN_RQM | FDC::ST_MAIN_DIO);
+  get_fdc()->set_ST0(FDC::ST_0_IC_MASK | FDC::ST_0_SEEK_END,
+		     FDC::ST_0_IC_NORMAL_TERMINATION);
 
+  _result[0] = get_fdc()->get_ST0();
+  _result[1] = get_fdc()->get_ST1();
+  _result[2] = get_fdc()->get_ST2();
   _result[3] = _arg[2];
   _result[4] = _arg[3];
   _result[5] = _arg[4];
   _result[6] = _arg[5];
+
+  _data_transfer = true;
 }
 
 bool
@@ -491,14 +534,23 @@ FDC_CMD_READ_DATA::read_byte(void)
   byte_t b = 0xff;
 
   if (_idx == _size)
-    if (!fetch_next_sector())
-      ; // FIXME: set terminal count here!
+    {
+      if (!fetch_next_sector())
+	{
+	  _data_transfer = false;
+	  finish_cmd();
+	}
+    }
 
   if (_idx < _size)
     b = _buf[_idx++];  
 
   DBG(2, form("KCemu/FDC_CMD/read_byte",
-              "FDC_CMD_READ_DATA::read_byte(): 0x%02x (%3d, '%c')\n",
+              "FDC_CMD_READ_DATA::read_byte(): c/h/s %d/%d/%d [%d]: 0x%02x (%3d, '%c')\n",
+	      get_fdc()->get_cylinder(),
+	      get_fdc()->get_head(),
+	      get_fdc()->get_sector(),
+	      _idx - 1,
               b, b, isprint(b) ? b : '.'));
   
   return b;
@@ -523,7 +575,10 @@ FDC_CMD_RECALIBRATE::execute(void)
               "FDC: RECALIBRATE: --------------------------------\n"
               "FDC: RECALIBRATE: Drive Select = %d\n"
               "FDC: RECALIBRATE: --------------------------------\n",
-              _arg[1] & 2));
+              _arg[1] & 3));
+
+  get_fdc()->select_floppy(_arg[1] & 3);
+  get_fdc()->set_input_gate(0x40, 0x40);
 }
 
 /********************************************************************
@@ -541,11 +596,12 @@ FDC_CMD_SENSE_INTERRUPT_STATUS::~FDC_CMD_SENSE_INTERRUPT_STATUS(void)
 void
 FDC_CMD_SENSE_INTERRUPT_STATUS::execute(void)
 {
-  _result[0] = 0x20; /* ST0: SEEK END */
   DBG(2, form("KCemu/FDC_CMD/SENSE_INTERRUPT_STATUS",
               "FDC: SENSE INTERRUPT STATUS: --------------------------------\n"
               "FDC: SENSE INTERRUPT STATUS: --------------------------------\n"
               ));
+
+  _result[0] = get_fdc()->get_ST0();
 }
 
 /********************************************************************
@@ -585,7 +641,24 @@ FDC_CMD_READ_ID::execute(void)
 {
   DBG(2, form("KCemu/FDC_CMD/READ_ID",
               "FDC: READ ID: ------------------------------------\n"
-              "FDC: READ ID: ------------------------------------\n"));
+	      "FDC: READ ID: FM or MFM Mode         = %s\n"
+              "FDC: READ ID: Head Select            = %d\n"
+              "FDC: READ ID: Drive Select           = %d\n"
+              "FDC: READ ID: ------------------------------------\n",
+              ((_arg[0] >> 7) & 1) ? "MFM Mode" : "FM Mode",
+              (_arg[1] >> 2) & 1,
+              _arg[1] & 3));
+
+  get_fdc()->select_floppy(_arg[1] & 3);
+  get_fdc()->set_input_gate(0x40, 0x40);
+
+  _result[0] = get_fdc()->get_ST0();
+  _result[1] = get_fdc()->get_ST1();
+  _result[2] = get_fdc()->get_ST2();
+  _result[3] = get_fdc()->get_cylinder();
+  _result[4] = get_fdc()->get_head();
+  _result[5] = get_fdc()->get_sector();
+  _result[6] = 0x03; /* FIXME: N */
 }
 
 /********************************************************************
@@ -736,8 +809,17 @@ FDC_CMD_SEEK::execute(void)
               "FDC: SEEK: New Cylinder Number = %d\n"
               "FDC: SEEK: ---------------------------------------\n",
               (_arg[1] >> 2) & 1,
-              _arg[1] & 2,
+              _arg[1] & 3,
               _arg[2]));
+
+  get_fdc()->select_floppy(_arg[1] & 3);
+
+  // input gate is also set in the seek function!
+  get_fdc()->seek((_arg[1] >> 2) & 1, _arg[2], 1);
+  get_fdc()->set_input_gate(0x40, 0x00);
+
+  get_fdc()->set_ST0(FDC::ST_0_IC_MASK | FDC::ST_0_SEEK_END,
+		     FDC::ST_0_IC_NORMAL_TERMINATION | FDC::ST_0_SEEK_END);
 }
 
 /********************************************************************

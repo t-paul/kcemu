@@ -103,14 +103,16 @@ VERSION = @VERSION@
 VORBIS_LIBS = @VORBIS_LIBS@
 l = @l@
 
-noinst_PROGRAMS = disk-tool # send_file show-wav ft disp-wav wavtokc audio2kc
+noinst_PROGRAMS = disk-tool tape-tool tape-check tape-check-bc tape-merge tape-test tape-basicode tape-split tape-rename basic-decode make-font tp-type
+
+# send_file show-wav ft disp-wav wavtokc audio2kc
 
 LIBS = 
 
 CPPFLAGS =  	-DDEBUG
 
 
-INCLUDES =  	`gtk-config --cflags`
+INCLUDES =  	-I../../include
 
 
 #wav2kc_SOURCES = \
@@ -148,6 +150,51 @@ INCLUDES =  	`gtk-config --cflags`
 
 disk_tool_SOURCES =  	disk-tool.c
 
+
+tape_tool_SOURCES =  	tape-tool.c tape-type.c
+
+
+tape_tool_LDADD =  	../libaudio/libaudio.a		        $(SNDFILE_LIBS)                         $(AUDIOFILE_LIBS)                       $(MP3LAME_LIBS)                         $(VORBIS_LIBS)                          $(F_L_A_C_LIBS)
+
+
+tape_test_SOURCES =  	tape-test.c
+
+
+tape_test_LDADD =  	../libaudio/libaudio.a		        $(SNDFILE_LIBS)                         $(AUDIOFILE_LIBS)                       $(MP3LAME_LIBS)                         $(VORBIS_LIBS)                          $(F_L_A_C_LIBS)
+
+
+tape_basicode_SOURCES =  	tape-basicode.c
+
+
+tape_basicode_LDADD =  	../libaudio/libaudio.a		        $(SNDFILE_LIBS)                         $(AUDIOFILE_LIBS)                       $(MP3LAME_LIBS)                         $(VORBIS_LIBS)                          $(F_L_A_C_LIBS)
+
+
+tape_split_SOURCES =  	tape-split.c
+
+
+tape_check_SOURCES =  	tape-check.c tape-type.c
+
+
+tape_check_bc_SOURCES =  	tape-check-bc.c
+
+
+tape_merge_SOURCES =  	tape-merge.c
+
+
+basic_decode_SOURCES =  	basic-decode.c
+
+
+basic_decode_LDADD =  	../fileio/libfileio.a
+
+
+make_font_SOURCES =  	make-font.c
+
+
+tape_rename_SOURCES =  	tape-rename.c tape-type.c
+
+
+tp_type_SOURCES =  	tp-type.c
+
 mkinstalldirs = $(SHELL) $(top_srcdir)/mkinstalldirs
 CONFIG_HEADER = ../../include/kc/config.h
 CONFIG_CLEAN_FILES = 
@@ -160,6 +207,46 @@ disk_tool_OBJECTS =  disk-tool.o
 disk_tool_LDADD = $(LDADD)
 disk_tool_DEPENDENCIES = 
 disk_tool_LDFLAGS = 
+tape_tool_OBJECTS =  tape-tool.o tape-type.o
+tape_tool_DEPENDENCIES =  ../libaudio/libaudio.a
+tape_tool_LDFLAGS = 
+tape_check_OBJECTS =  tape-check.o tape-type.o
+tape_check_LDADD = $(LDADD)
+tape_check_DEPENDENCIES = 
+tape_check_LDFLAGS = 
+tape_check_bc_OBJECTS =  tape-check-bc.o
+tape_check_bc_LDADD = $(LDADD)
+tape_check_bc_DEPENDENCIES = 
+tape_check_bc_LDFLAGS = 
+tape_merge_OBJECTS =  tape-merge.o
+tape_merge_LDADD = $(LDADD)
+tape_merge_DEPENDENCIES = 
+tape_merge_LDFLAGS = 
+tape_test_OBJECTS =  tape-test.o
+tape_test_DEPENDENCIES =  ../libaudio/libaudio.a
+tape_test_LDFLAGS = 
+tape_basicode_OBJECTS =  tape-basicode.o
+tape_basicode_DEPENDENCIES =  ../libaudio/libaudio.a
+tape_basicode_LDFLAGS = 
+tape_split_OBJECTS =  tape-split.o
+tape_split_LDADD = $(LDADD)
+tape_split_DEPENDENCIES = 
+tape_split_LDFLAGS = 
+tape_rename_OBJECTS =  tape-rename.o tape-type.o
+tape_rename_LDADD = $(LDADD)
+tape_rename_DEPENDENCIES = 
+tape_rename_LDFLAGS = 
+basic_decode_OBJECTS =  basic-decode.o
+basic_decode_DEPENDENCIES =  ../fileio/libfileio.a
+basic_decode_LDFLAGS = 
+make_font_OBJECTS =  make-font.o
+make_font_LDADD = $(LDADD)
+make_font_DEPENDENCIES = 
+make_font_LDFLAGS = 
+tp_type_OBJECTS =  tp-type.o
+tp_type_LDADD = $(LDADD)
+tp_type_DEPENDENCIES = 
+tp_type_LDFLAGS = 
 CFLAGS = @CFLAGS@
 COMPILE = $(CC) $(DEFS) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS)
 CCLD = $(CC)
@@ -171,8 +258,8 @@ DISTFILES = $(DIST_COMMON) $(SOURCES) $(HEADERS) $(TEXINFOS) $(EXTRA_DIST)
 
 TAR = tar
 GZIP_ENV = --best
-SOURCES = $(disk_tool_SOURCES)
-OBJECTS = $(disk_tool_OBJECTS)
+SOURCES = $(disk_tool_SOURCES) $(tape_tool_SOURCES) $(tape_check_SOURCES) $(tape_check_bc_SOURCES) $(tape_merge_SOURCES) $(tape_test_SOURCES) $(tape_basicode_SOURCES) $(tape_split_SOURCES) $(tape_rename_SOURCES) $(basic_decode_SOURCES) $(make_font_SOURCES) $(tp_type_SOURCES)
+OBJECTS = $(disk_tool_OBJECTS) $(tape_tool_OBJECTS) $(tape_check_OBJECTS) $(tape_check_bc_OBJECTS) $(tape_merge_OBJECTS) $(tape_test_OBJECTS) $(tape_basicode_OBJECTS) $(tape_split_OBJECTS) $(tape_rename_OBJECTS) $(basic_decode_OBJECTS) $(make_font_OBJECTS) $(tp_type_OBJECTS)
 
 all: all-redirect
 .SUFFIXES:
@@ -216,6 +303,50 @@ maintainer-clean-compile:
 disk-tool: $(disk_tool_OBJECTS) $(disk_tool_DEPENDENCIES)
 	@rm -f disk-tool
 	$(LINK) $(disk_tool_LDFLAGS) $(disk_tool_OBJECTS) $(disk_tool_LDADD) $(LIBS)
+
+tape-tool: $(tape_tool_OBJECTS) $(tape_tool_DEPENDENCIES)
+	@rm -f tape-tool
+	$(LINK) $(tape_tool_LDFLAGS) $(tape_tool_OBJECTS) $(tape_tool_LDADD) $(LIBS)
+
+tape-check: $(tape_check_OBJECTS) $(tape_check_DEPENDENCIES)
+	@rm -f tape-check
+	$(LINK) $(tape_check_LDFLAGS) $(tape_check_OBJECTS) $(tape_check_LDADD) $(LIBS)
+
+tape-check-bc: $(tape_check_bc_OBJECTS) $(tape_check_bc_DEPENDENCIES)
+	@rm -f tape-check-bc
+	$(LINK) $(tape_check_bc_LDFLAGS) $(tape_check_bc_OBJECTS) $(tape_check_bc_LDADD) $(LIBS)
+
+tape-merge: $(tape_merge_OBJECTS) $(tape_merge_DEPENDENCIES)
+	@rm -f tape-merge
+	$(LINK) $(tape_merge_LDFLAGS) $(tape_merge_OBJECTS) $(tape_merge_LDADD) $(LIBS)
+
+tape-test: $(tape_test_OBJECTS) $(tape_test_DEPENDENCIES)
+	@rm -f tape-test
+	$(LINK) $(tape_test_LDFLAGS) $(tape_test_OBJECTS) $(tape_test_LDADD) $(LIBS)
+
+tape-basicode: $(tape_basicode_OBJECTS) $(tape_basicode_DEPENDENCIES)
+	@rm -f tape-basicode
+	$(LINK) $(tape_basicode_LDFLAGS) $(tape_basicode_OBJECTS) $(tape_basicode_LDADD) $(LIBS)
+
+tape-split: $(tape_split_OBJECTS) $(tape_split_DEPENDENCIES)
+	@rm -f tape-split
+	$(LINK) $(tape_split_LDFLAGS) $(tape_split_OBJECTS) $(tape_split_LDADD) $(LIBS)
+
+tape-rename: $(tape_rename_OBJECTS) $(tape_rename_DEPENDENCIES)
+	@rm -f tape-rename
+	$(LINK) $(tape_rename_LDFLAGS) $(tape_rename_OBJECTS) $(tape_rename_LDADD) $(LIBS)
+
+basic-decode: $(basic_decode_OBJECTS) $(basic_decode_DEPENDENCIES)
+	@rm -f basic-decode
+	$(LINK) $(basic_decode_LDFLAGS) $(basic_decode_OBJECTS) $(basic_decode_LDADD) $(LIBS)
+
+make-font: $(make_font_OBJECTS) $(make_font_DEPENDENCIES)
+	@rm -f make-font
+	$(LINK) $(make_font_LDFLAGS) $(make_font_OBJECTS) $(make_font_LDADD) $(LIBS)
+
+tp-type: $(tp_type_OBJECTS) $(tp_type_DEPENDENCIES)
+	@rm -f tp-type
+	$(LINK) $(tp_type_LDFLAGS) $(tp_type_OBJECTS) $(tp_type_LDADD) $(LIBS)
 
 tags: TAGS
 
@@ -261,7 +392,22 @@ distdir: $(DISTFILES)
 	    || cp -p $$d/$$file $(distdir)/$$file || :; \
 	  fi; \
 	done
+basic-decode.o: basic-decode.c ../../include/fileio/load.h
 disk-tool.o: disk-tool.c
+make-font.o: make-font.c ../../include/ui/font1.h \
+	../../include/kc/system.h ../../include/kc/config.h \
+	../../include/sys/sysdep.h
+tape-basicode.o: tape-basicode.c ../../include/libaudio/libaudio.h
+tape-check-bc.o: tape-check-bc.c
+tape-check.o: tape-check.c
+tape-merge.o: tape-merge.c
+tape-rename.o: tape-rename.c
+tape-split.o: tape-split.c
+tape-test.o: tape-test.c ../../include/libaudio/libaudio.h
+tape-tool.o: tape-tool.c ../../include/libaudio/libaudio.h
+tape-tool2.o: tape-tool2.c ../../include/libaudio/libaudio.h
+tape-type.o: tape-type.c
+tp-type.o: tp-type.c
 
 info-am:
 info: info-am
@@ -332,6 +478,7 @@ all-redirect all-am all installdirs mostlyclean-generic \
 distclean-generic clean-generic maintainer-clean-generic clean \
 mostlyclean distclean maintainer-clean
 
+	`gtk-config --cflags`
 
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.

@@ -308,13 +308,15 @@ Memory::loadRAM(istream *is, bool with_block_nr)
   /* read header */
   if (with_block_nr)
     {
-      is->read((char *)buf, 129);
+      for (a = 0;a < 129;a++)
+	buf[a] = is->get(); // workaround for memstream problems
       ptr = &buf[1];
     }
   else
     {
-      is->read((char *)buf, 128);
-      ptr = &buf[1];
+      for (a = 0;a < 128;a++)
+	buf[a] = is->get(); // workaround for memstream problems
+      ptr = &buf[0];
     }
   if (!(*is))
     return false;

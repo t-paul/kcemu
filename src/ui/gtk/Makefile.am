@@ -23,6 +23,7 @@ libui_gtk_a_SOURCES = \
 	ui_gtk3.cc	\
 	ui_gtk4.cc	\
 	ui_gtk8.cc	\
+	ui_gtk9.cc	\
 	cmd.cc		\
 	window.cc	\
 	disk.cc		\

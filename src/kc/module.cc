@@ -48,7 +48,7 @@ ModuleInterface::~ModuleInterface(void)
 }
 
 byte_t
-ModuleInterface::in(word_t addr)
+ModuleInterface::m_in(word_t addr)
 {
   return get_id();
 }
@@ -108,7 +108,7 @@ Module::in(word_t addr)
     return 0xff;
   a = (a - 8) / 4;
   if (_module[a])
-    id = _module[a]->in(addr);
+    id = _module[a]->m_in(addr);
   else
     id = 0xff;
 
@@ -136,7 +136,7 @@ Module::out(word_t addr, byte_t val)
       DBG(2, form("KCemu/Module/out",
                   "Module::out():  %04x -> %02x\n",
                   addr, val));
-      _module[slot]->out(addr, val);
+      _module[slot]->m_out(addr, val);
       ui->getModuleInterface()->activate(slot, val);
     }
 }
