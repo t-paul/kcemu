@@ -35,18 +35,16 @@ class CopyingWindow : public UI_Gtk_Window
   struct
   {
     GtkWidget *vbox;
-    GtkWidget *hbox;
-    GtkWidget *text;
-    GtkWidget *scrollbar;
+    GtkWidget *label_copying;
+    GtkWidget *label_warranty;
+    GtkWidget *label_vbox;
+    GtkWidget *scrolled_window;
     GtkWidget *separator;
     GtkWidget *close;
   } _w;
 
-  int _lines;
-  int _warranty_pos;
-  float _text_pos;
   CMD *_cmd;
-  static const char COPYING_FONT[];
+  PangoFontDescription *_font_desc;
 
  protected:
   void init(void);

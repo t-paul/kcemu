@@ -41,6 +41,9 @@ class UI_Gtk_Window : public UI_Window
   void toggle(void);
 
   bool is_visible(void);
+
+  GtkWidget * create_pixmap_widget(GtkWidget *parent, char **data);
+  GtkWidget * create_button_with_pixmap(GtkWidget *parent, char **data);
 };
 
 #endif /* __ui_gtk_window_h */

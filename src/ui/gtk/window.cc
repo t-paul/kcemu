@@ -51,3 +51,36 @@ UI_Gtk_Window::is_visible(void)
 {
   return _visible;
 }
+
+GtkWidget *
+UI_Gtk_Window::create_pixmap_widget(GtkWidget *parent, char **data)
+{
+  GtkStyle  *style;
+  GdkPixmap *pixmap;
+  GdkBitmap *pixmap_mask;
+  GtkWidget *pixmap_widget;
+
+  style = gtk_widget_get_style(parent);
+  pixmap = gdk_pixmap_create_from_xpm_d(parent->window,
+					&pixmap_mask,
+					&style->bg[GTK_STATE_NORMAL],
+					data);
+  pixmap_widget = gtk_pixmap_new(pixmap, pixmap_mask);
+  return pixmap_widget;
+}
+
+GtkWidget *
+UI_Gtk_Window::create_button_with_pixmap(GtkWidget *parent, char **data)
+{
+  GtkWidget *button;
+  GtkWidget *pixmap;
+
+  button = gtk_button_new();
+  gtk_container_set_border_width(GTK_CONTAINER(button), 0);
+  pixmap = create_pixmap_widget(parent, data);
+  gtk_widget_show(pixmap);
+  gtk_container_add(GTK_CONTAINER(button), pixmap);
+
+  return button;
+}
+

@@ -1,3 +1,109 @@
+2003-06-08  Torsten Paul  <Torsten.Paul@gmx.de>
+
+	* src/libdisk/disk.c: set passed reference to pointer to NULL on
+	failure in libdisk_open()
+
+2003-06-07  Torsten Paul  <Torsten.Paul@gmx.de>
+
+	* upgrade to GTK+-2.2.1
+
+	* src/ui/gtk/tape.cc, src/ui/gtk/ui_gtk0.cc, src/ui/gtk/ui_gtk1.cc,
+	src/ui/gtk/ui_gtk8.cc, src/ui/gtk/keyboard.cc: fix color specification; pango
+	doesn't like the form "rgb:00/a0/ff"
+
+	* src/ui/gtk/copying.cc: gtk_text_new() is only available if
+	GTK_ENABLE_BROKEN is defined :-( and this is obviously no joke;
+	removed the text widget and replaced it with two labels in a
+	scrolled window which works quite well; need to check font allocation
+	by libpango as it currently uses hardcoded fontfamily "Courier"
+
+	* src/ui/gtk/debug.cc: fixed compile problem with overloading do_goto();
+	can't use style->font anymore -- need new method to set font
+
+	* src/ui/gtk/disk.cc, src/ui/gtk/tape.cc: char * -> const gchar *
+
+	* src/ui/gtk/ui_gtk.cc, src/ui/gtk/disk.cc, src/ui/gtk/tape.cc,
+	src/ui/gtk/tapeadd.cc, src/ui/gtk/about.cc, src/ui/gtk/color.cc,
+	src/ui/gtk/module.cc, src/ui/gtk/keyboard.cc,
+	src/ui/gtk/copying.cc, src/ui/gtk/hedit.cc: GTK_WINDOW_DIALOG -> GTK_WINDOW_TOPLEVEL
+
+	* src/ui/gtk/ui_gtk.cc: removed usage of gdk_key_repeat_disable() and
+	gdk_key_repeat_restore(); both are not available in GTK-2.0
+
+	* src/ui/gtk/ui_gtk.cc: changed XA_STRING to GDK_TARGET_STRING
+
+	* src/ui/gtk/tape.cc: disabled combo box; signal handling is too buggy
+
+	* src/ui/gtk/about.cc: added KCemu logo
+
+2003-06-06  Torsten Paul  <Torsten.Paul@gmx.de>
+
+	* include/kc/memory.h, src/kc/memory.cc: expose the reload_mem_ptr()
+	function for public access (needed by the 192k module)
+
+	* include/kc/mod_192k.h, src/kc/mod_192k.cc: first implementation
+	of the 192 KByte RAM/EPROM module for kc85/1; still needs some changes
+	to work for kc87 (ROMDI handling)
+
+2003-06-03  Torsten Paul  <Torsten.Paul@gmx.de>
+
+	* src/kc/mod_v24.cc: fix initialization
+
+2003-04-26  Torsten Paul  <Torsten.Paul@gmx.de>
+
+	* src/kc/keyb*.cc: fixed keyboard reset
+
+	* include/kc/vis.h, src/kc/vis.cc, src/ui/generic/ui_9.cc: added
+	function to check char set changes so when loading a new charset
+	from disk the screen is updated correctly and not only after
+	redrawing characters
+
+	* src/kc/gdc.cc: added even more debug output
+
+	* include/kc/cb_list.h, src/kc/cb_list.cc, src/kc/z80.cc: added
+	function to remove queued callback requests
+
+	* src/kc/pio.cc: fixed callback handling (missing initialization
+	of callback return variable)
+
+	* src/fileio/load_TAPE.c: relaxed file type check, the filename is
+	not checked for valid chars anymore; this now allows loading of most
+	.KCC files
+
+2003-04-21  Torsten Paul  <Torsten.Paul@gmx.de>
+
+	* include/kc/mod_js.h, src/kc/mod_js.cc: joystick module M008
+	for kc 85/2-4 using linux joystick interface
+
+	* src/kc/mod_list.cc: fix inclusion of the v24 (wrong #define);
+	added joystick module
+
+2003-04-18  Torsten Paul  <Torsten.Paul@gmx.de>
+
+	* src/ui/gtk/ui_gtk9.cc, src/ui/sdl/ui_sdl9.cc: fix cpu timing
+	(clock frequency is 3,75MHz)
+
+	* src/ui/generic/ui_9.cc: fix display resolutions for screen
+	modes 3 and 5
+
+	* src/kc/vis.cc: implemented read access to char data (port 9ch);
+	fixes text output in graphics mode
+
+2003-04-03  Torsten Paul  <Torsten.Paul@gmx.de>
+
+	* src/ui/generic/ui_8.cc: honour clear_cache flag
+
+	* src/ui/generic/ui_3.cc: honour clear_cache flag
+
+	* src/ui/generic/ui_0.cc: honour clear_cache flag in GDC update
+	function
+
+	* src/ui/gtk/ui_gtk8.cc: call generic_update() with clear_cache flag
+	
+	* src/ui/gtk/ui_gtk.cc: render bitmap when calling gtk_update()
+	with the full_update flag set; fixes display update problems when
+	changing the display scaling
+	
 2003-04-01  Torsten Paul  <Torsten.Paul@gmx.de>
 
 	* some changes to allow compilation in the MinGW/MSYS environment

@@ -24,6 +24,7 @@
 
 #include "kc/system.h"
 
+#include "kc/z80.h"
 #include "kc/keys.h"
 #include "kc/keyb8.h"
 #include "kc/keyb8k.h"
@@ -33,10 +34,12 @@
 Keyboard8::Keyboard8(void)
 {
   init();
+  z80->register_ic(this);
 }
 
 Keyboard8::~Keyboard8(void)
 {
+  z80->unregister_ic(this);
 }
 
 void

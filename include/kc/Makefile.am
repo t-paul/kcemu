@@ -66,12 +66,14 @@ EXTRA_DIST = \
 	mod_64k.h	\
 	mod_rom.h	\
 	mod_rom1.h	\
+	mod_192k.h	\
 	mod_ramf.h	\
 	mod_fdc.h	\
 	mod_gdc.h	\
 	mod_rtc.h	\
 	mod_disk.h	\
 	mod_v24.h	\
+	mod_js.h	\
 	mod_4131.h	\
 	mod_list.h	\
 	profile.h	\

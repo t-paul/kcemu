@@ -68,12 +68,12 @@ public:
   
   void execute(CMD_Args *args, CMD_Context context)
     {
-      _w->do_goto(z80->getPC());
+      _w->do_goto_int(z80->getPC());
     }
 };
 
 void
-DebugWindow::do_goto(int addr)
+DebugWindow::do_goto_int(int addr)
 {
   _op->go_to(this, addr);
   _op->update(this);
@@ -81,7 +81,7 @@ DebugWindow::do_goto(int addr)
 }
 
 void
-DebugWindow::do_goto(char *str)
+DebugWindow::do_goto_string(const char *str)
 {
   long val;
   char *endptr;
@@ -92,7 +92,7 @@ DebugWindow::do_goto(char *str)
       if ((*str != '\0') && (*endptr == '\0'))
 	if ((val >= 0) && (val <= 0xffff))
 	  {
-	    do_goto(val);
+	    do_goto_int(val);
 	    return;
 	  }
     }
@@ -145,7 +145,7 @@ DebugWindow::key_press_func(GtkWidget *widget, GdkEventKey *event,
         {
         case GDK_Return: case GDK_KP_Enter:
           if (!GTK_WIDGET_VISIBLE(self->_w.op)) break;
-          self->do_goto(gtk_entry_get_text(GTK_ENTRY(self->_w.op)));
+          self->do_goto_string(gtk_entry_get_text(GTK_ENTRY(self->_w.op)));
           break;
         case GDK_Escape:
           clear_op = 1;
@@ -361,7 +361,7 @@ DebugWindow::init(void)
     {
       _w.l_asm[a] = gtk_label_new("");
       style = gtk_widget_get_style(_w.l_asm[a]);
-      style->font = font;
+      // style->font = font; // FIXME
       gtk_widget_set_style(_w.l_asm[a], style);
       gtk_misc_set_alignment(GTK_MISC(_w.l_asm[a]), 0, 0.5);
       gtk_box_pack_start(GTK_BOX(_w.vbox_asm), _w.l_asm[a], FALSE, TRUE, 0);
@@ -371,7 +371,7 @@ DebugWindow::init(void)
     {
       _w.l_mem[a] = gtk_label_new("");
       style = gtk_widget_get_style(_w.l_mem[a]);
-      style->font = font;
+      // style->font = font; // FIXME
       gtk_widget_set_style(_w.l_mem[a], style);
       gtk_misc_set_alignment(GTK_MISC(_w.l_mem[a]), 0, 0.5);
       gtk_box_pack_start(GTK_BOX(_w.vbox_mem), _w.l_mem[a], FALSE, TRUE, 0);
@@ -381,7 +381,7 @@ DebugWindow::init(void)
     {
       _w.l_reg[a] = gtk_label_new("");
       style = gtk_widget_get_style(_w.l_reg[a]);
-      style->font = font;
+      // style->font = font; // FIXME
       gtk_widget_set_style(_w.l_reg[a], style);
       gtk_misc_set_alignment(GTK_MISC(_w.l_reg[a]), 0, 0.5);
       gtk_box_pack_start(GTK_BOX(_w.vbox_reg), _w.l_reg[a], FALSE, TRUE, 0);

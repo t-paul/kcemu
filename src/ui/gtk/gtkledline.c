@@ -43,44 +43,30 @@ static void gtk_led_line_size_allocate            (GtkWidget          *widget,
 					           GtkAllocation      *allocation);
 static gint gtk_led_line_expose                   (GtkWidget          *widget,
 						   GdkEventExpose     *event);
-#if 0
-static gint gtk_led_line_button_press             (GtkWidget          *widget,
-						   GdkEventButton     *event);
-static gint gtk_led_line_button_release           (GtkWidget          *widget,
-						   GdkEventButton     *event);
-static void gtk_led_line_update_mouse             (GtkLedLine         *led_line,
-						   gint                x,
-						   gint                y);
-static void gtk_led_line_update                   (GtkLedLine         *led_line);
-static void gtk_led_line_adjustment_changed       (GtkAdjustment      *adjustment,
-						   gpointer            data);
-static void gtk_led_line_adjustment_value_changed (GtkAdjustment      *adjustment,
-						   gpointer            data);
-#endif
-
 /* Local data */
 
 static GtkWidgetClass *parent_class = NULL;
 
-guint
+GtkType
 gtk_led_line_get_type ()
 {
-  static guint led_line_type = 0;
+  static GtkType led_line_type = 0;
 
   if (!led_line_type)
     {
-      GtkTypeInfo led_line_info =
+      static const GtkTypeInfo led_line_info =
       {
 	"GtkLedLine",
 	sizeof (GtkLedLine),
 	sizeof (GtkLedLineClass),
 	(GtkClassInitFunc) gtk_led_line_class_init,
 	(GtkObjectInitFunc) gtk_led_line_init,
-	(GtkArgSetFunc) NULL,
-	(GtkArgGetFunc) NULL,
+	/* reserved_1 */ NULL,
+	/* reserved_1 */ NULL,
+	(GtkClassInitFunc) NULL,
       };
 
-      led_line_type = gtk_type_unique (gtk_widget_get_type (), &led_line_info);
+      led_line_type = gtk_type_unique (GTK_TYPE_WIDGET, &led_line_info);
     }
 
   return led_line_type;
@@ -103,9 +89,6 @@ gtk_led_line_class_init (GtkLedLineClass *class)
   widget_class->expose_event = gtk_led_line_expose;
   widget_class->size_request = gtk_led_line_size_request;
   widget_class->size_allocate = gtk_led_line_size_allocate;
-  /* widget_class->button_press_event = gtk_led_line_button_press; */
-  /* widget_class->button_release_event = gtk_led_line_button_release; */
-  /* widget_class->motion_notify_event = gtk_led_line_motion_notify; */
 }
 
 static void

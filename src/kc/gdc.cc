@@ -120,8 +120,8 @@ GDC::out(word_t addr, byte_t val)
     }
 
   DBG(2, form("KCemu/GDC/out",
-              "GDC::out(): %04xh val = %02x [%c]\n",
-              addr, val, isprint(val) ? val : '.'));
+              "GDC::out(): %04xh: %04xh val = %02x [%c]\n",
+              z80->getPC(), addr, val, isprint(val) ? val : '.'));
 
   if (_cmd == 0x00) // RESET
     _screen_on = 0;
@@ -331,9 +331,10 @@ GDC::info(void)
     {
     case 0x00:
       DBG(2, form("KCemu/GDC/RESET",
-		  "GDC: RESET -------------------------------\n"
+		  "GDC: RESET ------------------------------- %02x\n"
 		  "GDC: RESET mode                  %s\n"
 		  "GDC: RESET -------------------------------\n",
+		  _cmd,
 		  ((_arg[0] & 0x20) ?
 		   ((_arg[0] & 0x02) ? "  invalid" : "character") :
 		   ((_arg[0] & 0x02) ? "  graphic": "    mixed"))
@@ -342,13 +343,14 @@ GDC::info(void)
       
     case 0x0e: case 0x0f:
       DBG(2, form("KCemu/GDC/SYNC",
-		  "GDC: SYNC --------------------------------\n"
+		  "GDC: SYNC -------------------------------- %02x\n"
 		  "GDC: SYNC display on/off               %s\n"
 		  "GDC: SYNC mode (C/G)       %s (%d/%d)\n"
 		  "GDC: SYNC retrace (I/S)      %s (%d/%d)\n"
 		  "GDC: SYNC refresh (D)                  %s\n"
 		  "GDC: SYNC drawing (F)         %s\n"
 		  "GDC: SYNC --------------------------------\n",
+		  _cmd,
 		  (_cmd & 1) ? " on" : "off",
 		  
 		  ((_arg[0] & 0x20) ?
@@ -371,15 +373,16 @@ GDC::info(void)
 
     case 0x6e: case 0x6f:
       DBG(2, form("KCemu/GDC/VSYNC",
-		  "GDC: VSYNC -------------------------------\n"
+		  "GDC: VSYNC ------------------------------- %02x\n"
 		  "GDC: VSYNC external sync            %s\n"
 		  "GDC: VSYNC -------------------------------\n",
+		  _cmd,
 		  (_cmd & 1) ? "master" : " slave"));
       break;
 
     case 0x4b:
       DBG(2, form("KCemu/GDC/CCHAR",
-		  "GDC: CCHAR -------------------------------\n"
+		  "GDC: CCHAR ------------------------------- %02x\n"
 		  "GDC: CCHAR display cursor              %s\n"
 		  "GDC: CCHAR number of lines           %5d\n"
 		  "GDC: CCHAR cursor top                %5d\n"
@@ -387,6 +390,7 @@ GDC::info(void)
 		  "GDC: CCHAR steady cursor               %s\n"
 		  "GDC: CCHAR cursor blink frequency    %5d\n"
 		  "GDC: CCHAR -------------------------------\n",
+		  _cmd,
 		  (_arg[0] & 0x80) ? " on" : "off",
 		  _nr_of_lines,
 		  _cursor_top,
@@ -397,30 +401,34 @@ GDC::info(void)
 
     case 0x6b:
       DBG(2, form("KCemu/GDC/START",
-		  "GDC: START -------------------------------\n"
-		  "GDC: START -------------------------------\n"));
+		  "GDC: START ------------------------------- %02x\n"
+		  "GDC: START -------------------------------\n",
+		  _cmd));
       break;
 
     case 0x0c: case 0x0d:
       DBG(2, form("KCemu/GDC/BCTRL",
-		  "GDC: BCTRL -------------------------------\n"
+		  "GDC: BCTRL ------------------------------- %02x\n"
 		  "GDC: BCTRL display on/off              %s\n"
 		  "GDC: BCTRL -------------------------------\n",
+		  _cmd,
 		  (_cmd & 1) ? " on" : "off"));
       break;
 
     case 0x46:
       DBG(2, form("KCemu/GDC/ZOOM",
-		  "GDC: ZOOM --------------------------------\n"
-		  "GDC: ZOOM --------------------------------\n"));
+		  "GDC: ZOOM -------------------------------- %02x\n"
+		  "GDC: ZOOM --------------------------------\n",
+		  _cmd));
       break;
 
     case 0x49:
       DBG(2, form("KCemu/GDC/CURS",
-		  "GDC: CURS --------------------------------\n"
+		  "GDC: CURS -------------------------------- %02x\n"
 		  "GDC: CURS set cursor to addr:        %05x\n"
 		  "GDC: CURS point address:                %02x\n"
 		  "GDC: CURS --------------------------------\n",
+		  _cmd,
 		  _ptr,
 		  _pptr));
       break;
@@ -430,7 +438,7 @@ GDC::info(void)
     case 0x78: case 0x79: case 0x7a: case 0x7b:
     case 0x7c: case 0x7d: case 0x7e: case 0x7f:
       DBG(2, form("KCemu/GDC/PRAM",
-		  "GDC: PRAM --------------------------------\n"
+		  "GDC: PRAM -------------------------------- %02x\n"
 		  "GDC: PRAM write starting at register    %2d\n"
 		  "GDC: PRAM register  0: %04x %04x %04x %04x\n"
 		  "GDC: PRAM register  4: %04x %04x %04x %04x\n"
@@ -445,6 +453,7 @@ GDC::info(void)
 		  "GDC: PRAM SAD/LEN 4  %010x/%010x\n"
 		  "GDC: PRAM IM/WD 4              %s/%d\n"
 		  "GDC: PRAM --------------------------------\n",
+		  _cmd,
 		  
 		  _cmd & 15,
 		  _pram[ 0], _pram[ 1], _pram[ 2], _pram[ 3],
@@ -475,9 +484,10 @@ GDC::info(void)
 
     case 0x47:
       DBG(2, form("KCemu/GDC/PITCH",
-		  "GDC: PITCH -------------------------------\n"
+		  "GDC: PITCH ------------------------------- %02x\n"
 		  "GDC: PITCH line width                %5d\n"
 		  "GDC: PITCH -------------------------------\n",
+		  _cmd,
 		  _arg[0]));
       break;
 
@@ -486,12 +496,13 @@ GDC::info(void)
     case 0x30: case 0x31: case 0x32: case 0x33:
     case 0x38: case 0x39: case 0x3a: case 0x3b:
       DBG(2, form("KCemu/GDC/WDAT",
-		  "GDC: WDAT --------------------------------\n"
+		  "GDC: WDAT -------------------------------- %02x\n"
 		  "GDC: WDAT type                           %d\n"
 		  "GDC: WDAT MOD                            %d\n"
 		  "GDC: WDAT arg[0]                      0x%02x\n"
 		  "GDC: WDAT arg[1]                      0x%02x\n"
 		  "GDC: WDAT --------------------------------\n",
+		  _cmd,
 		  (_cmd & 0x18) >> 3,
 		  (_cmd & 3),
 		  _arg[0],
@@ -500,30 +511,34 @@ GDC::info(void)
 
     case 0x4a:
       DBG(2, form("KCemu/GDC/MASK",
-		  "GDC: MASK --------------------------------\n"
+		  "GDC: MASK -------------------------------- %02x\n"
 		  "GDC: MASK mask                        %04x\n"
 		  "GDC: MASK --------------------------------\n",
+		  _cmd,
 		  _mask));
       break;
 
     case 0x4c:
       DBG(2, form("KCemu/GDC/FIGS",
-		  "GDC: FIGS --------------------------------\n"
+		  "GDC: FIGS -------------------------------- %02x\n"
 		  "GDC: FIGS count                      %05d\n"
 		  "GDC: FIGS --------------------------------\n",
+		  _cmd,
 		  _figs_dc));
       break;
 
     case 0x6c:
       DBG(2, form("KCemu/GDC/FIGD",
-		  "GDC: FIGD --------------------------------\n"
-		  "GDC: FIGD --------------------------------\n"));
+		  "GDC: FIGD -------------------------------- %02x\n"
+		  "GDC: FIGD --------------------------------\n",
+		  _cmd));
       break;
 
     case 0x68:
       DBG(2, form("KCemu/GDC/GCHRD",
-		  "GDC: GCHRD -------------------------------\n"
-		  "GDC: GCHRD -------------------------------\n"));
+		  "GDC: GCHRD ------------------------------- %02x\n"
+		  "GDC: GCHRD -------------------------------\n",
+		  _cmd));
       break;
 
     case 0xa0: case 0xa1: case 0xa2: case 0xa3:
@@ -531,24 +546,27 @@ GDC::info(void)
     case 0xb0: case 0xb1: case 0xb2: case 0xb3:
     case 0xb8: case 0xb9: case 0xba: case 0xbb:
       DBG(2, form("KCemu/GDC/RDAT",
-		  "GDC: RDAT --------------------------------\n"
+		  "GDC: RDAT -------------------------------- %02x\n"
 		  "GDC: RDAT type                           %d\n"
 		  "GDC: RDAT MOD                            %d\n"
 		  "GDC: RDAT --------------------------------\n",
+		  _cmd,
 		  (_cmd & 0x18) >> 3,
 		  (_cmd & 3)));
       break;
 
     case 0xe0:
       DBG(2, form("KCemu/GDC/CURD",
-		  "GDC: CURD --------------------------------\n"
-		  "GDC: CURD --------------------------------\n"));
+		  "GDC: CURD -------------------------------- %02x\n"
+		  "GDC: CURD --------------------------------\n",
+		  _cmd));
       break;
 
     case 0xc0:
       DBG(2, form("KCemu/GDC/LPRD",
-		  "GDC: LPRD --------------------------------\n"
-		  "GDC: LPRD --------------------------------\n"));
+		  "GDC: LPRD -------------------------------- %02x\n"
+		  "GDC: LPRD --------------------------------\n",
+		  _cmd));
       break;
 
     case 0xa4: case 0xa5: case 0xa6: case 0xa7:
@@ -556,10 +574,11 @@ GDC::info(void)
     case 0xb4: case 0xb5: case 0xb6: case 0xb7:
     case 0xbc: case 0xbd: case 0xbe: case 0xbf:
       DBG(2, form("KCemu/GDC/DMAR",
-		  "GDC: DMAR --------------------------------\n"
+		  "GDC: DMAR -------------------------------- %02x\n"
 		  "GDC: DMAR type                           %d\n"
 		  "GDC: DMAR MOD                            %d\n"
 		  "GDC: DMAR --------------------------------\n",
+		  _cmd,
 		  (_cmd & 0x18) >> 3,
 		  (_cmd & 3)));
       break;
@@ -569,10 +588,11 @@ GDC::info(void)
     case 0x34: case 0x35: case 0x36: case 0x37:
     case 0x3c: case 0x3d: case 0x3e: case 0x3f:
       DBG(2, form("KCemu/GDC/DMAW",
-		  "GDC: DMAW --------------------------------\n"
+		  "GDC: DMAW -------------------------------- %02x\n"
 		  "GDC: DMAW type                           %d\n"
 		  "GDC: DMAW MOD                            %d\n"
 		  "GDC: DMAW --------------------------------\n",
+		  _cmd,
 		  (_cmd & 0x18) >> 3,
 		  (_cmd & 3)));
       break;

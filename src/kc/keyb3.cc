@@ -66,12 +66,14 @@ public:
 Keyboard3::Keyboard3(void)
 {
   init();
+  z80->register_ic(this);
   _cmd = new CMD_keyboard_replay(this);
 }
 
 Keyboard3::~Keyboard3(void)
 {
   delete _cmd;
+  z80->unregister_ic(this);
 }
 
 void

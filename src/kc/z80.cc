@@ -133,19 +133,20 @@ RdZ80(word_t Addr)
 {
   _z80_reg_r++;
   byte_t Value = memory->memRead8(Addr);
+
   return Value;
 }
 
 void
 WrZ80(word_t Addr, byte_t Value)
 {
-  /*
-  if ((Addr == 0x8c0) || (Addr == 0x8c1))
+#if 0
+  if ((Addr == 0xf27a) || (Addr == 0xf27b))
     {
       z80->printPC();
       cout.form("%04x: %02x\n", Addr, Value);
     }
-  */
+#endif
   memory->memWrite8(Addr, Value);
 }
 
@@ -312,7 +313,7 @@ Z80::run(void)
       //if ((_regs.PC.W == 0xe0d5) && (RdZ80(0xe0d5) == 0xed) && (_regs.BC.W < 5))
       //debug(true);
 
-      //if (_regs.PC.W == 0xe046)
+      //if (_regs.PC.W == 0x802f)
       //z80->debug(true);
 
       if (_singlestep)
@@ -427,6 +428,12 @@ void
 Z80::addCallback(unsigned long long offset, Callback *cb, void *data)
 {
   _cb_list.add_callback(getCounter() + offset, cb, data);
+}
+
+void
+Z80::remove_callback_listener(Callback *cb)
+{
+  _cb_list.remove_callback_listener(cb);
 }
 
 bool

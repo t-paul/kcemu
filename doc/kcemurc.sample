@@ -53,13 +53,15 @@ Tape File List_00000007: /tmp/x.kct
 #
 #  Die aktuelle Liste kann mit dem Aufruf 'kcemu -v' ausgegeben werden.
 #
-#  Werte:       1 = z9001, z9001.10, z9001.11, kc85/1*
+#  Werte:       0 = z1013*, z1013.01, z1013.12, z1013.16, z1013.64,
+#		    z1013.a2, z1013.rb, z1013.surl, z1013.bl4
+#		1 = z9001, z9001.10, z9001.11, kc85/1*
 #               2 = hc900, hc-900, kc85/2*
 #               3 = kc85/3*
 #               4 = kc85/4*
-#               7=  kc87, kc87.10, kc87.11*, kc87.21
+#               7=  kc87, kc87.10, kc87.11*, kc87.20, kc87.21
 #               8 = lc80*
-#               9 = bic, k1505*, a5105
+#               9 = bic, k1505, a5105*
 #
 #  Default ist bei unbekannten Werten kc85/4.
 #
@@ -112,18 +114,48 @@ V24-Baudrate: 19200
 #  Die Zahlen müssen in Hex angegeben werden, sprich nach der 00000009
 #  kommt erstmal 0000000A.
 #
-#  Werte:	M003	V24-Modul
-#		M011	64k RAM
-#		M022	Expander RAM (16k)
-#		M012	Texor
-#		M026	Forth
-#		M027	Development
-#		M900	WordPro '86 (KC85/3)
-#		M901	WordPro '86 (KC85/4)
+#  Werte:	(kc85/2-4)
+#		M003		V24-Modul
+#		M011		64k RAM
+#		M022		Expander RAM (16k)
+#		M012		Texor
+#		M026		Forth
+#		M027		Development
+#		M900		WordPro '86 (KC85/3)
+#		M901		WordPro '86 (KC85/4)
+#		BASIC		Basic-Modul für KC85/2
 #
-#		RAM4	RAM Module (16k/4000h) für KC85/1
-#		RAM8	RAM Module (16k/8000h) für KC85/1
-#		IRMX	IRM Color Expansion für KC85/1, KC87
+#		(kc85/1, kc87)
+#		RAM4		RAM Modul (16k/4000h) für KC85/1
+#		RAM8		RAM Modul (16k/8000h) für KC85/1
+#		IRMX		IRM Color Expansion für KC85/1, KC87
+#		BASIC		BASIC Modul
+#		PLOTTER		Plotter Modul
+#		ZM30		ROM Modul mit Zusatzmonitor
+#		EDAS		ROM Modul mit Editor/Assembler
+#		IDAS		ROM Modul mit Interpretativen Dialogassembler
+#		BITEX		ROM Modul mit Textverarbeitung
+#		ZSID		ROM Modul mit Zusatzmonitor
+#		R80		ROM Modul mit Reassembler
+#		XY4131		Plotter-Emulation (noch unvollständig!)
+#		CPM-Z9-BOOT	ROM Modul mit CP/M Bootlader
+#		CPM-Z9-FLOPPY	Floppy-Modul für Z9001 CP/M
+#		CPM-Z9-RAM64	RAM Modul für Z9001 CP/M
+#
+#		(z1013)
+#		RAMFLOPPY	256k RAM Floppy (max. 2 Module gleichzeitig)
+#		FDC_SCHNEIDER	Floppy Modul für Z1013 CP/M
+#		FDC_KRAMER	<noch nicht implementiert!>
+#		GDC		Modul mit Graphic Chip für 80x25 Zeichen
+#		RTC20		Uhr-Modul (Ports 20h-2fh)
+#		RTC70		Uhr-Modul (Ports 70h-7fh)
+#
+#		(lc80)
+#		RAM2400		RAM Modul 2400h-27ffh
+#		RAM2800		RAM Modul 2800h-2fffh
+#		RAM3000		RAM Modul 3000h-3fffh
+#		RAM4000		RAM Modul 4000h-7fffh
+#		RAM8000		RAM Modul 8000h-ffffh
 #
 Module_00000000: M011
 Module_00000001: M011

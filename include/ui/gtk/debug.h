@@ -94,7 +94,7 @@ class DebugWindow : public UI_Gtk_Window, public DebugInterface
 
  protected:
   void init(void);
-  void do_goto(char *str);
+  void do_goto_string(const char *str);
 
   static gint key_press_func(GtkWidget *widget, GdkEventKey *event,
                              gpointer data);
@@ -104,7 +104,7 @@ class DebugWindow : public UI_Gtk_Window, public DebugInterface
   DebugWindow(void);
   virtual ~DebugWindow(void);
 
-  void do_goto(int addr);
+  void do_goto_int(int addr);
 
   virtual void debugTrace(void) {}
   virtual void debugSingleStep(void) {}

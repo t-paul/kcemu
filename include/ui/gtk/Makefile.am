@@ -31,4 +31,5 @@ EXTRA_DIST = \
 	open.xpm	\
 	pause.xpm	\
 	play.xpm	\
-	stop.xpm
+	stop.xpm	\
+	kcemu.xpm

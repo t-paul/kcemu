@@ -82,6 +82,7 @@ class CallbackList
   void clear();
   void add_callback(unsigned long long offset, Callback *cb, void *data);
   void run_callbacks(unsigned long long value);
+  void remove_callback_listener(Callback *cb);
 };
 
 #endif /* __kc_cb_list_h */

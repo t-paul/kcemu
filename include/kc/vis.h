@@ -34,6 +34,7 @@ class VIS : public PortInterface, public InterfaceCircuit
   int _mode;
   int _border;
   byte_t _char[0x0800];
+  byte_t _changed[0x100];
 
  public:
   VIS(void);
@@ -42,11 +43,14 @@ class VIS : public PortInterface, public InterfaceCircuit
   virtual byte_t in(word_t addr);
   virtual void out(word_t addr, byte_t val);
 
-  virtual int get_mode();
+  virtual int get_mode(void);
   virtual void set_mode(int mode);
-  virtual int get_border();
+  virtual int get_border(void);
   virtual void set_border(int border);
-  virtual byte_t * get_memory();
+  virtual int get_changed(byte_t idx);
+  virtual void reset_changed(void);
+
+  virtual byte_t * get_memory(void);
 
   /*
    *  InterfaceCircuit

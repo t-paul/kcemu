@@ -32,12 +32,12 @@ class UI_8
   int     _dirty_size;
 
  protected:
-  virtual void generic_put_pixel(int x, int y, byte_t col);
-  virtual void generic_draw_led(int x, int y, byte_t col);
-  virtual void generic_draw_hline(int x, int y, byte_t col);
-  virtual void generic_draw_vline(int x, int y, byte_t col);
-  virtual void generic_draw_point(int x, int y, byte_t col);
-  virtual void generic_draw_digit(int x, int y, int index, byte_t led_value);
+  virtual void generic_put_pixel(int x, int y, byte_t col, bool clear_cache);
+  virtual void generic_draw_led(int x, int y, byte_t col, bool clear_cache);
+  virtual void generic_draw_hline(int x, int y, byte_t col, bool clear_cache);
+  virtual void generic_draw_vline(int x, int y, byte_t col, bool clear_cache);
+  virtual void generic_draw_point(int x, int y, byte_t col, bool clear_cache);
+  virtual void generic_draw_digit(int x, int y, int index, byte_t led_value, bool clear_cache);
 
  public:
   UI_8(void);

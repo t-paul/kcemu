@@ -71,9 +71,9 @@ libdisk_open(libdisk_prop_t **prop, const char *path)
   if (prop == NULL)
     return -1;
 
-  *prop = NULL;
-
   *prop = (libdisk_prop_t *)malloc(sizeof(libdisk_prop_t));
+  if (*prop == NULL)
+    return -1;
 
   for (a = 0;a < MAX_DISK_LOADERS;a++)
     {
@@ -87,6 +87,9 @@ libdisk_open(libdisk_prop_t **prop, const char *path)
 	}
     }
 
+  free(*prop);
+  *prop = 0; // ensure pointer to be NULL on failure!
+  
   return -1;
 }
 

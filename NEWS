@@ -4,6 +4,15 @@
 
 KCemu 0.3.7
 
+  * upgrade to GTK+-2.2.1
+  * fixed display cache handling
+  * fixed keyboard reset bug
+  * relaxed file type checking for standard tape files; now
+    most .KCC files should be loadable
+  * fixed cpu timing and display resolutions for BIC/A5105
+  * fixed text output in graphic mode for BIC/A5105
+  * added 192 KByte RAM/EPROM module for KC85/1
+  * added joystick module M008
   * added Z1013 emulation
   * added 256k RAM-Floppy module for Z1013
   * added BIC/A5105 emulation

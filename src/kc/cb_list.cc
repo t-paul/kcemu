@@ -159,8 +159,19 @@ CallbackList::run_callbacks(unsigned long long value)
       cb = ptr->_cb;
       data = ptr->_data;
       delete ptr;
-      cb->callback(data);
+      if (cb)
+	cb->callback(data);
     }
+}
+
+void
+CallbackList::remove_callback_listener(Callback *cb)
+{
+  CallbackListEntry *ptr = _list;
+
+  for (ptr = _list;ptr != NULL;ptr = ptr->_next)
+    if (ptr->_cb == cb)
+      ptr->_cb = NULL;
 }
 
 /*

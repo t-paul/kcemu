@@ -115,6 +115,8 @@ ModuleXY4131::ModuleXY4131(ModuleXY4131 &tmpl) :
   pio->register_callback_B_in(this);
   pio->register_callback_B_out(this);
 
+  pio->set_B_EXT(0xff, 0x00);
+
   f = fopen("/tmp/plotter.log", "wb+");
   fprintf(f, "%%!PS-Adobe-3.0\n"
 	  "%%%%Creator: KCemu\n"

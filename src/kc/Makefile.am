@@ -24,7 +24,7 @@ CPPFLAGS = \
 	$(SDL_CFLAGS)
 
 if TARGET_LINUX
-EXTRA_kcemu_SOURCES = mod_v24.cc mod_4131.cc
+EXTRA_kcemu_SOURCES = mod_v24.cc mod_js.cc mod_4131.cc
 endif
 
 kcemu_SOURCES = \
@@ -86,6 +86,7 @@ kcemu_SOURCES = \
 	mod_64k.cc	\
 	mod_rom.cc	\
 	mod_rom1.cc	\
+	mod_192k.cc	\
 	mod_ramf.cc	\
 	mod_fdc.cc	\
 	mod_gdc.cc	\

@@ -90,7 +90,7 @@ TapeAddWindow::init(const char *tapename, const char *text)
   /*
    *  window
    */
-  _window = gtk_window_new(GTK_WINDOW_DIALOG);
+  _window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
   gtk_window_set_title(GTK_WINDOW(_window), _("KCemu: Rename File"));
   gtk_window_position(GTK_WINDOW(_window), GTK_WIN_POS_MOUSE);
   gtk_signal_connect(GTK_OBJECT(_window), "destroy",

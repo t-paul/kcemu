@@ -63,8 +63,11 @@ ModuleV24::ModuleV24(ModuleV24 &tmpl) :
   _irq_pending[A] = 0;
   _irq_pending[B] = 0;
 
+  _fd_in[A] = 0;
+  _fd_in[B] = 0;
+  _fd_out[A] = 0;
+  _fd_out[B] = 0;
   _in_buf_ptr = 0;
-
   _socket_name = 0;
 }
 
@@ -72,8 +75,12 @@ ModuleV24::ModuleV24(const char *name, byte_t id) :
   ModuleInterface(name, id, KC_MODULE_KC_85_3),
   InterfaceCircuit("ModuleV24")
 {
-  _reg[A] = 0;
-  _reg[B] = 0;
+  _fd_in[A] = 0;
+  _fd_in[B] = 0;
+  _fd_out[A] = 0;
+  _fd_out[B] = 0;
+  _in_buf_ptr = 0;
+  _socket_name = 0;
 }
 
 ModuleV24::~ModuleV24(void)

@@ -138,7 +138,7 @@ DiskWindow::sf_disk_attach(GtkWidget *widget, gpointer data)
 {
   CMD_Args *args;
   int nr = (int)data;
-  char *text = gtk_entry_get_text(GTK_ENTRY(widget));
+  const gchar *text = gtk_entry_get_text(GTK_ENTRY(widget));
 
   if (text == NULL)
     return;
@@ -185,7 +185,7 @@ DiskWindow::init(void)
   /*
    *  disk window
    */
-  _window = gtk_window_new(GTK_WINDOW_DIALOG);
+  _window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
   gtk_widget_set_name(_window, "DiskWindow");
   gtk_window_set_title(GTK_WINDOW(_window), _("KCemu: Disk"));
   gtk_window_position(GTK_WINDOW(_window), GTK_WIN_POS_MOUSE);

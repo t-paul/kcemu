@@ -139,7 +139,8 @@ UI_0::generic_update_gdc(byte_t *font, bool clear_cache)
 	  p = gdc->get_mem(z + offset);
 	  c = gdc->get_col(z + offset);
 
-	  _dirty[z] = 0;
+	  _dirty[z] = clear_cache;
+
 	  if (p != _pix_cache[z])
 	    {
 	      _dirty[z]++;
@@ -204,11 +205,11 @@ UI_0::generic_update_32x32(byte_t *font, bool clear_cache)
         {
 	  i++;
 	  z++;
+
+	  _dirty[z] = clear_cache;
+
 	  pix = irm[i];
 	  if (_pix_cache[i] != pix)
-	    _dirty[z]++;
-
-	  if (clear_cache)
 	    _dirty[z]++;
 
 	  if (!_dirty[z])
@@ -245,11 +246,11 @@ UI_0::generic_update_64x16(byte_t *font, bool clear_cache)
         {
 	  i++;
 	  z++;
+
+	  _dirty[z] = clear_cache;
+
 	  pix = irm[i];
 	  if (_pix_cache[i] != pix)
-	    _dirty[z]++;
-
-	  if (clear_cache)
 	    _dirty[z]++;
 
 	  if (!_dirty[z])

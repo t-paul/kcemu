@@ -45,6 +45,14 @@ VIS::in(word_t addr)
 {
   byte_t val = 0xff;
 
+  switch (addr & 0xff)
+    {
+    case 0x9c:
+      val = _char[_idx];
+      _idx = (_idx + 1) & 0x07ff;
+      break;
+    }
+
   DBG(2, form("KCemu/VIS/in",
               "VIS::in():  %04xh val = %02x\n",
               addr, val));
@@ -146,6 +154,7 @@ VIS::out(word_t addr, byte_t val)
 		  (val &  64) ? '#' : ' ',
 		  (val & 128) ? '#' : ' '));
       _char[_idx] = val;
+      _changed[_idx / 8] = 1;
       _idx = (_idx + 1) & 0x07ff;
       break;
     case 0x9d:
@@ -194,7 +203,7 @@ VIS::set_mode(int mode)
 }
 
 int
-VIS::get_border()
+VIS::get_border(void)
 {
   return _border;
 }
@@ -208,8 +217,20 @@ VIS::set_border(int border)
   _border = border;
 }
 
+int
+VIS::get_changed(byte_t idx)
+{
+  return _changed[idx];
+}
+
+void
+VIS::reset_changed(void)
+{
+  memset(_changed, 0, 0x100);
+}
+
 byte_t *
-VIS::get_memory()
+VIS::get_memory(void)
 {
   return _char;
 }

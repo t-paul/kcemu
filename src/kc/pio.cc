@@ -87,10 +87,12 @@ PIO::reset(bool power_on)
 
 byte_t
 PIO::in_A_DATA(void) {
+  int cb;
   byte_t ret;
 
+  cb = -1;
   if (_cb_a_in)
-    _cb_a_in->callback_A_in();
+    cb = _cb_a_in->callback_A_in();
 
   if (_mode[A] == 3)
     {
@@ -102,6 +104,8 @@ PIO::in_A_DATA(void) {
   else
     {
       ret = _value[A];
+      if (cb >= 0)
+	ret = cb;
       DBG(2, form("KCemu/PIO/A/in_DATA",
 		  "PIO::in():  port A DATA (mode %d): val = %02x\n",
 		  _mode[A], ret));
@@ -115,6 +119,7 @@ PIO::in_B_DATA(void) {
   int cb;
   byte_t ret;
 
+  cb = -1;
   if (_cb_b_in)
     cb = _cb_b_in->callback_B_in();
 

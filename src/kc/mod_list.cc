@@ -67,6 +67,7 @@
 #include "kc/mod_64k.h"
 #include "kc/mod_rom.h"
 #include "kc/mod_rom1.h"
+#include "kc/mod_192k.h"
 #include "kc/mod_fdc.h"
 #include "kc/mod_gdc.h"
 #include "kc/mod_rtc.h"
@@ -75,9 +76,10 @@
 #include "kc/mod_list.h"
 #include "kc/mod_4131.h"
 
-#ifdef TARGET_OS_LINUX
+#ifdef HOST_OS_LINUX
 #include "kc/mod_v24.h"
-#endif /* TARGET_OS_LINUX */
+#include "kc/mod_js.h"
+#endif /* HOST_OS_LINUX */
 
 #include "ui/ui.h"
 
@@ -248,6 +250,21 @@ ModuleList::ModuleList(void)
   delete[] ptr;
   */
 
+  ptr = new char[strlen(kcemu_datadir) + 14];
+  strcpy(ptr, kcemu_datadir);
+  char * ptr_d2 = strcat(ptr, "/192k__d2.851");
+  ptr = new char[strlen(kcemu_datadir) + 14];
+  strcpy(ptr, kcemu_datadir);
+  char * ptr_d3 = strcat(ptr, "/192k__d3.851");
+  ptr = new char[strlen(kcemu_datadir) + 14];
+  strcpy(ptr, kcemu_datadir);
+  char * ptr_d5 = strcat(ptr, "/192k__d5.851");
+  m = new Module192k(ptr_d2, ptr_d3, ptr_d5, "192k");
+  _mod_list.push_back(new ModuleListEntry(_("192 KByte RAM/EPROM"), m, KC_TYPE_85_1_CLASS));
+  delete[] ptr_d2;
+  delete[] ptr_d3;
+  delete[] ptr_d5;
+
   /*
    *  IRM Expansion for color display (kc85/1)
    *
@@ -268,10 +285,10 @@ ModuleList::ModuleList(void)
   /*
    *  Plotter-Anschluß
    */
-#ifdef TARGET_OS_LINUX
+#ifdef HOST_OS_LINUX
   m = new ModuleXY4131("XY4131");
   _mod_list.push_back(new ModuleListEntry(_("Plotter XY4131"), m, KC_TYPE_85_1_CLASS));
-#endif /* TARGET_OS_LINUX */
+#endif /* HOST_OS_LINUX */
 
   /*
    *  CPM-Z9 boot rom module (kc85/1)
@@ -298,14 +315,20 @@ ModuleList::ModuleList(void)
   /*
    *  V24 module
    */
-#ifdef TARGET_OS_LINUX
+#ifdef HOST_OS_LINUX
   if (RC::instance()->get_int("Enable V24-Module"))
     {
       m = new ModuleV24("M003", 0xee);
       entry = new ModuleListEntry(_("M003: V24 (not working!)"), m, KC_TYPE_85_2_CLASS);
       _mod_list.push_back(entry);
     }
-#endif /* TARGET_OS_LINUX */
+
+  /*
+   *  RAM module 16k (kc85/2-4)
+   */
+  m = new ModuleJoystick("M008", 0xff);
+  _mod_list.push_back(new ModuleListEntry(_("M008: Joystick"), m, KC_TYPE_85_2_CLASS));
+#endif /* HOST_OS_LINUX */
 
   /*
    *  RAM module 16k (kc85/2-4)

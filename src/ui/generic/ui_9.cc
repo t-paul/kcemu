@@ -221,6 +221,9 @@ UI_9::generic_update_text(int width, int height, int lines, bool clear_cache)
 	      _col_cache[z] = c;
 	    }
 
+	  if (vis->get_changed(p))
+	    changed++;
+
 	  if (gdc->get_cursor(z + offset))
 	    {
 	      changed++;
@@ -238,6 +241,8 @@ UI_9::generic_update_text(int width, int height, int lines, bool clear_cache)
 	  set_char(x, y, p, fg, bg, width, lines);
 	}
     }
+
+  vis->reset_changed();
 }
 
 void
@@ -333,11 +338,11 @@ UI_9::generic_update(bool clear_cache)
 	{
 	case 0:
 	case 2:
-	case 3:
+	case 5:
 	  ui->set_mode(UI_GENERIC_MODE_LORES);
 	  break;
 	case 1:
-	case 5:
+	case 3:
 	  ui->set_mode(UI_GENERIC_MODE_HIRES);
 	  break;
 	}

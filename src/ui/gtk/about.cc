@@ -24,8 +24,10 @@
 #include "ui/gtk/cmd.h"
 #include "ui/gtk/about.h"
 
+#include "ui/gtk/kcemu.xpm"
+
 char AboutWindow::APP_NAME[]      = ("KCemu v" KCEMU_VERSION);
-char AboutWindow::APP_COPYRIGHT[] = ("        (c) 1997-2001 Torsten Paul        \n"
+char AboutWindow::APP_COPYRIGHT[] = ("(c) 1997-2003 Torsten Paul\n"
 				     "<Torsten.Paul@gmx.de>");
 
 class CMD_about_window_toggle : public CMD
@@ -59,9 +61,10 @@ AboutWindow::~AboutWindow(void)
 void
 AboutWindow::init(void)
 {
-  _window = gtk_window_new(GTK_WINDOW_DIALOG);
+  _window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
   gtk_widget_set_name(_window, "AboutWindow");
   gtk_window_set_title(GTK_WINDOW(_window), _("About KCemu"));
+  gtk_window_set_resizable(GTK_WINDOW(_window), false);
   gtk_window_position(GTK_WINDOW(_window), GTK_WIN_POS_MOUSE);
   gtk_signal_connect(GTK_OBJECT(_window), "delete_event",
                      GTK_SIGNAL_FUNC(cmd_exec_sft),
@@ -74,6 +77,18 @@ AboutWindow::init(void)
   gtk_container_border_width(GTK_CONTAINER(_w.vbox), 6);
   gtk_container_add(GTK_CONTAINER(_window), _w.vbox);
   gtk_widget_show(_w.vbox);
+
+  /*
+   *  realize window for pixmap creation
+   */
+  gtk_widget_realize(_window);
+
+  /*
+   *  pixmap
+   */
+  _w.pixmap = create_pixmap_widget(_window, __xpm_kcemu);
+  gtk_box_pack_start(GTK_BOX(_w.vbox), _w.pixmap, FALSE, FALSE, 2);
+  gtk_widget_show(_w.pixmap);
   
   /*
    *  labels
@@ -81,6 +96,7 @@ AboutWindow::init(void)
   _w.name = gtk_label_new(APP_NAME);
   _w.copyright = gtk_label_new(APP_COPYRIGHT);
   _w.info = gtk_label_new("build: " __DATE__ " / " __TIME__);
+  gtk_label_set_justify(GTK_LABEL(_w.copyright), GTK_JUSTIFY_CENTER);
   gtk_box_pack_start(GTK_BOX(_w.vbox), _w.name,
                      FALSE, FALSE, 5);
   gtk_box_pack_start(GTK_BOX(_w.vbox), _w.copyright,

@@ -43,29 +43,35 @@ PIO1_1::~PIO1_1(void)
 byte_t
 PIO1_1::in(word_t addr)
 {
-  DBG(2, form("KCemu/PIO/1a/in",
-              "PIO1_1::in(): addr = %04x\n",
-              addr));
+  byte_t val = 0xff;
 
   switch (addr & 3)
     {
     case 0:
-      return in_A_DATA();
+      val = in_A_DATA();
+      break;
     case 1:
-      return in_B_DATA();
+      val = in_B_DATA();
+      break;
     case 2:
-      return in_A_CTRL();
+      val = in_A_CTRL();
+      break;
     case 3:
-      return in_B_CTRL();
+      val = in_B_CTRL();
+      break;
     }
 
-  return 0; // shouldn't be reached
+  DBG(2, form("KCemu/PIO/1a/in",
+              "PIO1_1::in(): addr = %04x, val = %02x\n",
+              addr, val));
+
+  return val;
 }
 
 void
 PIO1_1::out(word_t addr, byte_t val)
 {
-  DBG(3, form("KCemu/PIO/1a/out",
+  DBG(2, form("KCemu/PIO/1a/out",
               "PIO1_1::out(): addr = %04x, val = %02x\n",
               addr, val));
 

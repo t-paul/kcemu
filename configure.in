@@ -27,7 +27,7 @@ dnl ---------------------
 KCEMU_MAJOR_VERSION=0
 KCEMU_MINOR_VERSION=3
 KCEMU_MICRO_VERSION=7
-KCEMU_EXTRA_VERSION=beta5
+KCEMU_EXTRA_VERSION=beta6
 
 if test $KCEMU_MICRO_VERSION -eq 0
 then
@@ -364,7 +364,7 @@ if test x"$HOST_OS" = "xLinux" -o x"$HOST_OS" = "xMinGW"; then
 	dnl  check for libgtk
 	dnl ------------------
 
-	AM_PATH_GTK(1.2.0, have_libgtk=yes, have_libgtk=no)
+	AM_PATH_GTK_2_0(2.2.1, have_libgtk=yes, have_libgtk=no)
 
 	if test x$have_libgtk = xyes; then
 		AC_DEFINE(HAVE_LIBGTK, 1, "have libgtk")

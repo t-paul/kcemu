@@ -142,7 +142,6 @@ public:
 protected:
   virtual void loadROM(const char *filename, void *buf, long len, int force);
   virtual void loadRAM(const char *filename, word_t addr);
-  void reload_mem_ptr(void);
   void * get_page_addr_r(word_t addr);
   void * get_page_addr_w(word_t addr);
 
@@ -163,6 +162,7 @@ public:
                                          byte_t *mem, int prio,
                                          bool ro);
   virtual void unregister_memory(MemAreaGroup *group);
+  virtual void reload_mem_ptr(void);
     
   virtual void dumpCore(void)                     = 0;
   virtual byte_t memRead8(word_t addr)            = 0;

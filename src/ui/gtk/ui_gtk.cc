@@ -131,7 +131,7 @@ UI_Gtk::attach_remote_listener(void)
 
   atom = gdk_atom_intern("_KCEMU_REMOTE_COMMAND", FALSE);
   gdk_property_change(_main.window->window,
-                      atom, XA_STRING, 8, GDK_PROP_MODE_REPLACE,
+                      atom, GDK_TARGET_STRING, 8, GDK_PROP_MODE_REPLACE,
                       (unsigned char *)"", 1);
   gdk_flush();
 }
@@ -162,7 +162,7 @@ UI_Gtk::property_change(GtkWidget *widget,
                   "property_change: %s\n",
                   gdk_atom_name(event->atom)));
       gdk_property_get(self->_main.window->window,
-                       event->atom, XA_STRING,
+                       event->atom, GDK_TARGET_STRING,
                        0, (65536 / sizeof(long)), FALSE,
                        &actual_property_type,
                        &actual_format, &actual_length,
@@ -391,7 +391,7 @@ UI_Gtk::sf_focus_in(GtkWidget * /* widget */, GdkEventFocus *event)
               "got focus\n"));
 
   keyboard->keyReleased(-1, -1);
-  gdk_key_repeat_disable();
+  //gdk_key_repeat_disable();
 }
 
 void
@@ -401,7 +401,7 @@ UI_Gtk::sf_focus_out(GtkWidget *widget, GdkEventFocus *event)
               "lost focus\n"));
 
   keyboard->keyReleased(-1, -1);
-  gdk_key_repeat_restore();
+  //gdk_key_repeat_restore();
 }
 
 void
@@ -666,7 +666,7 @@ UI_Gtk::create_main_window(void)
   _main.agroup = gtk_accel_group_new();
   _main.ifact = gtk_item_factory_new(GTK_TYPE_MENU_BAR, "<KCemu>", _main.agroup);
   gtk_item_factory_create_items(_main.ifact, nentries, entries, NULL);
-  gtk_accel_group_attach(_main.agroup, GTK_OBJECT(_main.window));
+  _gtk_accel_group_attach(_main.agroup, G_OBJECT(_main.window)); // FIXME
 
   _main.agroupP = gtk_accel_group_new();
   _main.ifactP = gtk_item_factory_new(GTK_TYPE_MENU, "<KCemuP>", _main.agroupP);
@@ -721,13 +721,15 @@ UI_Gtk::create_main_window(void)
   _main.st_statusbar = gtk_statusbar_new();
   gtk_box_pack_start(GTK_BOX(_main.st_hbox), _main.st_statusbar,
                      TRUE, TRUE, 0);
+  gtk_statusbar_set_has_resize_grip(GTK_STATUSBAR(_main.st_statusbar), false);
+  gtk_misc_set_padding(GTK_MISC(GTK_STATUSBAR(_main.st_statusbar)->label), 4, 0); // hmm, is there a better way?
   gtk_widget_show(_main.st_statusbar);
 }
 
 void
 UI_Gtk::create_header_window(void)
 {
-  _header.window = gtk_window_new(GTK_WINDOW_DIALOG);
+  _header.window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
   gtk_window_set_title(GTK_WINDOW(_header.window), "Edit Header");
 
   gtk_widget_show(_header.window);
@@ -743,7 +745,7 @@ UI_Gtk::UI_Gtk(void)
 UI_Gtk::~UI_Gtk(void)
 {
   gtk_widget_destroy(_main.window);
-  gdk_key_repeat_restore();
+  //gdk_key_repeat_restore();
         
   delete _about_window;
   delete _tape_window;
@@ -760,7 +762,7 @@ UI_Gtk::~UI_Gtk(void)
 void
 UI_Gtk::show_greeting(void)
 {
-  const char *msg = " KCemu v" KCEMU_VERSION;
+  const char *msg = "KCemu v" KCEMU_VERSION;
   const char *variant = get_kc_variant_name();
   const char *fmt = _("%s (%s)");
   char *status = new char[strlen(msg) + strlen(variant) + strlen(fmt) + 10];
@@ -864,7 +866,7 @@ UI_Gtk::init(int *argc, char ***argv)
    */
   signal(SIGSEGV, SIG_DFL);
 
-  gdk_key_repeat_disable();
+  //gdk_key_repeat_disable();
 
   _main.statusbar_sec = 0;
   Status::instance()->addStatusListener(this);
@@ -1272,13 +1274,6 @@ UI_Gtk::gtk_update_3(byte_t *bitmap, byte_t *dirty, int dirty_size, int width, i
 void
 UI_Gtk::gtk_update(byte_t *bitmap, byte_t *dirty, int dirty_size, int width, int height, bool full_update)
 {
-  if (full_update)
-    {
-      gdk_draw_image(GTK_WIDGET(_main.canvas)->window, _gc, _image,
-		     0, 0, 0, 0, get_width(), get_height());
-      return;
-    }
-
   switch (kcemu_ui_scale)
     {
     case 1:
@@ -1293,6 +1288,13 @@ UI_Gtk::gtk_update(byte_t *bitmap, byte_t *dirty, int dirty_size, int width, int
     case 3:
       gtk_update_3(bitmap, dirty, dirty_size, width, height);
       break;
+    }
+
+  if (full_update)
+    {
+      gdk_draw_image(GTK_WIDGET(_main.canvas)->window, _gc, _image,
+		     0, 0, 0, 0, get_width(), get_height());
+      return;
     }
 
   int d = -1;
@@ -1349,7 +1351,7 @@ UI_Gtk::errorInfo(const char *msg)
   GtkWidget *separator;
   GtkWidget *ok;
 
-  w = gtk_window_new(GTK_WINDOW_DIALOG);
+  w = gtk_window_new(GTK_WINDOW_TOPLEVEL);
   gtk_window_set_title(GTK_WINDOW(w), "Info");
   gtk_window_position(GTK_WINDOW(w), GTK_WIN_POS_MOUSE);
   gtk_signal_connect(GTK_OBJECT(w), "destroy",

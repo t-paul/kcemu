@@ -122,7 +122,7 @@ UI_3::generic_update(Scanline *scanline, bool clear_cache)
 
       for (x = 0;x < 32;x++)
         {
-	  changed = 0;
+	  changed = clear_cache;
 
           val = irm[p];
           col = irm[pc + x];
@@ -170,7 +170,7 @@ UI_3::generic_update(Scanline *scanline, bool clear_cache)
 
       for (x = 0;x < 8;x++)
         {
-	  changed = 0;
+	  changed = clear_cache;
 
           val = irm[p];
           col = irm[yc + x];

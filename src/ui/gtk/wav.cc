@@ -101,30 +101,6 @@ WavWindow::~WavWindow(void)
 {
 }
 
-static GtkWidget *
-gtk_button_new_with_pixmap(GtkWidget *parent, char **data)
-{
-  GtkWidget *button;
-  GtkWidget *pixmap_widget;
-  GdkPixmap *pixmap;
-  GdkBitmap *mask;
-  GtkStyle *style;
-
-  button = gtk_button_new();
-  gtk_container_set_border_width(GTK_CONTAINER(button), 0);
-  style = gtk_widget_get_style(parent);
-  pixmap = gdk_pixmap_create_from_xpm_d(parent->window,
-					&mask,
-					&style->bg[GTK_STATE_NORMAL],
-					data);
-  pixmap_widget = gtk_pixmap_new(pixmap, mask);
-  gtk_widget_show(pixmap_widget);
-
-  gtk_container_add(GTK_CONTAINER(button), pixmap_widget);
-
-  return button;
-}
-
 void
 WavWindow::init(void)
 {
@@ -209,7 +185,7 @@ WavWindow::init(void)
    *  open button
    */
   //_w.open = gtk_button_new_with_label(_("Open"));
-  _w.open = gtk_button_new_with_pixmap(_window, __xpm_open);
+  _w.open = create_button_with_pixmap(_window, __xpm_open);
   gtk_signal_connect(GTK_OBJECT(_w.open), "clicked",
                      GTK_SIGNAL_FUNC(cmd_exec_sf),
                      (gpointer)"ui-wav-open");
@@ -222,7 +198,7 @@ WavWindow::init(void)
    *  stop button
    */
   //_w.stop = gtk_button_new_with_label(_("Stop"));
-  _w.stop = gtk_button_new_with_pixmap(_window, __xpm_stop);
+  _w.stop = create_button_with_pixmap(_window, __xpm_stop);
   gtk_signal_connect(GTK_OBJECT(_w.stop), "clicked",
                      GTK_SIGNAL_FUNC(cmd_exec_sf),
                      (gpointer)"kc-wav-stop");
@@ -236,7 +212,7 @@ WavWindow::init(void)
    */
   //_w.pause = gtk_button_new_with_label(_("Pause"));
   /*
-  _w.pause = gtk_button_new_with_pixmap(_window, __xpm_pause);
+  _w.pause = create_button_with_pixmap(_window, __xpm_pause);
   gtk_signal_connect(GTK_OBJECT(_w.pause), "clicked",
                      GTK_SIGNAL_FUNC(cmd_exec_sf),
                      (gpointer)"kc-wav-pause");
@@ -250,7 +226,7 @@ WavWindow::init(void)
    *  play button
    */
   //_w.play = gtk_button_new_with_label(_("Play"));
-  _w.play = gtk_button_new_with_pixmap(_window, __xpm_play);
+  _w.play = create_button_with_pixmap(_window, __xpm_play);
   gtk_signal_connect(GTK_OBJECT(_w.play), "clicked",
                      GTK_SIGNAL_FUNC(cmd_exec_sf),
                      (gpointer)"kc-wav-play");

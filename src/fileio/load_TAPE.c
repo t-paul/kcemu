@@ -59,32 +59,14 @@ loader_TAPE_check(const char *filename,
   int a;
   
   /*
-   *  standard kc tape image
-   *  this is somewhat tricky because we don't have a simple
-   *  signature to check against
-   *  instead we test some constraints that should filter out
-   *  most of the tape images
+   *  standard kc tape image (128 bytes/block no checksum)
+   *  This is somewhat tricky because we don't have a simple
+   *  signature to check against. Instead we test some
+   *  constraints that should detect most of the tape images.
    */
   if (size > 128)
-    {
-      if ((data[8] == 'C') && (data[9] == 'O') && (data[10] == 'M'))
-        if ((data[16] >= 2) && (data[16] <= 0x0a))
-          return check_addr(data, size - 128);
-      for (a = 0;a < 8;a++)
-        {
-          if (data[a] == '\0')
-	    break;
-          if ((data[a] >= 'A') && (data[a] <= 'Z'))
-            continue;
-          if ((data[a] >= 'a') && (data[a] <= 'z'))
-            continue;
-          if (strchr(" .&+", data[a]) != NULL)
-            continue;
-          break;
-        }
-      if (a > 0)
-        return check_addr(data, size - 128);
-    }
+    if ((data[16] >= 2) && (data[16] <= 0x0a))
+      return check_addr(data, size - 128);
   
   return 0;
 }

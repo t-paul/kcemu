@@ -5,7 +5,6 @@
 - fix timing bug when loading digger by double click in the
   tape window and starting the program before the tape
   loader has timed out
-- update gtk ui code to use the generic display routines
 - fix interrupt handling, the hardware daisy chain is not
   honored correctly which breaks some programs (e.g. PHARAO)
 - fix programs using SPRITE-MC

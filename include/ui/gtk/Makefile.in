@@ -84,7 +84,6 @@ GLIBC21 = @GLIBC21@
 GMOFILES = @GMOFILES@
 GMSGFMT = @GMSGFMT@
 GTK_CFLAGS = @GTK_CFLAGS@
-GTK_CONFIG = @GTK_CONFIG@
 GTK_LIBS = @GTK_LIBS@
 INSTALL_STRIP_PROGRAM = @INSTALL_STRIP_PROGRAM@
 INSTOBJEXT = @INSTOBJEXT@
@@ -98,6 +97,7 @@ MKINSTALLDIRS = @MKINSTALLDIRS@
 MP3LAME_LIBS = @MP3LAME_LIBS@
 MSGFMT = @MSGFMT@
 PACKAGE = @PACKAGE@
+PKG_CONFIG = @PKG_CONFIG@
 POFILES = @POFILES@
 POSUB = @POSUB@
 RANLIB = @RANLIB@
@@ -145,7 +145,8 @@ EXTRA_DIST = \
 	open.xpm	\
 	pause.xpm	\
 	play.xpm	\
-	stop.xpm
+	stop.xpm	\
+	kcemu.xpm
 
 subdir = include/ui/gtk
 mkinstalldirs = $(SHELL) $(top_srcdir)/mkinstalldirs

@@ -50,7 +50,7 @@ UI_Gtk9::callback(void *data)
     {
       update();
       z80->addCallback(1000, this, (void *)1);
-      z80->addCallback(CB_OFFSET, this, 0);
+      z80->addCallback(75000, this, 0);
       generic_signal_v_retrace(true);
     }
 }
@@ -142,5 +142,5 @@ UI_Gtk9::set_mode(int mode)
 void
 UI_Gtk9::reset(bool power_on)
 {
-  z80->addCallback(CB_OFFSET, this, 0);
+  z80->addCallback(75000, this, 0);
 }

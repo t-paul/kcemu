@@ -102,6 +102,7 @@ class Z80
 	bool irq_enabled(void);
 
 	void addCallback(unsigned long long offset, Callback *cb, void *data);
+	void remove_callback_listener(Callback *cb);
 	inline unsigned long long getCounter(void) { return _counter; }
 
 	void daisy_chain_set_first(InterfaceCircuit *ic);

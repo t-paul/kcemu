@@ -74,10 +74,10 @@ UI_8::get_dirty_buffer_size(void)
 }
 
 void
-UI_8::generic_put_pixel(int x, int y, byte_t col)
+UI_8::generic_put_pixel(int x, int y, byte_t col, bool clear_cache)
 {
   int idx = y * get_real_width() + x;
-  if (_bitmap[idx] != col)
+  if ((_bitmap[idx] != col) || clear_cache)
     {
       _bitmap[idx] = col;
       _dirty[(y / 8) * (get_real_width() / 8) + (x / 8)] = 1;
@@ -85,57 +85,57 @@ UI_8::generic_put_pixel(int x, int y, byte_t col)
 }
 
 void
-UI_8::generic_draw_hline(int x, int y, byte_t col)
+UI_8::generic_draw_hline(int x, int y, byte_t col, bool clear_cache)
 {
   for (int a = 2;a < 38;a++)
-    generic_put_pixel(x + a, y, col);
+    generic_put_pixel(x + a, y, col, clear_cache);
   for (int a = 3;a < 37;a++)
     {
-      generic_put_pixel(x + a, y - 1, col);
-      generic_put_pixel(x + a, y + 1, col);
+      generic_put_pixel(x + a, y - 1, col, clear_cache);
+      generic_put_pixel(x + a, y + 1, col, clear_cache);
     }
   for (int a = 4;a < 36;a++)
     {
-      generic_put_pixel(x + a, y - 2, col);
-      generic_put_pixel(x + a, y + 2, col);
+      generic_put_pixel(x + a, y - 2, col, clear_cache);
+      generic_put_pixel(x + a, y + 2, col, clear_cache);
     }
   for (int a = 5;a < 35;a++)
     {
-      generic_put_pixel(x + a, y - 3, col);
-      generic_put_pixel(x + a, y + 3, col);
+      generic_put_pixel(x + a, y - 3, col, clear_cache);
+      generic_put_pixel(x + a, y + 3, col, clear_cache);
     }
 }
 
 void
-UI_8::generic_draw_vline(int x, int y, byte_t col)
+UI_8::generic_draw_vline(int x, int y, byte_t col, bool clear_cache)
 {
   for (int a = 2;a < 38;a++)
     {
       int q = a / 8;
-      generic_put_pixel(x - q, y + a, col);
+      generic_put_pixel(x - q, y + a, col, clear_cache);
     }
   for (int a = 3;a < 37;a++)
     {
       int q = a / 8;
-      generic_put_pixel(x - q - 1, y + a, col);
-      generic_put_pixel(x - q + 1, y + a, col);
+      generic_put_pixel(x - q - 1, y + a, col, clear_cache);
+      generic_put_pixel(x - q + 1, y + a, col, clear_cache);
     }
   for (int a = 4;a < 36;a++)
     {
       int q = a / 8;
-      generic_put_pixel(x - q - 2, y + a, col);
-      generic_put_pixel(x - q + 2, y + a, col);
+      generic_put_pixel(x - q - 2, y + a, col, clear_cache);
+      generic_put_pixel(x - q + 2, y + a, col, clear_cache);
     }
   for (int a = 5;a < 35;a++)
     {
       int q = a / 8;
-      generic_put_pixel(x - q - 3, y + a, col);
-      generic_put_pixel(x - q + 3, y + a, col);
+      generic_put_pixel(x - q - 3, y + a, col, clear_cache);
+      generic_put_pixel(x - q + 3, y + a, col, clear_cache);
     }
 }
 
 void
-UI_8::generic_draw_led(int x, int y, byte_t col)
+UI_8::generic_draw_led(int x, int y, byte_t col, bool clear_cache)
 {
   int space[10] = {
     6,  4,  3,  2,  1,  1,  0,  0,  0,  0
@@ -147,13 +147,13 @@ UI_8::generic_draw_led(int x, int y, byte_t col)
   for (int yy = 0;yy < 10;yy++)
     for (int xx = 0;xx < len[yy];xx++)
       {
-	generic_put_pixel(x + xx + space[yy], y + yy, col);
-	generic_put_pixel(x + xx + space[yy], y + 19 - yy, col);
+	generic_put_pixel(x + xx + space[yy], y + yy, col, clear_cache);
+	generic_put_pixel(x + xx + space[yy], y + 19 - yy, col, clear_cache);
       }
 }
 
 void
-UI_8::generic_draw_point(int x, int y, byte_t col)
+UI_8::generic_draw_point(int x, int y, byte_t col, bool clear_cache)
 {
   int space[4] = {
     2, 1, 0, 0
@@ -165,29 +165,29 @@ UI_8::generic_draw_point(int x, int y, byte_t col)
   for (int yy = 0;yy < 4;yy++)
     for (int xx = 0;xx < len[yy];xx++)
       {
-	generic_put_pixel(x + xx + space[yy], y - 4 + yy, col);
-	generic_put_pixel(x + xx + space[yy], y - 4 + 7 - yy, col);
+	generic_put_pixel(x + xx + space[yy], y - 4 + yy, col, clear_cache);
+	generic_put_pixel(x + xx + space[yy], y - 4 + 7 - yy, col, clear_cache);
       }
 }
 
 void
-UI_8::generic_draw_digit(int x, int y, int index, byte_t led_value)
+UI_8::generic_draw_digit(int x, int y, int index, byte_t led_value, bool clear_cache)
 {
   byte_t fg, bg;
 
   fg = 1;
   bg = 2;
 
-  generic_draw_hline(x +  4, y     , (led_value &   4) ? bg : fg);
-  generic_draw_hline(x     , y + 40, (led_value &   8) ? bg : fg);
-  generic_draw_hline(x -  4, y + 80, (led_value & 128) ? bg : fg);
+  generic_draw_hline(x +  4, y     , (led_value &   4) ? bg : fg, clear_cache);
+  generic_draw_hline(x     , y + 40, (led_value &   8) ? bg : fg, clear_cache);
+  generic_draw_hline(x -  4, y + 80, (led_value & 128) ? bg : fg, clear_cache);
 
-  generic_draw_vline(x +  4, y     , (led_value &   2) ? bg : fg);
-  generic_draw_vline(x + 44, y     , (led_value &   1) ? bg : fg);
-  generic_draw_vline(x     , y + 40, (led_value &  64) ? bg : fg);
-  generic_draw_vline(x + 40, y + 40, (led_value &  32) ? bg : fg);
+  generic_draw_vline(x +  4, y     , (led_value &   2) ? bg : fg, clear_cache);
+  generic_draw_vline(x + 44, y     , (led_value &   1) ? bg : fg, clear_cache);
+  generic_draw_vline(x     , y + 40, (led_value &  64) ? bg : fg, clear_cache);
+  generic_draw_vline(x + 40, y + 40, (led_value &  32) ? bg : fg, clear_cache);
 
-  generic_draw_point(x + 42, y + 80, (led_value &  16) ? bg : fg);
+  generic_draw_point(x + 42, y + 80, (led_value &  16) ? bg : fg, clear_cache);
 }
 
 void
@@ -198,16 +198,16 @@ UI_8::generic_update(bool clear_cache)
   for (int a = 0;a < 6;a++)
     {
       led_value = ((PIO8_1 *)pio)->get_led_value(a);
-      generic_draw_digit(65 * a + 62, 12, a, led_value);
+      generic_draw_digit(65 * a + 62, 12, a, led_value, clear_cache);
     }
 
   /* TAPE OUT led */
   led_value = ((PIO8_1 *)pio)->get_led_value(6);
-  generic_draw_led(18, 20, led_value ? 1 : 4);
+  generic_draw_led(18, 20, led_value ? 1 : 4, clear_cache);
 
   /* HALT led */
   led_value = z80->get_halt();
-  generic_draw_led(18, 60, led_value ? 3 : 1);
+  generic_draw_led(18, 60, led_value ? 3 : 1, clear_cache);
 }
 
 int

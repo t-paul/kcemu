@@ -24,20 +24,23 @@
 
 #include "kc/system.h"
 
+#include "kc/z80.h"
 #include "kc/keys.h"
 #include "kc/keyb1.h"
 #include "kc/keyb1k.h"
 
-#define PARANOIA_CHECK
 #define KEYB_DEBUG
 
 Keyboard1::Keyboard1(void)
 {
   init();
+  z80->register_ic(this);
 }
+
 
 Keyboard1::~Keyboard1(void)
 {
+  z80->unregister_ic(this);
 }
 
 void

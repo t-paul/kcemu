@@ -6,7 +6,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2003-04-01 22:48+0200\n"
+"POT-Creation-Date: 2003-06-08 01:04+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -596,139 +596,147 @@ msgstr ""
 msgid "Can't attach disk-file."
 msgstr ""
 
-#: src/kc/mod_list.cc:97
+#: src/kc/mod_list.cc:99
 msgid "<no module>"
 msgstr ""
 
-#: src/kc/mod_list.cc:108
+#: src/kc/mod_list.cc:110
 msgid "RAM Module (1k/2400h)"
 msgstr ""
 
-#: src/kc/mod_list.cc:110
+#: src/kc/mod_list.cc:112
 msgid "RAM Module (2k/2800h)"
 msgstr ""
 
-#: src/kc/mod_list.cc:112
+#: src/kc/mod_list.cc:114
 msgid "RAM Module (4k/3000h)"
 msgstr ""
 
-#: src/kc/mod_list.cc:114 src/kc/mod_list.cc:183
+#: src/kc/mod_list.cc:116 src/kc/mod_list.cc:185
 msgid "RAM Module (16k/4000h)"
 msgstr ""
 
-#: src/kc/mod_list.cc:116
+#: src/kc/mod_list.cc:118
 msgid "RAM Module (32k/8000h)"
 msgstr ""
 
-#: src/kc/mod_list.cc:122
+#: src/kc/mod_list.cc:124
 msgid "256k RAM Floppy"
 msgstr ""
 
-#: src/kc/mod_list.cc:128
+#: src/kc/mod_list.cc:130
 msgid "FDC (Schneider)"
 msgstr ""
 
-#: src/kc/mod_list.cc:134
+#: src/kc/mod_list.cc:136
 msgid "FDC (Kramer)"
 msgstr ""
 
-#: src/kc/mod_list.cc:140
+#: src/kc/mod_list.cc:142
 msgid "GDC 82720"
 msgstr ""
 
-#: src/kc/mod_list.cc:146
+#: src/kc/mod_list.cc:148
 msgid "RTC (port 20h-2fh)"
 msgstr ""
 
-#: src/kc/mod_list.cc:152
+#: src/kc/mod_list.cc:154
 msgid "RTC (port 70h-7fh)"
 msgstr ""
 
-#: src/kc/mod_list.cc:161
+#: src/kc/mod_list.cc:163
 msgid "Basic Module (c000h-e7ffh)"
 msgstr ""
 
-#: src/kc/mod_list.cc:176
+#: src/kc/mod_list.cc:178
 msgid "Plotter Module (c000h-e7ffh)"
 msgstr ""
 
-#: src/kc/mod_list.cc:185
+#: src/kc/mod_list.cc:187
 msgid "RAM Module (16k/8000h)"
 msgstr ""
 
-#: src/kc/mod_list.cc:194
+#: src/kc/mod_list.cc:196
 msgid "ZM30 (c000h-ccffh)"
 msgstr ""
 
-#: src/kc/mod_list.cc:204
+#: src/kc/mod_list.cc:206
 msgid "EDAS (c000h-e7ffh)"
 msgstr ""
 
-#: src/kc/mod_list.cc:214
+#: src/kc/mod_list.cc:216
 msgid "IDAS / ZM (c000h-e7ffh)"
 msgstr ""
 
-#: src/kc/mod_list.cc:224
+#: src/kc/mod_list.cc:226
 msgid "BITEX (c000h-d7ffh)"
 msgstr ""
 
-#: src/kc/mod_list.cc:258 src/ui/gtk/module.cc:253
+#: src/kc/mod_list.cc:263
+msgid "192 KByte RAM/EPROM"
+msgstr ""
+
+#: src/kc/mod_list.cc:275 src/ui/gtk/module.cc:253
 msgid "IRM Color Expansion"
 msgstr ""
 
-#: src/kc/mod_list.cc:273
+#: src/kc/mod_list.cc:290
 msgid "Plotter XY4131"
 msgstr ""
 
-#: src/kc/mod_list.cc:283
+#: src/kc/mod_list.cc:300
 msgid "CPM-Z9 BOOT (c000h-c7ffh)"
 msgstr ""
 
-#: src/kc/mod_list.cc:290
+#: src/kc/mod_list.cc:307
 msgid "CPM-Z9 Floppy"
 msgstr ""
 
-#: src/kc/mod_list.cc:296
+#: src/kc/mod_list.cc:313
 msgid "CPM-Z9 64k RAM"
 msgstr ""
 
-#: src/kc/mod_list.cc:305
+#: src/kc/mod_list.cc:322
 msgid "M003: V24 (not working!)"
 msgstr ""
 
-#: src/kc/mod_list.cc:314
+#: src/kc/mod_list.cc:330
+msgid "M008: Joystick"
+msgstr ""
+
+#: src/kc/mod_list.cc:337
 msgid "M022: Expander RAM (16k)"
 msgstr ""
 
-#: src/kc/mod_list.cc:320
+#: src/kc/mod_list.cc:343
 msgid "M011: 64k RAM"
 msgstr ""
 
-#: src/kc/mod_list.cc:329
+#: src/kc/mod_list.cc:352
 msgid "M006: Basic"
 msgstr ""
 
-#: src/kc/mod_list.cc:339
+#: src/kc/mod_list.cc:362
 msgid "M012: Texor"
 msgstr ""
 
-#: src/kc/mod_list.cc:349
+#: src/kc/mod_list.cc:372
 msgid "M026: Forth"
 msgstr ""
 
-#: src/kc/mod_list.cc:359
+#: src/kc/mod_list.cc:382
 msgid "M027: Development"
 msgstr ""
 
-#: src/kc/mod_list.cc:370
+#: src/kc/mod_list.cc:393
 msgid "M900: WordPro '86 (KC85/3)"
 msgstr ""
 
-#: src/kc/mod_list.cc:381
+#: src/kc/mod_list.cc:404
 msgid "M901: WordPro '86 (KC85/4)"
 msgstr ""
 
-#: src/kc/mod_list.cc:392
+#: src/kc/mod_list.cc:415
 msgid "Floppy Disk Basis"
 msgstr ""
 
@@ -786,16 +794,16 @@ msgid ""
 "skip this file."
 msgstr ""
 
-#: src/ui/gtk/about.cc:64
+#: src/ui/gtk/about.cc:66
 msgid "About KCemu"
 msgstr ""
 
 #.
 #. *  close button
 #.
-#: src/ui/gtk/about.cc:105 src/ui/gtk/color.cc:244 src/ui/gtk/copying.cc:150
+#: src/ui/gtk/about.cc:121 src/ui/gtk/color.cc:244 src/ui/gtk/copying.cc:134
 #: src/ui/gtk/disk.cc:303 src/ui/gtk/info.cc:537 src/ui/gtk/module.cc:324
-#: src/ui/gtk/tape.cc:459 src/ui/gtk/wav.cc:273
+#: src/ui/gtk/tape.cc:459 src/ui/gtk/wav.cc:249
 msgid "Close"
 msgstr ""
 
@@ -845,7 +853,7 @@ msgstr ""
 msgid "White Level"
 msgstr ""
 
-#: src/ui/gtk/copying.cc:77
+#: src/ui/gtk/copying.cc:78
 msgid "KCemu: Copying"
 msgstr ""
 
@@ -1231,14 +1239,10 @@ msgstr ""
 msgid "KCemu: Tape"
 msgstr ""
 
-#: src/ui/gtk/tape.cc:333
-msgid "Tape:"
-msgstr ""
-
 #.
 #. *  buttons
 #.
-#: src/ui/gtk/tape.cc:424 src/ui/gtk/wav.cc:232
+#: src/ui/gtk/tape.cc:424 src/ui/gtk/wav.cc:208
 msgid "Stop"
 msgstr ""
 
@@ -1246,7 +1250,7 @@ msgstr ""
 msgid "Record"
 msgstr ""
 
-#: src/ui/gtk/tape.cc:438 src/ui/gtk/wav.cc:260
+#: src/ui/gtk/tape.cc:438 src/ui/gtk/wav.cc:236
 msgid "Play"
 msgstr ""
 
@@ -1258,11 +1262,11 @@ msgstr ""
 msgid "Detach"
 msgstr ""
 
-#: src/ui/gtk/wav.cc:138
+#: src/ui/gtk/wav.cc:114
 msgid "KCemu: Audio Player"
 msgstr ""
 
-#: src/ui/gtk/wav.cc:219
+#: src/ui/gtk/wav.cc:195
 msgid "Open"
 msgstr ""
 
@@ -1422,7 +1426,7 @@ msgstr ""
 msgid "/Quit Emulator"
 msgstr ""
 
-#: src/ui/gtk/ui_gtk.cc:765
+#: src/ui/gtk/ui_gtk.cc:767
 #, c-format
 msgid "%s (%s)"
 msgstr ""

@@ -84,7 +84,6 @@ GLIBC21 = @GLIBC21@
 GMOFILES = @GMOFILES@
 GMSGFMT = @GMSGFMT@
 GTK_CFLAGS = @GTK_CFLAGS@
-GTK_CONFIG = @GTK_CONFIG@
 GTK_LIBS = @GTK_LIBS@
 INSTALL_STRIP_PROGRAM = @INSTALL_STRIP_PROGRAM@
 INSTOBJEXT = @INSTOBJEXT@
@@ -98,6 +97,7 @@ MKINSTALLDIRS = @MKINSTALLDIRS@
 MP3LAME_LIBS = @MP3LAME_LIBS@
 MSGFMT = @MSGFMT@
 PACKAGE = @PACKAGE@
+PKG_CONFIG = @PKG_CONFIG@
 POFILES = @POFILES@
 POSUB = @POSUB@
 RANLIB = @RANLIB@
@@ -180,12 +180,14 @@ EXTRA_DIST = \
 	mod_64k.h	\
 	mod_rom.h	\
 	mod_rom1.h	\
+	mod_192k.h	\
 	mod_ramf.h	\
 	mod_fdc.h	\
 	mod_gdc.h	\
 	mod_rtc.h	\
 	mod_disk.h	\
 	mod_v24.h	\
+	mod_js.h	\
 	mod_4131.h	\
 	mod_list.h	\
 	profile.h	\

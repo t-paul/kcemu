@@ -74,11 +74,11 @@ UI_Gtk8::allocate_colors(double saturation_fg,
 {
     int a;
     char *color_names[] = {
-      "rgb:00/00/00", /* black */
-      "rgb:00/20/00", /* really dark green */
-      "rgb:00/e0/00", /* green */
-      "rgb:ff/8c/00", /* dark orange */
-      "rgb:9a/cd/32", /* led green */
+      "#000000", /* black */
+      "#002000", /* really dark green */
+      "#00e000", /* green */
+      "#ff8c00", /* dark orange */
+      "#9acd32", /* led green */
       0,
     };
 
@@ -97,7 +97,7 @@ UI_Gtk8::init(void)
 void
 UI_Gtk8::update(bool full_update, bool clear_cache)
 {
-  generic_update();
+  generic_update(clear_cache);
   gtk_update(_bitmap, get_dirty_buffer(), get_dirty_buffer_size(),
 	     get_real_width(), get_real_height(), full_update);
   processEvents();

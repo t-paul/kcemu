@@ -170,7 +170,7 @@ EditHeaderWindow::init(const char *tapename, const char *kcname)
   /*
    *  window
    */
-  _w.window = gtk_window_new(GTK_WINDOW_DIALOG);
+  _w.window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
   gtk_window_set_title(GTK_WINDOW(_w.window), _("File Properties"));
   gtk_window_position(GTK_WINDOW(_w.window), GTK_WIN_POS_MOUSE);
   gtk_signal_connect(GTK_OBJECT(_w.window), "delete_event",

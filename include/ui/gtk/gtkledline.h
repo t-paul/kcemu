@@ -30,10 +30,12 @@ extern "C" {
 #endif /* __cplusplus */
 
 
-#define GTK_LED_LINE(obj)          GTK_CHECK_CAST (obj, gtk_led_line_get_type (), GtkLedLine)
-#define GTK_LED_LINE_CLASS(klass)  GTK_CHECK_CLASS_CAST (klass, gtk_led_line_get_type (), GtkLedLineClass)
-#define GTK_IS_LED_LINE(obj)       GTK_CHECK_TYPE (obj, gtk_led_line_get_type ())
-
+#define GTK_TYPE_LED_LINE            (gtk_led_line_get_type())
+#define GTK_LED_LINE(obj)            (G_TYPE_CHECK_INSTANCE_CAST((obj), GTK_TYPE_LED_LINE, GtkLedLine))
+#define GTK_LED_LINE_CLASS(klass)    (G_TYPE_CHECK_CLASS_CAST ((klass), GTK_TYPE_LED_LINE, GtkLedLineClass))
+#define GTK_IS_LED_LINE(obj)         (G_TYPE_CHECK_INSTANCE_TYPE((obj), GTK_TYPE_LED_LINE))
+#define GTK_IS_LED_LINE_CLASS(klass) (G_TYPE_CHECK_CLASS_CAST((klass), GTK_TYPE_LED_LINE))
+#define GTK_LED_LINE_GET_CLASS(obj)  (G_TYPE_INSTANCE_GET_CLASS((obj), GTK_TYPE_LED_LINE, GtkLedLineClass))
 
 typedef struct _GtkLedLine        GtkLedLine;
 typedef struct _GtkLedLineClass   GtkLedLineClass;
@@ -53,7 +55,7 @@ struct _GtkLedLineClass
 
 
 GtkWidget*     gtk_led_line_new                 (gint nr);
-guint          gtk_led_line_get_type            (void);
+GtkType        gtk_led_line_get_type            (void);
 void           gtk_led_line_set_value           (GtkLedLine *led_line,
                                                  guint32 value);
 void           gtk_led_line_set_led             (GtkLedLine *led_line,

@@ -60,6 +60,8 @@ Sound::open_sound(void)
   wanted.userdata = this;
 
   ret = SDL_OpenAudio(&wanted, &obtained);
+
+#if 0
   printf("ret = %d\n", ret);
 
   printf("obtained.freq     = %d\n", obtained.freq);
@@ -68,6 +70,7 @@ Sound::open_sound(void)
   printf("obtained.samples  = %d\n", obtained.samples);
   printf("obtained.silence  = %d\n", obtained.silence);
   printf("obtained.size     = %d\n", obtained.size);
+#endif
 
   SDL_PauseAudio(0);
 #endif /* ENABLE_SOUND */

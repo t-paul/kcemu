@@ -84,7 +84,6 @@ GLIBC21 = @GLIBC21@
 GMOFILES = @GMOFILES@
 GMSGFMT = @GMSGFMT@
 GTK_CFLAGS = @GTK_CFLAGS@
-GTK_CONFIG = @GTK_CONFIG@
 GTK_LIBS = @GTK_LIBS@
 INSTALL_STRIP_PROGRAM = @INSTALL_STRIP_PROGRAM@
 INSTOBJEXT = @INSTOBJEXT@
@@ -98,6 +97,7 @@ MKINSTALLDIRS = @MKINSTALLDIRS@
 MP3LAME_LIBS = @MP3LAME_LIBS@
 MSGFMT = @MSGFMT@
 PACKAGE = @PACKAGE@
+PKG_CONFIG = @PKG_CONFIG@
 POFILES = @POFILES@
 POSUB = @POSUB@
 RANLIB = @RANLIB@
@@ -135,7 +135,7 @@ CPPFLAGS = \
 	$(SDL_CFLAGS)
 
 
-@TARGET_LINUX_TRUE@EXTRA_kcemu_SOURCES = mod_v24.cc mod_4131.cc
+@TARGET_LINUX_TRUE@EXTRA_kcemu_SOURCES = mod_v24.cc mod_js.cc mod_4131.cc
 
 kcemu_SOURCES = \
 	debug.cc	\
@@ -196,6 +196,7 @@ kcemu_SOURCES = \
 	mod_64k.cc	\
 	mod_rom.cc	\
 	mod_rom1.cc	\
+	mod_192k.cc	\
 	mod_ramf.cc	\
 	mod_fdc.cc	\
 	mod_gdc.cc	\
@@ -274,7 +275,8 @@ bin_PROGRAMS = kcemu$(EXEEXT)
 @TARGET_LINUX_FALSE@noinst_PROGRAMS =
 PROGRAMS = $(bin_PROGRAMS) $(noinst_PROGRAMS)
 
-@TARGET_LINUX_TRUE@am__objects_1 = mod_v24.$(OBJEXT) mod_4131.$(OBJEXT)
+@TARGET_LINUX_TRUE@am__objects_1 = mod_v24.$(OBJEXT) mod_js.$(OBJEXT) \
+@TARGET_LINUX_TRUE@	mod_4131.$(OBJEXT)
 am_kcemu_OBJECTS = debug.$(OBJEXT) kc.$(OBJEXT) rc.$(OBJEXT) \
 	ic.$(OBJEXT) ctc.$(OBJEXT) ctc1.$(OBJEXT) ctc3.$(OBJEXT) \
 	ctc8.$(OBJEXT) ctc9.$(OBJEXT) ctc_fdc.$(OBJEXT) \
@@ -292,13 +294,13 @@ am_kcemu_OBJECTS = debug.$(OBJEXT) kc.$(OBJEXT) rc.$(OBJEXT) \
 	ports4.$(OBJEXT) module.$(OBJEXT) mod_ram.$(OBJEXT) \
 	mod_ram1.$(OBJEXT) mod_r64.$(OBJEXT) mod_cpm.$(OBJEXT) \
 	mod_ram8.$(OBJEXT) mod_64k.$(OBJEXT) mod_rom.$(OBJEXT) \
-	mod_rom1.$(OBJEXT) mod_ramf.$(OBJEXT) mod_fdc.$(OBJEXT) \
-	mod_gdc.$(OBJEXT) mod_rtc.$(OBJEXT) mod_disk.$(OBJEXT) \
-	mod_list.$(OBJEXT) tape.$(OBJEXT) disk.$(OBJEXT) \
-	timer.$(OBJEXT) timer1.$(OBJEXT) timer3.$(OBJEXT) z80.$(OBJEXT) \
-	z80_fdc.$(OBJEXT) wav.$(OBJEXT) sound.$(OBJEXT) \
-	sound3.$(OBJEXT) sound8.$(OBJEXT) disass.$(OBJEXT) \
-	$(am__objects_1)
+	mod_rom1.$(OBJEXT) mod_192k.$(OBJEXT) mod_ramf.$(OBJEXT) \
+	mod_fdc.$(OBJEXT) mod_gdc.$(OBJEXT) mod_rtc.$(OBJEXT) \
+	mod_disk.$(OBJEXT) mod_list.$(OBJEXT) tape.$(OBJEXT) \
+	disk.$(OBJEXT) timer.$(OBJEXT) timer1.$(OBJEXT) \
+	timer3.$(OBJEXT) z80.$(OBJEXT) z80_fdc.$(OBJEXT) wav.$(OBJEXT) \
+	sound.$(OBJEXT) sound3.$(OBJEXT) sound8.$(OBJEXT) \
+	disass.$(OBJEXT) $(am__objects_1)
 kcemu_OBJECTS = $(am_kcemu_OBJECTS)
 @TARGET_BEOS_FALSE@@TARGET_LINUX_FALSE@@TARGET_MINGW_FALSE@@TARGET_UI_GTK_FALSE@@TARGET_UI_SDL_FALSE@@USE_INCLUDED_GETOPT_TRUE@kcemu_DEPENDENCIES = \
 @TARGET_BEOS_FALSE@@TARGET_LINUX_FALSE@@TARGET_MINGW_FALSE@@TARGET_UI_GTK_FALSE@@TARGET_UI_SDL_FALSE@@USE_INCLUDED_GETOPT_TRUE@	../z80core/libz80.a \
@@ -1290,10 +1292,11 @@ am__depfiles_maybe = depfiles
 @AMDEP_TRUE@	./$(DEPDIR)/memory1.Po ./$(DEPDIR)/memory2.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/memory3.Po ./$(DEPDIR)/memory4.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/memory7.Po ./$(DEPDIR)/memory8.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/memory9.Po ./$(DEPDIR)/mod_4131.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/mod_64k.Po ./$(DEPDIR)/mod_cpm.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/mod_disk.Po ./$(DEPDIR)/mod_fdc.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/mod_gdc.Po ./$(DEPDIR)/mod_list.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/memory9.Po ./$(DEPDIR)/mod_192k.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/mod_4131.Po ./$(DEPDIR)/mod_64k.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/mod_cpm.Po ./$(DEPDIR)/mod_disk.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/mod_fdc.Po ./$(DEPDIR)/mod_gdc.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/mod_js.Po ./$(DEPDIR)/mod_list.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/mod_r64.Po ./$(DEPDIR)/mod_ram.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/mod_ram1.Po ./$(DEPDIR)/mod_ram8.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/mod_ramf.Po ./$(DEPDIR)/mod_rom.Po \
@@ -1414,12 +1417,14 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/memory7.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/memory8.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/memory9.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/mod_192k.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/mod_4131.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/mod_64k.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/mod_cpm.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/mod_disk.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/mod_fdc.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/mod_gdc.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/mod_js.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/mod_list.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/mod_r64.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/mod_ram.Po@am__quote@

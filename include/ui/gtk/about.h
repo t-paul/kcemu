@@ -33,6 +33,7 @@ class AboutWindow : public UI_Gtk_Window
  private:
   struct {
     GtkWidget *vbox;
+    GtkWidget *pixmap;
     GtkWidget *name;
     GtkWidget *copyright;
     GtkWidget *info;

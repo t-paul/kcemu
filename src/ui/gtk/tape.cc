@@ -201,7 +201,7 @@ void
 TapeWindow::sf_tape_archive_select(GtkWidget *widget, gpointer data)
 {
   CMD_Args *args;
-  char *filename;
+  const gchar *filename;
 
   filename = gtk_entry_get_text(GTK_ENTRY(GTK_COMBO(data)->entry));
   args = (new CMD_Args())->set_string_arg("filename", (const char *)filename);
@@ -250,9 +250,9 @@ TapeWindow::sf_power_expose(TapeWindow *self)
 void
 TapeWindow::init(void)
 {
-  int a;
-  GList *popdown;
-  const char *fname;
+  //int a;
+  //GList *popdown;
+  //const char *fname;
   GtkTooltips *tips;
 
   tips = gtk_tooltips_new();
@@ -308,7 +308,7 @@ TapeWindow::init(void)
   /*
    *  tape window
    */
-  _window = gtk_window_new(GTK_WINDOW_DIALOG);
+  _window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
   gtk_widget_set_name(_window, "TapeWindow");
   gtk_window_set_title(GTK_WINDOW(_window), _("KCemu: Tape"));
   gtk_window_position(GTK_WINDOW(_window), GTK_WIN_POS_MOUSE);
@@ -326,33 +326,33 @@ TapeWindow::init(void)
   /*
    *  combo hbox, combo label, combo box
    */
-  _w.combo_hbox = gtk_hbox_new(FALSE, 0);
-  gtk_container_add(GTK_CONTAINER(_w.vbox), _w.combo_hbox);
-  gtk_widget_show(_w.combo_hbox);
-
-  _w.combo_label = gtk_label_new(_("Tape:"));
-  gtk_box_pack_start(GTK_BOX(_w.combo_hbox), _w.combo_label, FALSE, FALSE, 6);
-  gtk_widget_show(_w.combo_label);
-
-  popdown = NULL;
-  for (a = 0;;a++)
-    {
-      fname = RC::instance()->get_string_i(a, "Tape File List");
-      if (fname == NULL)
-	break;
-      popdown = g_list_append(popdown, (void *)fname);
-    }
-  _w.combo = gtk_combo_new();
-  gtk_box_pack_start(GTK_BOX(_w.combo_hbox), _w.combo, TRUE, TRUE, 0);
-  gtk_combo_set_value_in_list(GTK_COMBO(_w.combo), FALSE, TRUE);
-  gtk_combo_set_use_arrows(GTK_COMBO(_w.combo), TRUE);
-  gtk_entry_set_editable(GTK_ENTRY(GTK_COMBO(_w.combo)->entry), FALSE);
-  if (popdown)
-    gtk_combo_set_popdown_strings(GTK_COMBO(_w.combo), popdown);
-  gtk_signal_connect(GTK_OBJECT(GTK_COMBO(_w.combo)->entry), "changed",
-		     GTK_SIGNAL_FUNC(sf_tape_archive_select), _w.combo);
-  fname = RC::instance()->get_string_i(a, "Tape File List");
-  gtk_widget_show(_w.combo);
+//  _w.combo_hbox = gtk_hbox_new(FALSE, 0);
+//  gtk_container_add(GTK_CONTAINER(_w.vbox), _w.combo_hbox);
+//  gtk_widget_show(_w.combo_hbox);
+//
+//  _w.combo_label = gtk_label_new(_("Tape:"));
+//  gtk_box_pack_start(GTK_BOX(_w.combo_hbox), _w.combo_label, FALSE, FALSE, 6);
+//  gtk_widget_show(_w.combo_label);
+//
+//  popdown = NULL;
+//  for (a = 0;;a++)
+//    {
+//      fname = RC::instance()->get_string_i(a, "Tape File List");
+//      if (fname == NULL)
+//	break;
+//      popdown = g_list_append(popdown, (void *)fname);
+//    }
+//  _w.combo = gtk_combo_new();
+//  gtk_box_pack_start(GTK_BOX(_w.combo_hbox), _w.combo, TRUE, TRUE, 0);
+//  gtk_combo_set_value_in_list(GTK_COMBO(_w.combo), FALSE, TRUE);
+//  gtk_combo_set_use_arrows(GTK_COMBO(_w.combo), TRUE);
+//  gtk_entry_set_editable(GTK_ENTRY(GTK_COMBO(_w.combo)->entry), FALSE);
+//  if (popdown)
+//    gtk_combo_set_popdown_strings(GTK_COMBO(_w.combo), popdown);
+//  gtk_signal_connect(GTK_OBJECT(GTK_COMBO(_w.combo)->entry), "changed",
+//		     GTK_SIGNAL_FUNC(sf_tape_archive_select), _w.combo);
+//  fname = RC::instance()->get_string_i(a, "Tape File List");
+//  gtk_widget_show(_w.combo);
 
   /*
    *  tape list
@@ -490,9 +490,9 @@ TapeWindow::attached(const char *name)
   /*
    *  block changed signal when setting the entry field!
    */
-  gtk_signal_handler_block_by_data(GTK_OBJECT(GTK_COMBO(_w.combo)->entry), _w.combo);
-  gtk_entry_set_text(GTK_ENTRY(GTK_COMBO(_w.combo)->entry), name);
-  gtk_signal_handler_unblock_by_data(GTK_OBJECT(GTK_COMBO(_w.combo)->entry), _w.combo);
+  // gtk_signal_handler_block_by_data(GTK_OBJECT(GTK_COMBO(_w.combo)->entry), _w.combo);
+  // gtk_entry_set_text(GTK_ENTRY(GTK_COMBO(_w.combo)->entry), name);
+  // gtk_signal_handler_unblock_by_data(GTK_OBJECT(GTK_COMBO(_w.combo)->entry), _w.combo);
 }
 
 void
@@ -511,22 +511,28 @@ TapeWindow::sf_tape_button_press(GtkWidget */*widget*/, GdkEventButton *event,
   gint ret, row, column;
   TapeWindow *self = (TapeWindow *)data;
 
-  if (event->button == 3)
+  ret = gtk_clist_get_selection_info(GTK_CLIST(self->_w.clist),
+				     (int)event->x, (int)event->y,
+				     &row, &column);
+  if (ret)
+    gtk_clist_select_row(GTK_CLIST(self->_w.clist), row, 0);
+
+  if ((event->button == 1) && (event->type == GDK_2BUTTON_PRESS))
     {
-      ret = gtk_clist_get_selection_info(GTK_CLIST(self->_w.clist),
-                                         (int)event->x, (int)event->y,
-                                         &row, &column);
+      CMD_EXEC("ui-tape-run-selected");
+    }
+  else if (event->button == 3)
+    {
       gtk_widget_set_sensitive(self->_w.m_run, ret);
       gtk_widget_set_sensitive(self->_w.m_load, ret);
       gtk_widget_set_sensitive(self->_w.m_edit, ret);
       gtk_widget_set_sensitive(self->_w.m_delete, ret);
       gtk_widget_set_sensitive(self->_w.m_rename, ret);
       gtk_widget_set_sensitive(self->_w.m_export, ret);
-      if (ret)
-        gtk_clist_select_row(GTK_CLIST(self->_w.clist), row, 0);
       gtk_menu_popup(GTK_MENU(self->_w.menu), NULL, NULL, NULL, NULL, 3,
                      event->time);
     }
+
   /*
    *  run other event handlers too...
    */
@@ -538,10 +544,10 @@ TapeWindow::allocate_colors(void)
 {
     int a;
     char *color_names[] = {
-      "rgb:00/00/00",
-      "rgb:d0/00/00",
-      "rgb:00/d0/00",
-      "rgb:a0/a0/00"
+      "#000000",
+      "#d00000",
+      "#00d000",
+      "#a0a000"
     };
 
     _colormap = gdk_colormap_get_system();

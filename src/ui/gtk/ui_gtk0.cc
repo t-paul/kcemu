@@ -83,8 +83,8 @@ UI_Gtk0::allocate_colors(double saturation_fg,
 {
     int a;
     char *color_names[] = {
-      "rgb:00/00/00",
-      "rgb:d0/d0/d0",
+      "#000000",
+      "#d0d0d0",
       0,
     };
 
