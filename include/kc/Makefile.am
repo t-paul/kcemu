@@ -8,6 +8,9 @@ EXTRA_DIST = \
 	ctc.h		\
 	ctc1.h		\
 	ctc3.h		\
+	ctc_fdc.h	\
+	ctc_base.h	\
+	cb_list.h	\
 	keyboard.h	\
 	keyb1.h		\
 	keyb1k.h	\
@@ -48,6 +51,7 @@ EXTRA_DIST = \
 	wav.h		\
 	sound.h		\
 	z80.h		\
+	z80_fdc.h	\
 	system.h	\
 	disass.h	\
 	op.h		\

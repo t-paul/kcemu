@@ -11,7 +11,8 @@ INCLUDES = \
 	$(GTK_CFLAGS)
 
 CPPFLAGS = \
-	-DVERSION=\"$(VERSION)\"
+	-DVERSION=\"$(VERSION)\" \
+        -DDATADIR=\"$(pkgdatadir)\"
 
 libui_gtk_a_SOURCES = \
 	gtkledline.c	\

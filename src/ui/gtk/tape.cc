@@ -2,7 +2,7 @@
  *  KCemu -- the KC 85/3 and KC 85/4 Emulator
  *  Copyright (C) 1997-2001 Torsten Paul
  *
- *  $Id: tape.cc,v 1.19 2001/04/22 22:24:56 tp Exp $
+ *  $Id: tape.cc,v 1.20 2002/01/06 12:53:41 torsten_paul Exp $
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -303,7 +303,8 @@ TapeWindow::init(void)
   gtk_combo_set_value_in_list(GTK_COMBO(_w.combo), FALSE, TRUE);
   gtk_combo_set_use_arrows(GTK_COMBO(_w.combo), TRUE);
   gtk_entry_set_editable(GTK_ENTRY(GTK_COMBO(_w.combo)->entry), FALSE);
-  gtk_combo_set_popdown_strings(GTK_COMBO(_w.combo), popdown);
+  if (popdown)
+    gtk_combo_set_popdown_strings(GTK_COMBO(_w.combo), popdown);
   gtk_signal_connect(GTK_OBJECT(GTK_COMBO(_w.combo)->entry), "changed",
 		     GTK_SIGNAL_FUNC(sf_tape_archive_select), _w.combo);
   fname = RC::instance()->get_string_i(a, "Tape File List");

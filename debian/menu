@@ -1,0 +1,2 @@
+?package(kcemu):needs=X11 section=Apps/Emulators\
+  title="kcemu" command="/usr/X11R6/bin/kcemu"

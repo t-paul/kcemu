@@ -2,7 +2,7 @@
  *  KCemu -- the KC 85/3 and KC 85/4 Emulator
  *  Copyright (C) 1997-2001 Torsten Paul
  *
- *  $Id: module.cc,v 1.8 2001/04/14 15:17:01 tp Exp $
+ *  $Id: module.cc,v 1.9 2002/01/06 12:53:40 torsten_paul Exp $
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -72,12 +72,17 @@ ModuleWindow::create_menu(int slot)
   GtkWidget *menuitem;
   GSList *group;
   ModuleList::iterator it;
-  
+  kc_type_t type;
+
+  type = get_kc_type();
   menu = gtk_menu_new();
 
   group = NULL;
   for (it = module_list->begin();it != module_list->end();it++)
     {
+      if (((*it)->get_kc_type() & type) == 0)
+	continue;
+
       menuitem = gtk_radio_menu_item_new_with_label(group, (*it)->get_name());
       gtk_object_set_user_data(GTK_OBJECT(menuitem), (*it));
       gtk_signal_connect(GTK_OBJECT(menuitem), "activate",
@@ -194,7 +199,8 @@ ModuleWindow::init(void)
       sprintf(buf, _("D002: Busdriver [%02X]"), 16 * a);
       init_device(buf, 16 * a, 15);
     }
-  if (RC::instance()->get_int("Floppy Disk Basis"))
+
+  if (RC::instance()->get_int("Floppy Disk Basis") && (get_kc_type() & KC_TYPE_85_2_CLASS))
     init_device(_("Floppy Disk Basis [F0]"), 0xf0, 3);
   init_device(_("Basis Device"), 0, 12);
 

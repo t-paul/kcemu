@@ -2,7 +2,7 @@
  *  KCemu -- the KC 85/3 and KC 85/4 Emulator
  *  Copyright (C) 1997-2001 Torsten Paul
  *
- *  $Id: ctc.h,v 1.14 2001/04/14 15:14:05 tp Exp $
+ *  $Id: ctc.h,v 1.16 2001/12/31 14:11:53 torsten_paul Exp $
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -78,8 +78,6 @@ class CTC : public InterfaceCircuit, public PortInterface, public Callback
     CONTROL        = 0x01,
     CONTROL_VECTOR = 0x00,
     CONTROL_WORD   = 0x01,
-  
-    CHANNEL_2_CLK  = 70000, // 25 Hz
   };
         
   byte_t  _irq_vector;
@@ -95,6 +93,14 @@ class CTC : public InterfaceCircuit, public PortInterface, public Callback
 
   cb_list_t *_cb_list[4];
 
+ private:
+  void handle_counter_mode(int channel);
+
+ protected:
+  virtual long long get_counter() = 0;
+  virtual byte_t trigger_irq(byte_t irq_vector) = 0;
+  virtual void add_callback(unsigned long long offset, Callback *cb, void *data) = 0;
+
  public:
   CTC(void);
   virtual ~CTC(void);
@@ -103,6 +109,11 @@ class CTC : public InterfaceCircuit, public PortInterface, public Callback
   virtual bool irq_1(void) = 0;
   virtual bool irq_2(void) = 0;
   virtual bool irq_3(void) = 0;
+
+  virtual long counter_value_0(void) = 0;
+  virtual long counter_value_1(void) = 0;
+  virtual long counter_value_2(void) = 0;
+  virtual long counter_value_3(void) = 0;
 
   void info(void);
   

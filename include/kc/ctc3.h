@@ -2,7 +2,7 @@
  *  KCemu -- the KC 85/3 and KC 85/4 Emulator
  *  Copyright (C) 1997-2001 Torsten Paul
  *
- *  $Id: ctc3.h,v 1.3 2001/04/14 15:14:07 tp Exp $
+ *  $Id: ctc3.h,v 1.5 2001/12/31 14:11:53 torsten_paul Exp $
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -24,12 +24,15 @@
 
 #include "kc/system.h"
 
-#include "kc/ctc.h"
+#include "kc/ctc_base.h"
 
-class CTC3 : public CTC
+class CTC3 : public CTC_Base
 {
  private:
-  
+  enum {
+    CHANNEL_2_CLK  = 70000 // 25 Hz
+  };
+
  public:
   CTC3(void);
   virtual ~CTC3(void);
@@ -38,6 +41,11 @@ class CTC3 : public CTC
   virtual bool irq_1(void);
   virtual bool irq_2(void);
   virtual bool irq_3(void);
+
+  virtual long counter_value_0(void);
+  virtual long counter_value_1(void);
+  virtual long counter_value_2(void);
+  virtual long counter_value_3(void);
 
   void info(void);
   

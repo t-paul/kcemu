@@ -2,7 +2,7 @@
  *  KCemu -- the KC 85/3 and KC 85/4 Emulator
  *  Copyright (C) 1997-2001 Torsten Paul
  *
- *  $Id: mod_list.cc,v 1.11 2001/04/29 22:01:13 tp Exp $
+ *  $Id: mod_list.cc,v 1.12 2002/01/06 12:53:40 torsten_paul Exp $
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -66,7 +66,7 @@ ModuleList::ModuleList(void)
    *  placeholder for a not present module ;-)
    */
   m = 0;
-  _mod_list.push_back(new ModuleListEntry(_("<no module>"), m));
+  _mod_list.push_back(new ModuleListEntry(_("<no module>"), m, KC_TYPE_ALL));
 
   /*
    *  V24 module
@@ -74,7 +74,7 @@ ModuleList::ModuleList(void)
   if (RC::instance()->get_int("Enable V24-Module"))
     {
       m = new ModuleV24("M003", 0xee);
-      entry = new ModuleListEntry(_("M003: V24 (not working!)"), m);
+      entry = new ModuleListEntry(_("M003: V24 (not working!)"), m, KC_TYPE_85_2_CLASS);
       _mod_list.push_back(entry);
     }
 
@@ -82,27 +82,31 @@ ModuleList::ModuleList(void)
    *  RAM module 64k
    */
   m = new Module64k("M011", 0xf6);
-  _mod_list.push_back(new ModuleListEntry(_("M011: 64k RAM"), m));
+  _mod_list.push_back(new ModuleListEntry(_("M011: 64k RAM"), m, KC_TYPE_85_2_CLASS));
   
   /*
    *  RAM modules 16k at 4000h and 8000h (kc85/1)
    */
   m = new ModuleRAM1("RAM4", 0x4000, 0x4000);
-  _mod_list.push_back(new ModuleListEntry(_("RAM Module (16k/4000h)"), m));
+  _mod_list.push_back(new ModuleListEntry(_("RAM Module (16k/4000h)"), m, KC_TYPE_85_1_CLASS));
   m = new ModuleRAM1("RAM8", 0x8000, 0x4000);
-  _mod_list.push_back(new ModuleListEntry(_("RAM Module (16k/8000h)"), m));
+  _mod_list.push_back(new ModuleListEntry(_("RAM Module (16k/8000h)"), m, KC_TYPE_85_1_CLASS));
 
   /*
    *  IRM Expansion for color display (kc85/1)
    */
   m = new ModuleRAM1("IRMX", 0xe800, 0x0800);
-  _mod_list.push_back(new ModuleListEntry(_("IRM Color Expansion"), m));
+  entry = new ModuleListEntry(_("IRM Color Expansion"), m, KC_TYPE_NONE);
+  _mod_list.push_back(entry);
+  _init_color_expansion = 0;
+  if (get_kc_type() == KC_TYPE_87)
+    _init_color_expansion = entry;
 
   /*
    *  RAM module 16k (kc85/3)
    */
   m = new ModuleRAM("M022", 0xf4);
-  _mod_list.push_back(new ModuleListEntry(_("M022: Expander RAM (16k)"), m));
+  _mod_list.push_back(new ModuleListEntry(_("M022: Expander RAM (16k)"), m, KC_TYPE_85_2_CLASS));
 
   /*
    *  basic
@@ -111,7 +115,7 @@ ModuleList::ModuleList(void)
   strcpy(ptr, kcemu_datadir);
   strcat(ptr, "/m006.rom");
   m = new ModuleROM(ptr, "Basic", 0x2000, 0xfb);
-  _mod_list.push_back(new ModuleListEntry(_("M006: Basic"), m));
+  _mod_list.push_back(new ModuleListEntry(_("M006: Basic"), m, KC_TYPE_85_2_CLASS));
   delete ptr;
 
   /*
@@ -121,7 +125,7 @@ ModuleList::ModuleList(void)
   strcpy(ptr, kcemu_datadir);
   strcat(ptr, "/m012.rom");
   m = new ModuleROM(ptr, "M012", 0x2000, 0xfb);
-  _mod_list.push_back(new ModuleListEntry(_("M012: Texor"), m));
+  _mod_list.push_back(new ModuleListEntry(_("M012: Texor"), m, KC_TYPE_85_2_CLASS));
   delete ptr;
 
   /*
@@ -131,7 +135,7 @@ ModuleList::ModuleList(void)
   strcpy(ptr, kcemu_datadir);
   strcat(ptr, "/m026.rom");
   m = new ModuleROM(ptr, "M026", 0x2000, 0xfb);
-  _mod_list.push_back(new ModuleListEntry(_("M026: Forth"), m));
+  _mod_list.push_back(new ModuleListEntry(_("M026: Forth"), m, KC_TYPE_85_2_CLASS));
   delete ptr;
 
   /*
@@ -141,7 +145,7 @@ ModuleList::ModuleList(void)
   strcpy(ptr, kcemu_datadir);
   strcat(ptr, "/m027.rom");
   m = new ModuleROM(ptr, "M027", 0x2000, 0xfb);
-  entry = new ModuleListEntry(_("M027: Development"), m);
+  entry = new ModuleListEntry(_("M027: Development"), m, KC_TYPE_85_2_CLASS);
   _mod_list.push_back(entry);
   delete ptr;
 
@@ -152,7 +156,7 @@ ModuleList::ModuleList(void)
   strcpy(ptr, kcemu_datadir);
   strcat(ptr, "/m900.rom");
   m = new ModuleROM(ptr, "M900", 0x2000, 0xfb);
-  entry = new ModuleListEntry(_("M900: WordPro '86 (KC85/3)"), m);
+  entry = new ModuleListEntry(_("M900: WordPro '86 (KC85/3)"), m, KC_TYPE_85_3);
   _mod_list.push_back(entry);
   delete ptr;
 
@@ -163,7 +167,7 @@ ModuleList::ModuleList(void)
   strcpy(ptr, kcemu_datadir);
   strcat(ptr, "/m901.rom");
   m = new ModuleROM(ptr, "M901", 0x2000, 0xfb);
-  entry = new ModuleListEntry(_("M901: WordPro '86 (KC85/4)"), m);
+  entry = new ModuleListEntry(_("M901: WordPro '86 (KC85/4)"), m, KC_TYPE_85_4);
   _mod_list.push_back(entry);
   delete ptr;
 
@@ -174,7 +178,7 @@ ModuleList::ModuleList(void)
   strcpy(ptr, kcemu_datadir);
   strcat(ptr, "/floppy.rom");
   m = new ModuleDisk(ptr, "Floppy Disk Basis", 0x2000, 0xa7);
-  entry = new ModuleListEntry(_("Floppy Disk Basis"), m);
+  entry = new ModuleListEntry(_("Floppy Disk Basis"), m, KC_TYPE_NONE);
   _mod_list.push_back(entry);
   _init_floppy_basis = 0;
   if (RC::instance()->get_int("Floppy Disk Basis"))
@@ -184,8 +188,12 @@ ModuleList::ModuleList(void)
   delete ptr;
 
   _nr_of_bd = RC::instance()->get_int("Busdrivers");
-  if (_nr_of_bd < 0) _nr_of_bd = 0;
-  if (_nr_of_bd > MAX_BD) _nr_of_bd = MAX_BD;
+  if (_nr_of_bd < 0)
+    _nr_of_bd = 0;
+  if (_nr_of_bd > MAX_BD)
+    _nr_of_bd = MAX_BD;
+  if (get_kc_type() | KC_TYPE_85_1_CLASS)
+    _nr_of_bd = 0;
 
   for (a = 0;a < 4 * _nr_of_bd + 2;a++)
     {
@@ -227,8 +235,23 @@ ModuleList::init(void)
     }
   if (_init_floppy_basis)
     {
-      /* floppy disk basis ROM is always in slot fch! */
+      /*
+       *  floppy disk basis ROM is always in slot fch!
+       */
       insert(61, _init_floppy_basis);
+    }
+
+  if (_init_color_expansion)
+    {
+      /*
+       *  this is set if the emulator runs in KC 87 mode which means
+       *  the color expansion is always present
+       *  the KC 87 doesn't support the module slot notation like
+       *  the KC 85/2 class we just insert it at slot fch like
+       *  the floppy disk interface for KC 85/2 which is never available
+       *  in KC 87 mode.
+       */
+      insert(61, _init_color_expansion);
     }
 }
 

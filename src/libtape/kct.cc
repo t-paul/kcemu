@@ -2,7 +2,7 @@
  *  KCemu -- the KC 85/3 and KC 85/4 Emulator
  *  Copyright (C) 1997-2001 Torsten Paul
  *
- *  $Id: kct.cc,v 1.11 2001/04/14 15:16:39 tp Exp $
+ *  $Id: kct.cc,v 1.12 2001/12/29 03:50:21 torsten_paul Exp $
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -21,6 +21,9 @@
 
 #include <string.h>
 #include <strstream.h>
+
+#include <iostream.h>
+#include <iomanip.h>
 
 #include <zlib.h>
 
@@ -65,13 +68,12 @@ KCTDir::add(kct_dirent_t *dirent)
 
 KCTFile::KCTFile(void)
 {  
-  /* cerr << "KCTFile::KCTFile()" << endl; */
+  _f = 0;
 }
 
 KCTFile::~KCTFile(void)
 {
-  _f.close();
-  /* cerr << "KCTFile::~KCTFile()" << endl; */
+  close();
 }
 
 const char *
@@ -93,16 +95,14 @@ KCTFile::type_name(kct_file_type_t type)
 bool
 KCTFile::header_read(kct_header_t &header, unsigned long offset)
 {
-  /* cerr.form("KCTFile::header_read():  %08lx\n", offset); */
-  
-  _f.seekp(offset);
-  if (!_f)
+  _f->seekp(offset);
+  if (_f->fail())
     {
       cerr << "KCTFile::header_read(): seek error" << endl;
       return false;
     }
-  _f.read(&header, sizeof(kct_header_t));
-  if (!_f)
+  _f->read((char *)&header, sizeof(kct_header_t));
+  if (_f->fail())
     {
       cerr << "KCTFile::header_read(): read error" << endl;
       return false;
@@ -111,12 +111,18 @@ KCTFile::header_read(kct_header_t &header, unsigned long offset)
 
   if (header.version != KCT_VERSION)
     {
-      cerr.form("Warning: tape version mismatch!\n");
-      cerr.form("         expected v%d.%d and got v%d.%d\n",
-                KCT_VERSION_MAJOR(KCT_VERSION),
-                KCT_VERSION_MINOR(KCT_VERSION),
-                KCT_VERSION_MAJOR(header.version),
-                KCT_VERSION_MINOR(header.version));
+      cerr << "Warning: tape version mismatch!"
+	   << endl
+	   << "         expected v"
+           << KCT_VERSION_MAJOR(KCT_VERSION)
+	   << "."
+           << KCT_VERSION_MINOR(KCT_VERSION)
+	   << " and got v"
+           << KCT_VERSION_MAJOR(header.version)
+	   << "."
+           << KCT_VERSION_MINOR(header.version)
+	   << endl;
+
     }
 
   return true;
@@ -124,16 +130,14 @@ KCTFile::header_read(kct_header_t &header, unsigned long offset)
 void
 KCTFile::header_write(kct_header_t &header, unsigned long offset)
 {
-  /* cerr.form("KCTFile::header_write():   %08lx\n", offset); */
-  
-  _f.seekp(offset);
-  if (!_f)
+  _f->seekp(offset);
+  if (_f->fail())
     {
       cerr << "KCTFile::header_write(): seek error" << endl;
       exit(1);
     }
-  _f.write(&header, sizeof(kct_header_t));
-  if (!_f)
+  _f->write((char *)&header, sizeof(kct_header_t));
+  if (_f->fail())
     {
       cerr << "KCTFile::header_write(): write error" << endl;
       exit(1);
@@ -197,16 +201,14 @@ KCTFile::bam_block_find_free(kct_bam_t &bam)
 void
 KCTFile::bam_read(kct_bam_t &bam, unsigned long offset)
 {
-  /* cerr.form("KCTFile::bam_read():  %08lx\n", offset); */
-  
-  _f.seekp(offset);
-  if (!_f)
+  _f->seekp(offset);
+  if (_f->fail())
     {
       cerr << "KCTFile::bam_read(): seek error" << endl;
       exit(1);
     }
-  _f.read(bam, sizeof(kct_bam_t));
-  if (!_f)
+  _f->read((char *)bam, sizeof(kct_bam_t));
+  if (_f->fail())
     {
       cerr << "KCTFile::bam_read(): read error" << endl;
       exit(1);
@@ -215,16 +217,14 @@ KCTFile::bam_read(kct_bam_t &bam, unsigned long offset)
 void
 KCTFile::bam_write(kct_bam_t &bam, unsigned long offset)
 {
-  /* cerr.form("KCTFile::bam_write():      %08lx\n", offset); */
-  
-  _f.seekp(offset);
-  if (!_f)
+  _f->seekp(offset);
+  if (_f->fail())
     {
       cerr << "KCTFile::bam_write(): seek error" << endl;
       exit(1);
     }
-  _f.write(bam, sizeof(kct_bam_t));
-  if (!_f)
+  _f->write((char *)bam, sizeof(kct_bam_t));
+  if (_f->fail())
     {
       cerr << "KCTFile::bam_write(): write error" << endl;
       exit(1);
@@ -249,16 +249,15 @@ kct_error_t
 KCTFile::dirblock_read(kct_dirblock_t &dirblock, unsigned long offset)
 {
   unsigned long o = offset & DIRBLOCK_OFFSET_MASK;
-  /* cerr.form("KCTFile::dirblock_read():  %08lx [%08lx]\n", o, offset); */
   
-  _f.seekp(o);
-  if (!_f)
+  _f->seekp(o);
+  if (_f->fail())
     {
       cerr << "KCTFile::dirblock_read(): seek error" << endl;
       return KCT_ERROR_IO;
     }
-  _f.read(dirblock, sizeof(kct_dirblock_t));
-  if (!_f)
+  _f->read((char *)dirblock, sizeof(kct_dirblock_t));
+  if (_f->fail())
     {
       cerr << "KCTFile::dirblock_read(): read error" << endl;
       return KCT_ERROR_IO;
@@ -278,16 +277,15 @@ kct_error_t
 KCTFile::dirblock_write(kct_dirblock_t &dirblock, unsigned long offset)
 {
   unsigned long o = offset & DIRBLOCK_OFFSET_MASK;
-  /* cerr.form("KCTFile::dirblock_write(): %08lx [%08lx]\n", o, offset); */
   
-  _f.seekp(o);
-  if (!_f)
+  _f->seekp(o);
+  if (_f->fail())
     {
       cerr << "KCTFile::dirblock_write(): seek error" << endl;
       return KCT_ERROR_IO;
     }
-  _f.write(dirblock, sizeof(kct_dirblock_t));
-  if (!_f)
+  _f->write((char *)dirblock, sizeof(kct_dirblock_t));
+  if (_f->fail())
     {
       cerr << "KCTFile::dirblock_write(): write error" << endl;
       return KCT_ERROR_IO;
@@ -312,8 +310,6 @@ KCTFile::dirent_allocate(const char        *filename,
   unsigned long pos;
   kct_error_t ret;
 
-  /* cerr.form("KCTFile::dirent_allocate(): offset == %08x\n", *offset); */
-  
   idx = -1;
   for (a = 0;a < DIR_BLOCKS;a++)
     {
@@ -334,22 +330,18 @@ KCTFile::dirent_allocate(const char        *filename,
       ret = dirblock_clear(_dirblock);
       if (ret != KCT_OK)
         return ret;
-      /* cerr.form("KCTFile::dirent_allocate(): o == 0\n"); */
-      _f.seekp(0, ios::end);
-      pos = _f.tellp();
-      /* cerr.form("KCTFile::dirent_allocate(): pos = %08x\n", pos); */
+      _f->seekp(0, ios::end);
+      pos = _f->tellp();
       if ((pos % 256) != 0)
         {
           cerr << "warning: format error" << endl;
         }
       pos = (pos + 255) & DIRBLOCK_OFFSET_MASK;
-      /* cerr.form("KCTFile::dirent_allocate(): pos = %08x\n", pos); */
       ent = 0;
       o = *offset;
       *offset = bam_block_find_free(_bam);
       if (*offset == 0)
         return KCT_ERROR_NOMEM;
-      /* cerr.form("KCTFile::dirent_allocate():   o = %08x\n", o); */
       _header.offset[idx] = o | 1;
       bam_write(_bam, BAM_OFFSET);
     }
@@ -380,18 +372,17 @@ KCTFile::dirent_allocate(const char        *filename,
   strncpy(_dirblock[ent].name, filename, KCT_NAME_LENGTH);
   _dirblock[ent].name[KCT_NAME_LENGTH] = '\0';
 
-  /* cerr.form("KCTFile::dirent_allocate(): offset == %08x\n", *offset); */
-
   return dirblock_write(_dirblock, o);
 }
 
 kct_error_t
 KCTFile::create(const char *filename)
 {
-  /* cerr << "KCTFile::create(): " << filename << endl; */
+#warning no ios::noreplace with gcc-3.0.x ???
+  close();
 
-  _f.open(filename, ios::in | ios::out | ios::noreplace | ios::bin);
-  if (!_f)
+  _f = new fstream(filename, ios::in | ios::out | ios::binary);
+  if (_f->fail())
     {
       /* cerr << "open error" << endl; */
       return KCT_ERROR_EXIST;
@@ -401,8 +392,8 @@ KCTFile::create(const char *filename)
   strcpy(_header.id, "KCemu tape file\032");
   _header.version = KCT_VERSION;
   
-  _f.write(&_header, sizeof(_header));
-  if (!_f)
+  _f->write((char *)&_header, sizeof(_header));
+  if (_f->fail())
     {
       /* cerr << "write error (header)" << endl; */
       return KCT_ERROR_IO;
@@ -411,8 +402,8 @@ KCTFile::create(const char *filename)
   bam_clear(_bam);
   bam_block_allocate(_bam, 0); /* header */
   bam_block_allocate(_bam, 1); /* the bam itself */
-  _f.write(&_bam, sizeof(kct_bam_t));
-  if (!_f)
+  _f->write((char *)&_bam, sizeof(kct_bam_t));
+  if (_f->fail())
     {
       /* cerr << "write error (bam)" << endl; */
       return KCT_ERROR_IO;
@@ -429,28 +420,20 @@ KCTFile::create(const char *filename)
 kct_error_t
 KCTFile::open(const char *filename)
 {
-  /* cerr << "KCTFile::open(): " << filename << endl; */
+#warning no ios::noreplace with gcc-3.0.x ???
+
+  close();
 
   _readonly = false;
-#ifdef LINUX
-  _f.open(filename, ios::in | ios::out | ios::nocreate | ios::bin);
-#endif
-#ifdef MSDOS
-  _f.open(filename, ios::in | ios::bin);
-#endif
-  if (!_f)
+  _f = new fstream(filename, ios::in | ios::out | ios::binary);
+  if (_f->fail())
     {
       /*
        *  try to open read only
        */
       _readonly = true;
-#ifdef LINUX
-      _f.open(filename, ios::in | ios::nocreate | ios::bin);
-#endif
-#ifdef MSDOS
-      _f.open(filename, ios::bin);
-#endif
-      if (!_f)
+      _f = new fstream(filename, ios::in | ios::binary);
+      if (_f->fail())
 	return KCT_ERROR_NOENT;
     }
 
@@ -474,7 +457,12 @@ KCTFile::is_readonly(void)
 kct_error_t
 KCTFile::close(void)
 {
-  _f.close();
+  if (_f != 0)
+    {
+      _f->close();
+      delete _f;
+    }
+  _f = 0;
   return KCT_OK;
 }
 
@@ -509,36 +497,52 @@ KCTFile::list(void)
 	case KCT_TYPE_BAS_P:  type = "PBAS"; break;
 	default:              type = "???";  break;
 	}
+
       if (com && ((*it)->start_addr == 0xffff))
-	cout.form("%-32s %-5s 0x%04x -      0x%08x 0x%08x\n",
-		  (*it)->name,
-		  type,
-		  (*it)->load_addr,
-		  (*it)->compressed_size,
-		  (*it)->uncompressed_size);
+	{
+	  cout.setf(ios::left);
+          cout << setw(32) << setfill(' ') << (*it)->name << " "
+               << setw(5)  << setfill(' ') << type << " 0x";
+	  cout.setf(ios::right);
+	  cout << setw(4)  << hex << setfill('0') << (*it)->load_addr << " -      0x"
+	       << setw(8)  << hex << setfill('0') << (*it)->compressed_size << " 0x"
+	       << setw(8)  << hex << setfill('0') << (*it)->uncompressed_size
+	       << endl;
+	}
       else if (com)
-	cout.form("%-32s %-5s 0x%04x 0x%04x 0x%08x 0x%08x\n",
-		  (*it)->name,
-		  type,
-		  (*it)->load_addr,
-		  (*it)->start_addr,
-		  (*it)->compressed_size,
-		  (*it)->uncompressed_size);
+	{
+	  cout.setf(ios::left);
+          cout << setw(32) << setfill(' ') << (*it)->name << " "
+	       << setw(5)  << setfill(' ') << type << " 0x";
+	  cout.setf(ios::right);
+	  cout << setw(4)  << hex << setfill('0') << (*it)->load_addr << " 0x"
+	       << setw(4)  << hex << setfill('0') << (*it)->start_addr << " 0x"
+	       << setw(8)  << hex << setfill('0') << (*it)->compressed_size << " 0x"
+	       << setw(8)  << hex << setfill('0') << (*it)->uncompressed_size
+	       << endl;
+        }
       else
-	cout.form("%-32s %-5s -      -      0x%08x 0x%08x\n",
-		  (*it)->name,
-		  type,
-		  (*it)->compressed_size,
-		  (*it)->uncompressed_size);
+	{
+	  cout.setf(ios::left);
+          cout << setw(32) << setfill(' ') << (*it)->name << " "
+	       << setw(5)  << setfill(' ') << type << " -      -      0x";
+	  cout.setf(ios::right);
+	  cout << setw(8)  << hex << setfill('0') << (*it)->compressed_size << " 0x"
+	       << setw(8)  << hex << setfill('0') << (*it)->uncompressed_size
+	       << endl;
+	}
       count++;
       c_total += (*it)->compressed_size;
       u_total += (*it)->uncompressed_size;
     }
   cout << "--------------------------------------------------------------------------"
-       << endl;
-  cout.form("files: %ld, compressed size: %ld, uncompressed size: %ld, ratio: %4.2f\n",
-            count, c_total, u_total, (100.0 * c_total) / u_total);
-  cout << "--------------------------------------------------------------------------"
+       << endl
+       << "files: " << dec << count << ", compressed size: "
+       << c_total << ", uncompressed size: "
+       << u_total << ", ratio: "
+       << setprecision(3) << ((100.0 * c_total) / u_total) << "%"
+       << endl
+       << "--------------------------------------------------------------------------"
        << endl;
 }
 
@@ -596,16 +600,13 @@ KCTFile::read(int idx, kct_file_props_t *props)
   unsigned char *cbuf, *ubuf, *ptr;
   istrstream *is;
   
-  //cerr << "KCTFile::read(): idx = " << idx << endl;
   idx = translate_index(idx);
-  //cerr << "KCTFile::read(): idx = " << idx << endl;
 
   offset = _header.offset[idx / 4];
 
   dirblock_read(_dirblock, offset);
 
   idx %= 4;
-  /* cerr << "KCTFile::read(): name = " << _dirblock[idx].name << endl; */
 
   csize = _dirblock[idx].compressed_size;
   cbuf = new unsigned char[csize + 256];
@@ -614,9 +615,8 @@ KCTFile::read(int idx, kct_file_props_t *props)
   offset = _dirblock[idx].offset;
   while (offset != 0)
     {
-      // cerr.form("KCTFile::read(): offset = %08x\n", offset);
-      _f.seekp(offset);
-      _f.read(&data, BLOCK_SIZE);
+      _f->seekp(offset);
+      _f->read((char *)&data, BLOCK_SIZE);
       memcpy(ptr, &data.data, 252);
       ptr += 252;
       offset = data.link;
@@ -629,7 +629,7 @@ KCTFile::read(int idx, kct_file_props_t *props)
 
   if (ret != Z_OK)
     {
-      cerr.form("error in uncompress: %d\n", ret);
+      cerr << "error in uncompress: " << ret << endl;
       return NULL;
     }
 
@@ -644,13 +644,9 @@ KCTFile::read(int idx, kct_file_props_t *props)
       props->size = usize;
       props->type = (kct_file_type_t)_dirblock[idx].type;
       props->machine = (kct_machine_type_t)_dirblock[idx].machine;
-      //cerr.form("kct_props: auto_start: %d\n", props->auto_start);
-      //cerr.form("kct_props: load_addr:  %04x\n", props->load_addr);
-      //cerr.form("kct_props: start_addr: %04x\n", props->start_addr);
-      //cerr.form("kct_props: size:       %08x\n", props->size);
     }
   else
-    cerr.form("kct_props: NULL!\n");
+    cerr << "kct_props: NULL!" << endl;
 
   is = new istrstream((const char *)ubuf, usize);
   return is;
@@ -668,7 +664,7 @@ KCTFile::read(const char *name, kct_file_props_t *props)
         return read(a, props);
       a++;
     }
-  cerr.form("KCTFile::read(): file not found!\n");
+  cerr << "KCTFile::read(): file not found!" << endl;
   return NULL;
 }
 
@@ -730,14 +726,14 @@ KCTFile::write(const char *filename,
 
   for (;;)
     {
-      _f.seekp(offset);
+      _f->seekp(offset);
       if (clen < 252)
         {
           offset = 0;
-          _f.write(&offset, 4);
-          _f.write(cbuf, clen);
+          _f->write((char *)&offset, 4);
+          _f->write((char *)cbuf, clen);
           /* pad to 256 byte */
-          for (a = 0;a < 252 - clen;a++) _f.put(0);
+          for (a = 0;a < 252 - clen;a++) _f->put(0);
           break;
         }
       else
@@ -745,8 +741,8 @@ KCTFile::write(const char *filename,
           offset = bam_block_find_free(_bam);
           if (offset == 0)
             return KCT_ERROR_IO;
-          _f.write(&offset, 4);
-          _f.write(cbuf, 252);
+          _f->write((char *)&offset, 4);
+          _f->write((char *)cbuf, 252);
         }
       cbuf += 252;
       clen -= 252;
@@ -763,7 +759,7 @@ KCTFile::write(const char *filename,
                unsigned long len,
                kct_machine_type_t machine)
 {
-  cerr.form("*** obsolate function called ***\n");
+  cerr << "*** obsolate function called ***" << endl;
   return KCT_ERROR_IO;
 }
 
@@ -774,15 +770,12 @@ KCTFile::remove(int idx)
   kct_data_t data;
   unsigned long offset;
 
-  /* cerr << "KCTFile::remove(): idx = " << idx << endl; */
   idx = translate_index(idx);
-  /* cerr << "KCTFile::remove(): idx = " << idx << endl; */
 
   entry = idx % 4;
   idx /= 4;
   offset = _header.offset[idx];
   _header.offset[idx] &= ~(1 << entry);
-  /* cerr.form("_header.offset[%02x] = %08x\n", idx, _header.offset[idx]); */
 
   dirblock_read(_dirblock, offset);
   if ((_header.offset[idx] & DIRBLOCK_INDEX_MASK) == 0)
@@ -798,10 +791,9 @@ KCTFile::remove(int idx)
   offset = _dirblock[entry].offset;
   while (offset != 0)
     {
-      /* cerr.form("KCTFile::remove(): offset = %08x\n", offset); */
       bam_block_free(_bam, offset / BLOCK_SIZE);
-      _f.seekp(offset);
-      _f.read(&data, BLOCK_SIZE);
+      _f->seekp(offset);
+      _f->read((char *)&data, BLOCK_SIZE);
       offset = data.link;
     }
   bam_write(_bam, BAM_OFFSET);
@@ -845,26 +837,25 @@ KCTFile::test(void)
   if (sizeof(kct_header_t) != 256)
     {
       ok = false;
-      cerr.form("*** sizeof kct_header_t != 256 (%d)\n", sizeof(kct_header_t));
+      cerr << "*** sizeof kct_header_t != 256 (" << sizeof(kct_header_t) << ")" << endl;
     }
   
   if (sizeof(kct_bam_t) != 256)
     {
       ok = false;
-      cerr.form("*** sizeof kct_bam_t != 256 (%d)\n", sizeof(kct_bam_t));
+      cerr << "*** sizeof kct_bam_t != 256 (" << sizeof(kct_bam_t) << ")" << endl;
     }
 
   if (sizeof(kct_data_t) != 256)
     {
       ok = false;
-      cerr.form("*** sizeof kct_data_t != 256 (%d)\n", sizeof(kct_data_t));
+      cerr << "*** sizeof kct_data_t != 256 (" << sizeof(kct_data_t) << ")" << endl;
     }
 
   if (sizeof(kct_dirblock_t) != 256)
     {
       ok = false;
-      cerr.form("*** sizeof kct_dirblock_t != 256 (%d)\n",
-                sizeof(kct_dirblock_t));
+      cerr << "*** sizeof kct_dirblock_t != 256 (" << sizeof(kct_dirblock_t) << ")" << endl;
     }
 
   bam_clear(bam);
@@ -942,7 +933,7 @@ KCTFile::print_block_list(void)
           for (c = 0;c < 8;c++)
             {
 	      if ((_bam[16 * a + b]) & (0x80 >> c))
-                cout.form("%08x\n", 32768 * a + 2048 * b + 256 * c);
+                cout << hex << setw(8) << (32768 * a + 2048 * b + 256 * c) << endl;
 	    }
 	}
     }

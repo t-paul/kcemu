@@ -2,7 +2,7 @@
  *  KCemu -- the KC 85/3 and KC 85/4 Emulator
  *  Copyright (C) 1997-2001 Torsten Paul
  *
- *  $Id: cmdargs.cc,v 1.3 2001/04/14 15:15:42 tp Exp $
+ *  $Id: cmdargs.cc,v 1.4 2001/12/29 03:50:20 torsten_paul Exp $
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -208,7 +208,7 @@ CMD_Arg::get_string_arg(void)
   switch (_type)
     {
     case CMD_ARG_INT:
-      cerr.form("CMD_Arg: accessing INT arg as STRING\n");
+      cerr << "CMD_Arg: accessing INT arg as STRING" << endl;
       break;
     case CMD_ARG_STRING:
       return _val.v_string;
@@ -236,10 +236,8 @@ CMD_Args::lookup(const char *name)
 
   for (it = _arg_list.begin();it != _arg_list.end();it++)
     {
-      //printf("CMD_Args::lookup -> %s\n", (*it)->get_name());
       if (strcmp((*it)->get_name(), name) == 0)
         {
-          //printf("CMD_Args::lookup => %s\n", (*it)->get_name());
           return (*it);
         }
     }

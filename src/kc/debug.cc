@@ -17,6 +17,9 @@
 #include <ctype.h>
 #include <string.h>
 
+#include <iostream.h>
+#include <iomanip.h>
+
 #include "kc/config.h"
 #include "kc/system.h"
 
@@ -323,17 +326,32 @@ byte_t DebugZ80(_Z80 *R)
   for(J=0,I=R->AF.B.l;J<8;J++,I<<=1) T[J]=((I&0x80)? "SZ.H.PNC"[J]:'.');
   T[8] = '\0';
 
-  cerr.form("%04x: %02x - %-16.16s  [%s] AF:%04x HL:%04x IX:%04x IY:%04x\n",
-	R->PC.W, RdZ80(R->PC.W), S, T, R->AF.W, R->HL.W, R->IX.W, R->IY.W);
-  cerr.form("                                        BC:%04x DE:%04x SP:%04x PC:%04x\n",
-	R->BC.W, R->DE.W, R->SP.W, R->PC.W);
+  cerr.setf(ios::right);
+  cerr << setw(4)  << setfill('0') << hex << R->PC.W << ": "
+       << setw(2)  << setfill('0') << hex << (int)RdZ80(R->PC.W) << " "
+       << setw(2)  << setfill('0') << hex << (int)RdZ80(R->PC.W + 1) << " "
+       << setw(2)  << setfill('0') << hex << (int)RdZ80(R->PC.W + 2) << " - ";
+  cerr.setf(ios::left);
+  cerr << setw(16) << setfill(' ') << S << "  [" << T << "]";
+  cerr.setf(ios::right);
+  cerr << " AF:" << setw(4) << setfill('0') << hex << R->AF.W
+       << " HL:" << setw(4) << setfill('0') << hex << R->HL.W
+       << " IX:" << setw(4) << setfill('0') << hex << R->IX.W
+       << " IY:" << setw(4) << setfill('0') << hex << R->IY.W
+       << endl
+       << "                                             "
+       << " BC:" << setw(4) << setfill('0') << hex << R->BC.W
+       << " DE:" << setw(4) << setfill('0') << hex << R->DE.W
+       << " SP:" << setw(4) << setfill('0') << hex << R->SP.W
+       << " PC:" << setw(4) << setfill('0') << hex << R->PC.W
+       << endl;
 
   if (R->Trace<2) return 1;
 
   last_word = 0xffff;
   while(1)
   {
-    cout.form("\n[Command,'?']-> ");
+    cout << endl << "[Command,'?']-> " << flush;
     fflush(stdout);fflush(stdin);
     ui->processEvents();
     ui->update(true);
@@ -397,7 +415,9 @@ byte_t DebugZ80(_Z80 *R)
 		   sscanf(S+1,"%hX %hX", &port, &val);
 		   val &= 0xff;
 		   port &= 0xff;
-		   cout.form("writing value 0x%02x to port 0x%02x\n", val, port);
+		   cout << "writing value 0x" << hex << setw(2) << setfill('0') << val
+			<< " to port 0x" << hex << setw(2) << setfill('0') << port
+			<< endl;
 		   ports->out(port, val);
 		   return(1);
                  }
@@ -407,7 +427,9 @@ byte_t DebugZ80(_Z80 *R)
 	           word_t port, val;
 		   sscanf(S+1,"%hX", &port);
 		   val = ports->in(port);
-		   cout.form("reading from port 0x%02x: 0x%02x\n", port, val);
+		   cout << "reading from port 0x" << hex << setw(2) << setfill('0') << port
+			<< ": 0x" << hex << setw(2) << setfill('0') << val
+			<< endl;
 		   return(1);
                  }
 		break;
@@ -418,24 +440,25 @@ byte_t DebugZ80(_Z80 *R)
 	  word_t addr = R->SP.W, ptr;
 
 	  x = 0;
-	  cout.form("current stack pointer is at %04xh", addr);
+	  cout << "current stack pointer is at " << hex << setw(4) << setfill('0') << addr << "h" << endl;
 	  while (242)
 	    {
 	      if (x == 0)
-		cout.form("\nSP = %04xh:", addr);
+		cout << endl << "SP = " << hex << setw(4) << setfill('0') << addr << "h:";
 	      
 	      ptr = RdZ80(addr) | RdZ80(addr + 1) << 8;
 	      if (RdZ80(ptr - 3) == 0xcd)
 		{
 		  x = 0;
-		  cout.form(" at %04xh: call %04xh",
-			    ptr - 3, RdZ80(ptr - 2) | RdZ80(ptr - 1) << 8);
+		  cout << " at "
+		       << hex << setw(4) << setfill('0') << (ptr - 3) << "h: call "
+		       << hex << setw(4) << setfill('0') << (RdZ80(ptr - 2) | (RdZ80(ptr - 1) << 8)) << "h";
 		  addr += 2;
 		}
 	      else
 		{
 		  x++;
-		  cout.form(" [%02x]", RdZ80(addr));
+		  cout << " [" << hex << setw(2) << setfill('0') << RdZ80(addr) << "]";
 		  addr += 1;
 		  if (x > 6)
 		    break;
@@ -460,13 +483,19 @@ byte_t DebugZ80(_Z80 *R)
           puts("");
           for(J=0;J<16;J++)
           {
-            cout.form("%04X: ",Addr);
-            for(I=0;I<16;I++,Addr++)
-              cout.form("%02X%s",RdZ80(Addr),I==7?" - ":" ");
-            cout.form("| ");Addr-=16;
+            cout << hex << setw(4) << setfill('0') << Addr << ": ";
+
+            for (I=0;I<16;I++,Addr++)
+	      cout << hex << setw(4) << setfill('0') << RdZ80(Addr)
+		   << (I == 7 ? " - " : " ");
+
+            cout << "| ";
+	    Addr-=16;
+
             for(I=0;I<16;I++,Addr++)
               putchar(isprint(RdZ80(Addr))? RdZ80(Addr):'.');
-            puts("");
+
+            cout << endl;
           }
         }
         break;
@@ -479,7 +508,7 @@ byte_t DebugZ80(_Z80 *R)
           puts("");
           for(J=0;J<16;J++)
           {
-            cout.form("%04X: ",Addr);
+            cout << hex << setw(4) << setfill('0') << Addr << ": ";
             Addr+=DAsm(S,Addr);
             puts(S);
           }
@@ -491,21 +520,6 @@ byte_t DebugZ80(_Z80 *R)
 	  return(1);
         }
 	break;
-
-    case 'E':
-      {
-	  int a;
-	  extern int exec_trace_idx;
-	  extern unsigned short exec_trace[];
-	  
-	  for (a = 0;a < 40;a++) 
-	    {
-	      printf("%04X  ", exec_trace[(exec_trace_idx - a - 1) % 100]);
-	      if ((a % 8) == 7)
-		printf("\n");
-	    }
-	  printf("\n");
-      }
     }
   }
 

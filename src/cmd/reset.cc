@@ -2,7 +2,7 @@
  *  KCemu -- the KC 85/3 and KC 85/4 Emulator
  *  Copyright (C) 1997-2001 Torsten Paul
  *
- *  $Id: reset.cc,v 1.2 2001/04/14 15:15:46 tp Exp $
+ *  $Id: reset.cc,v 1.3 2002/01/06 12:53:40 torsten_paul Exp $
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -24,8 +24,6 @@
 #include "ui/status.h"
 #include "cmd/cmd.h"
 
-extern int __kc_type; /* FIXME: this is in kc.cc */
-
 class CMD_reset : public CMD
 {
 public:
@@ -42,10 +40,19 @@ public:
         {
         case 0:
           Status::instance()->setMessage("*** RESET ***");
-          if (__kc_type == 1)
-            z80->reset(0xf000);
-          else
-            z80->reset(0xe000);
+	  switch (get_kc_type())
+	    {
+	    case KC_TYPE_85_1:
+	    case KC_TYPE_87:
+	      z80->reset(0xf000);
+	      break;
+	      
+	    case KC_TYPE_85_2:
+	    case KC_TYPE_85_3:
+	    case KC_TYPE_85_4:
+	      z80->reset(0xe000);
+	      break;
+	    }
           break;
         case 1:
           Status::instance()->setMessage("*** POWER ON ***");

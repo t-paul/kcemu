@@ -1,4 +1,4 @@
-# $Id: de.po,v 1.19 2001/12/28 15:28:39 torsten_paul Exp $
+# $Id: de.po,v 1.20 2002/01/06 12:53:40 torsten_paul Exp $
 # KCemu german translation
 # Copyright (C) 1998 Free Software Foundation, Inc.
 # Torsten Paul <Torsten.Paul@gmx.de>, 1998-2000.
@@ -6,7 +6,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: KCemu V0.2\n"
-"POT-Creation-Date: 2001-08-09 12:13+0200\n"
+"POT-Creation-Date: 2002-01-06 14:05+0100\n"
 "PO-Revision-Date: 2000-10-15 00:07+02:00\n"
 "Last-Translator: Torsten Paul <Torsten.Paul@gmx.de>\n"
 "Language-Team: German\n"
@@ -43,15 +43,15 @@ msgstr ""
 "können, muß die Datei einem Kassetten-Archiv\n"
 "hinzugefügt werden!"
 
-#: src/kc/disk.cc:78
+#: src/kc/disk.cc:82
 msgid "Select disk..."
 msgstr "Diskette auswählen..."
 
-#: src/kc/disk.cc:116 src/kc/tape.cc:178
+#: src/kc/disk.cc:120 src/kc/tape.cc:178
 msgid "create file?"
 msgstr "Datei erzeugen?"
 
-#: src/kc/disk.cc:118 src/kc/tape.cc:180
+#: src/kc/disk.cc:122 src/kc/tape.cc:180
 #, c-format
 msgid ""
 "The file '%s' doesn't exist.\n"
@@ -60,12 +60,12 @@ msgstr ""
 "Die Datei '%s' existiert nicht.\n"
 "Wollen Sie, daß sie erzeugt wird?"
 
-#: src/kc/disk.cc:131
+#: src/kc/disk.cc:135
 #, c-format
 msgid "disk-file `%s' attached."
 msgstr "Disketten-Datei `%s' aktiviert."
 
-#: src/kc/disk.cc:136
+#: src/kc/disk.cc:140
 msgid "Can't attach disk-file."
 msgstr "Kann Disketten-Datei nicht aktivieren."
 
@@ -93,35 +93,35 @@ msgstr "RAM Module (16k/8000h)"
 msgid "IRM Color Expansion"
 msgstr "IRM Color Expansion"
 
-#: src/kc/mod_list.cc:105
+#: src/kc/mod_list.cc:109
 msgid "M022: Expander RAM (16k)"
 msgstr "M022: Expander RAM (16k)"
 
-#: src/kc/mod_list.cc:114
+#: src/kc/mod_list.cc:118
 msgid "M006: Basic"
 msgstr "M006: Basic"
 
-#: src/kc/mod_list.cc:124
+#: src/kc/mod_list.cc:128
 msgid "M012: Texor"
 msgstr "M012: Texor"
 
-#: src/kc/mod_list.cc:134
+#: src/kc/mod_list.cc:138
 msgid "M026: Forth"
 msgstr "M026: Forth"
 
-#: src/kc/mod_list.cc:144
+#: src/kc/mod_list.cc:148
 msgid "M027: Development"
 msgstr "M027: Development"
 
-#: src/kc/mod_list.cc:155
+#: src/kc/mod_list.cc:159
 msgid "M900: WordPro '86 (KC85/3)"
 msgstr "M900: WordPro '86 (KC85/3)"
 
-#: src/kc/mod_list.cc:166
+#: src/kc/mod_list.cc:170
 msgid "M901: WordPro '86 (KC85/4)"
 msgstr "M901: WordPro '86 (KC85/4)"
 
-#: src/kc/mod_list.cc:177
+#: src/kc/mod_list.cc:181
 msgid "Floppy Disk Basis"
 msgstr "Floppy Disk Basis"
 
@@ -167,9 +167,9 @@ msgstr "Über den KC-Emulator"
 #.
 #. *  close button
 #.
-#: src/ui/gtk/about.cc:92 src/ui/gtk/color.cc:245 src/ui/gtk/copying.cc:151
-#: src/ui/gtk/disk.cc:287 src/ui/gtk/info.cc:541 src/ui/gtk/module.cc:212
-#: src/ui/gtk/tape.cc:414 src/ui/gtk/tapeadd.cc:184
+#: src/ui/gtk/about.cc:96 src/ui/gtk/color.cc:245 src/ui/gtk/copying.cc:151
+#: src/ui/gtk/disk.cc:295 src/ui/gtk/info.cc:541 src/ui/gtk/module.cc:218
+#: src/ui/gtk/tape.cc:415 src/ui/gtk/tapeadd.cc:184
 msgid "Close"
 msgstr "Schließen"
 
@@ -223,19 +223,19 @@ msgstr "Weiß Wert"
 msgid "KCemu: Copying"
 msgstr "KCemu: Lizenz"
 
-#: src/ui/gtk/debug.cc:227
+#: src/ui/gtk/debug.cc:225
 msgid "KCemu: Debugger"
 msgstr "KCemu: Debugger"
 
-#: src/ui/gtk/debug.cc:326
+#: src/ui/gtk/debug.cc:324
 msgid "Trace"
 msgstr "Ablaufverfolgung"
 
-#: src/ui/gtk/debug.cc:333
+#: src/ui/gtk/debug.cc:331
 msgid "Single Step"
 msgstr "Einzelschritt"
 
-#: src/ui/gtk/debug.cc:340
+#: src/ui/gtk/debug.cc:338
 msgid "Execute Step"
 msgstr "Instruktion ausführen"
 
@@ -264,14 +264,14 @@ msgstr "Ja"
 msgid "No"
 msgstr "Nein"
 
-#: src/ui/gtk/disk.cc:169
+#: src/ui/gtk/disk.cc:188
 msgid "KCemu: Disk"
 msgstr "KCemu: Diskette"
 
 #.
 #. *  label
 #.
-#: src/ui/gtk/disk.cc:196
+#: src/ui/gtk/disk.cc:215
 #, c-format
 msgid "Disk %d"
 msgstr "Diskette %d"
@@ -279,30 +279,16 @@ msgstr "Diskette %d"
 #.
 #. *  browse button
 #.
-#: src/ui/gtk/disk.cc:224 src/ui/gtk/tapeadd.cc:87
+#: src/ui/gtk/disk.cc:263 src/ui/gtk/tapeadd.cc:87
 msgid "Browse"
 msgstr "Durchsuchen"
 
 #.
 #. *  eject button
 #.
-#: src/ui/gtk/disk.cc:236
+#: src/ui/gtk/disk.cc:276
 msgid "Eject"
 msgstr "Auswerfen"
-
-#.
-#. *  ok button
-#.
-#: src/ui/gtk/disk.cc:264 src/ui/gtk/tapeadd.cc:165
-msgid "Ok"
-msgstr "Ok"
-
-#.
-#. *  apply button
-#.
-#: src/ui/gtk/disk.cc:276
-msgid "Apply"
-msgstr "Übernehmen"
 
 #: src/ui/gtk/fbrowse.cc:42
 msgid "Select File..."
@@ -491,20 +477,20 @@ msgstr "CTC"
 msgid "Update"
 msgstr "Aktualisieren"
 
-#: src/ui/gtk/module.cc:178
+#: src/ui/gtk/module.cc:183
 msgid "KCemu: Module"
 msgstr "KCemu: Module"
 
-#: src/ui/gtk/module.cc:194
+#: src/ui/gtk/module.cc:199
 #, c-format
 msgid "D002: Busdriver [%02X]"
 msgstr "D002: Bus-Treiber [%02X]"
 
-#: src/ui/gtk/module.cc:198
+#: src/ui/gtk/module.cc:204
 msgid "Floppy Disk Basis [F0]"
 msgstr "Floppy Disk Grundgerät [F0]"
 
-#: src/ui/gtk/module.cc:199
+#: src/ui/gtk/module.cc:205
 msgid "Basis Device"
 msgstr "Grundgerät"
 
@@ -546,6 +532,13 @@ msgstr "load addr:"
 #: src/ui/gtk/tapeadd.cc:135
 msgid "start addr:"
 msgstr "start addr:"
+
+#.
+#. *  ok button
+#.
+#: src/ui/gtk/tapeadd.cc:165
+msgid "Ok"
+msgstr "Ok"
 
 #: src/ui/gtk/tapeadd.cc:242
 msgid "no filename given!"
@@ -653,23 +646,23 @@ msgstr "Kassette:"
 #.
 #. *  buttons
 #.
-#: src/ui/gtk/tape.cc:379
+#: src/ui/gtk/tape.cc:380
 msgid "Stop"
 msgstr "Stop"
 
-#: src/ui/gtk/tape.cc:386
+#: src/ui/gtk/tape.cc:387
 msgid "Record"
 msgstr "Aufnahme"
 
-#: src/ui/gtk/tape.cc:393
+#: src/ui/gtk/tape.cc:394
 msgid "Play"
 msgstr "Abspielen"
 
-#: src/ui/gtk/tape.cc:400
+#: src/ui/gtk/tape.cc:401
 msgid "Attach"
 msgstr "Aktivieren"
 
-#: src/ui/gtk/tape.cc:407
+#: src/ui/gtk/tape.cc:408
 msgid "Detach"
 msgstr "Deaktivieren"
 
@@ -800,3 +793,6 @@ msgstr "/sep3"
 #: src/ui/gtk/ui_gtk.cc:453
 msgid "/Quit Emulator"
 msgstr "/Emulator beenden"
+
+#~ msgid "Apply"
+#~ msgstr "Übernehmen"

@@ -2,7 +2,7 @@
  *  KCemu -- the KC 85/3 and KC 85/4 Emulator
  *  Copyright (C) 1997-2001 Torsten Paul
  *
- *  $Id: ui_gtk.cc,v 1.19 2001/04/14 15:17:04 tp Exp $
+ *  $Id: ui_gtk.cc,v 1.21 2002/01/06 12:53:41 torsten_paul Exp $
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -549,7 +549,7 @@ UI_Gtk::create_main_window(void)
   gtk_box_pack_start(GTK_BOX(_main.st_hbox), _main.st_frame, FALSE, TRUE, 0);
   gtk_widget_show(_main.st_frame);
 
-  _main.st_fps = gtk_label_new("");
+  _main.st_fps = gtk_label_new("          ");
   gtk_container_add(GTK_CONTAINER(_main.st_frame), _main.st_fps);
   gtk_widget_show(_main.st_fps);
 
@@ -584,7 +584,6 @@ UI_Gtk::sf_profile_event(GtkWidget * /* widget */, GdkEventButton *event)
   int x = (int)event->x;
   int y = (int)event->y;
   int addr = ((y / 2) << 8) | (x / 2);
-  cerr.form("sf_profile_event -> [%d, %d] => %04x\n", x, y, addr);
 }
 
 void

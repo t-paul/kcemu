@@ -1,27 +1,163 @@
-2001-01-22  Torsten Paul  <tp@gmx.de>
+2002-01-06  Torsten Paul  <Torsten.Paul@gmx.de>
+
+	* released version 0.3.3
+	
+	* src/libdisk/load_22dsk.c (loader_22dsk_write_sector): 
+	added write support
+	
+	* src/libdisk/load_cdm.c (loader_cdm_write_sector): added
+	write support
+
+	* src/ui/gtk/disk.cc: show disks that are installed by
+	default as combobox entries
+
+2002-01-05  Torsten Paul  <Torsten.Paul@gmx.de>
+
+	* src/kc/floppy.cc: fixed crash when the emulator tried
+	to access a floppy device with no attached floppy
+
+	* src/ui/gtk/ui_gtk*.cc: added/changed status info
+	showing the frames per second
+
+	* src/ui/gtk/tape.cc (init): don't set empty popup
+	on tape combobox
+
+	* Makefile.am: added the debian package control files to
+	the source distribution
+
+	* src/libdisk/load_dir.c: first working disk emulation
+	for unix directories (at least if pointed to directories
+	with reasonable content - will most likely crash on
+	directories with many or big files!)
+
+	* src/kc/fdc_cmd.cc (read_byte): fixed wrong call to
+	fetch_next_sector() which came one byte too early
+
+2002-01-03  Torsten Paul  <Torsten.Paul@gmx.de>
+
+	* src/libdisk/load_cdm.c: handles disk format used by the
+	yaze CP/M emulator and its disk handling program cdm
+	(for now only disks created with the cdm command
+	"create disk.img 819200 -b1024 -d127 -o4 -s5" are
+	supported - this is the same format as the CAOS disk
+	that ships with the D004 floppy system)
+
+	* src/libdisk/load_22dsk.c: handles disk dumps done with
+	the 22DISK tool by Sydex
+
+	* src/libdisk/load_dir.c: emulate unix directories as
+	CP/M disk
+
+	* src/libdisk/disk.c: moved the file I/O for floppy
+	disks into a separate library
+
+	* src/kc/ctc.cc (trigger): don't run interrupt handler
+	if interrupts are not enabled! this seems to fix the
+	MicroDOS boot hang
+
+2002-01-02  Torsten Paul  <Torsten.Paul@gmx.de>
+
+	* src/kc/kc.cc: added kc87 mode (equals kc85/1 mode with
+	color expansion installed), color expansion doesn't show
+	up in the module list anymore
+
+	* src/ui/gtk/module.cc: module user interface only displays
+	modules for the running computer type
+
+	* include/kc/mod_list.h (class ModuleList): added type field
+	for modules that specifies for which computer type the module
+	is intended for
+
+	* test/kc/t_cb_list.cc, test/kc/t_ctc.cc: first unit tests
+	based on Cppunit
+
+	* src/ui/gtk/disk.cc: user interface now somewhat functional -
+	initializastion not correct if disk-images are attached via
+	.kcemurc
+
+2002-01-01  Torsten Paul  <Torsten.Paul@gmx.de>
+
+	* src/kc/fdc_cmd.cc: enabled write access
+
+	* src/kc/fdc.cc: now emulate all four floppies and allows
+	initialization in .kcemurc
+
+	* src/kc/floppy.cc (attach): fixed missing size calculation of
+	the offset table when attaching CDM floppies
+	(read_offsets): moved sector offset table into the Floppy class
+
+2001-12-31  Torsten Paul  <Torsten.Paul@gmx.de>
+
+	* src/kc/ctc.cc: main ctc code is now processor independent
+	and can be used for the base and the floppy system /
+	handling of counter/timer mode changed to be more general
+	but needs some test and optimization eventually
+	
+	* src/kc/z80_fdc.cc, src/kc/ctc_fdc.cc: interrupt handling
+	working partially (MicroDOS system clock is running) but there
+	seems to be a ctc related problem that locks up the MicroDOS
+	system on boot
+
+	* include/ui/ui.h: removed reference to z80.h
+
+2001-12-30  Torsten Paul  <Torsten.Paul@gmx.de>
+
+	* include/kc/z80_fdc.h, src/kc/z80_fdc.cc: moved the floppy
+	systems cpu emulation into separate files
+
+	* src/kc/z80.cc: lots of dead code removed
+
+	* test/kc/t_cb_list_1.cc, test/kc/t_cb_list_2.cc: added some
+	testcases for the callback code
+
+	* include/kc/cb_list.h, src/kc/cb_list.cc: moved the callback
+	handling out of z80.cc so it can also be used for the floppy
+	processor emulation
+
+2001-12-30  Torsten Paul  <Torsten.Paul@gmx.de>
+
+	* include/kc/ctc*.h, src/kc/ctc*.cc: added layer between
+	core CTC emulation and system (processor) specific calls
+	to support the CTC usage in the floppy system emulation
+
+2001-12-29  Torsten Paul  <Torsten.Paul@gmx.de>
+
+	* compile fixes for gcc-3.0.x
+	* prepared debian binary release
+	* added manpages as required by debian policy
+
+2001-12-28  Torsten Paul  <Torsten.Paul@gmx.de>
+
+	* released version 0.3.2 on SourceForge.net
+
+2001-06-17  Torsten Paul  <Torsten.Paul@gmx.de>
+
+	* registred SourceForge.net project
+	
+2001-01-22  Torsten Paul  <Torsten.Paul@gmx.de>
 
 	* include/kc/ctc.h, src/kc/ctc.cc: added CTCCallbackInterface that
 	allows other classes to register some interresting events of the
 	emulated CTC (Timer Value change, Start, Stop, Zero Counter)
 
-2001-01-20  Torsten Paul  <tp@gmx.de>
+2001-01-20  Torsten Paul  <Torsten.Paul@gmx.de>
 
 	* include/kc/pio.h (class PIOCallbackInterface): output callbacks
 	now include the value as argument
 
-2001-01-15  Torsten Paul  <tp@gmx.de>
+2001-01-15  Torsten Paul  <Torsten.Paul@gmx.de>
 
 	* src/kc/memory4.cc (Memory4): load RAM-File on init
 	(Resource: "Load On Init"), hex number starting with 0x can
 	specify load addres; will only work with a patched System ROM
 	that doesn't zero all available memory
 
-2000-07-12  Torsten Paul  <tp@degas.eb.de>
+2000-07-12  Torsten Paul  <Torsten.Paul@gmx.de>
 
 	* src/fileio/load_SSS.c: new loader for raw BASIC files (without
 	header bytes and filename)
 
-2000-07-10  Torsten Paul  <tp@degas.eb.de>
+2000-07-10  Torsten Paul  <Torsten.Paul@gmx.de>
 
 	* src/ui/gtk/tape.cc: Translation of GtkItemFactoryEntries and the
 	associated text (without the '_' markers) need to be the same or
@@ -29,7 +165,7 @@
 
 	* src/kc/tape.cc: fixed saving to tape
 
-2000-07-08  Torsten Paul  <tp@degas.eb.de>
+2000-07-08  Torsten Paul  <Torsten.Paul@gmx.de>
 
 	* src/fileio/load.c: added get_name() function to the loader
 	interface
@@ -41,23 +177,22 @@
 	src/fileio/load_TAPE.c (loader_TAPE_load): fixed loaders to
 	correctly store the file blocks with the included block number
 
-2000-07-06  Torsten Paul  <tp@degas.eb.de>
+2000-07-06  Torsten Paul  <Torsten.Paul@gmx.de>
 
 	* src/libtape/kctape.cc (add_file): changed file loading to use
 	the fileio library
 
-2000-07-02  Torsten Paul  <tp@degas.eb.de>
+2000-07-02  Torsten Paul  <Torsten.Paul@gmx.de>
 
 	* src/ui/gtk/ui_gtk.cc (create_main_window): didn't get property
 	change events anymore, maybe gtk_widget_set_events() behaves now
 	differently or the default event mask is different? - fixed
 
-2000-07-01  Torsten Paul  <tp@degas.eb.de>
+2000-07-01  Torsten Paul  <Torsten.Paul@gmx.de>
 
 	* src/ui/gtk/module.cc (init): fixed another initialization bug
 
-2000-06-28  Torsten Paul  <tp@degas.eb.de>
+2000-06-28  Torsten Paul  <Torsten.Paul@gmx.de>
 
 	* src/kc/mod_rom.cc (ModuleROM): fixed initialization bug that
 	caused segfaults when leaving the emulator
-

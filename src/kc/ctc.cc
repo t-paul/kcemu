@@ -2,7 +2,7 @@
  *  KCemu -- the KC 85/3 and KC 85/4 Emulator
  *  Copyright (C) 1997-2001 Torsten Paul
  *
- *  $Id: ctc.cc,v 1.14 2001/05/06 21:21:33 tp Exp $
+ *  $Id: ctc.cc,v 1.19 2002/01/06 12:53:40 torsten_paul Exp $
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -28,17 +28,9 @@
 #include "kc/kc.h"
 #include "ui/ui.h"
 #include "kc/ctc.h"
-#include "kc/z80.h"
 #include "kc/tape.h"
 
 #include "libdbg/dbg.h"
-
-#define PARANOIA_CHECK
-// #define CTC_IRQ_DEBUG 0xff
-// #define CTC_VALUE_DEBUG 0xff
-// #define CTC_IN_DEBUG 3
-// #define CTC_OUT_DEBUG 2
-// #define CTC_CB_DEBUG 0xff
 
 CTC::CTC(void) : Callback("CTC")
 {
@@ -52,12 +44,10 @@ CTC::CTC(void) : Callback("CTC")
   _cb_list[3] = NULL;
 
   reset(true);
-  z80->register_ic(this);
 }
 
 CTC::~CTC(void)
 {
-  z80->unregister_ic(this);
 }
 
 void
@@ -102,18 +92,9 @@ CTC::reti(void)
       if (_irq_pending[a])
 	{
 	  DBG(2, form("KCemu/CTC/reti",
-		      "CTC::reti(): triggerIrq(): _irq_pending[a] = %d\n",
+		      "CTC::reti(): trigger_irq(): _irq_pending[a] = %d\n",
 		      _irq_pending[a]));
-	  if (z80->triggerIrq(_irq_vector | a << 1))
-	    {
-	      //cerr.form("CTC::reti() [%d] - irq ack\n", a);
-	      _irq_active[a] = 1;
-	      z80->handleIrq(_irq_vector | a << 1);
-	    }
-	  else
-	    {
-	      //cerr.form("CTC::reti() [%d] - irq nack\n", a);
-	    }
+	  _irq_active[a] |= trigger_irq(_irq_vector | a << 1);
 	  _irq_pending[a] = 0;
 	}
     }
@@ -124,26 +105,53 @@ CTC::trigger(byte_t channel)
 {
   byte_t c = channel & 3;
 
-  if ((_control[c] & MODE) != MODE_COUNTER) return;
-  if ((_control[c] & IRQ) != IRQ_ENABLED) return;
+  if ((_control[c] & MODE) != MODE_COUNTER)
+    return;
 
   _value[c]--;
-  if (_value[c] > 0) return;
+  if (_value[c] > 0)
+    return;
 
   _value[c] = _timer_value[c];
+
+  if ((_control[c] & IRQ) == IRQ_DISABLED)
+    return;
 
   if (_irq_pending[c] == 1)
     return;
 
   DBG(2, form("KCemu/CTC/reti",
-	      "CTC::trigger(%d): triggerIrq(): _irq_pending = %d\n",
+	      "CTC::trigger(%d): trigger_irq(): _irq_pending = %d\n",
 	      channel, _irq_pending[c]));
+
   _irq_pending[c] = 1;
-  if (z80->triggerIrq(_irq_vector | c << 1))
+  _irq_active[c] |= trigger_irq(_irq_vector | c << 1);
+  if (_irq_active[c])
+    _irq_pending[c] = 0;
+}
+
+void
+CTC::handle_counter_mode(int channel)
+{
+  long cv;
+
+  switch (channel)
     {
-      _irq_active[c] = 1;
-      z80->handleIrq(_irq_vector | c << 1);
+    case 0: cv = counter_value_0(); break;
+    case 1: cv = counter_value_1(); break;
+    case 2: cv = counter_value_2(); break;
+    case 3: cv = counter_value_3(); break;
     }
+  
+  if (cv == 0)
+    return;
+  
+  cv *= _timer_value[channel]; // mapping from 0 to 256 is done in c_out()
+
+  run_cb_tc(channel, _timer_value[channel]);
+
+  _irq_valid[channel] += 4;
+  add_callback(cv, this, (void *)((long)_irq_valid[channel]));
 }
 
 void
@@ -154,19 +162,8 @@ CTC::callback(void *data)
   long val = (long)data;
   byte_t c = val & 3;
 
-#ifdef PARANOIA_CHECK
-  if (_timer_value[c] == 0)
-    {
-      cerr.form("CTC: [%d] - timer value is 0!\n", c);
-      exit(1);
-    }
-#endif
-
   if (_irq_valid[c] != val)
-    {
-      // cerr.form("CTC: [%d] - invalid irq ignored\n", c);
-      return;
-    }
+    return;
 
   switch (c)
     {
@@ -197,66 +194,27 @@ CTC::callback(void *data)
    */
   if ((_control[c] & MODE) == MODE_COUNTER)
     {
-      if (c == 2)
-        {
-          /*
-           *  CLK for channel 2 is 50 Hz
-           */
-          tmp = _timer_value[c] * CHANNEL_2_CLK;
-          if (tmp == 0) tmp = 256 * CHANNEL_2_CLK;
-          z80->addCallback(tmp, this, (void *)((long)_irq_valid[c]));
-        }
+      handle_counter_mode(c);
       return;
     }
 
-  /*
-   *  TIMER mode (clock source is the internal clock prescaler)
-   */
-  switch (c)
-    {
-    case 1:
-      if ((_control[c] & IRQ) != IRQ_ENABLED) return;
-      break;
-    case 2:
-      if ((_control[c] & IRQ) != IRQ_ENABLED)
-        {
-          z80->addCallback(_timer_value[c], this, (void *)((long)val));
-          return;
-        }
-      break;
-    }
-  
-#ifdef CTC_IRQ_DEBUG
-  if (c == CTC_IRQ_DEBUG || CTC_IRQ_DEBUG == 0xff)
-    {
-      /*
-      cerr.form("CTC::callback(): [%d] %d [1fdh=%02x]\n", c, val,
-                memory->memRead8(0x1fd));
-      */
-    }
-#endif
   if ((_control[c] & IRQ) == IRQ_ENABLED)
     {
       if (_irq_pending[c] == 0)
 	{
 	  DBG(2, form("KCemu/CTC/reti",
-		      "CTC::callback(): triggerIrq(): _irq_pending = %d\n",
+		      "CTC::callback(): trigger_irq(): _irq_pending = %d\n",
 		      _irq_pending[c]));
 	  _irq_pending[c] = 1;
-	  if (z80->triggerIrq(_irq_vector | c << 1))
-	    {
-	      _irq_active[c] = 1;
-	      //cerr.form("CTC: [%d] - irq ack\n", c);
-          z80->handleIrq(_irq_vector | c << 1);
-	    }
-	  else
-	    {
-	      //cerr.form("CTC: [%d] - irq nack\n", c);
-	    }
+	  _irq_active[c] |= trigger_irq(_irq_vector | c << 1);
+	  if (_irq_active[c])
+	    _irq_pending[c] = 0;
 	}
-      z80->addCallback(_timer_value[c],
-		       this, (void *)((long)val));
+      else
+	cout << "IRQ pending!" << endl;
     }
+
+  add_callback(_timer_value[c], this, (void *)((long)val));
 }
 
 byte_t
@@ -267,8 +225,6 @@ CTC::c_in(byte_t c)
   
   if (_timer_value[c] == 0)
     {
-      //Z80::printPC();
-      //cerr.form("CTC: [%d] timer value is 0\n", c);
       return 0;
     }
 
@@ -284,7 +240,7 @@ CTC::c_in(byte_t c)
         }
       else
         {
-          diff = z80->getCounter() - _counter[c];
+          diff = get_counter() - _counter[c];
         }
     }
   
@@ -299,26 +255,7 @@ CTC::c_in(byte_t c)
       val = ((_value[c] / 256) - diff) & 0xff;
     }
 
-  /*
-    cerr.form("%02x ", val);
-    if (val < 0x10) {
-    cerr.form("<#%02x#> ", memory->memRead8(0x1fd));
-    }
-    */
-#ifdef CTC_IN_DEBUG
-  if ((c == CTC_IN_DEBUG) || (CTC_IN_DEBUG == 0xff))
-    {
-      cerr.form("CTC: %04x in [%d] - cur = %Ld, old = %Ld, diff = %8Ld, tv = %04x - 0x%02x\n",
-		z80->getPC(),
-		c,
-		z80->getCounter(),
-		_counter[c],
-		z80->getCounter() - _counter[c],
-		_timer_value[c],
-		val);
-    }
-#endif
-  _counter[c] = z80->getCounter();
+  _counter[c] = get_counter();
   
   return val;
 }
@@ -332,143 +269,62 @@ CTC::c_out(byte_t channel, byte_t val)
     {
       _control[channel] &= ~(CONSTANT | RESET);
       run_cb_start(channel);
-      
-      if ((_control[channel] & MODE) == MODE_COUNTER)
-        {
-#ifdef CTC_OUT_DEBUG
-          if ((channel == CTC_OUT_DEBUG) || (CTC_OUT_DEBUG == 0xff))
-            {
-              z80->printPC();
-              cerr << "CTC: new counter value for channel "
-                   << (int)channel << ": 0x"
-                   << hex << (int)val << " -> "
-                   << (int)_timer_value[channel] << "\n";
-            }
-#endif
-          _timer_value[channel] = val;
-          if (_timer_value[channel] == 0) _timer_value[channel] = 256;
-          _value[channel] = _timer_value[channel];
-	  run_cb_tc(channel, _timer_value[channel]);
-          if (channel == 2)
-            {
-              /*
-               *  CLK for channel 2 is 50 Hz
-               */
-              tmp = _timer_value[channel] * CHANNEL_2_CLK;
-              if (tmp == 0) tmp = 256 * CHANNEL_2_CLK;
-              _irq_valid[channel] += 4;
-              z80->addCallback(tmp, this, (void *)((long)_irq_valid[channel]));
-            }
-          return;
-        }
-      
-      if ((_control[channel] & PRESCALER) == PRESCALER_16)
-        {
-          _timer_value[channel] = val << 4; /* div 16 */
-          if (_timer_value[channel] == 0) _timer_value[channel] = 4096;
-        }
+
+      if ((_control[channel] & MODE) == MODE_TIMER)
+	{
+	  if ((_control[channel] & PRESCALER) == PRESCALER_16)
+	    {
+	      _timer_value[channel] = val << 4; /* div 16 */
+	      if (_timer_value[channel] == 0)
+		_timer_value[channel] = 4096;
+	    }
+	  else
+	    {
+	      _timer_value[channel] = val << 8; /* div 256 */
+	      /*
+	       *  well, this should be 65536 but this would need a dword
+	       *  for _timer_value
+	       */
+	      if (_timer_value[channel] == 0)
+		_timer_value[channel] = 65535;
+	    }
+	}
       else
-        {
-          _timer_value[channel] = val << 8; /* div 256 */
-          /*
-           *  well, this should be 65536 but this would need a dword
-           *  for _timer_value
-           */
-          if (_timer_value[channel] == 0) _timer_value[channel] = 65535;
-        }
-      _counter[channel] = z80->getCounter();
+	{
+	  /*
+	   *  COUNTER MODE has no prescaler
+	   */
+	  _timer_value[channel] = val;
+	}
+
+      _counter[channel] = get_counter();
       _value[channel] = _timer_value[channel];
       run_cb_tc(channel, _timer_value[channel]);
-#ifdef CTC_OUT_DEBUG
-      if ((channel == CTC_OUT_DEBUG) || (CTC_OUT_DEBUG == 0xff))
-        {
-          z80->printPC();
-          cerr << "CTC: new timer value for channel " << (int)channel << ": 0x"
-               << hex << (int)val << " -> "
-               << (int)_timer_value[channel] << "\n";
-        }
-#endif
-      if ((_control[channel] & IRQ) == IRQ_ENABLED)
-        {
-#ifdef CTC_CB_DEBUG
-          if ((channel == CTC_CB_DEBUG) || (CTC_CB_DEBUG == 0xff))
-            {
-              cerr.form("CTC: addCallback [%d] - %d\n",
-                        channel,
-                        _timer_value[channel]);
-            }
-#endif
-          _irq_valid[channel] += 4;
-          z80->addCallback(_timer_value[channel], this,
-                           (void *)((long)_irq_valid[channel]));
-        }
-      else
-        {
-          /*
-           *  special handling for tape io (channel 1)
-           */
-          if (channel == 1)
-            {
-              _irq_valid[channel] += 4;
-              z80->addCallback(_timer_value[channel], this,
-                               (void *)((long)_irq_valid[channel]));
-            }
-          /*
-           *  special handling for blink (channel 2)
-           */
-          if (channel == 2)
-            {
-              _irq_valid[channel] += 4;
-              z80->addCallback(_timer_value[channel], this,
-                               (void *)((long)_irq_valid[channel]));
-            }
-        }
 
+      if ((_control[channel] & MODE) == MODE_COUNTER)
+	{
+	  handle_counter_mode(channel);
+	  return;
+        }
+      
+      _irq_valid[channel] += 4;
+      add_callback(_timer_value[channel], this, (void *)((long)_irq_valid[channel]));
       return;
     }
 	
   if ((val & CONTROL) == CONTROL_VECTOR)
     {
       if (channel != 0) return;
-#ifdef CTC_OUT_DEBUG
-      z80->printPC();
-      cerr << "CTC: new irq vector: 0x" << hex << (int)val << "\n";
-#endif
       _irq_vector = val & ~ 7;
       return;
     }
 	
-#ifdef CTC_OUT_DEBUG
-  if ((channel == CTC_OUT_DEBUG) || (CTC_OUT_DEBUG == 0xff))
-    {
-      z80->printPC();
-      cerr << "CTC: new control byte for channel " << (int)channel << ": 0x"
-           << hex << (int)val << "\n";
-      if ((val & MODE) == MODE_TIMER)
-        {
-          z80->printPC();
-          cerr.form("CTC: [%d] mode = TIMER\n", channel);
-        }
-      else
-        {
-          z80->printPC();
-          cerr.form("CTC: [%d] mode = COUNTER\n", channel);
-        }
-    }
-#endif
-
   if ((val & RESET) == RESET_ACTIVE)
     {
       _value[channel] = _timer_value[channel];
       _irq_valid[channel] += 4;
       if ((_control[channel] & RESET) != RESET_ACTIVE)
 	run_cb_stop(channel);
-#ifdef CTC_OUT_DEBUG
-      if ((channel == CTC_OUT_DEBUG) || (CTC_OUT_DEBUG == 0xff)) {
-        z80->printPC();
-        cerr << "CTC: reset channel " << (int)channel << endl;
-      }
-#endif
     }
 	
   _control[channel] = val;
@@ -588,4 +444,3 @@ CTC::info(void)
 	 << hex << setfill('0') << setw(2) << (int)_value[3]
 	 << "h" << endl << endl;
 }
-

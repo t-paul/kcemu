@@ -62,6 +62,9 @@ host_triplet = @host@
 CATALOGS = @CATALOGS@
 CATOBJEXT = @CATOBJEXT@
 CC = @CC@
+CPPUNIT_CFLAGS = @CPPUNIT_CFLAGS@
+CPPUNIT_CONFIG = @CPPUNIT_CONFIG@
+CPPUNIT_LIBS = @CPPUNIT_LIBS@
 CXX = @CXX@
 DATADIRNAME = @DATADIRNAME@
 GENCAT = @GENCAT@
@@ -93,7 +96,7 @@ USE_NLS = @USE_NLS@
 VERSION = @VERSION@
 l = @l@
 
-SUBDIRS = include ROM PRG DISK intl src doc po
+SUBDIRS = include ROM PRG DISK intl src test doc man debian po
 
 pkgdata_DATA = .kcemurc .kcemurc.gtk
 

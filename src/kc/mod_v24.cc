@@ -2,7 +2,7 @@
  *  KCemu -- the KC 85/3 and KC 85/4 Emulator
  *  Copyright (C) 1997-2001 Torsten Paul
  *
- *  $Id: mod_v24.cc,v 1.10 2001/04/14 15:16:20 tp Exp $
+ *  $Id: mod_v24.cc,v 1.11 2001/12/29 03:50:21 torsten_paul Exp $
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -326,14 +326,12 @@ ModuleV24::clone(void)
 void
 ModuleV24::iei(byte_t val)
 {
-  cerr.form("ModuleV24: iei: 0x%02x\n", val);
   ieo(val);
 }
 
 void
 ModuleV24::reset(bool power_on)
 {
-  cerr.form("ModuleV24: reset\n");
   _irq_active[A] = 0;
   _irq_active[B] = 0;
 }
@@ -366,13 +364,13 @@ ModuleV24::push_data(char *buf, int len)
 
   if (_in_buf_ptr)
     {
-      cerr.form("data ignored! ***\n");
+      cerr << "data ignored! ***" << endl;
       return;
     }
 
   if (_irq_active[B])
     {
-      cout.form("irq still active!\n");
+      cout << "irq still active!" << endl;
       return;
     }
 
@@ -434,9 +432,9 @@ ModuleV24::set_signal_handler(int fd, void (*sig_func)(int))
               "setting signal handler for fd = %d\n", fd));
 
   if (fcntl(fd, F_SETOWN, getpid()) < 0)
-    cerr.form("can't set owner on filedescriptor %d to %d\n", fd, getpid());
+    cerr << "can't set owner on filedescriptor " << fd << " to " << getpid() << endl;
   if (fcntl(fd, F_SETFL, FASYNC) < 0)
-    cerr.form("can't set FASYNC flag on filedescriptor %d\n", fd);
+    cerr << "can't set FASYNC flag on filedescriptor " << fd << endl;
 
   self = this;
   saio.sa_handler = sig_func;
@@ -596,7 +594,7 @@ ModuleV24::fifo_server(int fd)
           len = read(fd_read, buf, 1024);
           if (len == 0)
             {
-              cerr.form("ModuleV24::fifo_server(): read error\n");
+              cerr << "ModuleV24::fifo_server(): read error" << endl;
               exit(1);
             }
           send(fd, buf, len, 0);
@@ -729,8 +727,6 @@ void
 ModuleV24::close_device(void)
 {
 #ifdef LINUX
-  cerr.form("%s\n", __PRETTY_FUNCTION__);
-
   if (_socket_name != 0)
     {
       unlink(_socket_name);

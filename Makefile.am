@@ -1,6 +1,6 @@
 ## Process this file with automake to produce Makefile.in
 
-SUBDIRS = include ROM PRG DISK intl src doc po
+SUBDIRS = include ROM PRG DISK intl src test doc man debian po
 
 pkgdata_DATA = .kcemurc .kcemurc.gtk
 

@@ -2,7 +2,7 @@
  *  KCemu -- the KC 85/3 and KC 85/4 Emulator
  *  Copyright (C) 1997-2001 Torsten Paul
  *
- *  $Id: cb.h,v 1.4 2001/04/14 15:14:04 tp Exp $
+ *  $Id: cb.h,v 1.6 2001/12/31 14:11:53 torsten_paul Exp $
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -33,10 +33,25 @@ private:
   char *_name;
   
 public:
-  Callback(const char *name = 0) { _name = strdup(name); }
-  virtual ~Callback(void) { delete _name; }
+  Callback(const char *name = 0)
+    {
+      if (name != 0)
+	_name = strdup(name);
+      else
+	_name = strdup("unknown");
+    }
+
+  virtual ~Callback(void)
+    {
+      delete _name;
+    }
+  
   virtual void callback(void *data) = 0;
-  virtual const char * get_name(void) { return _name; }
+
+  virtual const char * get_name(void)
+    {
+      return _name;
+    }
 };
 
-#endif __kc_cb_h
+#endif /* __kc_cb_h */

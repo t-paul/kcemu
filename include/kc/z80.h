@@ -2,7 +2,7 @@
  *  KCemu -- the KC 85/3 and KC 85/4 Emulator
  *  Copyright (C) 1997-2001 Torsten Paul
  *
- *  $Id: z80.h,v 1.14 2001/04/29 22:01:44 tp Exp $
+ *  $Id: z80.h,v 1.16 2001/12/31 14:11:53 torsten_paul Exp $
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -48,18 +48,19 @@ extern "C" {
 
 #include "kc/ic.h"
 #include "kc/cb.h"
-
-class callback_list;
+#include "kc/cb_list.h"
 
 class Z80
 {
   public:
 	_Z80 _regs;
-        bool _enable_floppy_cpu;
+
 	bool _debug;
 	bool _trace;
 	bool _singlestep;
 	bool _executestep;
+        bool _enable_floppy_cpu;
+
 	long _tracedelay;
         
 	typedef list<InterfaceCircuit *> ic_list_t;
@@ -68,9 +69,10 @@ class Z80
 
 	bool _do_quit;
 	unsigned long long _counter;
-	callback_list *_callback_list;
 	ic_list_t _ic_list;
-        
+
+        CallbackList _cb_list;
+
   public:
 	Z80(void);
 	~Z80(void) {}
@@ -93,6 +95,7 @@ class Z80
 	void unregister_ic(InterfaceCircuit *h);
 	int triggerIrq(int vector);
 	void handleIrq(int vector);
+
 	void addCallback(unsigned long long offset, Callback *cb, void *data);
 	inline unsigned long long getCounter(void) { return _counter; }
 

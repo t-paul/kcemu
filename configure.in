@@ -4,7 +4,7 @@ AM_CONFIG_HEADER(include/kc/config.h)
 
 KCEMU_MAJOR_VERSION=0
 KCEMU_MINOR_VERSION=3
-KCEMU_MICRO_VERSION=2
+KCEMU_MICRO_VERSION=3
 
 if test $KCEMU_MICRO_VERSION -eq 0
 then
@@ -74,6 +74,14 @@ if test x$enable_sound = xyes; then
 	fi
 fi
 
+dnl
+dnl  check for cppunit, if not found unit test will be disabled
+dnl
+AM_PATH_CPPUNIT(1.6.2,have_cppunit=yes,AC_MSG_WARN([
+***
+*** Cppunit not found. Unit test disabled
+***]))
+
 AC_DEFINE_UNQUOTED(KCEMU_MAJOR_VERSION, $KCEMU_MAJOR_VERSION)
 AC_DEFINE_UNQUOTED(KCEMU_MINOR_VERSION, $KCEMU_MINOR_VERSION)
 AC_DEFINE_UNQUOTED(KCEMU_MICRO_VERSION, $KCEMU_MICRO_VERSION)
@@ -108,6 +116,7 @@ AC_OUTPUT([
 	include/fileio/Makefile
 	include/libdbg/Makefile
 	include/libtape/Makefile
+	include/libdisk/Makefile
 	include/z80core/Makefile
 	include/z80core2/Makefile
 	src/Makefile
@@ -118,13 +127,45 @@ AC_OUTPUT([
 	src/fileio/Makefile
 	src/libdbg/Makefile
 	src/libtape/Makefile
+	src/libdisk/Makefile
 	src/util/Makefile
 	src/z80core/Makefile
 	src/z80core2/Makefile
+	test/Makefile
+	test/kc/Makefile
 	ROM/Makefile
 	PRG/Makefile
 	DISK/Makefile
 	doc/Makefile
 	intl/Makefile
+	man/Makefile
+	man/man1/Makefile
+	debian/Makefile
 	po/Makefile.in],
 	[sed -e "/POTFILES =/r po/POTFILES" po/Makefile.in > po/Makefile])
+
+
+echo ""
+echo ""
+echo "KCemu summary:"
+echo "--------------"
+echo ""
+echo "- version:         KCemu $KCEMU_VERSION"
+echo "- host system:     $host"
+echo "- debug level:     $DBG_LEVEL"
+echo "- install prefix:  $prefix"
+echo "- user interface:  Gtk+ ($gtk_config_major_version.$gtk_config_minor_version.$gtk_config_micro_version)"
+echo ""
+echo -n "* unit tests:      "
+if test x$have_cppunit = xyes; then
+	echo "yes (Cppunit $cppunit_major_version.$cppunit_minor_version.$cppunit_micro_version)"
+else
+	echo "no (make check will fail!)"
+fi
+echo -n "* sound:           "
+if test x$enable_sound = xyes; then
+	echo "yes"
+else
+	echo "no"
+fi
+echo ""

@@ -2,7 +2,7 @@
  *  KCemu -- the KC 85/3 and KC 85/4 Emulator
  *  Copyright (C) 1997-2001 Torsten Paul
  *
- *  $Id: kctape.cc,v 1.10 2001/04/14 15:16:41 tp Exp $
+ *  $Id: kctape.cc,v 1.11 2001/12/29 03:50:21 torsten_paul Exp $
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -24,6 +24,9 @@
 #include <string.h>
 #include <getopt.h>
 
+#include <iostream.h>
+#include <iomanip.h>
+
 #include "libtape/kct.h"
 #include "fileio/load.h"
 
@@ -40,7 +43,7 @@ dump(istream *s, int addr)
       return false;
     }
 
-  cout.form("Block %02xh (%d)\n", c & 0xff, c & 0xff);
+  cout << "Block " << hex << setw(2) << (c & 0xff) << "h (" << dec << (c & 0xff) << ")" << endl;
 
   end = false;
   for (int a = 0;a < 8;a++)
@@ -48,7 +51,7 @@ dump(istream *s, int addr)
       int c;
       char buf[16];
 
-      cout.form("%04x: ", addr + a * 16);
+      cout << hex << setw(4) << (addr + a * 16) << ": ";
       x = 16;
       for (int b = 0;b < 16;b++)
         {
@@ -64,16 +67,16 @@ dump(istream *s, int addr)
       for (int b = 0;b < 16;b++)
         {
           if (b >= x)
-            cout.form("   ");
+            cout << "   ";
           else
-            cout.form("%02x ", buf[b] & 0xff);
+	    cout << hex << setw(2) << (buf[b] & 0xff) << " ";
         }
       cout << "| ";
       for (int b = 0;b < 16;b++)
         {
           if (b >= x)
             break;
-          cout.form("%c", isprint(buf[b]) ? buf[b] : '.');
+          cout << ((char)isprint(buf[b]) ? buf[b] : '.');
         }
       cout << endl;
       if (end)
@@ -129,7 +132,7 @@ read_file(unsigned char *buf, FILE *f, int block, long *bytes)
 }
 
 static kct_error_t
-add_file(KCTFile &kct_file, char *filename) //, char *name)
+add_file(KCTFile &kct_file, char *filename)
 {
 #if 0
   FILE *f;
@@ -429,10 +432,13 @@ int main(int argc, char **argv)
               cerr << "ERROR: File not found" << endl;
               return 1;
             }
-	  cerr.form("%s: load = %04x, size = %04x, start = %04x%s\n",
-			argv[3],
-			props.load_addr, props.size, props.start_addr,
-			props.auto_start ? " [autostart]" : "");
+
+	  cerr << argv[3] << ": "
+	       << "load = "  << hex << setw(4) << props.load_addr << ", "
+	       << "size = "  << hex << setw(4) << props.size << ", "
+	       << "start = " << hex << setw(4) << props.start_addr
+	       << (props.auto_start ? " [autostart]" : "")
+	       << endl;
 
 	  fputs("\xc3KC-TAPE by AF. ", stdout);
 	  a = 0;

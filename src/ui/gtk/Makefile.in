@@ -62,6 +62,9 @@ host_triplet = @host@
 CATALOGS = @CATALOGS@
 CATOBJEXT = @CATOBJEXT@
 CC = @CC@
+CPPUNIT_CFLAGS = @CPPUNIT_CFLAGS@
+CPPUNIT_CONFIG = @CPPUNIT_CONFIG@
+CPPUNIT_LIBS = @CPPUNIT_LIBS@
 CXX = @CXX@
 DATADIRNAME = @DATADIRNAME@
 GENCAT = @GENCAT@
@@ -101,7 +104,7 @@ noinst_LIBRARIES = libui_gtk.a
 INCLUDES =  	-I../../../include 	$(GTK_CFLAGS)
 
 
-CPPFLAGS =  	-DVERSION=\"$(VERSION)\"
+CPPFLAGS =  	-DVERSION=\"$(VERSION)\"         -DDATADIR=\"$(pkgdatadir)\"
 
 
 libui_gtk_a_SOURCES =  	gtkledline.c		ui_gtk.cc		ui_gtk1.cc		ui_gtk3.cc		ui_gtk4.cc		window.cc		disk.cc			tape.cc			tapeadd.cc		info.cc			about.cc		color.cc		module.cc		debug.cc		copying.cc		fbrowse.cc		dialog.cc		image.cc		hedit.cc
@@ -289,10 +292,11 @@ debug.o: debug.cc ../../../include/kc/config.h \
 	../../../include/kc/system.h ../../../include/kc/z80.h \
 	../../../include/z80core/z80.h ../../../include/kc/ic.h \
 	../../../include/kc/cb.h ../../../include/kc/kc.h \
-	../../../include/kc/memory.h ../../../include/ui/gtk/cmd.h \
-	../../../include/cmd/cmd.h ../../../include/cmd/cmdargs.h \
-	../../../include/ui/gtk/window.h ../../../include/ui/window.h \
-	../../../include/ui/gtk/debug.h ../../../include/ui/debug.h
+	../../../include/kc/cb_list.h ../../../include/kc/memory.h \
+	../../../include/ui/gtk/cmd.h ../../../include/cmd/cmd.h \
+	../../../include/cmd/cmdargs.h ../../../include/ui/gtk/window.h \
+	../../../include/ui/window.h ../../../include/ui/gtk/debug.h \
+	../../../include/ui/debug.h
 dialog.o: dialog.cc ../../../include/kc/config.h \
 	../../../include/kc/system.h ../../../include/ui/gtk/dialog.h \
 	../../../include/cmd/cmd.h ../../../include/cmd/cmdargs.h
@@ -320,11 +324,12 @@ info.o: info.cc ../../../include/kc/config.h \
 	../../../include/ui/gtk/gtkledline.h ../../../include/kc/z80.h \
 	../../../include/z80core/z80.h ../../../include/kc/ic.h \
 	../../../include/kc/cb.h ../../../include/kc/kc.h \
-	../../../include/kc/pio.h ../../../include/kc/ports.h \
-	../../../include/kc/ctc.h ../../../include/kc/memory.h \
-	../../../include/ui/gtk/cmd.h ../../../include/cmd/cmd.h \
-	../../../include/cmd/cmdargs.h ../../../include/ui/gtk/window.h \
-	../../../include/ui/window.h ../../../include/ui/gtk/info.h
+	../../../include/kc/cb_list.h ../../../include/kc/pio.h \
+	../../../include/kc/ports.h ../../../include/kc/ctc.h \
+	../../../include/kc/memory.h ../../../include/ui/gtk/cmd.h \
+	../../../include/cmd/cmd.h ../../../include/cmd/cmdargs.h \
+	../../../include/ui/gtk/window.h ../../../include/ui/window.h \
+	../../../include/ui/gtk/info.h
 kcemu-remote.o: kcemu-remote.c
 module.o: module.cc ../../../include/kc/config.h \
 	../../../include/kc/system.h ../../../include/kc/kc.h \
@@ -355,33 +360,34 @@ ui_gtk.o: ui_gtk.cc ../../../include/kc/config.h \
 	../../../include/kc/system.h ../../../include/kc/z80.h \
 	../../../include/z80core/z80.h ../../../include/kc/ic.h \
 	../../../include/kc/cb.h ../../../include/kc/kc.h \
-	../../../include/kc/keys.h ../../../include/kc/keyboard.h \
-	../../../include/cmd/cmd.h ../../../include/cmd/cmdargs.h \
-	../../../include/ui/error.h ../../../include/ui/errorl.h \
-	../../../include/ui/status.h ../../../include/ui/statusl.h \
-	../../../include/ui/gtk/cmd.h ../../../include/ui/gtk/window.h \
-	../../../include/ui/window.h ../../../include/ui/gtk/debug.h \
-	../../../include/ui/debug.h ../../../include/ui/gtk/ui_gtk.h \
-	../../../include/ui/ui.h ../../../include/kc/profile.h \
-	../../../include/ui/tape.h ../../../include/libtape/kct.h \
-	../../../include/ui/module.h ../../../include/kc/module.h \
-	../../../include/kc/ports.h ../../../include/ui/commands.h \
-	../../../include/ui/gtk/tape.h ../../../include/ui/gtk/disk.h \
-	../../../include/ui/gtk/info.h ../../../include/ui/gtk/about.h \
-	../../../include/ui/gtk/color.h \
+	../../../include/kc/cb_list.h ../../../include/kc/keys.h \
+	../../../include/kc/keyboard.h ../../../include/cmd/cmd.h \
+	../../../include/cmd/cmdargs.h ../../../include/ui/error.h \
+	../../../include/ui/errorl.h ../../../include/ui/status.h \
+	../../../include/ui/statusl.h ../../../include/ui/gtk/cmd.h \
+	../../../include/ui/gtk/window.h ../../../include/ui/window.h \
+	../../../include/ui/gtk/debug.h ../../../include/ui/debug.h \
+	../../../include/ui/gtk/ui_gtk.h ../../../include/ui/ui.h \
+	../../../include/kc/profile.h ../../../include/ui/tape.h \
+	../../../include/libtape/kct.h ../../../include/ui/module.h \
+	../../../include/kc/module.h ../../../include/kc/ports.h \
+	../../../include/ui/commands.h ../../../include/ui/gtk/tape.h \
+	../../../include/ui/gtk/disk.h ../../../include/ui/gtk/info.h \
+	../../../include/ui/gtk/about.h ../../../include/ui/gtk/color.h \
 	../../../include/ui/gtk/module.h \
 	../../../include/ui/gtk/copying.h \
 	../../../include/ui/gtk/tapeadd.h \
 	../../../include/ui/gtk/fbrowse.h \
 	../../../include/ui/gtk/dialog.h \
 	../../../include/ui/gtk/hedit.h ../../../include/libdbg/dbg.h
-ui_gtk1.o: ui_gtk1.cc ../../../include/kc/memory.h \
+ui_gtk1.o: ui_gtk1.cc ../../../include/kc/z80.h \
 	../../../include/kc/config.h ../../../include/kc/system.h \
-	../../../include/kc/ic.h ../../../include/ui/gtk/font1.h \
+	../../../include/z80core/z80.h ../../../include/kc/ic.h \
+	../../../include/kc/cb.h ../../../include/kc/kc.h \
+	../../../include/kc/cb_list.h ../../../include/kc/memory.h \
+	../../../include/ui/gtk/font1.h \
 	../../../include/ui/gtk/ui_gtk1.h \
 	../../../include/ui/gtk/ui_gtk.h ../../../include/ui/ui.h \
-	../../../include/kc/cb.h ../../../include/kc/kc.h \
-	../../../include/kc/z80.h ../../../include/z80core/z80.h \
 	../../../include/kc/profile.h ../../../include/ui/tape.h \
 	../../../include/libtape/kct.h ../../../include/ui/debug.h \
 	../../../include/ui/module.h ../../../include/kc/module.h \
@@ -399,13 +405,13 @@ ui_gtk1.o: ui_gtk1.cc ../../../include/kc/memory.h \
 	../../../include/ui/gtk/fbrowse.h \
 	../../../include/ui/gtk/dialog.h \
 	../../../include/ui/gtk/hedit.h ../../../include/libdbg/dbg.h
-ui_gtk3.o: ui_gtk3.cc ../../../include/kc/memory.h \
+ui_gtk3.o: ui_gtk3.cc ../../../include/kc/z80.h \
 	../../../include/kc/config.h ../../../include/kc/system.h \
-	../../../include/kc/ic.h ../../../include/ui/hsv2rgb.h \
-	../../../include/ui/gtk/ui_gtk3.h \
-	../../../include/ui/gtk/ui_gtk.h ../../../include/ui/ui.h \
+	../../../include/z80core/z80.h ../../../include/kc/ic.h \
 	../../../include/kc/cb.h ../../../include/kc/kc.h \
-	../../../include/kc/z80.h ../../../include/z80core/z80.h \
+	../../../include/kc/cb_list.h ../../../include/kc/memory.h \
+	../../../include/ui/hsv2rgb.h ../../../include/ui/gtk/ui_gtk3.h \
+	../../../include/ui/gtk/ui_gtk.h ../../../include/ui/ui.h \
 	../../../include/kc/profile.h ../../../include/ui/tape.h \
 	../../../include/libtape/kct.h ../../../include/ui/debug.h \
 	../../../include/ui/module.h ../../../include/kc/module.h \
@@ -427,8 +433,9 @@ ui_gtk4.o: ui_gtk4.cc ../../../include/kc/config.h \
 	../../../include/kc/system.h ../../../include/kc/kc.h \
 	../../../include/kc/rc.h ../../../include/kc/z80.h \
 	../../../include/z80core/z80.h ../../../include/kc/ic.h \
-	../../../include/kc/cb.h ../../../include/kc/memory.h \
-	../../../include/ui/hsv2rgb.h ../../../include/ui/gtk/ui_gtk4.h \
+	../../../include/kc/cb.h ../../../include/kc/cb_list.h \
+	../../../include/kc/memory.h ../../../include/ui/hsv2rgb.h \
+	../../../include/ui/gtk/ui_gtk4.h \
 	../../../include/ui/gtk/ui_gtk.h ../../../include/ui/ui.h \
 	../../../include/kc/profile.h ../../../include/ui/tape.h \
 	../../../include/libtape/kct.h ../../../include/ui/debug.h \

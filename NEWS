@@ -1,0 +1,26 @@
+#
+# $Id: NEWS,v 1.4 2002/01/06 12:53:40 torsten_paul Exp $
+#
+
+Sat Jan  5 18:31:11 CET 2002
+
+  * disk emulation for unix directories (don't try
+    to attach directories with many (e.g. > 100)
+    or big files!)
+
+Wed Jan  2 01:13:43 CET 2002
+
+  * emulate 4 disks now
+  * disk handling partially functional
+  * use cppunit for unit tests
+
+Sat Dec 29 04:29:33 CET 2001
+
+  * released a debian binary package of KCemu v0.3.2
+  * added manpages because the debian packaging system
+    requires them
+
+Sat Dec 28 20:01:43 CET 2001
+
+  * released KCemu v0.3.2
+

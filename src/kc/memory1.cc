@@ -2,7 +2,7 @@
  *  KCemu -- the KC 85/3 and KC 85/4 Emulator
  *  Copyright (C) 1997-2001 Torsten Paul
  *
- *  $Id: memory1.cc,v 1.4 2001/04/14 15:16:09 tp Exp $
+ *  $Id: memory1.cc,v 1.5 2001/12/31 14:11:53 torsten_paul Exp $
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -27,6 +27,7 @@
 #include "kc/system.h"
 
 #include "kc/kc.h"
+#include "kc/z80.h"
 #include "kc/memory1.h"
 
 #include "ui/ui.h"

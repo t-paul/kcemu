@@ -2,7 +2,7 @@
  *  KCemu -- the KC 85/3 and KC 85/4 Emulator
  *  Copyright (C) 1997-2001 Torsten Paul
  *
- *  $Id: kc.cc,v 1.20 2001/04/29 21:57:27 tp Exp $
+ *  $Id: kc.cc,v 1.25 2002/01/06 12:53:40 torsten_paul Exp $
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -57,10 +57,13 @@
 #include "kc/disk_io.h"
 #include "kc/fdc.h"
 #include "kc/sound.h"
+#include "kc/ctc_fdc.h"
+#include "kc/z80_fdc.h"
 
 #include "ui/log.h"
 #include "cmd/cmd.h"
 #include "fileio/load.h"
+#include "libdisk/libdisk.h"
 
 #include "kc/pio1.h"
 #include "kc/ctc1.h"
@@ -117,15 +120,17 @@ CMD        *cmd;
 Sound      *sound;
 #endif /* HAVE_LIBSDL */
 
+Z80_FDC         *fdc_z80;
 FloppyIO        *fdc_io;
 FloppySharedMem *fdc_shmem;
 Ports           *fdc_ports;
 FDC             *fdc_fdc;
+CTC             *fdc_ctc;
 
-int         __kc_type; /* FIXME: */
 
-char *kcemu_datadir;
-char *kcemu_localedir;
+char      *kcemu_datadir;
+char      *kcemu_localedir;
+static kc_type_t  kcemu_kc_type;
 
 void
 usage(char *argv0)
@@ -134,17 +139,24 @@ usage(char *argv0)
        << "    ***  KC 85/4 Emulator  ***" << endl
        << "      (c) 1997  Torsten Paul  " << endl
        << endl
-       << "usage: " << argv0 << " [-1234hdl]" << endl
+       << "usage: " << argv0 << " [-12347hdl]" << endl
        << endl
        << "  -1:             run in Z9001 / KC 85/1 mode" << endl
        << "  -2:             run in KC 85/2 mode" << endl
        << "  -3:             run in KC 85/3 mode" << endl
        << "  -4:             run in KC 85/4 mode (default)" << endl
+       << "  -7:             run in KC 87 mode (= KC 85/1 with color expansion)" << endl
        << "  -h --help:      display help" << endl
        << "  -d --datadir:   set data directory (for ROM images)" << endl
        << "  -l --localedir: set locale directory" << endl
        << endl;
   exit(0);
+}
+
+kc_type_t
+get_kc_type(void)
+{
+  return kcemu_kc_type;
 }
 
 int
@@ -207,13 +219,13 @@ main(int argc, char **argv)
   while (1)
     {
 #ifdef HAVE_GETOPT_LONG
-      c = getopt_long(argc, argv, "1234d:l:",
+      c = getopt_long(argc, argv, "12347d:l:",
                       long_options, &option_index);
 #else
 #ifdef HAVE_GETOPT
-      c = getopt(argc, argv, "1234d:l:");
+      c = getopt(argc, argv, "12347d:l:");
 #else
-#warning neihter HAVE_GETOPT_LONG nor HAVE_GETOPT defined
+#warning neither HAVE_GETOPT_LONG nor HAVE_GETOPT defined
 #warning commandline parsing disabled!
       c = -1;
 #endif /* HAVE_GETOPT */
@@ -234,6 +246,9 @@ main(int argc, char **argv)
           break;
         case '4':
           type = 4;
+          break;
+        case '7':
+          type = 7;
           break;
         case 'd':
           free(kcemu_datadir);
@@ -259,12 +274,21 @@ main(int argc, char **argv)
   cout << "DEBUG: PROFILE_WINDOW" << endl;
 #endif /* PROFILE_WINDOW */
 
+  fileio_init();
+  libdisk_init();
+
   RC::init();
   if (type == 0)
     type = RC::instance()->get_int("Default KC Model", 4);
-  if ((type <= 0) || (type > 4))
-    type = 4;
-  __kc_type = type;
+
+  switch (type)
+    {
+    case 1:  kcemu_kc_type = KC_TYPE_85_1; break;
+    case 2:  kcemu_kc_type = KC_TYPE_85_2; break;
+    case 3:  kcemu_kc_type = KC_TYPE_85_3; break;
+    case 7:  kcemu_kc_type = KC_TYPE_87;   break;
+    default: kcemu_kc_type = KC_TYPE_85_4; break;
+    }
 
   do
     {
@@ -273,9 +297,10 @@ main(int argc, char **argv)
       ports = new Ports;
       portg = ports->register_ports("-", 0, 0x100, new NullPort, 256);
 
-      switch (type)
+      switch (kcemu_kc_type)
 	{
-	case 1:
+	case KC_TYPE_87:
+	case KC_TYPE_85_1:
 	  memory   = new Memory1;
 	  ui       = new UI_Gtk1;
 	  pio      = new PIO1_1;
@@ -290,7 +315,7 @@ main(int argc, char **argv)
 	  pio2->register_callback_B_in(k1);
 	  keyboard = k1;
 	  break;
-	case 2:
+	case KC_TYPE_85_2:
 	  memory   = new Memory2;
 #ifdef HAVE_UI_GTK
 	  ui       = new UI_Gtk3;
@@ -306,10 +331,9 @@ main(int argc, char **argv)
 	  pio      = new PIO2;
 	  ctc      = new CTC3;
 	  tape     = new Tape(364, 729, 1458, 1);
-	  disk     = new Disk;
 	  keyboard = new Keyboard3;
 	  break;
-	case 3:
+	case KC_TYPE_85_3:
 	  memory   = new Memory3;
 #ifdef HAVE_UI_GTK
 	  ui       = new UI_Gtk3;
@@ -325,10 +349,9 @@ main(int argc, char **argv)
 	  pio      = new PIO3;
 	  ctc      = new CTC3;
 	  tape     = new Tape(364, 729, 1458, 1);
-	  disk     = new Disk;
 	  keyboard = new Keyboard3;
 	  break;
-	case 4:
+	case KC_TYPE_85_4:
 	  memory   = new Memory4;
 #ifdef HAVE_UI_GTK
 	  ui       = new UI_Gtk4;
@@ -343,10 +366,7 @@ main(int argc, char **argv)
 	  pio      = new PIO4;
 	  ctc      = new CTC3;
 	  tape     = new Tape(364, 729, 1458, 1);
-	  disk     = new Disk;
 	  keyboard = new Keyboard3;
-	  break;
-	default:
 	  break;
 	}
 
@@ -360,20 +380,21 @@ main(int argc, char **argv)
       module      = new Module;
       module_list = new ModuleList;
       
-      switch (type)
+      switch (kcemu_kc_type)
 	{
-	case 1:
+	case KC_TYPE_87:
+	case KC_TYPE_85_1:
 	  portg = ports->register_ports("CTC",  0x80, 4, ctc,  10);
 	  portg = ports->register_ports("PIO1", 0x88, 4, pio,  10);
 	  portg = ports->register_ports("PIO2", 0x90, 4, pio2, 10);
 	  break;
-	case 2:
-	case 3:
+	case KC_TYPE_85_2:
+	case KC_TYPE_85_3:
 	  portg = ports->register_ports("Module", 0x80, 1, module, 10);
 	  portg = ports->register_ports("PIO",    0x88, 4, pio,    10);
 	  portg = ports->register_ports("CTC",    0x8c, 4, ctc,    10);
 	  break;
-	case 4:
+	case KC_TYPE_85_4:
 	  portg = ports->register_ports("Module", 0x80, 1, module, 10);
 	  portg = ports->register_ports("Port84", 0x84, 1, porti,  10);
 	  portg = ports->register_ports("Port86", 0x86, 1, porti,  10);
@@ -386,24 +407,29 @@ main(int argc, char **argv)
 
       if (RC::instance()->get_int("Floppy Disk Basis"))
         {
-          fdc_ports = new Ports;
+	  fdc_z80 = new Z80_FDC();
+          fdc_ports = new Ports();
           fdc_io = new FloppyIO();
           fdc_shmem = new FloppySharedMem();
           fdc_shmem->set_memory(&fdc_mem[0xfc00]);
           fdc_fdc = new FDC();
-          
+	  fdc_ctc = new CTC_FDC();
+
+          fdc_ports->register_ports("-", 0, 0x100, new NullPort(), 256);
+          fdc_ports->register_ports("FDC", 0xf0, 12, fdc_fdc, 10);
+	  fdc_ports->register_ports("CTC", 0xfc, 4, fdc_ctc, 10);
+
           portg = ports->register_ports("FloppyIO", 0xf4, 1, fdc_io, 10);
           portg = ports->register_ports("FloppySHMEM", 0xf0, 4, fdc_shmem, 10);
 
-          fdc_ports->register_ports("-", 0, 0x100, new NullPort, 256);
-          fdc_ports->register_ports("FDC", 0xf0, 12, fdc_fdc, 10);
+	  disk = new Disk();
         }
       
       log = new LOG();
       ui->init(&argc, &argv);
       module_list->init();
 
-      if (type == 1)
+      if ((kcemu_kc_type == KC_TYPE_85_1) || (KC_TYPE_87))
 	tape->power(true);
 
       //ctc->next(pio);
@@ -424,8 +450,6 @@ main(int argc, char **argv)
 	  tape->attach(ptr);
 	  free(ptr);
 	}
-
-      fileio_init();
 
       do_quit = z80->run();
       

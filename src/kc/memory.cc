@@ -2,7 +2,7 @@
  *  KCemu -- the KC 85/3 and KC 85/4 Emulator
  *  Copyright (C) 1997-2001 Torsten Paul
  *
- *  $Id: memory.cc,v 1.11 2001/04/14 15:16:08 tp Exp $
+ *  $Id: memory.cc,v 1.13 2002/01/06 12:53:40 torsten_paul Exp $
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -25,11 +25,14 @@
 #include <string.h>
 #include <malloc.h>
 #include <fstream.h>
+
 #include <iostream.h>
+#include <iomanip.h>
 
 #include "kc/config.h"
 #include "kc/system.h"
 
+#include "kc/kc.h"
 #include "kc/memory.h"
 #include "ui/status.h"
 
@@ -203,10 +206,10 @@ MemAreaPtr::info(void)
    */
   for (it = _l.begin();it != --(_l.end());it++)
     {
-      cerr.form(" [\"%s\" %c%c ]",
-                (*it)->get_name(),
-                (*it)->is_active() ? 'A' : 'a',
-                (*it)->is_readonly() ? 'R' : 'r');
+      cerr << " [\"" << (*it)->get_name() << "\" "
+	   << ((*it)->is_active() ? 'A' : 'a')
+	   << ((*it)->is_readonly() ? 'R' : 'r')
+	   << " ]";
     }
 }
 
@@ -219,7 +222,6 @@ MemAreaPtr::get_read_ptr_p(void)
     if ((*it)->is_active())
       return (*it)->get_read_ptr();
   return 0;
-  // _ptr = area;
 }
 
 byte_t *
@@ -231,7 +233,6 @@ MemAreaPtr::get_write_ptr_p(void)
     if ((*it)->is_active())
       return (*it)->get_write_ptr();
   return 0;
-  // _ptr = area;
 }
 
 Memory::Memory(void)
@@ -247,13 +248,13 @@ Memory::loadROM(const char *filename, void *buf, long len, int force)
 {
     ifstream is;
 
-    is.open(filename, ios::in | ios::bin);
+    is.open(filename, ios::in | ios::binary);
     if (!is) {
 	if (!force) return;
 	cerr << "can't open file '" << filename << "'\n";
 	exit(1);
     }
-    is.read(buf, len);
+    is.read((char *)buf, len);
     if (!is) {
 	if (force) {
 	    cerr << "error while reading '" << filename << "'\n";
@@ -283,7 +284,7 @@ Memory::loadRAM(const char *filename, word_t addr)
     int c;
     ifstream is;
     
-    is.open(filename, ios::in | ios::bin);
+    is.open(filename, ios::in | ios::binary);
     if (!is)
       return;
 
@@ -301,17 +302,16 @@ Memory::loadRAM(istream *is, bool with_block_nr)
   int a, c, idx;
   unsigned char buf[129], *ptr;
   unsigned short load_addr, end_addr;
-  // unsigned short start_addr;
 
   /* read header */
   if (with_block_nr)
     {
-      is->read(buf, 129);
+      is->read((char *)buf, 129);
       ptr = &buf[1];
     }
   else
     {
-      is->read(buf, 128);
+      is->read((char *)buf, 128);
       ptr = &buf[1];
     }
   if (!(*is))
@@ -322,23 +322,28 @@ Memory::loadRAM(istream *is, bool with_block_nr)
     {
       extern int __kc_type; /* FIXME: BASIC */
 
-      //cout << __PRETTY_FUNCTION__ << ": BASIC program" << endl;
       load_addr = 0x0401;
       end_addr = load_addr + (ptr[11] | (ptr[12] << 8));
-      if (__kc_type == 1)
-        {
+      switch (get_kc_type())
+	{
+	case KC_TYPE_85_1:
+	case KC_TYPE_87:
           memWrite8(0x03d7, end_addr & 0xff);
           memWrite8(0x03d8, end_addr >> 8);
-        }
-      else
-        {
+	  break;
+
+	case KC_TYPE_85_2:
+	case KC_TYPE_85_3:
+	case KC_TYPE_85_4:
           memWrite8(0x03d7, end_addr & 0xff);
           memWrite8(0x03d8, end_addr >> 8);
           memWrite8(0x03d9, end_addr & 0xff);
           memWrite8(0x03da, end_addr >> 8);
           memWrite8(0x03db, end_addr & 0xff);
           memWrite8(0x03dc, end_addr >> 8);
+	  break;
         }
+
       for (;a < 115;a++)
 	memWrite8(load_addr++, ptr[a + 13]);
     }
@@ -434,26 +439,31 @@ Memory::scratch_mem(byte_t *ptr, int len)
 void
 Memory::dump(word_t addr)
 {
-    int a, b, c;
-    for (a = 0;a < 8;a++) {
-	cerr.form("%04x: ", addr + 16 * a);
-	for (b = 0;b < 16;b++) {
-	    cerr.form("%02x ", memRead8(addr + 16 * a + b));
-	    if (b == 7) cerr << ": ";
+  int a, b, c;
+  for (a = 0;a < 8;a++)
+    {
+      cerr << hex << setw(4) << setfill('0') << (addr + 16 * a) << ": ";
+      for (b = 0;b < 16;b++)
+	{
+	  cerr << hex << setw(2) << setfill('0') << memRead8(addr + 16 * a + b) << " ";
+	  if (b == 7) cerr << ": ";
 	}
-	cerr << "   ";
-	for (b = 0;b < 16;b++) {
-	    c = memRead8(addr + 16 * a + b);
-	    if (c > 0x20 && c < 0x80) {
-		cerr << (char)c;
-	    } else {
-		cerr << '.';
+      cerr << "   ";
+      for (b = 0;b < 16;b++)
+	{
+	  c = memRead8(addr + 16 * a + b);
+	  if (c > 0x20 && c < 0x80)
+	    {
+	      cerr << (char)c;
+	    }
+	  else
+	    {
+	      cerr << '.';
 	    }
 	}
-	cerr << endl;
+      cerr << endl;
     }
 }
-
 
 void
 Memory::info(void)
@@ -469,9 +479,9 @@ Memory::info(void)
     {
       if (_mem_ptr[a]->size() > 1)
         {
-          cerr.form("  %04xh:", addr);
+	  cerr << "  " << hex << setw(4) << setfill('0') << addr << "h:";
           _mem_ptr[a]->info();
-          cerr.form("\n");
+	  cerr << endl;
         }
       addr += MemArea::PAGE_SIZE;
     }

@@ -2,7 +2,7 @@
  *  KCemu -- the KC 85/3 and KC 85/4 Emulator
  *  Copyright (C) 1997-2001 Torsten Paul
  *
- *  $Id: tape.cc,v 1.20 2001/04/22 22:24:58 tp Exp $
+ *  $Id: tape.cc,v 1.21 2001/12/29 03:50:21 torsten_paul Exp $
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -403,25 +403,28 @@ dump_buf(const char *buf, int block)
 {
   int a, b;
 
-  cout.form("tape block dump: block %02xh [saved block number: %02xh]\n",
-            block, ((int)*buf) & 0xff);
+  cout << "tape block dump: block "
+       << hex << setw(2) << setfill('0') << block << "h [saved block number: "
+       << hex << setw(2) << setfill('0') << (((int)*buf) & 0xff) << "h]"
+       << endl;
+
   for (a = 0;a < 128;a += 16)
     {
-      cout.form("%02x:", a);
+      cout << hex << setw(2) << setfill('0') << a << ":";
       for (b = 0;b < 16;b++)
         {
-          cout.form(" %02x", buf[a + b + 1] & 0xff);
+	  cout << " " << hex << setw(2) << setfill('0') << (buf[a + b + 1] & 0xff);
           if (b == 8)
-            cout.form(" -");
+            cout << " -";
         }
-      cout.form(" | ");
+      cout << " | ";
       for (b = 0;b < 16;b++)
         {
-          cout.form("%c", isprint(buf[a + b + 1]) ? buf[a + b + 1] : '.');
+          cout << (isprint(buf[a + b + 1]) ? buf[a + b + 1] : '.');
           if (b == 8)
-            cout.form(" - ");
+            cout << " - ";
         }
-      cout.form("\n");
+      cout << endl;
     }
 }
 
@@ -589,7 +592,7 @@ Tape::stop(void)
   if (_os->pcount() == 0)
     return;
 
-  os.open("/tmp/kcemu.output", ios::out | ios::bin);
+  os.open("/tmp/kcemu.output", ios::out | ios::binary);
   if (!os)
     cout << "Tape::stop(): can't open output file" << endl;
   else
@@ -599,7 +602,7 @@ Tape::stop(void)
       DBG(1, form("KCemu/Tape/write",
 		  "Tape::stop(): writing output file (%d bytes)\n",
 		  _os->pcount()));
-      os.write(ptr, _os->pcount());
+      os.write((char *)ptr, _os->pcount());
 
       load = 0;
       start = 0;
@@ -766,7 +769,7 @@ Tape::do_play(int edge)
       //_block += _start_block;
 
       _byte_counter = 0;
-      _is->read(_buf, 129);
+      _is->read((char *)_buf, 129);
       _block = _buf[0];
       TAPE_IF()->tapeProgress((100 * _bytes_read) / _file_size);
 
@@ -971,7 +974,7 @@ Tape::ctcSignal(void)
               _state++;
               _crc = _byte;
               if (_crc_calculated == _crc)
-                _os->write(_buf, 129);
+                _os->write((char *)_buf, 129);
               else
                 DBG(0, form("KCemu/Tape/block-info",
                             "Tape output: wrong crc: %04x != %04x\n",
@@ -1160,7 +1163,7 @@ Tape::add_raw(const char     *filename,
       
   if ((f = fopen(filename, "rb")) == NULL)
     {
-      cerr.form("can't open `%s'\n", filename);
+      cerr << "can't open `" << filename << "'" << endl;
       return TAPE_ERROR;
     }
 
@@ -1200,7 +1203,7 @@ Tape::remove(const char *name)
 {
   int idx;
 
-  cout.form("Tape::remove(): [1] %s\n", name);
+  cout << "Tape::remove(): [1] " << name << endl;
 
   // FIXME: using the index internal to the user interface
   // is kinda ugly
@@ -1213,7 +1216,7 @@ Tape::remove(const char *name)
         return TAPE_ERROR;
     }
 
-  cout.form("Tape::remove(): [2] %s\n", name);
+  cout << "Tape::remove(): [2] " << name << endl;
 
   _kct_file.remove(name);
   TAPE_IF()->tapeRemoveFile(idx);
@@ -1233,7 +1236,7 @@ Tape::extract(const char *name, const char *filename)
   if (!is)
     return TAPE_ERROR;
 
-  f.open(filename, ios::out | ios::noreplace | ios::bin);
+  f.open(filename, ios::out | ios::binary);
   if (!f)
     return TAPE_ERROR;
 

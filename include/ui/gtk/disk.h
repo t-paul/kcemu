@@ -2,7 +2,7 @@
  *  KCemu -- the KC 85/3 and KC 85/4 Emulator
  *  Copyright (C) 1997-2001 Torsten Paul
  *
- *  $Id: disk.h,v 1.2 2001/04/14 15:15:24 tp Exp $
+ *  $Id: disk.h,v 1.4 2002/01/06 12:53:40 torsten_paul Exp $
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -44,14 +44,14 @@ class DiskWindow : public UI_Gtk_Window
     GtkWidget *browse[NR_OF_DISKS];
     GtkWidget *eject[NR_OF_DISKS];
     GtkWidget *separator;
-    GtkWidget *bbox;
-    GtkWidget *b_ok;
-    GtkWidget *b_apply;
-    GtkWidget *b_close;
+    GtkWidget *close;
+    guint combo_signal_id[NR_OF_DISKS];
   } _w;
 
  protected:
   void init(void);
+
+  static void sf_disk_attach(GtkWidget *widget, gpointer data);
 
  public:
   DiskWindow(void) { init(); }

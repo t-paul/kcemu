@@ -2,7 +2,7 @@
  *  KCemu -- the KC 85/3 and KC 85/4 Emulator
  *  Copyright (C) 1997-2001 Torsten Paul
  *
- *  $Id: pio.cc,v 1.12 2001/04/14 15:16:22 tp Exp $
+ *  $Id: pio.cc,v 1.13 2001/12/29 03:50:21 torsten_paul Exp $
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -321,7 +321,9 @@ PIO::out_CTRL(int port, byte_t val)
         }
       break;
     default:
-      cout.form("PIO: [%c] ??? unknon control byte: %02x\n", p, val);
+      cout << "PIO: [" << p << "] ??? unknon control byte: "
+	   << hex << setw(2) << setfill('0') << val
+	   << endl;
       break;
     }
 }
@@ -344,11 +346,9 @@ PIO::set_EXT(int port, byte_t mask, byte_t val)
   byte_t old;
   char p = "AB"[port];
 
-  // cout.form("PIO: [%c] external value: mask = 0x%02x, val = 0x%02x (old = 0x%02x)\n", p, mask, val, _ext[port]);
-
   if (_irq_active[port] )
     {
-      cout.form("PIO::set_EXT() - irq active\n");
+      cout << "PIO::set_EXT() - irq active" << endl;
       return;
     }
 

@@ -2,7 +2,7 @@
  *  KCemu -- the KC 85/3 and KC 85/4 Emulator
  *  Copyright (C) 1997-2001 Torsten Paul
  *
- *  $Id: disk.cc,v 1.2 2001/04/14 15:16:54 tp Exp $
+ *  $Id: disk.cc,v 1.4 2002/01/06 12:53:40 torsten_paul Exp $
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -97,6 +97,9 @@ public:
   {
     const char *filename;
     
+    if (!args)
+      args = new CMD_Args();
+
     filename = NULL;
     switch (context)
       {
@@ -104,9 +107,6 @@ public:
       case 1:
       case 2:
       case 3:
-	if (!args)
-	  args = new CMD_Args();
-	
 	args->set_int_arg("disk", context);
 	CMD_EXEC_ARGS("disk-attach", args);
 	break;
@@ -114,9 +114,6 @@ public:
       case 5:
       case 6:
       case 7:
-	if (!args)
-	  args = new CMD_Args();
-	
 	args->set_int_arg("disk", context & 3);
 	CMD_EXEC_ARGS("disk-detach", args);
 	break;
@@ -127,10 +124,32 @@ public:
 void
 DiskWindow::set_name(int idx, const char *name)
 {
+  GtkWidget *entry = GTK_COMBO(_w.combo[idx])->entry;
+
   if (!name)
     name = "";
 
-  gtk_entry_set_text(GTK_ENTRY(GTK_COMBO(_w.combo[idx])->entry), name);
+  gtk_signal_handler_block(GTK_OBJECT(entry), _w.combo_signal_id[idx]);
+  gtk_entry_set_text(GTK_ENTRY(entry), name);
+  gtk_signal_handler_unblock(GTK_OBJECT(entry), _w.combo_signal_id[idx]);
+}
+
+void
+DiskWindow::sf_disk_attach(GtkWidget *widget, gpointer data)
+{
+  CMD_Args *args;
+  int nr = (int)data;
+  char *text = gtk_entry_get_text(GTK_ENTRY(widget));
+
+  if (text == NULL)
+    return;
+  if (strlen(text) == 0)
+    return;
+
+  args = new CMD_Args();
+  args->set_int_arg("disk", nr);
+  args->set_string_arg("filename", text);
+  CMD_EXEC_ARGS("disk-attach", args);
 }
 
 void
@@ -153,9 +172,9 @@ DiskWindow::init(void)
     "ui-disk-detach-3",
     "ui-disk-detach-4",
   };
-  char e1[] = "/home/tp/projects/KCemu/DISK/caos.dump";
-  char e2[] = "/home/tp/projects/KCemu/DISK/microdos.dump";
-  char e3[] = "Disk 3";
+  char *disk1;
+  char *disk2;
+  char *disk3;
   GtkTooltips *tips;
 
   tips = gtk_tooltips_new();
@@ -208,14 +227,34 @@ DiskWindow::init(void)
      *  combo box
      */
     popdown = NULL;
-    popdown = g_list_append(popdown, e1);
-    popdown = g_list_append(popdown, e2);
-    popdown = g_list_append(popdown, e3);
+    disk1 = new char[strlen(DATADIR) + 15];
+    strcpy(disk1, DATADIR);
+    strcat(disk1, "/");
+    strcat(disk1, "microdos.dump");
+
+    disk2 = new char[strlen(DATADIR) + 11];
+    strcpy(disk2, DATADIR);
+    strcat(disk2, "/");
+    strcat(disk2, "caos.dump");
+
+    disk3 = new char[strlen(DATADIR) + 12];
+    strcpy(disk3, DATADIR);
+    strcat(disk3, "/");
+    strcat(disk3, "tools.dump");
+
+    popdown = g_list_append(popdown, disk1);
+    popdown = g_list_append(popdown, disk2);
+    //popdown = g_list_append(popdown, disk3);
     _w.combo[a] = gtk_combo_new();
     gtk_table_attach_defaults(GTK_TABLE(_w.table), _w.combo[a],
 			      1, 2, a, a + 1);
     gtk_combo_set_popdown_strings(GTK_COMBO(_w.combo[a]), popdown);
-    gtk_entry_set_text(GTK_ENTRY(GTK_COMBO(_w.combo[a])->entry), "hello!");
+    gtk_entry_set_text(GTK_ENTRY(GTK_COMBO(_w.combo[a])->entry), "");
+    gtk_entry_set_editable(GTK_ENTRY(GTK_COMBO(_w.combo[a])->entry), FALSE);
+    _w.combo_signal_id[a] = gtk_signal_connect(GTK_OBJECT(GTK_COMBO(_w.combo[a])->entry),
+					       "changed",
+					       GTK_SIGNAL_FUNC(sf_disk_attach),
+					       (gpointer)a);
     gtk_widget_show(_w.combo[a]);
 
     /*
@@ -229,6 +268,7 @@ DiskWindow::init(void)
 		       GTK_SIGNAL_FUNC(cmd_exec_sf),
 		       (char *)attach_cmd[a]); // FIXME:
     gtk_widget_show(_w.browse[a]);
+    GTK_WIDGET_UNSET_FLAGS(_w.browse[a], GTK_CAN_DEFAULT);
 
     /*
      *  eject button
@@ -241,6 +281,7 @@ DiskWindow::init(void)
 		       GTK_SIGNAL_FUNC(cmd_exec_sf),
 		       (char *)detach_cmd[a]); // FIXME:
     gtk_widget_show(_w.eject[a]);
+    GTK_WIDGET_UNSET_FLAGS(_w.eject[a], GTK_CAN_DEFAULT);
   }
 
   _w.separator = gtk_hseparator_new();
@@ -249,48 +290,16 @@ DiskWindow::init(void)
   gtk_widget_show(_w.separator);
     
   /*
-   *  button box
-   */
-  _w.bbox = gtk_hbutton_box_new();
-  gtk_button_box_set_spacing(GTK_BUTTON_BOX(_w.bbox), 0);
-  gtk_button_box_set_layout(GTK_BUTTON_BOX(_w.bbox), GTK_BUTTONBOX_SPREAD);
-  gtk_button_box_set_child_size(GTK_BUTTON_BOX(_w.bbox), 0, 0);
-  gtk_box_pack_start(GTK_BOX(_w.vbox), _w.bbox, FALSE, TRUE, 4);
-  gtk_widget_show(_w.bbox);
-
-  /*
-   *  ok button
-   */
-  _w.b_ok = gtk_button_new_with_label(_("Ok"));
-  gtk_signal_connect(GTK_OBJECT(_w.b_ok), "clicked",
-                     GTK_SIGNAL_FUNC(cmd_exec_sf),
-                     (gpointer)"ui-disk-window-toggle");
-  gtk_container_add(GTK_CONTAINER(_w.bbox), _w.b_ok);
-  GTK_WIDGET_SET_FLAGS(_w.b_ok, GTK_CAN_DEFAULT);
-  gtk_widget_grab_default(_w.b_ok);
-  gtk_widget_show(_w.b_ok);
-
-  /*
-   *  apply button
-   */
-  _w.b_apply = gtk_button_new_with_label(_("Apply"));
-  gtk_signal_connect(GTK_OBJECT(_w.b_apply), "clicked",
-                     GTK_SIGNAL_FUNC(cmd_exec_sf),
-                     (gpointer)"ui-disk-window-toggle");
-  gtk_container_add(GTK_CONTAINER(_w.bbox), _w.b_apply);
-  GTK_WIDGET_SET_FLAGS(_w.b_apply, GTK_CAN_DEFAULT);
-  gtk_widget_show(_w.b_apply);
-
-  /*
    *  close button
    */
-  _w.b_close = gtk_button_new_with_label(_("Close"));
-  gtk_signal_connect(GTK_OBJECT(_w.b_close), "clicked",
+  _w.close = gtk_button_new_with_label(_("Close"));
+  gtk_signal_connect(GTK_OBJECT(_w.close), "clicked",
                      GTK_SIGNAL_FUNC(cmd_exec_sf),
                      (gpointer)"ui-disk-window-toggle");
-  gtk_container_add(GTK_CONTAINER(_w.bbox), _w.b_close);
-  GTK_WIDGET_SET_FLAGS(_w.b_close, GTK_CAN_DEFAULT);
-  gtk_widget_show(_w.b_close);
+  gtk_box_pack_start(GTK_BOX(_w.vbox), _w.close, FALSE, FALSE, 5);
+  GTK_WIDGET_SET_FLAGS(_w.close, GTK_CAN_DEFAULT);
+  gtk_widget_grab_default(_w.close);
+  gtk_widget_show(_w.close);
 
   CMD *cmd;
   cmd = new CMD_ui_disk_window_toggle(this);

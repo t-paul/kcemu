@@ -2,7 +2,7 @@
  *  KCemu -- the KC 85/3 and KC 85/4 Emulator
  *  Copyright (C) 1997-2001 Torsten Paul
  *
- *  $Id: mod_list.h,v 1.5 2001/04/14 15:14:30 tp Exp $
+ *  $Id: mod_list.h,v 1.6 2002/01/06 12:53:40 torsten_paul Exp $
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -28,18 +28,21 @@
 #include "kc/config.h"
 #include "kc/system.h"
 
+#include "kc/kc.h"
 #include "kc/module.h"
 
 class ModuleListEntry
 {
 private:
   char *_name;
+  kc_type_t _type;
   ModuleInterface *_mod;
   
 public:
-  ModuleListEntry(const char *name, ModuleInterface *mod)
+  ModuleListEntry(const char *name, ModuleInterface *mod, kc_type_t type)
     {
       _mod = mod;
+      _type = type;
       _name = strdup(name);
     }
   virtual ~ModuleListEntry(void)
@@ -48,6 +51,7 @@ public:
     }
   virtual ModuleInterface * get_mod(void) { return _mod; }
   virtual const char * get_name(void) { return _name; }
+  virtual kc_type_t get_kc_type() { return _type; }
 };
 
 class ModuleList
@@ -59,6 +63,7 @@ private:
 
   int _nr_of_bd;
   ModuleListEntry *_init_floppy_basis;
+  ModuleListEntry *_init_color_expansion;
   const char *_init_mod[4 * MAX_BD + 2];
 
   typedef list<ModuleListEntry *> mod_list_t;

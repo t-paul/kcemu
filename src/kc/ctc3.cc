@@ -2,7 +2,7 @@
  *  KCemu -- the KC 85/3 and KC 85/4 Emulator
  *  Copyright (C) 1997-2001 Torsten Paul
  *
- *  $Id: ctc3.cc,v 1.5 2001/04/14 15:15:57 tp Exp $
+ *  $Id: ctc3.cc,v 1.6 2001/12/31 14:11:53 torsten_paul Exp $
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -109,4 +109,31 @@ CTC3::irq_2(void)
 bool
 CTC3::irq_3(void)
 {
+}
+
+long
+CTC3::counter_value_0(void)
+{
+  return 0;
+}
+
+long
+CTC3::counter_value_1(void)
+{
+  return 0;
+}
+
+long
+CTC3::counter_value_2(void)
+{
+  /*
+   *  CLK for channel 2 is 50 Hz
+   */
+  return CHANNEL_2_CLK;
+}
+
+long
+CTC3::counter_value_3(void)
+{
+  return 0;
 }

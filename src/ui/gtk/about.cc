@@ -2,7 +2,7 @@
  *  KCemu -- the KC 85/3 and KC 85/4 Emulator
  *  Copyright (C) 1997-2001 Torsten Paul
  *
- *  $Id: about.cc,v 1.8 2001/04/14 15:16:47 tp Exp $
+ *  $Id: about.cc,v 1.9 2001/12/29 03:50:21 torsten_paul Exp $
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -71,12 +71,16 @@ AboutWindow::init(void)
    */
   _w.name = gtk_label_new(APP_NAME);
   _w.copyright = gtk_label_new(APP_COPYRIGHT);
+  _w.info = gtk_label_new("build: " __DATE__ " / " __TIME__);
   gtk_box_pack_start(GTK_BOX(_w.vbox), _w.name,
                      FALSE, FALSE, 5);
   gtk_box_pack_start(GTK_BOX(_w.vbox), _w.copyright,
                      FALSE, FALSE, 5);
+  gtk_box_pack_start(GTK_BOX(_w.vbox), _w.info,
+                     FALSE, FALSE, 5);
   gtk_widget_show(_w.name);
   gtk_widget_show(_w.copyright);
+  gtk_widget_show(_w.info);
   
   /*
    *  separator

@@ -2,7 +2,7 @@
  *  KCemu -- the KC 85/3 and KC 85/4 Emulator
  *  Copyright (C) 1997-2001 Torsten Paul
  *
- *  $Id: ui_gtk3.cc,v 1.9 2001/04/14 15:17:06 tp Exp $
+ *  $Id: ui_gtk3.cc,v 1.11 2002/01/06 12:53:41 torsten_paul Exp $
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -25,6 +25,7 @@
 #include <unistd.h>
 #include <sys/time.h>
 
+#include "kc/z80.h"
 #include "kc/memory.h"
 
 #include "ui/hsv2rgb.h"
@@ -65,50 +66,41 @@ UI_Gtk3::~UI_Gtk3(void)
 void
 UI_Gtk3::callback(void * /* data */)
 {
-  static int count = 0;
-  static struct timeval tv1 = { 0, 0 };
-  static struct timeval tv2;
-  unsigned long diff, fps;
-  char buf[10];
-
-  unsigned long timeframe;
+  static int count = -300;
   static bool first = true;
   static struct timeval tv;
+  static struct timeval tv1 = { 0, 0 };
+  static struct timeval tv2;
   static unsigned long frame = 0;
   static unsigned long long base, d2;
   static struct timeval basetime = { 0, 0 };
 
-  if (++count > 60)
+  char buf[10];
+  unsigned long timeframe, diff, fps;
+
+  z80->addCallback(CB_OFFSET, this, 0);
+
+  if (++count >= 60)
     {
       count = 0;
       gettimeofday(&tv2, NULL);
       diff = ((1000000 * (tv2.tv_sec - tv1.tv_sec)) +
 	      (tv2.tv_usec - tv1.tv_usec));
-      fps = 60000000 / diff;
-#if 0
-      cout << "\x1b[H\x1b[2J" << flush;
-      for (y = 0;y < 16;y++)
-	{
-	  for (x = 0;x < 5;x++)
-	    {
-	      cout << (_dirty[(x << 7) | y] ? '#' : '.');
-	    }
-	  cout << endl;
-	}
-#endif
-      sprintf(buf, " %ld fps", fps);
-      gtk_label_set(GTK_LABEL(_main.st_fps), buf);
+      fps = 60500000 / diff;
+      sprintf(buf, " %ld fps ", fps);
+      if (tv1.tv_sec != 0)
+	gtk_label_set(GTK_LABEL(_main.st_fps), buf);
       tv1 = tv2;
     }
-
-  z80->addCallback(CB_OFFSET, this, 0);
 
   if (first)
     {
       first = false;
+      gettimeofday(&tv1, NULL);
       gettimeofday(&basetime, NULL);
       base = (basetime.tv_sec * 50) + basetime.tv_usec / 20000;
     }
+
   gettimeofday(&tv, NULL);
   d2 = (tv.tv_sec * 50) + tv.tv_usec / 20000;
   timeframe = (unsigned long)(d2 - base);
@@ -136,6 +128,7 @@ UI_Gtk3::callback(void * /* data */)
   d2 = (tv.tv_sec * 50) + tv.tv_usec / 20000;
   timeframe = (unsigned long)(d2 - base);
   _auto_skip = false;
+
   if (frame < timeframe)
     {
       if (++_cur_auto_skip > _max_auto_skip)

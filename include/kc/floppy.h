@@ -2,7 +2,7 @@
  *  KCemu -- the KC 85/3 and KC 85/4 Emulator
  *  Copyright (C) 1997-2001 Torsten Paul
  *
- *  $Id: floppy.h,v 1.2 2001/04/14 15:14:13 tp Exp $
+ *  $Id: floppy.h,v 1.4 2002/01/06 12:53:40 torsten_paul Exp $
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -25,31 +25,15 @@
 #include "kc/config.h"
 #include "kc/system.h"
 
-#include "kc/fdc.h"
+#include "libdisk/libdisk.h"
 
 class Floppy
 {
-  typedef enum {
-    FLOPPY_TYPE_UNKNOWN,
-    FLOPPY_TYPE_22DSK,
-    FLOPPY_TYPE_CDM
-  } floppy_type_t;
-
  private:
-  byte_t _head;
-  byte_t _cylinder;
-  byte_t _sector;
+  libdisk_prop_t *_disk_prop;
 
-  int _head_count;
-  int _cylinder_count;
-  int _sector_size;
-  int _sectors_per_cylinder;
-
- protected:
-  floppy_type_t check_type(const char *filename);
-  
  public:
-  Floppy(void);
+  Floppy(const char *cmdname);
   virtual ~Floppy(void);
 
   int get_head_count(void);

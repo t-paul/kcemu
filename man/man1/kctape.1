@@ -1,0 +1,52 @@
+.TH KCTAPE 1
+.SH NAME
+kctape \- handle tape files for KCemu
+.SH SYNOPSIS
+.B kctape tapefile [OPTION] [file] ...
+.br
+.B kctape --help
+.br
+.SH "DESCRIPTION"
+This manual page documents briefly the
+.BR kctape
+command.
+This manual page was written for the Debian GNU/Linux distribution
+because the original program does not have a manual page.
+.PP
+.B kctape
+...
+.SH OPTIONS
+.TP
+.B \-l, --list
+List the content of the tapefile (default).
+.TP
+.B \-c, --create
+Create the specified tapefile.
+.TP
+.B \-a, --add file [file ...]
+Add new file to tapefile.
+.TP
+.B \-A, --add-raw file tapename kcname loadaddr [startaddr]
+Add raw file to tapefile specifying the header values.
+.TP
+.B \-x, --extract filename
+Extract file to stdout.
+.TP
+.B \-r, --remove filename
+Remove file from tapefile.
+.TP
+.B \-d, --dump filename
+Hexdump file from tapefile.
+.TP
+.B \-b, --print-bam
+Show internal block map.
+.TP
+.B \-B, --print-block-list
+Show internal block list.
+.SH "BUGS"
+The handling of the commandline options is not quite GNU like.
+.SH "SEE ALSO"
+.IR kcemu(1x)
+.SH AUTHOR
+This manual page was written by Torsten Paul <Torsten.Paul@gmx.de>,
+for the Debian GNU/Linux system (but may be used by others).

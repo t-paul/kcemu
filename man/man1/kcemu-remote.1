@@ -1,0 +1,52 @@
+.TH KCEMU-REMOTE 1
+.SH NAME
+kcemu-remote \- A remote controller for the KC 85/4 Emulator
+.SH SYNOPSIS
+.B kcemu-remote command [param1=value1] [param2=value2] ...
+.br
+.SH "DESCRIPTION"
+This manual page documents briefly the
+.BR kcemu-remote
+command.
+This manual page was written for the Debian GNU/Linux distribution
+because the original program does not have a manual page.
+.PP
+.B kcemu-remote
+can control an already running KCemu by sending commands.
+The communication is done via the X Window System and
+is network transparent as long as the X Window Display can be
+accessed.
+
+.SH EXAMPLE COMMANDS
+.TP
+.B emu-reset
+Reset the emulator.
+.TP
+.B emu-power-on
+Power-On Reset the emulator.
+.TP
+.B emu-quit
+Exit the emulator.
+.TP
+.B kc-image-load filename=/absolute/path/to/imagefile
+Load a program into the emulator (if the given file is not
+found a filerequester will pop up).
+.TP
+.B kc-image-run filename=/absolute/path/to/imagefile
+Just like kc-image-load but tries to start the program
+after it is loaded.
+.TP
+.B floppy-attach filename=/absolute/path/to/diskimage
+The only way to change disk images for now (the user
+interface is not functional ;-)
+.TP
+.B keyboard-replay test=text_to_insert
+Send the text to the emulator.
+.SH BUGS
+There is no error handling and it's not possible to specify an
+emulator instance if more than one emulator is running.
+.SH "SEE ALSO"
+.IR kcemu(1x)
+.SH AUTHOR
+This manual page was written by Torsten Paul <Torsten.Paul@gmx.de>,
+for the Debian GNU/Linux system (but may be used by others).

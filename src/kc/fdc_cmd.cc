@@ -2,7 +2,7 @@
  *  KCemu -- the KC 85/3 and KC 85/4 Emulator
  *  Copyright (C) 1997-2001 Torsten Paul
  *
- *  $Id: fdc_cmd.cc,v 1.2 2001/04/14 15:16:03 tp Exp $
+ *  $Id: fdc_cmd.cc,v 1.4 2002/01/06 12:53:40 torsten_paul Exp $
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -302,7 +302,9 @@ FDC_CMD_WRITE_DATA::execute(void)
               _arg[7],
               _arg[8]));
   get_fdc()->set_input_gate(0x40, 0x40);
-  get_fdc()->get_floppy()->seek(_arg[3], _arg[2], _arg[4]);
+  _head = _arg[3];
+  _cylinder = _arg[2];
+  _sector = _arg[4];
 
   if (_buf != 0)
     delete _buf;
@@ -327,8 +329,8 @@ FDC_CMD_WRITE_DATA::write_byte(byte_t val)
       f = get_fdc()->get_floppy();
       if (f != 0)
         {
-          //get_fdc()->seek(_head, _cylinder, _sector);
-          //f->write_sector(_buf, _sector_size);
+          get_fdc()->seek(_head, _cylinder, _sector);
+          f->write_sector(_buf, _sector_size);
         }
     }
 }
@@ -375,7 +377,7 @@ FDC_CMD_READ_DATA::execute(void)
               ((_arg[0] >> 7) & 1) ? "MFM Mode" : "FM Mode",
               ((_arg[0] >> 6) & 1) ? "yes" : "no",
               (_arg[1] >> 2) & 1,
-              _arg[1] & 2,
+              _arg[1] & 3,
               _arg[2],
               _arg[3],
               _arg[4],
@@ -383,16 +385,13 @@ FDC_CMD_READ_DATA::execute(void)
               _arg[6],
               _arg[7],
               _arg[8]));
-  get_fdc()->select_floppy(_arg[1] & 2);
+  get_fdc()->select_floppy(_arg[1] & 3);
+  get_fdc()->seek(_arg[3], _arg[2], _arg[4]);
   f = get_fdc()->get_floppy();
   if (f == 0)
     return;
 
-  size = f->get_sector_size();
-  if (size == 0)
-    return;
-
-  DBG(2, form("KCemu/FDC_CMD/READ_DATA",
+  DBG(2, form("KCemu/FDC_CMD/READ_DATA_FORMAT",
               "FDC: READ DATA: heads:        %d\n"
               "FDC: READ DATA: cylinders:    %d\n"
               "FDC: READ DATA: sector size:  %d\n"
@@ -402,10 +401,14 @@ FDC_CMD_READ_DATA::execute(void)
               size,
               f->get_sectors_per_cylinder()));
 
+  size = f->get_sector_size();
+  if (size <= 0)
+    return;
+
   if (_buf != 0)
     delete _buf;
   _buf = new byte_t[size];
-  get_fdc()->seek(_arg[3], _arg[2], _arg[4]);
+
   len = f->read_sector(_buf, size);
   if (len != size)
     /* FIXME: read error */
@@ -414,17 +417,35 @@ FDC_CMD_READ_DATA::execute(void)
   _idx = 0;
   _size = size;
 
+  DBG(2, form("KCemu/FDC_CMD/READ_DATA_DUMP",
+              "FDC: READ DATA: %02x %02x %02x %02x %02x %02x %02x %02x\n"
+              "FDC: READ DATA: %02x %02x %02x %02x %02x %02x %02x %02x\n"
+              "FDC: READ DATA: %02x %02x %02x %02x %02x %02x %02x %02x\n"
+              "FDC: READ DATA: %02x %02x %02x %02x %02x %02x %02x %02x\n"
+              "FDC: READ DATA: %02x %02x %02x %02x %02x %02x %02x %02x\n"
+              "FDC: READ DATA: %02x %02x %02x %02x %02x %02x %02x %02x\n"
+              "FDC: READ DATA: %02x %02x %02x %02x %02x %02x %02x %02x\n"
+              "FDC: READ DATA: %02x %02x %02x %02x %02x %02x %02x %02x\n",
+	      _buf[0x00], _buf[0x01], _buf[0x02], _buf[0x03], _buf[0x04], _buf[0x05], _buf[0x06], _buf[0x07],
+	      _buf[0x08], _buf[0x09], _buf[0x0a], _buf[0x0b], _buf[0x0c], _buf[0x0d], _buf[0x0e], _buf[0x0f],
+	      _buf[0x10], _buf[0x11], _buf[0x12], _buf[0x13], _buf[0x14], _buf[0x15], _buf[0x16], _buf[0x17],
+	      _buf[0x18], _buf[0x19], _buf[0x1a], _buf[0x1b], _buf[0x1c], _buf[0x1d], _buf[0x1e], _buf[0x1f],
+	      _buf[0x20], _buf[0x21], _buf[0x22], _buf[0x23], _buf[0x24], _buf[0x25], _buf[0x26], _buf[0x27],
+	      _buf[0x28], _buf[0x29], _buf[0x2a], _buf[0x2b], _buf[0x2c], _buf[0x2d], _buf[0x2e], _buf[0x2f],
+	      _buf[0x30], _buf[0x31], _buf[0x32], _buf[0x33], _buf[0x34], _buf[0x35], _buf[0x36], _buf[0x37],
+	      _buf[0x38], _buf[0x39], _buf[0x3a], _buf[0x3b], _buf[0x3c], _buf[0x3d], _buf[0x3e], _buf[0x3f]));
+
+
   /*
   _result[0] = _ST0;
   _result[1] = _ST1;
   _result[2] = _ST2;
   */
-  /*
-    _result[3] = _Cylinder;
-    _result[4] = _Head;
-    _result[5] = _Sector;
-    _result[6] = _N;
-  */
+
+  _result[3] = _arg[2];
+  _result[4] = _arg[3];
+  _result[5] = _arg[4];
+  _result[6] = _arg[5];
 }
 
 bool
@@ -467,13 +488,13 @@ FDC_CMD_READ_DATA::read_byte(void)
 {
   byte_t b = 0xff;
 
-  if (_idx < _size)
-    b = _buf[_idx++];
-
   if (_idx == _size)
     if (!fetch_next_sector())
       1 == 1; // FIXME: set terminal count here!
-  
+
+  if (_idx < _size)
+    b = _buf[_idx++];  
+
   DBG(2, form("KCemu/FDC_CMD/read_byte",
               "FDC_CMD_READ_DATA::read_byte(): 0x%02x (%3d, '%c')\n",
               b, b, isprint(b) ? b : '.'));
@@ -614,12 +635,12 @@ FDC_CMD_FORMAT_A_TRACK::execute(void)
               "FDC: FORMAT A TRACK: --------------------------------\n",
               ((_arg[0] >> 7) & 1) ? "MFM Mode" : "FM Mode",
               (_arg[1] >> 2) & 1,
-              _arg[1] & 2,
+              _arg[1] & 3,
 	      _arg[2],
 	      _arg[3],
 	      _arg[4],
 	      _arg[5], _arg[5]));
-  get_fdc()->select_floppy(_arg[1] & 2);
+  get_fdc()->select_floppy(_arg[1] & 3);
   get_fdc()->set_input_gate(0x40, 0x40);
 
   _idx = 0;

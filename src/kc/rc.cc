@@ -2,7 +2,7 @@
  *  KCemu -- the KC 85/3 and KC 85/4 Emulator
  *  Copyright (C) 1997-2001 Torsten Paul
  *
- *  $Id: rc.cc,v 1.3 2001/04/14 15:16:31 tp Exp $
+ *  $Id: rc.cc,v 1.4 2001/12/29 03:50:21 torsten_paul Exp $
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -82,14 +82,18 @@ RC::load_file(const char *filename)
 {
   int c;
   ifstream is;
-  char *line, *name, *arg, *tmp;
+  char *name, *arg, *tmp;
+  char line[4096];
   
   is.open(filename);
-  if (!is) return;
+  if (!is)
+    return;
+
   while (242)
     {
-      is.gets(&line);
-      if (!line) break;
+      is.getline(line, 4096);
+      if (is.eof())
+	break;
 
       name = line;
       while ((*name == ' ') || (*name == '\t')) name++;
@@ -111,8 +115,9 @@ RC::load_file(const char *filename)
                 }
             }
         }
-      delete line;
     }
+
+  is.close();
 }
 
 void
@@ -127,7 +132,7 @@ RC::instance(void)
 {
   if (_instance == 0)
     {
-      cerr.form("RC::instance(void): RC::init() not called!\n");
+      cerr << "RC::instance(void): RC::init() not called!" << endl;
       exit(1);
     }
   return _instance;

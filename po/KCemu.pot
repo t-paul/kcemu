@@ -6,7 +6,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2001-08-09 12:13+0200\n"
+"POT-Creation-Date: 2002-01-06 14:05+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -38,27 +38,27 @@ msgid ""
 "programs add this file to a tape-archive!"
 msgstr ""
 
-#: src/kc/disk.cc:78
+#: src/kc/disk.cc:82
 msgid "Select disk..."
 msgstr ""
 
-#: src/kc/disk.cc:116 src/kc/tape.cc:178
+#: src/kc/disk.cc:120 src/kc/tape.cc:178
 msgid "create file?"
 msgstr ""
 
-#: src/kc/disk.cc:118 src/kc/tape.cc:180
+#: src/kc/disk.cc:122 src/kc/tape.cc:180
 #, c-format
 msgid ""
 "The file '%s' doesn't exist.\n"
 "Do you want to create it?"
 msgstr ""
 
-#: src/kc/disk.cc:131
+#: src/kc/disk.cc:135
 #, c-format
 msgid "disk-file `%s' attached."
 msgstr ""
 
-#: src/kc/disk.cc:136
+#: src/kc/disk.cc:140
 msgid "Can't attach disk-file."
 msgstr ""
 
@@ -86,35 +86,35 @@ msgstr ""
 msgid "IRM Color Expansion"
 msgstr ""
 
-#: src/kc/mod_list.cc:105
+#: src/kc/mod_list.cc:109
 msgid "M022: Expander RAM (16k)"
 msgstr ""
 
-#: src/kc/mod_list.cc:114
+#: src/kc/mod_list.cc:118
 msgid "M006: Basic"
 msgstr ""
 
-#: src/kc/mod_list.cc:124
+#: src/kc/mod_list.cc:128
 msgid "M012: Texor"
 msgstr ""
 
-#: src/kc/mod_list.cc:134
+#: src/kc/mod_list.cc:138
 msgid "M026: Forth"
 msgstr ""
 
-#: src/kc/mod_list.cc:144
+#: src/kc/mod_list.cc:148
 msgid "M027: Development"
 msgstr ""
 
-#: src/kc/mod_list.cc:155
+#: src/kc/mod_list.cc:159
 msgid "M900: WordPro '86 (KC85/3)"
 msgstr ""
 
-#: src/kc/mod_list.cc:166
+#: src/kc/mod_list.cc:170
 msgid "M901: WordPro '86 (KC85/4)"
 msgstr ""
 
-#: src/kc/mod_list.cc:177
+#: src/kc/mod_list.cc:181
 msgid "Floppy Disk Basis"
 msgstr ""
 
@@ -160,9 +160,9 @@ msgstr ""
 #.
 #. *  close button
 #.
-#: src/ui/gtk/about.cc:92 src/ui/gtk/color.cc:245 src/ui/gtk/copying.cc:151
-#: src/ui/gtk/disk.cc:287 src/ui/gtk/info.cc:541 src/ui/gtk/module.cc:212
-#: src/ui/gtk/tape.cc:414 src/ui/gtk/tapeadd.cc:184
+#: src/ui/gtk/about.cc:96 src/ui/gtk/color.cc:245 src/ui/gtk/copying.cc:151
+#: src/ui/gtk/disk.cc:295 src/ui/gtk/info.cc:541 src/ui/gtk/module.cc:218
+#: src/ui/gtk/tape.cc:415 src/ui/gtk/tapeadd.cc:184
 msgid "Close"
 msgstr ""
 
@@ -216,19 +216,19 @@ msgstr ""
 msgid "KCemu: Copying"
 msgstr ""
 
-#: src/ui/gtk/debug.cc:227
+#: src/ui/gtk/debug.cc:225
 msgid "KCemu: Debugger"
 msgstr ""
 
-#: src/ui/gtk/debug.cc:326
+#: src/ui/gtk/debug.cc:324
 msgid "Trace"
 msgstr ""
 
-#: src/ui/gtk/debug.cc:333
+#: src/ui/gtk/debug.cc:331
 msgid "Single Step"
 msgstr ""
 
-#: src/ui/gtk/debug.cc:340
+#: src/ui/gtk/debug.cc:338
 msgid "Execute Step"
 msgstr ""
 
@@ -257,14 +257,14 @@ msgstr ""
 msgid "No"
 msgstr ""
 
-#: src/ui/gtk/disk.cc:169
+#: src/ui/gtk/disk.cc:188
 msgid "KCemu: Disk"
 msgstr ""
 
 #.
 #. *  label
 #.
-#: src/ui/gtk/disk.cc:196
+#: src/ui/gtk/disk.cc:215
 #, c-format
 msgid "Disk %d"
 msgstr ""
@@ -272,29 +272,15 @@ msgstr ""
 #.
 #. *  browse button
 #.
-#: src/ui/gtk/disk.cc:224 src/ui/gtk/tapeadd.cc:87
+#: src/ui/gtk/disk.cc:263 src/ui/gtk/tapeadd.cc:87
 msgid "Browse"
 msgstr ""
 
 #.
 #. *  eject button
 #.
-#: src/ui/gtk/disk.cc:236
-msgid "Eject"
-msgstr ""
-
-#.
-#. *  ok button
-#.
-#: src/ui/gtk/disk.cc:264 src/ui/gtk/tapeadd.cc:165
-msgid "Ok"
-msgstr ""
-
-#.
-#. *  apply button
-#.
 #: src/ui/gtk/disk.cc:276
-msgid "Apply"
+msgid "Eject"
 msgstr ""
 
 #: src/ui/gtk/fbrowse.cc:42
@@ -473,20 +459,20 @@ msgstr ""
 msgid "Update"
 msgstr ""
 
-#: src/ui/gtk/module.cc:178
+#: src/ui/gtk/module.cc:183
 msgid "KCemu: Module"
 msgstr ""
 
-#: src/ui/gtk/module.cc:194
+#: src/ui/gtk/module.cc:199
 #, c-format
 msgid "D002: Busdriver [%02X]"
 msgstr ""
 
-#: src/ui/gtk/module.cc:198
+#: src/ui/gtk/module.cc:204
 msgid "Floppy Disk Basis [F0]"
 msgstr ""
 
-#: src/ui/gtk/module.cc:199
+#: src/ui/gtk/module.cc:205
 msgid "Basis Device"
 msgstr ""
 
@@ -527,6 +513,13 @@ msgstr ""
 #.
 #: src/ui/gtk/tapeadd.cc:135
 msgid "start addr:"
+msgstr ""
+
+#.
+#. *  ok button
+#.
+#: src/ui/gtk/tapeadd.cc:165
+msgid "Ok"
 msgstr ""
 
 #: src/ui/gtk/tapeadd.cc:242
@@ -635,23 +628,23 @@ msgstr ""
 #.
 #. *  buttons
 #.
-#: src/ui/gtk/tape.cc:379
+#: src/ui/gtk/tape.cc:380
 msgid "Stop"
 msgstr ""
 
-#: src/ui/gtk/tape.cc:386
+#: src/ui/gtk/tape.cc:387
 msgid "Record"
 msgstr ""
 
-#: src/ui/gtk/tape.cc:393
+#: src/ui/gtk/tape.cc:394
 msgid "Play"
 msgstr ""
 
-#: src/ui/gtk/tape.cc:400
+#: src/ui/gtk/tape.cc:401
 msgid "Attach"
 msgstr ""
 
-#: src/ui/gtk/tape.cc:407
+#: src/ui/gtk/tape.cc:408
 msgid "Detach"
 msgstr ""
 

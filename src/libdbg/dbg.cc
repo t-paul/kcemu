@@ -1,3 +1,4 @@
+#include <stdio.h>
 #include <fstream.h>
 
 #include "libdbg/dbg.h"
@@ -160,18 +161,22 @@ void
 DBG_class::load_file(const char *filename)
 {
   ifstream is;
-  char *line;
+  char line[4096];
 
   is.open(filename);
-  if (!is) return;
+  if (!is)
+    return;
+
   while (242)
     {
-      is.gets(&line);
-      if (!line)
-        break;
+      is.getline(line, 4096);
+      if (is.eof())
+	break;
       if (line[0] != '#')
         add_path(line, false);
     }
+
+  is.close();
 }
 
 void
@@ -183,12 +188,15 @@ DBG_class::add_path(const char *path, bool allow_subkeys)
 void
 DBG_class::form(const char *path, const char *format ...)
 {
+  char buf[8192];
+
   if (!_tree.check_path(path))
     return;
 
   va_list ap;
   va_start(ap, format);
-  _o->vform(format, ap);
+  vsnprintf(buf, 8192, format, ap);
+  *_o << buf;
   va_end(ap);
 }
 
@@ -198,7 +206,7 @@ DBG_class::print(const char *path, const char *msg)
   if (!_tree.check_path(path))
     return;
 
-  _o->form("DEBUG: %s - %s", path, msg);
+  *_o << "DEBUG: " << path << " - " << msg;
 }
 
 void
@@ -207,7 +215,7 @@ DBG_class::println(const char *path, const char *msg)
   if (!_tree.check_path(path))
     return;
 
-  _o->form("DEBUG: %s - %s\n", path, msg);
+  *_o << "DEBUG: " << path << " - " << msg << endl;
 }
 
 bool

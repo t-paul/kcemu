@@ -2,7 +2,7 @@
  *  KCemu -- the KC 85/3 and KC 85/4 Emulator
  *  Copyright (C) 1997-2001 Torsten Paul
  *
- *  $Id: wav.cc,v 1.3 2001/04/14 15:16:36 tp Exp $
+ *  $Id: wav.cc,v 1.4 2001/12/29 03:50:21 torsten_paul Exp $
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -72,7 +72,7 @@ public:
           printf("CMD_kc_play_wav::execute(): '%s'\n", filename);
           
           is = new ifstream();
-          is->open(filename, ios::in | ios::bin);
+          is->open(filename, ios::in | ios::binary);
           if (!(*is))
             return;
           _p->play(is);

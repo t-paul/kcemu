@@ -25,6 +25,9 @@ kcemu_SOURCES = \
 	ctc.cc		\
 	ctc1.cc		\
 	ctc3.cc		\
+	ctc_fdc.cc	\
+	ctc_base.cc	\
+	cb_list.cc	\
 	keyb1.cc	\
 	keyb3.cc	\
 	memory.cc	\
@@ -59,6 +62,7 @@ kcemu_SOURCES = \
 	wav.cc		\
 	timer.cc	\
 	z80.cc		\
+	z80_fdc.cc	\
 	sound.cc	\
 	disass.cc
 
@@ -67,6 +71,7 @@ kcemu_LDADD = \
 	../z80core2/libz80.a	\
 	../fileio/libfileio.a	\
 	../libtape/libtape.a	\
+	../libdisk/libdisk.a	\
 	../ui/gtk/libui_gtk.a	\
 	../ui/libui.a		\
 	../libdbg/libdbg.a	\

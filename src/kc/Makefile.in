@@ -62,6 +62,9 @@ host_triplet = @host@
 CATALOGS = @CATALOGS@
 CATOBJEXT = @CATOBJEXT@
 CC = @CC@
+CPPUNIT_CFLAGS = @CPPUNIT_CFLAGS@
+CPPUNIT_CONFIG = @CPPUNIT_CONFIG@
+CPPUNIT_LIBS = @CPPUNIT_LIBS@
 CXX = @CXX@
 DATADIRNAME = @DATADIRNAME@
 GENCAT = @GENCAT@
@@ -105,10 +108,10 @@ localedir = $(prefix)/@DATADIRNAME@/locale
 CPPFLAGS =  	-DVERSION=\"$(VERSION)\" 	-DDATADIR=\"$(pkgdatadir)\" 	-DPACKAGE=\"$(PACKAGE)\" 	-DLOCALEDIR=\"$(localedir)\" 	-DDEBUG 	$(GTK_CFLAGS) 	$(SDL_CFLAGS)
 
 
-kcemu_SOURCES =  	debug.cc		kc.cc			rc.cc			ctc.cc			ctc1.cc			ctc3.cc			keyb1.cc		keyb3.cc		memory.cc		memory1.cc		memory2.cc		memory3.cc		memory4.cc		sh_mem.cc		disk_io.cc		fdc.cc			fdc_cmd.cc		floppy.cc		pio.cc			pio1.cc			pio2.cc			pio3.cc			pio4.cc			ports.cc		ports1.cc		ports3.cc		ports4.cc		module.cc		mod_ram.cc		mod_ram1.cc		mod_64k.cc		mod_rom.cc		mod_disk.cc		mod_v24.cc		mod_list.cc		tape.cc			disk.cc			wav.cc			timer.cc		z80.cc			sound.cc		disass.cc
+kcemu_SOURCES =  	debug.cc		kc.cc			rc.cc			ctc.cc			ctc1.cc			ctc3.cc			ctc_fdc.cc		ctc_base.cc		cb_list.cc		keyb1.cc		keyb3.cc		memory.cc		memory1.cc		memory2.cc		memory3.cc		memory4.cc		sh_mem.cc		disk_io.cc		fdc.cc			fdc_cmd.cc		floppy.cc		pio.cc			pio1.cc			pio2.cc			pio3.cc			pio4.cc			ports.cc		ports1.cc		ports3.cc		ports4.cc		module.cc		mod_ram.cc		mod_ram1.cc		mod_64k.cc		mod_rom.cc		mod_disk.cc		mod_v24.cc		mod_list.cc		tape.cc			disk.cc			wav.cc			timer.cc		z80.cc			z80_fdc.cc		sound.cc		disass.cc
 
 
-kcemu_LDADD =  	../z80core/libz80.a		../z80core2/libz80.a		../fileio/libfileio.a		../libtape/libtape.a		../ui/gtk/libui_gtk.a		../ui/libui.a			../libdbg/libdbg.a		../cmd/*.o			@INTLLIBS@			$(GTK_LIBS)			$(SDL_LIBS)
+kcemu_LDADD =  	../z80core/libz80.a		../z80core2/libz80.a		../fileio/libfileio.a		../libtape/libtape.a		../libdisk/libdisk.a		../ui/gtk/libui_gtk.a		../ui/libui.a			../libdbg/libdbg.a		../cmd/*.o			@INTLLIBS@			$(GTK_LIBS)			$(SDL_LIBS)
 
 
 kcemu_send_SOURCES =  	kcemu-send.c
@@ -125,15 +128,15 @@ PROGRAMS =  $(bin_PROGRAMS) $(noinst_PROGRAMS)
 DEFS = @DEFS@ -I. -I$(srcdir) -I../../include/kc
 LDFLAGS = @LDFLAGS@
 LIBS = @LIBS@
-kcemu_OBJECTS =  debug.o kc.o rc.o ctc.o ctc1.o ctc3.o keyb1.o keyb3.o \
-memory.o memory1.o memory2.o memory3.o memory4.o sh_mem.o disk_io.o \
-fdc.o fdc_cmd.o floppy.o pio.o pio1.o pio2.o pio3.o pio4.o ports.o \
-ports1.o ports3.o ports4.o module.o mod_ram.o mod_ram1.o mod_64k.o \
-mod_rom.o mod_disk.o mod_v24.o mod_list.o tape.o disk.o wav.o timer.o \
-z80.o sound.o disass.o
+kcemu_OBJECTS =  debug.o kc.o rc.o ctc.o ctc1.o ctc3.o ctc_fdc.o \
+ctc_base.o cb_list.o keyb1.o keyb3.o memory.o memory1.o memory2.o \
+memory3.o memory4.o sh_mem.o disk_io.o fdc.o fdc_cmd.o floppy.o pio.o \
+pio1.o pio2.o pio3.o pio4.o ports.o ports1.o ports3.o ports4.o module.o \
+mod_ram.o mod_ram1.o mod_64k.o mod_rom.o mod_disk.o mod_v24.o \
+mod_list.o tape.o disk.o wav.o timer.o z80.o z80_fdc.o sound.o disass.o
 kcemu_DEPENDENCIES =  ../z80core/libz80.a ../z80core2/libz80.a \
-../fileio/libfileio.a ../libtape/libtape.a ../ui/gtk/libui_gtk.a \
-../ui/libui.a ../libdbg/libdbg.a ../cmd/*.o
+../fileio/libfileio.a ../libtape/libtape.a ../libdisk/libdisk.a \
+../ui/gtk/libui_gtk.a ../ui/libui.a ../libdbg/libdbg.a ../cmd/*.o
 kcemu_LDFLAGS = 
 kcemu_send_OBJECTS =  kcemu-send.o
 kcemu_send_DEPENDENCIES = 
@@ -274,10 +277,12 @@ distdir: $(DISTFILES)
 	    || cp -p $$d/$$file $(distdir)/$$file || :; \
 	  fi; \
 	done
+cb_list.o: cb_list.cc ../../include/kc/config.h \
+	../../include/kc/system.h ../../include/kc/cb_list.h \
+	../../include/kc/cb.h ../../include/kc/kc.h
 ctc.o: ctc.cc ../../include/kc/config.h ../../include/kc/system.h \
 	../../include/kc/kc.h ../../include/ui/ui.h \
-	../../include/kc/cb.h ../../include/kc/z80.h \
-	../../include/z80core/z80.h ../../include/kc/ic.h \
+	../../include/kc/ic.h ../../include/kc/cb.h \
 	../../include/kc/profile.h ../../include/ui/tape.h \
 	../../include/libtape/kct.h ../../include/ui/debug.h \
 	../../include/ui/module.h ../../include/kc/module.h \
@@ -287,7 +292,8 @@ ctc.o: ctc.cc ../../include/kc/config.h ../../include/kc/system.h \
 ctc1.o: ctc1.cc ../../include/kc/config.h ../../include/kc/system.h \
 	../../include/kc/z80.h ../../include/z80core/z80.h \
 	../../include/kc/ic.h ../../include/kc/cb.h \
-	../../include/kc/kc.h ../../include/kc/ctc1.h \
+	../../include/kc/kc.h ../../include/kc/cb_list.h \
+	../../include/kc/ctc1.h ../../include/kc/ctc_base.h \
 	../../include/kc/ctc.h ../../include/kc/ports.h \
 	../../include/kc/tape.h ../../include/libtape/kct.h \
 	../../include/libdbg/dbg.h
@@ -295,29 +301,46 @@ ctc3.o: ctc3.cc ../../include/kc/config.h ../../include/kc/system.h \
 	../../include/kc/rc.h ../../include/kc/tape.h \
 	../../include/kc/cb.h ../../include/kc/kc.h \
 	../../include/libtape/kct.h ../../include/kc/ctc3.h \
-	../../include/kc/ctc.h ../../include/kc/ic.h \
-	../../include/kc/ports.h ../../include/ui/ui.h \
-	../../include/kc/z80.h ../../include/z80core/z80.h \
-	../../include/kc/profile.h ../../include/ui/tape.h \
-	../../include/ui/debug.h ../../include/ui/module.h \
-	../../include/kc/module.h ../../include/cmd/cmdargs.h \
+	../../include/kc/ctc_base.h ../../include/kc/ctc.h \
+	../../include/kc/ic.h ../../include/kc/ports.h \
+	../../include/ui/ui.h ../../include/kc/profile.h \
+	../../include/ui/tape.h ../../include/ui/debug.h \
+	../../include/ui/module.h ../../include/kc/module.h \
+	../../include/cmd/cmdargs.h ../../include/libdbg/dbg.h
+ctc_base.o: ctc_base.cc ../../include/kc/config.h \
+	../../include/kc/system.h ../../include/kc/z80.h \
+	../../include/z80core/z80.h ../../include/kc/ic.h \
+	../../include/kc/cb.h ../../include/kc/kc.h \
+	../../include/kc/cb_list.h ../../include/kc/ctc_base.h \
+	../../include/kc/ctc.h ../../include/kc/ports.h \
 	../../include/libdbg/dbg.h
+ctc_fdc.o: ctc_fdc.cc ../../include/kc/config.h \
+	../../include/kc/system.h ../../include/kc/kc.h \
+	../../include/kc/ctc_fdc.h ../../include/kc/ctc.h \
+	../../include/kc/ic.h ../../include/kc/cb.h \
+	../../include/kc/ports.h ../../include/kc/z80_fdc.h \
+	../../include/z80core2/z80.h ../../include/z80core2/z80io.h \
+	../../include/kc/cb_list.h ../../include/libdbg/dbg.h
 debug.o: debug.cc ../../include/kc/config.h ../../include/kc/system.h \
 	../../include/kc/ctc.h ../../include/kc/ic.h \
 	../../include/kc/cb.h ../../include/kc/kc.h \
 	../../include/kc/ports.h ../../include/kc/pio.h \
 	../../include/kc/z80.h ../../include/z80core/z80.h \
-	../../include/kc/memory.h ../../include/ui/ui.h \
-	../../include/kc/profile.h ../../include/ui/tape.h \
-	../../include/libtape/kct.h ../../include/ui/debug.h \
-	../../include/ui/module.h ../../include/kc/module.h \
-	../../include/cmd/cmdargs.h
+	../../include/kc/cb_list.h ../../include/kc/memory.h \
+	../../include/ui/ui.h ../../include/kc/profile.h \
+	../../include/ui/tape.h ../../include/libtape/kct.h \
+	../../include/ui/debug.h ../../include/ui/module.h \
+	../../include/kc/module.h ../../include/cmd/cmdargs.h
 disass.o: disass.cc ../../include/kc/config.h ../../include/kc/system.h \
 	../../include/kc/kc.h ../../include/kc/disass.h \
 	../../include/kc/memory.h ../../include/kc/ic.h \
 	../../include/kc/op.h ../../include/kc/opcb.h \
 	../../include/kc/opxx.h ../../include/kc/opxxxx.h
 disk.o: disk.cc ../../include/kc/config.h ../../include/kc/system.h \
+	../../include/kc/rc.h ../../include/kc/kc.h \
+	../../include/kc/fdc.h ../../include/kc/ic.h \
+	../../include/kc/ports.h ../../include/kc/fdc_cmd.h \
+	../../include/kc/floppy.h ../../include/libdisk/libdisk.h \
 	../../include/kc/disk.h ../../include/cmd/cmd.h \
 	../../include/cmd/cmdargs.h ../../include/ui/status.h \
 	../../include/ui/statusl.h ../../include/libdbg/dbg.h
@@ -325,22 +348,21 @@ disk_io.o: disk_io.cc ../../include/kc/config.h \
 	../../include/kc/system.h ../../include/kc/kc.h \
 	../../include/kc/z80.h ../../include/z80core/z80.h \
 	../../include/kc/ic.h ../../include/kc/cb.h \
-	../../include/kc/disk_io.h ../../include/kc/ports.h \
-	../../include/libdbg/dbg.h
+	../../include/kc/cb_list.h ../../include/kc/disk_io.h \
+	../../include/kc/ports.h ../../include/libdbg/dbg.h
 fdc.o: fdc.cc ../../include/kc/config.h ../../include/kc/system.h \
 	../../include/kc/fdc.h ../../include/kc/ic.h \
 	../../include/kc/ports.h ../../include/kc/fdc_cmd.h \
-	../../include/kc/floppy.h ../../include/libdbg/dbg.h \
-	../../include/z80core2/z80.h ../../include/z80core2/z80io.h
+	../../include/kc/floppy.h ../../include/libdisk/libdisk.h \
+	../../include/libdbg/dbg.h ../../include/z80core2/z80.h \
+	../../include/z80core2/z80io.h
 fdc_cmd.o: fdc_cmd.cc ../../include/kc/config.h \
 	../../include/kc/system.h ../../include/kc/fdc.h \
 	../../include/kc/ic.h ../../include/kc/ports.h \
 	../../include/kc/fdc_cmd.h ../../include/kc/floppy.h \
-	../../include/libdbg/dbg.h
+	../../include/libdisk/libdisk.h ../../include/libdbg/dbg.h
 floppy.o: floppy.cc ../../include/kc/config.h ../../include/kc/system.h \
-	../../include/kc/rc.h ../../include/kc/fdc.h \
-	../../include/kc/ic.h ../../include/kc/ports.h \
-	../../include/kc/fdc_cmd.h ../../include/kc/floppy.h \
+	../../include/kc/floppy.h ../../include/libdisk/libdisk.h \
 	../../include/cmd/cmd.h ../../include/cmd/cmdargs.h \
 	../../include/libdbg/dbg.h
 kc.o: kc.cc ../../include/kc/config.h ../../include/kc/system.h \
@@ -348,37 +370,41 @@ kc.o: kc.cc ../../include/kc/config.h ../../include/kc/system.h \
 	../../include/kc/ctc.h ../../include/kc/ic.h \
 	../../include/kc/cb.h ../../include/kc/ports.h \
 	../../include/kc/pio.h ../../include/kc/z80.h \
-	../../include/z80core/z80.h ../../include/kc/wav.h \
-	../../include/cmd/cmd.h ../../include/cmd/cmdargs.h \
-	../../include/kc/tape.h ../../include/libtape/kct.h \
-	../../include/kc/disk.h ../../include/kc/timer.h \
-	../../include/kc/module.h ../../include/kc/mod_list.h \
-	../../include/kc/sh_mem.h ../../include/kc/disk_io.h \
-	../../include/kc/fdc.h ../../include/kc/fdc_cmd.h \
-	../../include/kc/floppy.h ../../include/kc/sound.h \
+	../../include/z80core/z80.h ../../include/kc/cb_list.h \
+	../../include/kc/wav.h ../../include/cmd/cmd.h \
+	../../include/cmd/cmdargs.h ../../include/kc/tape.h \
+	../../include/libtape/kct.h ../../include/kc/disk.h \
+	../../include/kc/timer.h ../../include/kc/module.h \
+	../../include/kc/mod_list.h ../../include/kc/sh_mem.h \
+	../../include/kc/disk_io.h ../../include/kc/fdc.h \
+	../../include/kc/fdc_cmd.h ../../include/kc/floppy.h \
+	../../include/libdisk/libdisk.h ../../include/kc/sound.h \
+	../../include/kc/ctc_fdc.h ../../include/kc/z80_fdc.h \
+	../../include/z80core2/z80.h ../../include/z80core2/z80io.h \
 	../../include/ui/log.h ../../include/ui/errorl.h \
 	../../include/ui/statusl.h ../../include/fileio/load.h \
 	../../include/kc/pio1.h ../../include/kc/ctc1.h \
-	../../include/kc/ports1.h ../../include/kc/memory1.h \
-	../../include/kc/memory.h ../../include/kc/keyb1.h \
-	../../include/kc/keyboard.h ../../include/ui/gtk/ui_gtk1.h \
-	../../include/ui/gtk/ui_gtk.h ../../include/ui/ui.h \
-	../../include/kc/profile.h ../../include/ui/tape.h \
-	../../include/ui/debug.h ../../include/ui/module.h \
-	../../include/ui/commands.h ../../include/ui/gtk/cmd.h \
-	../../include/ui/gtk/window.h ../../include/ui/window.h \
-	../../include/ui/gtk/tape.h ../../include/ui/gtk/disk.h \
-	../../include/ui/gtk/info.h ../../include/ui/gtk/about.h \
-	../../include/ui/gtk/debug.h ../../include/ui/gtk/color.h \
-	../../include/ui/gtk/module.h ../../include/ui/gtk/copying.h \
-	../../include/ui/gtk/tapeadd.h ../../include/ui/gtk/fbrowse.h \
-	../../include/ui/gtk/dialog.h ../../include/ui/gtk/hedit.h \
-	../../include/kc/pio2.h ../../include/kc/memory2.h \
-	../../include/kc/pio3.h ../../include/kc/ctc3.h \
-	../../include/kc/ports3.h ../../include/kc/memory3.h \
-	../../include/kc/keyb3.h ../../include/kc/pio4.h \
-	../../include/kc/ports4.h ../../include/kc/memory4.h \
-	../../include/ui/gtk/ui_gtk3.h ../../include/ui/gtk/ui_gtk4.h
+	../../include/kc/ctc_base.h ../../include/kc/ports1.h \
+	../../include/kc/memory1.h ../../include/kc/memory.h \
+	../../include/kc/keyb1.h ../../include/kc/keyboard.h \
+	../../include/ui/gtk/ui_gtk1.h ../../include/ui/gtk/ui_gtk.h \
+	../../include/ui/ui.h ../../include/kc/profile.h \
+	../../include/ui/tape.h ../../include/ui/debug.h \
+	../../include/ui/module.h ../../include/ui/commands.h \
+	../../include/ui/gtk/cmd.h ../../include/ui/gtk/window.h \
+	../../include/ui/window.h ../../include/ui/gtk/tape.h \
+	../../include/ui/gtk/disk.h ../../include/ui/gtk/info.h \
+	../../include/ui/gtk/about.h ../../include/ui/gtk/debug.h \
+	../../include/ui/gtk/color.h ../../include/ui/gtk/module.h \
+	../../include/ui/gtk/copying.h ../../include/ui/gtk/tapeadd.h \
+	../../include/ui/gtk/fbrowse.h ../../include/ui/gtk/dialog.h \
+	../../include/ui/gtk/hedit.h ../../include/kc/pio2.h \
+	../../include/kc/memory2.h ../../include/kc/pio3.h \
+	../../include/kc/ctc3.h ../../include/kc/ports3.h \
+	../../include/kc/memory3.h ../../include/kc/keyb3.h \
+	../../include/kc/pio4.h ../../include/kc/ports4.h \
+	../../include/kc/memory4.h ../../include/ui/gtk/ui_gtk3.h \
+	../../include/ui/gtk/ui_gtk4.h
 kcemu-send.o: kcemu-send.c
 keyb1.o: keyb1.cc ../../include/kc/config.h ../../include/kc/system.h \
 	../../include/kc/keys.h ../../include/kc/keyb1.h \
@@ -390,54 +416,57 @@ keyb3.o: keyb3.cc ../../include/kc/config.h ../../include/kc/system.h \
 	../../include/cmd/cmd.h ../../include/cmd/cmdargs.h \
 	../../include/kc/z80.h ../../include/z80core/z80.h \
 	../../include/kc/ic.h ../../include/kc/cb.h \
-	../../include/kc/kc.h ../../include/kc/pio.h \
-	../../include/kc/ports.h ../../include/kc/keys.h \
-	../../include/kc/keyb3.h ../../include/kc/keyboard.h \
-	../../include/kc/keyb3k.h ../../include/libdbg/dbg.h
+	../../include/kc/kc.h ../../include/kc/cb_list.h \
+	../../include/kc/pio.h ../../include/kc/ports.h \
+	../../include/kc/keys.h ../../include/kc/keyb3.h \
+	../../include/kc/keyboard.h ../../include/kc/keyb3k.h \
+	../../include/libdbg/dbg.h
 memory.o: memory.cc ../../include/kc/config.h ../../include/kc/system.h \
-	../../include/kc/memory.h ../../include/kc/ic.h \
-	../../include/ui/status.h ../../include/ui/statusl.h
+	../../include/kc/kc.h ../../include/kc/memory.h \
+	../../include/kc/ic.h ../../include/ui/status.h \
+	../../include/ui/statusl.h
 memory1.o: memory1.cc ../../include/kc/config.h \
 	../../include/kc/system.h ../../include/kc/kc.h \
-	../../include/kc/memory1.h ../../include/kc/memory.h \
-	../../include/kc/ic.h ../../include/ui/ui.h \
-	../../include/kc/cb.h ../../include/kc/z80.h \
-	../../include/z80core/z80.h ../../include/kc/profile.h \
-	../../include/ui/tape.h ../../include/libtape/kct.h \
-	../../include/ui/debug.h ../../include/ui/module.h \
-	../../include/kc/module.h ../../include/kc/ports.h \
-	../../include/cmd/cmdargs.h
+	../../include/kc/z80.h ../../include/z80core/z80.h \
+	../../include/kc/ic.h ../../include/kc/cb.h \
+	../../include/kc/cb_list.h ../../include/kc/memory1.h \
+	../../include/kc/memory.h ../../include/ui/ui.h \
+	../../include/kc/profile.h ../../include/ui/tape.h \
+	../../include/libtape/kct.h ../../include/ui/debug.h \
+	../../include/ui/module.h ../../include/kc/module.h \
+	../../include/kc/ports.h ../../include/cmd/cmdargs.h
 memory2.o: memory2.cc ../../include/kc/config.h \
 	../../include/kc/system.h ../../include/kc/kc.h \
-	../../include/kc/memory2.h ../../include/kc/memory.h \
-	../../include/kc/ic.h ../../include/ui/ui.h \
-	../../include/kc/cb.h ../../include/kc/z80.h \
-	../../include/z80core/z80.h ../../include/kc/profile.h \
-	../../include/ui/tape.h ../../include/libtape/kct.h \
-	../../include/ui/debug.h ../../include/ui/module.h \
-	../../include/kc/module.h ../../include/kc/ports.h \
-	../../include/cmd/cmdargs.h
+	../../include/kc/z80.h ../../include/z80core/z80.h \
+	../../include/kc/ic.h ../../include/kc/cb.h \
+	../../include/kc/cb_list.h ../../include/kc/memory2.h \
+	../../include/kc/memory.h ../../include/ui/ui.h \
+	../../include/kc/profile.h ../../include/ui/tape.h \
+	../../include/libtape/kct.h ../../include/ui/debug.h \
+	../../include/ui/module.h ../../include/kc/module.h \
+	../../include/kc/ports.h ../../include/cmd/cmdargs.h
 memory3.o: memory3.cc ../../include/kc/config.h \
 	../../include/kc/system.h ../../include/kc/kc.h \
-	../../include/kc/memory3.h ../../include/kc/memory.h \
-	../../include/kc/ic.h ../../include/ui/ui.h \
-	../../include/kc/cb.h ../../include/kc/z80.h \
-	../../include/z80core/z80.h ../../include/kc/profile.h \
-	../../include/ui/tape.h ../../include/libtape/kct.h \
-	../../include/ui/debug.h ../../include/ui/module.h \
-	../../include/kc/module.h ../../include/kc/ports.h \
-	../../include/cmd/cmdargs.h
+	../../include/kc/z80.h ../../include/z80core/z80.h \
+	../../include/kc/ic.h ../../include/kc/cb.h \
+	../../include/kc/cb_list.h ../../include/kc/memory3.h \
+	../../include/kc/memory.h ../../include/ui/ui.h \
+	../../include/kc/profile.h ../../include/ui/tape.h \
+	../../include/libtape/kct.h ../../include/ui/debug.h \
+	../../include/ui/module.h ../../include/kc/module.h \
+	../../include/kc/ports.h ../../include/cmd/cmdargs.h
 memory4.o: memory4.cc ../../include/kc/config.h \
 	../../include/kc/system.h ../../include/kc/kc.h \
-	../../include/kc/rc.h ../../include/kc/memory4.h \
-	../../include/kc/memory.h ../../include/kc/ic.h \
+	../../include/kc/rc.h ../../include/kc/z80.h \
+	../../include/z80core/z80.h ../../include/kc/ic.h \
+	../../include/kc/cb.h ../../include/kc/cb_list.h \
+	../../include/kc/memory4.h ../../include/kc/memory.h \
 	../../include/kc/mod_rom.h ../../include/kc/module.h \
 	../../include/kc/ports.h ../../include/ui/ui.h \
-	../../include/kc/cb.h ../../include/kc/z80.h \
-	../../include/z80core/z80.h ../../include/kc/profile.h \
-	../../include/ui/tape.h ../../include/libtape/kct.h \
-	../../include/ui/debug.h ../../include/ui/module.h \
-	../../include/cmd/cmdargs.h ../../include/libdbg/dbg.h
+	../../include/kc/profile.h ../../include/ui/tape.h \
+	../../include/libtape/kct.h ../../include/ui/debug.h \
+	../../include/ui/module.h ../../include/cmd/cmdargs.h \
+	../../include/libdbg/dbg.h
 mod_64k.o: mod_64k.cc ../../include/kc/config.h \
 	../../include/kc/system.h ../../include/kc/kc.h \
 	../../include/kc/mod_64k.h ../../include/kc/module.h \
@@ -458,7 +487,6 @@ mod_list.o: mod_list.cc ../../include/kc/config.h \
 	../../include/kc/mod_rom.h ../../include/kc/mod_disk.h \
 	../../include/kc/mod_v24.h ../../include/kc/mod_list.h \
 	../../include/ui/ui.h ../../include/kc/cb.h \
-	../../include/kc/z80.h ../../include/z80core/z80.h \
 	../../include/kc/profile.h ../../include/ui/tape.h \
 	../../include/libtape/kct.h ../../include/ui/debug.h \
 	../../include/ui/module.h ../../include/cmd/cmdargs.h \
@@ -482,14 +510,13 @@ mod_v24.o: mod_v24.cc ../../include/kc/config.h \
 	../../include/kc/system.h ../../include/kc/kc.h \
 	../../include/kc/rc.h ../../include/kc/z80.h \
 	../../include/z80core/z80.h ../../include/kc/ic.h \
-	../../include/kc/cb.h ../../include/kc/mod_v24.h \
-	../../include/kc/ports.h ../../include/kc/module.h \
-	../../include/libdbg/dbg.h
+	../../include/kc/cb.h ../../include/kc/cb_list.h \
+	../../include/kc/mod_v24.h ../../include/kc/ports.h \
+	../../include/kc/module.h ../../include/libdbg/dbg.h
 module.o: module.cc ../../include/kc/config.h ../../include/kc/system.h \
 	../../include/kc/kc.h ../../include/kc/module.h \
 	../../include/kc/ports.h ../../include/ui/ui.h \
-	../../include/kc/cb.h ../../include/kc/z80.h \
-	../../include/z80core/z80.h ../../include/kc/ic.h \
+	../../include/kc/ic.h ../../include/kc/cb.h \
 	../../include/kc/profile.h ../../include/ui/tape.h \
 	../../include/libtape/kct.h ../../include/ui/debug.h \
 	../../include/ui/module.h ../../include/cmd/cmdargs.h \
@@ -498,15 +525,15 @@ pio.o: pio.cc ../../include/kc/config.h ../../include/kc/system.h \
 	../../include/kc/kc.h ../../include/kc/pio.h \
 	../../include/kc/ic.h ../../include/kc/ports.h \
 	../../include/kc/z80.h ../../include/z80core/z80.h \
-	../../include/kc/cb.h ../../include/kc/tape.h \
-	../../include/libtape/kct.h ../../include/kc/memory.h \
-	../../include/libdbg/dbg.h
+	../../include/kc/cb.h ../../include/kc/cb_list.h \
+	../../include/kc/tape.h ../../include/libtape/kct.h \
+	../../include/kc/memory.h ../../include/libdbg/dbg.h
 pio1.o: pio1.cc ../../include/kc/config.h ../../include/kc/system.h \
 	../../include/kc/kc.h ../../include/kc/z80.h \
 	../../include/z80core/z80.h ../../include/kc/ic.h \
-	../../include/kc/cb.h ../../include/kc/pio1.h \
-	../../include/kc/pio.h ../../include/kc/ports.h \
-	../../include/libdbg/dbg.h
+	../../include/kc/cb.h ../../include/kc/cb_list.h \
+	../../include/kc/pio1.h ../../include/kc/pio.h \
+	../../include/kc/ports.h ../../include/libdbg/dbg.h
 pio2.o: pio2.cc ../../include/kc/config.h ../../include/kc/system.h \
 	../../include/kc/kc.h ../../include/kc/pio2.h \
 	../../include/kc/pio.h ../../include/kc/ic.h \
@@ -553,48 +580,56 @@ rc.o: rc.cc ../../include/kc/config.h ../../include/kc/system.h \
 	../../include/kc/kc.h ../../include/kc/rc.h \
 	../../include/libdbg/dbg.h
 sh_mem.o: sh_mem.cc ../../include/kc/config.h ../../include/kc/system.h \
-	../../include/kc/kc.h ../../include/kc/sh_mem.h \
-	../../include/kc/ports.h ../../include/libdbg/dbg.h
+	../../include/kc/kc.h ../../include/kc/z80.h \
+	../../include/z80core/z80.h ../../include/kc/ic.h \
+	../../include/kc/cb.h ../../include/kc/cb_list.h \
+	../../include/kc/sh_mem.h ../../include/kc/ports.h \
+	../../include/libdbg/dbg.h
 sound.o: sound.cc ../../include/kc/config.h ../../include/kc/system.h
 tape.o: tape.cc ../../include/kc/config.h ../../include/kc/system.h \
 	../../include/kc/z80.h ../../include/z80core/z80.h \
 	../../include/kc/ic.h ../../include/kc/cb.h \
-	../../include/kc/kc.h ../../include/kc/pio.h \
-	../../include/kc/ports.h ../../include/kc/tape.h \
-	../../include/libtape/kct.h ../../include/kc/memory.h \
-	../../include/cmd/cmd.h ../../include/cmd/cmdargs.h \
-	../../include/fileio/load.h ../../include/ui/ui.h \
-	../../include/kc/profile.h ../../include/ui/tape.h \
-	../../include/ui/debug.h ../../include/ui/module.h \
-	../../include/kc/module.h ../../include/ui/status.h \
-	../../include/ui/statusl.h ../../include/libdbg/dbg.h
+	../../include/kc/kc.h ../../include/kc/cb_list.h \
+	../../include/kc/pio.h ../../include/kc/ports.h \
+	../../include/kc/tape.h ../../include/libtape/kct.h \
+	../../include/kc/memory.h ../../include/cmd/cmd.h \
+	../../include/cmd/cmdargs.h ../../include/fileio/load.h \
+	../../include/ui/ui.h ../../include/kc/profile.h \
+	../../include/ui/tape.h ../../include/ui/debug.h \
+	../../include/ui/module.h ../../include/kc/module.h \
+	../../include/ui/status.h ../../include/ui/statusl.h \
+	../../include/libdbg/dbg.h
 timer.o: timer.cc ../../include/kc/config.h ../../include/kc/system.h \
 	../../include/kc/kc.h ../../include/kc/z80.h \
 	../../include/z80core/z80.h ../../include/kc/ic.h \
-	../../include/kc/cb.h ../../include/kc/ctc.h \
-	../../include/kc/ports.h ../../include/kc/timer.h
+	../../include/kc/cb.h ../../include/kc/cb_list.h \
+	../../include/kc/ctc.h ../../include/kc/ports.h \
+	../../include/kc/timer.h
 wav.o: wav.cc ../../include/kc/config.h ../../include/kc/system.h \
 	../../include/kc/z80.h ../../include/z80core/z80.h \
 	../../include/kc/ic.h ../../include/kc/cb.h \
-	../../include/kc/kc.h ../../include/kc/pio.h \
-	../../include/kc/ports.h ../../include/kc/wav.h \
-	../../include/cmd/cmd.h ../../include/cmd/cmdargs.h \
-	../../include/libdbg/dbg.h
+	../../include/kc/kc.h ../../include/kc/cb_list.h \
+	../../include/kc/pio.h ../../include/kc/ports.h \
+	../../include/kc/wav.h ../../include/cmd/cmd.h \
+	../../include/cmd/cmdargs.h ../../include/libdbg/dbg.h
 z80.o: z80.cc ../../include/kc/config.h ../../include/kc/system.h \
-	../../include/kc/kc.h ../../include/kc/ctc.h \
-	../../include/kc/ic.h ../../include/kc/cb.h \
-	../../include/kc/ports.h ../../include/kc/pio.h \
-	../../include/kc/z80.h ../../include/z80core/z80.h \
-	../../include/kc/tape.h ../../include/libtape/kct.h \
-	../../include/kc/timer.h ../../include/kc/memory.h \
-	../../include/kc/keyboard.h ../../include/kc/sh_mem.h \
-	../../include/kc/disk_io.h ../../include/cmd/cmd.h \
-	../../include/cmd/cmdargs.h ../../include/ui/ui.h \
-	../../include/kc/profile.h ../../include/ui/tape.h \
+	../../include/kc/kc.h ../../include/kc/z80.h \
+	../../include/z80core/z80.h ../../include/kc/ic.h \
+	../../include/kc/cb.h ../../include/kc/cb_list.h \
+	../../include/kc/timer.h ../../include/kc/ports.h \
+	../../include/kc/memory.h ../../include/kc/z80_fdc.h \
+	../../include/z80core2/z80.h ../../include/z80core2/z80io.h \
+	../../include/cmd/cmd.h ../../include/cmd/cmdargs.h \
+	../../include/ui/ui.h ../../include/kc/profile.h \
+	../../include/ui/tape.h ../../include/libtape/kct.h \
 	../../include/ui/debug.h ../../include/ui/module.h \
-	../../include/kc/module.h ../../include/ui/status.h \
-	../../include/ui/statusl.h ../../include/libdbg/dbg.h \
-	../../include/z80core2/z80.h ../../include/z80core2/z80io.h
+	../../include/kc/module.h ../../include/libdbg/dbg.h
+z80_fdc.o: z80_fdc.cc ../../include/kc/config.h \
+	../../include/kc/system.h ../../include/kc/kc.h \
+	../../include/kc/ports.h ../../include/kc/cb_list.h \
+	../../include/kc/cb.h ../../include/kc/z80_fdc.h \
+	../../include/z80core2/z80.h ../../include/z80core2/z80io.h \
+	../../include/kc/ic.h ../../include/libdbg/dbg.h
 
 info-am:
 info: info-am

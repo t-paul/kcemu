@@ -2,7 +2,7 @@
  *  KCemu -- the KC 85/3 and KC 85/4 Emulator
  *  Copyright (C) 1997-2001 Torsten Paul
  *
- *  $Id: ports.cc,v 1.5 2001/04/14 15:16:27 tp Exp $
+ *  $Id: ports.cc,v 1.6 2001/12/29 03:50:21 torsten_paul Exp $
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -20,6 +20,9 @@
  */
 
 #include <string.h>
+
+#include <iostream.h>
+#include <iomanip.h>
 
 #include "kc/config.h"
 #include "kc/system.h"
@@ -143,22 +146,23 @@ Ports::info(void)
   int a;
   port_list_t::iterator it;
 
-  cout.form("  Ports:\n");
-  cout.form("  ------\n\n");
+  cerr << "  Ports:" << endl;
+  cerr << "  ------" << endl << endl;
   for (a = 0;a < NR_PORTS;a++)
     {
       if (_port_list[a].size() > 1)
         {
-          cout.form("  %02xh:", a);
+	  cerr << "  " << hex << setw(2) << setfill('0') << a << "h:";
           /*
            *  display registered ports but don't list the fallback
            *  entry that comes as the last entry
            */
           for (it = _port_list[a].begin();it != --(_port_list[a].end());it++)
-            cout.form(" [\"%s\" %c]",
-                      (*it)->get_name(),
-                      (*it)->is_active() ? 'A' : 'a');
-          cout.form("\n");
+	    cerr << " [\"" << (*it)->get_name() << "\" "
+		 << ((*it)->is_active() ? 'A' : 'a')
+		 << " ]";
+
+          cout << endl;
         }
     }
 }

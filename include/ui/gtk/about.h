@@ -2,7 +2,7 @@
  *  KCemu -- the KC 85/3 and KC 85/4 Emulator
  *  Copyright (C) 1997-2001 Torsten Paul
  *
- *  $Id: about.h,v 1.7 2001/04/14 15:15:16 tp Exp $
+ *  $Id: about.h,v 1.8 2001/12/29 03:50:20 torsten_paul Exp $
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -34,6 +34,7 @@ class AboutWindow : public UI_Gtk_Window
     GtkWidget *vbox;
     GtkWidget *name;
     GtkWidget *copyright;
+    GtkWidget *info;
     GtkWidget *separator;
     GtkWidget *close;
   } _w;

@@ -2,7 +2,7 @@
  *  KCemu -- the KC 85/3 and KC 85/4 Emulator
  *  Copyright (C) 1997-2001 Torsten Paul
  *
- *  $Id: ctc1.cc,v 1.4 2001/04/14 15:15:56 tp Exp $
+ *  $Id: ctc1.cc,v 1.5 2001/12/31 14:11:53 torsten_paul Exp $
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -119,4 +119,28 @@ bool
 CTC1::irq_3(void)
 {
   return false;
+}
+
+long
+CTC1::counter_value_0(void)
+{
+  return 0;
+}
+
+long
+CTC1::counter_value_1(void)
+{
+  return 0;
+}
+
+long
+CTC1::counter_value_2(void)
+{
+  return 0;
+}
+
+long
+CTC1::counter_value_3(void)
+{
+  return 0;
 }

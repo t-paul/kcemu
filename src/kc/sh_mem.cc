@@ -2,7 +2,7 @@
  *  KCemu -- the KC 85/3 and KC 85/4 Emulator
  *  Copyright (C) 1997-2001 Torsten Paul
  *
- *  $Id: sh_mem.cc,v 1.3 2001/04/14 15:16:32 tp Exp $
+ *  $Id: sh_mem.cc,v 1.4 2002/01/02 00:35:05 torsten_paul Exp $
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -27,6 +27,7 @@
 #include "kc/system.h"
 
 #include "kc/kc.h"
+#include "kc/z80.h" //DEBUG
 #include "kc/sh_mem.h"
 
 #include "libdbg/dbg.h"
@@ -102,27 +103,31 @@ FloppySharedMem::in(word_t addr)
 void
 FloppySharedMem::out(word_t addr, byte_t val)
 {
-  DBG(2, form("KCemu/FloppySharedMem/out",
-              "FloppySharedMem::out(): addr = %04x, val = %02x\n",
-              addr, val));
+  int idx;
 
   switch (addr & 0xff)
     {
     case 0xf0:
-      _mem[((addr >> 8) & 0xff)] = val;
+      idx = ((addr >> 8) & 0xff);
       break;
     case 0xf1:
-      _mem[((addr >> 8) & 0xff) | 0x0100] = val;
+      idx = ((addr >> 8) & 0xff) | 0x0100;
       break;
     case 0xf2:
-      _mem[((addr >> 8) & 0xff) | 0x0200] = val;
+      idx = ((addr >> 8) & 0xff) | 0x0200;
       break;
     case 0xf3:
-      _mem[((addr >> 8) & 0xff) | 0x0300] = val;
+      idx = ((addr >> 8) & 0xff) | 0x0300;
       break;
     default:
-      break;
+      return;
     }
+
+  DBG(2, form("KCemu/FloppySharedMem/out",
+	      "FloppySharedMem::out(): %04xh: addr = %04x [=%04x], val = %02x\n",
+	      z80->getPC(), addr, idx + 0xfc00, val));
+
+  _mem[idx] = val;
 }
 
 void

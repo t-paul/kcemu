@@ -2,7 +2,7 @@
  *  KCemu -- the KC 85/3 and KC 85/4 Emulator
  *  Copyright (C) 1997-2001 Torsten Paul
  *
- *  $Id: kc.h,v 1.10 2001/04/14 15:14:16 tp Exp $
+ *  $Id: kc.h,v 1.12 2002/01/06 12:53:40 torsten_paul Exp $
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -25,7 +25,21 @@
 #include "kc/config.h"
 #include "kc/system.h"
 
+typedef enum
+{
+  KC_TYPE_NONE       = 0,
+  KC_TYPE_85_1 	     = (1 << 0),
+  KC_TYPE_85_2 	     = (1 << 1),
+  KC_TYPE_85_3 	     = (1 << 2),
+  KC_TYPE_85_4 	     = (1 << 3),
+  KC_TYPE_87         = (1 << 4),
+  KC_TYPE_85_1_CLASS = KC_TYPE_85_1 | KC_TYPE_87,
+  KC_TYPE_85_2_CLASS = KC_TYPE_85_2 | KC_TYPE_85_3 | KC_TYPE_85_4,
+  KC_TYPE_ALL        = KC_TYPE_85_1_CLASS | KC_TYPE_85_2_CLASS,m
+} kc_type_t;
+
 class Z80;
+class Z80_FDC;
 class UI;
 class Ports;
 class Module;
@@ -57,7 +71,8 @@ extern Timer           *timer;
 extern Keyboard        *keyboard;
 extern ModuleList      *module_list;
 extern CMD             *cmd;
-     
+
+extern Z80_FDC         *fdc_z80;     
 extern FloppyIO        *fdc_io;
 extern FloppySharedMem *fdc_shmem;
 extern Ports           *fdc_ports;
@@ -67,5 +82,7 @@ extern byte_t           fdc_mem[];
 
 extern char *kcemu_datadir;
 extern char *kcemu_localedir;
+
+kc_type_t get_kc_type(void);
 
 #endif /* __kc_kc_h */

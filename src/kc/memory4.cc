@@ -2,7 +2,7 @@
  *  KCemu -- the KC 85/3 and KC 85/4 Emulator
  *  Copyright (C) 1997-2001 Torsten Paul
  *
- *  $Id: memory4.cc,v 1.12 2001/04/14 15:16:12 tp Exp $
+ *  $Id: memory4.cc,v 1.14 2001/12/31 14:11:53 torsten_paul Exp $
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -28,6 +28,7 @@
 
 #include "kc/kc.h"
 #include "kc/rc.h"
+#include "kc/z80.h"
 #include "kc/memory4.h"
 #include "kc/mod_rom.h"
 
@@ -142,12 +143,12 @@ Memory4::dumpCore(void)
       return;
     }
     
-  os.write(&_ram_0[0],  0x4000);
-  os.write(&_ram_4[0],  0x4000);
-  os.write(&_ram_8a[0], 0x4000);
-  os.write(&_ram_8b[0], 0x4000);
-  os.write(&_irm0[0],   0x8000);
-  os.write(&_irm1[0],   0x8000);
+  os.write((char *)_ram_0,  0x4000);
+  os.write((char *)_ram_4,  0x4000);
+  os.write((char *)_ram_8a, 0x4000);
+  os.write((char *)_ram_8b, 0x4000);
+  os.write((char *)_irm0,   0x8000);
+  os.write((char *)_irm1,   0x8000);
   os.close();
 }
 

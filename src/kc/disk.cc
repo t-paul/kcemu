@@ -2,7 +2,7 @@
  *  KCemu -- the KC 85/3 and KC 85/4 Emulator
  *  Copyright (C) 1997-2001 Torsten Paul
  *
- *  $Id: disk.cc,v 1.2 2001/04/14 15:16:00 tp Exp $
+ *  $Id: disk.cc,v 1.3 2002/01/02 00:35:05 torsten_paul Exp $
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -22,7 +22,11 @@
 #include "kc/config.h"
 #include "kc/system.h"
 
+#include "kc/rc.h"
+#include "kc/kc.h"
+#include "kc/fdc.h"
 #include "kc/disk.h"
+#include "kc/floppy.h"
 
 #include "cmd/cmd.h"
 
@@ -142,8 +146,26 @@ public:
 
 Disk::Disk()
 {
-    CMD *cmd;
-    cmd = new CMD_disk_attach(this);
+  CMD *cmd;
+  const char *filename;
+
+  cmd = new CMD_disk_attach(this);
+
+  filename = RC::instance()->get_string("Floppy Disk 1", NULL);
+  if (filename != NULL)
+    attach(0, filename);
+  
+  filename = RC::instance()->get_string("Floppy Disk 2", NULL);
+  if (filename != NULL)
+    attach(1, filename);
+
+  filename = RC::instance()->get_string("Floppy Disk 3", NULL);
+  if (filename != NULL)
+    attach(2, filename);
+
+  filename = RC::instance()->get_string("Floppy Disk 4", NULL);
+  if (filename != NULL)
+    attach(3, filename);
 }
 
 Disk::~Disk()
@@ -164,6 +186,10 @@ Disk::attach(int disk_no, const char *filename, bool create = false)
       DBG(1, form("KCemu/Disk/attach",
                   "Disk::attach(): [disk %d] open (%s)\n",
                   disk_no, filename));
+
+      Floppy *floppy = fdc_fdc->get_floppy(disk_no);
+      if (floppy != NULL)
+	floppy->attach(filename);
     }
 
   return DISK_OK;
@@ -175,4 +201,8 @@ Disk::detach(int disk_no)
   DBG(1, form("KCemu/Disk/detach",
 	      "Disk::detach(): [disk %d] close\n",
 	      disk_no));
+
+  Floppy *floppy = fdc_fdc->get_floppy(disk_no);
+  if (floppy != NULL)
+    floppy->attach(NULL);
 }
