@@ -1,0 +1,19 @@
+
+#undef ENABLE_NLS
+#undef HAVE_CATGETS
+#undef HAVE_GETTEXT
+#undef HAVE_LC_MESSAGES
+#undef HAVE_STPCPY
+
+#undef KCEMU_MAJOR_VERSION
+#undef KCEMU_MICRO_VERSION
+#undef KCEMU_MINOR_VERSION
+#undef KCEMU_VERSION
+
+#undef DBG_LEVEL
+
+#undef HAVE_LIBSDL
+
+/* #undef PACKAGE */
+/* #undef VERSION */
+

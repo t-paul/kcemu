@@ -1,0 +1,164 @@
+/*
+ *  KCemu -- the KC 85/3 and KC 85/4 Emulator
+ *  Copyright (C) 1997-1998 Torsten Paul
+ *
+ *  $Id: ports.cc,v 1.4 2000/05/21 16:54:32 tp Exp $
+ *
+ *  This program is free software; you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation; either version 2 of the License, or
+ *  (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with this program; if not, write to the Free Software
+ *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+ */
+
+#include <string.h>
+
+#include "kc/config.h"
+#include "kc/system.h"
+
+#include "kc/ports.h"
+
+#include "libdbg/dbg.h"
+
+byte_t
+NullPort::in(word_t addr)
+{
+  byte_t val = 0xff;
+
+  DBG(1, form("KCemu/Ports/NullPort/in",
+              "NullPort: in() addr = %04x (returning %02x)\n",
+              addr, val));
+  return val;
+}
+
+void
+NullPort::out(word_t addr, byte_t val)
+{
+  DBG(1, form("KCemu/Ports/NullPort/out",
+              "NullPort: out() addr = %04x, val = %02x\n",
+              addr, val));
+}
+
+PortGroup::PortGroup(const char *name, PortInterface *p,
+                     byte_t start, word_t len, int prio)
+{
+  int a;
+  
+  _p = p;
+  _start = start;
+  _len = len;
+  _prio = prio;
+  _name = strdup(name);
+  _active = true;
+}
+
+PortGroup::~PortGroup(void)
+{
+  free(_name);
+}
+
+Ports::Ports(void)
+{
+}
+                                      
+Ports::~Ports(void)
+{
+}
+                                      
+void
+Ports::insert(port_list_t *l, PortGroup *group)
+{
+  int prio;
+  port_list_t::iterator it;
+
+  prio = group->get_prio();
+  for (it = l->begin();it != l->end();it++)
+    if ((*it)->get_prio() > prio) break;
+  l->insert(it, group);
+}
+
+PortGroup *
+Ports::register_ports(const char *name,
+                      byte_t start, word_t len,
+                      PortInterface *p, int prio)
+{
+  int a;
+  PortGroup *portg = new PortGroup(name, p, start, len, prio);
+  
+  for (a = start;a < (len + start);a++)
+    insert(&_port_list[a], portg);
+  reload_prt_ptr();
+
+  return portg;
+}
+
+void
+Ports::unregister_ports(PortGroup *p)
+{
+  int a;
+  
+  for (a = p->get_start();a < (p->get_len() + p->get_start());a++)
+    _port_list[a].remove(p);
+  reload_prt_ptr();
+}
+
+void
+Ports::reload_prt_ptr(void)
+{
+  int a;
+  port_list_t::iterator it;
+  
+  for (a = 0;a < NR_PORTS;a++)
+    for (it = _port_list[a].begin();it != _port_list[a].end();it++)
+      if ((*it)->is_active())
+        {
+          _port_ptr[a] = (*it)->get_port_if();
+          break;
+        }
+}
+
+byte_t
+Ports::in(word_t addr)
+{
+  return _port_ptr[addr & 0xff]->in(addr);
+}
+
+void
+Ports::out(word_t addr, byte_t val)
+{
+  _port_ptr[addr & 0xff]->out(addr, val);
+}
+
+void
+Ports::info(void)
+{
+  int a;
+  port_list_t::iterator it;
+
+  cout.form("  Ports:\n");
+  cout.form("  ------\n\n");
+  for (a = 0;a < NR_PORTS;a++)
+    {
+      if (_port_list[a].size() > 1)
+        {
+          cout.form("  %02xh:", a);
+          /*
+           *  display registered ports but don't list the fallback
+           *  entry that comes as the last entry
+           */
+          for (it = _port_list[a].begin();it != --(_port_list[a].end());it++)
+            cout.form(" [\"%s\" %c]",
+                      (*it)->get_name(),
+                      (*it)->is_active() ? 'A' : 'a');
+          cout.form("\n");
+        }
+    }
+}

@@ -1,0 +1,17 @@
+## Process this file with automake to produce Makefile.in
+
+SUBDIRS = gtk
+
+EXTRA_DIST = \
+	ui.h		\
+	log.h		\
+	tape.h		\
+	debug.h		\
+	error.h		\
+	errorl.h	\
+	module.h	\
+	status.h	\
+	statusl.h	\
+	commands.h	\
+	copying.h	\
+	window.h

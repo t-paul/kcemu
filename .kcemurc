@@ -1,0 +1,37 @@
+#
+#  kcemurc
+#
+
+#
+#  src/kc/kc.cc
+#
+Default KC Model:	4
+
+#
+#  src/kc/mod_list.cc
+#
+#  module names:
+#
+#	M003	V24
+#	M011	64k RAM
+#	M022	16k RAM
+#	M026	Forth
+#	M027	Development
+#	M900	WordPro '86
+#
+Busdrivers:		1
+Module_00000000:	M027
+Module_00000001:	M011
+Module_00000002:	M003
+
+#
+#  color flashing
+#
+Flash Offset:		50
+Full Flash Support:     0
+
+#
+#  debug
+#
+Enable V24-Module:	0
+V24-Device:		/dev/ttyS1

@@ -1,0 +1,728 @@
+# $Id: de.po,v 1.15 2001/01/05 18:39:07 tp Exp $
+# KCemu german translation
+# Copyright (C) 1998 Free Software Foundation, Inc.
+# Torsten Paul <Torsten.Paul@gmx.de>, 1998-2000.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: KCemu V0.2\n"
+"POT-Creation-Date: 2001-02-08 22:22+0100\n"
+"PO-Revision-Date: 2000-10-15 00:07+02:00\n"
+"Last-Translator: Torsten Paul <Torsten.Paul@gmx.de>\n"
+"Language-Team: German\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=iso-8859-1\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: src/cmd/image.cc:103
+msgid "KCemu: Select File..."
+msgstr "KCemu: Datei auswählen..."
+
+#: src/cmd/image.cc:127
+msgid "KCemu: Can't load file..."
+msgstr "KCemu: Kann die Datei nicht laden..."
+
+#: src/cmd/image.cc:129
+msgid "The file you selected couldn't be loaded!"
+msgstr "Die ausgewählte Datei kann nicht geladen werden!"
+
+#: src/cmd/image.cc:142
+msgid "KCemu: Warning..."
+msgstr "KCemu: Warnung..."
+
+#: src/cmd/image.cc:144
+msgid ""
+"The file you selected contains more than one\n"
+"program. Only the first program will be loaded.\n"
+"If you want to access all the contained\n"
+"programs add this file to a tape-archive!"
+msgstr ""
+"Die ausgewählte Datei enthält mehr als ein\n"
+"Programm. Es wird nur das erste Programm geladen.\n"
+"Um auf alle enthaltenen Programme zugreifen zu\n"
+"können, muß die Datei einem Kassetten-Archiv\n"
+"hinzugefügt werden!"
+
+#: src/kc/disk.cc:78
+msgid "Select disk..."
+msgstr "Diskette auswählen..."
+
+#: src/kc/disk.cc:116 src/kc/tape.cc:177
+msgid "create file?"
+msgstr "Datei erzeugen?"
+
+#: src/kc/disk.cc:118 src/kc/tape.cc:179
+#, c-format
+msgid ""
+"The file '%s' doesn't exist.\n"
+"Do you want to create it?"
+msgstr ""
+"Die Datei '%s' existiert nicht.\n"
+"Wollen Sie, daß sie erzeugt wird?"
+
+#: src/kc/disk.cc:131
+#, c-format
+msgid "disk-file `%s' attached."
+msgstr "Disketten-Datei `%s' aktiviert."
+
+#: src/kc/disk.cc:136
+msgid "Can't attach disk-file."
+msgstr "Kann Disketten-Datei nicht aktivieren."
+
+#: src/kc/mod_list.cc:69
+msgid "<no module>"
+msgstr "<kein Modul>"
+
+#: src/kc/mod_list.cc:77
+msgid "M003: V24 (not working!)"
+msgstr "M003: V24 (fehlerhaft!)"
+
+#: src/kc/mod_list.cc:85
+msgid "M011: 64k RAM"
+msgstr "M011: 64k RAM"
+
+#: src/kc/mod_list.cc:91
+msgid "RAM Module (16k/4000h)"
+msgstr "RAM Module (16k/4000h)"
+
+#: src/kc/mod_list.cc:93
+msgid "RAM Module (16k/8000h)"
+msgstr "RAM Module (16k/8000h)"
+
+#: src/kc/mod_list.cc:99
+msgid "IRM Color Expansion"
+msgstr "IRM Color Expansion"
+
+#: src/kc/mod_list.cc:105
+msgid "M022: Expander RAM (16k)"
+msgstr "M022: Expander RAM (16k)"
+
+#: src/kc/mod_list.cc:114
+msgid "M012: Texor"
+msgstr "M012: Texor"
+
+#: src/kc/mod_list.cc:124
+msgid "M026: Forth"
+msgstr "M026: Forth"
+
+#: src/kc/mod_list.cc:134
+msgid "M027: Development"
+msgstr "M027: Development"
+
+#: src/kc/mod_list.cc:145
+msgid "M900: WordPro '86 (KC85/3)"
+msgstr "M900: WordPro '86 (KC85/3)"
+
+#: src/kc/mod_list.cc:156
+msgid "M901: WordPro '86 (KC85/4)"
+msgstr "M901: WordPro '86 (KC85/4)"
+
+#: src/kc/mod_list.cc:167
+msgid "Floppy Disk Basis"
+msgstr "Floppy Disk Basis"
+
+#: src/kc/tape.cc:90
+#, c-format
+msgid "File `%s' loaded."
+msgstr "Datei `%s' geladen."
+
+#: src/kc/tape.cc:139
+msgid "Select tape-archive..."
+msgstr "Select tape-archive..."
+
+#: src/kc/tape.cc:192
+#, c-format
+msgid "tape-archive `%s' attached."
+msgstr "Kassetten-Datei `%s' aktiviert."
+
+#: src/kc/tape.cc:196
+msgid "Can't attach tape-archive."
+msgstr "Kann Kassetten-Datei nicht aktivieren."
+
+#: src/kc/tape.cc:232
+msgid "Export As..."
+msgstr "Exportieren als..."
+
+#: src/kc/tape.cc:248
+#, c-format
+msgid "File `%s' saved."
+msgstr "Datei `%s' gespeichert."
+
+#: src/kc/tape.cc:252
+msgid "Can't export file."
+msgstr "Kann Datei nicht exportieren."
+
+#: src/kc/tape.cc:284
+msgid "Select file..."
+msgstr "Datei auswählen..."
+
+#: src/ui/gtk/about.cc:55
+msgid "About KCemu"
+msgstr "Über den KC-Emulator"
+
+#.
+#. *  close button
+#.
+#: src/ui/gtk/about.cc:92 src/ui/gtk/copying.cc:151 src/ui/gtk/disk.cc:287
+#: src/ui/gtk/info.cc:541 src/ui/gtk/module.cc:212 src/ui/gtk/tape.cc:400
+#: src/ui/gtk/tapeadd.cc:184
+msgid "Close"
+msgstr "Schließen"
+
+#: src/ui/gtk/copying.cc:78
+msgid "KCemu: Copying"
+msgstr "KCemu: Lizenz"
+
+#: src/ui/gtk/debug.cc:199
+msgid "KCemu: Debugger"
+msgstr "KCemu: Debugger"
+
+#: src/ui/gtk/dialog.cc:51
+msgid "???"
+msgstr "???"
+
+#.
+#. *  OK button
+#.
+#: src/ui/gtk/dialog.cc:168 src/ui/gtk/image.cc:198
+msgid "OK"
+msgstr "OK"
+
+#.
+#. *  yes button
+#.
+#: src/ui/gtk/dialog.cc:192
+msgid "Yes"
+msgstr "Ja"
+
+#.
+#. *  no button
+#.
+#: src/ui/gtk/dialog.cc:203
+msgid "No"
+msgstr "Nein"
+
+#: src/ui/gtk/disk.cc:169
+msgid "KCemu: Disk"
+msgstr "KCemu: Diskette"
+
+#.
+#. *  label
+#.
+#: src/ui/gtk/disk.cc:196
+#, c-format
+msgid "Disk %d"
+msgstr "Diskette %d"
+
+#.
+#. *  browse button
+#.
+#: src/ui/gtk/disk.cc:224 src/ui/gtk/tapeadd.cc:87
+msgid "Browse"
+msgstr "Durchsuchen"
+
+#.
+#. *  eject button
+#.
+#: src/ui/gtk/disk.cc:236
+msgid "Eject"
+msgstr "Auswerfen"
+
+#.
+#. *  ok button
+#.
+#: src/ui/gtk/disk.cc:264 src/ui/gtk/tapeadd.cc:165
+msgid "Ok"
+msgstr "Ok"
+
+#.
+#. *  apply button
+#.
+#: src/ui/gtk/disk.cc:276
+msgid "Apply"
+msgstr "Übernehmen"
+
+#: src/ui/gtk/fbrowse.cc:42
+msgid "Select File..."
+msgstr "Datei auswählen..."
+
+#: src/ui/gtk/hedit.cc:97
+msgid "no tape-filename given!"
+msgstr "no tape-filename given!"
+
+#: src/ui/gtk/hedit.cc:102
+msgid "no KC-filename given!"
+msgstr "no KC-filename given!"
+
+#: src/ui/gtk/hedit.cc:107 src/ui/gtk/image.cc:90
+msgid ""
+"error in given load address!\n"
+"\n"
+"valid addresses have to be in the range from 0 to 65535\n"
+"hexadecimal values need to be prefixed with 0x (e.g. 0x1234),\n"
+"octal values require a leading 0 (e.g. 0444)"
+msgstr ""
+"Fehler in der angegebenen Lade-Adresse!\n"
+"\n"
+"Eine gültige Adresse muß im Bereich 0 bis 65535 liegen,\n"
+"hexadezimale Werte können durch vorangestelltes 0x (z.B. 0x1234)\n"
+"angegeben werden, oktale durch eine führende 0 (z.B. 0444)"
+
+#: src/ui/gtk/hedit.cc:120 src/ui/gtk/image.cc:106
+msgid "error in given start address!"
+msgstr "Fehler in der angegebenen Start-Adresse!"
+
+#: src/ui/gtk/hedit.cc:175
+msgid "File Properties"
+msgstr "Datei Eigenschaften"
+
+#.
+#. *  tapename
+#.
+#: src/ui/gtk/hedit.cc:200
+msgid "Name in tape-directory:"
+msgstr "Name in tape-directory:"
+
+#.
+#. *  kc name
+#.
+#: src/ui/gtk/hedit.cc:213
+msgid "Name in KC file-header:"
+msgstr "Name in KC file-header:"
+
+#.
+#. *  load addr
+#.
+#: src/ui/gtk/hedit.cc:226 src/ui/gtk/image.cc:157
+msgid "Load address:"
+msgstr "Lade-Adresse:"
+
+#.
+#. *  start addr
+#.
+#: src/ui/gtk/hedit.cc:239 src/ui/gtk/image.cc:170
+msgid "Start address:"
+msgstr "Start-Adresse:"
+
+#.
+#. *  autostart
+#.
+#: src/ui/gtk/hedit.cc:252
+msgid "autostart"
+msgstr "automatisch starten"
+
+#: src/ui/gtk/image.cc:127
+msgid "Input Image Properties"
+msgstr "Input Image Properties"
+
+#.
+#. *  label
+#.
+#: src/ui/gtk/image.cc:134
+msgid ""
+"It was not possible to automatically determine the\n"
+"type of the selected file. Thus I don't know at which\n"
+"address the file should be loaded\n"
+"\n"
+"To load the file nevertheless you need to type in the\n"
+"needed values yourself."
+msgstr ""
+"It was not possible to automatically determine the\n"
+"type of the selected file. Thus I don't know at which\n"
+"address the file should be loaded\n"
+"\n"
+"To load the file nevertheless you need to type in the\n"
+"needed values yourself."
+
+#: src/ui/gtk/image.cc:186
+msgid "Start Program after Loading"
+msgstr "Programm nach dem Laden starten"
+
+#.
+#. *  cancel button
+#.
+#: src/ui/gtk/image.cc:210
+msgid "Cancel"
+msgstr "Abbrechen"
+
+#: src/ui/gtk/info.cc:138
+msgid "byte output"
+msgstr "byte output"
+
+#: src/ui/gtk/info.cc:139
+msgid "byte input"
+msgstr "byte input"
+
+#: src/ui/gtk/info.cc:140
+msgid "byte input/output"
+msgstr "byte input/output"
+
+#: src/ui/gtk/info.cc:141
+msgid "bit input/output"
+msgstr "bit input/output"
+
+#.
+#. *  mode
+#.
+#: src/ui/gtk/info.cc:332
+msgid "Mode:"
+msgstr "Mode:"
+
+#.
+#. *  irq
+#.
+#: src/ui/gtk/info.cc:347 src/ui/gtk/info.cc:413
+msgid "IRQ:"
+msgstr "IRQ:"
+
+#.
+#. *  irq vector
+#.
+#: src/ui/gtk/info.cc:362 src/ui/gtk/info.cc:428
+msgid "IRQ Vector:"
+msgstr "IRQ Vector:"
+
+#: src/ui/gtk/info.cc:385
+msgid "Channel A"
+msgstr "Kanal A"
+
+#: src/ui/gtk/info.cc:389
+msgid "Channel B"
+msgstr "Kanal B"
+
+#: src/ui/gtk/info.cc:450
+msgid "Channel 0"
+msgstr "Kanal 0"
+
+#: src/ui/gtk/info.cc:454
+msgid "Channel 1"
+msgstr "Kanal 1"
+
+#: src/ui/gtk/info.cc:458
+msgid "Channel 2"
+msgstr "Kanal 2"
+
+#: src/ui/gtk/info.cc:462
+msgid "Channel 3"
+msgstr "Kanal 3"
+
+#: src/ui/gtk/info.cc:477
+msgid "KCemu: Info"
+msgstr "KCemu: Info"
+
+#: src/ui/gtk/info.cc:502
+msgid "CPU"
+msgstr "CPU"
+
+#: src/ui/gtk/info.cc:505
+msgid "PIO"
+msgstr "PIO"
+
+#: src/ui/gtk/info.cc:508
+msgid "CTC"
+msgstr "CTC"
+
+#.
+#. *  update button
+#.
+#: src/ui/gtk/info.cc:531
+msgid "Update"
+msgstr "Aktualisieren"
+
+#: src/ui/gtk/module.cc:178
+msgid "KCemu: Module"
+msgstr "KCemu: Module"
+
+#: src/ui/gtk/module.cc:194
+#, c-format
+msgid "D002: Busdriver [%02X]"
+msgstr "D002: Bus-Treiber [%02X]"
+
+#: src/ui/gtk/module.cc:198
+msgid "Floppy Disk Basis [F0]"
+msgstr "Floppy Disk Grundgerät [F0]"
+
+#: src/ui/gtk/module.cc:199
+msgid "Basis Device"
+msgstr "Grundgerät"
+
+#: src/ui/gtk/tapeadd.cc:55
+msgid "KCemu: Add File"
+msgstr "KCemu: Datei hinzufügen"
+
+#.
+#. *  filename
+#.
+#: src/ui/gtk/tapeadd.cc:79
+msgid "Filename:"
+msgstr "Dateiname:"
+
+#.
+#. *  tapename
+#.
+#: src/ui/gtk/tapeadd.cc:99
+msgid "Tapename:"
+msgstr "Tapename:"
+
+#.
+#. *  kc name
+#.
+#: src/ui/gtk/tapeadd.cc:111
+msgid "KC name:"
+msgstr "KC name:"
+
+#.
+#. *  load addr
+#.
+#: src/ui/gtk/tapeadd.cc:123
+msgid "load addr:"
+msgstr "load addr:"
+
+#.
+#. *  start addr
+#.
+#: src/ui/gtk/tapeadd.cc:135
+msgid "start addr:"
+msgstr "start addr:"
+
+#: src/ui/gtk/tapeadd.cc:242
+msgid "no filename given!"
+msgstr "no filename given!"
+
+#: src/ui/gtk/tapeadd.cc:248
+msgid "need load address!"
+msgstr "need load address!"
+
+#: src/ui/gtk/tapeadd.cc:253
+msgid "invalid value for load address!"
+msgstr "invalid value for load address!"
+
+#: src/ui/gtk/tapeadd.cc:262
+msgid "invalid value for start address!"
+msgstr "invalid value for start address!"
+
+#: src/ui/gtk/tape.cc:208
+msgid "/_Run File"
+msgstr "/Datei _Ausführen"
+
+#: src/ui/gtk/tape.cc:209
+msgid "/_Load File"
+msgstr "/Datei _Laden"
+
+#: src/ui/gtk/tape.cc:210
+msgid "/_Export File"
+msgstr "/Datei _Exportieren"
+
+#: src/ui/gtk/tape.cc:211 src/ui/gtk/ui_gtk.cc:415
+msgid "/sep1"
+msgstr "/sep1"
+
+#: src/ui/gtk/tape.cc:212
+msgid "/Edit _Header"
+msgstr "/_Header Ändern"
+
+#: src/ui/gtk/tape.cc:213
+msgid "/_Delete File"
+msgstr "/_Datei Löschen"
+
+#: src/ui/gtk/tape.cc:214 src/ui/gtk/ui_gtk.cc:421
+msgid "/sep2"
+msgstr "/sep2"
+
+#: src/ui/gtk/tape.cc:215
+msgid "/_Add File"
+msgstr "/Datei _Hinzufügen"
+
+#: src/ui/gtk/tape.cc:220
+msgid "Name"
+msgstr "Name"
+
+#: src/ui/gtk/tape.cc:221
+msgid "Type"
+msgstr "Typ"
+
+#: src/ui/gtk/tape.cc:222
+msgid "Load"
+msgstr "Load"
+
+#: src/ui/gtk/tape.cc:223
+msgid "Start"
+msgstr "Start"
+
+#: src/ui/gtk/tape.cc:224
+msgid "Size"
+msgstr "Größe"
+
+#.
+#. *  popup menu
+#.
+#: src/ui/gtk/tape.cc:236 src/ui/gtk/tape.cc:242
+msgid "<TapeP>"
+msgstr "<TapeP>"
+
+#: src/ui/gtk/tape.cc:243
+msgid "/Run File"
+msgstr "/Datei Ausführen"
+
+#: src/ui/gtk/tape.cc:244
+msgid "/Load File"
+msgstr "/Datei Laden"
+
+#: src/ui/gtk/tape.cc:245
+msgid "/Edit Header"
+msgstr "/Header Ändern"
+
+#: src/ui/gtk/tape.cc:246
+msgid "/Delete File"
+msgstr "/Datei Löschen"
+
+#: src/ui/gtk/tape.cc:247
+msgid "/Export File"
+msgstr "/Datei Exportieren"
+
+#: src/ui/gtk/tape.cc:254
+msgid "KCemu: Tape"
+msgstr "KCemu: Kassetten-Archiv"
+
+#.
+#. *  buttons
+#.
+#: src/ui/gtk/tape.cc:365
+msgid "Stop"
+msgstr "Stop"
+
+#: src/ui/gtk/tape.cc:372
+msgid "Record"
+msgstr "Aufnahme"
+
+#: src/ui/gtk/tape.cc:379
+msgid "Play"
+msgstr "Abspielen"
+
+#: src/ui/gtk/tape.cc:386
+msgid "Attach"
+msgstr "Aktivieren"
+
+#: src/ui/gtk/tape.cc:393
+msgid "Detach"
+msgstr "Deaktivieren"
+
+#: src/ui/gtk/ui_gtk.cc:387
+msgid "/_File"
+msgstr "/_Datei"
+
+#: src/ui/gtk/ui_gtk.cc:388
+msgid "/File/Run..."
+msgstr "/Datei/Ausführen..."
+
+#: src/ui/gtk/ui_gtk.cc:389
+msgid "/File/Load..."
+msgstr "/Datei/Laden..."
+
+#: src/ui/gtk/ui_gtk.cc:390
+msgid "/File/Tape..."
+msgstr "/Datei/Kassette..."
+
+#: src/ui/gtk/ui_gtk.cc:391
+msgid "/File/Disk..."
+msgstr "/Datei/Diskette..."
+
+#: src/ui/gtk/ui_gtk.cc:392
+msgid "/File/Module..."
+msgstr "/Datei/Modul..."
+
+#: src/ui/gtk/ui_gtk.cc:393
+msgid "/File/sep1"
+msgstr "/Datei/sep1"
+
+#: src/ui/gtk/ui_gtk.cc:394
+msgid "/File/Reset"
+msgstr "/Datei/Reset"
+
+#: src/ui/gtk/ui_gtk.cc:395
+msgid "/File/Power On"
+msgstr "/Datei/Einschalten"
+
+#: src/ui/gtk/ui_gtk.cc:396
+msgid "/File/sep2"
+msgstr "/Datei/sep2"
+
+#: src/ui/gtk/ui_gtk.cc:397
+msgid "/File/Quit Emulator"
+msgstr "/Datei/Emulator beenden"
+
+#: src/ui/gtk/ui_gtk.cc:398 src/ui/gtk/ui_gtk.cc:416
+msgid "/_View"
+msgstr "/_Ansicht"
+
+#: src/ui/gtk/ui_gtk.cc:399 src/ui/gtk/ui_gtk.cc:417
+msgid "/View/Debugger"
+msgstr "/Ansicht/Debugger"
+
+#: src/ui/gtk/ui_gtk.cc:400 src/ui/gtk/ui_gtk.cc:418
+msgid "/View/Info"
+msgstr "/Ansicht/Information"
+
+#: src/ui/gtk/ui_gtk.cc:401 src/ui/gtk/ui_gtk.cc:419
+msgid "/View/Menubar"
+msgstr "/Ansicht/Menüleiste"
+
+#: src/ui/gtk/ui_gtk.cc:402 src/ui/gtk/ui_gtk.cc:420
+msgid "/View/Statusbar"
+msgstr "/Ansicht/Statusleiste"
+
+#: src/ui/gtk/ui_gtk.cc:403
+msgid "/_Help"
+msgstr "/_Hilfe"
+
+#: src/ui/gtk/ui_gtk.cc:404
+msgid "/Help/About KCemu"
+msgstr "/Hilfe/Über KCemu"
+
+#: src/ui/gtk/ui_gtk.cc:405
+msgid "/Help/sep3"
+msgstr "/Hilfe/sep3"
+
+#: src/ui/gtk/ui_gtk.cc:406
+msgid "/Help/KCemu Licence"
+msgstr "/Hilfe/KCemu Lizenz"
+
+#: src/ui/gtk/ui_gtk.cc:407
+msgid "/Help/No Warranty!"
+msgstr "/Hilfe/Keine Gewährleistung!"
+
+#: src/ui/gtk/ui_gtk.cc:410
+msgid "/_Run..."
+msgstr "/_Ausführen..."
+
+#: src/ui/gtk/ui_gtk.cc:411
+msgid "/_Load..."
+msgstr "/_Laden..."
+
+#: src/ui/gtk/ui_gtk.cc:412
+msgid "/_Tape..."
+msgstr "/_Kassette..."
+
+#: src/ui/gtk/ui_gtk.cc:413
+msgid "/_Disk..."
+msgstr "/_Diskette..."
+
+#: src/ui/gtk/ui_gtk.cc:414
+msgid "/_Module..."
+msgstr "/_Modul..."
+
+#: src/ui/gtk/ui_gtk.cc:422
+msgid "/Reset"
+msgstr "/Reset"
+
+#: src/ui/gtk/ui_gtk.cc:423
+msgid "/Power On"
+msgstr "/Einschalten"
+
+#: src/ui/gtk/ui_gtk.cc:424
+msgid "/sep3"
+msgstr "/sep3"
+
+#: src/ui/gtk/ui_gtk.cc:425
+msgid "/Quit Emulator"
+msgstr "/Emulator beenden"

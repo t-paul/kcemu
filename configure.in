@@ -1,0 +1,128 @@
+dnl Process this file with autoconf to produce a configure script.
+AC_INIT(include/kc/kc.h)
+AM_CONFIG_HEADER(include/kc/config.h)
+
+KCEMU_MAJOR_VERSION=0
+KCEMU_MINOR_VERSION=3
+KCEMU_MICRO_VERSION=0
+
+if test $KCEMU_MICRO_VERSION -eq 0
+then
+        KCEMU_VERSION=${KCEMU_MAJOR_VERSION}.${KCEMU_MINOR_VERSION}
+else
+        KCEMU_VERSION=${KCEMU_MAJOR_VERSION}.${KCEMU_MINOR_VERSION}pl${KCEMU_MICRO_VERSION}
+fi
+
+dnl declare options
+AC_ARG_ENABLE(sound,     [  --enable-sound          enable sound using libSDL [default=no]],,enable_sound=no)
+AC_ARG_WITH(debug_level, [  --with-debug-level=L    set debug level to L (0..3) [default=1]])
+
+dnl Checks for programs.
+AC_PROG_CC
+AC_PROG_CXX
+AC_PROG_INSTALL
+AC_PROG_LN_S
+AC_PROG_RANLIB
+
+dnl Automake
+PACKAGE=KCemu
+VERSION=$KCEMU_VERSION
+AC_DEFINE_UNQUOTED(PACKAGE, "$PACKAGE")
+AC_DEFINE_UNQUOTED(VERSION, "$VERSION")
+AC_SUBST(PACKAGE)
+AC_SUBST(VERSION)
+AC_ARG_PROGRAM
+AC_PROG_MAKE_SET
+
+ALL_LINGUAS="de"
+AM_GNU_GETTEXT
+dnl AC_LINK_FILES($nls_cv_header_libgt, $nls_cv_header_intl)
+
+AM_INIT_AUTOMAKE($PACKAGE, $VERSION, no-define)
+AC_CANONICAL_HOST
+
+AC_MSG_CHECKING(which debug level is requested)
+DBG_LEVEL=1
+if test "x$with_debug_level" = "x0"; then
+  DBG_LEVEL=0
+elif test "x$with_debug_level" = "x1"; then
+  DBG_LEVEL=1
+elif test "x$with_debug_level" = "x2"; then
+  DBG_LEVEL=2
+elif test "x$with_debug_level" = "x3"; then
+  DBG_LEVEL=3
+fi
+AC_MSG_RESULT($DBG_LEVEL)
+
+dnl
+dnl  check for libgtk
+dnl
+AM_PATH_GTK(1.2.0,,
+	AC_MSG_ERROR(Cannot include/link gtk/gdk/glib -- check CFLAGS/LDFLAGS))
+
+dnl
+dnl  check for libSDL if sound is enabled
+dnl
+if test x$enable_sound = xyes; then
+	AM_PATH_SDL(1.1.6, have_libsdl=yes, have_libsdl=no)
+	if test x$have_libsdl = xyes; then
+		AC_DEFINE(HAVE_LIBSDL)
+	else
+		AC_MSG_WARN([
+*** Unable to find SDL library (http://www.libsdl.org/)
+*** Sound is disabled!])
+	fi
+fi
+
+AC_DEFINE_UNQUOTED(KCEMU_MAJOR_VERSION, $KCEMU_MAJOR_VERSION)
+AC_DEFINE_UNQUOTED(KCEMU_MINOR_VERSION, $KCEMU_MINOR_VERSION)
+AC_DEFINE_UNQUOTED(KCEMU_MICRO_VERSION, $KCEMU_MICRO_VERSION)
+AC_DEFINE_UNQUOTED(KCEMU_VERSION, "$KCEMU_VERSION")
+AC_DEFINE_UNQUOTED(DBG_LEVEL, $DBG_LEVEL)
+
+dnl Checks for libraries.
+AC_CHECK_LIB(z, crc32,,
+	AC_MSG_ERROR(Cannot link libz -- check CFLAGS/LDFLAGS))
+
+dnl Checks for header files.
+AC_PATH_X
+AC_HEADER_STDC
+AC_CHECK_HEADERS(sys/time.h unistd.h)
+
+dnl Checks for typedefs, structures, and compiler characteristics.
+AC_C_CONST
+AC_C_INLINE
+AC_HEADER_TIME
+
+dnl Checks for library functions.
+AC_TYPE_SIGNAL
+AC_CHECK_FUNCS(gettimeofday strstr strtol)
+
+AC_OUTPUT([
+	Makefile
+	include/Makefile
+	include/kc/Makefile
+	include/cmd/Makefile
+	include/ui/Makefile
+	include/ui/gtk/Makefile
+	include/fileio/Makefile
+	include/libdbg/Makefile
+	include/libtape/Makefile
+	include/z80core/Makefile
+	include/z80core2/Makefile
+	src/Makefile
+	src/kc/Makefile
+	src/cmd/Makefile
+	src/ui/Makefile
+	src/ui/gtk/Makefile
+	src/fileio/Makefile
+	src/libdbg/Makefile
+	src/libtape/Makefile
+	src/util/Makefile
+	src/z80core/Makefile
+	src/z80core2/Makefile
+	ROM/Makefile
+	PRG/Makefile
+	intl/Makefile
+	po/Makefile.in],
+	[sed -e "/POTFILES =/r po/POTFILES" po/Makefile.in > po/Makefile])

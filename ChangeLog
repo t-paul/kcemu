@@ -1,0 +1,63 @@
+2001-01-22  Torsten Paul  <tp@gmx.de>
+
+	* include/kc/ctc.h, src/kc/ctc.cc: added CTCCallbackInterface that
+	allows other classes to register some interresting events of the
+	emulated CTC (Timer Value change, Start, Stop, Zero Counter)
+
+2001-01-20  Torsten Paul  <tp@gmx.de>
+
+	* include/kc/pio.h (class PIOCallbackInterface): output callbacks
+	now include the value as argument
+
+2001-01-15  Torsten Paul  <tp@gmx.de>
+
+	* src/kc/memory4.cc (Memory4): load RAM-File on init
+	(Resource: "Load On Init"), hex number starting with 0x can
+	specify load addres; will only work with a patched System ROM
+	that doesn't zero all available memory
+
+2000-07-12  Torsten Paul  <tp@degas.eb.de>
+
+	* src/fileio/load_SSS.c: new loader for raw BASIC files (without
+	header bytes and filename)
+
+2000-07-10  Torsten Paul  <tp@degas.eb.de>
+
+	* src/ui/gtk/tape.cc: Translation of GtkItemFactoryEntries and the
+	associated text (without the '_' markers) need to be the same or
+	else the retrieving of the widgets will fail!!!
+
+	* src/kc/tape.cc: fixed saving to tape
+
+2000-07-08  Torsten Paul  <tp@degas.eb.de>
+
+	* src/fileio/load.c: added get_name() function to the loader
+	interface
+
+	* src/kc/ctc1.cc, src/ui/gtk/ui_gtk1.cc, src/kc/pio3.cc: changed
+	debug code to use libdbg
+
+	* src/fileio/load_BASIC.c (loader_BASIC_load),
+	src/fileio/load_TAPE.c (loader_TAPE_load): fixed loaders to
+	correctly store the file blocks with the included block number
+
+2000-07-06  Torsten Paul  <tp@degas.eb.de>
+
+	* src/libtape/kctape.cc (add_file): changed file loading to use
+	the fileio library
+
+2000-07-02  Torsten Paul  <tp@degas.eb.de>
+
+	* src/ui/gtk/ui_gtk.cc (create_main_window): didn't get property
+	change events anymore, maybe gtk_widget_set_events() behaves now
+	differently or the default event mask is different? - fixed
+
+2000-07-01  Torsten Paul  <tp@degas.eb.de>
+
+	* src/ui/gtk/module.cc (init): fixed another initialization bug
+
+2000-06-28  Torsten Paul  <tp@degas.eb.de>
+
+	* src/kc/mod_rom.cc (ModuleROM): fixed initialization bug that
+	caused segfaults when leaving the emulator
+
