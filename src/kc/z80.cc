@@ -2,7 +2,7 @@
  *  KCemu -- the KC 85/3 and KC 85/4 Emulator
  *  Copyright (C) 1997-2001 Torsten Paul
  *
- *  $Id: z80.cc,v 1.35 2002/01/20 13:39:30 torsten_paul Exp $
+ *  $Id: z80.cc,v 1.37 2002/06/09 14:24:34 torsten_paul Exp $
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -27,7 +27,6 @@
 #include <iomanip.h>
 #include <sys/time.h>
 
-#include "kc/config.h"
 #include "kc/system.h"
 
 #include "kc/kc.h"
@@ -37,6 +36,8 @@
 #include "kc/memory.h"
 #include "kc/z80_fdc.h"
 #include "kc/cb_list.h"
+
+#include "sys/sysdep.h"
 
 #include "z80core/z80.h"
 
@@ -205,7 +206,9 @@ Z80::Z80(void)
   _regs.Trace = 0;
   _regs.Trap = 0xffff;
   ResetZ80(&_regs);
-  _regs.PC.W = 0xf000;
+  
+  if (get_kc_type() != KC_TYPE_LC80)
+    _regs.PC.W = 0xf000;
   
   _counter = 0;
 
@@ -298,13 +301,16 @@ Z80::run(void)
       //cout << "entering ctc channel 3 irq routine" << endl;
       //if ((_regs.PC.W == 0xe0d5) && (RdZ80(0xe0d5) == 0xed) && (_regs.BC.W < 5))
       //debug(true);
+
+      //if (_regs.PC.W == 0x0818)
+      //debug(true);
       
       if (_singlestep)
 	{
 	  ui->processEvents();
 	  if (!_executestep)
 	    {
-	      usleep(100000);
+	      sys_usleep(100000);
 	      continue;
 	    }
 	  CMD_EXEC("single-step-executed");
@@ -316,7 +322,7 @@ Z80::run(void)
 	    ui->processEvents();
 	    ui->update();
 	    CMD_EXEC("single-step-executed");
-	    usleep(_tracedelay);
+	    sys_usleep(_tracedelay);
 	  }
       
       if (_debug)
@@ -357,8 +363,9 @@ Z80::run(void)
 	    {
 	      /*
 	       *  trigger pending irq if IFF is set (= irqs enabled)
+	       *  (NMI is triggered even if IFF is not set!)
 	       */
-	      if ((_regs.IFF & 1) != 0)
+	      if (((_regs.IFF & 1) != 0) || (_regs.IRequest == 0x66))
 		{
 		  if (_irq_line)
 		    {
@@ -385,7 +392,13 @@ Z80::run(void)
            *  emulation running...
            */
           _regs.ICount = -4;
+	  _halt = true;
         }
+      else
+	{
+	  _halt = false;
+	}
+
       _counter -= _regs.ICount; // ICount is negative!
 
       _cb_list.run_callbacks(_counter);

@@ -2,7 +2,7 @@
  *  KCemu -- the KC 85/3 and KC 85/4 Emulator
  *  Copyright (C) 1997-2001 Torsten Paul
  *
- *  $Id: tapeadd.h,v 1.2 2001/04/14 15:15:32 tp Exp $
+ *  $Id: tapeadd.h,v 1.3 2002/06/09 14:24:32 torsten_paul Exp $
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -24,12 +24,13 @@
 
 #include <gtk/gtk.h>
 
-#include "kc/config.h"
 #include "kc/system.h"
+
+#include "cmd/cmd.h"
 
 #include "ui/gtk/window.h"
 
-class TapeAddWindow : public UI_Gtk_Window
+class TapeAddWindow : public UI_Gtk_Window, public CMD
 {
  private:
   struct {
@@ -43,40 +44,21 @@ class TapeAddWindow : public UI_Gtk_Window
     GtkWidget *separator;
     GtkWidget *bbox;
     GtkWidget *b_ok;
-    GtkWidget *b_close;
+    GtkWidget *b_cancel;
   } _tape_add;
 
- public:
-  TapeAddWindow(void)
-    {
-      init();
-    }
-  virtual ~TapeAddWindow(void)
-    {
-      gtk_widget_destroy(_window);
-    }
+  CMD_Args *_args;
 
-  void init(void);
-  const char * getFileName(void)
-    {
-      return gtk_entry_get_text(GTK_ENTRY(_tape_add.filename));
-    } 
-  const char * getTapeName(void)
-    {
-      return gtk_entry_get_text(GTK_ENTRY(_tape_add.tapename));
-    }
-  const char * getKCName(void)
-    {
-      return gtk_entry_get_text(GTK_ENTRY(_tape_add.kcname));
-    }
-  const char * getLoadAddr(void)
-    {
-      return gtk_entry_get_text(GTK_ENTRY(_tape_add.load_addr));
-    }
-  const char * getStartAddr(void)
-    {
-      return gtk_entry_get_text(GTK_ENTRY(_tape_add.start_addr));
-    }
+ protected:
+  static void ok(GtkWidget *widget, gpointer *data);
+  static void cancel(GtkWidget *widget, gpointer *data);
+
+ public:
+  TapeAddWindow(void);
+  ~TapeAddWindow(void);
+
+  void init(const char *tapename, const char *text);
+  void execute(CMD_Args *args, CMD_Context context);
 };
 
 #endif /* __ui_gtk_tapeadd_h */

@@ -2,7 +2,7 @@
  *  KCemu -- the KC 85/3 and KC 85/4 Emulator
  *  Copyright (C) 1997-2001 Torsten Paul
  *
- *  $Id: reset.cc,v 1.3 2002/01/06 12:53:40 torsten_paul Exp $
+ *  $Id: reset.cc,v 1.4 2002/03/23 20:04:40 torsten_paul Exp $
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -32,6 +32,7 @@ public:
     {
       register_cmd("emu-reset", 0);
       register_cmd("emu-power-on", 1);
+      register_cmd("emu-nmi", 2);
     }
 
   void execute(CMD_Args *args, CMD_Context context)
@@ -52,12 +53,27 @@ public:
 	    case KC_TYPE_85_4:
 	      z80->reset(0xe000);
 	      break;
+	    case KC_TYPE_LC80:
+	      z80->reset(0x0000);
+	      break;
 	    }
           break;
         case 1:
           Status::instance()->setMessage("*** POWER ON ***");
-          z80->power_on(0xf000);
-          break;
+	  switch (get_kc_type())
+	    {
+	    case KC_TYPE_LC80:
+	      z80->power_on(0x0000);
+	      break;
+	    default:
+	      z80->power_on(0xf000);
+	      break;
+	    }
+	  break;
+	case 2:
+          Status::instance()->setMessage("*** NMI ***");
+	  z80->handleIrq(0x0066);
+	  break;
         }
     }
 };

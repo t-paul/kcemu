@@ -2,7 +2,7 @@
  *  KCemu -- the KC 85/3 and KC 85/4 Emulator
  *  Copyright (C) 1997-2001 Torsten Paul
  *
- *  $Id: z80.h,v 1.18 2002/01/20 13:39:29 torsten_paul Exp $
+ *  $Id: z80.h,v 1.20 2002/06/09 14:24:32 torsten_paul Exp $
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -39,7 +39,6 @@
 
 #include <list.h>
 
-#include "kc/config.h"
 #include "kc/system.h"
 
 extern "C" {
@@ -55,6 +54,7 @@ class Z80
   public:
 	_Z80 _regs;
 
+	bool _halt;
 	bool _debug;
 	bool _trace;
 	bool _singlestep;
@@ -131,6 +131,8 @@ class Z80
         
         byte_t getIFF(void) { return _regs.IFF; }
         byte_t getI(void)   { return _regs.I; }
+
+	bool get_halt(void) { return _halt; }
 
         void start_floppy_cpu(void);
         void halt_floppy_cpu(void);

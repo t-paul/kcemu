@@ -4,4 +4,4 @@ SUBDIRS = include ROM PRG DISK intl src test doc man debian po
 
 pkgdata_DATA = .kcemurc .kcemurc.gtk
 
-EXTRA_DIST = $(pkgdata_DATA) README.de TODO
+EXTRA_DIST = $(pkgdata_DATA) README.de TODO THANKS

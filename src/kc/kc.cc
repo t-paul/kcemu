@@ -2,7 +2,7 @@
  *  KCemu -- the KC 85/3 and KC 85/4 Emulator
  *  Copyright (C) 1997-2001 Torsten Paul
  *
- *  $Id: kc.cc,v 1.28 2002/02/12 17:24:14 torsten_paul Exp $
+ *  $Id: kc.cc,v 1.30 2002/06/09 14:24:33 torsten_paul Exp $
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -19,13 +19,15 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-#include <getopt.h>
 #include <stdlib.h>
 #include <string.h>
 #include <iostream.h>
 
-#include "kc/config.h"
 #include "kc/system.h"
+
+#ifdef HAVE_GETOPT
+#include <getopt.h>
+#endif
 
 #ifdef HAVE_LOCALE_H
 #include <locale.h>
@@ -70,35 +72,60 @@
 #include "kc/ports1.h"
 #include "kc/memory1.h"
 #include "kc/keyb1.h"
-#include "ui/gtk/ui_gtk1.h"
 
 #include "kc/pio2.h"
 #include "kc/memory2.h"
 
 #include "kc/pio3.h"
 #include "kc/ctc3.h"
-#include "kc/ports3.h"
-#include "kc/memory3.h"
 #include "kc/keyb3.h"
+#include "kc/ports3.h"
+#include "kc/sound3.h"
+#include "kc/memory3.h"
 
 #include "kc/pio4.h"
 #include "kc/ports4.h"
 #include "kc/memory4.h"
 
-#ifdef HAVE_UI_GTK
-#include "ui/gtk/ui_gtk3.h"
-#include "ui/gtk/ui_gtk4.h"
-#endif /* HAVE_UI_GTK */
+#include "kc/ctc8.h"
+#include "kc/pio8.h"
+#include "kc/keyb8.h"
+#include "kc/sound8.h"
+#include "kc/memory8.h"
 
-#ifdef HAVE_UI_DUMMY
-#include "ui/dummy/dummy3.h"
-#include "ui/dummy/dummy4.h"
-#endif /* HAVE_UI_DUMMY */
+#ifdef HOST_OS_LINUX
+# ifdef USE_UI_GTK
+#  include "ui/gtk/ui_gtk1.h"
+#  include "ui/gtk/ui_gtk3.h"
+#  include "ui/gtk/ui_gtk4.h"
+#  include "ui/gtk/ui_gtk8.h"
+#  define UI_1 UI_Gtk1
+#  define UI_3 UI_Gtk3
+#  define UI_4 UI_Gtk4
+#  define UI_8 UI_Gtk8
+# endif /* USE_UI_GTK */
+# ifdef USE_UI_SDL
+#  include "ui/sdl/ui_sdl1.h"
+#  include "ui/sdl/ui_sdl3.h"
+#  include "ui/sdl/ui_sdl4.h"
+#  include "ui/sdl/ui_sdl8.h"
+#  define UI_1 UI_SDL1
+#  define UI_3 UI_SDL3
+#  define UI_4 UI_SDL4
+#  define UI_8 UI_SDL8
+# endif /* USE_UI_SDL */
+#endif /* HOST_OS_LINUX */
 
-#ifdef HAVE_UI_DOS
-#include "ui/dos/dos3.h"
-#include "ui/dos/dos4.h"
-#endif /* HAVE_UI_DOS */
+#ifdef HOST_OS_BEOS
+# include "ui/beos/ui_beos1.h"
+# include "ui/beos/ui_beos3.h"
+# include "ui/beos/ui_beos4.h"
+# include "ui/beos/ui_beos8.h"
+# define UI_1 UI_BeOS1
+# define UI_3 UI_BeOS3
+# define UI_4 UI_BeOS4
+# define UI_8 UI_BeOS8
+#endif /* HOST_OS_BEOS */
 
 Z80        *z80;
 UI         *ui;
@@ -111,14 +138,12 @@ PIO        *pio;
 PIO        *pio2;
 Tape       *tape;
 Disk       *disk;
-WavPlayer  *wav;
+//WavPlayer  *wav;
 Timer      *timer;
 Keyboard   *keyboard;
 ModuleList *module_list;
 CMD        *cmd;
-#if HAVE_LIBSDL
 Sound      *sound;
-#endif /* HAVE_LIBSDL */
 
 Z80_FDC         *fdc_z80;
 FloppyIO        *fdc_io;
@@ -154,12 +179,13 @@ usage(char *argv0)
 	    "This is free software, and you are welcome to redistribute it\n"
 	    "under certain conditions; run `kcemu --license' for details.\n"
 	    "\n"
-	    "usage: kcemu [-12347hdl]\n"
+	    "usage: kcemu [-123478sthdlLW]\n"
 	    "  -1:             run in Z9001 / KC 85/1 mode\n"
 	    "  -2:             run in KC 85/2 mode\n"
 	    "  -3:             run in KC 85/3 mode\n"
 	    "  -4:             run in KC 85/4 mode (default)\n"
 	    "  -7:             run in KC 87 mode (= KC 85/1 with color expansion)\n"
+	    "  -8:             run in LC 80 mode\n"
 	    "  -s --scale:     scale display (only values 1 and 2 allowed)\n"
 	    "  -t --tape:      attach tape on startup\n"
 	    "  -h --help:      display help\n"
@@ -580,7 +606,7 @@ main(int argc, char **argv)
 #endif /* HAVE_GETOPT_LONG */
   PortGroup *portg;
   PortInterface *porti;
-  Keyboard1 *k1;
+  Keyboard8 *k8;
   LOG *log;
 
 #ifdef __CALL_MTRACE
@@ -622,11 +648,11 @@ main(int argc, char **argv)
   while (1)
     {
 #ifdef HAVE_GETOPT_LONG
-      c = getopt_long(argc, argv, "12347hd:l:s:t:LW",
+      c = getopt_long(argc, argv, "123478hd:l:s:t:LW",
                       long_options, &option_index);
 #else
 #ifdef HAVE_GETOPT
-      c = getopt(argc, argv, "12347hd:l:s:LW");
+      c = getopt(argc, argv, "123478hd:l:s:LW");
 #else
 #warning neither HAVE_GETOPT_LONG nor HAVE_GETOPT defined
 #warning commandline parsing disabled!
@@ -653,6 +679,9 @@ main(int argc, char **argv)
         case '7':
           type = 7;
           break;
+	case '8':
+	  type = 8;
+	  break;
         case 'd':
           free(kcemu_datadir);
           kcemu_datadir = strdup(optarg);
@@ -706,6 +735,7 @@ main(int argc, char **argv)
     case 2:  kcemu_kc_type = KC_TYPE_85_2; break;
     case 3:  kcemu_kc_type = KC_TYPE_85_3; break;
     case 7:  kcemu_kc_type = KC_TYPE_87;   break;
+    case 8:  kcemu_kc_type = KC_TYPE_LC80; break;
     default: kcemu_kc_type = KC_TYPE_85_4; break;
     }
 
@@ -727,86 +757,90 @@ main(int argc, char **argv)
       ports = new Ports;
       portg = ports->register_ports("-", 0, 0x100, new NullPort, 256);
 
+      PIO1_1 *p1;
+      PIO2 *p2;
+      PIO3 *p3;
+      PIO4 *p4;
+      PIO8_1 *p8;
+      Keyboard1 *k1;
+
       switch (kcemu_kc_type)
 	{
 	case KC_TYPE_87:
 	case KC_TYPE_85_1:
 	  fileio_set_kctype(FILEIO_KC85_1);
 	  memory   = new Memory1;
-	  ui       = new UI_Gtk1;
-	  pio      = new PIO1_1;
+	  ui       = new UI_1;
 	  ctc      = new CTC1;
 	  pio2     = new PIO1_2;
 	  tape     = new Tape(500, 1000, 2000, 0);
 	  disk     = NULL;
-	  k1       = new Keyboard1;
-	  
+
+	  p1 = new PIO1_1;
+	  k1 = new Keyboard1;
+	  tape->set_tape_callback(p1);
+
+	  pio = p1;
+	  keyboard = k1;
+
 	  //tape->setAutoplay(false);
 	  pio2->register_callback_A_in(k1);
 	  pio2->register_callback_B_in(k1);
-	  keyboard = k1;
 	  break;
 	case KC_TYPE_85_2:
 	  memory   = new Memory2;
-#ifdef HAVE_UI_GTK
-	  ui       = new UI_Gtk3;
-#endif /* HAVE_UI_GTK */
-#ifdef HAVE_UI_DUMMY
-	  ui       = new UI_Dummy3;
-#endif /* HAVE_UI_DUMMY */
-#ifdef HAVE_UI_DOS
-	  ui       = new UI_Dos3;
-#endif /* HAVE_UI_DOS */
+	  ui       = new UI_3;
 	  porti    = new Ports3;
 	  
-	  pio      = new PIO2;
 	  ctc      = new CTC3;
 	  tape     = new Tape(364, 729, 1458, 1);
 	  keyboard = new Keyboard3;
+	  p2       = new PIO2;
+	  tape->set_tape_callback(p2);
+	  pio = p2;
 	  break;
 	case KC_TYPE_85_3:
 	  memory   = new Memory3;
-#ifdef HAVE_UI_GTK
-	  ui       = new UI_Gtk3;
-#endif /* HAVE_UI_GTK */
-#ifdef HAVE_UI_DUMMY
-	  ui       = new UI_Dummy3;
-#endif /* HAVE_UI_DUMMY */
-#ifdef HAVE_UI_DOS
-	  ui       = new UI_Dos3;
-#endif /* HAVE_UI_DOS */
+	  ui       = new UI_3;
 	  porti    = new Ports3;
 	  
-	  pio      = new PIO3;
+	  p3       = new PIO3;
 	  ctc      = new CTC3;
 	  tape     = new Tape(364, 729, 1458, 1);
 	  keyboard = new Keyboard3;
+	  tape->set_tape_callback(p3);
+	  pio = p3;
 	  break;
 	case KC_TYPE_85_4:
 	  memory   = new Memory4;
-#ifdef HAVE_UI_GTK
-	  ui       = new UI_Gtk4;
-#endif /* HAVE_UI_GTK */
-#ifdef HAVE_UI_DUMMY
-	  ui       = new UI_Dummy4;
-#endif /* HAVE_UI_DUMMY */
-#ifdef HAVE_UI_DOS
-	  ui       = new UI_Dos4;
-#endif /* HAVE_UI_DOS */
+	  ui       = new UI_4;
 	  porti    = new Ports4;
-	  pio      = new PIO4;
+	  p4       = new PIO4;
 	  ctc      = new CTC3;
 	  tape     = new Tape(364, 729, 1458, 1);
 	  keyboard = new Keyboard3;
+	  tape->set_tape_callback(p4);
+	  pio      = p4;
+	  break;
+	case KC_TYPE_LC80:
+	  ui       = new UI_8;
+	  memory   = new Memory8;
+	  p8       = new PIO8_1;
+	  pio2     = new PIO8_2;
+	  ctc      = new CTC8;
+	  tape     = new Tape(500, 1000, 2000, 0);
+	  disk     = NULL;
+
+	  k8       = new Keyboard8;
+	  pio2->register_callback_A_in(k8);
+	  pio2->register_callback_B_in(k8);
+	  tape->set_tape_callback(p8);
+	  keyboard = k8;
+	  pio = p8;
 	  break;
 	}
 
-#if HAVE_LIBSDL
-      sound       = new Sound;
-      if (RC::instance()->get_int("Enable Sound"))
-	sound->init();
-#endif /* HAVE_LIBSDL */
-      wav         = new WavPlayer;
+      // wav         = new WavPlayer;
       timer       = new Timer;
       module      = new Module;
       module_list = new ModuleList;
@@ -830,6 +864,10 @@ main(int argc, char **argv)
 	  break;
 	case KC_TYPE_85_2:
 	case KC_TYPE_85_3:
+	  sound = new Sound3;
+	  if (RC::instance()->get_int("Enable Sound"))
+	    sound->init();
+
 	  portg = ports->register_ports("Module", 0x80, 1, module, 10);
 	  portg = ports->register_ports("PIO",    0x88, 4, pio,    10);
 	  portg = ports->register_ports("CTC",    0x8c, 4, ctc,    10);
@@ -843,6 +881,10 @@ main(int argc, char **argv)
           z80->daisy_chain_set_last(ctc->get_last());  // lowest priority
 	  break;
 	case KC_TYPE_85_4:
+	  sound = new Sound3;
+	  if (RC::instance()->get_int("Enable Sound"))
+	    sound->init();
+
 	  portg = ports->register_ports("Module", 0x80, 1, module, 10);
 	  portg = ports->register_ports("Port84", 0x84, 1, porti,  10);
 	  portg = ports->register_ports("Port86", 0x86, 1, porti,  10);
@@ -856,6 +898,24 @@ main(int argc, char **argv)
           ctc->iei(1);
           z80->daisy_chain_set_first(ctc->get_first()); // highest priority
           z80->daisy_chain_set_last(ctc->get_last());  // lowest priority
+	  break;
+	case KC_TYPE_LC80:
+	  sound = new Sound8;
+	  if (RC::instance()->get_int("Enable Sound"))
+	    sound->init();
+
+	  portg = ports->register_ports("CTC",  0xec, 4, ctc,  10);
+	  portg = ports->register_ports("PIO1", 0xf4, 4, pio,  10);
+	  portg = ports->register_ports("PIO2", 0xf8, 4, pio2, 10);
+          /*
+           *  build interrupt daisy chain
+           */
+	  ctc->next(pio->get_first());
+	  pio->next(pio2->get_first());
+          pio2->next(0);
+          ctc->iei(1);
+          z80->daisy_chain_set_first(pio->get_first()); // highest priority
+          z80->daisy_chain_set_last(pio->get_last());  // lowest priority
 	  break;
 	}
 
@@ -883,7 +943,9 @@ main(int argc, char **argv)
       ui->init(&argc, &argv);
       module_list->init();
 
-      if ((kcemu_kc_type == KC_TYPE_85_1) || (kcemu_kc_type == KC_TYPE_87))
+      if ((kcemu_kc_type == KC_TYPE_85_1) ||
+	  (kcemu_kc_type == KC_TYPE_87) ||
+	  (kcemu_kc_type == KC_TYPE_LC80))
 	tape->power(true);
 
       if (kcemu_tape != 0)

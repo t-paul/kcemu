@@ -15,6 +15,8 @@ pkgdata_DATA = \
 	m027.rom	\
 	m900.rom	\
 	m901.rom	\
-	floppy.rom
+	floppy.rom	\
+	lc80__00.rom	\
+	lc80__08.rom
 
 EXTRA_DIST = $(pkgdata_DATA)

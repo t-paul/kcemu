@@ -1,6 +1,23 @@
 #
-# $Id: NEWS,v 1.7 2002/02/12 17:24:12 torsten_paul Exp $
+# $Id: NEWS,v 1.8 2002/06/09 14:24:31 torsten_paul Exp $
 #
+
+KCemu 0.3.5
+
+  * added emulation of the LC 80 computer (thanks to Holger
+    Krull for providing the necessary information at
+    www.lc80.de)
+  * big internal changes in the display code; there is now
+    a generic display layer to simplify the porting to other
+    architectures
+  * started BeOS port to check the generic display layer --
+    not quite usable due to some threading bugs and missing
+    user interface
+  * renaming of files in tape archives is now possible
+  * allow adding .TAP files with multiple files with the same
+    name (by renaming the duplicated names)
+  * fixed some tape handling bugs
+  * fixed initialization bug in the display code
 
 KCemu 0.3.4
 

@@ -2,7 +2,7 @@
  *  KCemu -- the KC 85/3 and KC 85/4 Emulator
  *  Copyright (C) 1997-2001 Torsten Paul
  *
- *  $Id: kct.h,v 1.10 2001/12/29 03:50:20 torsten_paul Exp $
+ *  $Id: kct.h,v 1.12 2002/06/09 14:24:32 torsten_paul Exp $
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -201,6 +201,7 @@ protected:
                               kct_machine_type_t machine);
 
   int translate_index(int idx);
+  int find_entry(const char *name);
 
 public:
   KCTFile(void);
@@ -216,11 +217,10 @@ public:
   kct_error_t close(void);
   kct_error_t remove(int idx);
   kct_error_t remove(const char *name);
+  kct_error_t rename(int idx, const char *to);
+  kct_error_t rename(const char *name, const char *to);
+  kct_error_t find(const char *name);
 
-  kct_error_t write(const char *filename,
-                    const unsigned char *buf,
-                    unsigned long len,
-                    kct_machine_type_t machine = KCT_MACHINE_ALL);
   kct_error_t write(const char *filename,
                     const unsigned char *buf,
                     unsigned long len,
@@ -233,6 +233,8 @@ public:
   istream *   read(const char *name,
                    kct_file_props_t *props = NULL);
   KCTDir *    readdir(void);
+
+  const char * get_error_string(kct_error_t error);
 
 #ifdef DEBUG
   void test(void);

@@ -1,0 +1,9 @@
+## Process this file with automake to produce Makefile.in
+
+noinst_LIBRARIES = libsys_beos.a
+
+INCLUDES = \
+	-I../../../include
+
+libsys_beos_a_SOURCES = \
+	sys_usleep.c

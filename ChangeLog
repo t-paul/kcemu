@@ -1,5 +1,112 @@
+2002-06-09  Torsten Paul  <Torsten.Paul@gmx.de>
+
+	* released version 0.3.5
+
+2002-06-07  Torsten Paul  <Torsten.Paul@gmx.de>
+
+	* src/kc/kc.cc: added -8 to commandline help output
+
+	* configure.in: added separate variable to enable sound;
+	using HAVE_LIBSDL to enable sound doesn't work after adding
+	SDL user interface code
+
+2002-05-29  Torsten Paul  <Torsten.Paul@gmx.de>
+
+	* src/ui/gtk/tape.cc: added menu entry to rename files
+	in the tape archive
+
+	* include/libtape/kct.h, src/libtape/kct.cc: added method to
+	rename files in the tape archive
+
+	* src/kc/tape.cc (class CMD_tape_export): fixed return value
+	checking when exporting files
+
+2002-05-28  Torsten Paul  <Torsten.Paul@gmx.de>
+
+	* src/kc/tape.cc, src/ui/gtk/tapeadd.cc: handle duplicate
+	file names when adding files to tape archives
+	(resurrection of tapeadd.cc which wasn't used for some time)
+
+2002-05-25  Torsten Paul  <Torsten.Paul@gmx.de>
+
+	* src/ui/gtk/tape.cc (tapeNext): changed tape delay from 5
+	to 10 seconds; this should be enough to allow the basic file
+	loader to initialize basic and call CLOAD
+
+	* src/libtape/kctape.cc (add_file), src/kc/tape.cc (add):
+	fixed typo in file type handling which caused BASIC files
+	to be added as COM files
+
+	* src/fileio/load_AF.c (check_end): modified check for file
+	end; basic files can be larger than 255 blocks so we can't
+	check for the block number in this case; fixes loading bug
+	for some files from www.kc85emu.de (e.g. Spiele1M.tap)
+
+2002-04-02  Torsten Paul  <Torsten.Paul@gmx.de>
+
+	* include/ui/font1.h, src/ui/gtk/ui_gtk1.cc: changed font to
+	include empty chars between 0h and 20h
+
+	* include/ui/gtk/font1.h: moved to include/ui/font1.h, it's not
+	only usable for gtk
+
+2002-03-30  Torsten Paul  <Torsten.Paul@gmx.de>
+
+	* src/ui/gtk/ui_gtk3.cc: changed obsolete type byte to byte_t
+
+	* include/ui/gtk/module.h, src/ui/gtk/module.cc: moved constructor
+	and destructor out of the header file
+
+	* src/kc/kc.cc, src/kc/sound3.cc: removed dependency on libSDL
+
+	* included first code of a port to BeOS
+
+	* kc/config.h is now included by kc/system.h, no need to include
+	both in every file
+
+2002-03-25  Torsten Paul  <Torsten.Paul@gmx.de>
+
+	* src/ui/gtk/ui_gtk.cc (ui_callback): fixed initialization problem
+	in time frame calculation which was caused by limited value range
+
+	* src/ui/gtk/ui_gtk.cc, src/ui/gtk/ui_gtk1.cc, src/ui/gtk/ui_gtk3.cc,
+	src/ui/gtk/ui_gtk4.cc, src/ui/gtk/ui_gtk8.cc: moved callback
+	implementation to base UI class as ui_callback()
+
+2002-03-23  Torsten Paul  <Torsten.Paul@gmx.de>
+
+	* added emulation of the LC 80 computer
+
+2002-03-08  Torsten Paul  <Torsten.Paul@gmx.de>
+
+	* include/kc/tape.h (class Tape): 
+	renamed ctcSignal() to tape_signal() and getDelay() to get_delay()
+
+	* src/kc/pio1.h, src/kc/pio1.cc, src/kc/pio2.h, src/kc/pio2.cc,
+	src/kc/pio3.h, src/kc/pio3.cc, src/kc/pio4.h, src/kc/pio4.cc:
+	added tape_callback()
+
+	* src/kc/tape.cc (set_tape_callback): set callback function
+	for tape input
+
+	* include/kc/tape.h: added interface TapeCallback with function
+	tape_callback() that is called when the tape signal changes;
+	this removes the dependency on pio.h
+
+2002-02-15  Torsten Paul  <Torsten.Paul@gmx.de>
+
+	* src/libtape/kct.cc (write): refuse to add a file if the
+	filename already exists in the archvie
+
+	* src/libtape/kct.cc: removed obsolate write() method
+
+	* src/libtape/kctape.cc: error handling if adding a file
+	with a name that is already in the archive
+
 2002-02-11  Torsten Paul  <Torsten.Paul@gmx.de>
 
+	* released version 0.3.4
+	
 	* src/kc/kc.cc (main): set fileio mode when emulating kc85/1
 
 	* src/libtape/kctape.cc (main): added switch to add kc85/1 files;

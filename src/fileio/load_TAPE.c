@@ -2,7 +2,7 @@
  *  KCemu -- the KC 85/3 and KC 85/4 Emulator
  *  Copyright (C) 1997-2001 Torsten Paul
  *
- *  $Id: load_TAPE.c,v 1.8 2002/02/12 17:24:14 torsten_paul Exp $
+ *  $Id: load_TAPE.c,v 1.9 2002/03/23 19:27:17 torsten_paul Exp $
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -144,11 +144,9 @@ loader_TAPE_load(const char *filename,
   switch (fileio_get_kctype())
     {
     case FILEIO_KC85_1:
-      printf("*** 85_1\n");
       fileio_copy_blocks((*prop)->data, data, size, 0);
       break;
     case FILEIO_KC85_3:
-      printf("*** 85_3\n");
       fileio_copy_blocks((*prop)->data, data, size, 1);
       break;
     }

@@ -1,6 +1,16 @@
 ## Process this file with automake to produce Makefile.in
 
-SUBDIRS = gtk
+if TARGET_LINUX
+
+SUBDIRS = generic sdl gtk
+
+endif
+
+if TARGET_BEOS
+
+SUBDIRS = generic beos
+
+endif
 
 noinst_LIBRARIES = libui.a
 

@@ -2,7 +2,7 @@
  *  KCemu -- the KC 85/3 and KC 85/4 Emulator
  *  Copyright (C) 1997-2001 Torsten Paul
  *
- *  $Id: tape.cc,v 1.22 2002/01/12 23:03:56 torsten_paul Exp $
+ *  $Id: tape.cc,v 1.24 2002/06/09 14:24:34 torsten_paul Exp $
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -26,17 +26,11 @@
 #include <iostream.h>
 #include <iomanip.h>
 
-#include "kc/config.h"
 #include "kc/system.h"
 
 #include "kc/z80.h"
-#include "kc/pio.h"
 #include "kc/tape.h"
 #include "kc/memory.h"
-
-#include "cmd/cmd.h"
-
-#include "fileio/load.h"
 
 #include "ui/ui.h"
 #include "ui/error.h"
@@ -248,7 +242,7 @@ public:
         }
       if (filename)
         {
-          if (tape->extract(tapename, filename))
+          if (tape->extract(tapename, filename) == TAPE_OK)
             {
               sprintf(buf, _("File `%s' saved."), filename);
               Status::instance()->setMessage(buf);
@@ -268,12 +262,15 @@ public:
     {
       _t = t;
       register_cmd("tape-add-file", 0);
+      register_cmd("tape-rename-file", 3);
     }
 
   void execute(CMD_Args *args, CMD_Context context)
     {
       CMD_Args *a;
-      const char *filename;
+      fileio_prop_t *prop;
+      kct_file_type_t type;
+      const char *filename, *tapename;
 
       filename = 0;
       if (args)
@@ -298,61 +295,33 @@ public:
             return;
 
 	  _t->add(filename);
+	  break;
+
+	case 2:
+	  /*
+	   *  this is the callback entry ui-tape-name-edit-CB-ok
+	   *  which is used by the function add_file()
+	   */
+	  prop = (fileio_prop_t *)args->get_pointer_arg("prop");
+	  tapename = args->get_string_arg("tape-filename");
+	  type = (kct_file_type_t)args->get_int_arg("type");
+
+	  _t->add_file(tapename, prop, type, KCT_MACHINE_ALL);
+	  break;
+
+	case 3:
+	  if (!filename)
+	    return;
+
+	  tapename = args->get_string_arg("tape-filename");
+	  if (!tapename)
+	    return;
+
+	  _t->rename(filename, tapename);
+	  break;
         }
     }
 };
-
-//      unsigned int load, start, autostart;
-//      const char *filename, *tapename, *kcname;
-
-//	  case 1:
-//	    /* FIXME: may use given args, but we'd need to
-//	       unregister the previous callback then! */
-//	    a = new CMD_Args();
-//	    a->set_string_arg("filename", filename);
-//	    a->add_callback("ui-edit-header-CB", this, 2);
-//	    CMD_EXEC_ARGS("ui-edit-header", a);
-//	    return;
-//
-//	  case 2:
-//	    if (!args->has_arg("filename")) return;
-//	    if (!args->has_arg("tape-filename")) return;
-//	    if (!args->has_arg("kc-filename")) return;
-//	    if (!args->has_arg("load-address")) return;
-//	    
-//	    
-//	    filename  = args->get_string_arg("filename");
-//	    tapename  = args->get_string_arg("tape-filename");
-//	    kcname    = args->get_string_arg("kc-filename");
-//	    load      = args->get_int_arg("load-address");
-//	    autostart = args->get_int_arg("autostart");
-//	    if (autostart)
-//	      start = args->get_int_arg("start-address");
-//	    
-//	    cout.form("filename: %s\n",  args->get_string_arg("filename"));
-//	    cout.form("tapename: %s\n",  args->get_string_arg("tape-filename"));
-//	    cout.form("kcname:   %s\n",  args->get_string_arg("kc-filename"));
-//	    cout.form("loadaddr: %x\n",  args->get_int_arg("load-address"));
-//	    cout.form("startaddr: %x\n", args->get_int_arg("start-address"));
-//	    cout.form("autostart: %d\n", args->get_int_arg("autostart"));
-//
-//	    _t->add_raw(filename, tapename, kcname, load, start, autostart);
-//	    break;
-//	  case 3:
-//	    a = new CMD_Args();
-//	    a->set_string_arg("ui-file-select-title",
-//			      _("Select memory image..."));
-//	    a->add_callback("ui-file-select-CB-ok", this, 4);
-//	    a->add_callback("ui-file-select-CB-cancel", this, 4);
-//	    CMD_EXEC_ARGS("ui-file-select", a);
-//	    return;
-//	  case 4:
-//	    filename = args->get_string_arg("filename");
-//	    if (!filename)
-//	      return;
-//	    _t->add(filename);
-//	    break;
-//
 
 class CMD_tape_play : public CMD
 {
@@ -443,16 +412,28 @@ Tape::Tape(int bit_0, int bit_1, int bit_s, int start_block) : Callback("Tape")
     _state = 0;
     _sync = 2;
 
-    CMD *cmd;
-    cmd = new CMD_tape_load(this);
-    cmd = new CMD_tape_export(this);
-    cmd = new CMD_tape_attach(this);
-    cmd = new CMD_tape_add_file(this);
-    cmd = new CMD_tape_play(this);
+    _tape_cb = 0;
+
+    _cmd_tape_load     = new CMD_tape_load(this);
+    _cmd_tape_play     = new CMD_tape_play(this);
+    _cmd_tape_attach   = new CMD_tape_attach(this);
+    _cmd_tape_export   = new CMD_tape_export(this);
+    _cmd_tape_add_file = new CMD_tape_add_file(this);
 }
 
 Tape::~Tape()
 {
+  delete _cmd_tape_load;
+  delete _cmd_tape_play;
+  delete _cmd_tape_attach;
+  delete _cmd_tape_export;
+  delete _cmd_tape_add_file;
+}
+
+void
+Tape::set_tape_callback(TapeCallback *tape_cb)
+{
+  _tape_cb = tape_cb;
 }
 
 void
@@ -559,7 +540,7 @@ Tape::play(const char *name, int delay)
     }
   else
     {
-      offset = getDelay(delay);
+      offset = get_delay(delay);
       DBG(1, form("KCemu/Tape/play",
 		  "Tape::play(): trigger offset is %ld\n",
 		  offset));
@@ -655,7 +636,7 @@ Tape::seek(int percent)
 }
 
 long
-Tape::getDelay(int seconds)
+Tape::get_delay(int seconds)
 {
   return 600 * BIT_S * seconds;
 }
@@ -672,7 +653,8 @@ Tape::callback(void *data)
 void
 Tape::do_play(int edge)
 {
-  pio->strobe_A();
+  if (_tape_cb)
+    _tape_cb->tape_callback(edge);
 
   if (edge == 1)
     {
@@ -843,7 +825,7 @@ Tape::do_play(int edge)
 }
 
 void
-Tape::ctcSignal(void)
+Tape::tape_signal(void)
 {
   int bit_type;
   unsigned long diff;
@@ -1057,58 +1039,86 @@ Tape::add(const char *name)
 
   for (ptr = prop;ptr != NULL;ptr = ptr->next)
     {
-      switch (prop->type)
+      kct_file_type_t type;
+
+      switch (ptr->type)
         {
         case FILEIO_TYPE_COM:
+	  type = KCT_TYPE_COM;
           DBG(0, form("KCemu/Tape/add",
                       "Tape::add(): '%s' %04x/%04x [COM]\n",
                       (const char *)&ptr->name[0],
                       ptr->load_addr, ptr->start_addr));
-          _kct_file.write((const char *)&ptr->name[0],
-                          ptr->data, ptr->size,
-                          ptr->load_addr, ptr->start_addr,
-                          KCT_TYPE_COM, KCT_MACHINE_ALL);
           break;
         case FILEIO_TYPE_BAS:
+	  type = KCT_TYPE_BAS;
           DBG(0, form("KCemu/Tape/add",
                       "Tape::add(): '%s' [BAS]\n",
                       (const char *)&ptr->name[0]));
-          _kct_file.write((const char *)&ptr->name[0],
-                          ptr->data, ptr->size,
-                          ptr->load_addr, ptr->start_addr,
-                          KCT_TYPE_BAS, KCT_MACHINE_ALL);
           break;
         case FILEIO_TYPE_MINTEX:
+	  type = KCT_TYPE_MINTEX;
           DBG(0, form("KCemu/Tape/add",
                       "Tape::add(): '%s' [MINTEX]\n",
                       (const char *)&ptr->name[0]));
-          _kct_file.write((const char *)&ptr->name[0],
-                          ptr->data, ptr->size,
-                          ptr->load_addr, ptr->start_addr,
-                          KCT_TYPE_MINTEX, KCT_MACHINE_ALL);
           break;
         case FILEIO_TYPE_PROT_BAS:
+	  type = KCT_TYPE_BAS_P;
           DBG(0, form("KCemu/Tape/add",
                       "Tape::add(): '%s' [BAS_P]\n",
                       (const char *)&ptr->name[0]));
-          _kct_file.write((const char *)&ptr->name[0],
-                          ptr->data, ptr->size,
-                          ptr->load_addr, ptr->start_addr,
-                          KCT_TYPE_BAS_P, KCT_MACHINE_ALL);
           break;
         default:
 	  Error::instance()->info(_("The format of the selected file is not recognized."));
-	  /*
           DBG(0, form("KCemu/Tape/add",
-                      "Tape::add(): '%s' %04x/%04x [default]\n",
-                      (const char *)&ptr->name[0],
-                      ptr->load_addr, ptr->start_addr));
-	  */
+		      "Tape::add(): '%s' %04x/%04x [ignored]\n",
+		      (const char *)&ptr->name[0],
+                      ptr->load_addr,
+		      ptr->start_addr));
           return TAPE_ERROR;
         }
+
+      add_file((const char *)&ptr->name[0], ptr, type, KCT_MACHINE_ALL);
     }
   update_tape_list();
   fileio_free_prop(&prop);
+
+  return TAPE_OK;
+}
+
+tape_error_t
+Tape::add_file(const char *name,
+	       fileio_prop_t *prop,
+	       kct_file_type_t type,
+	       kct_machine_type_t machine)
+{
+  kct_error_t err;
+  CMD_Args *args = 0;
+
+  err = _kct_file.write(name,
+			prop->data,
+			prop->size,
+			prop->load_addr,
+			prop->start_addr,
+			type, KCT_MACHINE_ALL);
+  if (err != KCT_ERROR_EXIST)
+    return TAPE_OK;
+
+  if (args == 0)
+    args = new CMD_Args();
+  
+  args->set_string_arg("tape-rename-title",
+		       _("The file you selected has a name that is already\n"
+			 "present in the current tape archive.\n"
+			 "\n"
+			 "Please select a different name to add this file\n"
+			 "to the tape archive or use the cancel button to\n"
+			 "skip this file."));
+  args->set_string_arg("tape-filename", name);
+  args->set_pointer_arg("prop", prop);
+  args->set_int_arg("type", type);
+  args->add_callback("ui-tape-name-edit-CB-ok", _cmd_tape_add_file, 2);
+  CMD_EXEC_ARGS("ui-tape-name-edit", args);
 
   return TAPE_OK;
 }
@@ -1183,6 +1193,16 @@ Tape::add_raw(const char     *filename,
 }
 
 tape_error_t
+Tape::rename(const char *from, const char *to)
+{
+  if (_kct_file.rename(from, to) != KCT_OK)
+    return TAPE_ERROR;
+
+  update_tape_list();
+  return TAPE_OK;
+}
+
+tape_error_t
 Tape::remove(const char *name)
 {
   int idx;
@@ -1191,11 +1211,10 @@ Tape::remove(const char *name)
 
   // FIXME: using the index internal to the user interface
   // is kinda ugly
-  idx = TAPE_IF()->tapeGetSelected();
   if (name == NULL)
     {
-      if (name == NULL)
-        name = TAPE_IF()->tapeGetName(idx);
+      idx = TAPE_IF()->tapeGetSelected();
+      name = TAPE_IF()->tapeGetName(idx);
       if (name == NULL)
         return TAPE_ERROR;
     }

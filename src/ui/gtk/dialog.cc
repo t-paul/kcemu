@@ -2,7 +2,7 @@
  *  KCemu -- the KC 85/3 and KC 85/4 Emulator
  *  Copyright (C) 1997-2001 Torsten Paul
  *
- *  $Id: dialog.cc,v 1.4 2001/04/14 15:16:53 tp Exp $
+ *  $Id: dialog.cc,v 1.5 2002/06/09 14:24:34 torsten_paul Exp $
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -19,7 +19,6 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-#include "kc/config.h"
 #include "kc/system.h"
 
 #include "ui/gtk/dialog.h"

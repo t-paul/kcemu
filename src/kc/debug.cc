@@ -20,7 +20,6 @@
 #include <iostream.h>
 #include <iomanip.h>
 
-#include "kc/config.h"
 #include "kc/system.h"
 
 #include "kc/ctc.h"

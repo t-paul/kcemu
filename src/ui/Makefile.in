@@ -96,7 +96,8 @@ USE_NLS = @USE_NLS@
 VERSION = @VERSION@
 l = @l@
 
-SUBDIRS = gtk
+@TARGET_LINUX_TRUE@SUBDIRS = generic sdl gtk
+@TARGET_BEOS_TRUE@SUBDIRS = generic beos
 
 noinst_LIBRARIES = libui.a
 
@@ -131,6 +132,7 @@ DISTFILES = $(DIST_COMMON) $(SOURCES) $(HEADERS) $(TEXINFOS) $(EXTRA_DIST)
 
 TAR = tar
 GZIP_ENV = --best
+DIST_SUBDIRS =  generic sdl gtk generic beos
 SOURCES = $(libui_a_SOURCES)
 OBJECTS = $(libui_a_OBJECTS)
 
@@ -284,7 +286,7 @@ distdir: $(DISTFILES)
 	    || cp -p $$d/$$file $(distdir)/$$file || :; \
 	  fi; \
 	done
-	for subdir in $(SUBDIRS); do \
+	for subdir in $(DIST_SUBDIRS); do \
 	  if test "$$subdir" = .; then :; else \
 	    test -d $(distdir)/$$subdir \
 	    || mkdir $(distdir)/$$subdir \
@@ -296,9 +298,9 @@ distdir: $(DISTFILES)
 	done
 commands.o: commands.cc
 error.o: error.cc ../../include/ui/error.h ../../include/ui/errorl.h
-hsv2rgb.o: hsv2rgb.cc ../../include/kc/config.h \
-	../../include/kc/system.h ../../include/ui/hsv2rgb.h \
-	../../include/libdbg/dbg.h
+hsv2rgb.o: hsv2rgb.cc ../../include/kc/system.h \
+	../../include/kc/config.h ../../include/sys/sysdep.h \
+	../../include/ui/hsv2rgb.h ../../include/libdbg/dbg.h
 log.o: log.cc ../../include/ui/log.h ../../include/ui/errorl.h \
 	../../include/ui/statusl.h ../../include/ui/status.h \
 	../../include/libdbg/dbg.h

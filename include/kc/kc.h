@@ -2,7 +2,7 @@
  *  KCemu -- the KC 85/3 and KC 85/4 Emulator
  *  Copyright (C) 1997-2001 Torsten Paul
  *
- *  $Id: kc.h,v 1.13 2002/02/12 17:24:14 torsten_paul Exp $
+ *  $Id: kc.h,v 1.15 2002/06/09 14:24:32 torsten_paul Exp $
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -22,7 +22,6 @@
 #ifndef __kc_kc_h
 #define __kc_kc_h
 
-#include "kc/config.h"
 #include "kc/system.h"
 
 typedef enum
@@ -33,9 +32,10 @@ typedef enum
   KC_TYPE_85_3 	     = (1 << 2),
   KC_TYPE_85_4 	     = (1 << 3),
   KC_TYPE_87         = (1 << 4),
+  KC_TYPE_LC80 	     = (1 << 5),
   KC_TYPE_85_1_CLASS = KC_TYPE_85_1 | KC_TYPE_87,
   KC_TYPE_85_2_CLASS = KC_TYPE_85_2 | KC_TYPE_85_3 | KC_TYPE_85_4,
-  KC_TYPE_ALL        = KC_TYPE_85_1_CLASS | KC_TYPE_85_2_CLASS,m
+  KC_TYPE_ALL        = KC_TYPE_85_1_CLASS | KC_TYPE_85_2_CLASS | KC_TYPE_LC80,
 } kc_type_t;
 
 class Z80;

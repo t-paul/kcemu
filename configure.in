@@ -1,10 +1,27 @@
-dnl Process this file with autoconf to produce a configure script.
+dnl ----------------------------------------------------------------
+dnl  $Id: configure.in,v 1.18 2002/06/09 14:24:31 torsten_paul Exp $
+dnl
+dnl  Process this file with autoconf to produce a configure script.
+dnl ----------------------------------------------------------------
+
 AC_INIT(include/kc/kc.h)
 AM_CONFIG_HEADER(include/kc/config.h)
 
+dnl -----------------------
+dnl  declare extra options
+dnl -----------------------
+
+AC_ARG_ENABLE(sound,     [  --enable-sound          enable sound using libSDL (broken!) [default=no]],,enable_sound=no)
+AC_ARG_WITH(ui,          [  --with-ui=UI            use User Interface UI (gtk or sdl) [default=auto]],,with_ui=auto)
+AC_ARG_WITH(debug_level, [  --with-debug-level=L    set debug level to L (0..3) [default=1]])
+
+dnl ---------------------
+dnl  set package version
+dnl ---------------------
+
 KCEMU_MAJOR_VERSION=0
 KCEMU_MINOR_VERSION=3
-KCEMU_MICRO_VERSION=4
+KCEMU_MICRO_VERSION=5
 
 if test $KCEMU_MICRO_VERSION -eq 0
 then
@@ -13,18 +30,25 @@ else
         KCEMU_VERSION=${KCEMU_MAJOR_VERSION}.${KCEMU_MINOR_VERSION}.${KCEMU_MICRO_VERSION}
 fi
 
-dnl declare options
-AC_ARG_ENABLE(sound,     [  --enable-sound          enable sound using libSDL (broken!) [default=no]],,enable_sound=no)
-AC_ARG_WITH(debug_level, [  --with-debug-level=L    set debug level to L (0..3) [default=1]])
+AC_DEFINE_UNQUOTED(KCEMU_MAJOR_VERSION, $KCEMU_MAJOR_VERSION)
+AC_DEFINE_UNQUOTED(KCEMU_MINOR_VERSION, $KCEMU_MINOR_VERSION)
+AC_DEFINE_UNQUOTED(KCEMU_MICRO_VERSION, $KCEMU_MICRO_VERSION)
+AC_DEFINE_UNQUOTED(KCEMU_VERSION, "$KCEMU_VERSION")
 
-dnl Checks for programs.
+dnl ---------------------
+dnl  checks for programs
+dnl ---------------------
+
 AC_PROG_CC
 AC_PROG_CXX
 AC_PROG_INSTALL
 AC_PROG_LN_S
 AC_PROG_RANLIB
 
-dnl Automake
+dnl ----------
+dnl  automake
+dnl ----------
+
 PACKAGE=KCemu
 VERSION=$KCEMU_VERSION
 AC_DEFINE_UNQUOTED(PACKAGE, "$PACKAGE")
@@ -34,12 +58,22 @@ AC_SUBST(VERSION)
 AC_ARG_PROGRAM
 AC_PROG_MAKE_SET
 
-ALL_LINGUAS="de"
-AM_GNU_GETTEXT
-dnl AC_LINK_FILES($nls_cv_header_libgt, $nls_cv_header_intl)
-
 AM_INIT_AUTOMAKE($PACKAGE, $VERSION, no-define)
 AC_CANONICAL_HOST
+
+dnl -------------------
+dnl  configure gettext
+dnl -------------------
+
+ALL_LINGUAS="de"
+AM_GNU_GETTEXT
+if test "x$USE_INCLUDED_LIBINTL" = "xyes"; then
+	AC_DEFINE(USE_INCLUDED_LIBINTL)
+fi
+
+dnl -------------------
+dnl  check debug level
+dnl -------------------
 
 AC_MSG_CHECKING(which debug level is requested)
 DBG_LEVEL=1
@@ -53,66 +87,149 @@ elif test "x$with_debug_level" = "x3"; then
   DBG_LEVEL=3
 fi
 AC_MSG_RESULT($DBG_LEVEL)
-
-dnl
-dnl  check for libgtk
-dnl
-AM_PATH_GTK(1.2.0,,
-	AC_MSG_ERROR(Cannot include/link gtk/gdk/glib -- check CFLAGS/LDFLAGS))
-
-dnl
-dnl  check for libSDL if sound is enabled
-dnl
-if test x$enable_sound = xyes; then
-	AM_PATH_SDL(1.1.6, have_libsdl=yes, have_libsdl=no)
-	if test x$have_libsdl = xyes; then
-		AC_DEFINE(HAVE_LIBSDL)
-	else
-		AC_MSG_WARN([
-*** Unable to find SDL library (http://www.libsdl.org/)
-*** Sound is disabled!])
-	fi
-fi
-
-dnl
-dnl  check for cppunit, if not found unit test will be disabled
-dnl
-AM_PATH_CPPUNIT(1.6.2,have_cppunit=yes,AC_MSG_WARN([
-***
-*** Cppunit not found. Unit test disabled
-***]))
-
-AC_DEFINE_UNQUOTED(KCEMU_MAJOR_VERSION, $KCEMU_MAJOR_VERSION)
-AC_DEFINE_UNQUOTED(KCEMU_MINOR_VERSION, $KCEMU_MINOR_VERSION)
-AC_DEFINE_UNQUOTED(KCEMU_MICRO_VERSION, $KCEMU_MICRO_VERSION)
-AC_DEFINE_UNQUOTED(KCEMU_VERSION, "$KCEMU_VERSION")
 AC_DEFINE_UNQUOTED(DBG_LEVEL, $DBG_LEVEL)
 
-dnl Checks for libraries.
-AC_CHECK_LIB(z, crc32,,
-	AC_MSG_ERROR(Cannot link libz -- check CFLAGS/LDFLAGS))
+dnl -----------------------------------
+dnl  check on which system we will run
+dnl -----------------------------------
 
-dnl Checks for header files.
-AC_PATH_X
-AC_HEADER_STDC
-AC_CHECK_HEADERS(sys/time.h unistd.h mcheck.h)
+case "$host_os" in
+	beos)
+		HOST_OS="BeOS"
+		HOST_OS_BEOS=1
+		AM_CONDITIONAL(TARGET_BEOS, true)
+		AM_CONDITIONAL(TARGET_LINUX, false)
+		AC_DEFINE_UNQUOTED(HOST_OS_BEOS, $HOST_OS_BEOS)
+		;;
+		
+	*)
+		HOST_OS="Linux"
+		HOST_OS_LINUX=1
+		AM_CONDITIONAL(TARGET_BEOS, false)
+		AM_CONDITIONAL(TARGET_LINUX, true)
+		AC_DEFINE_UNQUOTED(HOST_OS_LINUX, $HOST_OS_LINUX)
+		;;
+esac
 
-dnl Checks for typedefs, structures, and compiler characteristics.
+AC_DEFINE_UNQUOTED(HOST_OS, "$HOST_OS")
+
+dnl ---------------------------------------------------------------
+dnl  checks for typedefs, structures, and compiler characteristics
+dnl ---------------------------------------------------------------
+
 AC_C_CONST
 AC_C_INLINE
 AC_HEADER_TIME
 
-dnl Checks for library functions.
+dnl -------------------------------
+dnl  check for common header files
+dnl -------------------------------
+
+AC_PATH_X
+AC_HEADER_STDC
+AC_CHECK_HEADERS(sys/time.h unistd.h mcheck.h)
+
+dnl --------------------------------------
+dnl  checks for various library functions
+dnl --------------------------------------
 AC_TYPE_SIGNAL
 AC_CHECK_FUNCS(gettimeofday strstr strtol mtrace)
+AC_CHECK_FUNC(getopt, AC_DEFINE(HAVE_GETOPT))
+AC_CHECK_FUNC(getopt_long, AC_DEFINE(HAVE_GETOPT_LONG))
+
+dnl -----------------------------
+dnl  check for common libraries
+dnl -----------------------------
+AC_CHECK_LIB(z, crc32,,
+	AC_MSG_ERROR(Cannot link libz -- check CFLAGS/LDFLAGS))
+
+dnl -------------------------------------
+dnl  check for system specific libraries
+dnl -------------------------------------
+
+if test x"$HOST_OS" = "xLinux"; then
+	dnl ------------------
+	dnl  check for libgtk
+	dnl ------------------
+
+	AM_PATH_GTK(1.2.0, have_libgtk=yes, have_libgtk=no)
+
+	if test x$have_libgtk = xyes; then
+		AC_DEFINE(HAVE_LIBGTK)
+	fi
+
+	dnl --------------------------------------
+	dnl  check for libSDL if sound is enabled
+	dnl --------------------------------------
+
+	AM_PATH_SDL(1.2.0, have_libsdl=yes, have_libsdl=no)
+
+	if test x$have_libsdl = xyes; then
+		AC_DEFINE(HAVE_LIBSDL)
+	else
+		if test x$enable_sound = xyes; then
+			AC_MSG_WARN([
+***
+*** Unable to find SDL library (see http://www.libsdl.org/)
+*** Sound is disabled!
+***])
+			enable_sound=no
+		fi
+	fi
+
+	if test x$enable_sound = xyes; then
+		AC_DEFINE(ENABLE_SOUND)
+	fi
+
+	dnl -----------------------------------
+	dnl  check which user interface to use
+	dnl -----------------------------------
+
+	AC_MSG_CHECKING(which user interface to use)
+	if test x$have_libgtk = xyes -a \( "x$with_ui" = "xgtk" -o "x$with_ui" = "xauto" \); then
+		use_ui="GTK - The GIMP Toolkit"
+		AC_DEFINE(USE_UI_GTK)
+	elif test x$have_libsdl = xyes -a \( "x$with_ui" = "xsdl" -o "x$with_ui" = "xauto" \); then
+		use_ui="SDL - Simple DirectMedia Layer"
+		AC_DEFINE(USE_UI_SDL)
+	else
+		if test "x$with_ui" = "xauto"; then
+			AC_MSG_ERROR([
+***
+*** Couldn't find any user interface library
+***])
+		else
+			AC_MSG_ERROR([
+***
+*** Specified user interface library is not valid: '$with_ui'.
+*** Please use gtk or sdl.
+***])
+		fi
+	fi
+	AC_DEFINE_UNQUOTED(USE_UI, "$use_ui")
+	AC_MSG_RESULT($use_ui)
+
+	dnl ------------------------------------------------------------
+	dnl  check for cppunit, if not found unit test will be disabled
+	dnl ------------------------------------------------------------
+
+	AM_PATH_CPPUNIT(1.6.2,have_cppunit=yes,AC_MSG_WARN([
+***
+*** Cppunit not found. Unit test disabled
+***]))
+fi
 
 AC_OUTPUT([
 	Makefile
 	include/Makefile
 	include/kc/Makefile
+	include/sys/Makefile
 	include/cmd/Makefile
 	include/ui/Makefile
 	include/ui/gtk/Makefile
+	include/ui/sdl/Makefile
+	include/ui/beos/Makefile
+	include/ui/generic/Makefile
 	include/fileio/Makefile
 	include/libdbg/Makefile
 	include/libtape/Makefile
@@ -121,9 +238,15 @@ AC_OUTPUT([
 	include/z80core2/Makefile
 	src/Makefile
 	src/kc/Makefile
+	src/sys/Makefile
+	src/sys/beos/Makefile
+	src/sys/linux/Makefile
 	src/cmd/Makefile
 	src/ui/Makefile
 	src/ui/gtk/Makefile
+	src/ui/sdl/Makefile
+	src/ui/beos/Makefile
+	src/ui/generic/Makefile
 	src/fileio/Makefile
 	src/libdbg/Makefile
 	src/libtape/Makefile
@@ -152,12 +275,19 @@ echo "--------------"
 echo ""
 echo "- version:         KCemu $KCEMU_VERSION"
 echo "- host system:     $host"
+echo "- architecture:    $HOST_OS"
 echo "- debug level:     $DBG_LEVEL"
 echo "- install prefix:  $prefix"
-echo "- user interface:  Gtk+ ($gtk_config_major_version.$gtk_config_minor_version.$gtk_config_micro_version)"
-if test x$enable_sound = xyes; then
-echo "- SDL library:     SDL ($sdl_major_version.$sdl_minor_version.$sdl_micro_version)"
+echo "- user interface:  $use_ui"
+echo ""
+echo -n "- libs:"
+if test x$have_libgtk = xyes; then
+echo -n " Gtk+ ($gtk_config_major_version.$gtk_config_minor_version.$gtk_config_micro_version)"
 fi
+if test x$have_libsdl = xyes; then
+echo -n " libSDL ($sdl_major_version.$sdl_minor_version.$sdl_micro_version)"
+fi
+echo ""
 echo ""
 echo "- optional components:"
 echo -n "  * unit tests:      "

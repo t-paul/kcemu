@@ -1,6 +1,6 @@
 ## Process this file with automake to produce Makefile.in
 
-SUBDIRS = gtk
+SUBDIRS = generic gtk beos sdl
 
 EXTRA_DIST = \
 	ui.h		\
@@ -15,4 +15,5 @@ EXTRA_DIST = \
 	commands.h	\
 	copying.h	\
 	window.h	\
-	hsv2rgb.h
+	hsv2rgb.h	\
+	font1.h

@@ -2,7 +2,9 @@
 
 bin_PROGRAMS = kcemu
 
+if TARGET_LINUX
 noinst_PROGRAMS = kcemu-send
+endif
 
 INCLUDES = \
 	-I../../include
@@ -18,6 +20,10 @@ CPPFLAGS = \
 	$(GTK_CFLAGS) \
 	$(SDL_CFLAGS)
 
+if TARGET_LINUX
+EXTRA_kcemu_SOURCES = mod_v24.cc wav.cc
+endif
+
 kcemu_SOURCES = \
 	debug.cc	\
 	kc.cc		\
@@ -26,16 +32,19 @@ kcemu_SOURCES = \
 	ctc.cc		\
 	ctc1.cc		\
 	ctc3.cc		\
+	ctc8.cc		\
 	ctc_fdc.cc	\
 	ctc_base.cc	\
 	cb_list.cc	\
 	keyb1.cc	\
 	keyb3.cc	\
+	keyb8.cc	\
 	memory.cc	\
 	memory1.cc	\
 	memory2.cc	\
 	memory3.cc	\
 	memory4.cc	\
+	memory8.cc	\
 	sh_mem.cc	\
 	disk_io.cc	\
 	fdc.cc		\
@@ -46,6 +55,7 @@ kcemu_SOURCES = \
 	pio2.cc		\
 	pio3.cc		\
 	pio4.cc		\
+	pio8.cc		\
 	ports.cc	\
 	ports1.cc	\
 	ports3.cc	\
@@ -53,33 +63,48 @@ kcemu_SOURCES = \
 	module.cc	\
 	mod_ram.cc	\
 	mod_ram1.cc	\
+	mod_ram8.cc	\
 	mod_64k.cc	\
 	mod_rom.cc	\
 	mod_disk.cc	\
-	mod_v24.cc	\
 	mod_list.cc	\
 	tape.cc		\
 	disk.cc		\
-	wav.cc		\
 	timer.cc	\
 	z80.cc		\
 	z80_fdc.cc	\
 	sound.cc	\
+	sound3.cc	\
+	sound8.cc	\
 	disass.cc
 
+if TARGET_LINUX
+UILIBS_LINUX = ../ui/gtk/libui_gtk.a ../ui/sdl/libui_sdl.a
+SYSLIBS_LINUX = ../sys/linux/libsys_linux.a
+endif
+
+if TARGET_BEOS
+UILIBS_BEOS = ../ui/beos/libui_beos.a
+SYSLIBS_BEOS = ../sys/beos/libsys_beos.a -lbe
+endif
+
 kcemu_LDADD = \
-	../z80core/libz80.a	\
-	../z80core2/libz80.a	\
-	../fileio/libfileio.a	\
-	../libtape/libtape.a	\
-	../libdisk/libdisk.a	\
-	../ui/gtk/libui_gtk.a	\
-	../ui/libui.a		\
-	../libdbg/libdbg.a	\
-	../cmd/*.o		\
-	@INTLLIBS@		\
-	$(GTK_LIBS)		\
-	$(SDL_LIBS)
+	../z80core/libz80.a		\
+	../z80core2/libz80.a		\
+	../fileio/libfileio.a		\
+	../libtape/libtape.a		\
+	../libdisk/libdisk.a		\
+	$(UILIBS_LINUX)			\
+	$(UILIBS_BEOS)			\
+	../ui/generic/libui_generic.a	\
+	../ui/libui.a			\
+	../libdbg/libdbg.a		\
+	../cmd/*.o			\
+	@INTLLIBS@			\
+	$(GTK_LIBS)			\
+	$(SDL_LIBS)			\
+	$(SYSLIBS_LINUX)		\
+	$(SYSLIBS_BEOS)
 
 kcemu_send_SOURCES = \
 	kcemu-send.c

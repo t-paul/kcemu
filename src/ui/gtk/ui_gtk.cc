@@ -2,7 +2,7 @@
  *  KCemu -- the KC 85/3 and KC 85/4 Emulator
  *  Copyright (C) 1997-2001 Torsten Paul
  *
- *  $Id: ui_gtk.cc,v 1.22 2002/02/12 17:24:14 torsten_paul Exp $
+ *  $Id: ui_gtk.cc,v 1.24 2002/06/09 14:24:34 torsten_paul Exp $
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -33,11 +33,11 @@
 #include <gdk/gdkx.h>
 #include <gdk/gdkkeysyms.h>
 
-#include "kc/config.h"
 #include "kc/system.h"
 
 #include "kc/z80.h"
 #include "kc/keys.h"
+#include "kc/memory.h" // text_update()
 #include "kc/keyboard.h"
 
 #include "cmd/cmd.h"
@@ -375,7 +375,6 @@ UI_Gtk::sf_focus_out(GtkWidget *widget, GdkEventFocus *event)
 void
 UI_Gtk::sf_leave_notify(GtkWidget *widget, GdkEventCrossing *event)
 {
-  // cerr.form("UI_Gtk::sf_leave_notify()\n");
   keyboard->keyReleased(-1, -1);
 }
 
@@ -397,8 +396,110 @@ UI_Gtk::menu_bar_toggle(void)
     gtk_widget_show(_main.menubar);
 }
 
+void
+UI_Gtk::text_update(void)
+{
+#if 0
+  static GdkFont *font = 0;
+  unsigned long val = 0;
+
+  if (font == 0)
+    font = gdk_font_load("fixed");
+
+  byte_t *irm = memory->getIRM();
+  for (int a = 0;a < 8;a++)
+    {
+      val |= (irm[40 * a + 320] & 0xf);
+      val <<= 4;
+    }
+
+  char buf[100];
+  snprintf(buf, 100, "%08x", val);
+  gdk_draw_string(_text.canvas->window, font, _gc, 10, 10, buf);
+#endif
+}
+
+void
+UI_Gtk::ui_callback(void)
+{
+  static int count = 0;
+  static bool first = true;
+  static struct timeval tv;
+  static struct timeval tv1 = { 0, 0 };
+  static struct timeval tv2;
+  static unsigned long frame = 25;
+  static unsigned long long base, d2;
+  static struct timeval basetime = { 0, 0 };
+
+  char buf[10];
+  unsigned long timeframe, diff, fps;
+
+  z80->addCallback(get_callback_offset(), this, 0);
+
+  if (++count >= 60)
+    {
+      count = 0;
+      gettimeofday(&tv2, NULL);
+      diff = ((1000000 * (tv2.tv_sec - tv1.tv_sec)) +
+	      (tv2.tv_usec - tv1.tv_usec));
+      fps = 60500000 / diff;
+      sprintf(buf, " %ld fps ", fps);
+      gtk_label_set(GTK_LABEL(_main.st_fps), buf);
+      tv1 = tv2;
+    }
+
+  if (first)
+    {
+      first = false;
+      gettimeofday(&tv1, NULL);
+      gettimeofday(&basetime, NULL);
+      base = (basetime.tv_sec * 50) + basetime.tv_usec / 20000;
+      base -= 26; // see comment below
+    }
+
+  gettimeofday(&tv, NULL);
+  d2 = (tv.tv_sec * 50) + tv.tv_usec / 20000;
+  timeframe = (unsigned long)(d2 - base);
+  frame++;
+  
+  /*
+   *  because of this test we start with frame = 25 otherwise it
+   *  would fail due to the fact that timeframe is unsigned!
+   */
+  if (frame < (timeframe - 20))
+    {
+      DBG(1, form("KCemu/UI/update",
+                  "counter = %lu, frame = %lu, timeframe = %lu\n",
+                  (unsigned long)z80->getCounter() / get_callback_offset(), frame, timeframe));
+      frame = timeframe;
+    }
+
+  if (frame > (timeframe + 1)) {
+    usleep(20000 * (frame - timeframe - 1));
+  }
+
+  if (!_auto_skip)
+    {
+      processEvents();
+      update();
+    }
+
+  gettimeofday(&tv, NULL);
+  d2 = (tv.tv_sec * 50) + tv.tv_usec / 20000;
+  timeframe = (unsigned long)(d2 - base);
+  _auto_skip = false;
+
+  if (frame < timeframe)
+    {
+      if (++_cur_auto_skip > _max_auto_skip)
+	_cur_auto_skip = 0;
+      else
+	_auto_skip = true;
+    }
+}
+
 /*
- *  define some ungly typecasts to suppress some
+ *  define some ugly typecasts to suppress some
  *  compiler warnings :-(
  */
 #define CF(func)   ((GtkItemFactoryCallback)(func))

@@ -1,6 +1,11 @@
 Changes:
 
-Wed Nov 19 00:28:16 GMT+0100 1997
+Wed Nov 19 00:28:16 CET 1997
 
 	added RetiZ80() function for signaling a reti instruction
 	to interface circuits
+
+Fri Mar 22 13:31:41 CET 2002
+
+	changed timing for DJNZ from 8 to 13 which is the case
+	if the jump is done

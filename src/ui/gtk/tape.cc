@@ -2,7 +2,7 @@
  *  KCemu -- the KC 85/3 and KC 85/4 Emulator
  *  Copyright (C) 1997-2001 Torsten Paul
  *
- *  $Id: tape.cc,v 1.20 2002/01/06 12:53:41 torsten_paul Exp $
+ *  $Id: tape.cc,v 1.21 2002/06/09 14:24:34 torsten_paul Exp $
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -21,7 +21,6 @@
 
 #include <ctype.h>
 
-#include "kc/config.h"
 #include "kc/system.h"
 
 #include "kc/rc.h"
@@ -51,6 +50,48 @@ public:
     }
 };
 
+class CMD_ui_tape_rename_selected : public CMD
+{
+private:
+  TapeWindow *_w;
+public:
+  CMD_ui_tape_rename_selected(TapeWindow *w) : CMD("ui-tape-rename-selected")
+    {
+      _w = w;
+      register_cmd("ui-tape-rename-selected");
+    }
+
+  void execute(CMD_Args *args, CMD_Context context)
+    {
+      const char *name;
+
+      switch (context)
+        {
+	case 0:
+	  if (args == NULL)
+	    args = new CMD_Args();
+
+	  name = _w->tapeGetName(_w->tapeGetSelected());
+	  args->set_string_arg("filename", name);
+	  args->set_string_arg("tape-filename", name);
+	  args->set_string_arg("tape-rename-title",
+			       _("Please enter the new name for the file."));
+	  args->add_callback("ui-tape-name-edit-CB-ok", this, 1);
+	  CMD_EXEC_ARGS("ui-tape-name-edit", args);
+	  break;
+	case 1:
+	  if (args == NULL)
+	    return;
+
+	  /*
+	   *  rename callback
+	   */
+	  CMD_EXEC_ARGS("tape-rename-file", args);
+	  break;
+	}
+    }
+};
+
 class CMD_ui_tape_load_selected : public CMD
 {
 private:
@@ -71,7 +112,7 @@ public:
     {
       if (args == NULL)
 	args = new CMD_Args();
-      
+
       args->set_string_arg("tape-filename",
 			   _w->tapeGetName(_w->tapeGetSelected()));
 
@@ -225,6 +266,7 @@ TapeWindow::init(void)
     { _("/_Export File"),   "E",  CF(cmd_exec_mc), CD("ui-tape-export-selected"), NULL },
     { _("/sep1"),           NULL, NULL,         0,                                "<Separator>" },
     { _("/Edit _Header"),   "H",  CF(cmd_exec_mc), CD("ui-edit-header-selected"), NULL },
+    { _("/Re_name File"),   "N",  CF(cmd_exec_mc), CD("ui-tape-rename-selected"), NULL },
     { _("/_Delete File"),   "D",  CF(cmd_exec_mc), CD("ui-tape-delete-selected"), NULL },
     { _("/sep2"),           NULL, NULL,         0,                                "<Separator>" },
     { _("/_Add File"),      "A",  CF(cmd_exec_mc), CD("tape-add-file"),           NULL },
@@ -259,6 +301,7 @@ TapeWindow::init(void)
   _w.m_load   = gtk_item_factory_get_widget(ifactP, _("/Load File"));
   _w.m_edit   = gtk_item_factory_get_widget(ifactP, _("/Edit Header"));
   _w.m_delete = gtk_item_factory_get_widget(ifactP, _("/Delete File"));
+  _w.m_rename = gtk_item_factory_get_widget(ifactP, _("/Rename File"));
   _w.m_export = gtk_item_factory_get_widget(ifactP, _("/Export File"));
   
   /*
@@ -429,6 +472,7 @@ TapeWindow::init(void)
   CMD *cmd;
   cmd = new CMD_ui_tape_window_toggle(this);
   cmd = new CMD_ui_tape_load_selected(this);
+  cmd = new CMD_ui_tape_rename_selected(this);
   cmd = new CMD_ui_tape_attach(this);
 }
 
@@ -475,6 +519,7 @@ TapeWindow::sf_tape_button_press(GtkWidget */*widget*/, GdkEventButton *event,
       gtk_widget_set_sensitive(self->_w.m_load, ret);
       gtk_widget_set_sensitive(self->_w.m_edit, ret);
       gtk_widget_set_sensitive(self->_w.m_delete, ret);
+      gtk_widget_set_sensitive(self->_w.m_rename, ret);
       gtk_widget_set_sensitive(self->_w.m_export, ret);
       if (ret)
         gtk_clist_select_row(GTK_CLIST(self->_w.clist), row, 0);
@@ -595,7 +640,7 @@ TapeWindow::tapeNext(void)
   if (old != i)
     {
       CMD_Args *a = new CMD_Args();
-      a->set_int_arg("tape-play-delay", 5);
+      a->set_int_arg("tape-play-delay", 10);
       CMD_EXEC_ARGS("ui-tape-play-selected", a);
     }
 }

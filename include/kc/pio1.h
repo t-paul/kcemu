@@ -2,7 +2,7 @@
  *  KCemu -- the KC 85/3 and KC 85/4 Emulator
  *  Copyright (C) 1997-2001 Torsten Paul
  *
- *  $Id: pio1.h,v 1.2 2001/04/14 15:14:41 tp Exp $
+ *  $Id: pio1.h,v 1.3 2002/03/23 20:04:39 torsten_paul Exp $
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -23,9 +23,10 @@
 #define __kc_pio1_h
 
 #include "kc/pio.h"
+#include "kc/tape.h"
 #include "kc/ports.h"
 
-class PIO1_1 : public PIO
+class PIO1_1 : public PIO, public TapeCallback
 {
  public:
   PIO1_1(void);
@@ -34,6 +35,11 @@ class PIO1_1 : public PIO
   void out(word_t addr, byte_t val);
   void change_A(byte_t changed, byte_t val);
   void change_B(byte_t changed, byte_t val);
+
+  /*
+   *  TapeCallback
+   */
+  virtual void tape_callback(byte_t val);
 };
 
 class PIO1_2 : public PIO

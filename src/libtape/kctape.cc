@@ -2,7 +2,7 @@
  *  KCemu -- the KC 85/3 and KC 85/4 Emulator
  *  Copyright (C) 1997-2001 Torsten Paul
  *
- *  $Id: kctape.cc,v 1.12 2002/02/12 17:24:14 torsten_paul Exp $
+ *  $Id: kctape.cc,v 1.14 2002/06/09 14:24:34 torsten_paul Exp $
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -138,35 +138,7 @@ read_file(unsigned char *buf, FILE *f, int block, long *bytes)
 static kct_error_t
 add_file(KCTFile &kct_file, char *filename)
 {
-#if 0
-  FILE *f;
-  long len, bytes;
-  unsigned char buf[255 * 129 + 128], *ptr;
-
-  if (strlen(name) > KCT_NAME_LENGTH)
-    {
-      cerr << "ERROR: Filename too long" << endl;
-      return KCT_ERROR_INVAL;
-    }
-  if ((f = fopen(filename, "rb")) == NULL)
-    {
-      cerr << "ERROR: Can't open `" << filename << "'" << endl;
-      perror("ERROR");
-      return KCT_ERROR_NOENT;
-    }
-
-  len = read_file(&buf[0], f, 1, &bytes);
-  fclose(f);
-
-  if (len > 255 * 129 + 128)
-    {
-      cerr << "ERROR: Invalid file `" << filename << "'" << endl;
-      return KCT_ERROR_IO;
-    }
-
-  return kct_file.write(name, buf, len);
-#endif
-
+  kct_error_t err;
   kct_file_type_t type;
   fileio_prop_t *ptr, *prop;
 
@@ -176,7 +148,7 @@ add_file(KCTFile &kct_file, char *filename)
   fileio_debug_dump(prop, 0);
   for (ptr = prop;ptr != NULL;ptr = ptr->next)
     {
-      switch (prop->type)
+      switch (ptr->type)
 	{
 	case FILEIO_TYPE_COM:
 	  type = KCT_TYPE_COM;
@@ -191,10 +163,13 @@ add_file(KCTFile &kct_file, char *filename)
 	  cerr << "ERROR: file with unknown type ignored!" << endl;
 	  continue;
 	}
-      kct_file.write((const char *)&ptr->name[0],
-		     ptr->data, ptr->size,
-		     ptr->load_addr, ptr->start_addr,
-		     type, KCT_MACHINE_ALL);
+      err = kct_file.write((const char *)&ptr->name[0],
+			   ptr->data, ptr->size,
+			   ptr->load_addr, ptr->start_addr,
+			   type, KCT_MACHINE_ALL);
+
+      if (err != KCT_OK)
+	cout << "ERROR: can't add file: " << kct_file.get_error_string(err) << "." << endl;
     }
 
   return KCT_OK;
@@ -212,7 +187,7 @@ add_raw_file(KCTFile &kct_file, char *filename, char *tapename,
   if (strlen(name) > KCT_NAME_LENGTH)
     {
       cerr << "ERROR: Filename too long" << endl;
-      return KCT_ERROR_INVAL;
+      return KCT_ERROR_NAMETOOLONG;
     }
   if ((f = fopen(filename, "rb")) == NULL)
     {
@@ -287,6 +262,8 @@ int main(int argc, char **argv)
 	   << "usage: kctape tapefile [command [command_args]]\n"
 	   << "\n"
            << " commands:\t\targuments:\n"
+	   << " ---------\t\t----------\n"
+	   << "\n"
            << "  -l|--list\n"
            << "  -c|--create\n"
            << "  -a|--add\t\tfilename [filename] ...\n"
@@ -294,10 +271,10 @@ int main(int argc, char **argv)
 	   << "  -A|--add-raw\t\tfilename tapename kcname loadaddr [startaddr]\n"
 	   << "  -x|--extract\t\ttapename\n"
            << "  -r|--remove\t\tname\n"
-           << "  -d|--dump\n";
-
-      //<< "  -b|--print-bam" << endl
-      //<< "  -B|--print-block-list" << endl;
+           << "  -d|--dump\n"
+	   << "  -b|--print-bam\n"
+	   << "  -B|--print-block-list\n"
+	   << endl;
 
       return 0;
     }

@@ -2,7 +2,7 @@
  *  KCemu -- the KC 85/3 and KC 85/4 Emulator
  *  Copyright (C) 1997-2001 Torsten Paul
  *
- *  $Id: cmdargs.h,v 1.3 2001/04/14 15:13:59 tp Exp $
+ *  $Id: cmdargs.h,v 1.4 2002/06/09 14:24:32 torsten_paul Exp $
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -98,8 +98,10 @@ class CMD_Arg
   const char * get_name(void);
   virtual void set_int_arg(int value);
   virtual void set_string_arg(const char *value);
+  virtual void set_pointer_arg(void *ptr);
   virtual int get_int_arg(void);
   virtual const char * get_string_arg(void);
+  virtual void * get_pointer_arg(void);
 };
 
 class CMD_Args {
@@ -130,9 +132,11 @@ class CMD_Args {
   CMD_Arg * lookup(const char *name);
   virtual CMD_Args * set_int_arg(const char *name, int value);
   virtual CMD_Args * set_string_arg(const char *name, const char *value);
+  virtual CMD_Args * set_pointer_arg(const char *name, void *value);
   virtual CMD_Args * add_change_listener(CMD_Change_Listener *listener);
   virtual int get_int_arg(const char *name);
   virtual const char * get_string_arg(const char *name);
+  virtual void * get_pointer_arg(const char *name);
   virtual bool has_arg(const char *name);
   virtual void add_callback(const char *name,
                             CMD *cmd,

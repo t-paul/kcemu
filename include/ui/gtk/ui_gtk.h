@@ -2,7 +2,7 @@
  *  KCemu -- the KC 85/3 and KC 85/4 Emulator
  *  Copyright (C) 1997-2001 Torsten Paul
  *
- *  $Id: ui_gtk.h,v 1.17 2002/02/12 17:24:14 torsten_paul Exp $
+ *  $Id: ui_gtk.h,v 1.19 2002/06/09 14:24:32 torsten_paul Exp $
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -64,6 +64,10 @@ class UI_Gtk : public UI, public StatusListener, public ErrorListener
     
     PROFILE_HIST_LEN = 256,
   };
+  
+  bool       _auto_skip;
+  int        _cur_auto_skip;
+  int        _max_auto_skip;
     
     DebugWindow      *_debug_window;
     AboutWindow      *_about_window;
@@ -102,6 +106,11 @@ class UI_Gtk : public UI, public StatusListener, public ErrorListener
       long       statusbar_sec;
     } _main;
 
+    struct {
+      GtkWidget *window;
+      GtkWidget *canvas;
+    } _text;
+
     GdkGC         *_gc;
     GdkVisual     *_visual;
     GdkImage      *_image;
@@ -121,8 +130,11 @@ class UI_Gtk : public UI, public StatusListener, public ErrorListener
     void create_header_window(void);
     void create_profile_window(void);
     void tapeSelect(void);
-    
+
+    void text_update(void);
+    void ui_callback(void);
     void attach_remote_listener(void);
+
     static void sf_selection_received(GtkWidget *widget,
                                       GtkSelectionData *sel_data,
                                       gpointer *data);
@@ -178,6 +190,7 @@ class UI_Gtk : public UI, public StatusListener, public ErrorListener
     virtual const char * get_title(void) = 0;
     virtual int get_width(void) = 0;
     virtual int get_height(void) = 0;
+    virtual int get_callback_offset(void) = 0;
 
     virtual void status_bar_toggle(void);
     virtual void menu_bar_toggle(void);

@@ -2,7 +2,7 @@
  *  KCemu -- the KC 85/3 and KC 85/4 Emulator
  *  Copyright (C) 1997-2001 Torsten Paul
  *
- *  $Id: module.h,v 1.8 2001/04/14 15:14:35 tp Exp $
+ *  $Id: module.h,v 1.10 2002/06/09 14:24:32 torsten_paul Exp $
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -22,14 +22,13 @@
 #ifndef __kc_module_h
 #define __kc_module_h
 
-#include "kc/config.h"
 #include "kc/system.h"
 
 #include "kc/ports.h"
 
 typedef enum
 {
-  KC_MODULE_ALL, KC_MODULE_KC_85_1, KC_MODULE_KC_85_3,
+  KC_MODULE_ALL, KC_MODULE_KC_85_1, KC_MODULE_KC_85_3, KC_MODULE_LC_80,
 } mod_type_t;
 
 class ModuleInterface

@@ -2,7 +2,7 @@
  *  KCemu -- the KC 85/3 and KC 85/4 Emulator
  *  Copyright (C) 1997-2001 Torsten Paul
  *
- *  $Id: ui_gtk4.cc,v 1.13 2002/02/12 17:24:14 torsten_paul Exp $
+ *  $Id: ui_gtk4.cc,v 1.15 2002/06/09 14:24:34 torsten_paul Exp $
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -33,12 +33,12 @@
 #include <sys/stat.h>
 #include <fcntl.h>
 
-#include "kc/config.h"
 #include "kc/system.h"
 
 #include "kc/kc.h"
 #include "kc/rc.h"
 #include "kc/z80.h"
+#include "kc/ports.h"
 #include "kc/memory.h"
 
 #include "ui/hsv2rgb.h"
@@ -54,6 +54,7 @@ static word_t __pdirty[0x200];
 static word_t __bdirty[0x200];
 static GdkImage *__image;
 static gulong __fg, __bg;
+static gulong __pixel[4];
 
 static inline void set_bit(int nr, void *addr)
 {
@@ -88,91 +89,23 @@ UI_Gtk4::get_width(void)
 }
 
 int
-UI_Gtk4::get_height(void) {
+UI_Gtk4::get_height(void)
+{
   return kcemu_ui_scale * 256;
+}
+
+int
+UI_Gtk4::get_callback_offset(void)
+{
+  return CB_OFFSET;
 }
 
 void
 UI_Gtk4::callback(void * /* data */)
 {
-  long long ldiff;
-  static long long last = 0;
-
-  static int count = -300;
-  static bool first = true;
-  static struct timeval tv;
-  static struct timeval tv1 = { 0, 0};
-  static struct timeval tv2;
-  static unsigned long frame = 0;
-  static unsigned long long base, d2;
-  static struct timeval basetime = { 0, 0 };
-
-  char buf[10];
-  unsigned long timeframe, diff, fps;
-
-  z80->addCallback(CB_OFFSET, this, 0);
-
-  if (++count >= 60)
-    {
-      count = 0;
-      gettimeofday(&tv2, NULL);
-      diff = ((1000000 * (tv2.tv_sec - tv1.tv_sec)) +
-	      (tv2.tv_usec - tv1.tv_usec));
-      fps = 60500000 / diff;
-      sprintf(buf, " %ld fps ", fps);
-      if (tv1.tv_sec != 0)
-	gtk_label_set(GTK_LABEL(_main.st_fps), buf);
-      tv1 = tv2;
-    }
-
-  if (first)
-    {
-      first = false;
-      gettimeofday(&basetime, NULL);
-      base = (basetime.tv_sec * 50) + basetime.tv_usec / 20000;
-    }
-
-  gettimeofday(&tv, NULL);
-  d2 = (tv.tv_sec * 50) + tv.tv_usec / 20000;
-  timeframe = (unsigned long)(d2 - base);
-  frame++;
-
-  if (frame < (timeframe - 20))
-    {
-      DBG(1, form("KCemu/UI/4/update",
-                  "counter = %lu, frame = %lu, timeframe = %lu\n",
-                  (unsigned long)z80->getCounter() / 35000, frame, timeframe));
-      frame = timeframe;
-    }
-
-  if (frame > (timeframe + 1))
-    usleep(20000 * (frame - timeframe - 1));
-
+  ui_callback();
   if (!_auto_skip)
-    {
-#ifdef DISPLAY_DIRTY
-      cout << "\x1b[H\x1b[2J" << flush;
-#endif
-      processEvents();
-      handle_flash();
-      update();
-    }
-
-  ldiff = z80->getCounter() - last;
-  last = z80->getCounter();
-
-  gettimeofday(&tv, NULL);
-  d2 = (tv.tv_sec * 50) + tv.tv_usec / 20000;
-  timeframe = (unsigned long)(d2 - base);
-  _auto_skip = false;
-
-  if (frame < timeframe)
-    {
-      if (++_cur_auto_skip > _max_auto_skip)
-	_cur_auto_skip = 0;
-      else
-	_auto_skip = true;
-    }
+    handle_flash();
 }
 
 const char *
@@ -220,6 +153,49 @@ pix_loop(register int x2, register int y2, byte_t val)
 	    }
 	  x2 += 2;
 	  val <<= 1;
+	}
+      break;
+    }
+}
+
+/*
+ *  some optimizations to get better inner loop for the pixel
+ *  drawing; using dword_t for val and col will let the compiler
+ *  happily use 32 bit registers
+ *  (of cause this only applies to 32 bit intel)
+ */
+static inline void
+pix_loop_hires(register int x2, register int y2, dword_t val, dword_t col)
+{
+  int a, b;
+
+  val *= 2;
+
+  switch (kcemu_ui_scale)
+    {
+    case 1:
+      for (a = 0;a < 8;a++)
+	{
+	  b  = ((val & 256) | (col & 128)) >> 7;
+	  gdk_image_put_pixel(__image, x2, y2, __pixel[b]);
+	  x2++;
+	  val <<= 1;
+	  col <<= 1;
+	}
+      break;
+    case 2:
+      x2 *= 2;
+      y2 *= 2;
+      for (a = 0;a < 8;a++)
+	{
+	  b  = ((val & 256) | (col & 128)) >> 7;
+	  gdk_image_put_pixel(__image, x2    , y2 + 1, __pixel[b]);
+	  gdk_image_put_pixel(__image, x2    , y2    , __pixel[b]);
+	  gdk_image_put_pixel(__image, x2 + 1, y2 + 1, __pixel[b]);
+	  gdk_image_put_pixel(__image, x2 + 1, y2    , __pixel[b]);
+	  x2 += 2;
+	  val <<= 1;
+	  col <<= 1;
 	}
       break;
     }
@@ -276,6 +252,41 @@ UI_Gtk4::allocate_colors(double saturation_fg,
   _colormap = gdk_colormap_get_system();
   for (a = 0;a < 24;a++)
     gdk_color_alloc(_colormap, &_col[a]);
+
+  __pixel[0] = _col[0].pixel; /* hires color 0 -> black */
+  __pixel[1] = _col[2].pixel; /* hires color 1 -> red */
+  __pixel[2] = _col[5].pixel; /* hires color 2 -> cyan */
+  __pixel[3] = _col[7].pixel; /* hires color 3 -> white */
+}
+
+void
+UI_Gtk4::render_tile_hires(byte_t *irm, int x, int y, bool no_cache)
+{
+  int has_flash;
+  int a, b, xx, yy, x1, y1;
+
+  __image = _image;
+  
+  xx = x * 2;
+  yy = y * 16;
+  has_flash = 0;
+
+  __pdirty[(x << 4) | y] = 0;
+  __bdirty[(x << 4) | y] = has_flash;
+
+  for (y1 = 0;y1 < 16;y1++)
+    {
+      for (x1 = 0;x1 < 2;x1++)
+	{
+	  int changed = 0;
+	  int idx = ((xx + x1) << 8) | (yy + y1);
+
+	  byte_t val = irm[idx];
+	  byte_t col = irm[idx + 0x4000];
+	  
+	  pix_loop_hires(8 * (xx + x1), yy + y1, val, col);
+	}
+    }
 }
 
 void
@@ -312,20 +323,20 @@ UI_Gtk4::render_tile(byte_t *irm, int x, int y, bool no_cache)
         {
           int changed = 0;
           int idx = ((xx + x1) << 8) | (yy + y1);
-
-          val = irm[idx];
-          if (val != _pix_mem[idx])
-            {
-              changed++;
-              _pix_mem[idx] = val;
-            }
           
-          col = irm[idx + 0x4000];
-          if (col != _col_mem[idx])
-            {
-              changed++;
-              _col_mem[idx] = col;
-            }
+	  val = irm[idx];
+	  if (val != _pix_mem[idx])
+	    {
+	      changed++;
+	      _pix_mem[idx] = val;
+	    }
+	  col = irm[idx + 0x4000];
+	  if (col != _col_mem[idx])
+	    {
+	      changed++;
+	      _col_mem[idx] = col;
+	    }
+
 	  changed += no_cache;
           
           /*
@@ -376,9 +387,11 @@ UI_Gtk4::render_tile(byte_t *irm, int x, int y, bool no_cache)
 void
 UI_Gtk4::update(bool full_update, bool clear_cache)
 {
+  int hires;
   byte_t *irm;
   int a, b, c, x, y, z, scale;
   static byte_t *irm_old = NULL;
+  static int hires_old = -1;
   static int fs_val = RC::instance()->get_int("Frame Skip", 0);
 
   scale = kcemu_ui_scale * 16;
@@ -393,6 +406,17 @@ UI_Gtk4::update(bool full_update, bool clear_cache)
       irm_old = irm;
       clear_cache = true;
     }  
+
+  hires = ((ports->in(0x84) & 8) == 0);
+  if (hires != hires_old)
+    {
+      /*
+       *  when switching lores/hires mode ignore the
+       *  display cache too
+       */
+      hires_old = hires;
+      clear_cache = true;
+    }
 
   if (clear_cache)
     {
@@ -417,6 +441,7 @@ UI_Gtk4::update(bool full_update, bool clear_cache)
     }
   __frame_skip = fs_val;
 
+
   for (y = 0;y < 16;y++)
     {
 #ifdef DISPLAY_DIRTY
@@ -439,7 +464,10 @@ UI_Gtk4::update(bool full_update, bool clear_cache)
 #ifdef DISPLAY_DIRTY_RENDER
               cout << '#';
 #endif
-              render_tile(irm, x, y, clear_cache);
+	      if (hires)
+		render_tile_hires(irm, x, y, clear_cache);
+	      else
+		render_tile(irm, x, y, clear_cache);
               b += 16;
             }
           else
@@ -483,6 +511,8 @@ UI_Gtk4::update(bool full_update, bool clear_cache)
       cout << endl;
 #endif
     }
+  
+  text_update();
 }
 
 void

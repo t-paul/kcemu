@@ -2,7 +2,7 @@
  *  KCemu -- the KC 85/3 and KC 85/4 Emulator
  *  Copyright (C) 1997-2001 Torsten Paul
  *
- *  $Id: pio3.cc,v 1.10 2001/04/14 15:16:25 tp Exp $
+ *  $Id: pio3.cc,v 1.12 2002/06/09 14:24:33 torsten_paul Exp $
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -22,7 +22,6 @@
 #include <iostream.h>
 #include <iomanip.h>
 
-#include "kc/config.h"
 #include "kc/system.h"
 
 #include "kc/kc.h"
@@ -191,4 +190,10 @@ void PIO3::change_B(byte_t changed, byte_t val)
 		  "PIO B: foreground blink [%d]\n",
 		  ((val >> 6) & 1)));
     }
+}
+
+void
+PIO3::tape_callback(byte_t val)
+{
+  strobe_A();
 }

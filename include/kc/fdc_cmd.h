@@ -2,7 +2,7 @@
  *  KCemu -- the KC 85/3 and KC 85/4 Emulator
  *  Copyright (C) 1997-2001 Torsten Paul
  *
- *  $Id: fdc_cmd.h,v 1.4 2002/01/02 00:35:05 torsten_paul Exp $
+ *  $Id: fdc_cmd.h,v 1.5 2002/06/09 14:24:32 torsten_paul Exp $
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -22,7 +22,6 @@
 #ifndef __kc_fdc_cmd_h
 #define __kc_fdc_cmd_h
 
-#include "kc/config.h"
 #include "kc/system.h"
 
 class FDC;

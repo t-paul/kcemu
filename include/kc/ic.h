@@ -2,7 +2,7 @@
  *  KCemu -- the KC 85/3 and KC 85/4 Emulator
  *  Copyright (C) 1997-2001 Torsten Paul
  *
- *  $Id: ic.h,v 1.8 2002/01/20 13:39:29 torsten_paul Exp $
+ *  $Id: ic.h,v 1.9 2002/06/09 14:24:32 torsten_paul Exp $
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -26,7 +26,6 @@
 #include <string.h>
 #include <iostream.h>
 
-#include "kc/config.h"
 #include "kc/system.h"
 
 #define IRQ_NOT_ACK (0x100)

@@ -2,7 +2,7 @@
  *  KCemu -- the KC 85/3 and KC 85/4 Emulator
  *  Copyright (C) 1997-2001 Torsten Paul
  *
- *  $Id: tape.h,v 1.12 2001/04/14 15:14:56 tp Exp $
+ *  $Id: tape.h,v 1.14 2002/06/09 14:24:32 torsten_paul Exp $
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -25,11 +25,15 @@
 #include <fstream.h>
 #include <strstream.h>
 
-#include "kc/config.h"
 #include "kc/system.h"
 
 #include "kc/cb.h"
+
+#include "cmd/cmd.h"
+
 #include "libtape/kct.h"
+
+#include "fileio/load.h"
 
 typedef enum
 {
@@ -53,6 +57,11 @@ typedef enum
  *  const int BIT_1 = 1041;  - 1200 Hz
  *  const int BIT_S = 2083;  -  600 Hz
  */
+
+class TapeCallback {
+ public:
+  virtual void tape_callback(byte_t val) = 0;
+};
 
 class Tape : public Callback
 {
@@ -97,6 +106,14 @@ private:
 
     KCTFile _kct_file;
 
+    TapeCallback *_tape_cb;
+
+    CMD *_cmd_tape_load;
+    CMD *_cmd_tape_play;
+    CMD *_cmd_tape_attach;
+    CMD *_cmd_tape_export;
+    CMD *_cmd_tape_add_file;
+
  protected:
     void update_tape_list(void);
     
@@ -111,8 +128,10 @@ private:
     void seek(int percent);
     void do_play(int edge);
     void do_stop(void);
-    void ctcSignal(void);
-    long getDelay(int seconds);
+    void tape_signal(void);
+    long get_delay(int seconds);
+
+    virtual void set_tape_callback(TapeCallback *tape_cb);
 
     virtual void callback(void *data);
 
@@ -125,6 +144,11 @@ private:
                                  unsigned short load,
                                  unsigned short start,
                                  bool autostart);
+    virtual tape_error_t add_file(const char *name,
+				  fileio_prop_t *prop,
+				  kct_file_type_t type,
+				  kct_machine_type_t machine);
+    virtual tape_error_t rename(const char *from, const char *to);
     virtual tape_error_t remove(const char *name);
     virtual tape_error_t extract(const char *name,
                                 const char *filename);

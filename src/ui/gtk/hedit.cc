@@ -2,7 +2,7 @@
  *  KCemu -- the KC 85/3 and KC 85/4 Emulator
  *  Copyright (C) 1997-2001 Torsten Paul
  *
- *  $Id: hedit.cc,v 1.3 2001/04/14 15:16:56 tp Exp $
+ *  $Id: hedit.cc,v 1.4 2002/06/09 14:24:34 torsten_paul Exp $
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -21,15 +21,14 @@
 
 #include <ctype.h>
 
-#include "kc/config.h"
 #include "kc/system.h"
 
 #include "ui/error.h"
 #include "ui/gtk/hedit.h"
 
-EditHeaderWindow::EditHeaderWindow(void) : CMD("ui-edit-header")
+EditHeaderWindow::EditHeaderWindow(void) : CMD("ui-tape-header-edit")
 {
-  register_cmd("ui-edit-header");
+  register_cmd("ui-tape-header-edit");
 }
 
 EditHeaderWindow::~EditHeaderWindow(void)

@@ -96,7 +96,7 @@ USE_NLS = @USE_NLS@
 VERSION = @VERSION@
 l = @l@
 
-SUBDIRS = kc cmd fileio libdbg libtape libdisk ui z80core z80core2
+SUBDIRS = kc cmd fileio libdbg libtape libdisk ui sys z80core z80core2
 mkinstalldirs = $(SHELL) $(top_srcdir)/mkinstalldirs
 CONFIG_HEADER = ../include/kc/config.h
 CONFIG_CLEAN_FILES = 

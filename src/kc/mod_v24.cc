@@ -2,7 +2,7 @@
  *  KCemu -- the KC 85/3 and KC 85/4 Emulator
  *  Copyright (C) 1997-2001 Torsten Paul
  *
- *  $Id: mod_v24.cc,v 1.12 2002/01/20 13:39:30 torsten_paul Exp $
+ *  $Id: mod_v24.cc,v 1.13 2002/06/09 14:24:33 torsten_paul Exp $
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -28,13 +28,9 @@
 #include <sys/socket.h>
 #include <sys/poll.h>
 #include <sys/un.h>
-
-#include "kc/config.h"
-#include "kc/system.h"
-
-#ifdef LINUX
 #include <sys/signal.h>
-#endif /* LINUX */
+
+#include "kc/system.h"
 
 #include "kc/kc.h"
 #include "kc/rc.h"
@@ -444,7 +440,6 @@ ModuleV24::set_signal_handler(int fd, void (*sig_func)(int))
 bool
 ModuleV24::open_device_serial(int dev, const char *dev_name)
 {
-#ifdef LINUX
   int baudrate = RC::instance()->get_int("V24-Baudrate");
 
   _fd_in[dev] = open(dev_name, O_RDWR | O_NOCTTY | O_NONBLOCK);
@@ -522,9 +517,6 @@ ModuleV24::open_device_serial(int dev, const char *dev_name)
   tcsetattr(_fd_in[dev], TCSANOW, &_tio_new[dev]);
 
   return true;
-#else /* LINUX */
-  return false;
-#endif /* LINUX */
 }
 
 void
@@ -650,7 +642,6 @@ ModuleV24::socket_server(int fd)
 bool
 ModuleV24::open_device_socket_or_fifo(io_type_t io_type)
 {
-#ifdef LINUX
   int fd[2];
 
   /*
@@ -679,9 +670,6 @@ ModuleV24::open_device_socket_or_fifo(io_type_t io_type)
   else
     socket_server(fd[1]);
   return true;
-#else /* LINUX */
-  return false;
-#endif /* LINUX */
 }
 
 void
@@ -722,7 +710,6 @@ ModuleV24::open_device(void)
 void
 ModuleV24::close_device(void)
 {
-#ifdef LINUX
   if (_socket_name != 0)
     {
       unlink(_socket_name);
@@ -737,5 +724,4 @@ ModuleV24::close_device(void)
     }
 
   z80->unregister_ic(this);
-#endif /* LINUX */
 }

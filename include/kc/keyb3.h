@@ -2,7 +2,7 @@
  *  KCemu -- the KC 85/3 and KC 85/4 Emulator
  *  Copyright (C) 1997-2001 Torsten Paul
  *
- *  $Id: keyb3.h,v 1.7 2002/01/20 13:39:29 torsten_paul Exp $
+ *  $Id: keyb3.h,v 1.8 2002/06/09 14:24:32 torsten_paul Exp $
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -21,8 +21,6 @@
 
 #ifndef __kc_keyb3_h
 #define __kc_keyb3_h
-
-#include <glib.h>
 
 #include "kc/kc.h"
 #include "kc/cb.h"
@@ -71,7 +69,7 @@ class Keyboard3 : public Keyboard
   bool _control;
   int _replay_idx;
   int _replay_offset;
-  GString *_replay_text;
+  //GString *_replay_text;
 
   enum {
     KEY_CYCLES_BIT_0 =  8960,

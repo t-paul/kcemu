@@ -8,7 +8,7 @@
  *  For the original licence statement of the graphics.c file
  *  see below...
  *
- *  $Id: hsv2rgb.cc,v 1.2 2001/04/01 20:57:50 tp Exp $
+ *  $Id: hsv2rgb.cc,v 1.3 2002/06/09 14:24:34 torsten_paul Exp $
  *
  *  2001-03-28:
  *  - Code for colorspace conversion from HSV to RGB stolen from
@@ -47,7 +47,6 @@
 #include <math.h>
 #include <stdio.h>
 
-#include "kc/config.h"
 #include "kc/system.h"
 
 #include "ui/hsv2rgb.h"

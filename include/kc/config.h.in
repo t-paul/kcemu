@@ -50,6 +50,7 @@
 #undef HAVE_CATGETS
 #undef HAVE_GETTEXT
 #undef HAVE_LC_MESSAGES
+#undef USE_INCLUDED_LIBINTL
 #undef HAVE_STPCPY
 
 #undef KCEMU_MAJOR_VERSION
@@ -59,7 +60,20 @@
 
 #undef DBG_LEVEL
 
+#undef HOST_OS
+#undef HOST_OS_BEOS
+#undef HOST_OS_LINUX
+
+#undef HAVE_GETOPT
+#undef HAVE_GETOPT_LONG
+
 #undef HAVE_LIBSDL
+#undef HAVE_LIBGTK
+
+#undef USE_UI_GTK
+#undef USE_UI_SDL
+
+#undef ENABLE_SOUND
 
 /* #undef PACKAGE */
 /* #undef VERSION */

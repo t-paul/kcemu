@@ -1,5 +1,5 @@
 -------------------------------------------------------------------------------
-$Id: README.de,v 1.1 2001/04/01 22:15:13 tp Exp $
+$Id: README.de,v 1.2 2002/06/09 14:24:31 torsten_paul Exp $
 -------------------------------------------------------------------------------
 
 		       _  ______                     
@@ -9,7 +9,7 @@ $Id: README.de,v 1.1 2001/04/01 22:15:13 tp Exp $
 		      |_|\_\____\___|_| |_| |_|\__,_|
 		     =================================
 
-                      Copyright (c) 1997 Torsten Paul
+                    Copyright (c) 1997-2002 Torsten Paul
                            Lommatzscher Str. 26
                               01139 Dresden
 			   Torsten.Paul@gmx.de
@@ -52,8 +52,8 @@ $Id: README.de,v 1.1 2001/04/01 22:15:13 tp Exp $
    make
    make install
 
-   Eventuell ist es für den letzten Schritt sich vorher als 'root' anzumelden.
-
+   Eventuell ist es für den letzten Schritt notwendig, sich vorher als 'root'
+   anzumelden.
 
    Soll der Emulator nur für einen User und in dessen Verzeichnis installiert
    werden, kann auch der folgende Aufruf genutzt werden.

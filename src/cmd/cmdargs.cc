@@ -2,7 +2,7 @@
  *  KCemu -- the KC 85/3 and KC 85/4 Emulator
  *  Copyright (C) 1997-2001 Torsten Paul
  *
- *  $Id: cmdargs.cc,v 1.4 2001/12/29 03:50:20 torsten_paul Exp $
+ *  $Id: cmdargs.cc,v 1.5 2002/06/09 14:24:33 torsten_paul Exp $
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -21,7 +21,6 @@
 
 #include <stdio.h>
 
-#include "kc/config.h"
 #include "kc/system.h"
 
 #include "cmd/cmd.h"
@@ -189,6 +188,21 @@ CMD_Arg::set_string_arg(const char *value)
   _value_set = true;
 }
 
+void
+CMD_Arg::set_pointer_arg(void *value)
+{
+  switch (_type)
+    {
+    case CMD_ARG_INT:
+      _val.v_int = (int)value;
+      break;
+    case CMD_ARG_STRING:
+      _val.v_string = (char *)value;
+      break;
+    }
+  _value_set = true;
+}
+
 int
 CMD_Arg::get_int_arg(void)
 {
@@ -216,6 +230,20 @@ CMD_Arg::get_string_arg(void)
   return "";
 }
 
+void *
+CMD_Arg::get_pointer_arg(void)
+{
+  switch (_type)
+    {
+    case CMD_ARG_INT:
+      return (void *)_val.v_int;
+      break;
+    case CMD_ARG_STRING:
+      return _val.v_string;
+    }
+  return 0;
+}
+    
 /*
  *  class CMD_Args
  */
@@ -278,6 +306,22 @@ CMD_Args::set_string_arg(const char *name, const char *value)
 }
 
 CMD_Args *
+CMD_Args::set_pointer_arg(const char *name, void *value)
+{
+  CMD_Arg *arg;
+
+  arg = lookup(name);
+  if (arg == 0)
+    {
+      arg = new CMD_Arg(name, CMD_ARG_STRING);
+      _arg_list.push_back(arg);
+    }
+  arg->set_pointer_arg(value);
+  notify_change_listeners();
+  return this;
+}
+
+CMD_Args *
 CMD_Args::add_change_listener(CMD_Change_Listener *listener)
 {
   _cl_list.push_back(listener);
@@ -304,6 +348,17 @@ CMD_Args::get_string_arg(const char *name)
   if (arg == 0)
     return 0;
   return arg->get_string_arg();
+}
+
+void *
+CMD_Args::get_pointer_arg(const char *name)
+{
+  CMD_Arg *arg;
+
+  arg = lookup(name);
+  if (arg == 0)
+    return 0;
+  return arg->get_pointer_arg();
 }
 
 bool

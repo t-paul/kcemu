@@ -2,7 +2,7 @@
  *  KCemu -- the KC 85/3 and KC 85/4 Emulator
  *  Copyright (C) 1997-2001 Torsten Paul
  *
- *  $Id: system.h,v 1.7 2001/04/14 15:14:55 tp Exp $
+ *  $Id: system.h,v 1.8 2002/06/09 14:24:32 torsten_paul Exp $
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -22,13 +22,15 @@
 #ifndef __kc_system_h
 #define __kc_system_h
 
-#ifdef __linux__
-#define LINUX
-#define HAVE_UI_GTK
-#endif
+#include "kc/config.h"
+#include "sys/sysdep.h"
 
 #ifdef ENABLE_NLS
+# ifdef USE_INCLUDED_LIBINTL
+#  include "../../intl/libintl.h"
+# else
 # include <libintl.h>
+# endif
 # define _(x) (gettext(x))
 # ifdef gettext_noop
 #  define N_(x) gettext_noop(x)
@@ -39,22 +41,6 @@
 # define _(x) (x)
 # define N_(x) x
 #endif /* ENABLE_NLS */
-
-#ifdef MSDOS
-#define HAVE_GETOPT
-#undef  HAVE_GETOPT_LONG
-#endif /* MSDOS */
-#ifdef LINUX
-#define HAVE_GETOPT
-#define HAVE_GETOPT_LONG
-#endif /* LINUX */
-
-#ifdef MSDOS
-/* FIXME: should be defined by configure */
-#define DATADIR "C:\\EMU\\KCEMU\\SHARE"
-#define LOCALEDIR "C:\\EMU\\KCEMU\\LOCALE"
-#define HAVE_UI_DOS
-#endif /* MSDOS */
 
 typedef unsigned char byte_t;
 typedef unsigned short word_t;

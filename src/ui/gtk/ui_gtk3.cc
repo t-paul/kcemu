@@ -2,7 +2,7 @@
  *  KCemu -- the KC 85/3 and KC 85/4 Emulator
  *  Copyright (C) 1997-2001 Torsten Paul
  *
- *  $Id: ui_gtk3.cc,v 1.13 2002/02/12 17:24:14 torsten_paul Exp $
+ *  $Id: ui_gtk3.cc,v 1.14 2002/06/09 14:24:34 torsten_paul Exp $
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -70,83 +70,21 @@ UI_Gtk3::get_width(void)
 }
 
 int
-UI_Gtk3::get_height(void) {
+UI_Gtk3::get_height(void)
+{
   return kcemu_ui_scale * 256;
+}
+
+int
+UI_Gtk3::get_callback_offset(void)
+{
+  return CB_OFFSET;
 }
 
 void
 UI_Gtk3::callback(void * /* data */)
 {
-  static int count = -300;
-  static bool first = true;
-  static struct timeval tv;
-  static struct timeval tv1 = { 0, 0 };
-  static struct timeval tv2;
-  static unsigned long frame = 0;
-  static unsigned long long base, d2;
-  static struct timeval basetime = { 0, 0 };
-
-  char buf[10];
-  unsigned long timeframe, diff, fps;
-
-  z80->addCallback(CB_OFFSET, this, 0);
-
-  if (++count >= 60)
-    {
-      count = 0;
-      gettimeofday(&tv2, NULL);
-      diff = ((1000000 * (tv2.tv_sec - tv1.tv_sec)) +
-	      (tv2.tv_usec - tv1.tv_usec));
-      fps = 60500000 / diff;
-      sprintf(buf, " %ld fps ", fps);
-      if (tv1.tv_sec != 0)
-	gtk_label_set(GTK_LABEL(_main.st_fps), buf);
-      tv1 = tv2;
-    }
-
-  if (first)
-    {
-      first = false;
-      gettimeofday(&tv1, NULL);
-      gettimeofday(&basetime, NULL);
-      base = (basetime.tv_sec * 50) + basetime.tv_usec / 20000;
-    }
-
-  gettimeofday(&tv, NULL);
-  d2 = (tv.tv_sec * 50) + tv.tv_usec / 20000;
-  timeframe = (unsigned long)(d2 - base);
-  frame++;
-
-  if (frame < (timeframe - 20))
-    {
-      DBG(1, form("KCemu/UI/3/update",
-                  "counter = %lu, frame = %lu, timeframe = %lu\n",
-                  (unsigned long)z80->getCounter() / 35000, frame, timeframe));
-      frame = timeframe;
-    }
-
-  if (frame > (timeframe + 1)) {
-    usleep(20000 * (frame - timeframe - 1));
-  }
-
-  if (!_auto_skip)
-    {
-      processEvents();
-      update();
-    }
-
-  gettimeofday(&tv, NULL);
-  d2 = (tv.tv_sec * 50) + tv.tv_usec / 20000;
-  timeframe = (unsigned long)(d2 - base);
-  _auto_skip = false;
-
-  if (frame < timeframe)
-    {
-      if (++_cur_auto_skip > _max_auto_skip)
-	_cur_auto_skip = 0;
-      else
-	_auto_skip = true;
-    }
+  ui_callback();
 }
 
 const char *
@@ -258,9 +196,9 @@ UI_Gtk3::update(bool full_update, bool clear_cache)
 {
   int c, x, y;
   gulong fg, bg;
-  byte val, col;
+  byte_t val, col;
   int p, pc, ys, yc;
-  byte *irm = memory->getIRM();
+  byte_t *irm = memory->getIRM();
 
   if (clear_cache)
     {

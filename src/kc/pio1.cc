@@ -2,7 +2,7 @@
  *  KCemu -- the KC 85/3 and KC 85/4 Emulator
  *  Copyright (C) 1997-2001 Torsten Paul
  *
- *  $Id: pio1.cc,v 1.4 2001/04/14 15:16:23 tp Exp $
+ *  $Id: pio1.cc,v 1.6 2002/06/09 14:24:33 torsten_paul Exp $
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -22,7 +22,6 @@
 #include <iostream.h>
 #include <iomanip.h>
 
-#include "kc/config.h"
 #include "kc/system.h"
 
 #include "kc/kc.h"
@@ -93,6 +92,12 @@ PIO1_1::change_A(byte_t changed, byte_t val)
 void
 PIO1_1::change_B(byte_t changed, byte_t val)
 {
+}
+
+void
+PIO1_1::tape_callback(byte_t val)
+{
+  strobe_A();
 }
 
 PIO1_2::PIO1_2(void)

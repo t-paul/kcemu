@@ -2,7 +2,7 @@
  *  KCemu -- the KC 85/3 and KC 85/4 Emulator
  *  Copyright (C) 1997-2001 Torsten Paul
  *
- *  $Id: keyb3.cc,v 1.9 2002/01/20 13:39:30 torsten_paul Exp $
+ *  $Id: keyb3.cc,v 1.10 2002/06/09 14:24:33 torsten_paul Exp $
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -23,7 +23,6 @@
 #include <iostream.h>
 #include <iomanip.h>
 
-#include "kc/config.h"
 #include "kc/system.h"
 
 #include "cmd/cmd.h"
@@ -81,7 +80,7 @@ Keyboard3::init(void)
   _lock = -1;
   _release = 0;
   _replay_idx = 0;
-  _replay_text = NULL;
+  //_replay_text = NULL;
   _replay_offset = 50 * 256;
 }
 
@@ -169,10 +168,12 @@ Keyboard3::keyReleased(int keysym, int keycode)
 void
 Keyboard3::replayString(const char *text)
 {
+/*
   if (_replay_text == NULL)
     _replay_text = g_string_new(NULL);
   g_string_append(_replay_text, text);
   checkReplay();
+*/
 }
 
 void
@@ -233,6 +234,8 @@ Keyboard3::sendKey(void)
 int
 Keyboard3::checkReplay(void)
 {
+  return 0;
+#if 0
   int key;
 
   if (_replay_text == NULL)
@@ -270,6 +273,7 @@ Keyboard3::checkReplay(void)
   keyReleased(key, 0);
 
   return key;
+#endif
 }
 
 void

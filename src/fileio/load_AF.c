@@ -2,7 +2,7 @@
  *  KCemu -- the KC 85/3 and KC 85/4 Emulator
  *  Copyright (C) 1997-2001 Torsten Paul
  *
- *  $Id: load_AF.c,v 1.5 2001/04/22 22:24:05 tp Exp $
+ *  $Id: load_AF.c,v 1.6 2002/06/09 14:24:33 torsten_paul Exp $
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -26,20 +26,25 @@
 #include "fileio/loadP.h"
 
 static int
+check_signature(const char *data)
+{
+  if (strncmp(data, "KC-TAPE by AF", 13) == 0)
+    return 1;
+  
+  return 0;
+}
+
+static int
 loader_AF_check(const char *filename,
                 unsigned char *data,
                 long size)
 {
   /*
    *  files from the KC-Emulator by Arne Fitzenreiter
-   *  (currently only the first file is loaded!)
    */
   if (size >= (16 + 128)) /* file signature + first block */
-    if (strncmp((const char *)&data[1], "KC-TAPE by AF", 13) == 0)
-      {
-        return 1;
-      }
-
+    return check_signature((const char *)&data[1]);
+  
   return 0;
 }
 
@@ -91,6 +96,37 @@ set_type(unsigned char *data, fileio_prop_t *prop)
 }
 
 /*
+ *  check if we have the last block of the current file
+ *
+ *  for machine code we simply check the block counter but
+ *  basic files seem to be sometimes larger than 255 blocks
+ *  so in case of basic files we check for the basic end
+ *  marker in the current block (three zero bytes)
+ */
+static int
+check_end(unsigned char *data, int type)
+{
+  int a;
+  int is_last_block = 0;
+
+  switch (type)
+    {
+    case FILEIO_TYPE_BAS:
+    case FILEIO_TYPE_PROT_BAS:
+	for (a = 1;a < 127;a++)
+	  if ((data[a] | data[a + 1] | data[a + 2]) == 0)
+	    is_last_block = 1;
+        break;
+    default:
+        if ((*data) == 0xff)
+	  is_last_block = 1;
+	break;
+    }
+
+  return is_last_block;
+}
+
+/*
  *  return number of bytes used from the original file or -1 on error
  */
 static long
@@ -108,18 +144,18 @@ fill_prop(unsigned char *data, long size, fileio_prop_t *prop)
 
       len += 129;
 
-      if ((*data) == 0xff)
-        {
-          prop->size = len;
-          return len;
-        }
-            
       if (first)
         {
           first = 0;
 	  set_type(data, prop);
         }
 
+      if (check_end(data, prop->type))
+        {
+          prop->size = len;
+          return len;
+        }
+            
       data += 129;
       size -= 129;
     }
@@ -161,6 +197,21 @@ loader_AF_load(const char *filename,
   prop_lptr = 0;
   while (size > 0)
     {
+      /*
+       *  ignore trailing garbage if we don't find
+       *  file header (might be caused by basic files
+       *  which often store the last block twice)
+       *
+       *  so we don't simply bail out here but instead
+       *  skip one block of 129 bytes and try to go on...
+       */
+      if (!check_signature((const char *)&ptr[1]))
+        {
+	  ptr += 129;
+	  size -= 129;
+	  continue;
+	}
+
       ptr += 16;  /* skip header... */
       size -= 16;
       if (size < 0)

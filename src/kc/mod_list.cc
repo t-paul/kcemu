@@ -2,7 +2,7 @@
  *  KCemu -- the KC 85/3 and KC 85/4 Emulator
  *  Copyright (C) 1997-2001 Torsten Paul
  *
- *  $Id: mod_list.cc,v 1.13 2002/01/12 23:03:56 torsten_paul Exp $
+ *  $Id: mod_list.cc,v 1.15 2002/06/09 14:24:33 torsten_paul Exp $
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -20,35 +20,56 @@
  */
 
 /*
- *  a7h: Floppy Disk Basis ROM -- always at slot fch!
+ *  Quelle: http://www.kc85emu.de/scans/fa0192/Bild5.jpg
+ *  Original: Zeitschrift Funkamateur
+ * 
+ *  ---: D001 Grundgerät KC85/2
+ *  ---: D001 Grundgerät KC85/3
+ *  ---: D001 Grundgerät KC85/4
+ *  ---: D002 Busdriver
+ *  ---: D004 Floppy Disk Drive
+ *  a7h: D004 Floppy Disk Basis (ROM) -- always at slot fch!
  *  efh: M001 Digital IN/OUT
- *  eeh: M003 V24
- *  ---: M005 User (empty modul)
- *  ---: M007 Adapter (empty modul)
+ *  eeh: M003 V24 (2 Kanäle)
+ *  ---: M005 User (Leermodul)
+ *  ---: M006 BASIC (für KC 85/2)
+ *  ---: M007 Adapter (Herausführung der Anschlüsse an die Frontseite)
+ *  ---: M008 Joystick
  *  e7h: M010 ADU1
- *  f6h: M011 64k RAM
- *  fbh: M012 Texor
- *  f4h: M022 Expander RAM (16k)
- *  f7h: M025 User PROM (8k)
- *  fbh: M026 Forth
- *  fbh: M027 Development
+ *  f6h: M011 64 KByte RAM
+ *  fbh: M012 Software: Texor
+ *  ---: M021 Joy + Centronics
+ *  f4h: M022 Expander RAM (16 KByte)
+ *  f7h: M025 User PROM (8 KByte)
+ *  fbh: M026 Software: Forth
+ *  fbh: M027 Software: Development
  *  e3h: M029 DAU1
+ *  ---: M030 EPROMmer
+ *  ---: M032 256 KByte RAM
+ *  ---: M033 Software: TYPESTAR
+ *  ---: M036 128 KByte RAM
+ *  ---: M040 USER PROM ? KByte
+ *  ---: M053 RS 232
+ *  ---: M125 USER ROM ? KByte
  */
 
 #include <string.h>
 
-#include "kc/config.h"
 #include "kc/system.h"
 
 #include "kc/kc.h"
 #include "kc/rc.h"
 #include "kc/mod_ram.h"
 #include "kc/mod_ram1.h"
+#include "kc/mod_ram8.h"
 #include "kc/mod_64k.h"
 #include "kc/mod_rom.h"
 #include "kc/mod_disk.h"
-#include "kc/mod_v24.h"
 #include "kc/mod_list.h"
+
+#ifdef TARGET_OS_LINUX
+#include "kc/mod_v24.h"
+#endif /* TARGET_OS_LINUX */
 
 #include "ui/ui.h"
 
@@ -71,12 +92,14 @@ ModuleList::ModuleList(void)
   /*
    *  V24 module
    */
+#ifdef TARGET_OS_LINUX
   if (RC::instance()->get_int("Enable V24-Module"))
     {
       m = new ModuleV24("M003", 0xee);
       entry = new ModuleListEntry(_("M003: V24 (not working!)"), m, KC_TYPE_85_2_CLASS);
       _mod_list.push_back(entry);
     }
+#endif /* TARGET_OS_LINUX */
 
   /*
    *  RAM module 64k
@@ -84,6 +107,25 @@ ModuleList::ModuleList(void)
   m = new Module64k("M011", 0xf6);
   _mod_list.push_back(new ModuleListEntry(_("M011: 64k RAM"), m, KC_TYPE_85_2_CLASS));
   
+  /*
+   *  RAM modules 1k at 2400h-27ffh,
+   *                    2800h-2fffh,
+   *                    3000h-3fffh,
+   *                    4000h-7fffh,
+   *                    8000h-ffffh
+   *  (lc80)
+   */
+  m = new ModuleRAM8("RAM2400", 0x2400, 0x0400);
+  _mod_list.push_back(new ModuleListEntry(_("RAM Module (1k/2400h)"), m, KC_TYPE_LC80));
+  m = new ModuleRAM8("RAM2800", 0x2800, 0x0800);
+  _mod_list.push_back(new ModuleListEntry(_("RAM Module (2k/2800h)"), m, KC_TYPE_LC80));
+  m = new ModuleRAM8("RAM3000", 0x3000, 0x1000);
+  _mod_list.push_back(new ModuleListEntry(_("RAM Module (4k/3000h)"), m, KC_TYPE_LC80));
+  m = new ModuleRAM8("RAM4000", 0x4000, 0x4000);
+  _mod_list.push_back(new ModuleListEntry(_("RAM Module (16k/4000h)"), m, KC_TYPE_LC80));
+  m = new ModuleRAM8("RAM8000", 0x8000, 0x8000);
+  _mod_list.push_back(new ModuleListEntry(_("RAM Module (32k/8000h)"), m, KC_TYPE_LC80));
+
   /*
    *  RAM modules 16k at 4000h and 8000h (kc85/1)
    */
@@ -194,6 +236,8 @@ ModuleList::ModuleList(void)
     _nr_of_bd = MAX_BD;
   if (get_kc_type() & KC_TYPE_85_1_CLASS)
     _nr_of_bd = 0;
+  if (get_kc_type() & KC_TYPE_LC80)
+    _nr_of_bd = 1;
 
   for (a = 0;a < 4 * _nr_of_bd + 2;a++)
     {

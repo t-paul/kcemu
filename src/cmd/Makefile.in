@@ -224,33 +224,36 @@ distdir: $(DISTFILES)
 	done
 cmd.o: cmd.cc ../../include/cmd/cmd.h ../../include/cmd/cmdargs.h \
 	../../include/libdbg/dbg.h
-cmdargs.o: cmdargs.cc ../../include/kc/config.h \
-	../../include/kc/system.h ../../include/cmd/cmd.h \
-	../../include/cmd/cmdargs.h ../../include/libdbg/dbg.h
-image.o: image.cc ../../include/kc/config.h ../../include/kc/system.h \
-	../../include/kc/kc.h ../../include/kc/z80.h \
-	../../include/z80core/z80.h ../../include/kc/ic.h \
-	../../include/kc/cb.h ../../include/kc/cb_list.h \
-	../../include/kc/memory.h ../../include/cmd/cmd.h \
-	../../include/cmd/cmdargs.h ../../include/fileio/load.h \
+cmdargs.o: cmdargs.cc ../../include/kc/system.h \
+	../../include/kc/config.h ../../include/sys/sysdep.h \
+	../../include/cmd/cmd.h ../../include/cmd/cmdargs.h \
 	../../include/libdbg/dbg.h
-load.o: load.cc ../../include/kc/kc.h ../../include/kc/config.h \
-	../../include/kc/system.h ../../include/kc/memory.h \
-	../../include/kc/ic.h ../../include/ui/status.h \
+image.o: image.cc ../../include/kc/system.h ../../include/kc/config.h \
+	../../include/sys/sysdep.h ../../include/kc/kc.h \
+	../../include/kc/z80.h ../../include/z80core/z80.h \
+	../../include/kc/ic.h ../../include/kc/cb.h \
+	../../include/kc/cb_list.h ../../include/kc/memory.h \
+	../../include/cmd/cmd.h ../../include/cmd/cmdargs.h \
+	../../include/fileio/load.h ../../include/libdbg/dbg.h
+load.o: load.cc ../../include/kc/kc.h ../../include/kc/system.h \
+	../../include/kc/config.h ../../include/sys/sysdep.h \
+	../../include/kc/memory.h ../../include/kc/ic.h \
+	../../include/ui/status.h ../../include/ui/statusl.h \
+	../../include/cmd/cmd.h ../../include/cmd/cmdargs.h
+quit.o: quit.cc ../../include/kc/kc.h ../../include/kc/system.h \
+	../../include/kc/config.h ../../include/sys/sysdep.h \
+	../../include/kc/z80.h ../../include/z80core/z80.h \
+	../../include/kc/ic.h ../../include/kc/cb.h \
+	../../include/kc/cb_list.h ../../include/ui/status.h \
 	../../include/ui/statusl.h ../../include/cmd/cmd.h \
 	../../include/cmd/cmdargs.h
-quit.o: quit.cc ../../include/kc/kc.h ../../include/kc/config.h \
-	../../include/kc/system.h ../../include/kc/z80.h \
-	../../include/z80core/z80.h ../../include/kc/ic.h \
-	../../include/kc/cb.h ../../include/kc/cb_list.h \
-	../../include/ui/status.h ../../include/ui/statusl.h \
-	../../include/cmd/cmd.h ../../include/cmd/cmdargs.h
-reset.o: reset.cc ../../include/kc/kc.h ../../include/kc/config.h \
-	../../include/kc/system.h ../../include/kc/z80.h \
-	../../include/z80core/z80.h ../../include/kc/ic.h \
-	../../include/kc/cb.h ../../include/kc/cb_list.h \
-	../../include/ui/status.h ../../include/ui/statusl.h \
-	../../include/cmd/cmd.h ../../include/cmd/cmdargs.h
+reset.o: reset.cc ../../include/kc/kc.h ../../include/kc/system.h \
+	../../include/kc/config.h ../../include/sys/sysdep.h \
+	../../include/kc/z80.h ../../include/z80core/z80.h \
+	../../include/kc/ic.h ../../include/kc/cb.h \
+	../../include/kc/cb_list.h ../../include/ui/status.h \
+	../../include/ui/statusl.h ../../include/cmd/cmd.h \
+	../../include/cmd/cmdargs.h
 
 info-am:
 info: info-am

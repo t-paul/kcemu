@@ -2,7 +2,7 @@
  *  KCemu -- the KC 85/3 and KC 85/4 Emulator
  *  Copyright (C) 1997-2001 Torsten Paul
  *
- *  $Id: kct.cc,v 1.12 2001/12/29 03:50:21 torsten_paul Exp $
+ *  $Id: kct.cc,v 1.14 2002/06/09 14:24:34 torsten_paul Exp $
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -668,6 +668,13 @@ KCTFile::read(const char *name, kct_file_props_t *props)
   return NULL;
 }
 
+/*
+ *  return: KCT_ERROR_EXIST if filename already in archive
+ *          KCT_ERROR_NOMEM on memory allocation error
+ *          KCT_ERROR_IO    if file compression fails or
+ *                          no block free in the archive
+ *          KCT_OK          if all went well
+ */
 kct_error_t
 KCTFile::write(const char *filename,
                const unsigned char *buf,
@@ -684,6 +691,13 @@ KCTFile::write(const char *filename,
   unsigned long crc;
   unsigned long offset;
   kct_error_t err;
+
+  /*
+   *  check if the filename already exists in the archive
+   */
+  readdir();
+  if (find(filename) == KCT_OK)
+    return KCT_ERROR_EXIST;
 
   DBG(1, form("KCemu/KCT/write",
               "KCTFile::write(): name = '%s'\n"
@@ -752,16 +766,6 @@ KCTFile::write(const char *filename,
 
   return KCT_OK;
 }
-              
-kct_error_t
-KCTFile::write(const char *filename,
-               const unsigned char *buf,
-               unsigned long len,
-               kct_machine_type_t machine)
-{
-  cerr << "*** obsolate function called ***" << endl;
-  return KCT_ERROR_IO;
-}
 
 kct_error_t
 KCTFile::remove(int idx)
@@ -804,18 +808,109 @@ KCTFile::remove(int idx)
 }
 
 kct_error_t
-KCTFile::remove(const char *name)
+KCTFile::rename(int idx, const char *to)
 {
-  int a;
+  int entry;
+  kct_error_t err;
+  unsigned long offset;
 
-  a = 0;
+  idx = translate_index(idx);
+
+  entry = idx % 4;
+  idx /= 4;
+  offset = _header.offset[idx];
+
+  dirblock_read(_dirblock, offset);
+  strncpy(_dirblock[entry].name, to, KCT_NAME_LENGTH);
+  _dirblock[entry].name[KCT_NAME_LENGTH] = '\0';
+
+  err = dirblock_write(_dirblock, offset);
+
+  readdir(); /* reload internal directory list (_dir) */
+
+  return err;
+}
+
+int
+KCTFile::find_entry(const char *name)
+{
+  int a = 0;
+
   for (KCTDir::iterator it = _dir.begin();it != _dir.end();it++)
     {
       if (strcmp((*it)->name, name) == 0)
-        return remove(a);
+        return a;
       a++;
     }
-  return KCT_ERROR_NOENT;
+
+  return -1;
+}
+
+kct_error_t
+KCTFile::find(const char *name)
+{
+  int idx;
+
+  idx = find_entry(name);
+  if (idx < 0)
+    return KCT_ERROR_NOENT;
+
+  return KCT_OK;
+}
+
+kct_error_t
+KCTFile::remove(const char *name)
+{
+  int idx;
+
+  idx = find_entry(name);
+  if (idx < 0)
+    return KCT_ERROR_NOENT;
+
+  return remove(idx);
+}
+
+kct_error_t
+KCTFile::rename(const char *name, const char *to)
+{
+  int idx;
+
+  idx = find_entry(to);
+  if (idx >= 0)
+    return KCT_ERROR_EXIST;
+
+  idx = find_entry(name);
+  if (idx < 0)
+    return KCT_ERROR_NOENT;
+
+  rename(idx, to);
+}
+
+const char *
+KCTFile::get_error_string(kct_error_t error)
+{
+  switch (error)
+    {
+    case KCT_OK_READONLY:
+      return "success";
+    case KCT_OK:
+      return "success";
+    case KCT_ERROR_NOENT:
+      return "no such file";
+    case KCT_ERROR_IO:
+      return "io error";
+    case KCT_ERROR_NOMEM:
+      return "out of memory error";
+    case KCT_ERROR_ACCESS:
+      return "access error";
+    case KCT_ERROR_EXIST:
+      return "file already exists";
+    case KCT_ERROR_INVAL:
+      return "invalid parameter";
+    case KCT_ERROR_NAMETOOLONG:
+      return "name too long";
+    }
+  return "<unknown>";
 }
 
 #ifdef DEBUG

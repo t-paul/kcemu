@@ -2,7 +2,7 @@
  *  KCemu -- the KC 85/3 and KC 85/4 Emulator
  *  Copyright (C) 1997-2001 Torsten Paul
  *
- *  $Id: module.h,v 1.5 2001/04/14 15:15:30 tp Exp $
+ *  $Id: module.h,v 1.6 2002/06/09 14:24:32 torsten_paul Exp $
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -24,7 +24,8 @@
 
 #include <gtk/gtk.h>
 
-#include "kc/config.h"
+#include "kc/system.h"
+
 #include "ui/module.h"
 #include "ui/gtk/window.h"
 
@@ -57,8 +58,8 @@ protected:
   static void sf_activate(GtkWidget *widget, gpointer data);
   
  public:
-  ModuleWindow(void) { init(); }
-  virtual ~ModuleWindow(void) {}
+  ModuleWindow(void);
+  virtual ~ModuleWindow(void);
 
   /*
    *  UI_ModuleInterface
