@@ -40,6 +40,15 @@ void sys_usleep(long microseconds);
  */
 void sys_localtime(int *year, int *month, int *day, int *hour, int *minute, int *second);
 
+/*
+ *  return system time
+ *
+ *  works like gettimeofday() but instead of returning the
+ *  values in a struct timeval the values are directly stored
+ *  in the specified variables.
+ */
+void sys_gettimeofday(long *tv_sec, long *tv_usec);
+
 #ifdef __cplusplus
 }
 #endif

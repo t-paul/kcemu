@@ -1,4 +1,35 @@
+2003-06-12  Torsten Paul  <Torsten.Paul@gmx.de>
+
+	* configure.in: add AC_DEFINE for USE_INCLUDED_GETOPT
+
+	* src/libtape/kctape.cc (open_output): open file in binary mode;
+	check which getopt.h to include
+
+	* src/ui/gtk/ui_gtk.cc: replaced usleep() with g_usleep()
+
+	* include/sys/sysdep.h, src/sys/linux/sys_gettimeofday.c,
+	src/sys/beos/sys_gettimeofday.c, src/sys/mingw/sys_gettimeofday.c:
+	added sys_gettimeofday() which is a wrapper for gettimeofday() for
+	linux and beos, the mingw function was provided by Alexander Schön
+
+	* src/ui/gtk/ui_gtk.cc: removed references to gettimeofday() and
+	introduced system dependend function sys_gettimeofday()
+
+2003-06-11  Torsten Paul  <Torsten.Paul@gmx.de>
+
+	* src/kc/disk.cc: moved the command call "ui-disk-update-MSG" to
+	attach() and detach(); now initially attached disk images (via
+	command line or init file) are shown in the user interface;
+	allow attaching of disk images from DATADIR without path
+
+	* include/kc/keys.h: added KC_KEY_SPACE, KC_KEY_RESET and KC_KEY_NMI
+
+	* include/ui/gtk/keyboard.h, src/ui/gtk/keyboard.cc: complete
+	rewrite based on images for the keyboard display
+
 2003-06-08  Torsten Paul  <Torsten.Paul@gmx.de>
+
+	* src/ui/gtk/gtkledline.c: removed unused code
 
 	* src/libdisk/disk.c: set passed reference to pointer to NULL on
 	failure in libdisk_open()

@@ -25,8 +25,17 @@
 
 #include "kc/system.h"
 
+#ifdef HOST_OS_MINGW
+#include "SDL.h"
+#include <windows.h>
+#endif /* HOST_OS_MINGW */
+
+#ifdef USE_INCLUDED_GETOPT
+#include "getopt/getopt.h"
+#else
 #ifdef HAVE_GETOPT
 #include <getopt.h>
+#endif
 #endif
 
 #ifdef HAVE_LOCALE_H
@@ -988,8 +997,15 @@ attach_disk(void)
     disk->attach(3, filename);
 }
 
+#ifdef HOST_OS_MINGW
+int WINAPI
+WinMain(HINSTANCE hThisInstance, HINSTANCE hPrevInstance, LPSTR lpszArgument, int nStil)
+#define argc _argc
+#define argv _argv
+#else
 int
 main(int argc, char **argv)
+#endif /* HOST_OS_MINGW */
 {
   int c;
   int type;

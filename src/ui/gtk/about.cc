@@ -65,7 +65,7 @@ AboutWindow::init(void)
   gtk_widget_set_name(_window, "AboutWindow");
   gtk_window_set_title(GTK_WINDOW(_window), _("About KCemu"));
   gtk_window_set_resizable(GTK_WINDOW(_window), false);
-  gtk_window_position(GTK_WINDOW(_window), GTK_WIN_POS_MOUSE);
+  gtk_window_position(GTK_WINDOW(_window), GTK_WIN_POS_CENTER_ALWAYS);
   gtk_signal_connect(GTK_OBJECT(_window), "delete_event",
                      GTK_SIGNAL_FUNC(cmd_exec_sft),
                      (char *)"ui-about-window-toggle"); // FIXME:

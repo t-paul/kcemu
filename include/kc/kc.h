@@ -35,13 +35,15 @@ typedef enum
   KC_TYPE_LC80 	     = (1 << 5),
   KC_TYPE_Z1013      = (1 << 6),
   KC_TYPE_A5105      = (1 << 7),
+  KC_TYPE_POLY880    = (1 << 8),
   KC_TYPE_85_1_CLASS = KC_TYPE_85_1 | KC_TYPE_87,
   KC_TYPE_85_2_CLASS = KC_TYPE_85_2 | KC_TYPE_85_3 | KC_TYPE_85_4,
   KC_TYPE_ALL        = (KC_TYPE_85_1_CLASS |
-                       KC_TYPE_85_2_CLASS |
-                       KC_TYPE_LC80 |
-                       KC_TYPE_Z1013 |
-                       KC_TYPE_A5105)
+			KC_TYPE_85_2_CLASS |
+			KC_TYPE_LC80 |
+			KC_TYPE_Z1013 |
+			KC_TYPE_A5105 |
+			KC_TYPE_POLY880)
 } kc_type_t;
 
 typedef enum

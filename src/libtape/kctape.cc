@@ -22,17 +22,20 @@
 #include <stdio.h>
 #include <ctype.h>
 #include <string.h>
-#include <getopt.h>
 #include <unistd.h>
 
 #include <iostream>
 #include <iomanip>
 
+#include "kc/system.h"
+
+#ifdef USE_INCLUDED_GETOPT
+#include "getopt/getopt.h"
+#else
 #ifdef HAVE_GETOPT
 #include <getopt.h>
 #endif
-
-#include "kc/system.h"
+#endif
 
 #include "libtape/kct.h"
 #include "fileio/load.h"
@@ -319,7 +322,8 @@ do_remove(KCTFile &f, const char *name)
     cerr << "ERROR: File not found" << endl;
 }
 
-static FILE *open_output(const char *name)
+static FILE *
+open_output(const char *name)
 {
   if (name == 0)
     return stdout;
@@ -327,7 +331,7 @@ static FILE *open_output(const char *name)
   if (access(name, F_OK) == 0)
     return 0;
 
-  return fopen(name, "w+");
+  return fopen(name, "wb+");
 }
 
 static void

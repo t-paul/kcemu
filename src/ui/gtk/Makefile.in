@@ -114,9 +114,21 @@ am__include = @am__include@
 am__quote = @am__quote@
 install_sh = @install_sh@
 
-bin_PROGRAMS = kcemu-remote
-
 noinst_LIBRARIES = libui_gtk.a
+
+pkgdata_DATA = \
+	kc851.key \
+	kc851_keyboard.xpm \
+	kc851_keyboard_pressed.xpm \
+	kc854.key \
+	kc854_keyboard.xpm \
+	kc854_keyboard_pressed.xpm \
+	lc80.key \
+	lc80_keyboard.xpm \
+	lc80_keyboard_pressed.xpm
+
+
+EXTRA_DIST = $(pkgdata_DATA)
 
 INCLUDES = \
 	-I../../../include \
@@ -152,13 +164,9 @@ libui_gtk_a_SOURCES = \
 	hedit.cc
 
 
-kcemu_remote_SOURCES = \
-	kcemu-remote.c
-
-
-kcemu_remote_LDADD = \
-	-L/usr/X11R6/lib -lX11 -lXmu $(INTLLIBS)
-
+@TARGET_LINUX_TRUE@bin_PROGRAMS = kcemu-remote
+@TARGET_LINUX_TRUE@kcemu_remote_SOURCES = kcemu-remote.c
+@TARGET_LINUX_TRUE@kcemu_remote_LDADD = -L/usr/X11R6/lib -lX11 -lXmu $(INTLLIBS)
 subdir = src/ui/gtk
 mkinstalldirs = $(SHELL) $(top_srcdir)/mkinstalldirs
 CONFIG_HEADER = $(top_builddir)/include/kc/config.h
@@ -176,12 +184,14 @@ am_libui_gtk_a_OBJECTS = gtkledline.$(OBJEXT) ui_gtk.$(OBJEXT) \
 	debug.$(OBJEXT) copying.$(OBJEXT) fbrowse.$(OBJEXT) \
 	dialog.$(OBJEXT) image.$(OBJEXT) wav.$(OBJEXT) hedit.$(OBJEXT)
 libui_gtk_a_OBJECTS = $(am_libui_gtk_a_OBJECTS)
-bin_PROGRAMS = kcemu-remote$(EXEEXT)
+@TARGET_LINUX_TRUE@bin_PROGRAMS = kcemu-remote$(EXEEXT)
+@TARGET_LINUX_FALSE@bin_PROGRAMS =
 PROGRAMS = $(bin_PROGRAMS)
 
-am_kcemu_remote_OBJECTS = kcemu-remote.$(OBJEXT)
+@TARGET_LINUX_TRUE@am_kcemu_remote_OBJECTS = kcemu-remote.$(OBJEXT)
 kcemu_remote_OBJECTS = $(am_kcemu_remote_OBJECTS)
-kcemu_remote_DEPENDENCIES =
+@TARGET_LINUX_TRUE@kcemu_remote_DEPENDENCIES =
+@TARGET_LINUX_FALSE@kcemu_remote_DEPENDENCIES =
 kcemu_remote_LDFLAGS =
 
 DEFS = @DEFS@
@@ -216,6 +226,8 @@ CXXLINK = $(CXXLD) $(AM_CXXFLAGS) $(CXXFLAGS) $(AM_LDFLAGS) $(LDFLAGS) \
 	-o $@
 CXXFLAGS = @CXXFLAGS@
 DIST_SOURCES = $(libui_gtk_a_SOURCES) $(kcemu_remote_SOURCES)
+DATA = $(pkgdata_DATA)
+
 DIST_COMMON = Makefile.am Makefile.in
 SOURCES = $(libui_gtk_a_SOURCES) $(kcemu_remote_SOURCES)
 
@@ -327,6 +339,24 @@ CCDEPMODE = @CCDEPMODE@
 	$(CXXCOMPILE) -c -o $@ `cygpath -w $<`
 CXXDEPMODE = @CXXDEPMODE@
 uninstall-info-am:
+pkgdataDATA_INSTALL = $(INSTALL_DATA)
+install-pkgdataDATA: $(pkgdata_DATA)
+	@$(NORMAL_INSTALL)
+	$(mkinstalldirs) $(DESTDIR)$(pkgdatadir)
+	@list='$(pkgdata_DATA)'; for p in $$list; do \
+	  if test -f "$$p"; then d=; else d="$(srcdir)/"; fi; \
+	  f="`echo $$p | sed -e 's|^.*/||'`"; \
+	  echo " $(pkgdataDATA_INSTALL) $$d$$p $(DESTDIR)$(pkgdatadir)/$$f"; \
+	  $(pkgdataDATA_INSTALL) $$d$$p $(DESTDIR)$(pkgdatadir)/$$f; \
+	done
+
+uninstall-pkgdataDATA:
+	@$(NORMAL_UNINSTALL)
+	@list='$(pkgdata_DATA)'; for p in $$list; do \
+	  f="`echo $$p | sed -e 's|^.*/||'`"; \
+	  echo " rm -f $(DESTDIR)$(pkgdatadir)/$$f"; \
+	  rm -f $(DESTDIR)$(pkgdatadir)/$$f; \
+	done
 
 ETAGS = etags
 ETAGSFLAGS =
@@ -391,10 +421,10 @@ distdir: $(DISTFILES)
 	done
 check-am: all-am
 check: check-am
-all-am: Makefile $(LIBRARIES) $(PROGRAMS)
+all-am: Makefile $(LIBRARIES) $(PROGRAMS) $(DATA)
 
 installdirs:
-	$(mkinstalldirs) $(DESTDIR)$(bindir)
+	$(mkinstalldirs) $(DESTDIR)$(bindir) $(DESTDIR)$(pkgdatadir)
 
 install: install-am
 install-exec: install-exec-am
@@ -438,7 +468,7 @@ info: info-am
 
 info-am:
 
-install-data-am:
+install-data-am: install-pkgdataDATA
 
 install-exec-am: install-binPROGRAMS
 
@@ -456,18 +486,20 @@ mostlyclean: mostlyclean-am
 
 mostlyclean-am: mostlyclean-compile mostlyclean-generic
 
-uninstall-am: uninstall-binPROGRAMS uninstall-info-am
+uninstall-am: uninstall-binPROGRAMS uninstall-info-am \
+	uninstall-pkgdataDATA
 
 .PHONY: GTAGS all all-am check check-am clean clean-binPROGRAMS \
 	clean-generic clean-noinstLIBRARIES distclean distclean-compile \
 	distclean-depend distclean-generic distclean-tags distdir dvi \
 	dvi-am info info-am install install-am install-binPROGRAMS \
 	install-data install-data-am install-exec install-exec-am \
-	install-info install-info-am install-man install-strip \
-	installcheck installcheck-am installdirs maintainer-clean \
-	maintainer-clean-generic mostlyclean mostlyclean-compile \
-	mostlyclean-generic tags uninstall uninstall-am \
-	uninstall-binPROGRAMS uninstall-info-am
+	install-info install-info-am install-man install-pkgdataDATA \
+	install-strip installcheck installcheck-am installdirs \
+	maintainer-clean maintainer-clean-generic mostlyclean \
+	mostlyclean-compile mostlyclean-generic tags uninstall \
+	uninstall-am uninstall-binPROGRAMS uninstall-info-am \
+	uninstall-pkgdataDATA
 
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.

@@ -27,7 +27,7 @@ dnl ---------------------
 KCEMU_MAJOR_VERSION=0
 KCEMU_MINOR_VERSION=3
 KCEMU_MICRO_VERSION=7
-KCEMU_EXTRA_VERSION=beta6
+KCEMU_EXTRA_VERSION=beta7
 
 if test $KCEMU_MICRO_VERSION -eq 0
 then
@@ -62,6 +62,22 @@ dnl  checks for programs
 dnl ---------------------
 
 AC_PROG_CC
+
+dnl
+dnl  check for compiler-flag -mms-bitfields needed for mingw/cygwin
+dnl  it defines the bit-field layout to be MS Visual C/C++ compatible
+dnl
+ac_save_CFLAGS=$CFLAGS
+CFLAGS="-mms-bitfields"
+AC_CACHE_CHECK(whether $CC accepts $CFLAGS, ac_cv_prog_cc_mms_bitfields,
+	  [AC_COMPILE_IFELSE([AC_LANG_PROGRAM()], [ac_cv_prog_cc_mms_bitfields=yes],
+                                                  [ac_cv_prog_cc_mms_bitfields=no])])
+if test $ac_cv_prog_cc_mms_bitfields = yes; then
+	CFLAGS="$ac_save_CFLAGS $CFLAGS"
+else
+	CFLAGS="$ac_save_CFLAGS"
+fi
+
 AC_PROG_CXX
 AC_PROG_INSTALL
 AC_PROG_LN_S
@@ -174,6 +190,7 @@ if test x$have_getopt = xyes -o x$have_getopt_long = xyes; then
 else
 	use_included_getopt=yes
 	AM_CONDITIONAL(USE_INCLUDED_GETOPT, true)
+	AC_DEFINE(USE_INCLUDED_GETOPT, 1, "use included getopt")
         AC_DEFINE(HAVE_GETOPT, 1, "getopt() available")
         AC_DEFINE(HAVE_GETOPT_LONG, 1, "getopt_long() available")
 fi

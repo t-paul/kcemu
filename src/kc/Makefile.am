@@ -122,7 +122,7 @@ endif
 
 if TARGET_MINGW
 UILIBS_MINGW = $(UILIBS_GTK) $(UILIBS_SDL)
-SYSLIBS_MINGW = ../sys/mingw/libsys_mingw.a
+SYSLIBS_MINGW = ../sys/mingw/libsys_mingw.a -lwinmm
 endif
 
 if TARGET_BEOS

@@ -28,28 +28,48 @@
 
 #include "ui/gtk/window.h"
 
+struct _key_struct {
+  const char   *key;
+  int           key_val;
+  GdkRectangle  rect;
+  GdkRegion    *region;
+};
+
 class KeyboardWindow : public UI_Gtk_Window
 {
  private:
   struct {
     GtkWidget *vbox;
+    GtkWidget *eventbox;
     GtkWidget *canvas;
+    GtkWidget *label;
     GtkWidget *separator;
     GtkWidget *close;
   } _w;
   
-  GdkGC       *_gc;
-  GdkFont     *_font;
-  GdkColormap *_colormap;
-  
+  GdkPixbuf   *_pixbuf_normal;
+  GdkPixbuf   *_pixbuf_pressed;
+  gboolean     _key_active;
+
+  struct _key_struct _keys[256];
+  struct _key_struct *_key_pressed;
+
  protected:
   void init(void);
-  void button_press(GdkEventButton *event, bool press);
+  void init_key_regions(void);
+  int get_key_val(const char *key);
+  void draw_key_normal(struct _key_struct *key);
+  void draw_key_pressed(struct _key_struct *key);
 
-  static void sf_expose(GtkWidget *widget, GdkEventExpose *event, gpointer data);
-  static void sf_button_press(GtkWidget *widget, GdkEventButton *event, gpointer data);
-  static void sf_button_release(GtkWidget *widget, GdkEventButton *event, gpointer data);
-  
+  void debug_regions(GdkEventMotion *event);
+
+  static gboolean sf_expose(GtkWidget *widget, GdkEventExpose *event, gpointer data);
+  static gboolean sf_motion_notify(GtkWidget *widget, GdkEventMotion *event, gpointer data);
+  static gboolean sf_button_press(GtkWidget *widget, GdkEventButton *event, gpointer data);
+  static gboolean sf_button_release(GtkWidget *widget, GdkEventButton *event, gpointer data);
+  static gboolean sf_key_press(GtkWidget *widget, GdkEventKey *event, gpointer data);
+  static gboolean sf_key_release(GtkWidget *widget, GdkEventKey *event, gpointer data);
+
  public:
   KeyboardWindow(void);
   virtual ~KeyboardWindow(void);

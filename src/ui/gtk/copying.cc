@@ -76,7 +76,7 @@ CopyingWindow::init(void)
   _window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
   gtk_widget_set_name(_window, "CopyingWindow");
   gtk_window_set_title(GTK_WINDOW(_window), _("KCemu: Copying"));
-  gtk_window_position(GTK_WINDOW(_window), GTK_WIN_POS_MOUSE);
+  gtk_window_position(GTK_WINDOW(_window), GTK_WIN_POS_CENTER_ALWAYS);
   gtk_signal_connect(GTK_OBJECT(_window), "delete_event",
                      GTK_SIGNAL_FUNC(cmd_exec_sft),
                      (char *)"ui-copying-window-toggle"); // FIXME:

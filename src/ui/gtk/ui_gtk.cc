@@ -25,7 +25,6 @@
 #include <signal.h> /* FIXME: only for testing */
 #include <string.h>
 #include <unistd.h>
-#include <sys/time.h>
 
 #include <X11/Xatom.h>
 
@@ -364,7 +363,7 @@ UI_Gtk::key_press_release(GdkEventKey *event, bool press)
     keyboard->keyReleased(c, key_code);
 }
 
-void
+gboolean
 UI_Gtk::sf_key_press(GtkWidget */*widget*/, GdkEventKey *event)
 {
   DBG(2, form("KCemu/UI/key_press",
@@ -372,9 +371,11 @@ UI_Gtk::sf_key_press(GtkWidget */*widget*/, GdkEventKey *event)
               event->keyval, XKeysymToKeycode(GDK_DISPLAY(), event->keyval)));
 
   key_press_release(event, true);
+
+  return TRUE;
 }
 
-void
+gboolean
 UI_Gtk::sf_key_release(GtkWidget */*widget*/, GdkEventKey *event)
 {
   DBG(2, form("KCemu/UI/key_release",
@@ -382,6 +383,8 @@ UI_Gtk::sf_key_release(GtkWidget */*widget*/, GdkEventKey *event)
               event->keyval, XKeysymToKeycode(GDK_DISPLAY(), event->keyval)));
 
   key_press_release(event, false);
+
+  return TRUE;
 }
 
 void
@@ -462,12 +465,12 @@ UI_Gtk::gtk_sync(void)
 {
   static int count = 0;
   static bool first = true;
-  static struct timeval tv;
-  static struct timeval tv1 = { 0, 0 };
-  static struct timeval tv2;
+  static long tv_sec, tv_usec;
+  static long tv1_sec = 0, tv1_usec = 0;
+  static long tv2_sec, tv2_usec;
   static unsigned long frame = 25;
   static unsigned long long base, d2;
-  static struct timeval basetime = { 0, 0 };
+  static long basetime_sec = 0, basetime_usec = 0;
 
   char buf[10];
   unsigned long timeframe, diff, fps;
@@ -475,26 +478,26 @@ UI_Gtk::gtk_sync(void)
   if (++count >= 60)
     {
       count = 0;
-      gettimeofday(&tv2, NULL);
-      diff = ((1000000 * (tv2.tv_sec - tv1.tv_sec)) +
-	      (tv2.tv_usec - tv1.tv_usec));
+      sys_gettimeofday(&tv2_sec, &tv2_usec);
+      diff = ((1000000 * (tv2_sec - tv1_sec)) + (tv2_usec - tv1_usec));
       fps = 60500000 / diff;
       sprintf(buf, " %ld fps ", fps);
       gtk_label_set(GTK_LABEL(_main.st_fps), buf);
-      tv1 = tv2;
+      tv1_sec = tv2_sec;
+      tv1_usec = tv2_usec;
     }
 
   if (first)
     {
       first = false;
-      gettimeofday(&tv1, NULL);
-      gettimeofday(&basetime, NULL);
-      base = (basetime.tv_sec * 50) + basetime.tv_usec / 20000;
+      sys_gettimeofday(&tv1_sec, &tv1_usec);
+      sys_gettimeofday(&basetime_sec, &basetime_usec);
+      base = (basetime_sec * 50) + basetime_usec / 20000;
       base -= 26; // see comment below
     }
 
-  gettimeofday(&tv, NULL);
-  d2 = (tv.tv_sec * 50) + tv.tv_usec / 20000;
+  sys_gettimeofday(&tv_sec, &tv_usec);
+  d2 = (tv_sec * 50) + tv_usec / 20000;
   timeframe = (unsigned long)(d2 - base);
   frame++;
   
@@ -513,7 +516,12 @@ UI_Gtk::gtk_sync(void)
   if (_speed_limit)
     {
       if (frame > (timeframe + 1))
-	usleep(20000 * (frame - timeframe - 1));
+	{
+	  // FIMXE: maybe replace with sys_usleep() but
+	  // FIXME: this needs a working sys_usleep() for
+	  // FIXME: the mingw system layer
+	  g_usleep(20000 * (frame - timeframe - 1));
+	}
     }
   else
     {
@@ -528,8 +536,8 @@ UI_Gtk::gtk_sync(void)
     }
   */
 
-  gettimeofday(&tv, NULL);
-  d2 = (tv.tv_sec * 50) + tv.tv_usec / 20000;
+  sys_gettimeofday(&tv_sec, &tv_usec);
+  d2 = (tv_sec * 50) + tv_usec / 20000;
   timeframe = (unsigned long)(d2 - base);
   _auto_skip = false;
 
@@ -666,7 +674,7 @@ UI_Gtk::create_main_window(void)
   _main.agroup = gtk_accel_group_new();
   _main.ifact = gtk_item_factory_new(GTK_TYPE_MENU_BAR, "<KCemu>", _main.agroup);
   gtk_item_factory_create_items(_main.ifact, nentries, entries, NULL);
-  _gtk_accel_group_attach(_main.agroup, G_OBJECT(_main.window)); // FIXME
+  gtk_window_add_accel_group(GTK_WINDOW(_main.window), _main.agroup); // FIXME
 
   _main.agroupP = gtk_accel_group_new();
   _main.ifactP = gtk_item_factory_new(GTK_TYPE_MENU, "<KCemuP>", _main.agroupP);
@@ -934,12 +942,12 @@ UI_Gtk::gtk_zoom(int zoom)
 void
 UI_Gtk::processEvents(void)
 {
-  struct timeval tv;
+  long tv_sec, tv_usec;
 
   if (_main.statusbar_sec != 0)
     {
-      gettimeofday(&tv, NULL);
-      if (tv.tv_sec - _main.statusbar_sec > 10)
+      sys_gettimeofday(&tv_sec, &tv_usec);
+      if (tv_sec - _main.statusbar_sec > 10)
         gtk_statusbar_pop(GTK_STATUSBAR(_main.st_statusbar), 1);
     }
 
@@ -1334,10 +1342,10 @@ UI_Gtk::getDebugInterface(void)
 void
 UI_Gtk::setStatus(const char *msg)
 {
-  struct timeval tv;
+  long tv_sec, tv_usec;
 
-  gettimeofday(&tv, NULL);
-  _main.statusbar_sec = tv.tv_sec;
+  sys_gettimeofday(&tv_sec, &tv_usec);
+  _main.statusbar_sec = tv_sec;
   gtk_statusbar_pop(GTK_STATUSBAR(_main.st_statusbar), 1);
   gtk_statusbar_push(GTK_STATUSBAR(_main.st_statusbar), 1, msg);
 }

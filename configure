@@ -1372,7 +1372,7 @@ fi;
 KCEMU_MAJOR_VERSION=0
 KCEMU_MINOR_VERSION=3
 KCEMU_MICRO_VERSION=7
-KCEMU_EXTRA_VERSION=beta6
+KCEMU_EXTRA_VERSION=beta7
 
 if test $KCEMU_MICRO_VERSION -eq 0
 then
@@ -2864,6 +2864,60 @@ echo "${ECHO_T}$am_cv_CC_dependencies_compiler_type" >&6
 CCDEPMODE=depmode=$am_cv_CC_dependencies_compiler_type
 
 
+
+ac_save_CFLAGS=$CFLAGS
+CFLAGS="-mms-bitfields"
+
+echo "$as_me:$LINENO: checking whether $CC accepts $CFLAGS" >&5
+echo $ECHO_N "checking whether $CC accepts $CFLAGS... $ECHO_C" >&6
+if test "${ac_cv_prog_cc_mms_bitfields+set}" = set; then
+  echo $ECHO_N "(cached) $ECHO_C" >&6
+else
+  cat >conftest.$ac_ext <<_ACEOF
+#line $LINENO "configure"
+/* confdefs.h.  */
+_ACEOF
+cat confdefs.h >>conftest.$ac_ext
+cat >>conftest.$ac_ext <<_ACEOF
+/* end confdefs.h.  */
+
+int
+main ()
+{
+
+  ;
+  return 0;
+}
+_ACEOF
+rm -f conftest.$ac_objext
+if { (eval echo "$as_me:$LINENO: \"$ac_compile\"") >&5
+  (eval $ac_compile) 2>&5
+  ac_status=$?
+  echo "$as_me:$LINENO: \$? = $ac_status" >&5
+  (exit $ac_status); } &&
+         { ac_try='test -s conftest.$ac_objext'
+  { (eval echo "$as_me:$LINENO: \"$ac_try\"") >&5
+  (eval $ac_try) 2>&5
+  ac_status=$?
+  echo "$as_me:$LINENO: \$? = $ac_status" >&5
+  (exit $ac_status); }; }; then
+  ac_cv_prog_cc_mms_bitfields=yes
+else
+  echo "$as_me: failed program was:" >&5
+sed 's/^/| /' conftest.$ac_ext >&5
+
+ac_cv_prog_cc_mms_bitfields=no
+fi
+rm -f conftest.$ac_objext conftest.$ac_ext
+fi
+echo "$as_me:$LINENO: result: $ac_cv_prog_cc_mms_bitfields" >&5
+echo "${ECHO_T}$ac_cv_prog_cc_mms_bitfields" >&6
+if test $ac_cv_prog_cc_mms_bitfields = yes; then
+	CFLAGS="$ac_save_CFLAGS $CFLAGS"
+else
+	CFLAGS="$ac_save_CFLAGS"
+fi
+
 ac_ext=cc
 ac_cpp='$CXXCPP $CPPFLAGS'
 ac_compile='$CXX -c $CXXFLAGS $CPPFLAGS conftest.$ac_ext >&5'
@@ -3454,7 +3508,6 @@ fi
 
 
 ALL_LINGUAS="de"
-
 
         echo "$as_me:$LINENO: checking for strerror in -lcposix" >&5
 echo $ECHO_N "checking for strerror in -lcposix... $ECHO_C" >&6
@@ -7745,6 +7798,11 @@ else
   USE_INCLUDED_GETOPT_TRUE='#'
   USE_INCLUDED_GETOPT_FALSE=
 fi
+
+
+cat >>confdefs.h <<\_ACEOF
+#define USE_INCLUDED_GETOPT 1
+_ACEOF
 
 
 cat >>confdefs.h <<\_ACEOF

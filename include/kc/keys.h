@@ -24,6 +24,7 @@
 
 #define KC_KEY_ENTER               (0x0d)
 #define KC_KEY_ESC                 (0x1b)
+#define KC_KEY_SPACE               (0x20)
 
 #define KC_KEY_F1                  (0x101)
 #define KC_KEY_F2                  (0x102)
@@ -62,5 +63,7 @@
 #define KC_KEY_RUN                 (0x123)
 #define KC_KEY_STOP                (0x124)
 #define KC_KEY_SHIFT_LOCK          (0x125)
+#define KC_KEY_RESET               (0x126)
+#define KC_KEY_NMI                 (0x127)
 
 #endif /* __kc_keys_h */

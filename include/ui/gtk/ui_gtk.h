@@ -154,8 +154,8 @@ class UI_Gtk : public StatusListener, public ErrorListener, public UI
     static void sf_focus_in(GtkWidget *widget, GdkEventFocus *event);
     static void sf_focus_out(GtkWidget *widget, GdkEventFocus *event);
 
-    static void sf_key_press(GtkWidget *widget, GdkEventKey *event);
-    static void sf_key_release(GtkWidget *widget, GdkEventKey *event);
+    static gboolean sf_key_press(GtkWidget *widget, GdkEventKey *event);
+    static gboolean sf_key_release(GtkWidget *widget, GdkEventKey *event);
     static void sf_leave_notify(GtkWidget *widget, GdkEventCrossing *event);
     static void sf_button_press(GtkWidget *widget, GdkEventButton *event);
     static void sf_tape_button_press(GtkWidget *widget, GdkEventButton *event);
@@ -224,6 +224,8 @@ class UI_Gtk : public StatusListener, public ErrorListener, public UI
     virtual UI_ModuleInterface * getModuleInterface(void);
     virtual TapeInterface  * getTapeInterface(void);
     virtual DebugInterface * getDebugInterface(void);
+
+    friend class KeyboardWindow; // allow KeyboardWindow to call event handlers
 };
 
 #endif /* __ui_ui_gtk_h */

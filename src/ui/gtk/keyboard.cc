@@ -19,6 +19,9 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
+#include <stdio.h>
+#include <string.h>
+
 #include "kc/system.h"
 
 #include "kc/kc.h"
@@ -28,121 +31,59 @@
 #include "cmd/cmd.h"
 
 #include "ui/gtk/cmd.h"
+#include "ui/gtk/ui_gtk.h"
 #include "ui/gtk/keyboard.h"
 
-#if 1
-static struct
-{
-  int ch;
-  const char *text;
-  const char *color;
-  GdkRectangle rect;
-} __data[] = {
-  { KC_KEY_CONTROL,    "CONTR",      "#a0a0a0", {   0,   0, 26, 8 } },
-  { '1',               "1",          "#000000", {  42,   0, 26, 8 } },
-  { '2',               "2",          "#000000", {  84,   0, 26, 8 } },
-  { '3',               "3",          "#000000", { 126,   0, 26, 8 } },
-  { '4',               "4",          "#000000", { 168,   0, 26, 8 } },
-  { '5',               "5",          "#000000", { 210,   0, 26, 8 } },
-  { '6',               "6",          "#000000", { 252,   0, 26, 8 } },
-  { '7',               "7",          "#000000", { 294,   0, 26, 8 } },
-  { '8',               "8",          "#000000", { 336,   0, 26, 8 } },
-  { '9',               "9",          "#000000", { 378,   0, 26, 8 } },
-  { '0',               "0",          "#000000", { 420,   0, 26, 8 } },
-  { '@',               "@",          "#000000", { 462,   0, 26, 8 } },
-  { KC_KEY_COLOR,      "COLOR",      "#a0a0a0", {  00,  40, 26, 8 } },
-  { 'q',               "Q",          "#000000", {  42,  40, 26, 8 } },
-  { 'w',               "W",          "#000000", {  84,  40, 26, 8 } },
-  { 'e',               "E",          "#000000", { 126,  40, 26, 8 } },
-  { 'r',               "R",          "#000000", { 168,  40, 26, 8 } },
-  { 't',               "T",          "#000000", { 210,  40, 26, 8 } },
-  { 'z',               "Z",          "#000000", { 252,  40, 26, 8 } },
-  { 'u',               "U",          "#000000", { 294,  40, 26, 8 } },
-  { 'i',               "I",          "#000000", { 336,  40, 26, 8 } },
-  { 'o',               "O",          "#000000", { 378,  40, 26, 8 } },
-  { 'p',               "P",          "#000000", { 420,  40, 26, 8 } },
-  { '^',               "^",          "#000000", { 462,  40, 26, 8 } },
-  { KC_KEY_GRAPHIC,    "GRAPHIC",    "#a0a0a0", {  00,  80, 26, 8 } },
-  { 'a',               "A",          "#000000", {  42,  80, 26, 8 } },
-  { 's',               "S",          "#000000", {  84,  80, 26, 8 } },
-  { 'd',               "D",          "#000000", { 126,  80, 26, 8 } },
-  { 'f',               "F",          "#000000", { 168,  80, 26, 8 } },
-  { 'g',               "G",          "#000000", { 210,  80, 26, 8 } },
-  { 'h',               "H",          "#000000", { 252,  80, 26, 8 } },
-  { 'j',               "J",          "#000000", { 294,  80, 26, 8 } },
-  { 'k',               "K",          "#000000", { 336,  80, 26, 8 } },
-  { 'l',               "L",          "#000000", { 378,  80, 26, 8 } },
-  { ':',               ":",          "#000000", { 420,  80, 26, 8 } },
-  { '?',               "?",          "#000000", { 462,  80, 26, 8 } },
-  { 'y',               "Y",          "#000000", {  42, 120, 26, 8 } },
-  { 'x',               "X",          "#000000", {  84, 120, 26, 8 } },
-  { 'c',               "C",          "#000000", { 126, 120, 26, 8 } },
-  { 'v',               "V",          "#000000", { 168, 120, 26, 8 } },
-  { 'b',               "B",          "#000000", { 210, 120, 26, 8 } },
-  { 'n',               "N",          "#000000", { 252, 120, 26, 8 } },
-  { 'm',               "M",          "#000000", { 294, 120, 26, 8 } },
-  { ',',               ",",          "#000000", { 336, 120, 26, 8 } },
-  { '.',               ".",          "#000000", { 378, 120, 26, 8 } },
-  { ';',               ";",          "#000000", { 420, 120, 26, 8 } },
-  { '=',               "=",          "#000000", { 462, 120, 26, 8 } },
-  { KC_KEY_SHIFT,      "SHIFT",      "#a0a0a0", {  00, 160, 68, 8 } },
-  { KC_KEY_LEFT,       "<--",        "#a0a0a0", {  84, 160, 26, 8 } },
-  { KC_KEY_RIGHT,      "-->",        "#a0a0a0", { 126, 160, 26, 8 } },
-  { ' ',               " ",          "#a0a0a0", { 168, 160, 68, 8 } },
-  { ' ',               " ",          "#a0a0a0", { 252, 160, 68, 8 } },
-  { KC_KEY_UP,         "^",          "#a0a0a0", { 336, 160, 26, 8 } },
-  { KC_KEY_DOWN,       "v",          "#a0a0a0", { 378, 160, 26, 8 } },
-  { KC_KEY_SHIFT,      "SHIFT",      "#a0a0a0", { 420, 160, 68, 8 } },
-  { KC_KEY_PAUSE,      "PAUSE",      "#a0a0a0", { 546,   0, 26, 8 } },
-  { KC_KEY_INSERT,     "INS",        "#a0a0a0", { 546,  40, 26, 8 } },
-  { KC_KEY_ESC,        "ESC",        "#a0a0a0", { 546,  80, 26, 8 } },
-  { KC_KEY_HOME,       "|<--",       "#a0a0a0", { 546, 120, 26, 8 } },
-  { KC_KEY_SHIFT_LOCK, "SHIFT LOCK", "#a0a0a0", { 546, 160, 26, 8 } },
-  { -1,                "RESET",      "#ff0000", { 588,   0, 68, 8 } },
-  { KC_KEY_LIST,       "LIST",       "#a0a0a0", { 588,  40, 26, 8 } },
-  { KC_KEY_RUN,        "RUN",        "#a0a0a0", { 588,  80, 68, 8 } },
-  { KC_KEY_STOP,       "STOP",       "#a0a0a0", { 588, 120, 68, 8 } },
-  { KC_KEY_ENTER,      "ENTER",      "#a0a0a0", { 588, 160, 68, 8 } },
-  { ' ',               "",           "#000000", {   0,   0,  0, 0 } }
-};
-#endif
+/* #define DEBUG_REGIONS 1 */
 
-#if 0
-static struct
-{
-  int ch;
-  const char *text;
-  const char *color;
-  GdkRectangle rect;
-} __data[] = {
-  { -1,                "RES",        "#ff0000", {   0,   0, 30, 20 } },
-  { KC_KEY_F1,         "ADR",        "#404040", {  40,   0, 30, 20 } },
-  { KC_KEY_F2,         "DAT",        "#404040", {  80,   0, 30, 20 } },
-  { '+',               "+",          "#404040", { 120,   0, 30, 20 } },
-  { '-',               "-",          "#404040", { 160,   0, 30, 20 } },
-  { -1,                "NMI",        "#ff0000", {   0,  35, 30, 20 } },
-  { 'c',               "C",          "#ffffff", {  40,  35, 30, 20 } },
-  { 'd',               "D",          "#ffffff", {  80,  35, 30, 20 } },
-  { 'e',               "E",          "#ffffff", { 120,  35, 30, 20 } },
-  { 'f',               "F",          "#ffffff", { 160,  35, 30, 20 } },
-  { KC_KEY_F4,         "ST",         "#404040", {   0,  70, 30, 20 } },
-  { '8',               "8",          "#ffffff", {  40,  70, 30, 20 } },
-  { '9',               "9",          "#ffffff", {  80,  70, 30, 20 } },
-  { 'a',               "A",          "#ffffff", { 120,  70, 30, 20 } },
-  { 'b',               "B",          "#ffffff", { 160,  70, 30, 20 } },
-  { KC_KEY_F3,         "LD",         "#404040", {   0, 105, 30, 20 } },
-  { '4',               "4",          "#ffffff", {  40, 105, 30, 20 } },
-  { '5',               "5",          "#ffffff", {  80, 105, 30, 20 } },
-  { '6',               "6",          "#ffffff", { 120, 105, 30, 20 } },
-  { '7',               "7",          "#ffffff", { 160, 105, 30, 20 } },
-  { KC_KEY_ENTER,      "EX",         "#404040", {   0, 140, 30, 20 } },
-  { '0',               "0",          "#ffffff", {  40, 140, 30, 20 } },
-  { '1',               "1",          "#ffffff", {  80, 140, 30, 20 } },
-  { '2',               "2",          "#ffffff", { 120, 140, 30, 20 } },
-  { '3',               "3",          "#ffffff", { 160, 140, 30, 20 } },
-  { ' ',               "",           "#000000", {   0,   0,  0,  0 } }
+static struct {
+  const char *name;
+  int key_val;
+} _key_names[] = {
+  { "KC_KEY_ENTER", KC_KEY_ENTER },
+  { "KC_KEY_SPACE", KC_KEY_SPACE },
+  { "KC_KEY_ESC", KC_KEY_ESC },
+  { "KC_KEY_F1", KC_KEY_F1 },
+  { "KC_KEY_F2", KC_KEY_F2 },
+  { "KC_KEY_F3", KC_KEY_F3 },
+  { "KC_KEY_F4", KC_KEY_F4 },
+  { "KC_KEY_F5", KC_KEY_F5 },
+  { "KC_KEY_F6", KC_KEY_F6 },
+  { "KC_KEY_F7", KC_KEY_F7 },
+  { "KC_KEY_F8", KC_KEY_F8 },
+  { "KC_KEY_F9", KC_KEY_F9 },
+  { "KC_KEY_F10", KC_KEY_F10 },
+  { "KC_KEY_F11", KC_KEY_F11 },
+  { "KC_KEY_F12", KC_KEY_F12 },
+  { "KC_KEY_F13", KC_KEY_F13 },
+  { "KC_KEY_F14", KC_KEY_F14 },
+  { "KC_KEY_F15", KC_KEY_F15 },
+  { "KC_KEY_SHIFT", KC_KEY_SHIFT },
+  { "KC_KEY_CONTROL", KC_KEY_CONTROL },
+  { "KC_KEY_ALT", KC_KEY_ALT },
+  { "KC_KEY_ALT_GR", KC_KEY_ALT_GR },
+  { "KC_KEY_LEFT", KC_KEY_LEFT },
+  { "KC_KEY_RIGHT", KC_KEY_RIGHT },
+  { "KC_KEY_DOWN", KC_KEY_DOWN },
+  { "KC_KEY_UP", KC_KEY_UP },
+  { "KC_KEY_HOME", KC_KEY_HOME },
+  { "KC_KEY_END", KC_KEY_END },
+  { "KC_KEY_DEL", KC_KEY_DEL },
+  { "KC_KEY_INSERT", KC_KEY_INSERT },
+  { "KC_KEY_PAGE_UP", KC_KEY_PAGE_UP },
+  { "KC_KEY_PAGE_DOWN", KC_KEY_PAGE_DOWN },
+  { "KC_KEY_PAUSE", KC_KEY_PAUSE },
+  { "KC_KEY_PRINT", KC_KEY_PRINT },
+  { "KC_KEY_COLOR", KC_KEY_COLOR },
+  { "KC_KEY_GRAPHIC", KC_KEY_GRAPHIC },
+  { "KC_KEY_LIST", KC_KEY_LIST },
+  { "KC_KEY_RUN", KC_KEY_RUN },
+  { "KC_KEY_STOP", KC_KEY_STOP },
+  { "KC_KEY_SHIFT_LOCK", KC_KEY_SHIFT_LOCK },
+  { "KC_KEY_RESET", KC_KEY_RESET },
+  { "KC_KEY_NMI", KC_KEY_NMI },
+  { NULL, -1 },
 };
-#endif
 
 class CMD_ui_keyboard_window_toggle : public CMD
 {
@@ -162,15 +103,16 @@ public:
     }
 };
 
-static KeyboardWindow *kb;
-
 KeyboardWindow::KeyboardWindow(void)
 {
-  _font = (GdkFont *)22;
-  kb = this;
-  _gc = NULL;
-  _font = NULL;
-  _colormap = NULL;
+  _key_active = FALSE;
+  _key_pressed = NULL;
+
+  _keys[0].key = NULL;
+  _pixbuf_normal = NULL;
+  _pixbuf_pressed = NULL;
+
+  init_key_regions();
   init();
 }
 
@@ -178,121 +120,431 @@ KeyboardWindow::~KeyboardWindow(void)
 {
 }
 
-void
+gboolean
 KeyboardWindow::sf_expose(GtkWidget *widget, GdkEventExpose *event, gpointer data)
 {
+  int w, h;
+  KeyboardWindow *self = (KeyboardWindow *)data;
+
+  gdk_window_set_back_pixmap(self->_w.canvas->window, NULL, FALSE);
+
+  w = self->_w.canvas->allocation.width;
+  h = self->_w.canvas->allocation.height;
+  gdk_draw_rectangle(self->_w.canvas->window,
+		     self->_w.canvas->style->black_gc,
+		     FALSE, 0, 0, w - 1, h - 1);
+  gdk_draw_pixbuf(self->_w.canvas->window,
+		  self->_w.canvas->style->fg_gc[GTK_STATE_NORMAL],
+		  self->_pixbuf_normal,
+		  0, 0,
+		  1, 1,
+		  w - 2, h - 2,
+		  GDK_RGB_DITHER_NONE,
+		  0, 0);
+
+  return FALSE;
+}
+
+void
+KeyboardWindow::draw_key_normal(struct _key_struct *key)
+{
+  gdk_draw_pixbuf(_w.canvas->window,
+		  _w.canvas->style->fg_gc[GTK_STATE_NORMAL],
+		  _pixbuf_normal,
+		  key->rect.x,
+		  key->rect.y,
+		  key->rect.x + 1,
+		  key->rect.y + 1,
+		  key->rect.width,
+		  key->rect.height,
+		  GDK_RGB_DITHER_NONE,
+		  0, 0);
+}
+
+void
+KeyboardWindow::draw_key_pressed(struct _key_struct *key)
+{
+  gdk_draw_pixbuf(_w.canvas->window,
+		  _w.canvas->style->fg_gc[GTK_STATE_NORMAL],
+		  _pixbuf_pressed,
+		  key->rect.x,
+		  key->rect.y,
+		  key->rect.x + 1,
+		  key->rect.y + 1,
+		  key->rect.width,
+		  key->rect.height,
+		  GDK_RGB_DITHER_NONE,
+		  0, 0);
+}
+
+gboolean
+KeyboardWindow::sf_button_press(GtkWidget *widget, GdkEventButton *event, gpointer data)
+{
   int a;
-  GdkColor color;
   KeyboardWindow *self = (KeyboardWindow *)data;
-  GdkDrawable *drawable = GTK_WIDGET(widget)->window;
 
-  if (self->_gc == NULL)
-    self->_gc = gdk_gc_new(drawable);
-  if (self->_font == NULL)
-    self->_font = gdk_font_load("fixed");
-  if (self->_colormap == NULL)
-    self->_colormap = gdk_colormap_get_system();
-
-  gdk_color_parse("#000000", &color);
-  gdk_color_alloc(self->_colormap, &color);
-  gdk_gc_set_foreground(self->_gc, &color);
-
-  if ((get_kc_type() & KC_TYPE_85_1_CLASS) == 0)
+  for (a = 0;self->_keys[a].key != NULL;a++)
     {
-      gdk_draw_string(drawable, self->_font, self->_gc, 40, 40, _("comming soon..."));
-      return;
-    }
-
-  for (a = 0;__data[a].rect.width > 0;a++)
-    gdk_draw_string(drawable, self->_font, self->_gc,
-		    __data[a].rect.x, __data[a].rect.y + 20,
-		    __data[a].text);
-
-  for (a = 0;__data[a].rect.width > 0;a++)
-    {
-      gdk_color_parse(__data[a].color, &color);
-      gdk_color_alloc(self->_colormap, &color);
-      gdk_gc_set_foreground(self->_gc, &color);
-      gdk_draw_rectangle(drawable, self->_gc, 1,
-                         __data[a].rect.x, __data[a].rect.y,
-                         __data[a].rect.width, __data[a].rect.height);
-    }
-
-}
-
-void
-KeyboardWindow::sf_button_press(GtkWidget */*widget*/, GdkEventButton *event, gpointer data)
-{
-  KeyboardWindow *self = (KeyboardWindow *)data;
-  self->button_press(event, true);
-}
-
-void
-KeyboardWindow::sf_button_release(GtkWidget */*widget*/, GdkEventButton *event, gpointer data)
-{
-  KeyboardWindow *self = (KeyboardWindow *)data;
-  self->button_press(event, false);
-}
-
-void
-KeyboardWindow::button_press(GdkEventButton *event, bool press)
-{
-  int a, c;
-
-  if ((get_kc_type() & KC_TYPE_85_1_CLASS) == 0)
-    return;
-
-  c = -1;
-  for (a = 0;__data[a].rect.width > 0;a++)
-    {
-      if ((event->x < __data[a].rect.x) || (event->x > (__data[a].rect.x + __data[a].rect.width)))
-        continue;
-      if ((event->y < __data[a].rect.y) || (event->y > (__data[a].rect.y + __data[a].rect.height)))
-        continue;
-      c = __data[a].ch;
-
-      if (c < 0)
+      if (gdk_region_point_in(self->_keys[a].region,
+			      (int)event->x - 1,
+			      (int)event->y - 1))
 	{
-	  /*
-	   *  special handling for reset key which is not
-	   *  part of the keyboard matrix
-	   */
-	  CMD_EXEC("emu-reset");
-	  return;
-	}
+	  self->_key_active = TRUE;
+	  self->_key_pressed = &self->_keys[a];
+	  self->draw_key_pressed(self->_key_pressed);
 
+	  switch (event->button)
+	    {
+	    case 2:
+	      keyboard->keyPressed(KC_KEY_CONTROL, KC_KEY_CONTROL);
+	      break;
+	    case 3:
+	      keyboard->keyPressed(KC_KEY_SHIFT, KC_KEY_SHIFT);
+	      break;
+	    }
+	  
+	  keyboard->keyPressed(self->_key_pressed->key_val, self->_key_pressed->key_val);
+	}
+    }
+
+  return TRUE;
+}
+
+gboolean
+KeyboardWindow::sf_button_release(GtkWidget *widget, GdkEventButton *event, gpointer data)
+{
+  KeyboardWindow *self = (KeyboardWindow *)data;
+
+  if (!self->_key_pressed)
+    return TRUE;
+
+  if (self->_key_active)
+    self->_key_active = FALSE;
+
+  self->draw_key_normal(self->_key_pressed);
+
+  keyboard->keyReleased(self->_key_pressed->key_val, self->_key_pressed->key_val);
+  switch (event->button)
+    {
+    case 2:
+      keyboard->keyReleased(KC_KEY_CONTROL, KC_KEY_CONTROL);
+      break;
+    case 3:
+      keyboard->keyReleased(KC_KEY_SHIFT, KC_KEY_SHIFT);
       break;
     }
-  if (c < 0)
-    return;
-
-  if (press)
+  
+  if (self->_key_pressed->key_val == KC_KEY_RESET)
     {
-      switch (event->button)
-        {
-        case 2:
-          keyboard->keyPressed(KC_KEY_CONTROL, KC_KEY_CONTROL);
-          break;
-        case 3:
-          keyboard->keyPressed(KC_KEY_SHIFT, KC_KEY_SHIFT);
-          break;
-        }
+      CMD_EXEC("emu-reset");
+    }
+  else if (self->_key_pressed->key_val == KC_KEY_NMI)
+    {
+      CMD_EXEC("emu-nmi");
+    }
 
-      keyboard->keyPressed(c, c);
+  self->_key_pressed = NULL;
+
+  return TRUE;
+}
+
+gboolean
+KeyboardWindow::sf_key_press(GtkWidget *widget, GdkEventKey *event, gpointer data)
+{
+  return UI_Gtk::sf_key_press(widget, event);
+}
+
+gboolean
+KeyboardWindow::sf_key_release(GtkWidget *widget, GdkEventKey *event, gpointer data)
+{
+  return UI_Gtk::sf_key_release(widget, event);
+}
+
+gboolean
+KeyboardWindow::sf_motion_notify(GtkWidget *widget, GdkEventMotion *event, gpointer data)
+{
+  KeyboardWindow *self = (KeyboardWindow *)data;
+
+  if (!self->_key_pressed)
+    {
+#ifdef DEBUG_REGIONS
+      self->debug_regions(event);
+#endif /* DEBUG_REGIONS */
+      return TRUE;
+    }
+
+  if (gdk_region_point_in(self->_key_pressed->region,
+			  (int)event->x - 1,
+			  (int)event->y - 1))
+    {
+      if (self->_key_active)
+	return TRUE;
+
+      self->_key_active = TRUE;
+      self->draw_key_pressed(self->_key_pressed);
     }
   else
     {
-      keyboard->keyReleased(c, c);
-      switch (event->button)
-        {
-        case 2:
-          keyboard->keyReleased(KC_KEY_CONTROL, KC_KEY_CONTROL);
-          break;
-        case 3:
-          keyboard->keyReleased(KC_KEY_SHIFT, KC_KEY_SHIFT);
-          break;
-        }
+      if (!self->_key_active)
+	return TRUE;
+
+      self->_key_active = FALSE;
+      self->draw_key_normal(self->_key_pressed);
     }
+
+  return TRUE;
+}
+
+int
+KeyboardWindow::get_key_val(const char *key)
+{
+  int a;
+
+  for (a = 0;_key_names[a].name != NULL;a++)
+    if (strcmp(_key_names[a].name, key) == 0)
+      return _key_names[a].key_val;
+
+  if (strlen(key) == 1)
+    return key[0];
+
+  return -1;
+}
+
+void
+KeyboardWindow::debug_regions(GdkEventMotion *event)
+{
+#ifdef DEBUG_REGIONS
+  static GdkColor     red;
+  static GdkColor     blue;
+  static GdkGC       *gc;
+  static GdkColormap *colormap = NULL;
+
+  int a, b;
+  int n_rectangles;
+  GdkRectangle *rectangles;
+
+  if (colormap == NULL)
+    {
+      gc = gdk_gc_new(_w.canvas->window);
+      colormap = gdk_colormap_get_system();
+      gdk_color_parse("#ff0000", &red);
+      gdk_color_parse("#0000ff", &blue);
+      gdk_color_alloc(colormap, &red);
+      gdk_color_alloc(colormap, &blue);
+    }
+
+  for (a = 0;_keys[a].key != NULL;a++)
+    {
+      if (gdk_region_point_in(_keys[a].region, (int)event->x - 1, (int)event->y - 1))
+	{
+	  sf_expose(_w.canvas, NULL, this);
+	  gdk_gc_set_foreground(gc, &red);
+	  gdk_draw_rectangle(_w.canvas->window, gc, FALSE,
+			     _keys[a].rect.x + 1,
+			     _keys[a].rect.y + 1,
+			     _keys[a].rect.width - 1,
+			     _keys[a].rect.height - 1);
+	  gdk_draw_rectangle(_w.canvas->window, gc, FALSE,
+			     _keys[a].rect.x,
+			     _keys[a].rect.y,
+			     _keys[a].rect.width + 1,
+			     _keys[a].rect.height + 1);
+	  gdk_region_get_rectangles(_keys[a].region, &rectangles, &n_rectangles);
+	  gdk_gc_set_foreground(gc, &blue);
+	  for (b = 0;b < n_rectangles;b++)
+	    {
+	      gdk_draw_rectangle(_w.canvas->window, gc, FALSE,
+				 rectangles[b].x + 1,
+				 rectangles[b].y + 1,
+				 rectangles[b].width - 1,
+				 rectangles[b].height - 1);
+	    }
+	}
+    }
+#endif /* DEBUG_REGIONS */
+}
+
+void
+KeyboardWindow::init_key_regions(void)
+{
+  int a;
+  FILE *f;
+  int state;
+  char *ptr;
+  char buf[1024];
+  GdkRectangle r;
+  const char *filename = NULL;
+
+  switch (get_kc_type())
+    {
+    case KC_TYPE_85_2:
+    case KC_TYPE_85_3:
+    case KC_TYPE_85_4:
+      filename = "kc854.key";
+      break;
+    case KC_TYPE_85_1:
+    case KC_TYPE_87:
+      filename = "kc851.key";
+      break;
+    case KC_TYPE_LC80:
+      filename = "lc80.key";
+      break;
+    case KC_TYPE_Z1013:
+    case KC_TYPE_A5105:
+      break;
+
+      /*
+       *  We don't use a default so we get a warning if the enum
+       *  is extended; the following values can't be returned by
+       *  get_kc_type() though.
+       */
+    case KC_TYPE_NONE:
+    case KC_TYPE_85_1_CLASS:
+    case KC_TYPE_85_2_CLASS:
+    case KC_TYPE_ALL:
+      break;
+    }
+
+
+  if (filename == NULL)
+    return;
+
+  ptr = new char[strlen(kcemu_datadir) + strlen(filename) + 2];
+  strcpy(ptr, kcemu_datadir);
+  strcat(ptr, "/");
+  strcat(ptr, filename);
+
+  f = fopen(ptr, "rb");
+  delete[] ptr;
+  if (f == NULL)
+    return;
+
+  if (fgets(buf, 1024, f) == NULL)
+    {
+      fclose(f);
+      return;
+    }
+
+  ptr = strchr(buf, '\n');
+  if (ptr != NULL)
+    *ptr = '\0';
+
+  ptr = new char[strlen(kcemu_datadir) + strlen(buf) + 2];
+  strcpy(ptr, kcemu_datadir);
+  strcat(ptr, "/");
+  strcat(ptr, buf);
+
+  _pixbuf_normal = gdk_pixbuf_new_from_file(ptr, NULL);
+  if (_pixbuf_normal == NULL)
+    {
+      printf("can't load keyboard pixmap '%s'\n", ptr);
+      fclose(f);
+      delete[] ptr;
+      return;
+    }
+  delete[] ptr;
+
+  if (fgets(buf, 1024, f) == NULL)
+    {
+      fclose(f);
+      return;
+    }
+
+  ptr = strchr(buf, '\n');
+  if (ptr != NULL)
+    *ptr = '\0';
+
+  ptr = new char[strlen(kcemu_datadir) + strlen(buf) + 2];
+  strcpy(ptr, kcemu_datadir);
+  strcat(ptr, "/");
+  strcat(ptr, buf);
+
+  _pixbuf_pressed = gdk_pixbuf_new_from_file(ptr, NULL);
+  if (_pixbuf_pressed == NULL)
+    {
+      printf("can't load keyboard pixmap '%s'\n", ptr);
+      fclose(f);
+      delete[] ptr;
+      return;
+    }
+  delete[] ptr;
+
+  a = -1;
+  state = 0;
+  while (state >= 0)
+    {
+      if (fgets(buf, 1024, f) == NULL)
+	break;
+
+      if (buf[0] == '#')
+	continue;
+
+      ptr = strchr(buf, '\n');
+      if (ptr != NULL)
+	*ptr = '\0';
+
+      switch (state)
+	{
+	case 2:
+	  if (buf[0] == '=')
+	    {
+	      if (sscanf(buf, "=%d,%d,%d,%d", &r.x, &r.y, &r.width, &r.height) != 4)
+		{
+		  state = -1;
+		  break;
+		}
+	      _keys[a].region = gdk_region_rectangle(&r);
+	      break;
+	    }
+	  else if (buf[0] != '+')
+	    {
+	      state = -1;
+	      break;
+	    }
+	  /*
+	   *  else reset state and fall through; this is the case when we
+	   *  just read the first line for a new key definition
+	   */
+	  state = 0;
+	case 0:
+	  if (buf[0] != '+')
+	    {
+	      state = -1;
+	      break;
+	    }
+	  a++;
+	  _keys[a].key = strdup(buf + 1);
+	  _keys[a].key_val = get_key_val(_keys[a].key);
+	  state++;
+	  break;
+	case 1:
+	  if (buf[0] != ':')
+	    {
+	      state = -1;
+	      break;
+	    }
+	  if (sscanf(buf, ":%d,%d,%d,%d",
+		     &_keys[a].rect.x,
+		     &_keys[a].rect.y,
+		     &_keys[a].rect.width,
+		     &_keys[a].rect.height) != 4)
+	    {
+	      state = -1;
+	      break;
+	    }
+	  state++;
+	  break;
+	}
+    }
+
+  a++;
+  _keys[a].key = NULL;
+
+#ifdef DEBUG_REGIONS
+  printf("%d key definitions loaded.\n", a);
+#endif /* DEBUG_REGIONS */
+
+  fclose(f);
 }
 
 void
@@ -301,11 +553,12 @@ KeyboardWindow::init(void)
   _window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
   gtk_widget_set_name(_window, "KeyboardWindow");
   gtk_window_set_title(GTK_WINDOW(_window), _("KCemu: Keyboard"));
-  gtk_window_set_resizable(GTK_WINDOW(_window), false);
-  gtk_window_position(GTK_WINDOW(_window), GTK_WIN_POS_MOUSE);
+  gtk_window_set_resizable(GTK_WINDOW(_window), FALSE);
   gtk_signal_connect(GTK_OBJECT(_window), "delete_event",
                      GTK_SIGNAL_FUNC(cmd_exec_sft),
                      (char *)"ui-keyboard-window-toggle"); // FIXME:
+  gtk_signal_connect(GTK_OBJECT(_window), "key_press_event", GTK_SIGNAL_FUNC(sf_key_press), this);
+  gtk_signal_connect(GTK_OBJECT(_window), "key_release_event", GTK_SIGNAL_FUNC(sf_key_release), this);
 
   /*
    *  vbox
@@ -315,38 +568,56 @@ KeyboardWindow::init(void)
   gtk_container_add(GTK_CONTAINER(_window), _w.vbox);
   gtk_widget_show(_w.vbox);
 
-  /*
-   *  canvas
-   */
-  _w.canvas = gtk_drawing_area_new();
-  gtk_drawing_area_size(GTK_DRAWING_AREA(_w.canvas), 656, 180);
-  gtk_box_pack_start(GTK_BOX(_w.vbox), _w.canvas, FALSE, TRUE, 0);
-  gtk_widget_show(_w.canvas);
-  gtk_signal_connect(GTK_OBJECT(_w.canvas), "button_press_event",
-                     GTK_SIGNAL_FUNC(sf_button_press), this);
-  gtk_signal_connect(GTK_OBJECT(_w.canvas), "button_release_event",
-                     GTK_SIGNAL_FUNC(sf_button_release), this);
-  gtk_widget_set_events(_w.canvas, (GDK_BUTTON_PRESS_MASK |
-                                    GDK_BUTTON_RELEASE_MASK |
-                                    GDK_PROPERTY_CHANGE_MASK |
-                                    GDK_EXPOSURE_MASK));
-  gtk_signal_connect(GTK_OBJECT(_w.canvas), "expose_event",
-                     GTK_SIGNAL_FUNC(sf_expose), this);
+  _w.label = NULL;
+  _w.canvas = NULL;
+  _w.eventbox = NULL;
+  if ((_pixbuf_normal != NULL) && (_pixbuf_pressed != NULL))
+    {
+      /*
+       *  eventbox
+       */
+      _w.eventbox = gtk_event_box_new();
+      gtk_signal_connect(GTK_OBJECT(_w.eventbox), "motion_notify_event", GTK_SIGNAL_FUNC(sf_motion_notify), this);
+      gtk_signal_connect(GTK_OBJECT(_w.eventbox), "button_press_event", GTK_SIGNAL_FUNC(sf_button_press), this);
+      gtk_signal_connect(GTK_OBJECT(_w.eventbox), "button_release_event", GTK_SIGNAL_FUNC(sf_button_release), this);
+      gtk_widget_set_events(_w.eventbox, (GDK_POINTER_MOTION_MASK |
+					  GDK_BUTTON_PRESS_MASK |
+					  GDK_BUTTON_RELEASE_MASK));
+      gtk_box_pack_start(GTK_BOX(_w.vbox), _w.eventbox, FALSE, FALSE, 5);
+      gtk_widget_show(_w.eventbox);
+      
+      /*
+       *  canvas
+       */
+      _w.canvas = gtk_drawing_area_new();
+      gtk_widget_set_events(_w.canvas, GDK_EXPOSURE_MASK);
+      gtk_signal_connect(GTK_OBJECT(_w.canvas), "expose_event", GTK_SIGNAL_FUNC(sf_expose), this);
+      gtk_container_add(GTK_CONTAINER(_w.eventbox), _w.canvas);
+      gtk_widget_set_usize(_w.canvas,
+			   gdk_pixbuf_get_width(_pixbuf_normal),
+			   gdk_pixbuf_get_height(_pixbuf_normal));
+      gtk_widget_show(_w.canvas);
+    }
+  else
+    {
+      _w.label = gtk_label_new(_("\n  Sorry, keyboard display not configured.  \n"));
+      gtk_box_pack_start(GTK_BOX(_w.vbox), _w.label, FALSE, FALSE, 5);
+      gtk_widget_show(_w.label);
+    }
 
   /*
    *  separator
    */
   _w.separator = gtk_hseparator_new();
   gtk_box_pack_start(GTK_BOX(_w.vbox), _w.separator,
-                     FALSE, FALSE, 5);
+		     FALSE, FALSE, 5);
   gtk_widget_show(_w.separator);
   
   /*
    *  close button
    */
-  _w.close = gtk_button_new_with_label(_("Close"));
-  gtk_box_pack_start(GTK_BOX(_w.vbox), _w.close,
-                     FALSE, FALSE, 5);
+  _w.close = gtk_button_new_with_label("Close");
+  gtk_box_pack_start(GTK_BOX(_w.vbox), _w.close, FALSE, FALSE, 5);
   gtk_signal_connect(GTK_OBJECT(_w.close), "clicked",
                      GTK_SIGNAL_FUNC(cmd_exec_sf),
                      (gpointer)"ui-keyboard-window-toggle");

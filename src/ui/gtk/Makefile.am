@@ -1,8 +1,19 @@
 ## Process this file with automake to produce Makefile.in
 
-bin_PROGRAMS = kcemu-remote
-
 noinst_LIBRARIES = libui_gtk.a
+
+pkgdata_DATA = \
+	kc851.key \
+	kc851_keyboard.xpm \
+	kc851_keyboard_pressed.xpm \
+	kc854.key \
+	kc854_keyboard.xpm \
+	kc854_keyboard_pressed.xpm \
+	lc80.key \
+	lc80_keyboard.xpm \
+	lc80_keyboard_pressed.xpm
+
+EXTRA_DIST = $(pkgdata_DATA)
 
 INCLUDES = \
 	-I../../../include \
@@ -36,8 +47,8 @@ libui_gtk_a_SOURCES = \
 	wav.cc		\
 	hedit.cc
 
-kcemu_remote_SOURCES = \
-	kcemu-remote.c
-
-kcemu_remote_LDADD = \
-	-L/usr/X11R6/lib -lX11 -lXmu $(INTLLIBS)
+if TARGET_LINUX
+bin_PROGRAMS = kcemu-remote
+kcemu_remote_SOURCES = kcemu-remote.c
+kcemu_remote_LDADD = -L/usr/X11R6/lib -lX11 -lXmu $(INTLLIBS)
+endif

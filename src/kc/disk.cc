@@ -107,7 +107,6 @@ public:
            */
         case 3:
           _d->detach(get_disk_no(args));
-	  CMD_EXEC_ARGS("ui-disk-update-MSG", args);
           return;
         }
       
@@ -137,7 +136,6 @@ public:
                 shortname = filename;
               sprintf(buf, _("disk-file `%s' attached."), shortname);
               Status::instance()->setMessage(buf);
-	      CMD_EXEC_ARGS("ui-disk-update-MSG", args);
               break;
             default:
               Status::instance()->setMessage(_("Can't attach disk-file."));
@@ -162,9 +160,17 @@ Disk::~Disk()
 disk_error_t
 Disk::attach(int disk_no, const char *filename, bool create)
 {
+  char *ptr;
+  disk_error_t ret;
+
   if (fdc_fdc == NULL)
     return DISK_ERROR;
-  
+
+  if (filename == NULL)
+    return DISK_ERROR;
+
+  ret = DISK_OK;
+
   if (create)
     {
       DBG(1, form("KCemu/Disk/attach",
@@ -180,12 +186,31 @@ Disk::attach(int disk_no, const char *filename, bool create)
       Floppy *floppy = fdc_fdc->get_floppy(disk_no);
       if (floppy != NULL)
 	{
-	  if (!floppy->attach(filename))
-	    return DISK_ERROR;
+	  if (*filename == '/')
+	    {
+	      ptr = strdup(filename);
+	    }
+	  else
+	    {
+	      ptr = (char *)malloc(strlen(kcemu_datadir) + strlen(filename) + 2);
+	      strcpy(ptr, kcemu_datadir);
+	      strcat(ptr, "/");
+	      strcat(ptr, filename);
+	    }
+
+	  if (!floppy->attach(ptr))
+	    ret = DISK_ERROR;
+	  free(ptr);
 	}
     }
 
-  return DISK_OK;
+  CMD_Args *args = new CMD_Args();
+  args->set_int_arg("disk", disk_no);
+  args->set_string_arg("filename", filename);
+  CMD_EXEC_ARGS("ui-disk-update-MSG", args);
+  delete args;
+
+  return ret;
 }
 
 disk_error_t
@@ -201,6 +226,12 @@ Disk::detach(int disk_no)
   Floppy *floppy = fdc_fdc->get_floppy(disk_no);
   if (floppy != NULL)
     floppy->attach(NULL);
+
+  CMD_Args *args = new CMD_Args();
+  args->set_int_arg("disk", disk_no);
+  args->set_string_arg("filename", "");
+  CMD_EXEC_ARGS("ui-disk-update-MSG", args);
+  delete args;
 
   return DISK_OK;
 }

@@ -7,4 +7,5 @@ INCLUDES = \
 
 libsys_linux_a_SOURCES = \
 	sys_usleep.c \
-	sys_localtime.c
+	sys_localtime.c \
+	sys_gettimeofday.c

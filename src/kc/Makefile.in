@@ -226,7 +226,7 @@ kcemu_SOURCES = \
 @TARGET_LINUX_TRUE@SYSLIBS_LINUX = ../sys/linux/libsys_linux.a
 
 @TARGET_MINGW_TRUE@UILIBS_MINGW = $(UILIBS_GTK) $(UILIBS_SDL)
-@TARGET_MINGW_TRUE@SYSLIBS_MINGW = ../sys/mingw/libsys_mingw.a
+@TARGET_MINGW_TRUE@SYSLIBS_MINGW = ../sys/mingw/libsys_mingw.a -lwinmm
 
 @TARGET_BEOS_TRUE@UILIBS_BEOS = ../ui/beos/libui_beos.a
 @TARGET_BEOS_TRUE@SYSLIBS_BEOS = ../sys/beos/libsys_beos.a -lbe
