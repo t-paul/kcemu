@@ -2,7 +2,7 @@
  *  KCemu -- the KC 85/3 and KC 85/4 Emulator
  *  Copyright (C) 1997-2001 Torsten Paul
  *
- *  $Id: tape.h,v 1.14 2002/06/09 14:24:32 torsten_paul Exp $
+ *  $Id: tape.h,v 1.15 2002/10/31 01:46:33 torsten_paul Exp $
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -150,8 +150,10 @@ private:
 				  kct_machine_type_t machine);
     virtual tape_error_t rename(const char *from, const char *to);
     virtual tape_error_t remove(const char *name);
-    virtual tape_error_t extract(const char *name,
-                                const char *filename);
+    virtual tape_error_t export_tap(const char *name,
+				    const char *filename);
+    virtual tape_error_t export_wav(const char *name,
+				    const char *filename);
     virtual istream * read(const char *name,
 			   kct_file_props_t *props = NULL);
 };

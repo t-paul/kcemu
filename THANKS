@@ -1,5 +1,7 @@
 Marat Fayzullin
 	for the Z80 emulation core used for the main processor
+	(I needed to tweak some bits of the emulation core; see
+	src/z80core/README for the list of changes)
 Marcel de Kogel
 	for the Z80 emulation core used for the KC floppy
 	processor
@@ -13,5 +15,5 @@ Holger Krull
 	computer (see http://www.lc80.de/)
 Kev Thacker
 	for interesting insights concerning the floppy emulation
-	(he's also the author of the KC driver for MESS
-	http://mess.emuverse.com/)
+	(he's also the author of the KC driver for M.E.S.S. the
+	Multi-Emulator Super System, see http://mess.emuverse.com/)

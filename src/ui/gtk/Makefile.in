@@ -1,6 +1,6 @@
-# Makefile.in generated automatically by automake 1.4-p4 from Makefile.am
+# Makefile.in generated automatically by automake 1.4-p6 from Makefile.am
 
-# Copyright (C) 1994, 1995-8, 1999 Free Software Foundation, Inc.
+# Copyright (C) 1994, 1995-8, 1999, 2001 Free Software Foundation, Inc.
 # This Makefile.in is free software; the Free Software Foundation
 # gives unlimited permission to copy and/or distribute it,
 # with or without modifications, as long as this notice is preserved.
@@ -59,6 +59,7 @@ PRE_UNINSTALL = :
 POST_UNINSTALL = :
 host_alias = @host_alias@
 host_triplet = @host@
+AUDIOFILE_LIBS = @AUDIOFILE_LIBS@
 CATALOGS = @CATALOGS@
 CATOBJEXT = @CATOBJEXT@
 CC = @CC@
@@ -67,6 +68,7 @@ CPPUNIT_CONFIG = @CPPUNIT_CONFIG@
 CPPUNIT_LIBS = @CPPUNIT_LIBS@
 CXX = @CXX@
 DATADIRNAME = @DATADIRNAME@
+F_L_A_C_LIBS = @F_L_A_C_LIBS@
 GENCAT = @GENCAT@
 GMOFILES = @GMOFILES@
 GMSGFMT = @GMSGFMT@
@@ -82,6 +84,7 @@ INTLOBJS = @INTLOBJS@
 LN_S = @LN_S@
 MAKEINFO = @MAKEINFO@
 MKINSTALLDIRS = @MKINSTALLDIRS@
+MP3LAME_LIBS = @MP3LAME_LIBS@
 MSGFMT = @MSGFMT@
 PACKAGE = @PACKAGE@
 POFILES = @POFILES@
@@ -89,9 +92,11 @@ POSUB = @POSUB@
 RANLIB = @RANLIB@
 SDL_CONFIG = @SDL_CONFIG@
 SDL_LIBS = @SDL_LIBS@
+SNDFILE_LIBS = @SNDFILE_LIBS@
 USE_INCLUDED_LIBINTL = @USE_INCLUDED_LIBINTL@
 USE_NLS = @USE_NLS@
 VERSION = @VERSION@
+VORBIS_LIBS = @VORBIS_LIBS@
 l = @l@
 
 GTK_CFLAGS = @GTK_CFLAGS@
@@ -107,7 +112,7 @@ INCLUDES =  	-I../../../include 	$(GTK_CFLAGS) 	$(SDL_CFLAGS)
 CPPFLAGS =  	-DVERSION=\"$(VERSION)\"         -DDATADIR=\"$(pkgdatadir)\"
 
 
-libui_gtk_a_SOURCES =  	gtkledline.c		ui_gtk.cc		ui_gtk1.cc		ui_gtk3.cc		ui_gtk4.cc		ui_gtk8.cc		window.cc		disk.cc			tape.cc			tapeadd.cc		info.cc			about.cc		color.cc		module.cc		debug.cc		copying.cc		fbrowse.cc		dialog.cc		image.cc		hedit.cc
+libui_gtk_a_SOURCES =  	gtkledline.c		ui_gtk.cc		ui_gtk1.cc		ui_gtk3.cc		ui_gtk4.cc		ui_gtk8.cc		cmd.cc			window.cc		disk.cc			tape.cc			tapeadd.cc		info.cc			about.cc		color.cc		module.cc		keyboard.cc		debug.cc		copying.cc		fbrowse.cc		dialog.cc		image.cc		wav.cc			hedit.cc
 
 
 kcemu_remote_SOURCES =  	kcemu-remote.c
@@ -126,8 +131,9 @@ LDFLAGS = @LDFLAGS@
 LIBS = @LIBS@
 libui_gtk_a_LIBADD = 
 libui_gtk_a_OBJECTS =  gtkledline.o ui_gtk.o ui_gtk1.o ui_gtk3.o \
-ui_gtk4.o ui_gtk8.o window.o disk.o tape.o tapeadd.o info.o about.o \
-color.o module.o debug.o copying.o fbrowse.o dialog.o image.o hedit.o
+ui_gtk4.o ui_gtk8.o cmd.o window.o disk.o tape.o tapeadd.o info.o \
+about.o color.o module.o keyboard.o debug.o copying.o fbrowse.o \
+dialog.o image.o wav.o hedit.o
 AR = ar
 PROGRAMS =  $(bin_PROGRAMS)
 
@@ -245,7 +251,7 @@ TAGS:  $(HEADERS) $(SOURCES)  $(TAGS_DEPENDENCIES) $(LISP)
 	  awk '    { files[$$0] = 1; } \
 	       END { for (i in files) print i; }'`; \
 	test -z "$(ETAGS_ARGS)$$unique$(LISP)$$tags" \
-	  || (cd $(srcdir) && etags $(ETAGS_ARGS) $$tags  $$unique $(LISP) -o $$here/TAGS)
+	  || (cd $(srcdir) && etags -o $$here/TAGS $(ETAGS_ARGS) $$tags  $$unique $(LISP))
 
 mostlyclean-tags:
 
@@ -273,23 +279,25 @@ distdir: $(DISTFILES)
 	done
 about.o: about.cc ../../../include/kc/system.h \
 	../../../include/kc/config.h ../../../include/sys/sysdep.h \
-	../../../include/ui/gtk/cmd.h ../../../include/kc/kc.h \
-	../../../include/cmd/cmd.h ../../../include/cmd/cmdargs.h \
-	../../../include/ui/gtk/window.h ../../../include/ui/window.h \
-	../../../include/ui/gtk/about.h
+	../../../include/ui/gtk/cmd.h ../../../include/cmd/cmd.h \
+	../../../include/cmd/cmdargs.h ../../../include/ui/gtk/about.h \
+	../../../include/ui/gtk/window.h ../../../include/ui/window.h
+cmd.o: cmd.cc ../../../include/ui/gtk/cmd.h ../../../include/kc/system.h \
+	../../../include/kc/config.h ../../../include/sys/sysdep.h \
+	../../../include/cmd/cmd.h ../../../include/cmd/cmdargs.h
 color.o: color.cc ../../../include/kc/system.h \
 	../../../include/kc/config.h ../../../include/sys/sysdep.h \
 	../../../include/kc/rc.h ../../../include/ui/gtk/cmd.h \
-	../../../include/kc/kc.h ../../../include/cmd/cmd.h \
-	../../../include/cmd/cmdargs.h ../../../include/ui/gtk/window.h \
-	../../../include/ui/window.h ../../../include/ui/gtk/color.h \
+	../../../include/cmd/cmd.h ../../../include/cmd/cmdargs.h \
+	../../../include/ui/gtk/color.h \
+	../../../include/ui/gtk/window.h ../../../include/ui/window.h \
 	../../../include/libdbg/dbg.h
 copying.o: copying.cc ../../../include/kc/system.h \
 	../../../include/kc/config.h ../../../include/sys/sysdep.h \
 	../../../include/ui/copying.h ../../../include/ui/gtk/cmd.h \
-	../../../include/kc/kc.h ../../../include/cmd/cmd.h \
-	../../../include/cmd/cmdargs.h ../../../include/ui/gtk/window.h \
-	../../../include/ui/window.h ../../../include/ui/gtk/copying.h
+	../../../include/cmd/cmd.h ../../../include/cmd/cmdargs.h \
+	../../../include/ui/gtk/copying.h \
+	../../../include/ui/gtk/window.h ../../../include/ui/window.h
 debug.o: debug.cc ../../../include/kc/system.h \
 	../../../include/kc/config.h ../../../include/sys/sysdep.h \
 	../../../include/kc/z80.h ../../../include/z80core/z80.h \
@@ -297,8 +305,8 @@ debug.o: debug.cc ../../../include/kc/system.h \
 	../../../include/kc/kc.h ../../../include/kc/cb_list.h \
 	../../../include/kc/memory.h ../../../include/ui/gtk/cmd.h \
 	../../../include/cmd/cmd.h ../../../include/cmd/cmdargs.h \
-	../../../include/ui/gtk/window.h ../../../include/ui/window.h \
-	../../../include/ui/gtk/debug.h ../../../include/ui/debug.h
+	../../../include/ui/gtk/debug.h ../../../include/ui/debug.h \
+	../../../include/ui/gtk/window.h ../../../include/ui/window.h
 dialog.o: dialog.cc ../../../include/kc/system.h \
 	../../../include/kc/config.h ../../../include/sys/sysdep.h \
 	../../../include/ui/gtk/dialog.h ../../../include/cmd/cmd.h \
@@ -308,7 +316,7 @@ disk.o: disk.cc ../../../include/kc/system.h \
 	../../../include/cmd/cmd.h ../../../include/cmd/cmdargs.h \
 	../../../include/ui/gtk/disk.h ../../../include/ui/gtk/window.h \
 	../../../include/ui/window.h ../../../include/ui/gtk/cmd.h \
-	../../../include/kc/kc.h ../../../include/libdbg/dbg.h
+	../../../include/libdbg/dbg.h
 fbrowse.o: fbrowse.cc ../../../include/kc/system.h \
 	../../../include/kc/config.h ../../../include/sys/sysdep.h \
 	../../../include/ui/gtk/fbrowse.h ../../../include/cmd/cmd.h \
@@ -334,17 +342,25 @@ info.o: info.cc ../../../include/kc/system.h \
 	../../../include/kc/ports.h ../../../include/kc/ctc.h \
 	../../../include/kc/memory.h ../../../include/ui/gtk/cmd.h \
 	../../../include/cmd/cmd.h ../../../include/cmd/cmdargs.h \
-	../../../include/ui/gtk/window.h ../../../include/ui/window.h \
-	../../../include/ui/gtk/info.h
+	../../../include/ui/gtk/info.h ../../../include/ui/gtk/window.h \
+	../../../include/ui/window.h
 kcemu-remote.o: kcemu-remote.c
+keyboard.o: keyboard.cc ../../../include/kc/system.h \
+	../../../include/kc/config.h ../../../include/sys/sysdep.h \
+	../../../include/kc/kc.h ../../../include/kc/keys.h \
+	../../../include/kc/keyboard.h ../../../include/kc/cb.h \
+	../../../include/kc/ic.h ../../../include/cmd/cmd.h \
+	../../../include/cmd/cmdargs.h ../../../include/ui/gtk/cmd.h \
+	../../../include/ui/gtk/keyboard.h \
+	../../../include/ui/gtk/window.h ../../../include/ui/window.h
 module.o: module.cc ../../../include/kc/system.h \
 	../../../include/kc/config.h ../../../include/sys/sysdep.h \
 	../../../include/kc/kc.h ../../../include/kc/rc.h \
 	../../../include/kc/mod_list.h ../../../include/kc/module.h \
 	../../../include/kc/ports.h ../../../include/cmd/cmd.h \
 	../../../include/cmd/cmdargs.h ../../../include/ui/gtk/cmd.h \
-	../../../include/ui/gtk/window.h ../../../include/ui/window.h \
 	../../../include/ui/gtk/module.h ../../../include/ui/module.h \
+	../../../include/ui/gtk/window.h ../../../include/ui/window.h \
 	../../../include/ui/gtk/gtkledline.h
 tape.o: tape.cc ../../../include/kc/system.h \
 	../../../include/kc/config.h ../../../include/sys/sysdep.h \
@@ -360,41 +376,42 @@ tape.o: tape.cc ../../../include/kc/system.h \
 tapeadd.o: tapeadd.cc ../../../include/cmd/cmd.h \
 	../../../include/cmd/cmdargs.h ../../../include/ui/status.h \
 	../../../include/ui/statusl.h ../../../include/ui/gtk/cmd.h \
-	../../../include/kc/kc.h ../../../include/kc/system.h \
-	../../../include/kc/config.h ../../../include/sys/sysdep.h \
-	../../../include/ui/gtk/window.h ../../../include/ui/window.h \
-	../../../include/ui/gtk/tapeadd.h
+	../../../include/kc/system.h ../../../include/kc/config.h \
+	../../../include/sys/sysdep.h ../../../include/ui/gtk/tapeadd.h \
+	../../../include/ui/gtk/window.h ../../../include/ui/window.h
 ui_gtk.o: ui_gtk.cc ../../../include/kc/system.h \
 	../../../include/kc/config.h ../../../include/sys/sysdep.h \
-	../../../include/kc/z80.h ../../../include/z80core/z80.h \
-	../../../include/kc/ic.h ../../../include/kc/cb.h \
-	../../../include/kc/kc.h ../../../include/kc/cb_list.h \
-	../../../include/kc/keys.h ../../../include/kc/memory.h \
-	../../../include/kc/keyboard.h ../../../include/cmd/cmd.h \
-	../../../include/cmd/cmdargs.h ../../../include/ui/error.h \
-	../../../include/ui/errorl.h ../../../include/ui/status.h \
-	../../../include/ui/statusl.h ../../../include/ui/gtk/cmd.h \
-	../../../include/ui/gtk/window.h ../../../include/ui/window.h \
+	../../../include/kc/rc.h ../../../include/kc/z80.h \
+	../../../include/z80core/z80.h ../../../include/kc/ic.h \
+	../../../include/kc/cb.h ../../../include/kc/kc.h \
+	../../../include/kc/cb_list.h ../../../include/kc/keys.h \
+	../../../include/kc/memory.h ../../../include/kc/keyboard.h \
+	../../../include/cmd/cmd.h ../../../include/cmd/cmdargs.h \
+	../../../include/ui/error.h ../../../include/ui/errorl.h \
+	../../../include/ui/status.h ../../../include/ui/statusl.h \
+	../../../include/ui/hsv2rgb.h ../../../include/ui/gtk/cmd.h \
 	../../../include/ui/gtk/debug.h ../../../include/ui/debug.h \
+	../../../include/ui/gtk/window.h ../../../include/ui/window.h \
 	../../../include/ui/gtk/ui_gtk.h ../../../include/ui/ui.h \
 	../../../include/kc/profile.h ../../../include/ui/tape.h \
 	../../../include/libtape/kct.h ../../../include/ui/module.h \
 	../../../include/kc/module.h ../../../include/kc/ports.h \
-	../../../include/ui/commands.h ../../../include/ui/gtk/tape.h \
-	../../../include/ui/gtk/disk.h ../../../include/ui/gtk/info.h \
-	../../../include/ui/gtk/about.h ../../../include/ui/gtk/color.h \
+	../../../include/ui/commands.h ../../../include/ui/gtk/wav.h \
+	../../../include/ui/gtk/tape.h ../../../include/ui/gtk/disk.h \
+	../../../include/ui/gtk/info.h ../../../include/ui/gtk/about.h \
+	../../../include/ui/gtk/color.h \
 	../../../include/ui/gtk/module.h \
+	../../../include/ui/gtk/keyboard.h \
 	../../../include/ui/gtk/copying.h \
 	../../../include/ui/gtk/tapeadd.h \
 	../../../include/ui/gtk/fbrowse.h \
 	../../../include/ui/gtk/dialog.h \
 	../../../include/ui/gtk/hedit.h ../../../include/libdbg/dbg.h
-ui_gtk1.o: ui_gtk1.cc ../../../include/kc/z80.h \
-	../../../include/kc/system.h ../../../include/kc/config.h \
-	../../../include/sys/sysdep.h ../../../include/z80core/z80.h \
-	../../../include/kc/ic.h ../../../include/kc/cb.h \
-	../../../include/kc/kc.h ../../../include/kc/cb_list.h \
-	../../../include/kc/memory.h ../../../include/ui/font1.h \
+ui_gtk1.o: ui_gtk1.cc ../../../include/kc/system.h \
+	../../../include/kc/config.h ../../../include/sys/sysdep.h \
+	../../../include/kc/kc.h ../../../include/kc/z80.h \
+	../../../include/z80core/z80.h ../../../include/kc/ic.h \
+	../../../include/kc/cb.h ../../../include/kc/cb_list.h \
 	../../../include/ui/gtk/ui_gtk1.h \
 	../../../include/ui/gtk/ui_gtk.h ../../../include/ui/ui.h \
 	../../../include/kc/profile.h ../../../include/ui/tape.h \
@@ -403,23 +420,25 @@ ui_gtk1.o: ui_gtk1.cc ../../../include/kc/z80.h \
 	../../../include/kc/ports.h ../../../include/cmd/cmdargs.h \
 	../../../include/ui/errorl.h ../../../include/ui/statusl.h \
 	../../../include/ui/commands.h ../../../include/ui/gtk/cmd.h \
-	../../../include/cmd/cmd.h ../../../include/ui/gtk/window.h \
-	../../../include/ui/window.h ../../../include/ui/gtk/tape.h \
-	../../../include/ui/gtk/disk.h ../../../include/ui/gtk/info.h \
-	../../../include/ui/gtk/about.h ../../../include/ui/gtk/debug.h \
-	../../../include/ui/gtk/color.h \
+	../../../include/cmd/cmd.h ../../../include/ui/gtk/wav.h \
+	../../../include/ui/gtk/window.h ../../../include/ui/window.h \
+	../../../include/ui/gtk/tape.h ../../../include/ui/gtk/disk.h \
+	../../../include/ui/gtk/info.h ../../../include/ui/gtk/about.h \
+	../../../include/ui/gtk/debug.h ../../../include/ui/gtk/color.h \
 	../../../include/ui/gtk/module.h \
+	../../../include/ui/gtk/keyboard.h \
 	../../../include/ui/gtk/copying.h \
 	../../../include/ui/gtk/tapeadd.h \
 	../../../include/ui/gtk/fbrowse.h \
 	../../../include/ui/gtk/dialog.h \
-	../../../include/ui/gtk/hedit.h ../../../include/libdbg/dbg.h
-ui_gtk3.o: ui_gtk3.cc ../../../include/kc/z80.h \
-	../../../include/kc/system.h ../../../include/kc/config.h \
-	../../../include/sys/sysdep.h ../../../include/z80core/z80.h \
-	../../../include/kc/ic.h ../../../include/kc/cb.h \
-	../../../include/kc/kc.h ../../../include/kc/cb_list.h \
-	../../../include/kc/memory.h ../../../include/ui/hsv2rgb.h \
+	../../../include/ui/gtk/hedit.h \
+	../../../include/ui/generic/ui_1.h \
+	../../../include/libdbg/dbg.h
+ui_gtk3.o: ui_gtk3.cc ../../../include/kc/system.h \
+	../../../include/kc/config.h ../../../include/sys/sysdep.h \
+	../../../include/kc/kc.h ../../../include/kc/z80.h \
+	../../../include/z80core/z80.h ../../../include/kc/ic.h \
+	../../../include/kc/cb.h ../../../include/kc/cb_list.h \
 	../../../include/ui/gtk/ui_gtk3.h \
 	../../../include/ui/gtk/ui_gtk.h ../../../include/ui/ui.h \
 	../../../include/kc/profile.h ../../../include/ui/tape.h \
@@ -428,68 +447,83 @@ ui_gtk3.o: ui_gtk3.cc ../../../include/kc/z80.h \
 	../../../include/kc/ports.h ../../../include/cmd/cmdargs.h \
 	../../../include/ui/errorl.h ../../../include/ui/statusl.h \
 	../../../include/ui/commands.h ../../../include/ui/gtk/cmd.h \
-	../../../include/cmd/cmd.h ../../../include/ui/gtk/window.h \
-	../../../include/ui/window.h ../../../include/ui/gtk/tape.h \
-	../../../include/ui/gtk/disk.h ../../../include/ui/gtk/info.h \
-	../../../include/ui/gtk/about.h ../../../include/ui/gtk/debug.h \
-	../../../include/ui/gtk/color.h \
-	../../../include/ui/gtk/module.h \
-	../../../include/ui/gtk/copying.h \
-	../../../include/ui/gtk/tapeadd.h \
-	../../../include/ui/gtk/fbrowse.h \
-	../../../include/ui/gtk/dialog.h \
-	../../../include/ui/gtk/hedit.h ../../../include/libdbg/dbg.h
-ui_gtk4.o: ui_gtk4.cc ../../../include/kc/system.h \
-	../../../include/kc/config.h ../../../include/sys/sysdep.h \
-	../../../include/kc/kc.h ../../../include/kc/rc.h \
-	../../../include/kc/z80.h ../../../include/z80core/z80.h \
-	../../../include/kc/ic.h ../../../include/kc/cb.h \
-	../../../include/kc/cb_list.h ../../../include/kc/ports.h \
-	../../../include/kc/memory.h ../../../include/ui/hsv2rgb.h \
-	../../../include/ui/gtk/ui_gtk4.h \
-	../../../include/ui/gtk/ui_gtk.h ../../../include/ui/ui.h \
-	../../../include/kc/profile.h ../../../include/ui/tape.h \
-	../../../include/libtape/kct.h ../../../include/ui/debug.h \
-	../../../include/ui/module.h ../../../include/kc/module.h \
-	../../../include/cmd/cmdargs.h ../../../include/ui/errorl.h \
-	../../../include/ui/statusl.h ../../../include/ui/commands.h \
-	../../../include/ui/gtk/cmd.h ../../../include/cmd/cmd.h \
+	../../../include/cmd/cmd.h ../../../include/ui/gtk/wav.h \
 	../../../include/ui/gtk/window.h ../../../include/ui/window.h \
 	../../../include/ui/gtk/tape.h ../../../include/ui/gtk/disk.h \
 	../../../include/ui/gtk/info.h ../../../include/ui/gtk/about.h \
 	../../../include/ui/gtk/debug.h ../../../include/ui/gtk/color.h \
 	../../../include/ui/gtk/module.h \
+	../../../include/ui/gtk/keyboard.h \
 	../../../include/ui/gtk/copying.h \
 	../../../include/ui/gtk/tapeadd.h \
 	../../../include/ui/gtk/fbrowse.h \
 	../../../include/ui/gtk/dialog.h \
-	../../../include/ui/gtk/hedit.h ../../../include/libdbg/dbg.h
-ui_gtk8.o: ui_gtk8.cc ../../../include/kc/z80.h \
-	../../../include/kc/system.h ../../../include/kc/config.h \
-	../../../include/sys/sysdep.h ../../../include/z80core/z80.h \
-	../../../include/kc/ic.h ../../../include/kc/cb.h \
-	../../../include/kc/kc.h ../../../include/kc/cb_list.h \
-	../../../include/kc/pio8.h ../../../include/kc/pio.h \
-	../../../include/kc/ports.h ../../../include/kc/tape.h \
-	../../../include/cmd/cmd.h ../../../include/cmd/cmdargs.h \
-	../../../include/libtape/kct.h ../../../include/fileio/load.h \
+	../../../include/ui/gtk/hedit.h \
+	../../../include/ui/generic/ui_3.h \
+	../../../include/ui/generic/scanline.h \
+	../../../include/libdbg/dbg.h
+ui_gtk4.o: ui_gtk4.cc ../../../include/kc/system.h \
+	../../../include/kc/config.h ../../../include/sys/sysdep.h \
+	../../../include/kc/kc.h ../../../include/kc/z80.h \
+	../../../include/z80core/z80.h ../../../include/kc/ic.h \
+	../../../include/kc/cb.h ../../../include/kc/cb_list.h \
+	../../../include/ui/gtk/ui_gtk4.h \
+	../../../include/ui/gtk/ui_gtk.h ../../../include/ui/ui.h \
+	../../../include/kc/profile.h ../../../include/ui/tape.h \
+	../../../include/libtape/kct.h ../../../include/ui/debug.h \
+	../../../include/ui/module.h ../../../include/kc/module.h \
+	../../../include/kc/ports.h ../../../include/cmd/cmdargs.h \
+	../../../include/ui/errorl.h ../../../include/ui/statusl.h \
+	../../../include/ui/commands.h ../../../include/ui/gtk/cmd.h \
+	../../../include/cmd/cmd.h ../../../include/ui/gtk/wav.h \
+	../../../include/ui/gtk/window.h ../../../include/ui/window.h \
+	../../../include/ui/gtk/tape.h ../../../include/ui/gtk/disk.h \
+	../../../include/ui/gtk/info.h ../../../include/ui/gtk/about.h \
+	../../../include/ui/gtk/debug.h ../../../include/ui/gtk/color.h \
+	../../../include/ui/gtk/module.h \
+	../../../include/ui/gtk/keyboard.h \
+	../../../include/ui/gtk/copying.h \
+	../../../include/ui/gtk/tapeadd.h \
+	../../../include/ui/gtk/fbrowse.h \
+	../../../include/ui/gtk/dialog.h \
+	../../../include/ui/gtk/hedit.h \
+	../../../include/ui/generic/ui_4.h \
+	../../../include/ui/generic/scanline.h \
+	../../../include/libdbg/dbg.h
+ui_gtk8.o: ui_gtk8.cc ../../../include/kc/system.h \
+	../../../include/kc/config.h ../../../include/sys/sysdep.h \
+	../../../include/kc/kc.h ../../../include/kc/z80.h \
+	../../../include/z80core/z80.h ../../../include/kc/ic.h \
+	../../../include/kc/cb.h ../../../include/kc/cb_list.h \
 	../../../include/ui/gtk/ui_gtk8.h \
 	../../../include/ui/gtk/ui_gtk.h ../../../include/ui/ui.h \
 	../../../include/kc/profile.h ../../../include/ui/tape.h \
-	../../../include/ui/debug.h ../../../include/ui/module.h \
-	../../../include/kc/module.h ../../../include/ui/errorl.h \
-	../../../include/ui/statusl.h ../../../include/ui/commands.h \
-	../../../include/ui/gtk/cmd.h ../../../include/ui/gtk/window.h \
-	../../../include/ui/window.h ../../../include/ui/gtk/tape.h \
-	../../../include/ui/gtk/disk.h ../../../include/ui/gtk/info.h \
-	../../../include/ui/gtk/about.h ../../../include/ui/gtk/debug.h \
-	../../../include/ui/gtk/color.h \
+	../../../include/libtape/kct.h ../../../include/ui/debug.h \
+	../../../include/ui/module.h ../../../include/kc/module.h \
+	../../../include/kc/ports.h ../../../include/cmd/cmdargs.h \
+	../../../include/ui/errorl.h ../../../include/ui/statusl.h \
+	../../../include/ui/commands.h ../../../include/ui/gtk/cmd.h \
+	../../../include/cmd/cmd.h ../../../include/ui/gtk/wav.h \
+	../../../include/ui/gtk/window.h ../../../include/ui/window.h \
+	../../../include/ui/gtk/tape.h ../../../include/ui/gtk/disk.h \
+	../../../include/ui/gtk/info.h ../../../include/ui/gtk/about.h \
+	../../../include/ui/gtk/debug.h ../../../include/ui/gtk/color.h \
 	../../../include/ui/gtk/module.h \
+	../../../include/ui/gtk/keyboard.h \
 	../../../include/ui/gtk/copying.h \
 	../../../include/ui/gtk/tapeadd.h \
 	../../../include/ui/gtk/fbrowse.h \
 	../../../include/ui/gtk/dialog.h \
-	../../../include/ui/gtk/hedit.h ../../../include/libdbg/dbg.h
+	../../../include/ui/gtk/hedit.h \
+	../../../include/ui/generic/ui_8.h \
+	../../../include/libdbg/dbg.h
+wav.o: wav.cc ../../../include/kc/system.h ../../../include/kc/config.h \
+	../../../include/sys/sysdep.h ../../../include/cmd/cmd.h \
+	../../../include/cmd/cmdargs.h ../../../include/ui/gtk/cmd.h \
+	../../../include/ui/gtk/wav.h ../../../include/ui/gtk/window.h \
+	../../../include/ui/window.h ../../../include/ui/gtk/play.xpm \
+	../../../include/ui/gtk/stop.xpm \
+	../../../include/ui/gtk/open.xpm
 window.o: window.cc ../../../include/ui/gtk/window.h \
 	../../../include/ui/window.h
 

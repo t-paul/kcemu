@@ -2,7 +2,7 @@
  *  KCemu -- the KC 85/3 and KC 85/4 Emulator
  *  Copyright (C) 1997-2001 Torsten Paul
  *
- *  $Id: rc.cc,v 1.5 2002/06/09 14:24:33 torsten_paul Exp $
+ *  $Id: rc.cc,v 1.6 2002/10/31 01:46:35 torsten_paul Exp $
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -41,6 +41,16 @@ static void print(RC::rc_map_pair_t p)
               "- %-40s <=> %s\n",
               p.first, p.second));
 }
+
+static void deallocate(RC::rc_map_pair_t p)
+{
+  /*
+   *  data is allocated with strdup() so it has
+   *  to be freed by free()
+   */
+  free((void *)p.first);
+  free((void *)p.second);
+}
                   
 RC::RC(void)
 {
@@ -58,7 +68,7 @@ RC::RC(void)
       strcpy(filename, tmp);
       strcat(filename, "/.kcemurc");
       load_file(filename);
-      delete filename;
+      delete[] filename;
     }
   else
     cerr << "Warning: HOME not set! can't locate file `.kcemurc'" << endl;
@@ -67,7 +77,7 @@ RC::RC(void)
   strcpy(filename, kcemu_datadir);
   strcat(filename, "/.kcemurc");
   load_file(filename);
-  delete filename;
+  delete[] filename;
 
   DBG(0, form("KCemu/RC",
               "--- dumping ressource database ---\n\n"));
@@ -76,10 +86,15 @@ RC::RC(void)
               "\n----------------------------------\n"));
 }
 
+RC::~RC(void)
+{
+  for_each(_map.begin(), _map.end(), deallocate);
+  _map.clear();
+}
+
 void
 RC::load_file(const char *filename)
 {
-  int c;
   ifstream is;
   char *name, *arg, *tmp;
   char line[4096];
@@ -124,6 +139,12 @@ RC::init(void)
 {
   if (_instance == 0)
     _instance = new RC();
+}
+
+void
+RC::done(void)
+{
+  delete _instance;
 }
 
 RC *
@@ -193,6 +214,6 @@ RC::get_string_i(int idx, const char *key, const char *def_val)
   tmp = new char[strlen(key) + 10];
   sprintf(tmp, "%s_%08X", key, idx);
   val = get_string(tmp, def_val);
-  delete tmp;
+  delete[] tmp;
   return val;
 }

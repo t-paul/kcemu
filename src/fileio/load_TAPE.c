@@ -2,7 +2,7 @@
  *  KCemu -- the KC 85/3 and KC 85/4 Emulator
  *  Copyright (C) 1997-2001 Torsten Paul
  *
- *  $Id: load_TAPE.c,v 1.9 2002/03/23 19:27:17 torsten_paul Exp $
+ *  $Id: load_TAPE.c,v 1.10 2002/10/31 00:48:52 torsten_paul Exp $
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -102,7 +102,7 @@ loader_TAPE_load(const char *filename,
     return -1;
   memset(*prop, 0, sizeof(fileio_prop_t));
 
-  xsize = size + (size + 127) / 128;
+  xsize = 129 * ((size + 127) / 128);
   
   (*prop)->type = FILEIO_TYPE_COM;
   (*prop)->valid = (FILEIO_V_LOAD_ADDR |
@@ -128,7 +128,7 @@ loader_TAPE_load(const char *filename,
   if ((*prop)->start_addr == 0xffff)
     (*prop)->autostart = 0;
   
-  (*prop)->size  = size;
+  (*prop)->size = xsize;
   (*prop)->data = (unsigned char *)malloc(xsize);
   if ((*prop)->data == 0)
     return -1;
@@ -155,6 +155,12 @@ loader_TAPE_load(const char *filename,
 }
 
 static const char *
+loader_TAPE_get_type(void)
+{
+  return "TAPE";
+}
+
+static const char *
 loader_TAPE_get_name(void)
 {
   return "loader for raw KC-Tape images";
@@ -163,6 +169,7 @@ loader_TAPE_get_name(void)
 static file_loader_t loader = {
   loader_TAPE_check,
   loader_TAPE_load,
+  loader_TAPE_get_type,
   loader_TAPE_get_name
 };
 

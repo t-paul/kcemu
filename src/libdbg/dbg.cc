@@ -139,7 +139,7 @@ DBG_class::DBG_class(void)
       strcpy(filename, tmp);
       strcat(filename, "/.debug");
       load_file(filename);
-      delete filename;
+      delete[] filename;
     }
   
   _o = &cout;

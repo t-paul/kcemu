@@ -2,7 +2,7 @@
  *  KCemu -- the KC 85/3 and KC 85/4 Emulator
  *  Copyright (C) 1997-2001 Torsten Paul
  *
- *  $Id: load_UNKNOWN.c,v 1.6 2002/01/12 23:03:56 torsten_paul Exp $
+ *  $Id: load_UNKNOWN.c,v 1.7 2002/10/31 00:48:52 torsten_paul Exp $
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -150,6 +150,12 @@ loader_UNKNOWN_load(const char *filename,
 }
 
 static const char *
+loader_UNKNOWN_get_type(void)
+{
+  return "UNKNOWN";
+}
+
+static const char *
 loader_UNKNOWN_get_name(void)
 {
   return "fallback loader for unknown file types";
@@ -158,6 +164,7 @@ loader_UNKNOWN_get_name(void)
 static file_loader_t loader = {
   loader_UNKNOWN_check,
   loader_UNKNOWN_load,
+  loader_UNKNOWN_get_type,
   loader_UNKNOWN_get_name
 };
 

@@ -2,7 +2,7 @@
  *  KCemu -- the KC 85/3 and KC 85/4 Emulator
  *  Copyright (C) 1997-2001 Torsten Paul
  *
- *  $Id: load_AF.c,v 1.6 2002/06/09 14:24:33 torsten_paul Exp $
+ *  $Id: load_AF.c,v 1.7 2002/10/31 00:48:52 torsten_paul Exp $
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -246,6 +246,12 @@ loader_AF_load(const char *filename,
 }
 
 static const char *
+loader_AF_get_type(void)
+{
+  return "AF";
+}
+
+static const char *
 loader_AF_get_name(void)
 {
   return "loader for KC85/3+4 Emulator by Arne Fitzenreiter";
@@ -254,6 +260,7 @@ loader_AF_get_name(void)
 static file_loader_t loader = {
   loader_AF_check,
   loader_AF_load,
+  loader_AF_get_type,
   loader_AF_get_name
 };
 

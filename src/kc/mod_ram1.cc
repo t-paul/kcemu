@@ -2,7 +2,7 @@
  *  KCemu -- the KC 85/3 and KC 85/4 Emulator
  *  Copyright (C) 1997-2001 Torsten Paul
  *
- *  $Id: mod_ram1.cc,v 1.3 2002/06/09 14:24:33 torsten_paul Exp $
+ *  $Id: mod_ram1.cc,v 1.4 2002/10/31 01:46:35 torsten_paul Exp $
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -29,24 +29,29 @@
 ModuleRAM1::ModuleRAM1(ModuleRAM1 &tmpl) :
   ModuleInterface(tmpl.get_name(), tmpl.get_id(), tmpl.get_type())
 {
+  unsigned int a;
+
   _group = NULL;
   _size = tmpl._size;
   _ram = new byte_t[_size];
   _addr = tmpl._addr;
   if (_ram)
     {
-      memset(_ram, 0, _size);
+      srand(time(NULL));
+      for (a = 0;a < _size;a++)
+	_ram[a] = (byte_t)(256.0 * rand() / (RAND_MAX + 1.0));
       set_valid(true);
+      _group = memory->register_memory(get_name(), _addr, _size, _ram, 0, 0);
     }
-  _group = memory->register_memory(get_name(), _addr, _size, _ram, 0, 0);
 }
 
 ModuleRAM1::ModuleRAM1(const char *name, word_t addr, dword_t size) :
   ModuleInterface(name, 0, KC_MODULE_KC_85_1)
 {
-  _size = size;
-  _ram = new byte_t[_size];
+  _ram = new byte_t[size];
   _addr = addr;
+  _size = size;
+
   if (_ram)
     {
       _group = 0;
@@ -57,8 +62,10 @@ ModuleRAM1::ModuleRAM1(const char *name, word_t addr, dword_t size) :
 
 ModuleRAM1::~ModuleRAM1(void)
 {
-  if (_group) memory->unregister_memory(_group);
-  delete _ram;
+  if (_group)
+    memory->unregister_memory(_group);
+
+  delete[] _ram;
 }
 
 void

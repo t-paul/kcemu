@@ -1,0 +1,40 @@
+.TH kc2raw 1
+
+.SH NAME
+kc2raw \- convert KC files to KC memory dumps
+
+.SH SYNOPSIS
+.B kc2raw <infile> <outfile>
+.br
+
+.SH DESCRIPTION
+.B kc2raw
+converts the following file types to KC memory dumps. Those
+files only represent a memory snapshot without any header.
+
+.LP
+.IR 1)
+files used by the KC emulator by Arne Fitzenreiter (usually
+named .TAP)
+.LP
+.IR 2)
+files used by the GEMINI-SOFT KC emulator (usually named .GPF
+for machine code files and .GBF for basic files)
+.LP
+.IR 3)
+BASIC files (usually named .SSS)
+.LP
+.IR 4)
+KC image files that contain the data written by the KC tape routines
+without block number and checksum (usually named .KCC or .KCB
+where the .KCB files are BASIC files with an autostart routine)
+
+.SH BUGS
+Basic files are not handled properly.
+
+.SH SEE ALSO
+kcemu(1x), kctape(1), kc2tap(1), kc2wav(1), kc2img(1)
+
+.SH AUTHOR
+This manual page was written by Torsten Paul <Torsten.Paul@gmx.de>,
+for the Debian GNU/Linux system (but may be used by others).

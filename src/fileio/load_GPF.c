@@ -2,7 +2,7 @@
  *  KCemu -- the KC 85/3 and KC 85/4 Emulator
  *  Copyright (C) 1997-2001 Torsten Paul
  *
- *  $Id: load_GPF.c,v 1.4 2001/04/14 15:15:51 tp Exp $
+ *  $Id: load_GPF.c,v 1.5 2002/10/31 00:48:52 torsten_paul Exp $
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -88,6 +88,12 @@ loader_GPF_load(const char *filename,
 }
 
 static const char *
+loader_GPF_get_type(void)
+{
+  return "GEMINI";
+}
+
+static const char *
 loader_GPF_get_name(void)
 {
   return "loader for GEMINI-Emulator files";
@@ -96,6 +102,7 @@ loader_GPF_get_name(void)
 static file_loader_t loader = {
   loader_GPF_check,
   loader_GPF_load,
+  loader_GPF_get_type,
   loader_GPF_get_name
 };
 

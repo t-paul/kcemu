@@ -2,7 +2,7 @@
  *  KCemu -- the KC 85/3 and KC 85/4 Emulator
  *  Copyright (C) 1997-2001 Torsten Paul
  *
- *  $Id: load_dir.c,v 1.1 2002/01/06 12:53:40 torsten_paul Exp $
+ *  $Id: load_dir.c,v 1.2 2002/10/31 00:51:53 torsten_paul Exp $
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -19,10 +19,12 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
+#include <ctype.h>
 #include <stdio.h>
 #include <dirent.h>
 #include <string.h>
 #include <unistd.h>
+#include <stdlib.h>
 #include <sys/stat.h>
 #include <sys/types.h>
 
@@ -165,7 +167,7 @@ static int
 loader_dir_open(libdisk_prop_t *prop, const char *path)
 {
   DIR *d;
-  int a, idx, b, ro, au;
+  int a, idx, ro, au;
   char pwd[4096]; // FIXME: fix getcwd()!
   dir_data_t *data;
   struct stat statbuf;
@@ -304,7 +306,6 @@ read_block(dir_data_t *data, char *buf, int idx, long offset, int len)
 static int
 loader_dir_read_sector(libdisk_prop_t *prop, unsigned char *buf, int len)
 {
-  int l;
   int h, c, s;
   dir_data_t *data;
 

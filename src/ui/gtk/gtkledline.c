@@ -35,25 +35,28 @@
 
 static void gtk_led_line_class_init               (GtkLedLineClass    *klass);
 static void gtk_led_line_init                     (GtkLedLine         *led_line);
-static void gtk_led_line_destroy                  (GtkObject        *object);
-static void gtk_led_line_realize                  (GtkWidget        *widget);
-static void gtk_led_line_size_request             (GtkWidget      *widget,
-					       GtkRequisition *requisition);
-static void gtk_led_line_size_allocate            (GtkWidget     *widget,
-					       GtkAllocation *allocation);
-static gint gtk_led_line_expose                   (GtkWidget        *widget,
-						GdkEventExpose   *event);
-static gint gtk_led_line_button_press             (GtkWidget        *widget,
-						GdkEventButton   *event);
-static gint gtk_led_line_button_release           (GtkWidget        *widget,
-						GdkEventButton   *event);
-
-static void gtk_led_line_update_mouse             (GtkLedLine *led_line, gint x, gint y);
-static void gtk_led_line_update                   (GtkLedLine *led_line);
-static void gtk_led_line_adjustment_changed       (GtkAdjustment    *adjustment,
-						gpointer          data);
-static void gtk_led_line_adjustment_value_changed (GtkAdjustment    *adjustment,
-						gpointer          data);
+static void gtk_led_line_destroy                  (GtkObject          *object);
+static void gtk_led_line_realize                  (GtkWidget          *widget);
+static void gtk_led_line_size_request             (GtkWidget          *widget,
+					           GtkRequisition     *requisition);
+static void gtk_led_line_size_allocate            (GtkWidget          *widget,
+					           GtkAllocation      *allocation);
+static gint gtk_led_line_expose                   (GtkWidget          *widget,
+						   GdkEventExpose     *event);
+#if 0
+static gint gtk_led_line_button_press             (GtkWidget          *widget,
+						   GdkEventButton     *event);
+static gint gtk_led_line_button_release           (GtkWidget          *widget,
+						   GdkEventButton     *event);
+static void gtk_led_line_update_mouse             (GtkLedLine         *led_line,
+						   gint                x,
+						   gint                y);
+static void gtk_led_line_update                   (GtkLedLine         *led_line);
+static void gtk_led_line_adjustment_changed       (GtkAdjustment      *adjustment,
+						   gpointer            data);
+static void gtk_led_line_adjustment_value_changed (GtkAdjustment      *adjustment,
+						   gpointer            data);
+#endif
 
 /* Local data */
 
@@ -118,8 +121,8 @@ gtk_led_line_new (gint nr)
 
   led_line = gtk_type_new (gtk_led_line_get_type ());
 
-  g_return_if_fail (nr > 0);
-  g_return_if_fail (nr <= 32);
+  g_return_val_if_fail (nr > 0, NULL);
+  g_return_val_if_fail (nr <= 32, NULL);
   
   led_line->nr = nr;
   led_line->value = 0;

@@ -2,7 +2,7 @@
  *  KCemu -- the KC 85/3 and KC 85/4 Emulator
  *  Copyright (C) 1997-2001 Torsten Paul
  *
- *  $Id: z80.cc,v 1.37 2002/06/09 14:24:34 torsten_paul Exp $
+ *  $Id: z80.cc,v 1.39 2002/10/31 01:46:36 torsten_paul Exp $
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -51,6 +51,7 @@ extern "C" {
 #include "z80core2/z80.h"
 }
 
+static byte_t _z80_reg_r = 0;
 static Z80 *self; // for the signal handler
 static void signalHandler(int sig);
 
@@ -128,6 +129,7 @@ public:
 byte_t
 RdZ80(word_t Addr)
 {
+  _z80_reg_r++;
   byte_t Value = memory->memRead8(Addr);
   return Value;
 }
@@ -135,8 +137,17 @@ RdZ80(word_t Addr)
 void
 WrZ80(word_t Addr, byte_t Value)
 {
+  /*
+    if ((Addr == 0x4000) || (Addr == 0xB7B0))
+    z80->printPC(); cout.form("%04x: %02x\n", Addr, Value);
+  */
   memory->memWrite8(Addr, Value);
-  ui->memWrite(Addr, Value);
+}
+
+byte_t
+LdRZ80(void)
+{
+  return _z80_reg_r;
 }
 
 void
@@ -205,6 +216,7 @@ Z80::Z80(void)
   _regs.TrapBadOps = 1;
   _regs.Trace = 0;
   _regs.Trap = 0xffff;
+  _regs.IRequest = INT_NONE;
   ResetZ80(&_regs);
   
   if (get_kc_type() != KC_TYPE_LC80)
@@ -220,6 +232,7 @@ Z80::Z80(void)
 
   _tracedelay = 100000;
 
+  _irq_line = 0;
   _daisy_chain_first = 0;
   _daisy_chain_last = 0;
   _daisy_chain_irq_mask = 1;
@@ -227,6 +240,7 @@ Z80::Z80(void)
   _do_quit = false;
 }
 
+#if 0
 static void
 print_regs(_Z80 *r)
 {
@@ -249,6 +263,7 @@ print_regs(_Z80 *r)
        << " '" << (isprint(c2) ? c2 : '.') << "'"
        << endl;
 }
+#endif
 
 void
 Z80::executestep(void)
@@ -274,14 +289,14 @@ Z80::run(void)
   int a;
   CMD *cmd;
   int iff, iff_old = 0;
-  static int XXX = 0;
 
   signal(SIGINT, signalHandler);
 
   Z80_IPeriod = 0;
   Z80_IRQ = Z80_IGNORE_INT;
 
-  timer->start();
+  if (timer)
+    timer->start();
 
   cmd = new CMD_single_step(this);
 
@@ -297,17 +312,15 @@ Z80::run(void)
 	  cout << "%%% " << hex << _regs.PC.W << endl;
 	}
 #endif
-      //if (_regs.PC.W == 0xe339)
-      //cout << "entering ctc channel 3 irq routine" << endl;
+      //if (_regs.PC.W <= 0x8000)
+      //z80->printPC(); cout << endl;
+
       //if ((_regs.PC.W == 0xe0d5) && (RdZ80(0xe0d5) == 0xed) && (_regs.BC.W < 5))
       //debug(true);
 
-      //if (_regs.PC.W == 0x0818)
-      //debug(true);
-      
       if (_singlestep)
 	{
-	  ui->processEvents();
+	  ui->update(true);
 	  if (!_executestep)
 	    {
 	      sys_usleep(100000);
@@ -315,11 +328,11 @@ Z80::run(void)
 	    }
 	  CMD_EXEC("single-step-executed");
 	  _executestep = false;
+
 	}
       else
 	if (_trace)
 	  {
-	    ui->processEvents();
 	    ui->update();
 	    CMD_EXEC("single-step-executed");
 	    sys_usleep(_tracedelay);
@@ -465,7 +478,10 @@ Z80::reset(word_t pc, bool power_on)
   ResetZ80(&_regs);
   _regs.PC.W = pc;
 
-  timer->start();
+  halt_floppy_cpu();
+  
+  if (timer)
+    timer->start();
 }
 
 void
@@ -565,7 +581,7 @@ Z80::irq_ack(void)
 void
 Z80::reti(void)
 {
-  ic_list_t::iterator it;
+  //ic_list_t::iterator it;
 
   if (_daisy_chain_last)
     {
@@ -614,13 +630,14 @@ Z80::printPC(void)
 void
 Z80::start_floppy_cpu(void)
 {
-  fdc_z80->start();
+  fdc_z80->reset();
   _enable_floppy_cpu = true;
 }
 
 void
 Z80::halt_floppy_cpu(void)
 {
+  fdc_z80->reset();
   _enable_floppy_cpu = false;
 }
 

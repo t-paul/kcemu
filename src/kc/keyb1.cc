@@ -2,7 +2,7 @@
  *  KCemu -- the KC 85/3 and KC 85/4 Emulator
  *  Copyright (C) 1997-2001 Torsten Paul
  *
- *  $Id: keyb1.cc,v 1.7 2002/06/09 14:24:33 torsten_paul Exp $
+ *  $Id: keyb1.cc,v 1.8 2002/10/31 01:46:35 torsten_paul Exp $
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -63,8 +63,7 @@ void
 Keyboard1::keyPressed(int keysym, int keycode)
 {
   int a;
-  unsigned int k;
-  byte_t b = 0;
+  int k;
 #ifdef KEYB_DEBUG
   byte_t c1, c2, r1, r2;
 #endif /* KEYB_DEBUG */

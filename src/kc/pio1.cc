@@ -2,7 +2,7 @@
  *  KCemu -- the KC 85/3 and KC 85/4 Emulator
  *  Copyright (C) 1997-2001 Torsten Paul
  *
- *  $Id: pio1.cc,v 1.6 2002/06/09 14:24:33 torsten_paul Exp $
+ *  $Id: pio1.cc,v 1.7 2002/10/31 01:46:35 torsten_paul Exp $
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -58,6 +58,8 @@ PIO1_1::in(word_t addr)
     case 3:
       return in_B_CTRL();
     }
+
+  return 0; // shouldn't be reached
 }
 
 void
@@ -87,11 +89,25 @@ PIO1_1::out(word_t addr, byte_t val)
 void
 PIO1_1::change_A(byte_t changed, byte_t val)
 {
+  _border  = (val >> 3) & 0x07;
+  _20lines = (val >> 2) & 0x01;
 }
 
 void
 PIO1_1::change_B(byte_t changed, byte_t val)
 {
+}
+
+byte_t
+PIO1_1::get_border_color(void)
+{
+  return _border;
+}
+
+byte_t
+PIO1_1::get_line_mode(void)
+{
+  return _20lines;
 }
 
 void
@@ -126,6 +142,8 @@ PIO1_2::in(word_t addr)
     case 3:
       return in_B_CTRL();
     }
+
+  return 0; // shouldn't be reached
 }
 
 void

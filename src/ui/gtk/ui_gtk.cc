@@ -2,7 +2,7 @@
  *  KCemu -- the KC 85/3 and KC 85/4 Emulator
  *  Copyright (C) 1997-2001 Torsten Paul
  *
- *  $Id: ui_gtk.cc,v 1.24 2002/06/09 14:24:34 torsten_paul Exp $
+ *  $Id: ui_gtk.cc,v 1.25 2002/10/31 01:38:12 torsten_paul Exp $
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -35,6 +35,7 @@
 
 #include "kc/system.h"
 
+#include "kc/rc.h"
 #include "kc/z80.h"
 #include "kc/keys.h"
 #include "kc/memory.h" // text_update()
@@ -46,21 +47,17 @@
 #undef Status
 #include "ui/error.h"
 #include "ui/status.h"
+#include "ui/hsv2rgb.h"
 #include "ui/gtk/cmd.h"
-//#include "ui/gtk/cmds.h"
+
 #include "ui/gtk/debug.h"
 #include "ui/gtk/ui_gtk.h"
 
 #include "libdbg/dbg.h"
 
+#define MAX_DIRTY_SIZE (1536) // FIXME:
+
 static UI_Gtk *self;
-
-// #define UPDATE_PROFILING
-
-#ifdef UPDATE_PROFILING
-static long __update_calls = 0;
-static long __update_calls_dirty = 0;
-#endif /* UPDATE_PROFILING */
 
 class CMD_ui_toggle : public CMD
 {
@@ -73,6 +70,7 @@ public:
       _ui = ui;
       register_cmd("ui-status-bar-toggle", 0);
       register_cmd("ui-menu-bar-toggle", 1);
+      register_cmd("ui-speed-limit-toggle", 2);
     }
   
   void execute(CMD_Args *args, CMD_Context context)
@@ -84,6 +82,9 @@ public:
 	  break;
 	case 1:
 	  _ui->menu_bar_toggle();
+	  break;
+	case 2:
+	  _ui->speed_limit_toggle();
 	  break;
 	}
     }
@@ -132,15 +133,22 @@ UI_Gtk::property_change(GtkWidget *widget,
                         GdkEventProperty *event,
                         gpointer data)
 {
-  char *ptr, *val;
   guchar *prop_data;
+  char *ptr, *val, *atom;
   GdkAtom actual_property_type;
   gint    actual_format, actual_length;
   CMD_Args *args;
 
   UI_Gtk *self = (UI_Gtk *)data;
 
-  if (strcmp(gdk_atom_name(event->atom), "_KCEMU_REMOTE_COMMAND") == 0)
+  if (event == NULL)
+    return TRUE;
+
+  atom = gdk_atom_name(event->atom);
+  if (atom == NULL)
+    return TRUE;
+
+  if (strcmp(atom, "_KCEMU_REMOTE_COMMAND") == 0)
     {
       DBG(1, form("KCemu/UI/remote",
                   "property_change: %s\n",
@@ -317,6 +325,22 @@ UI_Gtk::key_press_release(GdkEventKey *event, bool press)
     case GDK_F13:              c = KC_KEY_F13;     break;
     case GDK_F14:              c = KC_KEY_F14;     break;
     case GDK_F15:              c = KC_KEY_F15;     break;
+    case GDK_KP_0:             c = '0';            break;
+    case GDK_KP_1:             c = '1';            break;
+    case GDK_KP_2:             c = '2';            break;
+    case GDK_KP_3:             c = '3';            break;
+    case GDK_KP_4:             c = '4';            break;
+    case GDK_KP_5:             c = '5';            break;
+    case GDK_KP_6:             c = '6';            break;
+    case GDK_KP_7:             c = '7';            break;
+    case GDK_KP_8:             c = '8';            break;
+    case GDK_KP_9:             c = '9';            break;
+    case GDK_KP_Equal:         c = '=';            break;
+    case GDK_KP_Multiply:      c = '*';            break;
+    case GDK_KP_Add:           c = '+';            break;
+    case GDK_KP_Subtract:      c = '-';            break;
+    case GDK_KP_Divide:        c = '/';            break;
+    case GDK_KP_Enter:         c = 0x0d;           break;
     default:
       c = event->keyval & 0xff;
     }
@@ -397,6 +421,12 @@ UI_Gtk::menu_bar_toggle(void)
 }
 
 void
+UI_Gtk::speed_limit_toggle(void)
+{
+  _speed_limit = !_speed_limit;
+}
+
+void
 UI_Gtk::text_update(void)
 {
 #if 0
@@ -420,7 +450,7 @@ UI_Gtk::text_update(void)
 }
 
 void
-UI_Gtk::ui_callback(void)
+UI_Gtk::gtk_sync(void)
 {
   static int count = 0;
   static bool first = true;
@@ -433,8 +463,6 @@ UI_Gtk::ui_callback(void)
 
   char buf[10];
   unsigned long timeframe, diff, fps;
-
-  z80->addCallback(get_callback_offset(), this, 0);
 
   if (++count >= 60)
     {
@@ -470,19 +498,27 @@ UI_Gtk::ui_callback(void)
     {
       DBG(1, form("KCemu/UI/update",
                   "counter = %lu, frame = %lu, timeframe = %lu\n",
-                  (unsigned long)z80->getCounter() / get_callback_offset(), frame, timeframe));
+                  (unsigned long)z80->getCounter(), frame, timeframe));
       frame = timeframe;
     }
 
-  if (frame > (timeframe + 1)) {
-    usleep(20000 * (frame - timeframe - 1));
-  }
-
-  if (!_auto_skip)
+  if (_speed_limit)
     {
-      processEvents();
-      update();
+      if (frame > (timeframe + 1))
+	usleep(20000 * (frame - timeframe - 1));
     }
+  else
+    {
+      frame = timeframe;
+    }
+
+  /*
+    if (!_auto_skip)
+    {
+    processEvents();
+    update();
+    }
+  */
 
   gettimeofday(&tv, NULL);
   d2 = (tv.tv_sec * 50) + tv.tv_usec / 20000;
@@ -496,6 +532,17 @@ UI_Gtk::ui_callback(void)
       else
 	_auto_skip = true;
     }
+}
+
+void
+UI_Gtk::hsv_to_gdk_color(double h, double s, double v, GdkColor *col)
+{
+  int r, g, b;
+
+  hsv2rgb(h, s, v, &r, &g, &b);
+  col->red   = r << 8;
+  col->green = g << 8;
+  col->blue  = b << 8;
 }
 
 /*
@@ -517,18 +564,21 @@ UI_Gtk::create_main_window(void)
     { _("/File/Tape..."),          "<alt>T", CF(cmd_exec_mc), CD("ui-tape-window-toggle"),     NULL },
     { _("/File/Disk..."),          "<alt>D", CF(cmd_exec_mc), CD("ui-disk-window-toggle"),     NULL },
     { _("/File/Module..."),        "<alt>M", CF(cmd_exec_mc), CD("ui-module-window-toggle"),   NULL },
+    { _("/File/Audio..."),         "<alt>A", CF(cmd_exec_mc), CD("ui-wav-window-toggle"),      NULL },
     { _("/File/sep1"),             NULL,     NULL,            0,                               "<Separator>" },
     { _("/File/Reset"),            "<alt>R", CF(cmd_exec_mc), CD("emu-reset"),                 NULL },
     { _("/File/Power On"),         NULL,     CF(cmd_exec_mc), CD("emu-power-on"),              NULL },
     { _("/File/sep2"),             NULL,     NULL,            0,                               "<Separator>" },
     { _("/File/Quit Emulator"),    "<alt>Q", CF(cmd_exec_mc), CD("emu-quit"),                  NULL },
     { _("/_View"),                 NULL,     NULL,            0,                               "<Branch>" },
+    { _("/View/Keyboard"),         "<alt>K", CF(cmd_exec_mc), CD("ui-keyboard-window-toggle"), NULL },
     { _("/View/Debugger"),         NULL,     CF(cmd_exec_mc), CD("ui-debug-window-toggle"),    NULL },
     { _("/View/Info"),             "<alt>I", CF(cmd_exec_mc), CD("ui-info-window-toggle"),     NULL },
     { _("/View/Menubar"),          NULL,     CF(cmd_exec_mc), CD("ui-menu-bar-toggle"),        NULL },
     { _("/View/Statusbar"),        NULL,     CF(cmd_exec_mc), CD("ui-status-bar-toggle"),      NULL },
     { _("/_Configuration"),        NULL,     NULL,            0,                               "<Branch>" },
     { _("/Configuration/Colors"),  "<alt>C", CF(cmd_exec_mc), CD("ui-color-window-toggle"),    NULL },
+    { _("/Configuration/No Speed Limit"),NULL, CF(cmd_exec_mc), CD("ui-speed-limit-toggle"),     "<ToggleItem>" },
     { _("/_Help"),                 NULL,     NULL,            0,                               "<LastBranch>" },
     { _("/Help/About KCemu"),      NULL,     CF(cmd_exec_mc), CD("ui-about-window-toggle"),    NULL },
     { _("/Help/sep3"),             NULL,     NULL,            0,                               "<Separator>" },
@@ -541,8 +591,10 @@ UI_Gtk::create_main_window(void)
     { _("/_Tape..."),              NULL,     CF(cmd_exec_mc), CD("ui-tape-window-toggle"),     NULL },
     { _("/_Disk..."),              NULL,     CF(cmd_exec_mc), CD("ui-disk-window-toggle"),     NULL },
     { _("/_Module..."),            NULL,     CF(cmd_exec_mc), CD("ui-module-window-toggle"),   NULL },
+    { _("/_Audio..."),             NULL,     CF(cmd_exec_mc), CD("ui-wav-window-toggle"),      NULL },
     { _("/sep1"),                  NULL,     NULL,            0,                               "<Separator>" },
     { _("/_View"),                 NULL,     NULL,            0,                               "<Branch>" },
+    { _("/View/Keyboard"),         NULL,     CF(cmd_exec_mc), CD("ui-keyboard-window-toggle"), NULL },
     { _("/View/Debugger"),         NULL,     NULL,            0,                               NULL },
     { _("/View/Info"),             NULL,     NULL,            0,                               NULL },
     { _("/View/Menubar"),          NULL,     CF(cmd_exec_mc), CD("ui-menu-bar-toggle"),        NULL },
@@ -679,49 +731,15 @@ UI_Gtk::create_header_window(void)
   gtk_widget_show(_header.window);
 }
 
-void
-UI_Gtk::sf_profile_event(GtkWidget * /* widget */, GdkEventButton *event)
-{
-  int x = (int)event->x;
-  int y = (int)event->y;
-  int addr = ((y / 2) << 8) | (x / 2);
-}
-
-void
-UI_Gtk::create_profile_window(void)
-{
-  _profile.window = gtk_window_new(GTK_WINDOW_DIALOG);
-  gtk_window_set_title(GTK_WINDOW(_profile.window), "Profiling...");
-
-  _profile.d_area = gtk_drawing_area_new();
-  gtk_drawing_area_size(GTK_DRAWING_AREA(_profile.d_area), 512, 512);
-  gtk_widget_set_events(_profile.d_area, GDK_BUTTON_PRESS_MASK);
-  gtk_signal_connect(GTK_OBJECT(_profile.d_area), "button_press_event",
-                     GTK_SIGNAL_FUNC(UI_Gtk::sf_profile_event), NULL);
-  
-  gtk_container_add(GTK_CONTAINER(_profile.window), _profile.d_area);
-  gtk_widget_show(_profile.d_area);
-  gtk_widget_show(_profile.window);
-}
-
 UI_Gtk::UI_Gtk(void)
 {
-  z80->register_ic(this);
 }
 
 UI_Gtk::~UI_Gtk(void)
 {
-  z80->unregister_ic(this);
   gtk_widget_destroy(_main.window);
   gdk_key_repeat_restore();
         
-#ifdef UPDATE_PROFILING
-  cerr.form("UI_Gtk: update calls total: %ld\n", __update_calls);
-  cerr.form("UI_Gtk: update calls dirty: %ld\n", __update_calls_dirty);
-  cerr.form("UI_Gtk: update ratio      : %.2f%%\n",
-            100.0 * (float)__update_calls_dirty / (float)__update_calls);
-#endif /* UPDATE_PROFILING */
-
   delete _about_window;
   delete _tape_window;
   delete _tape_add_window;
@@ -729,6 +747,7 @@ UI_Gtk::~UI_Gtk(void)
   delete _copying_window;
   delete _debug_window;
   delete _info_window;
+  delete _wav_window;
   delete _edit_header_window;
   delete _file_browser;
 }
@@ -736,12 +755,15 @@ UI_Gtk::~UI_Gtk(void)
 void
 UI_Gtk::init(int *argc, char ***argv)
 {
-  int a;
   char *filename, *tmp;
 
   self = this;
-  _flash = false;
   _shift_lock = false;
+  _speed_limit = true;
+
+  _auto_skip = false;
+  _cur_auto_skip = 0;
+  _max_auto_skip = RC::instance()->get_int("Max Auto Skip", 6);
 
   gtk_set_locale();
   gtk_init(argc, argv);
@@ -753,7 +775,7 @@ UI_Gtk::init(int *argc, char ***argv)
   strcpy(filename, kcemu_datadir);
   strcat(filename, "/.kcemurc.gtk");
   gtk_rc_parse(filename);
-  delete filename;
+  delete[] filename;
   
   tmp = getenv("HOME");
   if (tmp)
@@ -762,7 +784,7 @@ UI_Gtk::init(int *argc, char ***argv)
       strcpy(filename, tmp);
       strcat(filename, "/.kcemurc.gtk");
       gtk_rc_parse(filename);
-      delete filename;
+      delete[] filename;
     }
   else
     cerr << "Warning: HOME not set! can't locate file `.kcemurc.gtk'" << endl;
@@ -778,14 +800,6 @@ UI_Gtk::init(int *argc, char ***argv)
   Status::instance()->addStatusListener(this);
   Error::instance()->addErrorListener(this);
   
-  for (a = 0;a < 4096;a++) {
-	  _dirty_buf[a] = 1;
-  }
-  _dirty = &_dirty_buf[0x800];
-
-  _pix_mem = (unsigned char *)g_malloc(CANVAS_WIDTH * CANVAS_HEIGHT / 8);
-  _col_mem = (unsigned char *)g_malloc(CANVAS_WIDTH * CANVAS_HEIGHT / 8);
-
   _main.window = NULL;
 
   _about_window       = new AboutWindow();
@@ -794,9 +808,11 @@ UI_Gtk::init(int *argc, char ***argv)
   _tape_add_window    = new TapeAddWindow();
   _disk_window        = new DiskWindow();
   _module_window      = new ModuleWindow();
+  _keyboard_window    = new KeyboardWindow();
   _copying_window     = new CopyingWindow();
   _debug_window       = new DebugWindow();
   _info_window        = new InfoWindow();
+  _wav_window         = new WavWindow();
   _edit_header_window = new EditHeaderWindow();
   _dialog_window      = new DialogWindow();
   _file_browser       = new FileBrowser();
@@ -807,13 +823,9 @@ UI_Gtk::init(int *argc, char ***argv)
 		  _color_window->get_brightness_bg(),
 		  _color_window->get_black_level(),
 		  _color_window->get_white_level());
-#ifdef PROFILE_WINDOW
-  create_profile_window();
-#endif
+
   /* this _must_ come last due to some initialization for menus */
   create_main_window();
-
-  _profile_hist_ptr = 0;
 
   _visual = gdk_visual_get_system();
   _image  = gdk_image_new(GDK_IMAGE_FASTEST, _visual, get_width(), get_height());
@@ -824,6 +836,33 @@ UI_Gtk::init(int *argc, char ***argv)
   cmd = new CMD_update_colortable(this, _color_window);
 
   Status::instance()->setMessage(" KCemu v" VERSION);
+
+  /*
+      switch (_visual->type)
+	{
+	case GDK_VISUAL_STATIC_GRAY:
+	  cout << "GDK_VISUAL_STATIC_GRAY" << endl;
+	  break;
+	case GDK_VISUAL_GRAYSCALE:
+	  cout << "GDK_VISUAL_GRAYSCALE" << endl;
+	  break;
+	case GDK_VISUAL_STATIC_COLOR:
+	  cout << "GDK_VISUAL_STATIC_COLOR" << endl;
+	  break;
+	case GDK_VISUAL_PSEUDO_COLOR:
+	  cout << "GDK_VISUAL_PSEUDO_COLOR" << endl;
+	  break;
+	case GDK_VISUAL_TRUE_COLOR:
+	  cout << "GDK_VISUAL_TRUE_COLOR" << endl;
+	  break;
+	case GDK_VISUAL_DIRECT_COLOR:
+	  cout << "GDK_VISUAL_DIRECT_COLOR" << endl;
+	  break;
+	default:
+	  cout << "unknown visual type" << endl;
+	  break;
+	}
+  */
 }
 
 void
@@ -842,38 +881,371 @@ UI_Gtk::processEvents(void)
     gtk_main_iteration();
 }
 
-void
-UI_Gtk::profile_mem_access(int addr, pf_type type)
+#define ADD_COL(weight) \
+  r += weight * ((p >> 16) & 0xff); \
+  g += weight * ((p >>  8) & 0xff); \
+  b += weight * ((p      ) & 0xff); \
+  w += weight
+
+/*
+ *  +---+---+---+
+ *  | 0 | 1 | 2 |
+ *  +---+---+---+
+ *  | 3 | 4 | 5 |
+ *  +---+---+---+
+ *  | 6 | 7 | 8 |
+ *  +---+---+---+
+ */
+gulong
+UI_Gtk::get_col(byte_t *bitmap, int which, int idx, int width)
 {
-  int x;
-  int y;
-  GdkGC *gc;
-  GtkStyle *style;
+  gulong p;
+  long r, g, b, w;
 
-  if (type != PF_MEM_EXEC) return;
-        
-  style = _profile.d_area->style;
+  w = 0; r = 0; g = 0; b = 0;
 
-  gc = style->bg_gc[GTK_STATE_NORMAL];
-  x = _profile_hist[_profile_hist_ptr] & 0xff;
-  y = (_profile_hist[_profile_hist_ptr] >> 8) & 0xff;
-  /*
-    gdk_draw_point(_profile.d_area->window, gc, 2 * x    , 2 * y    );
-    gdk_draw_point(_profile.d_area->window, gc, 2 * x + 1, 2 * y    );
-    gdk_draw_point(_profile.d_area->window, gc, 2 * x    , 2 * y + 1);
-    gdk_draw_point(_profile.d_area->window, gc, 2 * x + 1, 2 * y + 1);
-    */
+  switch (which)
+    {
+    default:
+      return _col[bitmap[idx]].pixel;
 
-  _profile_hist[_profile_hist_ptr++] = addr;
-  if (_profile_hist_ptr >= PROFILE_HIST_LEN) _profile_hist_ptr = 0;
-  
-  gc = style->fg_gc[GTK_STATE_NORMAL];
-  x = addr & 0xff;
-  y = (addr >> 8) & 0xff;
-  gdk_draw_point(_profile.d_area->window, gc, 2 * x    , 2 * y    );
-  gdk_draw_point(_profile.d_area->window, gc, 2 * x + 1, 2 * y    );
-  gdk_draw_point(_profile.d_area->window, gc, 2 * x    , 2 * y + 1);
-  gdk_draw_point(_profile.d_area->window, gc, 2 * x + 1, 2 * y + 1);
+    case 1:
+      p = _col[bitmap[idx]].pixel;             ADD_COL(9);
+      p = _col[bitmap[idx - width]].pixel;     ADD_COL(3);
+      break;
+    case 3:
+      p = _col[bitmap[idx]].pixel;             ADD_COL(9);
+      p = _col[bitmap[idx - 1]].pixel;         ADD_COL(3);
+      break;
+    case 5:
+      p = _col[bitmap[idx]].pixel;             ADD_COL(9);
+      p = _col[bitmap[idx + 1]].pixel;         ADD_COL(3);
+      break;
+    case 7:
+      p = _col[bitmap[idx]].pixel;             ADD_COL(9);
+      p = _col[bitmap[idx + width]].pixel;     ADD_COL(3);
+      break;
+
+    case 0:
+      p = _col[bitmap[idx]].pixel;             ADD_COL(12);
+      p = _col[bitmap[idx - 1]].pixel;         ADD_COL(5);
+      p = _col[bitmap[idx - width]].pixel;     ADD_COL(5);
+      p = _col[bitmap[idx - width - 1]].pixel; ADD_COL(1);
+      break;
+    case 2:
+      p = _col[bitmap[idx]].pixel;             ADD_COL(12);
+      p = _col[bitmap[idx + 1]].pixel;         ADD_COL(5);
+      p = _col[bitmap[idx - width]].pixel;     ADD_COL(5);
+      p = _col[bitmap[idx - width + 1]].pixel; ADD_COL(1);
+      break;
+    case 6:
+      p = _col[bitmap[idx]].pixel;             ADD_COL(12);
+      p = _col[bitmap[idx - 1]].pixel;         ADD_COL(5);
+      p = _col[bitmap[idx + width]].pixel;     ADD_COL(5);
+      p = _col[bitmap[idx + width - 1]].pixel; ADD_COL(1);
+      break;
+    case 8:
+      p = _col[bitmap[idx]].pixel;             ADD_COL(12);
+      p = _col[bitmap[idx + 1]].pixel;         ADD_COL(5);
+      p = _col[bitmap[idx + width]].pixel;     ADD_COL(5);
+      p = _col[bitmap[idx + width + 1]].pixel; ADD_COL(1);
+      break;
+    }
+
+  r = r / w;
+  g = g / w;
+  b = b / w;
+
+  return (r << 16) | (g << 8) | b;
+}
+
+static gulong
+lighter_color(gulong col)
+{
+  static int color_add = RC::instance()->get_int("DEBUG UI_Gtk Color Add", 50);
+
+  int r = (col >> 16) & 0xff;
+  int g = (col >>  8) & 0xff;
+  int b = (col      ) & 0xff;
+
+  r += color_add;
+  g += color_add;
+  b += color_add;
+
+  if (r > 255)
+    r = 255;
+  if (g > 255)
+    g = 255;
+  if (b > 255)
+    b = 255;
+
+  return (r << 16) | (g << 8) | b;
+}
+
+static gulong
+darker_color(gulong col)
+{
+  int r = (col >> 16) & 0xff;
+  int g = (col >>  8) & 0xff;
+  int b = (col      ) & 0xff;
+
+  r = (2 * r) / 3;
+  g = (2 * g) / 3;
+  b = (2 * b) / 3;
+
+  return (r << 16) | (g << 8) | b;
+}
+
+void
+UI_Gtk::gtk_update_1(byte_t *bitmap, byte_t *dirty, int width, int height)
+{
+  int d = -1;
+  for (int y = 0;y < height;y += 8)
+    {
+      for (int x = 0;x < width;x += 8)
+	{
+	  d++;
+	  if (!dirty[d])
+	    continue;
+	  
+	  int z = y * width + x;
+	  
+	  for (int yy = 0;yy < 8;yy++)
+	    {
+	      for (int xx = 0;xx < 8;xx++)
+		{
+		  gdk_image_put_pixel(_image, x + xx, y + yy, _col[bitmap[z + xx]].pixel);
+		}
+	      z += width;
+	    }
+	}
+    }
+}
+
+void
+UI_Gtk::gtk_update_1_debug(byte_t *bitmap, byte_t *dirty, int width, int height)
+{
+  static int frame_delay;
+  static byte_t *dirty_old = 0;
+
+  if (dirty_old == 0)
+    {
+      dirty_old = new byte_t[MAX_DIRTY_SIZE];
+      memset(dirty_old, 0, MAX_DIRTY_SIZE);
+      frame_delay = RC::instance()->get_int("DEBUG UI_Gtk Frame Delay", 50);
+    }
+
+  int d = -1;
+  for (int y = 0;y < height;y += 8)
+    {
+      for (int x = 0;x < width;x += 8)
+	{
+	  d++;
+	  if (dirty[d])
+	    dirty_old[d] = frame_delay;
+	  
+	  if (dirty_old[d] == 0)
+	    continue;
+
+	  if (dirty_old[d] > 0)
+	    dirty_old[d]--;
+
+	  dirty[d] = 1;
+	  
+	  int z = y * width + x;
+
+	  if (dirty_old[d])
+	    {
+	      for (int yy = 0;yy < 8;yy++)
+		{
+		  for (int xx = 0;xx < 8;xx++)
+		    {
+		      gdk_image_put_pixel(_image, x + xx, y + yy, lighter_color(_col[bitmap[z + xx]].pixel));
+		    }
+		  z += width;
+		}
+	    }
+	  else
+	    {
+	      for (int yy = 0;yy < 8;yy++)
+		{
+		  for (int xx = 0;xx < 8;xx++)
+		    {
+		      gdk_image_put_pixel(_image, x + xx, y + yy, _col[bitmap[z + xx]].pixel);
+		    }
+		  z += width;
+		}
+	    }
+	}
+    }
+}
+
+void
+UI_Gtk::gtk_update_2(byte_t *bitmap, byte_t *dirty, int width, int height)
+{
+  int d = -1;
+  for (int y = 0;y < height;y += 8)
+    {
+      for (int x = 0;x < width;x += 8)
+	{
+	  d++;
+	  if (!dirty[d])
+	    continue;
+	  
+	  int z = y * width + x;
+	  
+	  for (int yy = 0;yy < 16;yy += 2)
+	    {
+	      for (int xx = 0;xx < 16;xx += 2)
+		{
+		  gulong pix = _col[bitmap[z++]].pixel;
+		  gdk_image_put_pixel(_image, 2 * x + xx,     2 * y + yy    , pix);
+		  gdk_image_put_pixel(_image, 2 * x + xx + 1, 2 * y + yy    , pix);
+		  gdk_image_put_pixel(_image, 2 * x + xx    , 2 * y + yy + 1, darker_color(pix));
+		  gdk_image_put_pixel(_image, 2 * x + xx + 1, 2 * y + yy + 1, darker_color(pix));
+		}
+	      z += width - 8;
+	    }
+	}
+    }
+}
+
+void
+UI_Gtk::gtk_update_3(byte_t *bitmap, byte_t *dirty, int width, int height)
+{
+  int d = -1;
+  byte_t dirty_buf[MAX_DIRTY_SIZE]; // FIXME -- check length!
+
+  memcpy(dirty_buf, dirty, MAX_DIRTY_SIZE); // FIXME -- check length!
+
+  for (int y = 0;y < height;y += 8)
+    {
+      for (int x = 0;x < width;x += 8)
+	{
+	  d++;
+
+	  if (dirty[d])
+	    {	  
+	      int z = y * width + x;
+	  
+	      for (int yy = 0;yy < 24;yy += 3)
+		{
+		  for (int xx = 0;xx < 24;xx += 3)
+		    {
+		      gdk_image_put_pixel(_image, 3 * x + xx    , 3 * y + yy    , get_col(bitmap, 0, z, width));
+		      gdk_image_put_pixel(_image, 3 * x + xx + 1, 3 * y + yy    , get_col(bitmap, 1, z, width));
+		      gdk_image_put_pixel(_image, 3 * x + xx + 2, 3 * y + yy    , get_col(bitmap, 2, z, width));
+		      gdk_image_put_pixel(_image, 3 * x + xx    , 3 * y + yy + 1, get_col(bitmap, 3, z, width));
+		      gdk_image_put_pixel(_image, 3 * x + xx + 1, 3 * y + yy + 1, get_col(bitmap, 4, z, width));
+		      gdk_image_put_pixel(_image, 3 * x + xx + 2, 3 * y + yy + 1, get_col(bitmap, 5, z, width));
+		      gdk_image_put_pixel(_image, 3 * x + xx    , 3 * y + yy + 2, get_col(bitmap, 6, z, width));
+		      gdk_image_put_pixel(_image, 3 * x + xx + 1, 3 * y + yy + 2, get_col(bitmap, 7, z, width));
+		      gdk_image_put_pixel(_image, 3 * x + xx + 2, 3 * y + yy + 2, get_col(bitmap, 8, z, width));		      z++;
+		    }
+		  z += width - 8;
+		} 
+	    }
+	  else
+	    {
+	      /*
+	       *  not dirty but we need to check the neighbour pixels due to
+	       *  the antialiasing
+	       */
+	      if ((d > 0) && (dirty[d - 1]))
+		{
+		  int z = y * width + x;
+		  for (int yy = 0;yy < 24;yy += 3)
+		    {
+		      gdk_image_put_pixel(_image, 3 * x, 3 * y + yy    , get_col(bitmap, 0, z, width));
+		      gdk_image_put_pixel(_image, 3 * x, 3 * y + yy + 1, get_col(bitmap, 3, z, width));
+		      gdk_image_put_pixel(_image, 3 * x, 3 * y + yy + 2, get_col(bitmap, 6, z, width));
+		      z += width;
+		    }
+		  dirty_buf[d] = 1;
+		}
+	      if (dirty[d + 1])
+		{
+		  int z = y * width + x + 7;
+		  for (int yy = 0;yy < 24;yy += 3)
+		    {
+		      gdk_image_put_pixel(_image, 3 * x + 23, 3 * y + yy    , get_col(bitmap, 2, z, width));
+		      gdk_image_put_pixel(_image, 3 * x + 23, 3 * y + yy + 1, get_col(bitmap, 5, z, width));
+		      gdk_image_put_pixel(_image, 3 * x + 23, 3 * y + yy + 2, get_col(bitmap, 8, z, width));
+		      z += width;
+		    }
+		  dirty_buf[d] = 1;
+		}
+	      if (dirty[d + width / 8])
+		{
+		  int z = (y + 7) * width + x;
+		  for (int xx = 0;xx < 24;xx += 3)
+		    {
+		      gdk_image_put_pixel(_image, 3 * x + xx    , 3 * y + 23, get_col(bitmap, 6, z, width));
+		      gdk_image_put_pixel(_image, 3 * x + xx + 1, 3 * y + 23, get_col(bitmap, 7, z, width));
+		      gdk_image_put_pixel(_image, 3 * x + xx + 2, 3 * y + 23, get_col(bitmap, 8, z, width));
+		      z++;
+		    }
+		  dirty_buf[d] = 1;
+		}
+	      if ((d > width / 8) && (dirty[d - width / 8]))
+		{
+		  int z = y * width + x;
+		  for (int xx = 0;xx < 24;xx += 3)
+		    {
+		      gdk_image_put_pixel(_image, 3 * x + xx    , 3 * y, get_col(bitmap, 0, z, width));
+		      gdk_image_put_pixel(_image, 3 * x + xx + 1, 3 * y, get_col(bitmap, 1, z, width));
+		      gdk_image_put_pixel(_image, 3 * x + xx + 2, 3 * y, get_col(bitmap, 2, z, width));
+		      z++;
+		    }
+		  dirty_buf[d] = 1;
+		}
+	    }
+	}
+    }
+
+  memcpy(dirty, dirty_buf, MAX_DIRTY_SIZE); // FIXME -- check length!
+}
+
+void
+UI_Gtk::gtk_update(byte_t *bitmap, byte_t *dirty, int width, int height, bool full_update)
+{
+  if (full_update)
+    {
+      gdk_draw_image(GTK_WIDGET(_main.canvas)->window, _gc, _image,
+		     0, 0, 0, 0, get_width(), get_height());
+      return;
+    }
+
+  switch (kcemu_ui_scale)
+    {
+    case 1:
+      if (kcemu_ui_debug)
+	gtk_update_1_debug(bitmap, dirty, width, height);
+      else
+	gtk_update_1(bitmap, dirty, width, height);
+      break;
+    case 2:
+      gtk_update_2(bitmap, dirty, width, height);
+      break;
+    case 3:
+      gtk_update_3(bitmap, dirty, width, height);
+      break;
+    }
+
+  int d = -1;
+  int s = 8 * kcemu_ui_scale;
+  for (int y = 0;y < get_height();y += s)
+    {
+      for (int x = 0;x < get_width();x += s)
+	{
+	  d++;	      
+	  if (!dirty[d])
+	    continue;
+
+	  dirty[d] = 0;
+	  gdk_draw_image(GTK_WIDGET(_main.canvas)->window, _gc, _image, x, y, x, y, s, s);
+	}
+    }
 }
 
 UI_ModuleInterface *

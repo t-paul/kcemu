@@ -2,7 +2,7 @@
  *  KCemu -- the KC 85/3 and KC 85/4 Emulator
  *  Copyright (C) 1997-2001 Torsten Paul
  *
- *  $Id: mod_list.cc,v 1.15 2002/06/09 14:24:33 torsten_paul Exp $
+ *  $Id: mod_list.cc,v 1.16 2002/10/31 01:46:35 torsten_paul Exp $
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -64,6 +64,7 @@
 #include "kc/mod_ram8.h"
 #include "kc/mod_64k.h"
 #include "kc/mod_rom.h"
+#include "kc/mod_rom1.h"
 #include "kc/mod_disk.h"
 #include "kc/mod_list.h"
 
@@ -127,6 +128,16 @@ ModuleList::ModuleList(void)
   _mod_list.push_back(new ModuleListEntry(_("RAM Module (32k/8000h)"), m, KC_TYPE_LC80));
 
   /*
+   *  basic (kc85/1)
+   */
+  ptr = new char[strlen(kcemu_datadir) + 14];
+  strcpy(ptr, kcemu_datadir);
+  strcat(ptr, "/basic_c0.851");
+  m = new ModuleROM1(ptr, "BASIC", 0xc000, 0x2800);
+  _mod_list.push_back(new ModuleListEntry(_("Basic Module (c000h-e7ffh)"), m, KC_TYPE_85_1));
+  delete[] ptr;
+
+  /*
    *  RAM modules 16k at 4000h and 8000h (kc85/1)
    */
   m = new ModuleRAM1("RAM4", 0x4000, 0x4000);
@@ -135,14 +146,78 @@ ModuleList::ModuleList(void)
   _mod_list.push_back(new ModuleListEntry(_("RAM Module (16k/8000h)"), m, KC_TYPE_85_1_CLASS));
 
   /*
+   *  ZM30 (kc85/1)
+   */
+  ptr = new char[strlen(kcemu_datadir) + 14];
+  strcpy(ptr, kcemu_datadir);
+  strcat(ptr, "/zm30__c0.851");
+  m = new ModuleROM1(ptr, "ZM30", 0xc000, 0x1c00);
+  _mod_list.push_back(new ModuleListEntry(_("ZM30 (c000h-ccffh)"), m, KC_TYPE_85_1_CLASS));
+  delete[] ptr;
+
+  /*
+   *  edas (kc85/1)
+   */
+  ptr = new char[strlen(kcemu_datadir) + 14];
+  strcpy(ptr, kcemu_datadir);
+  strcat(ptr, "/edas__c0.851");
+  m = new ModuleROM1(ptr, "EDAS", 0xc000, 0x2800);
+  _mod_list.push_back(new ModuleListEntry(_("EDAS (c000h-e7ffh)"), m, KC_TYPE_85_1_CLASS));
+  delete[] ptr;
+
+  /*
+   *  idas (kc85/1)
+   */
+  ptr = new char[strlen(kcemu_datadir) + 14];
+  strcpy(ptr, kcemu_datadir);
+  strcat(ptr, "/idas__c0.851");
+  m = new ModuleROM1(ptr, "IDAS", 0xc000, 0x2800);
+  _mod_list.push_back(new ModuleListEntry(_("IDAS / ZM (c000h-e7ffh)"), m, KC_TYPE_85_1_CLASS));
+  delete[] ptr;
+
+  /*
+   *  bitex (kc85/1)
+   */
+  ptr = new char[strlen(kcemu_datadir) + 14];
+  strcpy(ptr, kcemu_datadir);
+  strcat(ptr, "/bitex_c0.851");
+  m = new ModuleROM1(ptr, "BITEX", 0xc000, 0x1800);
+  _mod_list.push_back(new ModuleListEntry(_("BITEX (c000h-d7ffh)"), m, KC_TYPE_85_1_CLASS));
+  delete[] ptr;
+
+  /*
+   *  zsid (kc85/1)
+   */
+  /*
+  ptr = new char[strlen(kcemu_datadir) + 14];
+  strcpy(ptr, kcemu_datadir);
+  strcat(ptr, "/zsid__c0.851");
+  m = new ModuleROM1(ptr, "ZSID", 0xc000, 0x2800);
+  _mod_list.push_back(new ModuleListEntry(_("ZSID (c000h-e7ffh)"), m, KC_TYPE_85_1_CLASS));
+  delete[] ptr;
+  */
+
+  /*
+   *  r80 (kc85/1)
+   */
+  /*
+  ptr = new char[strlen(kcemu_datadir) + 14];
+  strcpy(ptr, kcemu_datadir);
+  strcat(ptr, "/r80___c0.851");
+  m = new ModuleROM1(ptr, "R80", 0xc000, 0x1c00);
+  _mod_list.push_back(new ModuleListEntry(_("R80 (c000h-dbffh)"), m, KC_TYPE_85_1_CLASS));
+  delete[] ptr;
+  */
+
+  /*
    *  IRM Expansion for color display (kc85/1)
    */
   m = new ModuleRAM1("IRMX", 0xe800, 0x0800);
-  entry = new ModuleListEntry(_("IRM Color Expansion"), m, KC_TYPE_NONE);
-  _mod_list.push_back(entry);
+  _color_expansion = new ModuleListEntry(_("IRM Color Expansion"), m, KC_TYPE_NONE);
+  _mod_list.push_back(_color_expansion);
   _init_color_expansion = 0;
   if (get_kc_type() == KC_TYPE_87)
-    _init_color_expansion = entry;
+    _init_color_expansion = _color_expansion;
 
   /*
    *  RAM module 16k (kc85/3)
@@ -151,14 +226,14 @@ ModuleList::ModuleList(void)
   _mod_list.push_back(new ModuleListEntry(_("M022: Expander RAM (16k)"), m, KC_TYPE_85_2_CLASS));
 
   /*
-   *  basic
+   *  basic (kc85/2-4)
    */
   ptr = new char[strlen(kcemu_datadir) + 10];
   strcpy(ptr, kcemu_datadir);
   strcat(ptr, "/m006.rom");
-  m = new ModuleROM(ptr, "Basic", 0x2000, 0xfb);
+  m = new ModuleROM(ptr, "BASIC", 0x2000, 0xfb);
   _mod_list.push_back(new ModuleListEntry(_("M006: Basic"), m, KC_TYPE_85_2_CLASS));
-  delete ptr;
+  delete[] ptr;
 
   /*
    *  texor
@@ -168,7 +243,7 @@ ModuleList::ModuleList(void)
   strcat(ptr, "/m012.rom");
   m = new ModuleROM(ptr, "M012", 0x2000, 0xfb);
   _mod_list.push_back(new ModuleListEntry(_("M012: Texor"), m, KC_TYPE_85_2_CLASS));
-  delete ptr;
+  delete[] ptr;
 
   /*
    *  forth
@@ -178,7 +253,7 @@ ModuleList::ModuleList(void)
   strcat(ptr, "/m026.rom");
   m = new ModuleROM(ptr, "M026", 0x2000, 0xfb);
   _mod_list.push_back(new ModuleListEntry(_("M026: Forth"), m, KC_TYPE_85_2_CLASS));
-  delete ptr;
+  delete[] ptr;
 
   /*
    *  development
@@ -189,7 +264,7 @@ ModuleList::ModuleList(void)
   m = new ModuleROM(ptr, "M027", 0x2000, 0xfb);
   entry = new ModuleListEntry(_("M027: Development"), m, KC_TYPE_85_2_CLASS);
   _mod_list.push_back(entry);
-  delete ptr;
+  delete[] ptr;
 
   /*
    *  wordpro ROM version for kc85/3
@@ -200,7 +275,7 @@ ModuleList::ModuleList(void)
   m = new ModuleROM(ptr, "M900", 0x2000, 0xfb);
   entry = new ModuleListEntry(_("M900: WordPro '86 (KC85/3)"), m, KC_TYPE_85_3);
   _mod_list.push_back(entry);
-  delete ptr;
+  delete[] ptr;
 
   /*
    *  wordpro ROM version for kc85/4
@@ -211,7 +286,7 @@ ModuleList::ModuleList(void)
   m = new ModuleROM(ptr, "M901", 0x2000, 0xfb);
   entry = new ModuleListEntry(_("M901: WordPro '86 (KC85/4)"), m, KC_TYPE_85_4);
   _mod_list.push_back(entry);
-  delete ptr;
+  delete[] ptr;
 
   /*
    *  Floppy Disk Basis ROM
@@ -227,7 +302,7 @@ ModuleList::ModuleList(void)
     {
       _init_floppy_basis = entry;
     }
-  delete ptr;
+  delete[] ptr;
 
   _nr_of_bd = RC::instance()->get_int("Busdrivers");
   if (_nr_of_bd < 0)
@@ -302,13 +377,14 @@ ModuleList::init(void)
 void
 ModuleList::insert(int slot, ModuleListEntry *entry)
 {
-  ModuleInterface *m;
+  ModuleInterface *m = NULL;
   
   /*
    *  the module object is deleted in module->insert()
    *  or module->remove()!
    */
-  m = entry->get_mod();
+  if (entry != NULL)
+    m = entry->get_mod();
 
   if (m)
     module->insert(slot, m->clone());
@@ -317,4 +393,10 @@ ModuleList::insert(int slot, ModuleListEntry *entry)
 
   ui->getModuleInterface()->insert(slot, m);
   ui->getModuleInterface()->activate(slot, 0);
+}
+
+ModuleListEntry *
+ModuleList::get_color_expansion()
+{
+  return _color_expansion;
 }

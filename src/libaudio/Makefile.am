@@ -1,0 +1,20 @@
+## Process this file with automake to produce Makefile.in
+
+noinst_LIBRARIES = libaudio.a
+
+CPPFLAGS = \
+	-DDEBUG -DLINUX
+
+INCLUDES = \
+	-I../../include
+
+libaudio_a_SOURCES = \
+	load.c \
+	load_oss.c \
+	load_snd.c \
+	load_aud.c \
+	load_mp3.c \
+	load_ogg.c \
+	load_flc.c \
+	load_wav.c \
+	load_raw.c

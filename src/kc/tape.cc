@@ -2,7 +2,7 @@
  *  KCemu -- the KC 85/3 and KC 85/4 Emulator
  *  Copyright (C) 1997-2001 Torsten Paul
  *
- *  $Id: tape.cc,v 1.24 2002/06/09 14:24:34 torsten_paul Exp $
+ *  $Id: tape.cc,v 1.25 2002/10/31 01:46:35 torsten_paul Exp $
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -208,6 +208,7 @@ public:
     {
       _t = t;
       register_cmd("tape-export");
+      register_cmd("tape-export-wav", 2);
     }
 
   void execute(CMD_Args *args, CMD_Context context)
@@ -232,23 +233,55 @@ public:
               args->add_callback("ui-file-select-CB-ok", this, 1);
               args->add_callback("ui-file-select-CB-cancel", this, 1);
               CMD_EXEC_ARGS("ui-file-select", args);
-              return;
             }
-          break;
+	  /* fall through */
         case 1:
           if (args)
             filename = args->get_string_arg("filename");
+	  if (!filename)
+	    return;
+
+	  if (tape->export_tap(tapename, filename) == TAPE_OK)
+	    {
+	      sprintf(buf, _("File `%s' saved."), filename);
+	      Status::instance()->setMessage(buf);
+	    }
+	  else
+	    {
+	      Status::instance()->setMessage(_("Can't export file."));
+	    }
+
           break;
-        }
-      if (filename)
-        {
-          if (tape->extract(tapename, filename) == TAPE_OK)
-            {
-              sprintf(buf, _("File `%s' saved."), filename);
-              Status::instance()->setMessage(buf);
+
+	case 2:
+	  if (!args)
+	    args = new CMD_Args();
+	  filename = args->get_string_arg("filename");
+	  if (!filename)
+	    {
+              args->set_string_arg("ui-file-select-title", _("Export As..."));
+              args->add_callback("ui-file-select-CB-ok", this, 3);
+              args->add_callback("ui-file-select-CB-cancel", this, 3);
+              CMD_EXEC_ARGS("ui-file-select", args);
             }
-          else
-            Status::instance()->setMessage(_("Can't export file."));
+	  /* fall through */
+	case 3:
+	  if (args)
+	    filename = args->get_string_arg("filename");
+	  if (!filename)
+	    return;
+
+	  if (tape->export_wav(tapename, filename) == TAPE_OK)
+	    {
+	      sprintf(buf, _("File `%s' saved."), filename);
+	      Status::instance()->setMessage(buf);
+	    }
+	  else
+	    {
+	      Status::instance()->setMessage(_("Can't export file."));
+	    }
+
+	  break;
         }
     }
 };
@@ -732,7 +765,9 @@ Tape::do_play(int edge)
       //_block += _start_block;
 
       _byte_counter = 0;
+      memset(_buf, 0, 129);
       _is->read((char *)_buf, 129);
+      //dump_buf((char *)_buf, _buf[0]);
       _block = _buf[0];
       TAPE_IF()->tapeProgress((100 * _bytes_read) / _file_size);
 
@@ -749,7 +784,7 @@ Tape::do_play(int edge)
           DBG(1, form("KCemu/Tape/play",
 		      "Tape::play(): gcount() = %d, peek() = %d\n",
 		      _is->gcount(), _is->peek()));
-
+	  
           _last_block = 1;
 	  delete _is;
 	  _is = NULL;
@@ -827,8 +862,8 @@ Tape::do_play(int edge)
 void
 Tape::tape_signal(void)
 {
+  long diff;
   int bit_type;
-  unsigned long diff;
   static unsigned long long c_old, c_new;
 
   /*
@@ -962,7 +997,6 @@ tape_error_t
 Tape::attach(const char *filename, bool create)
 {
   KCTDir *dir;
-  CMD_Args *args;
   kct_error_t err;
   
   _kct_file.close();
@@ -1092,6 +1126,7 @@ Tape::add_file(const char *name,
 	       kct_file_type_t type,
 	       kct_machine_type_t machine)
 {
+  char buf[1000];
   kct_error_t err;
   CMD_Args *args = 0;
 
@@ -1102,7 +1137,11 @@ Tape::add_file(const char *name,
 			prop->start_addr,
 			type, KCT_MACHINE_ALL);
   if (err != KCT_ERROR_EXIST)
-    return TAPE_OK;
+    {
+      snprintf(buf, 1000, _("File `%s' [%s] added."), name, prop->filetype);
+      Status::instance()->setMessage(buf);
+      return TAPE_OK;
+    }
 
   if (args == 0)
     args = new CMD_Args();
@@ -1223,43 +1262,62 @@ Tape::remove(const char *name)
 
   _kct_file.remove(name);
   TAPE_IF()->tapeRemoveFile(idx);
+  update_tape_list();
 
   return TAPE_OK;
 }
 
 tape_error_t
-Tape::extract(const char *name, const char *filename)
+Tape::export_tap(const char *name, const char *filename)
 {
-  int a, c;
-  fstream f;
+  int ret;
+  byte_t *buf;
   istream *is;
+  unsigned int a;
   kct_file_props_t props;
 
   is = tape->read(name, &props);
   if (!is)
     return TAPE_ERROR;
 
-  f.open(filename, ios::out | ios::binary);
-  if (!f)
+  buf = new byte_t[props.size];
+  for (a = 0;a < props.size;a++)
+    buf[a] = is->get();
+  delete is;
+
+  ret = fileio_save_tap(filename, buf, props.size);
+  delete[] buf;
+
+  if (ret < 0)
     return TAPE_ERROR;
 
-  f.write("\xc3KC-TAPE by AF. ", 16);
-  a = 0;
-  while (242)
-    {
-      c = is->get();
-      if (c == EOF)
-	break;
-      a++;
-      f.put(c);
-    }
-  while ((a % 129) != 0)
-    {
-      a++;
-      f.put('\0'); /* pad to block size */
-    }
-  
-  f.close();
+  return TAPE_OK;
+}
+
+tape_error_t
+Tape::export_wav(const char *name, const char *filename)
+{
+  int ret;
+  byte_t *buf;
+  istream *is;
+  unsigned int a;
+  kct_file_props_t props;
+
+  is = tape->read(name, &props);
+  if (!is)
+    return TAPE_ERROR;
+
+  buf = new byte_t[props.size];
+  for (a = 0;a < props.size;a++)
+    buf[a] = is->get();
+  delete is;
+
+  ret = fileio_save_wav(filename, buf, props.size);
+  delete[] buf;
+
+  if (ret < 0)
+    return TAPE_ERROR;
+
   return TAPE_OK;
 }
 

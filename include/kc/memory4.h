@@ -2,7 +2,7 @@
  *  KCemu -- the KC 85/3 and KC 85/4 Emulator
  *  Copyright (C) 1997-2001 Torsten Paul
  *
- *  $Id: memory4.h,v 1.9 2002/01/20 13:39:29 torsten_paul Exp $
+ *  $Id: memory4.h,v 1.10 2002/10/31 01:46:33 torsten_paul Exp $
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -40,6 +40,8 @@ private:
   byte_t _irm0[0x8000];
   byte_t _irm1[0x8000];
 
+  bool _caos_c;
+  bool _caos_e;
   bool _enable_irm;
   bool _access_ram_8_1;
   bool _access_color;
@@ -54,7 +56,8 @@ private:
   MemAreaGroup *_m_ram_4;   /* RAM   4000h - 7fffh */
   MemAreaGroup *_m_ram_8a;  /* RAM   8000h - bfffh (page 0) */
   MemAreaGroup *_m_ram_8b;  /* RAM   8000h - bfffh (page 1) */
-  MemAreaGroup *_m_irm_xx;  /* IRM   a800h - bfffh (shared) */
+  MemAreaGroup *_m_irm_x0;  /* IRM   a800h - bfffh (shared) */
+  MemAreaGroup *_m_irm_x1;  /* IRM   a800h - bfffh (available on CAOS-C on, CAOS-E off) */
   MemAreaGroup *_m_irm_0p;  /* IRM   8000h - a7ffh (screen 0/ pixel) */
   MemAreaGroup *_m_irm_0c;  /* IRM   8000h - a7ffh (screen 0/ color) */
   MemAreaGroup *_m_irm_1p;  /* IRM   8000h - a7ffh (screen 1/ pixel) */

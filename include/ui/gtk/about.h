@@ -2,7 +2,7 @@
  *  KCemu -- the KC 85/3 and KC 85/4 Emulator
  *  Copyright (C) 1997-2001 Torsten Paul
  *
- *  $Id: about.h,v 1.9 2002/06/09 14:24:32 torsten_paul Exp $
+ *  $Id: about.h,v 1.10 2002/10/31 01:38:07 torsten_paul Exp $
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -43,12 +43,14 @@ class AboutWindow : public UI_Gtk_Window
   static char APP_NAME[];
   static char APP_COPYRIGHT[];
 
+  CMD *_cmd;
+
  protected:
   void init(void);
   
  public:
-  AboutWindow(void) { init(); }
-  virtual ~AboutWindow(void) {}
+  AboutWindow(void);
+  virtual ~AboutWindow(void);
 };
 
 #endif /* __ui_gtk_about_h */

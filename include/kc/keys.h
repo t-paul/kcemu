@@ -2,7 +2,7 @@
  *  KCemu -- the KC 85/3 and KC 85/4 Emulator
  *  Copyright (C) 1997-2001 Torsten Paul
  *
- *  $Id: keys.h,v 1.3 2001/04/14 15:14:22 tp Exp $
+ *  $Id: keys.h,v 1.4 2002/10/31 01:46:33 torsten_paul Exp $
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -22,6 +22,7 @@
 #ifndef __kc_keys_h
 #define __kc_keys_h
 
+#define KC_KEY_ENTER               (0x0d)
 #define KC_KEY_ESC                 (0x1b)
 
 #define KC_KEY_F1                  (0x101)
@@ -55,5 +56,11 @@
 #define KC_KEY_PAGE_DOWN           (0x11d)
 #define KC_KEY_PAUSE               (0x11e)
 #define KC_KEY_PRINT               (0x11f)
+#define KC_KEY_COLOR               (0x120)
+#define KC_KEY_GRAPHIC             (0x121)
+#define KC_KEY_LIST                (0x122)
+#define KC_KEY_RUN                 (0x123)
+#define KC_KEY_STOP                (0x124)
+#define KC_KEY_SHIFT_LOCK          (0x125)
 
 #endif /* __kc_keys_h */

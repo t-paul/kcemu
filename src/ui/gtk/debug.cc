@@ -2,7 +2,7 @@
  *  KCemu -- the KC 85/3 and KC 85/4 Emulator
  *  Copyright (C) 1997-2001 Torsten Paul
  *
- *  $Id: debug.cc,v 1.13 2002/06/09 14:24:34 torsten_paul Exp $
+ *  $Id: debug.cc,v 1.14 2002/10/31 01:38:12 torsten_paul Exp $
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -104,8 +104,6 @@ DebugWindow::key_press_func(GtkWidget *widget, GdkEventKey *event,
                             gpointer data)
 {
   int clear_op;
-  char buf[100];
-  long val;
   DebugWindow *self;
 
   clear_op = 0;
@@ -446,6 +444,8 @@ debug_op_asm::update(DebugWindow *w, scroll_dir_t direction = SCROLL_NONE)
               done = 1;
             }
           break;
+	default:
+	  break;
         }
       if (++a > 22)
         {

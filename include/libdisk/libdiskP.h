@@ -2,7 +2,7 @@
  *  KCemu -- the KC 85/3 and KC 85/4 Emulator
  *  Copyright (C) 1997-2001 Torsten Paul
  *
- *  $Id: libdiskP.h,v 1.1 2002/01/06 12:53:40 torsten_paul Exp $
+ *  $Id: libdiskP.h,v 1.2 2002/10/31 00:51:48 torsten_paul Exp $
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -39,7 +39,7 @@ typedef struct libdisk_loader
 int  libdisk_register_loader(libdisk_loader_t *loader);
 
 void loader_dir_init(void);
-void loader_cmd_init(void);
+void loader_cdm_init(void);
 void loader_22dsk_init(void);
 
 #endif /* __libdisk_libdiskp_h */

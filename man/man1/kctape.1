@@ -2,7 +2,7 @@
 .SH NAME
 kctape \- handle tape files for KCemu
 .SH SYNOPSIS
-.B kctape tapefile [OPTION] [file] ...
+.B kctape -t tapefile [command [command_args]]
 .br
 .B kctape --help
 .br
@@ -12,41 +12,48 @@ This manual page documents briefly the
 command.
 This manual page was written for the Debian GNU/Linux distribution
 because the original program does not have a manual page.
-.PP
-.B kctape
-...
 .SH OPTIONS
 .TP
+.B \-h, --help
+Show short help text.
+.TP
+.B \-v, --verbose
+Be verbose about what's going on.
+.TP
+.B \-t, --tape tapefile
+tape archive to process.
+.TP
 .B \-l, --list
-List the content of the tapefile (default).
+List the content of the tapefile.
 .TP
 .B \-c, --create
 Create the specified tapefile.
 .TP
 .B \-a, --add file [file ...]
-Add new file to tapefile.
+Add new file to tapefile (in KC85/3 mode).
 .TP
-.B \-A, --add-raw file tapename kcname loadaddr [startaddr]
-Add raw file to tapefile specifying the header values.
-.TP
-.B \-x, --extract filename
-Extract file to stdout.
+.B \-1, --add1 file [file ...]
+Add new file to tapefile (in KC85/1 mode).
 .TP
 .B \-r, --remove filename
 Remove file from tapefile.
 .TP
+.B \-x, --extract filename
+Extract file to stdout or to the file specified by -o.
+.TP
 .B \-d, --dump filename
 Hexdump file from tapefile.
 .TP
+.B \-o, --output filename
+Output file for the extract command.
+.TP
 .B \-b, --print-bam
-Show internal block map.
+Show internal block allocation map.
 .TP
 .B \-B, --print-block-list
 Show internal block list.
-.SH "BUGS"
-The handling of the commandline options is not quite GNU like.
-.SH "SEE ALSO"
-.IR kcemu(1x)
+.SH SEE ALSO
+kcemu(1x), kc2tap(1), kc2wav(1), kc2img(1), kc2raw(1)
 .SH AUTHOR
 This manual page was written by Torsten Paul <Torsten.Paul@gmx.de>,
 for the Debian GNU/Linux system (but may be used by others).

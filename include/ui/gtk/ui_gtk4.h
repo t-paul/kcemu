@@ -1,8 +1,8 @@
 /*
  *  KCemu -- the KC 85/3 and KC 85/4 Emulator
- *  Copyright (C) 1997-2001 Torsten Paul
+ *  Copyright (C) 1997-2002 Torsten Paul
  *
- *  $Id: ui_gtk4.h,v 1.12 2002/06/09 14:24:33 torsten_paul Exp $
+ *  $Id: ui_gtk4.h,v 1.13 2002/10/31 01:38:07 torsten_paul Exp $
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -24,48 +24,32 @@
 
 #include "ui/gtk/ui_gtk.h"
 
-class UI_Gtk4 : public UI_Gtk
+#include "ui/generic/ui_4.h"
+#include "ui/generic/scanline.h"
+
+class UI_Gtk4 : public UI_Gtk, public UI_4
 {
  private:
-  bool       _flash_enabled;
-  int        _flash_idx;
-  int        _flash_count;
-  word_t     _flash_vec[48];
-  word_t    *_flash_v1;
-  word_t    *_flash_v2;
-  word_t    *_flash_v3;
-  long long  _flash_time;
-  long long  _frame_time;
-  bool       _auto_skip;
-  int        _cur_auto_skip;
-  int        _max_auto_skip;
+  Scanline scanline;
 
- protected:
-  void handle_flash(void);
-  void reset_flash(bool enable);
-  void render_tile(byte_t *irm, int x, int y, bool no_cache);
-  void render_tile_hires(byte_t *irm, int x, int y, bool no_cache);
+ public:
+  UI_Gtk4(void);
+  virtual ~UI_Gtk4(void);
 
- protected:
+  virtual void update(bool full_update = false, bool clear_cache = false);
+  virtual void callback(void *data);
+  virtual void flash(bool enable);
+
   virtual void allocate_colors(double saturation_fg,
 			       double saturation_bg,
 			       double brightness_fg,
 			       double brightness_bg,
 			       double black_level,
 			       double white_level);
-  
- public:
-  UI_Gtk4(void);
-  virtual ~UI_Gtk4(void);
-  virtual void update(bool full_update = false, bool clear_cache = false);
-  virtual void memWrite(int addr, char val);
-  virtual void callback(void *data);
-  virtual void flash(bool enable);
 
   virtual const char * get_title(void);
   virtual int get_width(void);
   virtual int get_height(void);
-  virtual int get_callback_offset(void);
 
   virtual void reset(bool power_on = false);
 };

@@ -2,7 +2,7 @@
  *  KCemu -- the KC 85/3 and KC 85/4 Emulator
  *  Copyright (C) 1997-2001 Torsten Paul
  *
- *  $Id: mod_ram.cc,v 1.5 2002/06/09 14:24:33 torsten_paul Exp $
+ *  $Id: mod_ram.cc,v 1.6 2002/10/31 01:46:35 torsten_paul Exp $
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -53,8 +53,9 @@ ModuleRAM::ModuleRAM(const char *name, byte_t id) :
 
 ModuleRAM::~ModuleRAM(void)
 {
-  if (_group) memory->unregister_memory(_group);
-  delete _ram;
+  if (_group)
+    memory->unregister_memory(_group);
+  delete[] _ram;
 }
 
 void

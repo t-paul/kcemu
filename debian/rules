@@ -11,8 +11,15 @@ export DH_COMPAT=3
 configure: configure-stamp
 configure-stamp:
 	dh_testdir
-	# Add here commands to configure the package.
-	./configure --prefix=/usr --mandir=\$${prefix}/share/man --infodir=\$${prefix}/share/info
+	./configure \
+		--prefix=/usr \
+		--mandir=\$${prefix}/share/man \
+		--infodir=\$${prefix}/share/info \
+		--enable-libsndfile=no \
+		--enable-libaudiofile=no \
+		--enable-libmp3lame=no \
+		--enable-libvorbis=no \
+		--enable-libflac=no
 
 	touch configure-stamp
 
@@ -20,9 +27,7 @@ build: configure-stamp build-stamp
 build-stamp:
 	dh_testdir
 
-	# Add here commands to compile the package.
 	$(MAKE)
-	#/usr/bin/docbook-to-man debian/kcemu.sgml > kcemu.1
 
 	touch build-stamp
 
@@ -31,7 +36,6 @@ clean:
 	dh_testroot
 	rm -f build-stamp configure-stamp
 
-	# Add here commands to clean up after the build process.
 	-$(MAKE) distclean
 
 	dh_clean
@@ -42,21 +46,20 @@ install: build
 	dh_clean -k
 	dh_installdirs
 
-	# Add here commands to install the package into debian/kcemu.
 	$(MAKE) install prefix=$(CURDIR)/debian/kcemu/usr \
 			exec_prefix=$(CURDIR)/debian/kcemu/usr/X11R6 \
 			mandir=$(CURDIR)/debian/kcemu/usr/X11R6/man
-
+	mkdir -p $(CURDIR)/debian/kcemu/usr/share/pixmaps
+	cp $(CURDIR)/images/*.xpm $(CURDIR)/debian/kcemu/usr/share/pixmaps/
 
 # Build architecture-independent files here.
 binary-indep: build install
-# We have nothing to do by default.
 
 # Build architecture-dependent files here.
 binary-arch: build install
 	dh_testdir
 	dh_testroot
-	dh_installdocs
+	dh_installdocs --noscripts
 	dh_installmenu
 	dh_installinfo
 	dh_installchangelogs
@@ -66,7 +69,6 @@ binary-arch: build install
 		    usr/share/KCemu/tools.dump \
 		    usr/share/KCemu/caos.dump
 	dh_fixperms
-#	dh_makeshlibs
 	dh_installdeb
 	dh_shlibdeps
 	dh_gencontrol

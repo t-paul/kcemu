@@ -44,6 +44,7 @@ kcemu_SOURCES = \
 	memory2.cc	\
 	memory3.cc	\
 	memory4.cc	\
+	memory7.cc	\
 	memory8.cc	\
 	sh_mem.cc	\
 	disk_io.cc	\
@@ -57,8 +58,6 @@ kcemu_SOURCES = \
 	pio4.cc		\
 	pio8.cc		\
 	ports.cc	\
-	ports1.cc	\
-	ports3.cc	\
 	ports4.cc	\
 	module.cc	\
 	mod_ram.cc	\
@@ -66,17 +65,21 @@ kcemu_SOURCES = \
 	mod_ram8.cc	\
 	mod_64k.cc	\
 	mod_rom.cc	\
+	mod_rom1.cc	\
 	mod_disk.cc	\
 	mod_list.cc	\
 	tape.cc		\
 	disk.cc		\
 	timer.cc	\
+	timer1.cc	\
+	timer3.cc	\
 	z80.cc		\
 	z80_fdc.cc	\
 	sound.cc	\
 	sound3.cc	\
 	sound8.cc	\
-	disass.cc
+	disass.cc	\
+	$(EXTRA_kcemu_SOURCES)
 
 if TARGET_LINUX
 UILIBS_LINUX = ../ui/gtk/libui_gtk.a ../ui/sdl/libui_sdl.a
@@ -94,15 +97,21 @@ kcemu_LDADD = \
 	../fileio/libfileio.a		\
 	../libtape/libtape.a		\
 	../libdisk/libdisk.a		\
+	../libaudio/libaudio.a		\
 	$(UILIBS_LINUX)			\
 	$(UILIBS_BEOS)			\
 	../ui/generic/libui_generic.a	\
 	../ui/libui.a			\
 	../libdbg/libdbg.a		\
 	../cmd/*.o			\
-	@INTLLIBS@			\
+	$(INTLLIBS)			\
 	$(GTK_LIBS)			\
 	$(SDL_LIBS)			\
+	$(SNDFILE_LIBS)			\
+	$(AUDIOFILE_LIBS)		\
+	$(MP3LAME_LIBS)			\
+	$(VORBIS_LIBS)			\
+	$(F_L_A_C_LIBS)			\
 	$(SYSLIBS_LINUX)		\
 	$(SYSLIBS_BEOS)
 

@@ -1,8 +1,8 @@
 /*
  *  KCemu -- the KC 85/3 and KC 85/4 Emulator
- *  Copyright (C) 1997-2001 Torsten Paul
+ *  Copyright (C) 1997-2002 Torsten Paul
  *
- *  $Id: ui_gtk1.h,v 1.7 2002/06/09 14:24:33 torsten_paul Exp $
+ *  $Id: ui_gtk1.h,v 1.8 2002/10/31 01:38:07 torsten_paul Exp $
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -24,16 +24,10 @@
 
 #include "ui/gtk/ui_gtk.h"
 
-class UI_Gtk1 : public UI_Gtk
-{
- private:
-  byte_t     _changed[24];
-  byte_t     _dirty_val[960];
-  byte_t     _dirty_col[960];
-  bool       _auto_skip;
-  int        _cur_auto_skip;
-  int        _max_auto_skip;
+#include "ui/generic/ui_1.h"
 
+class UI_Gtk1 : public UI_Gtk, public UI_1
+{
  protected:
   virtual void allocate_colors(double saturation_fg,
 			       double saturation_bg,
@@ -46,14 +40,12 @@ class UI_Gtk1 : public UI_Gtk
   UI_Gtk1(void);
   virtual ~UI_Gtk1(void);
   virtual void update(bool full_update = false, bool clear_cache = false);
-  virtual void memWrite(int addr, char val);
   virtual void callback(void *data);
   virtual void flash(bool enable);
   
   virtual const char * get_title(void);
   virtual int get_width(void);
   virtual int get_height(void);
-  virtual int get_callback_offset(void);
 
   virtual void reset(bool power_on = false);
 };

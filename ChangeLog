@@ -1,3 +1,220 @@
+2002-10-16  Torsten Paul  <Torsten.Paul@gmx.de>
+
+	* src/kc/z80.cc: timer is not available for all computer types
+	so don't try to start it if it's not initialized
+
+2002-10-08  Torsten Paul  <Torsten.Paul@gmx.de>
+
+	* src/ui/gtk/module.cc: made special entry for the kc85/1 color
+	expansion module as this is not a real module but an internal card
+
+	* src/kc/mod_list.cc (insert): allow the entry to be NULL; this
+	will remove a module that may be present in the given slot
+
+2002-10-06  Torsten Paul  <Torsten.Paul@gmx.de>
+
+	* added kc85/1 rom modules from www.sax.de/~zander: IDAS, BITEX,
+	EDAS, ZSID, R80 and ZM30; thanks to Ulrich Zander
+
+	* src/ui/generic/ui_1.cc: added emulation of the flash bit;
+	finally makes the cursor visible in kc87 mode
+
+	* include/kc/timer3.h, src/kc/timer3.cc: new Timer implementation
+	for kc85/2-4; this is a copy of the old timer.h/timer.cc
+
+	* include/kc/timer1.h, src/kc/timer1.cc: new Timer implementation
+	for kc85/1, kc87; this is needed to emulate the flashing cursor
+
+	* include/kc/timer.h, src/kc/timer.cc: made class Timer abstract
+
+	* src/ui/gtk/module.cc: show different module slot layout when
+	emulating a kc85/1 or kc87
+
+	* include/kc/mod_rom1.h, src/kc/mod_rom1.cc: rom module for the
+	kc85/1 series
+
+	* include/kc/memory7.h, src/kc/memory7.h: new files for the kc87
+	memory layout including basic rom
+
+	* include/kc/memory1.h, src/kc/memory1.h: removed basic rom as the
+	kc85/1 doesn't have it built in
+
+	* src/ui/generic/ui_1.cc: added emulation of the screen border and
+	the 20 line display mode
+
+2002-09-11  Torsten Paul  <Torsten.Paul@gmx.de>
+
+	* src/fileio/load_TAPE.c (loader_TAPE_load): fixed size calculation
+
+	* src/kc/tape.cc (remove): refresh display after remove
+	(add): show message in statusline after adding files; also displays
+	the loader which was used to load this file
+
+	* include/fileio/load.h, include/fileio/loadP.h: added filetype
+	to fileio_prop_t and get_type() to all the loaders
+
+2002-09-07  Torsten Paul  <Torsten.Paul@gmx.de>
+
+	* src/kc/tape.cc (export_wav): export tape files as .WAV
+	(export_tap): use fileio_save_tap() to export .TAP files
+
+2002-09-04  Torsten Paul  <Torsten.Paul@gmx.de>
+
+	* src/fileio/save_WAV.c, src/fileio/kc2wav.c: convert file to .WAV
+	format
+
+	* src/fileio/save_TAP.c, src/fileio/kc2tap.c: convert file to .TAP
+	format
+
+	* include/kc/tape.h (class Tape): renamed extract() to
+	export_tap() and added export_wav()
+
+2002-09-02  Torsten Paul  <Torsten.Paul@gmx.de>
+
+	* src/kc/z80_fdc.cc (reset): clear callback list on reset
+
+	* include/kc/floppy.h, src/kc/floppy.cc: changed return type
+	for attach() to signal failures
+
+2002-08-31  Torsten Paul  <Torsten.Paul@gmx.de>
+
+	* src/ui/gtk/ui_gtk.cc: added menu entry to disable the emulation
+	speed limit
+
+	* src/kc/memory4.cc: changed memory layout for the a800-bfff
+	region; quite obscure but (partly) verified against a real KC;
+	fixes FRACTAL4
+
+	* src/kc/wav.cc (do_play): do some padding on the end of the
+	audio input to compensate the delay of the digital filter
+
+2002-08-26  Torsten Paul  <Torsten.Paul@gmx.de>
+
+	* src/ui/gtk/ui_gtk1.cc, src/ui/gtk/ui_gtk3.cc,
+	src/ui/gtk/ui_gtk4.cc: removed unnecessary include statements
+
+2002-08-25  Torsten Paul  <Torsten.Paul@gmx.de>
+
+	* src/ui/generic/scanline.cc: support for the color scrolling
+	effect moved out of the KC 85/4 display code; the KC 85/3
+	emulation now uses this code too
+
+	* include/ui/ui.h (class UI): removed obsolete function memWrite()
+
+	* src/ui/gtk/ui_gtk.cc (property_change): check values of the
+	event structure
+
+	* src/ui/generic/ui_8.cc (get_real_height, get_real_width): use
+	width and height which are divideable by 8 for easier display caching
+
+	* src/ui/gtk/ui_gtk3.cc, src/ui/gtk/ui_gtk4.cc: moved previously
+	static helper function hsv_to_gdk_color() to ui_gtk.cc
+
+	* src/ui/gtk/ui_gtk.cc (key_press_release): map key pad numbers
+	and some of the special keys
+
+	* include/ui/gtk/cmd.h, src/ui/gtk/cmd.cc: moved previously static
+	helper functions from header file to cmd.cc
+
+	* src/libaudio/load.c: added library to load audio files
+	(wav, mp3, flac, ...)
+
+	* src/kc/kc.cc: added --version command line flag which shows
+	the kcemu version and the configuration of some of the libraries
+
+2002-08-21  Torsten Paul  <Torsten.Paul@gmx.de>
+
+	* src/kc/rc.cc (done): free allocated memory
+
+	* include/kc/rc.h (class RC): made destructor virtual and moved
+	  implementation to .cc file, implemented deallocation
+
+	* fixed lots of memory allocation problems using valgrind,
+	  (a great debugging/profiling tool by Julian Seward,
+	  http://developer.kde.org/~sewardj)
+	
+	* src/kc/memory.cc: added missing calls delete
+
+	* src/kc/memory4.cc: added missing call delete
+
+	* include/kc/cb.h (class Callback): fixed call to delete
+
+	* src/kc/mod_rom.cc (ModuleROM): fixed initialization
+
+	* src/kc/mod_ram.cc (ModuleRAM): fixed initialization
+
+	* src/kc/mod_ram1.cc (ModuleRAM1): fixed initialization
+
+	* src/kc/mod_ram8.cc (ModuleRAM8): fixed initialization
+
+	* src/kc/mod_64k.cc (Module64k): fixed initialization
+
+	* src/kc/keyb3.cc (init): fixed initialization
+
+	* src/ui/gtk/disk.cc (init): fixed call to delete
+
+	* src/libdbg/dbg.cc (DBG_class): fixed call to delete
+
+	* src/kc/rc.cc: fixed calls to delete
+
+	* src/kc/z80.cc (Z80): fixed initialization
+
+	* src/kc/mod_list.cc (ModuleList): fixed calls to delete
+
+	* src/kc/ic.cc (InterfaceCircuit): fixed initialization
+
+	* src/ui/gtk/ui_gtk.cc (init): fixed initialization, fixed calls to delete
+
+	* src/ui/gtk/ui_gtk4.cc (reset): fixed initialization
+
+2002-07-05  Torsten Paul  <Torsten.Paul@gmx.de>
+
+	* cleaned up lots of warnings produced by -Wall; fixed some
+	bugs that were pointed out by those warnings
+
+2002-06-16  Torsten Paul  <Torsten.Paul@gmx.de>
+
+	* src/ui/gtk/ui_gtk.cc: removed profiling code
+
+2002-06-15  Torsten Paul  <Torsten.Paul@gmx.de>
+
+	* src/ui/gtk/ui_gtk1.cc (update): fixed display caching
+	bug (color change without value change didn't call the
+	drawing routine)
+
+	* src/kc/mod_ram1.cc (ModuleRAM1): initialize memory of
+	a new module with random values instead of zero bytes
+
+	* src/kc/kc.cc: removed obsolete port switch code
+
+	* include/kc/ports1.h, include/kc/ports3.h,
+	src/kc/ports1.cc, src/kc/ports3.cc: removed, they
+	weren't used for some time because the port switch
+	is now handled somewhere else
+
+	* src/kc/ports4.cc: removed obsolete port switch code;
+	removed references to CTC/PIO/MODULE;
+	ports now initialized to 0xff instead of 0x00
+
+	* src/libtape/kctape.cc: rewrote the argument parsing
+	to use getopt(); command line parameters are not fully
+	compatible to the previous version
+
+	* src/libtape/kct.cc (list): prevent division by zero
+	when listing empty files
+	(header_read): removed some error messages (that were
+	going to stderr)
+
+	* src/kc/debug.cc: added function to change the memory
+
+	* src/kc/z80.cc (LdRZ80): now using a private emulation
+	of the Z80 R register; the one in the Z80 emulation core
+	isn't compatible with the way kcemu uses that core
+	(fixes the missing monsters in JUNGLE)
+
+	* src/kc/memory4.cc (enableIRM): handle text irm area at
+	a800h when enabling/disabling the irm
+
 2002-06-09  Torsten Paul  <Torsten.Paul@gmx.de>
 
 	* released version 0.3.5

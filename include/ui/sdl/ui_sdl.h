@@ -2,7 +2,7 @@
  *  KCemu -- the KC 85/3 and KC 85/4 Emulator
  *  Copyright (C) 1997-2001 Torsten Paul
  *
- *  $Id: ui_sdl.h,v 1.1 2002/06/09 14:24:33 torsten_paul Exp $
+ *  $Id: ui_sdl.h,v 1.2 2002/10/31 01:16:25 torsten_paul Exp $
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -26,7 +26,7 @@
 
 #include "ui/ui.h"
 
-class UI_SDL
+class UI_SDL : public UI
 {
  private:
   int _width;
@@ -55,6 +55,15 @@ class UI_SDL
   void sdl_set_colors(SDL_Color *colors, int numcolors);
   void sdl_process_events(void);
   void sdl_keyboard_handler(SDL_KeyboardEvent *event, bool press);
+
+  virtual void init(int *argc, char ***argv);
+
+  /*
+   *  interface handling
+   */
+  virtual UI_ModuleInterface * getModuleInterface(void);
+  virtual TapeInterface  * getTapeInterface(void);
+  virtual DebugInterface * getDebugInterface(void);
 };
 
 #endif /* __ui_sdl_ui_sdl_h */

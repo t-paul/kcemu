@@ -2,7 +2,7 @@
  *  KCemu -- the KC 85/3 and KC 85/4 Emulator
  *  Copyright (C) 1997-2001 Torsten Paul
  *
- *  $Id: about.cc,v 1.10 2002/06/09 14:24:34 torsten_paul Exp $
+ *  $Id: about.cc,v 1.11 2002/10/31 01:38:12 torsten_paul Exp $
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -45,6 +45,16 @@ public:
       _w->toggle();
     }
 };
+
+AboutWindow::AboutWindow(void)
+{
+  init();
+}
+
+AboutWindow::~AboutWindow(void)
+{
+  delete _cmd;
+}
 
 void
 AboutWindow::init(void)
@@ -102,5 +112,5 @@ AboutWindow::init(void)
   gtk_widget_grab_default(_w.close);
   gtk_widget_show(_w.close);
 
-  CMD_about_window_toggle *cmd = new CMD_about_window_toggle(this);
+  _cmd = new CMD_about_window_toggle(this);
 }

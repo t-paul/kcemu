@@ -2,7 +2,7 @@
  *  KCemu -- the KC 85/3 and KC 85/4 Emulator
  *  Copyright (C) 1997-2001 Torsten Paul
  *
- *  $Id: timer.h,v 1.5 2001/04/14 15:14:57 tp Exp $
+ *  $Id: timer.h,v 1.6 2002/10/31 01:46:33 torsten_paul Exp $
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -22,21 +22,17 @@
 #ifndef __kc_timer_h
 #define __kc_timer_h
 
-#include "kc/cb.h"
 #include "kc/kc.h"
+#include "kc/cb.h"
 
 class Timer : public Callback
 {
-private:
-  enum {
-    NR_OF_TIMERS  = 1,
-    TIMER_VALUE_0 = 35000, /* 50 Hz */
-  };
-  
-public:
-  Timer(void);
-  void start(void);
-  void callback(void *data);
+ public:
+  Timer(const char *name);
+  virtual ~Timer(void);
+
+  virtual void start(void) = 0;
+  virtual void callback(void *data) = 0;
 };
 
 #endif /* __kc_timer_h */

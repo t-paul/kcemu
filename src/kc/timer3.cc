@@ -2,7 +2,7 @@
  *  KCemu -- the KC 85/3 and KC 85/4 Emulator
  *  Copyright (C) 1997-2001 Torsten Paul
  *
- *  $Id: ports3.h,v 1.5 2001/04/14 15:14:47 tp Exp $
+ *  $Id: timer3.cc,v 1.1 2002/10/31 01:46:36 torsten_paul Exp $
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -19,31 +19,34 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-#ifndef __kc_ports3_h
-#define __kc_ports3_h
+#include <iostream.h>
+#include <iomanip.h>
 
-#include "kc/ports.h"
+#include "kc/system.h"
 
-class Ports3 : public PortInterface
+#include "kc/kc.h"
+#include "kc/z80.h"
+#include "kc/ctc.h"
+#include "kc/timer3.h"
+
+Timer3::Timer3(void) : Timer("Timer3")
 {
-public:
-  enum {
-    NR_PORTS = 256,
-  };
+}
 
-protected:
-  byte_t inout[Ports::NR_PORTS];
+Timer3::~Timer3(void)
+{
+}
 
-protected:
-  virtual void change_0x84(byte_t changed, byte_t val);
-  virtual void change_0x86(byte_t changed, byte_t val);
-  // virtual void change_0x88(byte_t changed, byte_t val);
+void
+Timer3::start(void)
+{
+  z80->addCallback(0, this, 0);
+}
 
-public:
-  Ports3(void);
-  virtual ~Ports3(void);
-  virtual byte_t in(word_t addr);
-  virtual void out(word_t addr, byte_t val);
-};
-
-#endif /* __kc_ports3_h */
+void
+Timer3::callback(void * /* data */)
+{
+  ctc->trigger(3);
+  ctc->trigger(2);
+  z80->addCallback(35000, this, 0); /* 50 Hz */
+}

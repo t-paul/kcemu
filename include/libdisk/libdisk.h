@@ -2,7 +2,7 @@
  *  KCemu -- the KC 85/3 and KC 85/4 Emulator
  *  Copyright (C) 1997-2001 Torsten Paul
  *
- *  $Id: libdisk.h,v 1.1 2002/01/06 12:53:40 torsten_paul Exp $
+ *  $Id: libdisk.h,v 1.2 2002/10/31 00:51:48 torsten_paul Exp $
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -65,6 +65,7 @@ void            libdisk_close(libdisk_prop_t **prop);
 int             libdisk_seek(libdisk_prop_t **prop, int head, int cylinder, int sector);
 int             libdisk_read_sector(libdisk_prop_t **prop, unsigned char *buf, int len);
 int             libdisk_write_sector(libdisk_prop_t **prop, unsigned char *buf, int len);
+void            libdisk_show_config(void);
 
 #ifdef __cplusplus
 }

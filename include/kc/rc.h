@@ -2,7 +2,7 @@
  *  KCemu -- the KC 85/3 and KC 85/4 Emulator
  *  Copyright (C) 1997-2001 Torsten Paul
  *
- *  $Id: rc.h,v 1.3 2001/04/14 15:14:50 tp Exp $
+ *  $Id: rc.h,v 1.4 2002/10/31 01:46:33 torsten_paul Exp $
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -45,12 +45,13 @@ public:
 
 protected:
   RC(void);
-  ~RC(void) {}
+  virtual ~RC(void);
 
   void load_file(const char *name);
   
 public:
   static void init(void);
+  static void done(void);
   static RC * instance(void);
 
   int get_int(const char *key, int def_val = -1);

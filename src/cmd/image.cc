@@ -2,7 +2,7 @@
  *  KCemu -- the KC 85/3 and KC 85/4 Emulator
  *  Copyright (C) 1997-2001 Torsten Paul
  *
- *  $Id: image.cc,v 1.6 2002/06/09 14:24:33 torsten_paul Exp $
+ *  $Id: image.cc,v 1.7 2002/10/31 16:40:02 torsten_paul Exp $
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -208,7 +208,7 @@ CMD_kc_image_load::execute(CMD_Args *args, CMD_Context context)
 		  autostart ? "start automatically" : "load only"));
 
       for (a = 0;a < size;a++)
-	memory->memWrite8(load + a, buf[a]);
+	  memory->memWrite8(load + a, buf[a]);
 
       delete buf;
 

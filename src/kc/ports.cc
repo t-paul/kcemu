@@ -2,7 +2,7 @@
  *  KCemu -- the KC 85/3 and KC 85/4 Emulator
  *  Copyright (C) 1997-2001 Torsten Paul
  *
- *  $Id: ports.cc,v 1.7 2002/06/09 14:24:33 torsten_paul Exp $
+ *  $Id: ports.cc,v 1.8 2002/10/31 01:46:35 torsten_paul Exp $
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -52,8 +52,6 @@ NullPort::out(word_t addr, byte_t val)
 PortGroup::PortGroup(const char *name, PortInterface *p,
                      byte_t start, word_t len, int prio)
 {
-  int a;
-  
   _p = p;
   _start = start;
   _len = len;

@@ -1,6 +1,6 @@
-# Makefile.in generated automatically by automake 1.4-p4 from Makefile.am
+# Makefile.in generated automatically by automake 1.4-p6 from Makefile.am
 
-# Copyright (C) 1994, 1995-8, 1999 Free Software Foundation, Inc.
+# Copyright (C) 1994, 1995-8, 1999, 2001 Free Software Foundation, Inc.
 # This Makefile.in is free software; the Free Software Foundation
 # gives unlimited permission to copy and/or distribute it,
 # with or without modifications, as long as this notice is preserved.
@@ -59,6 +59,7 @@ PRE_UNINSTALL = :
 POST_UNINSTALL = :
 host_alias = @host_alias@
 host_triplet = @host@
+AUDIOFILE_LIBS = @AUDIOFILE_LIBS@
 CATALOGS = @CATALOGS@
 CATOBJEXT = @CATOBJEXT@
 CC = @CC@
@@ -67,6 +68,7 @@ CPPUNIT_CONFIG = @CPPUNIT_CONFIG@
 CPPUNIT_LIBS = @CPPUNIT_LIBS@
 CXX = @CXX@
 DATADIRNAME = @DATADIRNAME@
+F_L_A_C_LIBS = @F_L_A_C_LIBS@
 GENCAT = @GENCAT@
 GMOFILES = @GMOFILES@
 GMSGFMT = @GMSGFMT@
@@ -83,6 +85,7 @@ INTLOBJS = @INTLOBJS@
 LN_S = @LN_S@
 MAKEINFO = @MAKEINFO@
 MKINSTALLDIRS = @MKINSTALLDIRS@
+MP3LAME_LIBS = @MP3LAME_LIBS@
 MSGFMT = @MSGFMT@
 PACKAGE = @PACKAGE@
 POFILES = @POFILES@
@@ -91,10 +94,14 @@ RANLIB = @RANLIB@
 SDL_CFLAGS = @SDL_CFLAGS@
 SDL_CONFIG = @SDL_CONFIG@
 SDL_LIBS = @SDL_LIBS@
+SNDFILE_LIBS = @SNDFILE_LIBS@
 USE_INCLUDED_LIBINTL = @USE_INCLUDED_LIBINTL@
 USE_NLS = @USE_NLS@
 VERSION = @VERSION@
+VORBIS_LIBS = @VORBIS_LIBS@
 l = @l@
+
+bin_PROGRAMS = kc2img kc2tap kc2wav kc2raw
 
 noinst_PROGRAMS = test-load
 
@@ -106,14 +113,23 @@ INCLUDES =  	-I../../include
 CPPFLAGS =  	-DVERSION=\"$(VERSION)\" 	-DFILEIO_DEBUG
 
 
-libfileio_a_SOURCES =  	load.c			load_AF.c		load_GPF.c		load_SSS.c		load_TAPE.c		load_BASIC.c		load_UNKNOWN.c
+libfileio_a_SOURCES =  	load.c			load_AF.c		load_GPF.c		load_SSS.c		load_TAPE.c		load_BASIC.c		load_UNKNOWN.c		save_IMG.c		save_TAP.c		save_WAV.c		save_RAW.c
 
 
-test_load_SOURCES =  	test_load.c
+kc2img_SOURCES = kc2img.c
+kc2img_LDADD = libfileio.a
 
+kc2tap_SOURCES = kc2tap.c
+kc2tap_LDADD = libfileio.a
 
-test_load_LDADD =  	libfileio.a
+kc2wav_SOURCES = kc2wav.c
+kc2wav_LDADD = libfileio.a
 
+kc2raw_SOURCES = kc2raw.c
+kc2raw_LDADD = libfileio.a
+
+test_load_SOURCES = test_load.c
+test_load_LDADD = libfileio.a
 mkinstalldirs = $(SHELL) $(top_srcdir)/mkinstalldirs
 CONFIG_HEADER = ../../include/kc/config.h
 CONFIG_CLEAN_FILES = 
@@ -125,10 +141,23 @@ LDFLAGS = @LDFLAGS@
 LIBS = @LIBS@
 libfileio_a_LIBADD = 
 libfileio_a_OBJECTS =  load.o load_AF.o load_GPF.o load_SSS.o \
-load_TAPE.o load_BASIC.o load_UNKNOWN.o
+load_TAPE.o load_BASIC.o load_UNKNOWN.o save_IMG.o save_TAP.o \
+save_WAV.o save_RAW.o
 AR = ar
-PROGRAMS =  $(noinst_PROGRAMS)
+PROGRAMS =  $(bin_PROGRAMS) $(noinst_PROGRAMS)
 
+kc2img_OBJECTS =  kc2img.o
+kc2img_DEPENDENCIES =  libfileio.a
+kc2img_LDFLAGS = 
+kc2tap_OBJECTS =  kc2tap.o
+kc2tap_DEPENDENCIES =  libfileio.a
+kc2tap_LDFLAGS = 
+kc2wav_OBJECTS =  kc2wav.o
+kc2wav_DEPENDENCIES =  libfileio.a
+kc2wav_LDFLAGS = 
+kc2raw_OBJECTS =  kc2raw.o
+kc2raw_DEPENDENCIES =  libfileio.a
+kc2raw_LDFLAGS = 
 test_load_OBJECTS =  test_load.o
 test_load_DEPENDENCIES =  libfileio.a
 test_load_LDFLAGS = 
@@ -143,8 +172,8 @@ DISTFILES = $(DIST_COMMON) $(SOURCES) $(HEADERS) $(TEXINFOS) $(EXTRA_DIST)
 
 TAR = tar
 GZIP_ENV = --best
-SOURCES = $(libfileio_a_SOURCES) $(test_load_SOURCES)
-OBJECTS = $(libfileio_a_OBJECTS) $(test_load_OBJECTS)
+SOURCES = $(libfileio_a_SOURCES) $(kc2img_SOURCES) $(kc2tap_SOURCES) $(kc2wav_SOURCES) $(kc2raw_SOURCES) $(test_load_SOURCES)
+OBJECTS = $(libfileio_a_OBJECTS) $(kc2img_OBJECTS) $(kc2tap_OBJECTS) $(kc2wav_OBJECTS) $(kc2raw_OBJECTS) $(test_load_OBJECTS)
 
 all: all-redirect
 .SUFFIXES:
@@ -190,6 +219,31 @@ libfileio.a: $(libfileio_a_OBJECTS) $(libfileio_a_DEPENDENCIES)
 	$(AR) cru libfileio.a $(libfileio_a_OBJECTS) $(libfileio_a_LIBADD)
 	$(RANLIB) libfileio.a
 
+mostlyclean-binPROGRAMS:
+
+clean-binPROGRAMS:
+	-test -z "$(bin_PROGRAMS)" || rm -f $(bin_PROGRAMS)
+
+distclean-binPROGRAMS:
+
+maintainer-clean-binPROGRAMS:
+
+install-binPROGRAMS: $(bin_PROGRAMS)
+	@$(NORMAL_INSTALL)
+	$(mkinstalldirs) $(DESTDIR)$(bindir)
+	@list='$(bin_PROGRAMS)'; for p in $$list; do \
+	  if test -f $$p; then \
+	    echo "  $(INSTALL_PROGRAM) $$p $(DESTDIR)$(bindir)/`echo $$p|sed 's/$(EXEEXT)$$//'|sed '$(transform)'|sed 's/$$/$(EXEEXT)/'`"; \
+	     $(INSTALL_PROGRAM) $$p $(DESTDIR)$(bindir)/`echo $$p|sed 's/$(EXEEXT)$$//'|sed '$(transform)'|sed 's/$$/$(EXEEXT)/'`; \
+	  else :; fi; \
+	done
+
+uninstall-binPROGRAMS:
+	@$(NORMAL_UNINSTALL)
+	list='$(bin_PROGRAMS)'; for p in $$list; do \
+	  rm -f $(DESTDIR)$(bindir)/`echo $$p|sed 's/$(EXEEXT)$$//'|sed '$(transform)'|sed 's/$$/$(EXEEXT)/'`; \
+	done
+
 mostlyclean-noinstPROGRAMS:
 
 clean-noinstPROGRAMS:
@@ -198,6 +252,22 @@ clean-noinstPROGRAMS:
 distclean-noinstPROGRAMS:
 
 maintainer-clean-noinstPROGRAMS:
+
+kc2img: $(kc2img_OBJECTS) $(kc2img_DEPENDENCIES)
+	@rm -f kc2img
+	$(LINK) $(kc2img_LDFLAGS) $(kc2img_OBJECTS) $(kc2img_LDADD) $(LIBS)
+
+kc2tap: $(kc2tap_OBJECTS) $(kc2tap_DEPENDENCIES)
+	@rm -f kc2tap
+	$(LINK) $(kc2tap_LDFLAGS) $(kc2tap_OBJECTS) $(kc2tap_LDADD) $(LIBS)
+
+kc2wav: $(kc2wav_OBJECTS) $(kc2wav_DEPENDENCIES)
+	@rm -f kc2wav
+	$(LINK) $(kc2wav_LDFLAGS) $(kc2wav_OBJECTS) $(kc2wav_LDADD) $(LIBS)
+
+kc2raw: $(kc2raw_OBJECTS) $(kc2raw_DEPENDENCIES)
+	@rm -f kc2raw
+	$(LINK) $(kc2raw_LDFLAGS) $(kc2raw_OBJECTS) $(kc2raw_LDADD) $(LIBS)
 
 test-load: $(test_load_OBJECTS) $(test_load_DEPENDENCIES)
 	@rm -f test-load
@@ -221,7 +291,7 @@ TAGS:  $(HEADERS) $(SOURCES)  $(TAGS_DEPENDENCIES) $(LISP)
 	  awk '    { files[$$0] = 1; } \
 	       END { for (i in files) print i; }'`; \
 	test -z "$(ETAGS_ARGS)$$unique$(LISP)$$tags" \
-	  || (cd $(srcdir) && etags $(ETAGS_ARGS) $$tags  $$unique $(LISP) -o $$here/TAGS)
+	  || (cd $(srcdir) && etags -o $$here/TAGS $(ETAGS_ARGS) $$tags  $$unique $(LISP))
 
 mostlyclean-tags:
 
@@ -247,6 +317,10 @@ distdir: $(DISTFILES)
 	    || cp -p $$d/$$file $(distdir)/$$file || :; \
 	  fi; \
 	done
+kc2img.o: kc2img.c ../../include/fileio/load.h
+kc2raw.o: kc2raw.c ../../include/fileio/load.h
+kc2tap.o: kc2tap.c ../../include/fileio/load.h
+kc2wav.o: kc2wav.c ../../include/fileio/load.h
 load.o: load.c ../../include/fileio/loadP.h ../../include/fileio/load.h
 load_AF.o: load_AF.c ../../include/fileio/loadP.h \
 	../../include/fileio/load.h
@@ -260,6 +334,17 @@ load_TAPE.o: load_TAPE.c ../../include/fileio/loadP.h \
 	../../include/fileio/load.h
 load_UNKNOWN.o: load_UNKNOWN.c ../../include/fileio/loadP.h \
 	../../include/fileio/load.h
+save_IMG.o: save_IMG.c ../../include/fileio/loadP.h \
+	../../include/fileio/load.h
+save_RAW.o: save_RAW.c ../../include/fileio/loadP.h \
+	../../include/fileio/load.h
+save_TAP.o: save_TAP.c ../../include/fileio/loadP.h \
+	../../include/fileio/load.h
+save_WAV.o: save_WAV.c ../../include/fileio/loadP.h \
+	../../include/fileio/load.h
+save_wav.o: save_wav.c ../../include/fileio/loadP.h \
+	../../include/fileio/load.h
+tap2wav.o: tap2wav.c ../../include/fileio/load.h
 test_load.o: test_load.c ../../include/fileio/load.h
 
 info-am:
@@ -270,7 +355,7 @@ check-am: all-am
 check: check-am
 installcheck-am:
 installcheck: installcheck-am
-install-exec-am:
+install-exec-am: install-binPROGRAMS
 install-exec: install-exec-am
 
 install-data-am:
@@ -279,13 +364,14 @@ install-data: install-data-am
 install-am: all-am
 	@$(MAKE) $(AM_MAKEFLAGS) install-exec-am install-data-am
 install: install-am
-uninstall-am:
+uninstall-am: uninstall-binPROGRAMS
 uninstall: uninstall-am
 all-am: Makefile $(LIBRARIES) $(PROGRAMS)
 all-redirect: all-am
 install-strip:
 	$(MAKE) $(AM_MAKEFLAGS) AM_INSTALL_PROGRAM_FLAGS=-s install
 installdirs:
+	$(mkinstalldirs)  $(DESTDIR)$(bindir)
 
 
 mostlyclean-generic:
@@ -298,24 +384,25 @@ distclean-generic:
 
 maintainer-clean-generic:
 mostlyclean-am:  mostlyclean-noinstLIBRARIES mostlyclean-compile \
-		mostlyclean-noinstPROGRAMS mostlyclean-tags \
-		mostlyclean-generic
+		mostlyclean-binPROGRAMS mostlyclean-noinstPROGRAMS \
+		mostlyclean-tags mostlyclean-generic
 
 mostlyclean: mostlyclean-am
 
-clean-am:  clean-noinstLIBRARIES clean-compile clean-noinstPROGRAMS \
-		clean-tags clean-generic mostlyclean-am
+clean-am:  clean-noinstLIBRARIES clean-compile clean-binPROGRAMS \
+		clean-noinstPROGRAMS clean-tags clean-generic \
+		mostlyclean-am
 
 clean: clean-am
 
 distclean-am:  distclean-noinstLIBRARIES distclean-compile \
-		distclean-noinstPROGRAMS distclean-tags \
-		distclean-generic clean-am
+		distclean-binPROGRAMS distclean-noinstPROGRAMS \
+		distclean-tags distclean-generic clean-am
 
 distclean: distclean-am
 
 maintainer-clean-am:  maintainer-clean-noinstLIBRARIES \
-		maintainer-clean-compile \
+		maintainer-clean-compile maintainer-clean-binPROGRAMS \
 		maintainer-clean-noinstPROGRAMS maintainer-clean-tags \
 		maintainer-clean-generic distclean-am
 	@echo "This command is intended for maintainers to use;"
@@ -326,15 +413,16 @@ maintainer-clean: maintainer-clean-am
 .PHONY: mostlyclean-noinstLIBRARIES distclean-noinstLIBRARIES \
 clean-noinstLIBRARIES maintainer-clean-noinstLIBRARIES \
 mostlyclean-compile distclean-compile clean-compile \
-maintainer-clean-compile mostlyclean-noinstPROGRAMS \
-distclean-noinstPROGRAMS clean-noinstPROGRAMS \
-maintainer-clean-noinstPROGRAMS tags mostlyclean-tags distclean-tags \
-clean-tags maintainer-clean-tags distdir info-am info dvi-am dvi check \
-check-am installcheck-am installcheck install-exec-am install-exec \
-install-data-am install-data install-am install uninstall-am uninstall \
-all-redirect all-am all installdirs mostlyclean-generic \
-distclean-generic clean-generic maintainer-clean-generic clean \
-mostlyclean distclean maintainer-clean
+maintainer-clean-compile mostlyclean-binPROGRAMS distclean-binPROGRAMS \
+clean-binPROGRAMS maintainer-clean-binPROGRAMS uninstall-binPROGRAMS \
+install-binPROGRAMS mostlyclean-noinstPROGRAMS distclean-noinstPROGRAMS \
+clean-noinstPROGRAMS maintainer-clean-noinstPROGRAMS tags \
+mostlyclean-tags distclean-tags clean-tags maintainer-clean-tags \
+distdir info-am info dvi-am dvi check check-am installcheck-am \
+installcheck install-exec-am install-exec install-data-am install-data \
+install-am install uninstall-am uninstall all-redirect all-am all \
+installdirs mostlyclean-generic distclean-generic clean-generic \
+maintainer-clean-generic clean mostlyclean distclean maintainer-clean
 
 
 # Tell versions [3.59,3.63) of GNU make to not export all variables.

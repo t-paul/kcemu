@@ -2,7 +2,7 @@
  *  KCemu -- the KC 85/3 and KC 85/4 Emulator
  *  Copyright (C) 1997-2001 Torsten Paul
  *
- *  $Id: ui_8.cc,v 1.1 2002/06/09 14:24:34 torsten_paul Exp $
+ *  $Id: ui_8.cc,v 1.2 2002/10/31 01:02:47 torsten_paul Exp $
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -29,35 +29,59 @@
 
 UI_8::UI_8(void)
 {
+  int a;
   int len = get_real_width() * get_real_height();
 
   _bitmap = new byte_t[len];
-  memset(_bitmap, 0, len);
+  _dirty_size = len / 64;
+  _dirty = new byte_t[_dirty_size];
+
+  for (a = 0;a < len;a++)
+    _bitmap[a] = 0;
+
+  for (a = 0;a < _dirty_size;a++)
+    _dirty[a] = 1;
 }
 
 UI_8::~UI_8(void)
 {
-  delete _bitmap;
+  delete[] _bitmap;
+  delete[] _dirty;
 }
-
 
 int
 UI_8::get_real_width(void)
 {
-  return 460;
+  return 464;
 }
 
 int
 UI_8::get_real_height(void)
 {
-  return 110;
+  return 112;
+}
+
+byte_t *
+UI_8::get_dirty_buffer(void)
+{
+  return _dirty;
+}
+
+int
+UI_8::get_dirty_buffer_size(void)
+{
+  return _dirty_size;
 }
 
 void
 UI_8::generic_put_pixel(int x, int y, byte_t col)
 {
   int idx = y * get_real_width() + x;
-  _bitmap[idx] = col;
+  if (_bitmap[idx] != col)
+    {
+      _bitmap[idx] = col;
+      _dirty[(y / 8) * (get_real_width() / 8) + (x / 8)] = 1;
+    }
 }
 
 void
@@ -149,7 +173,6 @@ UI_8::generic_draw_point(int x, int y, byte_t col)
 void
 UI_8::generic_draw_digit(int x, int y, int index, byte_t led_value)
 {
-  int a;
   byte_t fg, bg;
 
   fg = 1;
@@ -168,41 +191,21 @@ UI_8::generic_draw_digit(int x, int y, int index, byte_t led_value)
 }
 
 void
-UI_8::generic_update(void)
+UI_8::generic_update(bool clear_cache)
 {
   byte_t led_value;
 
   for (int a = 0;a < 6;a++)
     {
       led_value = ((PIO8_1 *)pio)->get_led_value(a);
-      generic_draw_digit(65 * a + 60, 10, a, led_value);
+      generic_draw_digit(65 * a + 62, 12, a, led_value);
     }
 
   /* TAPE OUT led */
   led_value = ((PIO8_1 *)pio)->get_led_value(6);
-  generic_draw_led(16, 20, led_value ? 1 : 4);
+  generic_draw_led(18, 20, led_value ? 1 : 4);
 
   /* HALT led */
   led_value = z80->get_halt();
-  generic_draw_led(16, 60, led_value ? 3 : 1);
-}
-
-UI_ModuleInterface *
-UI_8::getModuleInterface(void)
-{
-  static DummyModuleHandler *i = new DummyModuleHandler();
-  return i;
-}
-
-TapeInterface  *
-UI_8::getTapeInterface(void)
-{
-  static DummyTapeHandler *i = new DummyTapeHandler();
-  return i;
-}
-
-DebugInterface *
-UI_8::getDebugInterface(void)
-{
-  return 0;
+  generic_draw_led(18, 60, led_value ? 3 : 1);
 }

@@ -2,7 +2,7 @@
  *  KCemu -- the KC 85/3 and KC 85/4 Emulator
  *  Copyright (C) 1997-2001 Torsten Paul
  *
- *  $Id: pio1.h,v 1.3 2002/03/23 20:04:39 torsten_paul Exp $
+ *  $Id: pio1.h,v 1.4 2002/10/31 01:46:33 torsten_paul Exp $
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -28,6 +28,10 @@
 
 class PIO1_1 : public PIO, public TapeCallback
 {
+ private:
+  byte_t _border;
+  byte_t _20lines;
+
  public:
   PIO1_1(void);
   virtual ~PIO1_1(void);
@@ -35,6 +39,9 @@ class PIO1_1 : public PIO, public TapeCallback
   void out(word_t addr, byte_t val);
   void change_A(byte_t changed, byte_t val);
   void change_B(byte_t changed, byte_t val);
+
+  byte_t get_border_color(void);
+  byte_t get_line_mode(void); // returns true if in 20 line mode
 
   /*
    *  TapeCallback

@@ -2,7 +2,7 @@
  *  KCemu -- the KC 85/3 and KC 85/4 Emulator
  *  Copyright (C) 1997-2001 Torsten Paul
  *
- *  $Id: color.cc,v 1.3 2002/06/09 14:24:34 torsten_paul Exp $
+ *  $Id: color.cc,v 1.4 2002/10/31 01:38:12 torsten_paul Exp $
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -49,19 +49,19 @@ public:
 void
 ColorWindow::sf_adjustment_changed(GtkAdjustment *adj, double *data)
 {
-  ColorWindow *self = (ColorWindow *)gtk_object_get_data(GTK_OBJECT(adj), "self");
   *data = adj->value;
-
-  DBG(2, form("KCemu/UI/color",
-	      "s_fg: %6.2f, v_fg: %6.2f, s_bg: %6.2f, v_bg: %6.2f, b: %6.2f, w: %6.2f\n",
-	      self->_saturation_fg,
-	      self->_saturation_bg,
-	      self->_brightness_fg,
-	      self->_brightness_bg,
-	      self->_black_level,
-	      self->_white_level));
-
   CMD_EXEC("ui-update-colortable");
+}
+
+
+ColorWindow::ColorWindow(void)
+{
+  init();
+}
+
+ColorWindow::~ColorWindow(void)
+{
+  delete _cmd;
 }
 
 void
@@ -251,5 +251,5 @@ ColorWindow::init(void)
   gtk_widget_grab_default(_w.close);
   gtk_widget_show(_w.close);
 
-  CMD_color_window_toggle *cmd = new CMD_color_window_toggle(this);
+  _cmd = new CMD_color_window_toggle(this);
 }

@@ -1,5 +1,5 @@
 dnl ----------------------------------------------------------------
-dnl  $Id: configure.in,v 1.18 2002/06/09 14:24:31 torsten_paul Exp $
+dnl  $Id: configure.in,v 1.19 2002/10/31 16:39:53 torsten_paul Exp $
 dnl
 dnl  Process this file with autoconf to produce a configure script.
 dnl ----------------------------------------------------------------
@@ -11,9 +11,14 @@ dnl -----------------------
 dnl  declare extra options
 dnl -----------------------
 
-AC_ARG_ENABLE(sound,     [  --enable-sound          enable sound using libSDL (broken!) [default=no]],,enable_sound=no)
-AC_ARG_WITH(ui,          [  --with-ui=UI            use User Interface UI (gtk or sdl) [default=auto]],,with_ui=auto)
-AC_ARG_WITH(debug_level, [  --with-debug-level=L    set debug level to L (0..3) [default=1]])
+AC_ARG_ENABLE(sound,        [  --enable-sound          enable sound using libSDL (broken!) [default=no]],,enable_sound=no)
+AC_ARG_ENABLE(libaudiofile, [  --enable-libaudiofile   enable usage of libaudiofile if present [default=yes]],,enable_libaudiofile=yes)
+AC_ARG_ENABLE(libsndfile,   [  --enable-libsndfile     enable usage of libsndfile if present [default=yes]],,enable_libsndfile=yes)
+AC_ARG_ENABLE(libflac,      [  --enable-libflac        enable usage of libFLAC if present [default=yes]],,enable_libflac=yes)
+AC_ARG_ENABLE(libvorbis,    [  --enable-libvorbis      enable usage of libvorbis if present [default=yes]],,enable_libvorbis=yes)
+AC_ARG_ENABLE(libmp3lame,   [  --enable-libmp3lame     enable usage of libmp3lame if present [default=yes]],,enable_libmp3lame=yes)
+AC_ARG_WITH(ui,             [  --with-ui=UI            use User Interface UI (gtk or sdl) [default=auto]],,with_ui=auto)
+AC_ARG_WITH(debug_level,    [  --with-debug-level=L    set debug level to L (0..3) [default=1]])
 
 dnl ---------------------
 dnl  set package version
@@ -21,7 +26,7 @@ dnl ---------------------
 
 KCEMU_MAJOR_VERSION=0
 KCEMU_MINOR_VERSION=3
-KCEMU_MICRO_VERSION=5
+KCEMU_MICRO_VERSION=6
 
 if test $KCEMU_MICRO_VERSION -eq 0
 then
@@ -143,6 +148,115 @@ dnl -----------------------------
 AC_CHECK_LIB(z, crc32,,
 	AC_MSG_ERROR(Cannot link libz -- check CFLAGS/LDFLAGS))
 
+AC_CHECK_LIB(m, pow,,
+	AC_MSG_WARN(Cannot link libm -- check CFLAGS/LDFLAGS))
+
+dnl ---------------------
+dnl  check for libsndfile
+dnl ---------------------
+
+if test x$enable_libsndfile = xyes; then
+	AC_CHECK_LIB(sndfile, sf_open_read, have_libsndfile=yes, have_libsndfile=no)
+	if test x$have_libsndfile = xyes; then
+		SNDFILE_LIBS=-lsndfile
+		AC_SUBST(SNDFILE_LIBS)
+		AC_DEFINE(HAVE_LIBSNDFILE)
+	else
+		AC_MSG_WARN([
+	***
+	*** Unable to find sndfile library!
+	*** The audio loader module which requires this library
+	*** will be disabled.
+	***])
+	fi
+fi
+
+dnl -----------------------
+dnl  check for libaudiofile
+dnl -----------------------
+
+if test x$enable_libaudiofile = xyes; then
+	AC_CHECK_LIB(audiofile, afOpenFile, have_libaudiofile=yes, have_libaudiofile=no)
+	if test x$have_libaudiofile = xyes; then
+		AUDIOFILE_LIBS=-laudiofile
+		AC_SUBST(AUDIOFILE_LIBS)
+		AC_DEFINE(HAVE_LIBAUDIOFILE)
+	else
+		AC_MSG_WARN([
+	***
+	*** Unable to find audiofile library!
+	*** The audio loader module which requires this library
+	*** will be disabled.
+	***])
+	fi
+fi
+
+dnl ---------------------
+dnl  check for libmp3lame
+dnl ---------------------
+
+if test x$enable_libmp3lame = xyes; then
+	AC_CHECK_LIB(mp3lame, lame_decode1_headers, have_libmp3lame=yes, have_libmp3lame=no)
+	if test x$have_libmp3lame = xyes; then
+		MP3LAME_LIBS=-lmp3lame
+		AC_SUBST(MP3LAME_LIBS)
+		AC_DEFINE(HAVE_LIBMP3LAME)
+	else
+		AC_MSG_WARN([
+	***
+	*** Unable to find libmp3lame (part of MP3 encoder LAME)!
+	*** The audio loader module which requires this library will
+	*** be disabled.
+	***])
+	fi
+fi
+
+dnl --------------------
+dnl  check for libvorbis
+dnl --------------------
+
+if test x$enable_libvorbis = xyes; then
+	AC_CHECK_LIB(vorbisfile, ov_open, have_libvorbis=yes, have_libvorbis=no, -lvorbis)
+	if test x$have_libvorbis = xyes; then
+		VORBIS_LIBS="-lvorbisfile -lvorbis"
+		AC_SUBST(VORBIS_LIBS)
+		AC_DEFINE(HAVE_LIBVORBIS)
+	else
+		AC_MSG_WARN([
+	***
+	*** Unable to find libvorbis!
+	*** The audio loader module which requires this library will
+	*** be disabled.
+	***])
+	fi
+fi
+
+dnl ------------------
+dnl  check for libflac
+dnl ------------------
+
+dnl #
+dnl # ARGH, the function name FLAC__file_decoder_set_filename triggers
+dnl # some quite interresting bugs in autoconf (at least in version 2.13)
+dnl # We check for MD5Init instead :-(
+dnl #
+
+if test x$enable_libflac = xyes; then
+	AC_CHECK_LIB(FLAC, MD5Init, have_libflac=yes, have_libflac=no)
+	if test x$have_libflac = xyes; then
+		F_L_A_C_LIBS=-lFLAC
+		AC_SUBST(F_L_A_C_LIBS)
+		AC_DEFINE(HAVE_LIBFLAC)
+	else
+		AC_MSG_WARN([
+	***
+	*** Unable to find libFLAC!
+	*** The audio loader module which requires this library will
+	*** be disabled.
+	***])
+	fi
+fi
+
 dnl -------------------------------------
 dnl  check for system specific libraries
 dnl -------------------------------------
@@ -234,6 +348,7 @@ AC_OUTPUT([
 	include/libdbg/Makefile
 	include/libtape/Makefile
 	include/libdisk/Makefile
+	include/libaudio/Makefile
 	include/z80core/Makefile
 	include/z80core2/Makefile
 	src/Makefile
@@ -251,14 +366,18 @@ AC_OUTPUT([
 	src/libdbg/Makefile
 	src/libtape/Makefile
 	src/libdisk/Makefile
+	src/libaudio/Makefile
 	src/util/Makefile
 	src/z80core/Makefile
 	src/z80core2/Makefile
 	test/Makefile
 	test/kc/Makefile
+	test/libaudio/Makefile
+	test/libaudio/data/Makefile
 	ROM/Makefile
 	PRG/Makefile
 	DISK/Makefile
+	images/Makefile
 	doc/Makefile
 	intl/Makefile
 	man/Makefile
@@ -281,11 +400,34 @@ echo "- install prefix:  $prefix"
 echo "- user interface:  $use_ui"
 echo ""
 echo -n "- libs:"
+comma=""
 if test x$have_libgtk = xyes; then
-echo -n " Gtk+ ($gtk_config_major_version.$gtk_config_minor_version.$gtk_config_micro_version)"
+echo -n "$comma Gtk+ ($gtk_config_major_version.$gtk_config_minor_version.$gtk_config_micro_version)"
+comma=","
 fi
 if test x$have_libsdl = xyes; then
-echo -n " libSDL ($sdl_major_version.$sdl_minor_version.$sdl_micro_version)"
+echo -n "$comma SDL ($sdl_major_version.$sdl_minor_version.$sdl_micro_version)"
+comma=","
+fi
+if test x$have_libsndfile = xyes; then
+echo -n "$comma sndfile"
+comma=","
+fi
+if test x$have_libaudiofile = xyes; then
+echo -n "$comma audiofile"
+comma=","
+fi
+if test x$have_libvorbis = xyes; then
+echo -n "$comma vorbis"
+comma=","
+fi
+if test x$have_libmp3lame = xyes; then
+echo -n "$comma mp3lame"
+comma=","
+fi
+if test x$have_libflac = xyes; then
+echo -n "$comma FLAC"
+comma=","
 fi
 echo ""
 echo ""

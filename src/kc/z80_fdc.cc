@@ -2,7 +2,7 @@
  *  KCemu -- the KC 85/3 and KC 85/4 Emulator
  *  Copyright (C) 1997-2001 Torsten Paul
  *
- *  $Id: z80_fdc.cc,v 1.4 2002/06/09 14:24:34 torsten_paul Exp $
+ *  $Id: z80_fdc.cc,v 1.5 2002/10/31 01:46:36 torsten_paul Exp $
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -111,6 +111,7 @@ Z80_Retn(void)
 {
 }
 
+#if 0
 static void dump_core(void)
 {
   int ok;
@@ -129,6 +130,7 @@ static void dump_core(void)
   else
     printf("failed!\n");
 }
+#endif
 
 Z80_FDC::Z80_FDC(void)
 {
@@ -184,6 +186,8 @@ Z80_FDC::trigger_irq(byte_t irq_vector)
 {
   if (Z80_IRQ_VECTOR == Z80_IGNORE_INT)
     Z80_IRQ_VECTOR = irq_vector;
+
+  return 0;
 }
 
 void
@@ -193,24 +197,16 @@ Z80_FDC::add_callback(unsigned long long offset, Callback *cb, void *data)
 }
 
 void
-Z80_FDC::reset(word_t pc, bool power_on)
-{
-}
-
-void
-Z80_FDC::power_on(word_t pc)
-{
-}
-
-void
-Z80_FDC::start(void)
+Z80_FDC::reset(bool power_on)
 {
   Z80_Regs r;
 
   Z80_IPeriod = 0;
   Z80_IRQ = Z80_IGNORE_INT;
 
-  memset(fdc_mem, 0, 0xfc00);
+  if (power_on)
+    memset(fdc_mem, 0, 0xfc00);
+
   Z80_Reset();
   Z80_GetRegs(&r);
   r.PC.D = 0xfc00;
@@ -218,9 +214,12 @@ Z80_FDC::start(void)
   Z80_Trace = 0;
   if (DBG_check("KCemu/Z80core2/trace"))
     Z80_Trace = 1;
+
+  _cb_list.clear();
 }
 
 void
-Z80_FDC::stop(void)
+Z80_FDC::power_on()
 {
+  reset(true);
 }

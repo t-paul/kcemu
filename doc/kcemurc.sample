@@ -2,7 +2,7 @@
 #  KCemu -- the KC 85/3 and KC 85/4 Emulator
 #  Copyright (C) 1997-1998 Torsten Paul
 #
-#  $Id: kcemurc.sample,v 1.4 2002/02/12 17:24:14 torsten_paul Exp $
+#  $Id: kcemurc.sample,v 1.5 2002/10/31 16:40:01 torsten_paul Exp $
 #
 #
 #  KCemu Konfigurationsdatei ($HOME/.kcemurc)
@@ -56,7 +56,7 @@ Default KC Model: 4
 ##############################################################################
 #
 #  Skalierung des Fensters, in dem der Emulator läuft. Erlaubte Werte
-#  sind nur 1 und 2.
+#  sind 1, 2 und 3.
 #
 Display Scale: 1
 

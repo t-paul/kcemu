@@ -2,7 +2,7 @@
  *  KCemu -- the KC 85/3 and KC 85/4 Emulator
  *  Copyright (C) 1997-2001 Torsten Paul
  *
- *  $Id: mod_v24.cc,v 1.13 2002/06/09 14:24:33 torsten_paul Exp $
+ *  $Id: mod_v24.cc,v 1.14 2002/10/31 01:46:35 torsten_paul Exp $
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -42,8 +42,8 @@
 static ModuleV24 *self;
 
 ModuleV24::ModuleV24(ModuleV24 &tmpl) :
-  InterfaceCircuit("ModuleV24"),
-  ModuleInterface(tmpl.get_name(), tmpl.get_id(), tmpl.get_type())
+  ModuleInterface(tmpl.get_name(), tmpl.get_id(), tmpl.get_type()),
+  InterfaceCircuit("ModuleV24")
 {
   _reg[A] = 0;
   _reg[B] = 0;
@@ -67,8 +67,8 @@ ModuleV24::ModuleV24(ModuleV24 &tmpl) :
 }
 
 ModuleV24::ModuleV24(const char *name, byte_t id) :
-  InterfaceCircuit("ModuleV24"),
-  ModuleInterface(name, id, KC_MODULE_KC_85_3)
+  ModuleInterface(name, id, KC_MODULE_KC_85_3),
+  InterfaceCircuit("ModuleV24")
 {
   _reg[A] = 0;
   _reg[B] = 0;
@@ -352,8 +352,6 @@ ModuleV24::reti(void)
 void
 ModuleV24::push_data(char *buf, int len)
 {
-  int a;
-
   if (_in_buf_ptr)
     {
       cerr << "data ignored! ***" << endl;

@@ -2,7 +2,7 @@
  *  KCemu -- the KC 85/3 and KC 85/4 Emulator
  *  Copyright (C) 1997-2001 Torsten Paul
  *
- *  $Id: ui_3.cc,v 1.1 2002/06/09 14:24:34 torsten_paul Exp $
+ *  $Id: ui_3.cc,v 1.2 2002/10/31 01:02:47 torsten_paul Exp $
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -28,9 +28,14 @@
 
 UI_3::UI_3(void)
 {
-  int a, n1, n2;
+  int a, b, n1, n2;
 
+  b = (get_real_width() * get_real_height()) / 8;
   _bitmap = new byte_t[get_real_width() * get_real_height()];
+  _dirty_size = b / 8;
+  _dirty = new byte_t[_dirty_size];
+  _pix_cache = new byte_t[b];
+  _col_cache = new byte_t[b];
 
   for (a = 0;a < 256;a++)
     {
@@ -44,6 +49,9 @@ UI_3::UI_3(void)
 
   for (a = 0;a < 256;a++)
     _bitswap3[a] = 0x3000 + (_bitswap1[_bitswap2[a] >> 2] << 3);
+
+  for (a = 0;a < _dirty_size;a++)
+    _dirty[a] = 1;
 }
 
 UI_3::~UI_3(void)
@@ -63,10 +71,24 @@ UI_3::get_real_height(void)
   return 256;
 }
 
+byte_t *
+UI_3::get_dirty_buffer(void)
+{
+  return _dirty;
+}
+
+int
+UI_3::get_dirty_buffer_size(void)
+{
+  return _dirty_size;
+}
+
 void
 UI_3::generic_put_pixels(int x, int y, byte_t val, byte_t fg, byte_t bg)
 {
   int idx = y * get_real_width() + x;
+
+  _dirty[(y / 8) * (get_real_width() / 8) + (x / 8)] = 1;
 
   for (int a = 0;a < 8;a++)
     {
@@ -79,10 +101,11 @@ UI_3::generic_put_pixels(int x, int y, byte_t val, byte_t fg, byte_t bg)
 }
 
 void
-UI_3::generic_update(void)
+UI_3::generic_update(Scanline *scanline, bool clear_cache)
 {
   int x, y;
-  int p, pc, ys, yc;
+  int changed;
+  int p, pc, ys, yc, s;
   byte_t val, col, fg, bg;
 
   byte_t *irm = memory->getIRM();
@@ -92,14 +115,44 @@ UI_3::generic_update(void)
     {
       pc = (p & 0x7f) | ((p & 0xfe00) >> 2) + 0x2800;
       ys = _bitswap1[y];
+
+      s = 0;
+      if (scanline)
+	s = scanline->get_value(ys);
+
       for (x = 0;x < 32;x++)
         {
+	  changed = 0;
+
           val = irm[p];
           col = irm[pc + x];
-          p++;
+
+	  if (val != _pix_cache[p])
+	    {
+	      changed++;
+	      _pix_cache[p] = val;
+	    }
+
+	  if (col != _col_cache[p])
+	    {
+	      changed++;
+	      _col_cache[p] = col;
+	    }
 
           bg = (col & 7) | 0x10;
           fg = (col >> 3) & 15;
+
+	  if (col & 128)
+	    {
+	      changed++;
+	      if (s)
+		fg = bg;
+	    }
+
+          p++;
+
+	  if (!changed)
+	    continue;
 
           generic_put_pixels(8 * x, ys, val, fg, bg);
         }
@@ -110,37 +163,46 @@ UI_3::generic_update(void)
     {
       ys = _bitswap2[y];
       yc = _bitswap3[y];
+
+      s = 0;
+      if (scanline)
+	s = scanline->get_value(ys);
+
       for (x = 0;x < 8;x++)
         {
+	  changed = 0;
+
           val = irm[p];
           col = irm[yc + x];
-          p++;
+
+	  if (val != _pix_cache[p])
+	    {
+	      changed++;
+	      _pix_cache[p] = val;
+	    }
+
+	  if (col != _col_cache[p])
+	    {
+	      changed++;
+	      _col_cache[p] = col;
+	    }
 
           bg = (col & 7) | 0x10;
           fg = (col >> 3) & 15;
+
+	  if (col & 128)
+	    {
+	      changed++;
+	      if (s)
+		fg = bg;
+	    }
+
+          p++;
+
+	  if (!changed)
+	    continue;
 
           generic_put_pixels(8 * x + 256, ys, val, fg, bg);
         }
     }
 }
-
-UI_ModuleInterface *
-UI_3::getModuleInterface(void)
-{
-  static DummyModuleHandler *i = new DummyModuleHandler();
-  return i;
-}
-
-TapeInterface  *
-UI_3::getTapeInterface(void)
-{
-  static DummyTapeHandler *i = new DummyTapeHandler();
-  return i;
-}
-
-DebugInterface *
-UI_3::getDebugInterface(void)
-{
-  return 0;
-}
-

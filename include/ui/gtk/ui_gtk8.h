@@ -1,8 +1,8 @@
 /*
  *  KCemu -- the KC 85/3 and KC 85/4 Emulator
- *  Copyright (C) 1997-2001 Torsten Paul
+ *  Copyright (C) 1997-2002 Torsten Paul
  *
- *  $Id: ui_gtk8.h,v 1.2 2002/06/09 14:24:33 torsten_paul Exp $
+ *  $Id: ui_gtk8.h,v 1.3 2002/10/31 01:38:07 torsten_paul Exp $
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -24,9 +24,23 @@
 
 #include "ui/gtk/ui_gtk.h"
 
-class UI_Gtk8 : public UI_Gtk
+#include "ui/generic/ui_8.h"
+
+class UI_Gtk8 : public UI_Gtk, public UI_8
 {
- protected:
+ private:
+  enum {
+    LC80_CB_OFFSET = 18000
+  };
+
+ public:
+  UI_Gtk8(void);
+  virtual ~UI_Gtk8(void);
+
+  virtual void update(bool full_update = false, bool clear_cache = false);
+  virtual void callback(void *data);
+  virtual void flash(bool enable);
+
   virtual void allocate_colors(double saturation_fg,
 			       double saturation_bg,
 			       double brightness_fg,
@@ -34,24 +48,9 @@ class UI_Gtk8 : public UI_Gtk
 			       double black_level,
 			       double white_level);
 
- public:
-  UI_Gtk8(void);
-  virtual ~UI_Gtk8(void);
-  virtual void update(bool full_update = false, bool clear_cache = false);
-  virtual void memWrite(int addr, char val);
-  virtual void callback(void *data);
-  virtual void flash(bool enable);
-
-  virtual void draw_led(GdkImage *image, int x, int y, gulong color);
-  virtual void draw_digit(GdkImage *image, int x, int y, int index, byte_t led_value);
-  virtual void draw_hline(GdkImage *image, int x, int y, gulong color);
-  virtual void draw_vline(GdkImage *image, int x, int y, gulong color);
-  virtual void draw_point(GdkImage *image, int x, int y, gulong color);
-
   virtual const char * get_title(void);
   virtual int get_width(void);
   virtual int get_height(void);
-  virtual int get_callback_offset(void);
 
   virtual void reset(bool power_on = false);
 };

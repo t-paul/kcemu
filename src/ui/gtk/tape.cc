@@ -2,7 +2,7 @@
  *  KCemu -- the KC 85/3 and KC 85/4 Emulator
  *  Copyright (C) 1997-2001 Torsten Paul
  *
- *  $Id: tape.cc,v 1.21 2002/06/09 14:24:34 torsten_paul Exp $
+ *  $Id: tape.cc,v 1.22 2002/10/31 01:38:12 torsten_paul Exp $
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -103,9 +103,10 @@ public:
       register_cmd("ui-tape-load-selected", 0);
       register_cmd("ui-tape-run-selected", 1);
       register_cmd("ui-tape-export-selected", 2);
-      register_cmd("ui-tape-delete-selected", 3);
-      register_cmd("ui-tape-play-selected", 4);
-      register_cmd("ui-edit-header-selected", 5);
+      register_cmd("ui-tape-export-wav-selected", 3);
+      register_cmd("ui-tape-delete-selected", 4);
+      register_cmd("ui-tape-play-selected", 5);
+      register_cmd("ui-edit-header-selected", 6);
     }
 
   void execute(CMD_Args *args, CMD_Context context)
@@ -128,12 +129,15 @@ public:
           CMD_EXEC_ARGS("tape-export", args);
           break;
         case 3:
-          CMD_EXEC_ARGS("tape-delete", args);
+          CMD_EXEC_ARGS("tape-export-wav", args);
           break;
         case 4:
+          CMD_EXEC_ARGS("tape-delete", args);
+          break;
+        case 5:
           CMD_EXEC_ARGS("tape-play", args);
           break;
-	case 5:
+	case 6:
 	  CMD_EXEC_ARGS("ui-edit-header", args);
 	  break;
         }
@@ -249,10 +253,6 @@ TapeWindow::init(void)
   int a;
   GList *popdown;
   const char *fname;
-  GtkWidget *menu, *menu_item;
-  GSList *group;
-  GtkMenuPath *mpath;
-  GtkMenuFactory *mfact, *msubfact;
   GtkTooltips *tips;
 
   tips = gtk_tooltips_new();
@@ -261,15 +261,16 @@ TapeWindow::init(void)
   GtkItemFactory *ifactP;
   GtkAccelGroup *agroupP;
   GtkItemFactoryEntry entriesP[] = {
-    { _("/_Run File"),      "R",  CF(cmd_exec_mc), CD("ui-tape-run-selected"),    NULL },
-    { _("/_Load File"),     "L",  CF(cmd_exec_mc), CD("ui-tape-load-selected"),   NULL },
-    { _("/_Export File"),   "E",  CF(cmd_exec_mc), CD("ui-tape-export-selected"), NULL },
-    { _("/sep1"),           NULL, NULL,         0,                                "<Separator>" },
-    { _("/Edit _Header"),   "H",  CF(cmd_exec_mc), CD("ui-edit-header-selected"), NULL },
-    { _("/Re_name File"),   "N",  CF(cmd_exec_mc), CD("ui-tape-rename-selected"), NULL },
-    { _("/_Delete File"),   "D",  CF(cmd_exec_mc), CD("ui-tape-delete-selected"), NULL },
-    { _("/sep2"),           NULL, NULL,         0,                                "<Separator>" },
-    { _("/_Add File"),      "A",  CF(cmd_exec_mc), CD("tape-add-file"),           NULL },
+    { _("/_Run File"),      "R",  CF(cmd_exec_mc), CD("ui-tape-run-selected"),        NULL },
+    { _("/_Load File"),     "L",  CF(cmd_exec_mc), CD("ui-tape-load-selected"),       NULL },
+    { _("/_Export File"),   "E",  CF(cmd_exec_mc), CD("ui-tape-export-selected"),     NULL },
+    { _("/Export _Wav"),    "W",  CF(cmd_exec_mc), CD("ui-tape-export-wav-selected"), NULL },
+    { _("/sep1"),           NULL, NULL,         0,                                    "<Separator>" },
+    { _("/Edit _Header"),   "H",  CF(cmd_exec_mc), CD("ui-edit-header-selected"),     NULL },
+    { _("/Re_name File"),   "N",  CF(cmd_exec_mc), CD("ui-tape-rename-selected"),     NULL },
+    { _("/_Delete File"),   "D",  CF(cmd_exec_mc), CD("ui-tape-delete-selected"),     NULL },
+    { _("/sep2"),           NULL, NULL,         0,                                    "<Separator>" },
+    { _("/_Add File"),      "A",  CF(cmd_exec_mc), CD("tape-add-file"),               NULL },
   };
   int nentriesP = sizeof(entriesP) / sizeof(entriesP[0]);
   static char *titles[] =
@@ -667,16 +668,15 @@ TapeWindow::tapeAddFile(const char    *name,
 			long           size,
 			unsigned char  type)
 {
-  char buf1[40];
   char buf2[40];
   char buf3[40];
   char buf4[40];
   const char *data[5];
   kct_file_type_t t = (kct_file_type_t)type;
 
-  sprintf(buf2, "%04xh", load);
+  sprintf(buf2, "%04lxh", load);
   if (start != 0xffff)
-    sprintf(buf3, "%04xh", start);
+    sprintf(buf3, "%04lxh", start);
   else
     sprintf(buf3, "-");
   sprintf(buf4, "%ld", size);

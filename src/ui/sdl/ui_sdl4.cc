@@ -2,7 +2,7 @@
  *  KCemu -- the KC 85/3 and KC 85/4 Emulator
  *  Copyright (C) 1997-2001 Torsten Paul
  *
- *  $Id: ui_sdl4.cc,v 1.1 2002/06/09 14:24:34 torsten_paul Exp $
+ *  $Id: ui_sdl4.cc,v 1.2 2002/10/31 01:16:25 torsten_paul Exp $
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -28,6 +28,8 @@
 UI_SDL4::UI_SDL4(void)
 {
   reset();
+  sdl_init(get_width(), get_height(), get_title());
+  allocate_colors(0.4, 0.5, 0.8, 0.6, 0.1, 0.9);
 }
 
 UI_SDL4::~UI_SDL4(void)
@@ -75,16 +77,11 @@ UI_SDL4::allocate_colors(double saturation_fg,
 }
 
 void
-UI_SDL4::update(bool full_update = false, bool clear_cache = false)
+UI_SDL4::update(bool full_update, bool clear_cache)
 {
-  generic_update();
+  generic_update(NULL, clear_cache);
   sdl_update(_bitmap, 0, get_real_width(), get_real_height());
   sdl_sync();
-}
-
-void
-UI_SDL4::memWrite(int addr, char val)
-{
 }
 
 void
@@ -98,6 +95,7 @@ UI_SDL4::callback(void *data)
 void
 UI_SDL4::flash(bool enable)
 {
+  scanline.trigger(enable);
 }
 
 const char *
@@ -122,16 +120,4 @@ void
 UI_SDL4::reset(bool power_on = false)
 {
   z80->addCallback(35000, this, 0);
-}
-
-void
-UI_SDL4::processEvents()
-{
-}
-
-void
-UI_SDL4::init(int *, char ***)
-{
-  sdl_init(get_width(), get_height(), get_title());
-  allocate_colors(0.4, 0.5, 0.8, 0.6, 0.1, 0.9);
 }

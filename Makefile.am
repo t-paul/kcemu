@@ -1,7 +1,13 @@
 ## Process this file with automake to produce Makefile.in
 
-SUBDIRS = include ROM PRG DISK intl src test doc man debian po
+SUBDIRS = include ROM PRG DISK intl src test images doc man debian po
 
 pkgdata_DATA = .kcemurc .kcemurc.gtk
 
-EXTRA_DIST = $(pkgdata_DATA) README.de TODO THANKS
+docdir = $(datadir)/doc/kcemu
+doc_DATA = README.de TODO THANKS
+
+EXTRA_DIST = $(pkgdata_DATA) $(doc_DATA)
+
+install-data-local:
+	cp ChangeLog $(docdir)/changelog

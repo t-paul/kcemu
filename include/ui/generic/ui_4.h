@@ -2,7 +2,7 @@
  *  KCemu -- the KC 85/3 and KC 85/4 Emulator
  *  Copyright (C) 1997-2001 Torsten Paul
  *
- *  $Id: ui_4.h,v 1.1 2002/06/09 14:24:32 torsten_paul Exp $
+ *  $Id: ui_4.h,v 1.2 2002/10/31 01:02:43 torsten_paul Exp $
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -24,15 +24,16 @@
 
 #include "kc/system.h"
 
-#include "ui/ui.h"
+#include "ui/generic/scanline.h"
 
-#include "ui/generic/tape.h"
-#include "ui/generic/module.h"
-
-class UI_4 : public UI
+class UI_4
 {
  protected:
+  byte_t *_dirty;
   byte_t *_bitmap;
+  byte_t *_pix_cache;
+  byte_t *_col_cache;
+  int     _dirty_size;
 
  protected:
   void generic_put_pixels(int x, int y, byte_t pixel, byte_t fg, byte_t bg);
@@ -44,14 +45,12 @@ class UI_4 : public UI
   virtual int get_real_width(void);
   virtual int get_real_height(void);
 
-  virtual void generic_update(void);
+  virtual byte_t * get_dirty_buffer(void);
+  virtual int get_dirty_buffer_size(void);
 
-  /*
-   *  interface handling
-   */
-  virtual UI_ModuleInterface * getModuleInterface(void);
-  virtual TapeInterface  * getTapeInterface(void);
-  virtual DebugInterface * getDebugInterface(void);
+  virtual void generic_update(Scanline *scanline, bool clear_cache = false);
+  virtual void generic_update_hires(Scanline *scanline, byte_t *irm, bool clear_cache);
+  virtual void generic_update_lores(Scanline *scanline, byte_t *irm, bool clear_cache);
 };
 
 #endif /* __ui_generic_ui_4_h */

@@ -2,7 +2,7 @@
  *  KCemu -- the KC 85/3 and KC 85/4 Emulator
  *  Copyright (C) 1997-2001 Torsten Paul
  *
- *  $Id: color.h,v 1.3 2002/06/09 14:24:32 torsten_paul Exp $
+ *  $Id: color.h,v 1.4 2002/10/31 01:38:07 torsten_paul Exp $
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -68,14 +68,16 @@ class ColorWindow : public UI_Gtk_Window
   double _black_level;
   double _white_level;
 
+  CMD *_cmd;
+
  protected:
   static void sf_adjustment_changed(GtkAdjustment *adj, double *data);
 
   void init(void);
 
  public:
-  ColorWindow(void) { init(); }
-  virtual ~ColorWindow(void) {}
+  ColorWindow(void);
+  virtual ~ColorWindow(void);
 
   virtual double get_saturation_fg() { return _saturation_fg; }
   virtual double get_saturation_bg() { return _saturation_bg; }

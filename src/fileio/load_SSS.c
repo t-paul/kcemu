@@ -2,7 +2,7 @@
  *  KCemu -- the KC 85/3 and KC 85/4 Emulator
  *  Copyright (C) 1997-2001 Torsten Paul
  *
- *  $Id: load_SSS.c,v 1.4 2001/04/14 15:15:52 tp Exp $
+ *  $Id: load_SSS.c,v 1.5 2002/10/31 00:48:52 torsten_paul Exp $
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -152,6 +152,12 @@ loader_SSS_load(const char *filename,
 }
 
 static const char *
+loader_SSS_get_type(void)
+{
+  return "BASIC";
+}
+
+static const char *
 loader_SSS_get_name(void)
 {
   return "loader for raw BASIC files (*.sss)";
@@ -160,6 +166,7 @@ loader_SSS_get_name(void)
 static file_loader_t loader = {
   loader_SSS_check,
   loader_SSS_load,
+  loader_SSS_get_type,
   loader_SSS_get_name
 };
 

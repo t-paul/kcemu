@@ -2,7 +2,7 @@
  *  KCemu -- the KC 85/3 and KC 85/4 Emulator
  *  Copyright (C) 1997-2001 Torsten Paul
  *
- *  $Id: show_tap.c,v 1.2 2001/04/14 15:16:42 tp Exp $
+ *  $Id: show_tap.c,v 1.3 2002/10/31 01:26:47 torsten_paul Exp $
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -30,7 +30,7 @@ list_file(FILE *f, const char *name)
 	FILE *of;
 	char oname[100];
 	const char *fname;
-	int a, c, block, nr_blocks;
+	int block, nr_blocks;
 	unsigned char buf[129], kcname[12];
 	unsigned short addr, start, autostart;
   

@@ -1,6 +1,21 @@
 #
-# $Id: NEWS,v 1.8 2002/06/09 14:24:31 torsten_paul Exp $
+# $Id: NEWS,v 1.10 2002/10/31 16:39:53 torsten_paul Exp $
 #
+
+KCemu 0.3.6
+
+  * added emulation of screen border and 20 line display
+    mode for KC 85/1 and KC 87
+  * removed BASIC ROM from KC 85/1; it doesn't have a
+    BASIC interpreter built in
+  * changed memory layout for KC 85/4; fixes FRACTAL4
+  * added menu entry to disable the emulation speed limit
+  * fixed calculation problem of the main CPUs R register;
+    this fixes the missing monsters in JUNGLE
+  * added library to load various audio files
+  * some juggling in the display code again, now both
+    the KC 85/3 and KC 85/4 support the color scrolling
+    effect in BoulderDash
 
 KCemu 0.3.5
 

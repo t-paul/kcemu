@@ -2,7 +2,7 @@
  *  KCemu -- the KC 85/3 and KC 85/4 Emulator
  *  Copyright (C) 1997-2001 Torsten Paul
  *
- *  $Id: sound3.cc,v 1.2 2002/06/09 14:24:34 torsten_paul Exp $
+ *  $Id: sound3.cc,v 1.3 2002/10/31 01:46:35 torsten_paul Exp $
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -33,12 +33,6 @@
 
 #include "libdbg/dbg.h"
 
-static double _sound_counter = 0;
-static double _sound_freq = 1000;
-static double _sound_init = 0;
-
-static long long _idx = 0;
-
 #define SOUND_BUFFER_SIZE (1024)
 #define SOUND_SAMPLE_FREQ (44100)
 #define SYNC_COUNTER (10)
@@ -53,7 +47,6 @@ Sound3::sound_callback(void *userdata, unsigned char *stream, int len)
   static int val = 1;
   static int xxx = 0;
 
-  float f;
   static int freq = 0;
 
   cur = z80->getCounter();
@@ -140,7 +133,6 @@ Sound3::start()
 {
   double freq = (1750000.0 / 2) / ctc->getTimerValue(0);
 
-  _sound_init = z80->getCounter();
   if (_last_sndop->_freq != freq)
     {
       //cout << "sound: start [1]: " << z80->getCounter() << endl;

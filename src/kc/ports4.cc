@@ -2,7 +2,7 @@
  *  KCemu -- the KC 85/3 and KC 85/4 Emulator
  *  Copyright (C) 1997-2001 Torsten Paul
  *
- *  $Id: ports4.cc,v 1.10 2002/06/09 14:24:33 torsten_paul Exp $
+ *  $Id: ports4.cc,v 1.11 2002/06/15 18:32:31 torsten_paul Exp $
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -26,9 +26,6 @@
 #include "kc/system.h"
 
 #include "kc/kc.h"
-#include "kc/ctc.h"
-#include "kc/pio.h"
-#include "kc/module.h"
 #include "kc/ports4.h"
 #include "kc/memory4.h"
 
@@ -38,12 +35,8 @@
 
 Ports4::Ports4(void)
 {
-    int a;
-    
-    for (a = 0;a < NR_PORTS;a++) {
-	inout[a] = 0;
-    }
-    inout[0x88] = 0x0f;
+  for (int a = 0;a < NR_PORTS;a++)
+    inout[a] = 0xff;
 }
 
 Ports4::~Ports4(void)
@@ -53,29 +46,26 @@ Ports4::~Ports4(void)
 byte_t
 Ports4::in(word_t addr)
 {
-    int val;
-    byte_t a = addr & 0xff;
+  byte_t a = addr & 0xff;
+  byte_t val = inout[a];
+  
+  switch (a)
+    {
+    case 0x84:
+    case 0x86:
+      break;
+    default:
+      DBG(0, form("KCemu/internal_error",
+		  "Ports4: called in() with undefined address %04xh\n",
+		  addr));
+      break;
+    }
 
-    switch (a)
-      {
-      case 0x80: val = module->in(addr); break;
-      case 0x88: val = pio->in_A_DATA(); break;
-      case 0x89: val = pio->in_B_DATA(); break;
-      case 0x8a: val = pio->in_A_CTRL(); break;
-      case 0x8b: val = pio->in_B_CTRL(); break;
-      case 0x8c: val = ctc->in(0);       break;
-      case 0x8d: val = ctc->in(1);       break;
-      case 0x8e: val = ctc->in(2);       break;
-      case 0x8f: val = ctc->in(3);       break;
-      default:   val = inout[a];         break;
-      }
-
-#if 0
-    if ((a >= 0x08) && (a <= 0x0f))
-      cout.form("Ports::in():  %04x -> %02x\n", addr, inout[a]);
-#endif
-    
-    return val;
+  DBG(2, form("KCemu/Ports/4/in",
+	      "Ports4: in() addr = %04x (returning %02x)\n",
+	      addr, val));
+  
+  return val;
 }
 
 void
@@ -83,26 +73,26 @@ Ports4::out(word_t addr, byte_t val)
 {
   byte_t a = addr & 0xff;
 
-#if 0
-  if ((a >= 0x08) && (a <= 0x0f))
-    cout.form("Ports::out(): %04x <- %02x\n", addr, val);
-#endif
+  DBG(1, form("KCemu/Ports/4/out",
+              "Ports4: out() addr = %04x, val = %02x\n",
+              addr, val));
   
   switch (a)
     {
-    case 0x80: module->out(addr, val);              return;
-    case 0x84: change_0x84(inout[0x84] ^ val, val); break;
-    case 0x86: change_0x86(inout[0x86] ^ val, val); break;
-    case 0x88: pio->out_A_DATA(val);                return;
-    case 0x89: pio->out_B_DATA(val);                return;
-    case 0x8a: pio->out_A_CTRL(val);                return;
-    case 0x8b: pio->out_B_CTRL(val);                return;
-    case 0x8c: ctc->out(0, val);                    return;
-    case 0x8d: ctc->out(1, val);                    return;
-    case 0x8e: ctc->out(2, val);                    return;
-    case 0x8f: ctc->out(3, val);                    return;
+    case 0x84:
+      change_0x84(inout[0x84] ^ val, val);
+      break;
+    case 0x86:
+      change_0x86(inout[0x86] ^ val, val);
+      break;
+    default:
+      DBG(0, form("KCemu/internal_error",
+		  "Ports4: called out() with undefined address %04xh (val = %02xh)\n",
+		  addr, val));
+      break;
     }
-    inout[addr & 0xff] = val;
+
+  inout[addr & 0xff] = val;
 }
 
 void

@@ -2,7 +2,7 @@
  *  KCemu -- the KC 85/3 and KC 85/4 Emulator
  *  Copyright (C) 1997-2001 Torsten Paul
  *
- *  $Id: ui_sdl1.h,v 1.1 2002/06/09 14:24:33 torsten_paul Exp $
+ *  $Id: ui_sdl1.h,v 1.2 2002/10/31 01:16:25 torsten_paul Exp $
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -33,7 +33,6 @@ class UI_SDL1 : public UI_SDL, public UI_1
   virtual ~UI_SDL1(void);
 
   virtual void update(bool full_update = false, bool clear_cache = false);
-  virtual void memWrite(int addr, char val);
   virtual void callback(void *data);
   virtual void flash(bool enable);
 
@@ -49,9 +48,6 @@ class UI_SDL1 : public UI_SDL, public UI_1
   virtual int get_height(void);
 
   virtual void reset(bool power_on = false);
-
-  void processEvents();
-  void init(int *, char ***);
 };
 
 #endif /* __ui_sdl_ui_sdl1_h */

@@ -2,7 +2,7 @@
  *  KCemu -- the KC 85/3 and KC 85/4 Emulator
  *  Copyright (C) 1997-2001 Torsten Paul
  *
- *  $Id: module.cc,v 1.11 2002/06/09 14:24:34 torsten_paul Exp $
+ *  $Id: module.cc,v 1.12 2002/10/31 01:38:12 torsten_paul Exp $
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -57,6 +57,15 @@ ModuleWindow::ModuleWindow(void)
 
 ModuleWindow::~ModuleWindow(void)
 {
+}
+
+void
+ModuleWindow::sf_color_expansion(GtkWidget *widget, gpointer data)
+{
+  if (GTK_TOGGLE_BUTTON(widget)->active)
+    module_list->insert(61, module_list->get_color_expansion());
+  else
+    module_list->insert(61, NULL);
 }
 
 void
@@ -174,6 +183,77 @@ ModuleWindow::init_device(const char *name, int base, int active_slots)
 }
 
 void
+ModuleWindow::init_device_1(const char *name)
+{
+  int a;
+  char buf[10];
+
+  /*
+   *  frame
+   */
+  _w.frame[0] = gtk_frame_new(name);
+  gtk_box_pack_start(GTK_BOX(_w.vbox), _w.frame[0], FALSE, FALSE, 0);
+  gtk_widget_show(_w.frame[0]);
+  
+  /*
+   *  table
+   */
+  _w.table[0] = gtk_table_new(5, 3, 0);
+  gtk_container_border_width(GTK_CONTAINER(_w.table[0]), 4);
+  gtk_table_set_row_spacings(GTK_TABLE(_w.table[0]), 2);
+  gtk_table_set_col_spacings(GTK_TABLE(_w.table[0]), 4);
+  gtk_table_set_col_spacing(GTK_TABLE(_w.table[0]), 2, 16);
+  gtk_container_add(GTK_CONTAINER(_w.frame[0]), _w.table[0]);
+  gtk_widget_show(_w.table[0]);
+
+  for (a = 0;a < 4;a++)
+    {
+      snprintf(buf, 10, _("Slot %d"), 4 - a);
+
+      _w.l[a] = gtk_label_new(buf);
+      gtk_misc_set_alignment(GTK_MISC(_w.l[a]), 0, 0.5);
+      gtk_table_attach(GTK_TABLE(_w.table[0]), _w.l[a],
+		       0, 1,
+		       a, a + 1,
+		       (GtkAttachOptions)(GTK_EXPAND | GTK_FILL), GTK_FILL,
+		       0, 0);
+      gtk_widget_show(_w.l[a]);
+
+      _w.m[a] = gtk_option_menu_new();
+      gtk_option_menu_set_menu(GTK_OPTION_MENU(_w.m[a]), create_menu(a));
+      gtk_table_attach(GTK_TABLE(_w.table[0]), _w.m[a],
+		       1, 2,
+		       a, a + 1,
+		       (GtkAttachOptions)(GTK_EXPAND | GTK_FILL), GTK_FILL,
+		       0, 0);
+      gtk_widget_show(_w.m[a]);
+
+      _w.led[a] = gtk_led_line_new(1);
+#if 0
+      gtk_table_attach(GTK_TABLE(_w.table[0]), _w.led[a],
+		       2, 3,
+		       a, a + 1,
+		       (GtkAttachOptions)(GTK_EXPAND | GTK_FILL), GTK_FILL,
+		       0, 0);
+#endif
+      gtk_widget_show(_w.led[a]);
+    }
+
+  if (get_kc_type() & KC_TYPE_85_1)
+    {
+      _w.color_exp = gtk_check_button_new_with_label(_("IRM Color Expansion"));
+      gtk_table_attach(GTK_TABLE(_w.table[0]), _w.color_exp,
+		       1, 2,
+		       4, 5,
+		       (GtkAttachOptions)(GTK_EXPAND | GTK_FILL), GTK_FILL,
+		       0, 0);
+      gtk_signal_connect(GTK_OBJECT(_w.color_exp), "toggled",
+                         GTK_SIGNAL_FUNC(sf_color_expansion), NULL);
+      gtk_widget_show(_w.color_exp);
+    }
+}
+
+void
 ModuleWindow::init(void)
 {
   int a;
@@ -211,7 +291,10 @@ ModuleWindow::init(void)
       init_device(buf, 16 * a, 15);
     }
 
-  init_device(_("Basis Device"), 0, 12);
+  if (get_kc_type() & KC_TYPE_85_1_CLASS)
+    init_device_1(_("Basis Device"));
+  else
+    init_device(_("Basis Device"), 0, 12);
 
   /*
    *  separator
@@ -247,7 +330,6 @@ ModuleWindow::insert(int slot, ModuleInterface *m)
   int a;
   GSList *e;
   GtkObject *o;
-  GtkWidget *w;
   ModuleInterface *m2;
   
   e = _w.g[slot];

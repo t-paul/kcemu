@@ -2,7 +2,7 @@
  *  KCemu -- the KC 85/3 and KC 85/4 Emulator
  *  Copyright (C) 1997-2001 Torsten Paul
  *
- *  $Id: disk.cc,v 1.6 2002/06/09 14:24:34 torsten_paul Exp $
+ *  $Id: disk.cc,v 1.7 2002/10/31 01:38:12 torsten_paul Exp $
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -64,7 +64,7 @@ public:
     int disk_no;
 
     DBG(2, form("KCemu/Disk/update",
-		"got disk-update messge\n"));
+		"got disk-update message\n"));
 
     disk_no = args->get_int_arg("disk");
     if ((disk_no < 0) || (disk_no > 3))
@@ -220,7 +220,7 @@ DiskWindow::init(void)
 		     0, 1, a, a + 1,
 		     (GtkAttachOptions)0, (GtkAttachOptions)0, 0, 0);
     gtk_widget_show(_w.label[a]);
-    delete(ltext);
+    delete[] ltext;
 
     /*
      *  combo box

@@ -2,7 +2,7 @@
  *  KCemu -- the KC 85/3 and KC 85/4 Emulator
  *  Copyright (C) 1997-2001 Torsten Paul
  *
- *  $Id: load_22dsk.c,v 1.2 2002/01/12 23:03:56 torsten_paul Exp $
+ *  $Id: load_22dsk.c,v 1.3 2002/10/31 00:51:53 torsten_paul Exp $
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -76,6 +76,8 @@
 
 #include <zlib.h>
 #include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 
 #include "libdisk/libdiskP.h"
 
@@ -148,6 +150,8 @@ do_open(const char *path)
   data->f = f;
   data->gzf = gzf;
   data->read_only = ro;
+  
+  return data;
 }
 
 static int
@@ -189,22 +193,22 @@ do_getc(dsk_data_t *data)
 static
 int read_offsets(dsk_data_t *data)
 {
-  long idx, offset;
+  long idx;
   int a, acyl, asid, lcyl, lsid, lsec, llen, c, count;
 
   idx = 0;
   data->len = 0;
   while (242)
     {
-      acyl = do_getc(data); idx++; if (acyl == EOF) return;
-      asid = do_getc(data); idx++; if (asid == EOF) return;
-      lcyl = do_getc(data); idx++; if (lcyl == EOF) return;
-      lsid = do_getc(data); idx++; if (lsid == EOF) return;
-      lsec = do_getc(data); idx++; if (lsec == EOF) return;
-      llen = do_getc(data); idx++; if (llen == EOF) return;
-      c    = do_getc(data); idx++; if (c    == EOF) return;
+      acyl = do_getc(data); idx++; if (acyl == EOF) return 0;
+      asid = do_getc(data); idx++; if (asid == EOF) return -1;
+      lcyl = do_getc(data); idx++; if (lcyl == EOF) return -1;
+      lsid = do_getc(data); idx++; if (lsid == EOF) return -1;
+      lsec = do_getc(data); idx++; if (lsec == EOF) return -1;
+      llen = do_getc(data); idx++; if (llen == EOF) return -1;
+      c    = do_getc(data); idx++; if (c    == EOF) return -1;
       count = c;
-      c    = do_getc(data); idx++; if (c    == EOF) return;
+      c    = do_getc(data); idx++; if (c    == EOF) return -1;
       count |= (c << 8);
 
       data->offset[data->len].head     = lsid;
@@ -212,6 +216,7 @@ int read_offsets(dsk_data_t *data)
       data->offset[data->len].sector   = lsec;
       data->offset[data->len].count    = count;
       data->offset[data->len].offset   = idx;
+
       data->len++;
 
       for (a = 0;a < count;a++)
@@ -219,7 +224,7 @@ int read_offsets(dsk_data_t *data)
           c = do_getc(data);
           idx++;
           if (c == EOF)
-	    return;
+	    return -1;
         }
     }
 
@@ -228,7 +233,7 @@ int read_offsets(dsk_data_t *data)
 static const char *
 loader_22dsk_get_name(void)
 {
-  return "disk loader for 22dsk disk-dumps";
+  return "disk loader for Sydex ANADISK disk-dumps";
 }
 
 static int
@@ -243,7 +248,8 @@ loader_22dsk_open(libdisk_prop_t *prop, const char *path)
   if (data == NULL)
       return -1;
 
-  read_offsets(data);
+  if (read_offsets(data) < 0)
+    return -1;
 
   prop->head_count = 2;
   prop->cylinder_count = 80;
@@ -346,7 +352,7 @@ loader_22dsk_read_sector(libdisk_prop_t *prop, unsigned char *buf, int len)
 static int
 loader_22dsk_write_sector(libdisk_prop_t *prop, unsigned char *buf, int len)
 {
-  int a, l;
+  int l;
   dsk_data_t *data;
 
   if (loader_22dsk_seek(prop) < 0)

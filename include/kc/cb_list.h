@@ -2,7 +2,7 @@
  *  KCemu -- the KC 85/3 and KC 85/4 Emulator
  *  Copyright (C) 1997-2001 Torsten Paul
  *
- *  $Id: cb_list.h,v 1.1 2001/12/31 14:11:53 torsten_paul Exp $
+ *  $Id: cb_list.h,v 1.2 2002/10/31 01:46:33 torsten_paul Exp $
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -81,7 +81,7 @@ class CallbackList
 
   void clear();
   void add_callback(unsigned long long offset, Callback *cb, void *data);
-  void run_callbacks(long long value);
+  void run_callbacks(unsigned long long value);
 };
 
 #endif /* __kc_cb_list_h */

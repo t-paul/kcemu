@@ -2,7 +2,7 @@
  *  KCemu -- the KC 85/3 and KC 85/4 Emulator
  *  Copyright (C) 1997-2001 Torsten Paul
  *
- *  $Id: floppy.h,v 1.5 2002/06/09 14:24:32 torsten_paul Exp $
+ *  $Id: floppy.h,v 1.6 2002/10/31 01:46:33 torsten_paul Exp $
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -40,7 +40,7 @@ class Floppy
   int get_sector_size(void);
   int get_sectors_per_cylinder(void);
   
-  void attach(const char *filename);
+  bool attach(const char *filename);
   bool seek(int head, int cylinder, int sector);
   int read_sector(byte_t *buf, int len);
   int write_sector(byte_t *buf, int len);

@@ -25,6 +25,7 @@ EXTRA_DIST = \
 	memory2.h	\
 	memory3.h	\
 	memory4.h	\
+	memory7.h	\
 	memory8.h	\
 	pio.h		\
 	pio1.h		\
@@ -33,8 +34,6 @@ EXTRA_DIST = \
 	pio4.h		\
 	pio8.h		\
 	ports.h		\
-	ports1.h	\
-	ports3.h	\
 	ports4.h	\
 	sh_mem.h	\
 	disk_io.h	\
@@ -47,6 +46,7 @@ EXTRA_DIST = \
 	mod_ram8.h	\
 	mod_64k.h	\
 	mod_rom.h	\
+	mod_rom1.h	\
 	mod_disk.h	\
 	mod_v24.h	\
 	mod_list.h	\
@@ -54,6 +54,8 @@ EXTRA_DIST = \
 	tape.h		\
 	disk.h		\
 	timer.h		\
+	timer1.h	\
+	timer3.h	\
 	wav.h		\
 	sound.h		\
 	sound3.h	\

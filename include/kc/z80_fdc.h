@@ -2,7 +2,7 @@
  *  KCemu -- the KC 85/3 and KC 85/4 Emulator
  *  Copyright (C) 1997-2001 Torsten Paul
  *
- *  $Id: z80_fdc.h,v 1.3 2002/06/09 14:24:32 torsten_paul Exp $
+ *  $Id: z80_fdc.h,v 1.4 2002/10/31 01:46:33 torsten_paul Exp $
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -51,11 +51,8 @@ class Z80_FDC
   byte_t trigger_irq(byte_t irq_vector);
   void add_callback(unsigned long long offset, Callback *cb, void *data);
 
-  void reset(word_t pc, bool power_on);
-  void power_on(word_t pc);
-
-  void start(void);
-  void stop(void);
+  void reset(bool power_on = false);
+  void power_on();
 };
 
 #endif /* __kc_z80_fdc_h */

@@ -1,0 +1,39 @@
+.TH kc2wav 1
+
+.SH NAME
+kc2wav \- convert KC files audio files (.WAV format)
+
+.SH SYNOPSIS
+.B kc2wav <infile> <outfile>
+.br
+
+.SH DESCRIPTION
+.B kc2wav
+converts the following file types to raw KC tape images
+
+.LP
+.IR 1)
+files used by the KC emulator by Arne Fitzenreiter (usually
+named .TAP)
+.LP
+.IR 2)
+files used by the GEMINI-SOFT KC emulator (usually named .GPF
+for machine code files and .GBF for basic files)
+.LP
+.IR 3)
+BASIC files (usually named .SSS)
+.LP
+.IR 4)
+KC image files that contain the data written by the KC tape routines
+without block number and checksum (usually named .KCC or .KCB
+where the .KCB files are BASIC files with an autostart routine)
+
+.SH BUGS
+Basic files are not handled properly.
+
+.SH SEE ALSO
+kcemu(1x), kctape(1), kc2tap(1), kc2img(1), kc2raw(1)
+
+.SH AUTHOR
+This manual page was written by Torsten Paul <Torsten.Paul@gmx.de>,
+for the Debian GNU/Linux system (but may be used by others).

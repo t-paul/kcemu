@@ -27,4 +27,6 @@ main(void)
 		for (h = 0;h < 2;h++)
 			for (s = 1;s < 6;s++)
 				dump_sector(c, h, s);
+
+	return 0;
 }

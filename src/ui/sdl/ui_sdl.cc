@@ -2,7 +2,7 @@
  *  KCemu -- the KC 85/3 and KC 85/4 Emulator
  *  Copyright (C) 1997-2001 Torsten Paul
  *
- *  $Id: ui_sdl.cc,v 1.1 2002/06/09 14:24:34 torsten_paul Exp $
+ *  $Id: ui_sdl.cc,v 1.2 2002/10/31 01:16:25 torsten_paul Exp $
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -300,4 +300,29 @@ UI_SDL::sdl_process_events(void)
 	  break;
 	}
     }
+}
+
+void
+UI_SDL::init(int *argc, char ***argv)
+{
+}
+
+UI_ModuleInterface *
+UI_SDL::getModuleInterface(void)
+{
+  static UI_ModuleInterface *i = new DummyModuleHandler();
+  return i;
+}
+
+TapeInterface *
+UI_SDL:: getTapeInterface(void)
+{
+  static TapeInterface *i = new DummyTapeHandler();
+  return i;
+}
+
+DebugInterface *
+UI_SDL::getDebugInterface(void)
+{
+  return NULL;
 }

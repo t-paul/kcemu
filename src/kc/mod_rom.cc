@@ -2,7 +2,7 @@
  *  KCemu -- the KC 85/3 and KC 85/4 Emulator
  *  Copyright (C) 1997-2001 Torsten Paul
  *
- *  $Id: mod_rom.cc,v 1.7 2002/06/09 14:24:33 torsten_paul Exp $
+ *  $Id: mod_rom.cc,v 1.8 2002/10/31 01:46:35 torsten_paul Exp $
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -49,8 +49,9 @@ ModuleROM::ModuleROM(const char *filename, const char *name,
                      dword_t size, byte_t id, word_t addr) :
   ModuleInterface(name, id, KC_MODULE_KC_85_3)
 {
-  int a, c;
+  int c;
   ifstream is;
+  unsigned int a;
 
   _rom = new byte_t[size];
   _addr = addr;
@@ -59,21 +60,25 @@ ModuleROM::ModuleROM(const char *filename, const char *name,
 
   a = 0;
   is.open(filename);
-  if (!is) return;
+  if (!is)
+    return;
+
   for (a = 0;a < size;a++)
     {
       c = is.get();
-      if (c == EOF) return;
+      if (c == EOF)
+	return;
+
       _rom[a] = c;
     }
-  _ok = true;
   set_valid(true);
 }
 
 ModuleROM::~ModuleROM(void)
 {
-  if (_group) memory->unregister_memory(_group);
-  delete _rom;
+  if (_group)
+    memory->unregister_memory(_group);
+  delete[] _rom;
 }
 
 void

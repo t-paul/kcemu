@@ -2,7 +2,7 @@
 .SH NAME
 kcemu \- The KC 85/4 Emulator
 .SH SYNOPSIS
-.B kcemu [-1234dlh]
+.B kcemu [-123478sthdlvLW]
 .br
 .SH "DESCRIPTION"
 This manual page documents briefly the
@@ -30,14 +30,35 @@ Emulate KC 85/3 computer.
 .B \-4
 Emulate KC 85/4 computer.
 .TP
-.B \-d
+.B \-7
+Emulate KC 87 computer (KC 85/1 with color expansion).
+.TP
+.B \-8
+Emulate LC 80 computer.
+.TP
+.B \-s --scale
+Scale display (only values 1 and 2 allowed).
+.TP
+.B \-t --tape
+Attach tape on startup.
+.TP
+.B \-h --help
+Show summary of options.
+.TP
+.B \-d --datadir
 Set data directory (for ROM images).
 .TP
-.B \-l
+.B \-l --localedir
 Set locale directory.
 .TP
-.B \-h
-Show summary of options.
+.B \-v --version
+Show KCemu version and configuration.
+.TP
+.B \-L --license
+Show license.
+.TP
+.B \-W --warranty
+Show warranty.
 .SH AUTHOR
 This manual page was written by Torsten Paul <Torsten.Paul@gmx.de>,
 for the Debian GNU/Linux system (but may be used by others).

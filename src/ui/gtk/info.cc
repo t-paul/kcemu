@@ -2,7 +2,7 @@
  *  KCemu -- the KC 85/3 and KC 85/4 Emulator
  *  Copyright (C) 1997-2001 Torsten Paul
  *
- *  $Id: info.cc,v 1.8 2002/06/09 14:24:34 torsten_paul Exp $
+ *  $Id: info.cc,v 1.9 2002/10/31 01:38:12 torsten_paul Exp $
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -70,9 +70,9 @@ InfoWindow::switch_page(GtkWidget *w, GtkNotebookPage *page,
 void
 InfoWindow::do_update_cpu(void)
 {
-  int a;
   word_t b, m;
   char buf[20];
+  unsigned int a;
   word_t af, bc, de, hl, ix, iy, sp, pc;
   struct {
     int reg; const char *fmt, *name; word_t *val; int shift, mask;
@@ -267,8 +267,8 @@ InfoWindow::create_reg(int reg, const char *frame_title, int led)
 GtkWidget *
 InfoWindow::create_page_cpu(void)
 {
-  int a;
   GtkWidget *w;
+  unsigned int a;
   struct {
     int reg; char *name; int r1, c1, r2, c2, led;
   } r[] = {

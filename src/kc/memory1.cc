@@ -2,7 +2,7 @@
  *  KCemu -- the KC 85/3 and KC 85/4 Emulator
  *  Copyright (C) 1997-2001 Torsten Paul
  *
- *  $Id: memory1.cc,v 1.6 2002/06/09 14:24:33 torsten_paul Exp $
+ *  $Id: memory1.cc,v 1.7 2002/10/31 01:46:35 torsten_paul Exp $
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -47,7 +47,6 @@ Memory1::Memory1(void) : Memory()
   } *mptr, m[] = {
     { &_m_scr,   "-",     0x0000, 0x10000, 0,              256, 0, 1 },
     { &_m_ram,   "RAM",   0x0000,  0x4000, &_ram[0],         0, 0, 1 },
-    { &_m_basic, "BASIC", 0xc000,  0x2800, &_rom_basic[0],   0, 1, 1 },
     { &_m_os,    "OS",    0xf000,  0x1000, &_rom_os[0],      0, 1, 1 },
     { &_m_irm,   "IRM",   0xec00,  0x0400, &_irm[0x400],   128, 0, 1 },
     /* dummy entry needed for getIRM() */
@@ -59,13 +58,10 @@ Memory1::Memory1(void) : Memory()
   ptr = new char[l + 14];
   strcpy(ptr, kcemu_datadir);
   
-  strcpy(ptr + l, "/os____e0.851");
+  strcpy(ptr + l, "/os____f0.851");
   loadROM(ptr, &_rom_os, 0x1000, 1);
-  strcpy(ptr + l, "/basic_c0.851");
-  loadROM(ptr, &_rom_basic, 0x2800, 1);
   
   memset(&_irm[0], 0x70, 0x400);
-  //memset(&_irm[0x400], 0x20, 0x400);
   
   for (mptr = &m[0];mptr->name;mptr++)
     {
@@ -128,22 +124,4 @@ Memory1::reset(bool power_on)
 void
 Memory1::dumpCore(void)
 {
-#if 0
-  ofstream os;
-    
-  os.open("core.z80");
-
-  cout.form("Memory: dumping core...\n");
-  if (!os)
-    {
-      cerr << "can't write 'core.z80'\n";
-      exit(0);
-    }
-  
-  os.write(&_ram[0], 0x4000);
-  os.write(&_irm[0],   0x4000);
-
-  os.close();
-  cout.form("Memory: done.\n");
-#endif
 }

@@ -2,7 +2,7 @@
  *  KCemu -- the KC 85/3 and KC 85/4 Emulator
  *  Copyright (C) 1997-2001 Torsten Paul
  *
- *  $Id: cmd.h,v 1.3 2001/04/14 15:15:17 tp Exp $
+ *  $Id: cmd.h,v 1.4 2002/10/31 01:38:07 torsten_paul Exp $
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -22,53 +22,32 @@
 #ifndef __ui_gtk_cmd_h
 #define __ui_gtk_cmd_h
 
-#include "kc/kc.h"
+#include <gtk/gtk.h>
+
+#include "kc/system.h"
+
 #include "cmd/cmd.h"
-#include "ui/gtk/window.h"
 
 /*
  *  cmd_exec as GTK+ signal function
  */
-static void
-cmd_exec_sf(GtkWidget * /* widget */, gpointer data)
-{
-  const char *name = (const char *)data;
-  CMD_EXEC(name);
-}
+void cmd_exec_sf(GtkWidget *widget, gpointer data);
 
 /*
  *  cmd_exec as GTK+ event function returning true
  *  (e.g. for "delete_event")
  */
-static int
-cmd_exec_sft(GtkWidget *widget, GdkEvent *event, gpointer data)
-{
-  const char *name = (const char *)data;
-  CMD_EXEC(name);
-  return true;
-}
+int cmd_exec_sft(GtkWidget *widget, GdkEvent *event, gpointer data);
 
 /*
  *  cmd_exec for toggle buttons
- *  this functions calls the command only if the button is
- *  pressed
+ *  this functions calls the command only if the button is pressed
  */
-static void
-cmd_exec_sftb(GtkWidget *widget, gpointer data)
-{
-  const char *name = (const char *)data;
-  if (GTK_TOGGLE_BUTTON(widget)->active)
-    CMD_EXEC(name);
-}
+void cmd_exec_sftb(GtkWidget *widget, gpointer data);
 
 /*
  *  cmd_exec as GTK+ menu callback
  */
-static void
-cmd_exec_mc(gpointer data, guint action, GtkWidget *w)
-{
-  const char *name = (const char *)action;
-  CMD_EXEC(name);
-}
+void cmd_exec_mc(gpointer data, guint action, GtkWidget *widget);
 
 #endif /* __ui_gtk_cmd_h */

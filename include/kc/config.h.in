@@ -69,6 +69,11 @@
 
 #undef HAVE_LIBSDL
 #undef HAVE_LIBGTK
+#undef HAVE_LIBSNDFILE
+#undef HAVE_LIBAUDIOFILE
+#undef HAVE_LIBVORBIS
+#undef HAVE_LIBMP3LAME
+#undef HAVE_LIBFLAC
 
 #undef USE_UI_GTK
 #undef USE_UI_SDL
@@ -164,6 +169,9 @@
 
 /* Define if you have the i library (-li).  */
 #undef HAVE_LIBI
+
+/* Define if you have the m library (-lm).  */
+#undef HAVE_LIBM
 
 /* Define if you have the z library (-lz).  */
 #undef HAVE_LIBZ

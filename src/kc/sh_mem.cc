@@ -2,7 +2,7 @@
  *  KCemu -- the KC 85/3 and KC 85/4 Emulator
  *  Copyright (C) 1997-2001 Torsten Paul
  *
- *  $Id: sh_mem.cc,v 1.5 2002/06/09 14:24:33 torsten_paul Exp $
+ *  $Id: sh_mem.cc,v 1.6 2002/10/31 01:46:35 torsten_paul Exp $
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -31,6 +31,7 @@
 
 #include "libdbg/dbg.h"
 
+#ifdef ENABLE_COREDUMP
 static byte_t *__ptr = 0;
 static void dump_core(void)
 {
@@ -56,10 +57,13 @@ static void dump_core(void)
   else
     printf("failed!\n");
 }
+#endif /* ENABLE_COREDUMP */
 
 FloppySharedMem::FloppySharedMem(void)
 {
-  // atexit(dump_core);
+#ifdef ENABLE_COREDUMP
+  atexit(dump_core);
+#endif /* ENABLE_COREDUMP */
 }
 
 FloppySharedMem::~FloppySharedMem(void)
@@ -133,5 +137,7 @@ void
 FloppySharedMem::set_memory(byte_t *mem)
 {
   _mem = mem;
+#ifdef ENABLE_COREDUMP
   __ptr = mem;
+#endif /* ENABLE_COREDUMP */
 }

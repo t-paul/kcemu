@@ -1,2 +1,20 @@
-?package(kcemu):needs=X11 section=Apps/Emulators\
-  title="kcemu" command="/usr/X11R6/bin/kcemu"
+?package(kcemu):\
+  title="KCemu (KC85/4)"\
+  section="Apps/Emulators"\
+  icon="/usr/share/pixmaps/kcemu-kc85.xpm"\
+  needs="X11"\
+  command="/usr/X11R6/bin/kcemu -4"
+
+?package(kcemu):\
+  title="KCemu (KC87)"\
+  section="Apps/Emulators"\
+  icon="/usr/share/pixmaps/kcemu-kc87.xpm"\
+  needs="X11"\
+  command="/usr/X11R6/bin/kcemu -7"
+
+?package(kcemu):\
+  title="KCemu (LC80)"\
+  section="Apps/Emulators"\
+  icon="/usr/share/pixmaps/kcemu-lc80.xpm"\
+  needs="X11"\
+  command="/usr/X11R6/bin/kcemu -8"

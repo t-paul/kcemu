@@ -96,7 +96,8 @@ case LD_A_I:
   break;
 
 case LD_A_R:
-  R->AF.B.h=(byte)(-R->ICount&0xFF);
+  /*R->AF.B.h=(byte)(-R->ICount&0xFF);*/
+  R->AF.B.h=(byte)LdRZ80();
   R->AF.B.l=(R->AF.B.l&C_FLAG)|(R->IFF&1? P_FLAG:0)|ZSTable[R->AF.B.h];
   break;
 

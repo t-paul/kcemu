@@ -2,7 +2,7 @@
  *  KCemu -- the KC 85/3 and KC 85/4 Emulator
  *  Copyright (C) 1997-2001 Torsten Paul
  *
- *  $Id: ui_gtk.h,v 1.19 2002/06/09 14:24:32 torsten_paul Exp $
+ *  $Id: ui_gtk.h,v 1.20 2002/10/31 01:38:07 torsten_paul Exp $
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -37,6 +37,7 @@
 #include "ui/statusl.h"
 #include "ui/commands.h"
 #include "ui/gtk/cmd.h"
+#include "ui/gtk/wav.h"
 #include "ui/gtk/tape.h"
 #include "ui/gtk/disk.h"
 #include "ui/gtk/info.h"
@@ -44,6 +45,7 @@
 #include "ui/gtk/debug.h"
 #include "ui/gtk/color.h"
 #include "ui/gtk/module.h"
+#include "ui/gtk/keyboard.h"
 #include "ui/gtk/copying.h"
 #include "ui/gtk/tapeadd.h"
 #include "ui/gtk/fbrowse.h"
@@ -53,7 +55,7 @@
 #include "cmd/cmd.h"
 #include "cmd/cmdargs.h"
 
-class UI_Gtk : public UI, public StatusListener, public ErrorListener
+class UI_Gtk : public StatusListener, public ErrorListener, public UI
 {
  protected:
   enum {
@@ -61,8 +63,6 @@ class UI_Gtk : public UI, public StatusListener, public ErrorListener
     CANVAS_HEIGHT = 256,
     
     CB_OFFSET = 35000, /* 50 Hz */
-    
-    PROFILE_HIST_LEN = 256,
   };
   
   bool       _auto_skip;
@@ -77,19 +77,16 @@ class UI_Gtk : public UI, public StatusListener, public ErrorListener
     TapeAddWindow    *_tape_add_window;
     DiskWindow       *_disk_window;
     ModuleWindow     *_module_window;
+    KeyboardWindow   *_keyboard_window;
     InfoWindow       *_info_window;
     EditHeaderWindow *_edit_header_window;
     DialogWindow     *_dialog_window;
+    WavWindow        *_wav_window;
     FileBrowser      *_file_browser;
 
     struct {
       GtkWidget *window;
     } _header;
-
-    struct {
-      GtkWidget *window;
-      GtkWidget *d_area;
-    } _profile;
 
     struct {
       GtkWidget *window;
@@ -118,21 +115,15 @@ class UI_Gtk : public UI, public StatusListener, public ErrorListener
     GdkColor       _col[24];
 
     bool           _shift_lock;
-    bool           _flash;
-    char           _dirty_buf[8192];
-    char          *_dirty;
-    unsigned char *_pix_mem;
-    unsigned char *_col_mem;
-    unsigned int   _profile_hist_ptr;
-    unsigned int   _profile_hist[PROFILE_HIST_LEN];
+    bool           _speed_limit;
 
     void create_main_window(void);
     void create_header_window(void);
-    void create_profile_window(void);
     void tapeSelect(void);
+    void hsv_to_gdk_color(double h, double s, double v, GdkColor *col);
+    gulong get_col(byte_t *bitmap, int which, int idx, int width);
 
     void text_update(void);
-    void ui_callback(void);
     void attach_remote_listener(void);
 
     static void sf_selection_received(GtkWidget *widget,
@@ -172,7 +163,6 @@ class UI_Gtk : public UI, public StatusListener, public ErrorListener
     static void sf_load_ok(GtkWidget *widget, GtkFileSelection *fs);
     static void sf_quit(void);
     static void idle(void);
-    static void sf_profile_event(GtkWidget *widget, GdkEventButton *event);
 
   public:
     UI_Gtk(void);
@@ -180,20 +170,16 @@ class UI_Gtk : public UI, public StatusListener, public ErrorListener
     virtual void processEvents(void);
     
     virtual void update(bool full_update = false, bool clear_cache = false) = 0;
-    virtual void memWrite(int addr, char val) = 0;
-    virtual void callback(void *data) = 0;
     virtual void flash(bool enable) = 0;
-
-    virtual void profile_mem_access(int addr, pf_type type);
 
     virtual void init(int *argc, char ***argv);
     virtual const char * get_title(void) = 0;
     virtual int get_width(void) = 0;
     virtual int get_height(void) = 0;
-    virtual int get_callback_offset(void) = 0;
 
     virtual void status_bar_toggle(void);
     virtual void menu_bar_toggle(void);
+    virtual void speed_limit_toggle(void);
 
     virtual void allocate_colors(double saturation_fg,
 				 double saturation_bg,
@@ -201,11 +187,14 @@ class UI_Gtk : public UI, public StatusListener, public ErrorListener
 				 double brightness_bg,
 				 double black_level,
 				 double white_level) = 0;
-    
-    virtual UI_ModuleInterface * getModuleInterface(void);
-    virtual TapeInterface  * getTapeInterface(void);
-    virtual DebugInterface * getDebugInterface(void);
-    
+
+    void gtk_sync(void);
+    void gtk_update(byte_t *bitmap, byte_t *dirty, int width, int height, bool full_update);
+    void gtk_update_1(byte_t *bitmap, byte_t *dirty, int width, int height);
+    void gtk_update_2(byte_t *bitmap, byte_t *dirty, int width, int height);
+    void gtk_update_3(byte_t *bitmap, byte_t *dirty, int width, int height);
+    void gtk_update_1_debug(byte_t *bitmap, byte_t *dirty, int width, int height);
+
     /*
      *  StatusListener
      */
@@ -215,6 +204,13 @@ class UI_Gtk : public UI, public StatusListener, public ErrorListener
      *  ErrorListener
      */
     void errorInfo(const char *msg);
+
+    /*
+     *  interface handling
+     */
+    virtual UI_ModuleInterface * getModuleInterface(void);
+    virtual TapeInterface  * getTapeInterface(void);
+    virtual DebugInterface * getDebugInterface(void);
 };
 
 #endif /* __ui_ui_gtk_h */

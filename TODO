@@ -1,5 +1,5 @@
 #
-# $Id: TODO,v 1.7 2002/06/09 14:24:31 torsten_paul Exp $
+# $Id: TODO,v 1.9 2002/10/31 16:39:53 torsten_paul Exp $
 #
 
 - fix timing bug when loading digger by double click in the
@@ -10,11 +10,14 @@
   honored correctly which breaks some programs (e.g. PHARAO)
 - fix programs using SPRITE-MC
   (by Dr. H. Gutzer/ S. Wendt, Funkamateur 3/90)
+- fix fast tape loading (doesn't switch bank 8 from IRM to RAM)
+- forward reset/power on signals to modules
+- convert debugging code in pio.cc to libdbg
 - improve sound output
 - expand environment variables in .kcemurc
 - extend the configuration dialog and save the changed values
 - don't use tempnam() in ModuleV24::socket_server():
 - don't use inputstream.getline() with fixed buffer
 - transparently handle gzipped files
-- implement wav file reading
-- define coding style and change the code according to it
+- fix do_dump() in kctape.cc to actually use the specified
+  output file

@@ -17,6 +17,7 @@ src/ui/gtk/info.cc
 src/ui/gtk/module.cc
 src/ui/gtk/tapeadd.cc
 src/ui/gtk/tape.cc
+src/ui/gtk/wav.cc
 src/ui/gtk/ui_gtk1.cc
 src/ui/gtk/ui_gtk3.cc
 src/ui/gtk/ui_gtk4.cc

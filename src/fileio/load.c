@@ -2,7 +2,7 @@
  *  KCemu -- the KC 85/3 and KC 85/4 Emulator
  *  Copyright (C) 1997-2001 Torsten Paul
  *
- *  $Id: load.c,v 1.9 2002/02/12 17:24:14 torsten_paul Exp $
+ *  $Id: load.c,v 1.10 2002/10/31 00:48:52 torsten_paul Exp $
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -125,6 +125,7 @@ fileio_load_file(const char *filename, fileio_prop_t **prop)
               {
 	        /* printf("using %s.\n", loaders[a]->get_name()); */
                 ret = loaders[a]->load(filename, data, stat_buf.st_size, prop);
+		(*prop)->filetype = loaders[a]->get_type();
                 break;
               }
           }
@@ -160,6 +161,7 @@ fileio_get_image(fileio_prop_t *prop, unsigned char *buf)
       break;
     case FILEIO_TYPE_BAS:
     case FILEIO_TYPE_PROT_BAS:
+    case FILEIO_TYPE_MINTEX:
       a = 14;
       len = prop->size - 13;
       break;
@@ -256,7 +258,7 @@ fileio_debug_dump(fileio_prop_t *prop, int write_file)
         printf("%04x", ptr->start_addr);
       else
         printf(" -  ");
-      printf(" : %5ld bytes", ptr->size);
+      printf(" : %5ld bytes [%s]", ptr->size, ptr->filetype);
 
       if (write_file)
         {
@@ -281,4 +283,17 @@ fileio_debug_dump(fileio_prop_t *prop, int write_file)
       printf("\n");
     }
   printf("fileio: done.\n");
+}
+
+void
+fileio_show_config(void)
+{
+  int a;
+
+  printf("available fileio plugins:\n");
+  for (a = 0;a < MAX_FILE_LOADERS;a++)
+    {
+      if (loaders[a])
+	printf("  %s\n", loaders[a]->get_name());
+    }
 }

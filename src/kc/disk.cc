@@ -2,7 +2,7 @@
  *  KCemu -- the KC 85/3 and KC 85/4 Emulator
  *  Copyright (C) 1997-2001 Torsten Paul
  *
- *  $Id: disk.cc,v 1.4 2002/06/09 14:24:33 torsten_paul Exp $
+ *  $Id: disk.cc,v 1.5 2002/10/31 01:46:35 torsten_paul Exp $
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -188,7 +188,10 @@ Disk::attach(int disk_no, const char *filename, bool create = false)
 
       Floppy *floppy = fdc_fdc->get_floppy(disk_no);
       if (floppy != NULL)
-	floppy->attach(filename);
+	{
+	  if (!floppy->attach(filename))
+	    return DISK_ERROR;
+	}
     }
 
   return DISK_OK;
@@ -204,4 +207,6 @@ Disk::detach(int disk_no)
   Floppy *floppy = fdc_fdc->get_floppy(disk_no);
   if (floppy != NULL)
     floppy->attach(NULL);
+
+  return DISK_OK;
 }

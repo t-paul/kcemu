@@ -2,7 +2,7 @@
  *  KCemu -- the KC 85/3 and KC 85/4 Emulator
  *  Copyright (C) 1997-2001 Torsten Paul
  *
- *  $Id: memory1.h,v 1.3 2001/04/14 15:14:24 tp Exp $
+ *  $Id: memory1.h,v 1.4 2002/10/31 01:46:33 torsten_paul Exp $
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -33,11 +33,9 @@ private:
   byte_t _ram[0x4000];
   byte_t _irm[0x0800];
   byte_t _rom_os[0x1000];
-  byte_t _rom_basic[0x2800];
 
   MemAreaGroup *_m_scr;    /* scratch memory */
   MemAreaGroup *_m_ram;    /* RAM   0000h - 3fffh */
-  MemAreaGroup *_m_basic;  /* BASIC c000h - e7ffh */
   MemAreaGroup *_m_irm;    /* IRM   e800h - efffh */
   MemAreaGroup *_m_os;     /* OS    f000h - ffffh */
 

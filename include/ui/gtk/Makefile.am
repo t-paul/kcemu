@@ -17,10 +17,16 @@ EXTRA_DIST = \
 	about.h		\
 	color.h		\
 	module.h	\
+	keyboard.h	\
 	copying.h	\
 	window.h	\
 	fbrowse.h	\
 	dialog.h	\
 	image.h		\
 	hedit.h		\
-	gtkledline.h
+	wav.h		\
+	gtkledline.h	\
+	open.xpm	\
+	pause.xpm	\
+	play.xpm	\
+	stop.xpm

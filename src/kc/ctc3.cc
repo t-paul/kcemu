@@ -2,7 +2,7 @@
  *  KCemu -- the KC 85/3 and KC 85/4 Emulator
  *  Copyright (C) 1997-2001 Torsten Paul
  *
- *  $Id: ctc3.cc,v 1.9 2002/06/09 14:24:33 torsten_paul Exp $
+ *  $Id: ctc3.cc,v 1.10 2002/10/31 01:46:35 torsten_paul Exp $
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -58,6 +58,8 @@ CTC3::in(word_t addr)
     case 3:
       return c_in(3);
     }
+
+  return 0; // shouldn't be reached
 }
 
 void
@@ -86,12 +88,14 @@ CTC3::out(word_t addr, byte_t val)
 bool
 CTC3::irq_0(void)
 {
+  return false;
 }
 
 bool
 CTC3::irq_1(void)
 {
   tape->tape_signal();
+  return true;
 }
 
 bool
@@ -103,11 +107,14 @@ CTC3::irq_2(void)
     ui->flash(true);
   else
     ui->flash(false);
+
+  return true;
 }
 
 bool
 CTC3::irq_3(void)
 {
+  return false;
 }
 
 long

@@ -352,7 +352,6 @@ byte_t DebugZ80(_Z80 *R)
   {
     cout << endl << "[Command,'?']-> " << flush;
     fflush(stdout);fflush(stdin);
-    ui->processEvents();
     ui->update(true);
 
     fgets(S,50,stdin);
@@ -372,6 +371,7 @@ byte_t DebugZ80(_Z80 *R)
         puts("j <addr>       : Continue from addr");
 	puts("o <port> <val> : Write value to port");
 	puts("i <port>       : read value from port");
+	puts(", <addr> <val> : Write value to address");
         puts("m <addr>       : Memory dump at addr");
         puts("d <addr>       : Disassembly at addr");
 	puts("s              : Display internal state");
@@ -433,6 +433,20 @@ byte_t DebugZ80(_Z80 *R)
                  }
 		break;
 		
+      case ',':
+	if (strlen(S) >= 2) 
+	  {
+	    word_t addr, val;
+	    sscanf(S+1,"%hX %hX", &addr, &val);
+	    val &= 0xff;
+	    addr &= 0xffff;
+	    cout << "writing value 0x" << hex << setw(2) << setfill('0') << val
+		 << " to address 0x" << hex << setw(2) << setfill('0') << addr
+		 << endl;
+	    WrZ80(addr, val);
+	    return 1;
+	  }
+	break;
       case 'T':
 	{
 	  int x;

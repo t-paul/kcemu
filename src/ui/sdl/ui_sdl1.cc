@@ -2,7 +2,7 @@
  *  KCemu -- the KC 85/3 and KC 85/4 Emulator
  *  Copyright (C) 1997-2001 Torsten Paul
  *
- *  $Id: ui_sdl1.cc,v 1.1 2002/06/09 14:24:34 torsten_paul Exp $
+ *  $Id: ui_sdl1.cc,v 1.2 2002/10/31 01:16:25 torsten_paul Exp $
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -28,6 +28,8 @@
 UI_SDL1::UI_SDL1(void)
 {
   reset();
+  sdl_init(get_width(), get_height(), get_title());
+  allocate_colors(0.4, 0.5, 0.8, 0.6, 0.1, 0.9);
 }
 
 UI_SDL1::~UI_SDL1(void)
@@ -65,11 +67,6 @@ UI_SDL1::update(bool full_update = false, bool clear_cache = false)
 }
 
 void
-UI_SDL1::memWrite(int addr, char val)
-{
-}
-
-void
 UI_SDL1::callback(void *data)
 {
   z80->addCallback(35000, this, 0);
@@ -104,16 +101,4 @@ void
 UI_SDL1::reset(bool power_on = false)
 {
   z80->addCallback(35000, this, 0);
-}
-
-void
-UI_SDL1::processEvents()
-{
-}
-
-void
-UI_SDL1::init(int *, char ***)
-{
-  sdl_init(get_width(), get_height(), get_title());
-  allocate_colors(0.4, 0.5, 0.8, 0.6, 0.1, 0.9);
 }

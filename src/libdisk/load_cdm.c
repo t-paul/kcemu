@@ -2,7 +2,7 @@
  *  KCemu -- the KC 85/3 and KC 85/4 Emulator
  *  Copyright (C) 1997-2001 Torsten Paul
  *
- *  $Id: load_cdm.c,v 1.1 2002/01/06 12:53:40 torsten_paul Exp $
+ *  $Id: load_cdm.c,v 1.2 2002/10/31 00:51:53 torsten_paul Exp $
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -29,6 +29,8 @@
  */
 
 #include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
 
 #include "libdisk/libdiskP.h"
 

@@ -141,4 +141,7 @@ byte DebugZ80(register _Z80 *R);
 /************************************ TO BE WRITTEN BY USER **/
 word LoopZ80(register _Z80 *R);
 
+/** return value for LD A,R **/
+byte LdRZ80(void);
+
 #endif /* Z80_H */

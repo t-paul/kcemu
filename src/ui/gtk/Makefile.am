@@ -23,6 +23,7 @@ libui_gtk_a_SOURCES = \
 	ui_gtk3.cc	\
 	ui_gtk4.cc	\
 	ui_gtk8.cc	\
+	cmd.cc		\
 	window.cc	\
 	disk.cc		\
 	tape.cc		\
@@ -31,11 +32,13 @@ libui_gtk_a_SOURCES = \
 	about.cc	\
 	color.cc	\
 	module.cc	\
+	keyboard.cc	\
 	debug.cc	\
 	copying.cc	\
 	fbrowse.cc	\
 	dialog.cc	\
 	image.cc	\
+	wav.cc		\
 	hedit.cc
 
 kcemu_remote_SOURCES = \

@@ -9,7 +9,7 @@
 int
 main(void)
 {
-  int s, fd, ret;
+  int s, ret;
   char buf[1024];
   int len;
   struct sockaddr_un unix_addr;

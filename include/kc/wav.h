@@ -2,7 +2,7 @@
  *  KCemu -- the KC 85/3 and KC 85/4 Emulator
  *  Copyright (C) 1997-2001 Torsten Paul
  *
- *  $Id: wav.h,v 1.3 2002/06/09 14:24:32 torsten_paul Exp $
+ *  $Id: wav.h,v 1.4 2002/10/31 01:46:33 torsten_paul Exp $
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -30,24 +30,50 @@
 
 #include "cmd/cmd.h"
 
+#include "libaudio/libaudio.h"
+
 class WavPlayer : public Callback
 {
  private:
+  enum {
+    FILTER_SIZE = 100,
+  };
+
+ private:
   CMD *_cmd;
-  istream *_is;
+  libaudio_prop_t *_prop;
+
+  bool _stopped;
+
   int _val;
   int _th_low;
   int _th_high;
-  int _audio_fd;
-  int _fmt_mask;
-  
- public:
-  WavPlayer(void);
-  virtual ~WavPlayer(void);
+  int _sample_freq;
+  int _sample_size;
+  int _channels;
+  int _bit_0;
+  int _bit_1;
+  int _bit_s;
 
-  virtual void play(istream *is);
-  virtual void record();
+  int   _eof;
+  float _kernel[FILTER_SIZE + 1];
+  int   _buf[FILTER_SIZE + 1];
+
+  CMD_Args _info_args;
+
+ protected:
+  int get_y(float value);
+  void init_filter_kernel(void);
+
+ public:
+  WavPlayer(int bit_0, int bit_1, int bit_s);
+  virtual ~WavPlayer(void);
+  
+  virtual bool open(const char *filename);
+  virtual bool play(void);
   virtual void stop(void);
+  virtual void close(void);
+  virtual void record(void);
   
   virtual void callback(void *data);
   virtual void do_play(void);

@@ -2,7 +2,7 @@
  *  KCemu -- the KC 85/3 and KC 85/4 Emulator
  *  Copyright (C) 1997-2001 Torsten Paul
  *
- *  $Id: ctc.cc,v 1.22 2002/06/09 14:24:33 torsten_paul Exp $
+ *  $Id: ctc.cc,v 1.23 2002/10/31 01:46:35 torsten_paul Exp $
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -180,7 +180,6 @@ CTC::try_trigger_irq(int channel)
 void
 CTC::callback(void *data)
 {
-  long tmp;
   bool cont;
   long val = (long)data;
   byte_t c = val & 3;
@@ -289,8 +288,6 @@ CTC::c_in(byte_t c)
 void
 CTC::c_out(byte_t channel, byte_t val)
 {
-  long tmp;
-
   if ((_control[channel] & CONSTANT) == CONSTANT_LOAD)
     {
       _control[channel] &= ~(CONSTANT | RESET);

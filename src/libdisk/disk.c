@@ -2,7 +2,7 @@
  *  KCemu -- the KC 85/3 and KC 85/4 Emulator
  *  Copyright (C) 1997-2001 Torsten Paul
  *
- *  $Id: disk.c,v 1.1 2002/01/06 12:53:40 torsten_paul Exp $
+ *  $Id: disk.c,v 1.2 2002/10/31 00:51:53 torsten_paul Exp $
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -80,7 +80,7 @@ libdisk_open(libdisk_prop_t **prop, const char *path)
 
       if (loaders[a]->open(*prop, path) == 0)
 	{
-	  printf("loader: %s\n", loaders[a]->get_name());
+	  //printf("loader: %s\n", loaders[a]->get_name());
 	  return 0;
 	}
     }
@@ -91,6 +91,7 @@ libdisk_open(libdisk_prop_t **prop, const char *path)
 void
 libdisk_close(libdisk_prop_t **prop)
 {
+  // FIXME: not yet implemented
 }
 
 int
@@ -139,4 +140,17 @@ libdisk_write_sector(libdisk_prop_t **prop, unsigned char *buf, int len)
       return p->loader->write_sector(p, buf, len);
   
   return 0;  
+}
+
+void
+libdisk_show_config(void)
+{
+  int a;
+
+  printf("available libdisk plugins:\n");
+  for (a = 0;a < MAX_DISK_LOADERS;a++)
+    {
+      if (loaders[a])
+	printf("  %s\n", loaders[a]->get_name());
+    }
 }

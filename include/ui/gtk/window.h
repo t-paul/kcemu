@@ -2,7 +2,7 @@
  *  KCemu -- the KC 85/3 and KC 85/4 Emulator
  *  Copyright (C) 1997-2001 Torsten Paul
  *
- *  $Id: window.h,v 1.3 2001/04/14 15:15:38 tp Exp $
+ *  $Id: window.h,v 1.4 2002/10/31 01:38:07 torsten_paul Exp $
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -39,6 +39,8 @@ class UI_Gtk_Window : public UI_Window
   void show(void);
   void hide(void);
   void toggle(void);
+
+  bool is_visible(void);
 };
 
 #endif /* __ui_gtk_window_h */

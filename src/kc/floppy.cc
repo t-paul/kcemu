@@ -2,7 +2,7 @@
  *  KCemu -- the KC 85/3 and KC 85/4 Emulator
  *  Copyright (C) 1997-2001 Torsten Paul
  *
- *  $Id: floppy.cc,v 1.6 2002/06/09 14:24:33 torsten_paul Exp $
+ *  $Id: floppy.cc,v 1.7 2002/10/31 01:46:35 torsten_paul Exp $
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -104,15 +104,22 @@ Floppy::get_sectors_per_cylinder(void)
   return _disk_prop->sectors_per_cylinder;
 }
 
-void
+bool
 Floppy::attach(const char *filename)
 {
+  if (filename == NULL)
+    {
+      libdisk_close(&_disk_prop);
+      return true;
+    }
+
   if (libdisk_open(&_disk_prop, filename) < 0)
     {
-      cerr << "Can't attach disk-image '" << filename << "'!" << endl;
-      return;
+      //cerr << "Can't attach disk-image '" << filename << "'!" << endl;
+      return false;
     }
-  cerr << "Attached disk-image '" << filename << "'" << endl;
+  //cerr << "Attached disk-image '" << filename << "'" << endl;
+  return true;
 }
 
 bool

@@ -2,7 +2,7 @@
  *  KCemu -- the KC 85/3 and KC 85/4 Emulator
  *  Copyright (C) 1997-2001 Torsten Paul
  *
- *  $Id: memory.cc,v 1.15 2002/06/09 14:24:33 torsten_paul Exp $
+ *  $Id: memory.cc,v 1.16 2002/10/31 01:46:35 torsten_paul Exp $
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -159,7 +159,6 @@ MemAreaGroup::add(MemAreaPtr *area_ptr[])
 void
 MemAreaGroup::remove(MemAreaPtr *area_ptr[])
 {
-  int a;
   word_t addr;
   mem_area_list_t::iterator it;
 
@@ -215,31 +214,33 @@ MemAreaPtr::info(void)
 byte_t *
 MemAreaPtr::get_read_ptr_p(void)
 {
-  MemArea *area; 
-  
   for (mem_area_list_t::iterator it = _l.begin();it != _l.end();it++)
     if ((*it)->is_active())
       return (*it)->get_read_ptr();
+
   return 0;
 }
 
 byte_t *
 MemAreaPtr::get_write_ptr_p(void)
 {
-  MemArea *area; 
-  
   for (mem_area_list_t::iterator it = _l.begin();it != _l.end();it++)
     if ((*it)->is_active())
       return (*it)->get_write_ptr();
+
   return 0;
 }
 
 Memory::Memory(void) : InterfaceCircuit("Memory")
 {
-  int a;
-  
-  for (a = 0;a < MemArea::PAGES;a++)
+  for (int a = 0;a < MemArea::PAGES;a++)
     _mem_ptr[a] = new MemAreaPtr();            
+}
+
+Memory::~Memory(void)
+{
+  for (int a = 0;a < MemArea::PAGES;a++)
+    delete _mem_ptr[a];
 }
 
 void
@@ -319,8 +320,6 @@ Memory::loadRAM(istream *is, bool with_block_nr)
   a = 0;
   if ((ptr[0] == 0xd3) && (ptr[1] == 0xd3) && (ptr[2] == 0xd3))
     {
-      extern int __kc_type; /* FIXME: BASIC */
-
       load_addr = 0x0401;
       end_addr = load_addr + (ptr[11] | (ptr[12] << 8));
       switch (get_kc_type())
@@ -340,6 +339,8 @@ Memory::loadRAM(istream *is, bool with_block_nr)
           memWrite8(0x03da, end_addr >> 8);
           memWrite8(0x03db, end_addr & 0xff);
           memWrite8(0x03dc, end_addr >> 8);
+	  break;
+	default:
 	  break;
         }
 

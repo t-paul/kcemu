@@ -2,7 +2,7 @@
  *  KCemu -- the KC 85/3 and KC 85/4 Emulator
  *  Copyright (C) 1997-2001 Torsten Paul
  *
- *  $Id: load.h,v 1.5 2002/02/12 17:24:14 torsten_paul Exp $
+ *  $Id: load.h,v 1.6 2002/10/31 00:48:49 torsten_paul Exp $
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -58,6 +58,7 @@ typedef struct fileio_prop
   unsigned short start_addr;
   int            autostart;
   long           size;
+  const char     *filetype;
   unsigned char  *data;
   struct fileio_prop *next;
 } fileio_prop_t;
@@ -83,6 +84,30 @@ fileio_kctype_t fileio_get_kctype(void);
 int             fileio_load_file(const char *filename, fileio_prop_t **prop);
 
 /*
+ *  save file in wav format
+ */
+int             fileio_save_wav_prop(const char *filename, fileio_prop_t *prop);
+int             fileio_save_wav(const char *filename, const unsigned char *data, int size);
+
+/*
+ *  save file in tap format
+ */
+int             fileio_save_tap_prop(const char *filename, fileio_prop_t *prop);
+int             fileio_save_tap(const char *filename, const unsigned char *data, int size);
+
+/*
+ *  save file in image format
+ */
+int             fileio_save_img_prop(const char *filename, fileio_prop_t *prop);
+int             fileio_save_img(const char *filename, const unsigned char *data, int size);
+
+/*
+ *  save file in raw format (memory dump)
+ */
+int             fileio_save_raw_prop(const char *filename, fileio_prop_t *prop);
+int             fileio_save_raw(const char *filename, const unsigned char *data, int size, int load, int start);
+
+/*
  *  free loaded files and the associated property data
  */
 void            fileio_free_prop(fileio_prop_t **prop);
@@ -95,6 +120,11 @@ void            fileio_free_prop(fileio_prop_t **prop);
  *  is guarantied to be slightly more than needed
  */
 long            fileio_get_image(fileio_prop_t *prop, unsigned char *buf);
+
+/*
+ *  dump configuration to stdout
+ */    
+void            fileio_show_config(void);
 
 /*
  *  only for DEBUG

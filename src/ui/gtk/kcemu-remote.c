@@ -2,7 +2,7 @@
  *  KCemu -- the KC 85/3 and KC 85/4 Emulator
  *  Copyright (C) 1997-2001 Torsten Paul
  *
- *  $Id: kcemu-remote.c,v 1.2 2001/04/14 15:17:00 tp Exp $
+ *  $Id: kcemu-remote.c,v 1.3 2002/10/31 01:38:12 torsten_paul Exp $
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -20,18 +20,17 @@
  */
 
 #include <stdio.h>
+#include <stdlib.h>
 
 #include <X11/Xlib.h>
 #include <X11/Xatom.h>
 #include <X11/Xmu/WinUtil.h>
 
-static Window root;
-
 void
 send(Display *disp, const char *cmd, int len)
 {
   Atom atom, type_ret;
-  int a, b, format_ret;
+  int a, format_ret;
   unsigned char *prop_ret;
   unsigned int nchildren_ret;
   unsigned long nitems_ret, bytes_after_ret;
@@ -55,7 +54,7 @@ send(Display *disp, const char *cmd, int len)
                          &prop_ret);
       if (type_ret == None)
         continue;
-      printf("property found! on window %x -> %s\n", w, prop_ret);
+      printf("property found! on window %x -> %s\n", (unsigned int)w, prop_ret);
       XChangeProperty(disp, w,
                       atom, XA_STRING, 8, PropModeReplace,
                       cmd, len);

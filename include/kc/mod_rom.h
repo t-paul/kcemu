@@ -2,7 +2,7 @@
  *  KCemu -- the KC 85/3 and KC 85/4 Emulator
  *  Copyright (C) 1997-2001 Torsten Paul
  *
- *  $Id: mod_rom.h,v 1.4 2001/04/14 15:14:33 tp Exp $
+ *  $Id: mod_rom.h,v 1.5 2002/10/31 01:46:33 torsten_paul Exp $
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -28,7 +28,6 @@
 class ModuleROM : public ModuleInterface
 {
 protected:
-  bool _ok;
   byte_t _id;
   byte_t _val;
   word_t _addr;

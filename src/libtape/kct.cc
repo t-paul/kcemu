@@ -2,7 +2,7 @@
  *  KCemu -- the KC 85/3 and KC 85/4 Emulator
  *  Copyright (C) 1997-2001 Torsten Paul
  *
- *  $Id: kct.cc,v 1.14 2002/06/09 14:24:34 torsten_paul Exp $
+ *  $Id: kct.cc,v 1.16 2002/10/31 01:26:47 torsten_paul Exp $
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -98,13 +98,13 @@ KCTFile::header_read(kct_header_t &header, unsigned long offset)
   _f->seekp(offset);
   if (_f->fail())
     {
-      cerr << "KCTFile::header_read(): seek error" << endl;
+      //cerr << "KCTFile::header_read(): seek error" << endl;
       return false;
     }
   _f->read((char *)&header, sizeof(kct_header_t));
   if (_f->fail())
     {
-      cerr << "KCTFile::header_read(): read error" << endl;
+      //cerr << "KCTFile::header_read(): read error" << endl;
       return false;
     }
   if (strcmp("KCemu tape file\032", header.id) != 0) return false;
@@ -471,6 +471,7 @@ KCTFile::list(void)
 {
   int com;
   char *type;
+  float ratio;
   unsigned long count, c_total, u_total;
 
   count = 0;
@@ -535,12 +536,17 @@ KCTFile::list(void)
       c_total += (*it)->compressed_size;
       u_total += (*it)->uncompressed_size;
     }
+
+  ratio = 0;
+  if (u_total != 0)
+    ratio = (100.0 * c_total) / u_total;
+
   cout << "--------------------------------------------------------------------------"
        << endl
        << "files: " << dec << count << ", compressed size: "
        << c_total << ", uncompressed size: "
        << u_total << ", ratio: "
-       << setprecision(3) << ((100.0 * c_total) / u_total) << "%"
+       << setprecision(3) << ratio << "%"
        << endl
        << "--------------------------------------------------------------------------"
        << endl;
@@ -576,18 +582,24 @@ int
 KCTFile::translate_index(int idx)
 {
   int _idx;
-  int a, b;
+  unsigned int a, b;
 
   _idx = 0;
   for (a = 0;a < DIR_BLOCKS;a++)
     {
       for (b = 0;b < 4;b++)
         {
-          if (_header.offset[a] & (1 << b)) idx--;
-          if (idx < 0) return _idx;
+          if (_header.offset[a] & (1 << b))
+	    idx--;
+
+          if (idx < 0)
+	    return _idx;
+
 	  _idx++;
         }
     }
+
+  return -1;
 }
 
 istream *
@@ -882,8 +894,8 @@ KCTFile::rename(const char *name, const char *to)
   idx = find_entry(name);
   if (idx < 0)
     return KCT_ERROR_NOENT;
-
-  rename(idx, to);
+  
+  return rename(idx, to);
 }
 
 const char *

@@ -2,7 +2,7 @@
  *  KCemu -- the KC 85/3 and KC 85/4 Emulator
  *  Copyright (C) 1997-2001 Torsten Paul
  *
- *  $Id: dialog.cc,v 1.5 2002/06/09 14:24:34 torsten_paul Exp $
+ *  $Id: dialog.cc,v 1.6 2002/10/31 01:38:12 torsten_paul Exp $
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -41,7 +41,6 @@ DialogWindow::execute(CMD_Args *args, CMD_Context context)
   const char *text_arg;
   const char *text_val;
   const char *text_arg_val;
-  const char *filename;
 
   _args = args;
   text = NULL;

@@ -2,7 +2,7 @@
  *  KCemu -- the KC 85/3 and KC 85/4 Emulator
  *  Copyright (C) 1997-2001 Torsten Paul
  *
- *  $Id: pio.cc,v 1.16 2002/06/09 14:24:33 torsten_paul Exp $
+ *  $Id: pio.cc,v 1.17 2002/10/31 01:46:35 torsten_paul Exp $
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -336,7 +336,9 @@ void
 PIO::set_EXT(int port, byte_t mask, byte_t val)
 {
   byte_t old;
+#if 0
   char p = "AB"[port];
+#endif
 
   if (_irq_active[port] )
     {
@@ -452,14 +454,14 @@ PIO::reti(void)
 void
 PIO::strobe_A(void)
 {
-  _strobe[A] = 1;
+  //_strobe[A] = 1; this blocks the keyboard when the tape loader is active
   trigger_irq(A);
 }
 
 void
 PIO::strobe_B(void)
 {
-  _strobe[B] = 1;
+  //_strobe[B] = 1;
   trigger_irq(B);
 }
 

@@ -2,7 +2,7 @@
  *  KCemu -- the KC 85/3 and KC 85/4 Emulator
  *  Copyright (C) 1997-2001 Torsten Paul
  *
- *  $Id: kc.cc,v 1.30 2002/06/09 14:24:33 torsten_paul Exp $
+ *  $Id: kc.cc,v 1.32 2002/10/31 01:46:35 torsten_paul Exp $
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -66,12 +66,14 @@
 #include "cmd/cmd.h"
 #include "fileio/load.h"
 #include "libdisk/libdisk.h"
+#include "libaudio/libaudio.h"
 
 #include "kc/pio1.h"
 #include "kc/ctc1.h"
-#include "kc/ports1.h"
-#include "kc/memory1.h"
 #include "kc/keyb1.h"
+#include "kc/timer1.h"
+#include "kc/memory1.h"
+#include "kc/memory7.h"
 
 #include "kc/pio2.h"
 #include "kc/memory2.h"
@@ -79,7 +81,7 @@
 #include "kc/pio3.h"
 #include "kc/ctc3.h"
 #include "kc/keyb3.h"
-#include "kc/ports3.h"
+#include "kc/timer3.h"
 #include "kc/sound3.h"
 #include "kc/memory3.h"
 
@@ -138,12 +140,12 @@ PIO        *pio;
 PIO        *pio2;
 Tape       *tape;
 Disk       *disk;
-//WavPlayer  *wav;
 Timer      *timer;
 Keyboard   *keyboard;
 ModuleList *module_list;
 CMD        *cmd;
 Sound      *sound;
+WavPlayer  *wav;
 
 Z80_FDC         *fdc_z80;
 FloppyIO        *fdc_io;
@@ -154,6 +156,7 @@ CTC             *fdc_ctc;
 
 
 int   kcemu_ui_scale;
+int   kcemu_ui_debug;
 char *kcemu_datadir;
 char *kcemu_localedir;
 char *kcemu_tape;
@@ -179,21 +182,36 @@ usage(char *argv0)
 	    "This is free software, and you are welcome to redistribute it\n"
 	    "under certain conditions; run `kcemu --license' for details.\n"
 	    "\n"
-	    "usage: kcemu [-123478sthdlLW]\n"
+	    "usage: kcemu [-123478sthdlvLW]\n"
+	    "\n"
 	    "  -1:             run in Z9001 / KC 85/1 mode\n"
 	    "  -2:             run in KC 85/2 mode\n"
 	    "  -3:             run in KC 85/3 mode\n"
 	    "  -4:             run in KC 85/4 mode (default)\n"
 	    "  -7:             run in KC 87 mode (= KC 85/1 with color expansion)\n"
 	    "  -8:             run in LC 80 mode\n"
-	    "  -s --scale:     scale display (only values 1 and 2 allowed)\n"
+	    "  -s --scale:     scale display (allowed values: 1, 2 and 3)\n"
 	    "  -t --tape:      attach tape on startup\n"
 	    "  -h --help:      display help\n"
 	    "  -d --datadir:   set data directory (for ROM images)\n"
 	    "  -l --localedir: set locale directory\n"
+	    "  -v --version:   show KCemu version and configuration\n"
 	    "  -L --license:   show license\n"
 	    "  -W --warranty:  show warranty\n");
 
+  exit(0);
+}
+
+static void
+show_version(char *argv0)
+{
+  banner();
+  cout << endl;
+  fileio_show_config();
+  cout << endl;
+  libdisk_show_config();
+  cout << endl;
+  libaudio_show_config();
   exit(0);
 }
 
@@ -601,12 +619,12 @@ main(int argc, char **argv)
     { "localedir", 1, 0, 'l' },
     { "license", 0, 0, 'L' },
     { "warranty", 0, 0, 'W' },
+    { "version", 0, 0, 'v' },
     { 0, 0, 0, 0 }
   };
 #endif /* HAVE_GETOPT_LONG */
-  PortGroup *portg;
-  PortInterface *porti;
-  Keyboard8 *k8;
+  PortGroup *portg = NULL;
+  PortInterface *porti = NULL;
   LOG *log;
 
 #ifdef __CALL_MTRACE
@@ -631,6 +649,7 @@ main(int argc, char **argv)
 
   kcemu_tape = 0;
   kcemu_ui_scale = 0;
+  kcemu_ui_debug = 0;
   ptr = getenv("KCEMU_DATADIR");
   kcemu_datadir = (ptr) ? strdup(ptr) : strdup(DATADIR);
   ptr = getenv("KCEMU_LOCALEDIR");
@@ -644,15 +663,19 @@ main(int argc, char **argv)
   textdomain(PACKAGE);
 #endif /* ENABLE_NLS */
 
+  fileio_init();
+  libdisk_init();
+  libaudio_init(LIBAUDIO_TYPE_ALL);
+
   type = 0;
   while (1)
     {
 #ifdef HAVE_GETOPT_LONG
-      c = getopt_long(argc, argv, "123478hd:l:s:t:LW",
+      c = getopt_long(argc, argv, "123478hvd:l:s:t:LW",
                       long_options, &option_index);
 #else
 #ifdef HAVE_GETOPT
-      c = getopt(argc, argv, "123478hd:l:s:LW");
+      c = getopt(argc, argv, "123478hvd:l:s:LW");
 #else
 #warning neither HAVE_GETOPT_LONG nor HAVE_GETOPT defined
 #warning commandline parsing disabled!
@@ -702,6 +725,9 @@ main(int argc, char **argv)
 	case 'W':
 	  warranty(argv[0]);
 	  break;
+	case 'v':
+	  show_version(argv[0]);
+	  break;
         case ':':
         case '?':
         case 'h':
@@ -717,9 +743,6 @@ main(int argc, char **argv)
 #ifdef PROFILE_WINDOW
   cout << "DEBUG: PROFILE_WINDOW" << endl;
 #endif /* PROFILE_WINDOW */
-
-  fileio_init();
-  libdisk_init();
 
   RC::init();
 
@@ -747,8 +770,13 @@ main(int argc, char **argv)
   
   if (kcemu_ui_scale < 1)
     kcemu_ui_scale = 1;
-  if (kcemu_ui_scale > 2)
-    kcemu_ui_scale = 2;
+  if (kcemu_ui_scale > 3)
+    kcemu_ui_scale = 3;
+
+  /*
+   *  check display debug
+   */
+  kcemu_ui_debug = RC::instance()->get_int("Display Debug", 0);
 
   do
     {
@@ -763,17 +791,26 @@ main(int argc, char **argv)
       PIO4 *p4;
       PIO8_1 *p8;
       Keyboard1 *k1;
+      Keyboard8 *k8;
+
+      timer = NULL;
+      memory = NULL;
 
       switch (kcemu_kc_type)
 	{
 	case KC_TYPE_87:
+	  memory   = new Memory7;
+	  /* fall through */
 	case KC_TYPE_85_1:
+	  if (memory == NULL)
+	    memory   = new Memory1;
+
 	  fileio_set_kctype(FILEIO_KC85_1);
-	  memory   = new Memory1;
 	  ui       = new UI_1;
 	  ctc      = new CTC1;
 	  pio2     = new PIO1_2;
 	  tape     = new Tape(500, 1000, 2000, 0);
+	  wav      = new WavPlayer(500, 1000, 2000);
 	  disk     = NULL;
 
 	  p1 = new PIO1_1;
@@ -790,10 +827,10 @@ main(int argc, char **argv)
 	case KC_TYPE_85_2:
 	  memory   = new Memory2;
 	  ui       = new UI_3;
-	  porti    = new Ports3;
 	  
 	  ctc      = new CTC3;
 	  tape     = new Tape(364, 729, 1458, 1);
+	  wav      = new WavPlayer(364, 729, 1458);
 	  keyboard = new Keyboard3;
 	  p2       = new PIO2;
 	  tape->set_tape_callback(p2);
@@ -802,11 +839,11 @@ main(int argc, char **argv)
 	case KC_TYPE_85_3:
 	  memory   = new Memory3;
 	  ui       = new UI_3;
-	  porti    = new Ports3;
 	  
 	  p3       = new PIO3;
 	  ctc      = new CTC3;
 	  tape     = new Tape(364, 729, 1458, 1);
+	  wav      = new WavPlayer(364, 729, 1458);
 	  keyboard = new Keyboard3;
 	  tape->set_tape_callback(p3);
 	  pio = p3;
@@ -818,6 +855,7 @@ main(int argc, char **argv)
 	  p4       = new PIO4;
 	  ctc      = new CTC3;
 	  tape     = new Tape(364, 729, 1458, 1);
+	  wav      = new WavPlayer(364, 729, 1458);
 	  keyboard = new Keyboard3;
 	  tape->set_tape_callback(p4);
 	  pio      = p4;
@@ -829,6 +867,7 @@ main(int argc, char **argv)
 	  pio2     = new PIO8_2;
 	  ctc      = new CTC8;
 	  tape     = new Tape(500, 1000, 2000, 0);
+	  wav      = new WavPlayer(500, 1000, 2000);
 	  disk     = NULL;
 
 	  k8       = new Keyboard8;
@@ -838,10 +877,10 @@ main(int argc, char **argv)
 	  keyboard = k8;
 	  pio = p8;
 	  break;
+	default:
+	  break;
 	}
 
-      // wav         = new WavPlayer;
-      timer       = new Timer;
       module      = new Module;
       module_list = new ModuleList;
       
@@ -849,6 +888,8 @@ main(int argc, char **argv)
 	{
 	case KC_TYPE_87:
 	case KC_TYPE_85_1:
+	  timer = new Timer1;
+
 	  portg = ports->register_ports("CTC",  0x80, 4, ctc,  10);
 	  portg = ports->register_ports("PIO1", 0x88, 4, pio,  10);
 	  portg = ports->register_ports("PIO2", 0x90, 4, pio2, 10);
@@ -864,6 +905,7 @@ main(int argc, char **argv)
 	  break;
 	case KC_TYPE_85_2:
 	case KC_TYPE_85_3:
+	  timer = new Timer3;
 	  sound = new Sound3;
 	  if (RC::instance()->get_int("Enable Sound"))
 	    sound->init();
@@ -881,6 +923,7 @@ main(int argc, char **argv)
           z80->daisy_chain_set_last(ctc->get_last());  // lowest priority
 	  break;
 	case KC_TYPE_85_4:
+	  timer = new Timer3;
 	  sound = new Sound3;
 	  if (RC::instance()->get_int("Enable Sound"))
 	    sound->init();
@@ -916,6 +959,8 @@ main(int argc, char **argv)
           ctc->iei(1);
           z80->daisy_chain_set_first(pio->get_first()); // highest priority
           z80->daisy_chain_set_last(pio->get_last());  // lowest priority
+	  break;
+	default:
 	  break;
 	}
 
@@ -974,12 +1019,15 @@ main(int argc, char **argv)
 
       do_quit = z80->run();
       
-      // delete porti;
+      if (porti != NULL)
+	delete porti;
+
+      if (timer != NULL)
+	delete timer;
       
       delete module_list;
       delete module;
       delete keyboard;
-      delete timer;
       delete tape;
       delete disk;
       delete pio;
@@ -990,6 +1038,8 @@ main(int argc, char **argv)
       delete z80;
     }
   while (0); // (!do_quit);
+
+  RC::done();
       
   free(kcemu_datadir);
   free(kcemu_localedir);
