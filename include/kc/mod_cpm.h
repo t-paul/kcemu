@@ -31,6 +31,7 @@ class ModuleCPMZ9 : public ModuleInterface, public PortInterface
 private:
   PortGroup *_portg1;
   PortGroup *_portg2;
+  PortGroup *_portgX;
   
 public:
   ModuleCPMZ9(ModuleCPMZ9 &tmpl);

@@ -28,7 +28,12 @@
 
 typedef enum
 {
-  KC_MODULE_ALL, KC_MODULE_KC_85_1, KC_MODULE_KC_85_3, KC_MODULE_LC_80,
+  KC_MODULE_ALL,
+  KC_MODULE_KC_85_1,
+  KC_MODULE_KC_85_3,
+  KC_MODULE_LC_80,
+  KC_MODULE_Z1013,
+  KC_MODULE_A5105,
 } mod_type_t;
 
 class ModuleInterface

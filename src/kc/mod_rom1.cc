@@ -99,9 +99,6 @@ ModuleROM1::ModuleROM1(const char *filename,
 
 ModuleROM1::~ModuleROM1(void)
 {
-  if (_group)
-    memory->unregister_memory(_group);
-
   /*
    * FIXME: make common base class for Memory1 and Memory7
    */
@@ -118,6 +115,9 @@ ModuleROM1::~ModuleROM1(void)
 	break;
       default: break;
       }
+
+  if (_group)
+    memory->unregister_memory(_group);
 
   delete[] _rom;
 }

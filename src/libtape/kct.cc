@@ -86,9 +86,10 @@ KCTFile::type_name(kct_file_type_t type)
     {
     case KCT_TYPE_COM:    return "COM";
     case KCT_TYPE_BAS:    return "BASIC";
-    case KCT_TYPE_DATA  : return "DATA";
-    case KCT_TYPE_LIST  : return "LIST";
+    case KCT_TYPE_DATA:   return "DATA";
+    case KCT_TYPE_LIST:   return "LIST";
     case KCT_TYPE_BAS_P:  return "BASIC*";
+    case KCT_TYPE_BIN:    return "BIN";
     }
   return "???";
 }
@@ -99,7 +100,7 @@ KCTFile::type_name(kct_file_type_t type)
 bool
 KCTFile::header_read(kct_header_t &header, unsigned long offset)
 {
-  _f->seekp(offset);
+  _f->seekg(offset);
   if (_f->fail())
     {
       //cerr << "KCTFile::header_read(): seek error" << endl;
@@ -205,7 +206,7 @@ KCTFile::bam_block_find_free(kct_bam_t &bam)
 void
 KCTFile::bam_read(kct_bam_t &bam, unsigned long offset)
 {
-  _f->seekp(offset);
+  _f->seekg(offset);
   if (_f->fail())
     {
       cerr << "KCTFile::bam_read(): seek error" << endl;
@@ -254,7 +255,7 @@ KCTFile::dirblock_read(kct_dirblock_t &dirblock, unsigned long offset)
 {
   unsigned long o = offset & DIRBLOCK_OFFSET_MASK;
   
-  _f->seekp(o);
+  _f->seekg(o);
   if (_f->fail())
     {
       cerr << "KCTFile::dirblock_read(): seek error" << endl;
@@ -386,7 +387,22 @@ KCTFile::create(const char *filename)
 
   if (access(filename, F_OK) == 0)
     return KCT_ERROR_EXIST;
+  
+  /*
+   *  create file; fails with gcc-3.2 when including ios::in :-(
+   */
+  _f = new fstream(filename, ios::out | ios::binary | ios::trunc);
+  if (_f->fail())
+    {
+      delete _f;
+      _f = 0;
+      return KCT_ERROR_IO;
+    }
+  _f->close();
 
+  /*
+   *  reopen with in/out
+   */
   _f = new fstream(filename, ios::in | ios::out | ios::binary);
   if (_f->fail())
     {
@@ -427,8 +443,6 @@ KCTFile::create(const char *filename)
 kct_error_t
 KCTFile::open(const char *filename)
 {
-#warning no ios::noreplace with gcc-3.0.x ???
-
   close();
 
   if (access(filename, R_OK | W_OK) == 0)
@@ -509,6 +523,7 @@ KCTFile::list(void)
 	case KCT_TYPE_LIST:   type = "LIST"; break;
 	case KCT_TYPE_BAS:    type = "BAS";  break;
 	case KCT_TYPE_BAS_P:  type = "PBAS"; break;
+	case KCT_TYPE_BIN:    type = "BIN";  break;
 	default:              type = "???";  break;
 	}
 
@@ -639,7 +654,7 @@ KCTFile::read(int idx, kct_file_props_t *props)
   offset = _dirblock[idx].offset;
   while (offset != 0)
     {
-      _f->seekp(offset);
+      _f->seekg(offset);
       _f->read((char *)&data, BLOCK_SIZE);
       memcpy(ptr, &data.data, 252);
       ptr += 252;
@@ -819,7 +834,7 @@ KCTFile::remove(int idx)
   while (offset != 0)
     {
       bam_block_free(_bam, offset / BLOCK_SIZE);
-      _f->seekp(offset);
+      _f->seekg(offset);
       _f->read((char *)&data, BLOCK_SIZE);
       offset = data.link;
     }

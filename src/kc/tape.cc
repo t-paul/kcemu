@@ -58,6 +58,7 @@ public:
 
   void execute(CMD_Args *args, CMD_Context context)
     {
+      bool ret;
       istream *is;
       const char *name, *shortname;
       char buf[100]; /* FIXME: */
@@ -77,22 +78,60 @@ public:
           is = _t->read(name, &props);
           if (!is)
             return;
-	  
-          if (memory->loadRAM(is, true))
-            {
-              shortname = strrchr(name, '/');
-              if (shortname)
-                shortname++;
-              else
-                shortname = name;
-              sprintf(buf, _("File `%s' loaded."), shortname);
-              Status::instance()->setMessage(buf);
-              if (context == 1)
+
+	  if (get_kc_type() == KC_TYPE_Z1013)
+	    ret = memory->loadRAM_Z1013(is, props.load_addr);
+	  else
+	    ret = memory->loadRAM(is, true);
+
+          if (!ret)
+	    break;
+
+	  shortname = strrchr(name, '/');
+	  if (shortname)
+	    shortname++;
+	  else
+	    shortname = name;
+	  sprintf(buf, _("File `%s' loaded."), shortname);
+	  Status::instance()->setMessage(buf);
+	  if (context != 1)
+	    break;
+
+	  switch (props.type)
+	    {
+	    case KCT_TYPE_BAS:
+	    case KCT_TYPE_BAS_P:
+	      switch (get_kc_type())
 		{
-		  z80->jump(props.start_addr);
-		  TAPE_IF()->tapeNext();
+		case KC_TYPE_85_1:
+		case KC_TYPE_87:
+		  /*
+		   *  write autostart routine into tape buffer
+		   *  (see MP 3/89, page 86)
+		   */
+		  memory->memWrite8(0x100, 0xcd); // CALL INITR
+		  memory->memWrite8(0x101, 0x69);
+		  memory->memWrite8(0x102, 0xc6);
+		  memory->memWrite8(0x103, 0xcd); // CALL NEW2
+		  memory->memWrite8(0x104, 0x4f);
+		  memory->memWrite8(0x105, 0xc6);
+		  memory->memWrite8(0x106, 0xc3); // JMP  RUNMOD
+		  memory->memWrite8(0x107, 0x54);
+		  memory->memWrite8(0x108, 0xc8);
+		  z80->jump(0x100);
+		  break;
+		default:
+		  break;
 		}
-            }
+	      break;
+	    case KCT_TYPE_COM:
+	      z80->jump(props.start_addr);
+	      break;
+	    default:
+	      break;
+	    }
+	  TAPE_IF()->tapeNext();
+
           break;
         case 2:
           _t->remove(name);
@@ -487,7 +526,6 @@ Tape::power(bool val)
 void
 Tape::record(void)
 {
-  cout << "Tape::record()\n";
   _record = true;
   _sync = 2;
   _sync_count = 200;
@@ -543,6 +581,74 @@ Tape::play(const char *name, int delay)
     }
 }
 
+const char *
+Tape::get_filename(byte_t *data)
+{
+  int a;
+  static char filename[9];
+
+  memcpy(filename, data, 8);
+  filename[8] = '\0';
+  for (a = 7;(a > 0) && (filename[a] != ' ');a++)
+    filename[a] = '\0';
+
+  return filename;
+}
+
+bool
+Tape::check_addr(byte_t *data, long size)
+{
+  unsigned short load, end, start, x;
+  
+  /*
+   *  finally look if specified addresses are plausible
+   */
+  x     = data[17];
+  load  = data[18] | (data[19] << 8);
+  end   = data[20] | (data[21] << 8);
+  start = data[22] | (data[23] << 8);
+
+  if (load >= end)
+    return false;
+
+  if ((end - load - 1) > size)
+    return false;
+
+  if (x > 2)
+    if ((start < load) || (start >= end))
+      return false;
+
+  return true;
+}
+
+bool
+Tape::check_com(byte_t *data, long size)
+{
+  int a;
+
+  if ((data[9] == 'C') && (data[10] == 'O') && (data[11] == 'M'))
+    if ((data[17] >= 2) && (data[18] <= 0x0a))
+      return check_addr(data, size - 129);
+
+  for (a = 1;a < 9;a++)
+    {
+      if (data[a] == '\0')
+	break;
+      if ((data[a] >= 'A') && (data[a] <= 'Z'))
+	continue;
+      if ((data[a] >= 'a') && (data[a] <= 'z'))
+	continue;
+      if (strchr(" .&+", data[a]) != NULL)
+	continue;
+      break;
+    }
+
+  if (a > 1)
+    return check_addr(data, size - 129);
+
+  return false;
+}
+
 void
 Tape::stop(void)
 {
@@ -550,6 +656,7 @@ Tape::stop(void)
   ofstream os;
   int load, start;
   kct_file_type_t type;
+  const char *filename;
 
   _play = false;
   _record = false;
@@ -560,8 +667,6 @@ Tape::stop(void)
     return;
   if (((memstream *)_os)->size() == 0)
     return;
-
-  cout << "Tape::stop(): stream size = " << ((memstream *)_os)->size() << endl;
 
   os.open("/tmp/kcemu.output", ios::out | ios::binary);
   if (!os)
@@ -576,33 +681,46 @@ Tape::stop(void)
 
       load = 0;
       start = 0;
+      filename = "FILE";
       if ((ptr[1] == 0xd3) && (ptr[2] == 0xd3) && (ptr[3] == 0xd3))
 	{
 	  type = KCT_TYPE_BAS;
+	  filename = get_filename(ptr + 4);
 	}
       else if ((ptr[1] == 0xd4) && (ptr[2] == 0xd4) && (ptr[3] == 0xd4))
 	{
 	  type = KCT_TYPE_DATA;
+	  filename = get_filename(ptr + 4);
 	}
       else if ((ptr[1] == 0xd5) && (ptr[2] == 0xd5) && (ptr[3] == 0xd5))
 	{
 	  type = KCT_TYPE_LIST;
+	  filename = get_filename(ptr + 4);
 	}
       else if ((ptr[1] == 0xd7) && (ptr[2] == 0xd7) && (ptr[3] == 0xd7))
 	{
 	  type = KCT_TYPE_BAS_P;
+	  filename = get_filename(ptr + 4);
 	}
       else
 	{
-	  type = KCT_TYPE_COM;
-	  load = ptr[18] | (ptr[19] << 8);
-	  start = ptr[22] | (ptr[23] << 8);
+	  if (check_com(ptr, ((memstream *)_os)->size()))
+	    {
+	      type = KCT_TYPE_COM;
+	      load = ptr[18] | (ptr[19] << 8);
+	      start = ptr[22] | (ptr[23] << 8);
+	      filename = get_filename(ptr + 1);
+	    }
+	  else
+	    {
+	      type = KCT_TYPE_BIN;
+	    }
 	}
 
       DBG(1, form("KCemu/Tape/write",
 		  "Tape::stop(): type = %s, load = %04xh, start = %04xh\n",
 		  _kct_file.type_name(type), load, start));
-      _kct_file.write((const char *)"new file",
+      _kct_file.write(filename,
                       ptr, ((memstream *)_os)->size(), load, start,
                       type, KCT_MACHINE_ALL);
 
@@ -730,6 +848,118 @@ Tape::do_play_bic(int edge)
 }
 
 void
+Tape::do_play_z1013(int edge)
+{
+  static int idx;
+  static int bidx;
+  static int byte;
+  static int bytes;
+  static int blocks;
+  static int hs_flag;
+
+  if (_is == NULL)
+    return;
+
+  switch (_state)
+    {
+    case 0: // SYNC
+      z80->addCallback(1500, this, (void *)1);
+      z80->addCallback(3000, this, (void *)0);
+      
+      if (_init > 0)
+	{
+	  _init--;
+	}
+      else
+	{
+	  idx = 20;
+	  bytes = 0;
+	  blocks = 0;
+	  hs_flag = 0;
+	  _state++;
+	}
+      break;
+
+    case 1: // BLOCK SYNC
+      z80->addCallback(1550, this, (void *)1);
+      z80->addCallback(3100, this, (void *)0);
+
+      if (idx > 0)
+	{
+	  idx--;
+	}
+      else
+	{
+	  idx = 20;
+	  _state++;
+	}
+      break;
+
+    case 2: // BLOCK START
+      z80->addCallback(775, this, (void *)1);
+      z80->addCallback(1550, this, (void *)0);
+      bidx = 0;
+      _state++;
+      break;
+
+    case 3: // BLOCK DATA
+      if (bidx == 0)
+	{
+	  byte = _is->get();
+	  if (byte == EOF)
+	    return;
+
+	  if (blocks == 0)
+	    {
+	      if ((bytes == 15) && (byte == 0xd3))
+		hs_flag++;
+	      if ((bytes == 16) && (byte == 0xd3))
+		hs_flag++;
+	      if ((bytes == 17) && (byte == 0xd3))
+		hs_flag++;
+	    }
+
+	  //cout << hex << setw(2) << setfill('0') << (int)byte << " ";
+
+	  bytes++;
+	}
+
+      if (byte & (1 << bidx))
+	{
+	  z80->addCallback(775, this, (void *)0);
+	}
+      else
+	{
+	  z80->addCallback(387, this, (void *)1);
+	  z80->addCallback(775, this, (void *)0);
+	}
+
+      bidx++;
+      if (bidx == 8)
+	{
+	  bidx = 0;
+	  if ((bytes % 36) == 0)
+	    {
+	      _state = 1;
+	      if (hs_flag == 3)
+		{
+		  // long sync after first header save block
+		  idx = 1000;
+		  hs_flag = 0;
+		}
+
+	      //cout << endl;
+
+	      TAPE_IF()->tapeProgress((100 * bytes) / _file_size);
+	      blocks++;
+	    }
+	}
+
+      break;
+    }
+}
+
+void
 Tape::do_play(int edge)
 {
   int len;
@@ -758,10 +988,16 @@ Tape::do_play(int edge)
 	return;
     }
 
-  if (get_kc_type() == KC_TYPE_A5105)
+  switch (get_kc_type())
     {
+    case KC_TYPE_A5105:
       do_play_bic(edge);
       return;
+    case KC_TYPE_Z1013:
+      do_play_z1013(edge);
+      return;
+    default:
+      break;
     }
 
   /*
@@ -1003,6 +1239,121 @@ Tape::tape_signal_bic(long diff)
 }
 
 void
+Tape::tape_signal_z1013(long diff)
+{
+  int bit, sum;
+  static int idx;
+  static int sync;
+  static int byte;
+  static int bidx;
+  static int state = 0;
+  static bool first;
+  static byte_t buf[36];
+
+  if (diff > 20000)
+    {
+      state = 0;
+      sync = 100;
+      return;
+    }
+
+
+  switch (state)
+    {
+    case 0: // SYNC
+      if (sync > 0)
+	{
+	  if (diff > 1200)
+	    sync--;
+	  else
+	    sync = 100;
+	}
+
+      if (sync == 0)
+	{
+	  sync = 100;
+	  state++;
+	}
+
+      break;
+    case 1: // BLOCK SYNC
+      if (diff > 1200)
+	break;
+
+      if (diff < 580)
+	{
+	  sync = 100;
+	  state = 0;
+	  break;
+	}
+
+      state++;
+      break;
+    case 2: // BLOCK START
+      if ((diff < 580) || (diff > 1200))
+	{
+	  sync = 100;
+	  state = 0;
+	  break;
+	}
+
+      idx = 0;
+      bidx = 0;
+      first = false;
+      state++;
+      break;
+    case 3: // BLOCK DATA
+      if (diff > 1200)
+	{
+	  sync = 100;
+	  state = 0;
+	  break;
+	}
+
+      bit = (diff > 580) ? 128 : 0;
+      if (bit == 0)
+	if (first)
+	  {
+	    first = false;
+	  }
+	else
+	  {
+	    first = true;
+	    break;
+	  }
+
+      bidx++;
+      byte >>= 1;
+      byte = (byte & 0x7f) | bit;
+
+      if (bidx == 8)
+	{
+	  bidx = 0;
+	  buf[idx++] = byte;
+	  if (idx == 36)
+	    {
+	      sum = 0;
+	      for (idx = 0;idx < 34;idx += 2)
+		sum += buf[idx] | (buf[idx + 1] << 8);
+	      sum &= 0xffff;
+
+	      //for (idx = 0;idx < 36;idx++)
+	      //cout << hex << setw(2) << setfill('0') << (int)buf[idx] << " ";
+	      
+	      //cout << "=> " << (sum & 0xff) << " " << ((sum >> 8) & 0xff) << endl;
+
+	      for (idx = 0;idx < 36;idx++)
+		_os->write((const char *)&buf[idx], 1);
+
+	      idx = 0;
+	      state = 1;
+	    }
+	}
+      break;
+    }
+}
+
+void
 Tape::tape_signal(void)
 {
   long diff;
@@ -1025,10 +1376,16 @@ Tape::tape_signal(void)
   diff = c_new - c_old;
   c_old = c_new;
 
-  if (get_kc_type() == KC_TYPE_A5105)
+  switch (get_kc_type())
     {
+    case KC_TYPE_A5105:
       tape_signal_bic(diff);
       return;
+    case KC_TYPE_Z1013:
+      tape_signal_z1013(diff);
+      return;
+    default:
+      break;
     }
 
   if (diff < ((BIT_0 + BIT_1) / 2))

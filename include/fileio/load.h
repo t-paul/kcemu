@@ -29,7 +29,8 @@ extern "C" {
 typedef enum
 {
   FILEIO_KC85_1,
-  FILEIO_KC85_3 /* default */
+  FILEIO_KC85_3, /* default */
+  FILEIO_Z1013,
 } fileio_kctype_t;
 
 typedef enum

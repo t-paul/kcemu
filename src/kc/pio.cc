@@ -65,8 +65,8 @@ PIO::reset(bool power_on)
   _irq_enable[A] = _irq_enable[B] = 0;
   _irq_active[A] = _irq_active[B] = 0;
 
-  _ext[A] = 0x0; // DEBUG
-  _ext[B] = 0x0; // DEBUG
+  _ext[A] = 0xff;
+  _ext[B] = 0xff;
   _ext_fn[A] = 0;
   _ext_fn[B] = 0;
 

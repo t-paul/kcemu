@@ -6,7 +6,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2003-01-28 20:36+0100\n"
+"POT-Creation-Date: 2003-02-16 22:53+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -38,7 +38,7 @@ msgid ""
 "programs add this file to a tape-archive!"
 msgstr ""
 
-#: src/kc/kc.cc:221
+#: src/kc/kc.cc:237
 msgid ""
 "\n"
 "KCemu comes with ABSOLUTELY NO WARRANTY; for details run `kcemu --"
@@ -46,8 +46,9 @@ msgid ""
 "This is free software, and you are welcome to redistribute it\n"
 "under certain conditions; run `kcemu --license' for details.\n"
 "\n"
-"usage: kcemu [-1234789esthdlvLW]\n"
+"usage: kcemu [-01234789esthdlvLW]\n"
 "\n"
+"  -0:             run in Z1013 mode\n"
 "  -1:             run in Z9001 / KC 85/1 mode\n"
 "  -2:             run in KC 85/2 mode\n"
 "  -3:             run in KC 85/3 mode\n"
@@ -67,7 +68,7 @@ msgid ""
 "  -W --warranty:  show warranty\n"
 msgstr ""
 
-#: src/kc/kc.cc:303
+#: src/kc/kc.cc:335
 msgid ""
 "\n"
 "\t\t    GNU GENERAL PUBLIC LICENSE\n"
@@ -418,7 +419,7 @@ msgid ""
 "\n"
 msgstr ""
 
-#: src/kc/kc.cc:652
+#: src/kc/kc.cc:684
 msgid ""
 "\n"
 "NO WARRANTY\n"
@@ -450,11 +451,11 @@ msgstr ""
 msgid "Select disk..."
 msgstr ""
 
-#: src/kc/disk.cc:119 src/kc/tape.cc:176
+#: src/kc/disk.cc:119 src/kc/tape.cc:215
 msgid "create file?"
 msgstr ""
 
-#: src/kc/disk.cc:121 src/kc/tape.cc:178
+#: src/kc/disk.cc:121 src/kc/tape.cc:217
 #, c-format
 msgid ""
 "The file '%s' doesn't exist.\n"
@@ -470,163 +471,167 @@ msgstr ""
 msgid "Can't attach disk-file."
 msgstr ""
 
-#: src/kc/mod_list.cc:94
+#: src/kc/mod_list.cc:95
 msgid "<no module>"
 msgstr ""
 
-#: src/kc/mod_list.cc:103
-msgid "M003: V24 (not working!)"
-msgstr ""
-
-#: src/kc/mod_list.cc:112
-msgid "M011: 64k RAM"
-msgstr ""
-
-#: src/kc/mod_list.cc:123
+#: src/kc/mod_list.cc:106
 msgid "RAM Module (1k/2400h)"
 msgstr ""
 
-#: src/kc/mod_list.cc:125
+#: src/kc/mod_list.cc:108
 msgid "RAM Module (2k/2800h)"
 msgstr ""
 
-#: src/kc/mod_list.cc:127
+#: src/kc/mod_list.cc:110
 msgid "RAM Module (4k/3000h)"
 msgstr ""
 
-#: src/kc/mod_list.cc:129 src/kc/mod_list.cc:162
+#: src/kc/mod_list.cc:112 src/kc/mod_list.cc:151
 msgid "RAM Module (16k/4000h)"
 msgstr ""
 
-#: src/kc/mod_list.cc:131
+#: src/kc/mod_list.cc:114
 msgid "RAM Module (32k/8000h)"
 msgstr ""
 
-#: src/kc/mod_list.cc:140
+#: src/kc/mod_list.cc:120
+msgid "256k RAM Floppy"
+msgstr ""
+
+#: src/kc/mod_list.cc:129
 msgid "Basic Module (c000h-e7ffh)"
 msgstr ""
 
-#: src/kc/mod_list.cc:155
+#: src/kc/mod_list.cc:144
 msgid "Plotter Module (c000h-e7ffh)"
 msgstr ""
 
-#: src/kc/mod_list.cc:164
+#: src/kc/mod_list.cc:153
 msgid "RAM Module (16k/8000h)"
 msgstr ""
 
-#: src/kc/mod_list.cc:173
+#: src/kc/mod_list.cc:162
 msgid "ZM30 (c000h-ccffh)"
 msgstr ""
 
-#: src/kc/mod_list.cc:183
+#: src/kc/mod_list.cc:172
 msgid "EDAS (c000h-e7ffh)"
 msgstr ""
 
-#: src/kc/mod_list.cc:193
+#: src/kc/mod_list.cc:182
 msgid "IDAS / ZM (c000h-e7ffh)"
 msgstr ""
 
-#: src/kc/mod_list.cc:203
+#: src/kc/mod_list.cc:192
 msgid "BITEX (c000h-d7ffh)"
 msgstr ""
 
-#: src/kc/mod_list.cc:237 src/ui/gtk/module.cc:251
+#: src/kc/mod_list.cc:226 src/ui/gtk/module.cc:253
 msgid "IRM Color Expansion"
 msgstr ""
 
-#: src/kc/mod_list.cc:251
+#: src/kc/mod_list.cc:240
 msgid "Plotter XY4131"
 msgstr ""
 
-#: src/kc/mod_list.cc:260
+#: src/kc/mod_list.cc:249
 msgid "CPM-Z9 BOOT (c000h-c7ffh)"
 msgstr ""
 
-#: src/kc/mod_list.cc:267
+#: src/kc/mod_list.cc:256
 msgid "CPM-Z9 Floppy"
 msgstr ""
 
-#: src/kc/mod_list.cc:273
+#: src/kc/mod_list.cc:262
 msgid "CPM-Z9 64k RAM"
 msgstr ""
 
-#: src/kc/mod_list.cc:279
+#: src/kc/mod_list.cc:271
+msgid "M003: V24 (not working!)"
+msgstr ""
+
+#: src/kc/mod_list.cc:280
 msgid "M022: Expander RAM (16k)"
 msgstr ""
 
-#: src/kc/mod_list.cc:288
+#: src/kc/mod_list.cc:286
+msgid "M011: 64k RAM"
+msgstr ""
+
+#: src/kc/mod_list.cc:295
 msgid "M006: Basic"
 msgstr ""
 
-#: src/kc/mod_list.cc:298
+#: src/kc/mod_list.cc:305
 msgid "M012: Texor"
 msgstr ""
 
-#: src/kc/mod_list.cc:308
+#: src/kc/mod_list.cc:315
 msgid "M026: Forth"
 msgstr ""
 
-#: src/kc/mod_list.cc:318
+#: src/kc/mod_list.cc:325
 msgid "M027: Development"
 msgstr ""
 
-#: src/kc/mod_list.cc:329
+#: src/kc/mod_list.cc:336
 msgid "M900: WordPro '86 (KC85/3)"
 msgstr ""
 
-#: src/kc/mod_list.cc:340
+#: src/kc/mod_list.cc:347
 msgid "M901: WordPro '86 (KC85/4)"
 msgstr ""
 
-#: src/kc/mod_list.cc:351
+#: src/kc/mod_list.cc:358
 msgid "Floppy Disk Basis"
 msgstr ""
 
-#: src/kc/tape.cc:88
+#: src/kc/tape.cc:95
 #, c-format
 msgid "File `%s' loaded."
 msgstr ""
 
-#: src/kc/tape.cc:137
+#: src/kc/tape.cc:176
 msgid "Select tape-archive..."
 msgstr ""
 
-#: src/kc/tape.cc:192
+#: src/kc/tape.cc:231
 #, c-format
 msgid "tape-archive `%s' attached."
 msgstr ""
 
-#: src/kc/tape.cc:198
+#: src/kc/tape.cc:237
 msgid "Can't attach tape-archive."
 msgstr ""
 
-#: src/kc/tape.cc:235 src/kc/tape.cc:265
+#: src/kc/tape.cc:274 src/kc/tape.cc:304
 msgid "Export As..."
 msgstr ""
 
-#: src/kc/tape.cc:249 src/kc/tape.cc:279
+#: src/kc/tape.cc:288 src/kc/tape.cc:318
 #, c-format
 msgid "File `%s' saved."
 msgstr ""
 
-#: src/kc/tape.cc:254 src/kc/tape.cc:284
+#: src/kc/tape.cc:293 src/kc/tape.cc:323
 msgid "Can't export file."
 msgstr ""
 
-#: src/kc/tape.cc:322
+#: src/kc/tape.cc:361
 msgid "Select file..."
 msgstr ""
 
-#: src/kc/tape.cc:1259
+#: src/kc/tape.cc:1616
 msgid "The format of the selected file is not recognized."
 msgstr ""
 
-#: src/kc/tape.cc:1294
+#: src/kc/tape.cc:1651
 #, c-format
 msgid "File `%s' [%s] added."
 msgstr ""
 
-#: src/kc/tape.cc:1303
+#: src/kc/tape.cc:1660
 msgid ""
 "The file you selected has a name that is already\n"
 "present in the current tape archive.\n"
@@ -644,7 +649,7 @@ msgstr ""
 #. *  close button
 #.
 #: src/ui/gtk/about.cc:105 src/ui/gtk/color.cc:244 src/ui/gtk/copying.cc:150
-#: src/ui/gtk/disk.cc:294 src/ui/gtk/info.cc:537 src/ui/gtk/module.cc:318
+#: src/ui/gtk/disk.cc:294 src/ui/gtk/info.cc:537 src/ui/gtk/module.cc:322
 #: src/ui/gtk/tape.cc:459 src/ui/gtk/wav.cc:273
 msgid "Close"
 msgstr ""
@@ -947,20 +952,20 @@ msgstr ""
 msgid "Slot %d"
 msgstr ""
 
-#: src/ui/gtk/module.cc:279
+#: src/ui/gtk/module.cc:282
 msgid "KCemu: Module"
 msgstr ""
 
-#: src/ui/gtk/module.cc:294
+#: src/ui/gtk/module.cc:297
 msgid "Floppy Disk Basis [F0]"
 msgstr ""
 
-#: src/ui/gtk/module.cc:298
+#: src/ui/gtk/module.cc:302
 #, c-format
 msgid "D002: Busdriver [%02X]"
 msgstr ""
 
-#: src/ui/gtk/module.cc:303 src/ui/gtk/module.cc:305
+#: src/ui/gtk/module.cc:307 src/ui/gtk/module.cc:309
 msgid "Basis Device"
 msgstr ""
 

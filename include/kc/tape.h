@@ -114,6 +114,9 @@ private:
 
  protected:
     void update_tape_list(void);
+    bool check_addr(byte_t *data, long size);
+    bool check_com(byte_t *data, long size);
+    const char *get_filename(byte_t *data);
     
  public:
     Tape(int bit_0, int bit_1, int bit_s, int start_block);
@@ -126,9 +129,11 @@ private:
     void seek(int percent);
     void do_play(int edge);
     void do_play_bic(int edge);
+    void do_play_z1013(int edge);
     void do_stop(void);
     void tape_signal(void);
     void tape_signal_bic(long diff);
+    void tape_signal_z1013(long diff);
     long get_delay(int seconds);
 
     virtual void set_tape_callback(TapeCallback *tape_cb);

@@ -67,6 +67,7 @@
 #include "kc/mod_64k.h"
 #include "kc/mod_rom.h"
 #include "kc/mod_rom1.h"
+#include "kc/mod_ramf.h"
 #include "kc/mod_disk.h"
 #include "kc/mod_list.h"
 #include "kc/mod_4131.h"
@@ -94,24 +95,6 @@ ModuleList::ModuleList(void)
   _mod_list.push_back(new ModuleListEntry(_("<no module>"), m, KC_TYPE_ALL));
 
   /*
-   *  V24 module
-   */
-#ifdef TARGET_OS_LINUX
-  if (RC::instance()->get_int("Enable V24-Module"))
-    {
-      m = new ModuleV24("M003", 0xee);
-      entry = new ModuleListEntry(_("M003: V24 (not working!)"), m, KC_TYPE_85_2_CLASS);
-      _mod_list.push_back(entry);
-    }
-#endif /* TARGET_OS_LINUX */
-
-  /*
-   *  RAM module 64k
-   */
-  m = new Module64k("M011", 0xf6);
-  _mod_list.push_back(new ModuleListEntry(_("M011: 64k RAM"), m, KC_TYPE_85_2_CLASS));
-  
-  /*
    *  RAM modules 1k at 2400h-27ffh,
    *                    2800h-2fffh,
    *                    3000h-3fffh,
@@ -129,6 +112,12 @@ ModuleList::ModuleList(void)
   _mod_list.push_back(new ModuleListEntry(_("RAM Module (16k/4000h)"), m, KC_TYPE_LC80));
   m = new ModuleRAM8("RAM8000", 0x8000, 0x8000);
   _mod_list.push_back(new ModuleListEntry(_("RAM Module (32k/8000h)"), m, KC_TYPE_LC80));
+
+  /*
+   *  256k RAM floppy (Z1013)
+   */
+  m = new ModuleRAMFloppy("RAMFLOPPY");
+  _mod_list.push_back(new ModuleListEntry(_("256k RAM Floppy"), m, KC_TYPE_Z1013));
 
   /*
    *  basic (kc85/1)
@@ -241,7 +230,7 @@ ModuleList::ModuleList(void)
     if (get_kc_variant() == KC_VARIANT_85_1_11)
       _init_color_expansion = _color_expansion;
   if (get_kc_type() == KC_TYPE_87)
-    if (get_kc_variant() != KC_VARIANT_87_10)
+    if ((get_kc_variant() != KC_VARIANT_87_10) && (get_kc_variant() != KC_VARIANT_87_20))
       _init_color_expansion = _color_expansion;
 
   /*
@@ -273,11 +262,29 @@ ModuleList::ModuleList(void)
   _mod_list.push_back(new ModuleListEntry(_("CPM-Z9 64k RAM"), m, KC_TYPE_85_1_CLASS));
 
   /*
-   *  RAM module 16k (kc85/3)
+   *  V24 module
+   */
+#ifdef TARGET_OS_LINUX
+  if (RC::instance()->get_int("Enable V24-Module"))
+    {
+      m = new ModuleV24("M003", 0xee);
+      entry = new ModuleListEntry(_("M003: V24 (not working!)"), m, KC_TYPE_85_2_CLASS);
+      _mod_list.push_back(entry);
+    }
+#endif /* TARGET_OS_LINUX */
+
+  /*
+   *  RAM module 16k (kc85/2-4)
    */
   m = new ModuleRAM("M022", 0xf4);
   _mod_list.push_back(new ModuleListEntry(_("M022: Expander RAM (16k)"), m, KC_TYPE_85_2_CLASS));
 
+  /*
+   *  RAM module 64k (kc85/2-4)
+   */
+  m = new Module64k("M011", 0xf6);
+  _mod_list.push_back(new ModuleListEntry(_("M011: 64k RAM"), m, KC_TYPE_85_2_CLASS));
+  
   /*
    *  basic (kc85/2-4)
    */
@@ -462,9 +469,25 @@ ModuleList::insert(int slot, ModuleListEntry *entry)
     m = entry->get_mod();
 
   if (m)
-    module->insert(slot, m->clone());
+    {
+      ModuleInterface *mod = m->clone();
+      if (!mod)
+	return;
+
+      if (mod->is_valid())
+	{
+	  module->insert(slot, mod);
+	}
+      else
+	{
+	  m = NULL;
+	  delete mod;
+	}
+    }
   else
-    module->remove(slot);
+    {
+      module->remove(slot);
+    }
 
   ui->getModuleInterface()->insert(slot, m);
   ui->getModuleInterface()->activate(slot, 0);

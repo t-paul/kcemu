@@ -140,7 +140,7 @@ void
 WrZ80(word_t Addr, byte_t Value)
 {
   /*
-  if ((Addr == 0x1d) || (Addr == 0x1e) || (Addr == 0x1f))
+  if ((Addr == 0x8c0) || (Addr == 0x8c1))
     {
       z80->printPC();
       cout.form("%04x: %02x\n", Addr, Value);
@@ -309,22 +309,20 @@ Z80::run(void)
   while (!_do_quit)
     {
 #if 0
-      if (_regs.PC.W == 0xe339)
-	XXX = 20000;
-      if (XXX > 0)
-	{
-	  XXX--;
-	  cout << "%%% " << hex << _regs.PC.W << endl;
-	}
+      if (DBG_check("KCemu/Z80core/trace"))
+	debug(true);
 #endif
+
       //if (_regs.PC.W <= 0x8000)
       //z80->printPC(); cout << endl;
 
       //if ((_regs.PC.W == 0xe0d5) && (RdZ80(0xe0d5) == 0xed) && (_regs.BC.W < 5))
       //debug(true);
 
-      //if (_regs.PC.W == 0x2d48)
-        //debug(true);
+      //if (_regs.PC.W == 0x077c)
+      //z80->debug(true);
+      //if (_regs.PC.W == 0x079f)
+      //z80->debug(true);
 
       if (_singlestep)
 	{

@@ -101,7 +101,7 @@ VERSION = @VERSION@
 VORBIS_LIBS = @VORBIS_LIBS@
 l = @l@
 
-pkgdata_DATA =  	caos.dump		tools.dump		a5105sys.dump		microdos.dump
+pkgdata_DATA =  	caos.dump		tools.dump		cpmz9.dump		a5105sys.dump		microdos.dump
 
 
 EXTRA_DIST = $(pkgdata_DATA)

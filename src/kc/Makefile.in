@@ -115,7 +115,7 @@ CPPFLAGS =  	-DVERSION=\"$(VERSION)\" 	-DDATADIR=\"$(pkgdatadir)\" 	-DPACKAGE=\"
 
 @TARGET_LINUX_TRUE@EXTRA_kcemu_SOURCES = mod_v24.cc wav.cc
 
-kcemu_SOURCES =  	debug.cc		kc.cc			rc.cc			ic.cc			ctc.cc			ctc1.cc			ctc3.cc			ctc8.cc			ctc9.cc			ctc_fdc.cc		ctc_base.cc		cb_list.cc		keyb1.cc		keyb3.cc		keyb8.cc		keyb9.cc		memory.cc		memory1.cc		memory2.cc		memory3.cc		memory4.cc		memory7.cc		memory8.cc		memory9.cc		sh_mem.cc		disk_io.cc		gdc.cc			vis.cc			svg.cc			fdc.cc			fdc_cmd.cc		floppy.cc		pio.cc			pio1.cc			pio2.cc			pio3.cc			pio4.cc			pio8.cc			pio9.cc			ports.cc		ports4.cc		module.cc		mod_ram.cc		mod_ram1.cc		mod_r64.cc		mod_cpm.cc		mod_ram8.cc		mod_64k.cc		mod_rom.cc		mod_rom1.cc		mod_4131.cc		mod_disk.cc		mod_list.cc		tape.cc			disk.cc			timer.cc		timer1.cc		timer3.cc		z80.cc			z80_fdc.cc		sound.cc		sound3.cc		sound8.cc		disass.cc		$(EXTRA_kcemu_SOURCES)
+kcemu_SOURCES =  	debug.cc		kc.cc			rc.cc			ic.cc			ctc.cc			ctc1.cc			ctc3.cc			ctc8.cc			ctc9.cc			ctc_fdc.cc		ctc_base.cc		cb_list.cc		keyb0.cc		keyb1.cc		keyb3.cc		keyb8.cc		keyb9.cc		memory.cc		memory0.cc		memory1.cc		memory2.cc		memory3.cc		memory4.cc		memory7.cc		memory8.cc		memory9.cc		sh_mem.cc		disk_io.cc		gdc.cc			vis.cc			svg.cc			fdc.cc			fdc_cmd.cc		floppy.cc		pio.cc			pio0.cc			pio1.cc			pio2.cc			pio3.cc			pio4.cc			pio8.cc			pio9.cc			ports.cc		ports0.cc		ports4.cc		module.cc		mod_ram.cc		mod_ram1.cc		mod_r64.cc		mod_cpm.cc		mod_ram8.cc		mod_64k.cc		mod_rom.cc		mod_rom1.cc		mod_ramf.cc		mod_4131.cc		mod_disk.cc		mod_list.cc		tape.cc			disk.cc			timer.cc		timer1.cc		timer3.cc		z80.cc			z80_fdc.cc		sound.cc		sound3.cc		sound8.cc		disass.cc		$(EXTRA_kcemu_SOURCES)
 
 
 @TARGET_LINUX_TRUE@UILIBS_LINUX = ../ui/gtk/libui_gtk.a ../ui/sdl/libui_sdl.a
@@ -143,25 +143,27 @@ LDFLAGS = @LDFLAGS@
 LIBS = @LIBS@
 @TARGET_LINUX_TRUE@kcemu_OBJECTS =  debug.o kc.o rc.o ic.o ctc.o ctc1.o \
 @TARGET_LINUX_TRUE@ctc3.o ctc8.o ctc9.o ctc_fdc.o ctc_base.o cb_list.o \
-@TARGET_LINUX_TRUE@keyb1.o keyb3.o keyb8.o keyb9.o memory.o memory1.o \
-@TARGET_LINUX_TRUE@memory2.o memory3.o memory4.o memory7.o memory8.o \
-@TARGET_LINUX_TRUE@memory9.o sh_mem.o disk_io.o gdc.o vis.o svg.o fdc.o \
-@TARGET_LINUX_TRUE@fdc_cmd.o floppy.o pio.o pio1.o pio2.o pio3.o pio4.o \
-@TARGET_LINUX_TRUE@pio8.o pio9.o ports.o ports4.o module.o mod_ram.o \
+@TARGET_LINUX_TRUE@keyb0.o keyb1.o keyb3.o keyb8.o keyb9.o memory.o \
+@TARGET_LINUX_TRUE@memory0.o memory1.o memory2.o memory3.o memory4.o \
+@TARGET_LINUX_TRUE@memory7.o memory8.o memory9.o sh_mem.o disk_io.o \
+@TARGET_LINUX_TRUE@gdc.o vis.o svg.o fdc.o fdc_cmd.o floppy.o pio.o \
+@TARGET_LINUX_TRUE@pio0.o pio1.o pio2.o pio3.o pio4.o pio8.o pio9.o \
+@TARGET_LINUX_TRUE@ports.o ports0.o ports4.o module.o mod_ram.o \
 @TARGET_LINUX_TRUE@mod_ram1.o mod_r64.o mod_cpm.o mod_ram8.o mod_64k.o \
-@TARGET_LINUX_TRUE@mod_rom.o mod_rom1.o mod_4131.o mod_disk.o \
-@TARGET_LINUX_TRUE@mod_list.o tape.o disk.o timer.o timer1.o timer3.o \
-@TARGET_LINUX_TRUE@z80.o z80_fdc.o sound.o sound3.o sound8.o disass.o \
-@TARGET_LINUX_TRUE@mod_v24.o wav.o
+@TARGET_LINUX_TRUE@mod_rom.o mod_rom1.o mod_ramf.o mod_4131.o \
+@TARGET_LINUX_TRUE@mod_disk.o mod_list.o tape.o disk.o timer.o timer1.o \
+@TARGET_LINUX_TRUE@timer3.o z80.o z80_fdc.o sound.o sound3.o sound8.o \
+@TARGET_LINUX_TRUE@disass.o mod_v24.o wav.o
 @TARGET_LINUX_FALSE@kcemu_OBJECTS =  debug.o kc.o rc.o ic.o ctc.o ctc1.o \
 @TARGET_LINUX_FALSE@ctc3.o ctc8.o ctc9.o ctc_fdc.o ctc_base.o cb_list.o \
-@TARGET_LINUX_FALSE@keyb1.o keyb3.o keyb8.o keyb9.o memory.o memory1.o \
-@TARGET_LINUX_FALSE@memory2.o memory3.o memory4.o memory7.o memory8.o \
-@TARGET_LINUX_FALSE@memory9.o sh_mem.o disk_io.o gdc.o vis.o svg.o \
-@TARGET_LINUX_FALSE@fdc.o fdc_cmd.o floppy.o pio.o pio1.o pio2.o pio3.o \
-@TARGET_LINUX_FALSE@pio4.o pio8.o pio9.o ports.o ports4.o module.o \
-@TARGET_LINUX_FALSE@mod_ram.o mod_ram1.o mod_r64.o mod_cpm.o mod_ram8.o \
-@TARGET_LINUX_FALSE@mod_64k.o mod_rom.o mod_rom1.o mod_4131.o \
+@TARGET_LINUX_FALSE@keyb0.o keyb1.o keyb3.o keyb8.o keyb9.o memory.o \
+@TARGET_LINUX_FALSE@memory0.o memory1.o memory2.o memory3.o memory4.o \
+@TARGET_LINUX_FALSE@memory7.o memory8.o memory9.o sh_mem.o disk_io.o \
+@TARGET_LINUX_FALSE@gdc.o vis.o svg.o fdc.o fdc_cmd.o floppy.o pio.o \
+@TARGET_LINUX_FALSE@pio0.o pio1.o pio2.o pio3.o pio4.o pio8.o pio9.o \
+@TARGET_LINUX_FALSE@ports.o ports0.o ports4.o module.o mod_ram.o \
+@TARGET_LINUX_FALSE@mod_ram1.o mod_r64.o mod_cpm.o mod_ram8.o mod_64k.o \
+@TARGET_LINUX_FALSE@mod_rom.o mod_rom1.o mod_ramf.o mod_4131.o \
 @TARGET_LINUX_FALSE@mod_disk.o mod_list.o tape.o disk.o timer.o \
 @TARGET_LINUX_FALSE@timer1.o timer3.o z80.o z80_fdc.o sound.o sound3.o \
 @TARGET_LINUX_FALSE@sound8.o disass.o
@@ -454,11 +456,12 @@ disk_io.o: disk_io.cc ../../include/kc/system.h \
 	../../include/kc/disk_io.h ../../include/kc/ports.h \
 	../../include/libdbg/dbg.h
 fdc.o: fdc.cc ../../include/kc/system.h ../../include/kc/config.h \
-	../../include/sys/sysdep.h ../../include/kc/fdc.h \
-	../../include/kc/ic.h ../../include/kc/ports.h \
-	../../include/kc/fdc_cmd.h ../../include/kc/floppy.h \
-	../../include/libdisk/libdisk.h ../../include/libdbg/dbg.h \
-	../../include/z80core2/z80.h ../../include/z80core2/z80io.h
+	../../include/sys/sysdep.h ../../include/kc/kc.h \
+	../../include/kc/fdc.h ../../include/kc/ic.h \
+	../../include/kc/ports.h ../../include/kc/fdc_cmd.h \
+	../../include/kc/floppy.h ../../include/libdisk/libdisk.h \
+	../../include/libdbg/dbg.h ../../include/z80core2/z80.h \
+	../../include/z80core2/z80io.h
 fdc_cmd.o: fdc_cmd.cc ../../include/kc/system.h \
 	../../include/kc/config.h ../../include/sys/sysdep.h \
 	../../include/kc/fdc.h ../../include/kc/ic.h \
@@ -497,11 +500,13 @@ kc.o: kc.cc ../../include/kc/system.h ../../include/kc/config.h \
 	../../include/kc/z80_fdc.h ../../include/z80core2/z80.h \
 	../../include/z80core2/z80io.h ../../include/ui/log.h \
 	../../include/ui/errorl.h ../../include/ui/statusl.h \
+	../../include/kc/pio0.h ../../include/kc/keyb0.h \
+	../../include/kc/keyboard.h ../../include/kc/ports0.h \
+	../../include/kc/memory0.h ../../include/kc/memory.h \
 	../../include/kc/pio1.h ../../include/kc/ctc1.h \
 	../../include/kc/ctc_base.h ../../include/kc/keyb1.h \
-	../../include/kc/keyboard.h ../../include/kc/timer1.h \
-	../../include/kc/memory1.h ../../include/kc/romdi.h \
-	../../include/kc/memory.h ../../include/kc/memory7.h \
+	../../include/kc/timer1.h ../../include/kc/memory1.h \
+	../../include/kc/romdi.h ../../include/kc/memory7.h \
 	../../include/kc/pio2.h ../../include/kc/memory2.h \
 	../../include/kc/pio3.h ../../include/kc/ctc3.h \
 	../../include/kc/keyb3.h ../../include/kc/timer3.h \
@@ -513,7 +518,7 @@ kc.o: kc.cc ../../include/kc/system.h ../../include/kc/config.h \
 	../../include/kc/gdc.h ../../include/kc/vis.h \
 	../../include/kc/svg.h ../../include/kc/ctc9.h \
 	../../include/kc/pio9.h ../../include/kc/keyb9.h \
-	../../include/kc/memory9.h ../../include/ui/gtk/ui_gtk1.h \
+	../../include/kc/memory9.h ../../include/ui/gtk/ui_gtk0.h \
 	../../include/ui/gtk/ui_gtk.h ../../include/ui/ui.h \
 	../../include/kc/profile.h ../../include/ui/tape.h \
 	../../include/ui/debug.h ../../include/ui/module.h \
@@ -526,6 +531,7 @@ kc.o: kc.cc ../../include/kc/system.h ../../include/kc/config.h \
 	../../include/ui/gtk/keyboard.h ../../include/ui/gtk/copying.h \
 	../../include/ui/gtk/tapeadd.h ../../include/ui/gtk/fbrowse.h \
 	../../include/ui/gtk/dialog.h ../../include/ui/gtk/hedit.h \
+	../../include/ui/generic/ui_0.h ../../include/ui/gtk/ui_gtk1.h \
 	../../include/ui/generic/ui_1.h ../../include/ui/gtk/ui_gtk3.h \
 	../../include/ui/generic/ui_3.h \
 	../../include/ui/generic/scanline.h \
@@ -533,6 +539,17 @@ kc.o: kc.cc ../../include/kc/system.h ../../include/kc/config.h \
 	../../include/ui/gtk/ui_gtk8.h ../../include/ui/generic/ui_8.h \
 	../../include/ui/gtk/ui_gtk9.h ../../include/ui/generic/ui_9.h
 kcemu-send.o: kcemu-send.c
+keyb0.o: keyb0.cc ../../include/kc/system.h ../../include/kc/config.h \
+	../../include/sys/sysdep.h ../../include/kc/z80.h \
+	../../include/z80core/z80.h ../../include/kc/ic.h \
+	../../include/kc/cb.h ../../include/kc/kc.h \
+	../../include/kc/cb_list.h ../../include/kc/keys.h \
+	../../include/kc/pio0.h ../../include/kc/pio.h \
+	../../include/kc/ports.h ../../include/kc/tape.h \
+	../../include/cmd/cmd.h ../../include/cmd/cmdargs.h \
+	../../include/libtape/kct.h ../../include/fileio/load.h \
+	../../include/kc/keyb0.h ../../include/kc/keyboard.h \
+	../../include/kc/keyb0k.h ../../include/kc/ports0.h
 keyb1.o: keyb1.cc ../../include/kc/system.h ../../include/kc/config.h \
 	../../include/sys/sysdep.h ../../include/kc/keys.h \
 	../../include/kc/keyb1.h ../../include/kc/kc.h \
@@ -565,6 +582,17 @@ memory.o: memory.cc ../../include/kc/system.h ../../include/kc/config.h \
 	../../include/sys/sysdep.h ../../include/kc/kc.h \
 	../../include/kc/memory.h ../../include/kc/ic.h \
 	../../include/ui/status.h ../../include/ui/statusl.h
+memory0.o: memory0.cc ../../include/kc/system.h \
+	../../include/kc/config.h ../../include/sys/sysdep.h \
+	../../include/kc/kc.h ../../include/kc/z80.h \
+	../../include/z80core/z80.h ../../include/kc/ic.h \
+	../../include/kc/cb.h ../../include/kc/cb_list.h \
+	../../include/kc/memory0.h ../../include/kc/ports.h \
+	../../include/kc/memory.h ../../include/ui/ui.h \
+	../../include/kc/profile.h ../../include/ui/tape.h \
+	../../include/libtape/kct.h ../../include/ui/debug.h \
+	../../include/ui/module.h ../../include/kc/module.h \
+	../../include/cmd/cmdargs.h
 memory1.o: memory1.cc ../../include/kc/system.h \
 	../../include/kc/config.h ../../include/sys/sysdep.h \
 	../../include/kc/kc.h ../../include/kc/z80.h \
@@ -658,8 +686,8 @@ mod_cpm.o: mod_cpm.cc ../../include/kc/system.h \
 	../../include/kc/kc.h ../../include/kc/fdc.h \
 	../../include/kc/ic.h ../../include/kc/ports.h \
 	../../include/kc/fdc_cmd.h ../../include/kc/floppy.h \
-	../../include/libdisk/libdisk.h ../../include/kc/disk.h \
-	../../include/kc/mod_cpm.h ../../include/kc/module.h
+	../../include/libdisk/libdisk.h ../../include/kc/mod_cpm.h \
+	../../include/kc/module.h
 mod_disk.o: mod_disk.cc ../../include/kc/system.h \
 	../../include/kc/config.h ../../include/sys/sysdep.h \
 	../../include/kc/kc.h ../../include/kc/mod_disk.h \
@@ -675,13 +703,14 @@ mod_list.o: mod_list.cc ../../include/kc/system.h \
 	../../include/kc/mod_r64.h ../../include/kc/mod_cpm.h \
 	../../include/kc/mod_ram8.h ../../include/kc/mod_64k.h \
 	../../include/kc/mod_rom.h ../../include/kc/mod_rom1.h \
-	../../include/kc/romdi.h ../../include/kc/mod_disk.h \
-	../../include/kc/mod_list.h ../../include/kc/mod_4131.h \
-	../../include/kc/pio.h ../../include/ui/ui.h \
-	../../include/kc/cb.h ../../include/kc/profile.h \
-	../../include/ui/tape.h ../../include/libtape/kct.h \
-	../../include/ui/debug.h ../../include/ui/module.h \
-	../../include/cmd/cmdargs.h ../../include/libdbg/dbg.h
+	../../include/kc/romdi.h ../../include/kc/mod_ramf.h \
+	../../include/kc/mod_disk.h ../../include/kc/mod_list.h \
+	../../include/kc/mod_4131.h ../../include/kc/pio.h \
+	../../include/ui/ui.h ../../include/kc/cb.h \
+	../../include/kc/profile.h ../../include/ui/tape.h \
+	../../include/libtape/kct.h ../../include/ui/debug.h \
+	../../include/ui/module.h ../../include/cmd/cmdargs.h \
+	../../include/libdbg/dbg.h
 mod_r64.o: mod_r64.cc ../../include/kc/system.h \
 	../../include/kc/config.h ../../include/sys/sysdep.h \
 	../../include/kc/kc.h ../../include/kc/z80.h \
@@ -706,6 +735,10 @@ mod_ram8.o: mod_ram8.cc ../../include/kc/system.h \
 	../../include/kc/kc.h ../../include/kc/mod_ram8.h \
 	../../include/kc/module.h ../../include/kc/ports.h \
 	../../include/kc/memory.h ../../include/kc/ic.h
+mod_ramf.o: mod_ramf.cc ../../include/kc/system.h \
+	../../include/kc/config.h ../../include/sys/sysdep.h \
+	../../include/kc/kc.h ../../include/kc/mod_ramf.h \
+	../../include/kc/ports.h ../../include/kc/module.h
 mod_rom.o: mod_rom.cc ../../include/kc/system.h \
 	../../include/kc/config.h ../../include/sys/sysdep.h \
 	../../include/kc/kc.h ../../include/kc/mod_rom.h \
@@ -744,6 +777,14 @@ pio.o: pio.cc ../../include/kc/system.h ../../include/kc/config.h \
 	../../include/cmd/cmd.h ../../include/cmd/cmdargs.h \
 	../../include/libtape/kct.h ../../include/fileio/load.h \
 	../../include/kc/memory.h ../../include/libdbg/dbg.h
+pio0.o: pio0.cc ../../include/kc/system.h ../../include/kc/config.h \
+	../../include/sys/sysdep.h ../../include/kc/kc.h \
+	../../include/kc/pio0.h ../../include/kc/pio.h \
+	../../include/kc/ic.h ../../include/kc/ports.h \
+	../../include/kc/tape.h ../../include/kc/cb.h \
+	../../include/cmd/cmd.h ../../include/cmd/cmdargs.h \
+	../../include/libtape/kct.h ../../include/fileio/load.h \
+	../../include/libdbg/dbg.h
 pio1.o: pio1.cc ../../include/kc/system.h ../../include/kc/config.h \
 	../../include/sys/sysdep.h ../../include/kc/kc.h \
 	../../include/kc/z80.h ../../include/z80core/z80.h \
@@ -803,6 +844,14 @@ ports.o: ports.cc ../../include/kc/system.h ../../include/kc/config.h \
 	../../include/z80core/z80.h ../../include/kc/ic.h \
 	../../include/kc/cb.h ../../include/kc/kc.h \
 	../../include/kc/cb_list.h ../../include/kc/ports.h \
+	../../include/libdbg/dbg.h
+ports0.o: ports0.cc ../../include/kc/system.h ../../include/kc/config.h \
+	../../include/sys/sysdep.h ../../include/kc/kc.h \
+	../../include/kc/z80.h ../../include/z80core/z80.h \
+	../../include/kc/ic.h ../../include/kc/cb.h \
+	../../include/kc/cb_list.h ../../include/kc/pio.h \
+	../../include/kc/ports.h ../../include/kc/keyb0.h \
+	../../include/kc/keyboard.h ../../include/kc/ports0.h \
 	../../include/libdbg/dbg.h
 ports4.o: ports4.cc ../../include/kc/system.h ../../include/kc/config.h \
 	../../include/sys/sysdep.h ../../include/kc/kc.h \

@@ -14,6 +14,8 @@ EXTRA_DIST = \
 	ctc_base.h	\
 	cb_list.h	\
 	keyboard.h	\
+	keyb0.h		\
+	keyb0k.h	\
 	keyb1.h		\
 	keyb1k.h	\
 	keyb3.h		\
@@ -24,6 +26,7 @@ EXTRA_DIST = \
 	keyb9k.h	\
 	keys.h		\
 	memory.h	\
+	memory0.h	\
 	memory1.h	\
 	memory2.h	\
 	memory3.h	\
@@ -32,6 +35,7 @@ EXTRA_DIST = \
 	memory8.h	\
 	memory9.h	\
 	pio.h		\
+	pio0.h		\
 	pio1.h		\
 	pio2.h		\
 	pio3.h		\
@@ -39,6 +43,7 @@ EXTRA_DIST = \
 	pio8.h		\
 	pio9.h		\
 	ports.h		\
+	ports0.h	\
 	ports4.h	\
 	sh_mem.h	\
 	disk_io.h	\
@@ -57,6 +62,7 @@ EXTRA_DIST = \
 	mod_64k.h	\
 	mod_rom.h	\
 	mod_rom1.h	\
+	mod_ramf.h	\
 	mod_disk.h	\
 	mod_v24.h	\
 	mod_4131.h	\

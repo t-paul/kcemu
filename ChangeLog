@@ -1,3 +1,71 @@
+2003-02-16  Torsten Paul  <Torsten.Paul@gmx.de>
+
+	* src/kc/disk.cc: check if FDC is available
+
+	* src/kc/mod_4131.cc: added missing call to set_valid()
+
+	* src/libtape/kctape.cc: fix handling of readonly files
+
+	* src/libtape/kct.cc: fix file creation with gcc-3.2
+
+	* src/kc/mod_rom1.cc: call unregister_memory() after
+	unregister_romdi_handler() in destructor
+
+2003-02-15  Torsten Paul  <Torsten.Paul@gmx.de>
+
+	* src/kc/fdc.cc: added set_terminal_count() function; currently
+	used only by the KC87 emulation; terminal count doesn't clear the
+	result data
+
+2003-02-12  Torsten Paul  <Torsten.Paul@gmx.de>
+
+	* src/kc/fdc_cmd.cc: retract head to track 0 and set SEEK END; need
+	by CPM-Z9 boot routine
+
+	* src/kc/mod_cpm.cc: added missing call to set_valid()
+
+2003-02-08  Torsten Paul  <Torsten.Paul@gmx.de>
+
+	* src/kc/tape.cc: added autostart for BASIC programs in KC85/1 and
+	KC87 mode (BASIC must be initialized first!); autostart routine is
+	described in MP 3/89, page 86 ("Basic-Run im OS für die KC87-Familie")
+	
+2003-02-02  Torsten Paul  <Torsten.Paul@gmx.de>
+
+	* include/kc/mod_ramf.h, src/kc/mod_ramf.cc: 256k ram floppy for
+	z1013; it's possible to use two modules of this type at the same
+	time, the first will get i/o port 98h, the second i/o port 58h;
+	initial content can be loaded from files in headersave format that
+	live in the directories ~/.z1013-ramfloppy_98 and
+	~/.z1013-ramfloppy_58 respectivly
+
+	* src/kc/memory.cc, src/kc/tape.cc: added hack to load z1013 files
+	(in headersave format)
+	
+	* src/fileio/load_HS.c: loader for z1013 files in headersave format
+
+	* src/kc/mod_list.cc: check if module insert is possible by
+	checking the valid flag that must be set by the clone constructor
+
+2003-02-01  Torsten Paul  <Torsten.Paul@gmx.de>
+
+	* src/kc/kc.cc: added variant kc87.20
+
+	* src/kc/tape.cc: add files with unknown type as KCT_TYPE_BIN, use
+	real filename otherwise not just "new file"
+
+	* src/libtape/kctape.cc: use new type KCT_TYPE_BIN when adding raw
+	files (via switch -A)
+	
+	* include/libtape/kct.h, src/libtape/kct.cc: added type
+	KCT_TYPE_BIN that will be used for the new emulated systems until
+	the tape i/o really supports those systems
+
+2003-01-29  Torsten Paul  <Torsten.Paul@gmx.de>
+
+	* added first pieces of a z1013 emulation; base system is working
+	but there is no tape emulation yet
+
 2003-01-26  Torsten Paul  <Torsten.Paul@gmx.de>
 
 	* src/kc/mod_list.cc: added plotter module for kc85/1 (the ROM

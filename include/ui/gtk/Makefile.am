@@ -2,6 +2,7 @@
 
 EXTRA_DIST = \
 	ui_gtk.h	\
+	ui_gtk0.h	\
 	ui_gtk1.h	\
 	ui_gtk3.h	\
 	ui_gtk4.h	\

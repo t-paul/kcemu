@@ -37,6 +37,7 @@ Memory7::Memory7(void) : Memory()
 {
   int l;
   char *ptr;
+  kc_variant_t v;
   struct {
     MemAreaGroup **group;
     const char    *name;
@@ -61,7 +62,8 @@ Memory7::Memory7(void) : Memory()
   ptr = new char[l + 14];
   strcpy(ptr, kcemu_datadir);
 
-  if (get_kc_variant() == KC_VARIANT_87_21)
+  v = get_kc_variant();
+  if ((v == KC_VARIANT_87_20) || (v == KC_VARIANT_87_21))
     {
       strcpy(ptr + l, "/os____f0.87b");
       loadROM(ptr, &_rom_os, 0x1000, 1);

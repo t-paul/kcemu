@@ -143,6 +143,7 @@ class FDC : public InterfaceCircuit, public PortInterface
   byte_t _sector;
 
   int _read_bytes;
+  bool _terminal_count;
   
  public:
   FDC(void);
@@ -167,6 +168,7 @@ class FDC : public InterfaceCircuit, public PortInterface
   bool seek(byte_t head, byte_t cylinder, byte_t sector);
   void set_input_gate(byte_t mask, byte_t val);
   void set_msr(byte_t mask, byte_t val);
+  void set_terminal_count(bool val);
 
   byte_t get_ST0(void);
   byte_t get_ST1(void);

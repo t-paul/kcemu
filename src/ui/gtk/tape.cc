@@ -701,6 +701,9 @@ TapeWindow::tapeAddFile(const char    *name,
   case KCT_TYPE_BAS_P:
     data[1] = "BAS*";
     break;
+  case KCT_TYPE_BIN:
+    data[1] = "BIN";
+    break;
   default:
     data[1] = "???";
     break;

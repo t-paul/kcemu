@@ -46,6 +46,7 @@ fileio_init(void)
   loader_GPF_init();
   loader_BASIC_init();
   loader_SSS_init();
+  loader_HS_init();
   loader_BIN_init();
   loader_TAPE_init();
   loader_UNKNOWN_init(); /* fallback */
@@ -149,9 +150,41 @@ fileio_free_prop(fileio_prop_t **prop)
 }
 
 long
+fileio_get_image_z1013(fileio_prop_t *prop, unsigned char *buf)
+{
+  int a, b, len;
+
+  len = prop->size - 32;
+
+  a = 36;
+  b = 0;
+  while (len-- > 0)
+    {
+      switch (a % 36)
+	{
+	case 0:
+	case 1:
+	case 34:
+	case 35:
+	  break;
+	default:
+	  buf[b] = prop->data[a];
+	  b++;
+	  break;
+	}
+      a++;
+    }
+
+  return b;
+}
+
+long
 fileio_get_image(fileio_prop_t *prop, unsigned char *buf)
 {
   int a, b, len;
+
+  if (fileio_get_kctype() == FILEIO_Z1013)
+    return fileio_get_image_z1013(prop, buf);
 
   b = 0;
   switch (prop->type)

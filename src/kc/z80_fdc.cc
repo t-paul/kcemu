@@ -161,6 +161,7 @@ Z80_FDC::do_execute(void)
 void
 Z80_FDC::execute(void)
 {
+  static int x = 40000;
   static int calls = 8;
   
   do_execute();
@@ -173,6 +174,16 @@ Z80_FDC::execute(void)
     }
 
   _cb_list.run_callbacks(_counter);
+
+  if (--x == 0)
+    {
+      x = 40000;
+      if (DBG_check("KCemu/Z80core2/trace"))
+	{
+	  x = 500;
+	  Z80_Trace = 1;
+	}
+    }
 }
 
 long long
@@ -212,8 +223,6 @@ Z80_FDC::reset(bool power_on)
   r.PC.D = 0xfc00;
   Z80_SetRegs(&r);
   Z80_Trace = 0;
-  if (DBG_check("KCemu/Z80core2/trace"))
-    Z80_Trace = 1;
 
   _cb_list.clear();
 }

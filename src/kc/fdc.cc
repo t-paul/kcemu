@@ -23,6 +23,7 @@
 
 #include "kc/system.h"
 
+#include "kc/kc.h"
 #include "kc/fdc.h"
 #include "kc/fdc_cmd.h"
 
@@ -95,6 +96,7 @@ FDC::FDC(void) : InterfaceCircuit("FDC")
   _ST3 = 0;
   _INPUT_GATE = 0x60;
   _selected_unit = 0;
+  _terminal_count = false;
 
   _fstate[0] = new FloppyState(0, 0, 1, new Floppy("attach-1"));
   _fstate[1] = new FloppyState(0, 0, 1, new Floppy("attach-2"));
@@ -120,6 +122,7 @@ FDC::in(word_t addr)
     {
     case 0x40: // BIC
     case 0x98: // CPM-Z9 module (Status Register)
+    case 0x10: // CPM-Z9 module (Status Register) ???
     case 0xf0: // D004 (KC85/4)
       /* CS-FDC (Chipselect) */
       val = _MSR;
@@ -129,6 +132,7 @@ FDC::in(word_t addr)
       break;
     case 0x41: // BIC
     case 0x99: // CPM-Z9 module (Data Register)
+    case 0x11: // CPM-Z9 module (Data Register) ??
     case 0xf1: // D004 (KC85/4)
       val = in_F1(addr);
       DBG(2, form("KCemu/FDC/in_F1",
@@ -235,11 +239,9 @@ FDC::out(word_t addr, byte_t val)
       set_input_gate(0x40, 0x00);
       break;
     case 0xa0: // CPM-Z9 module
+      set_terminal_count((val & 0x10) == 0x10);
 
-      if ((val & 0x10) == 1)
-	set_state(FDC_STATE_COMMAND); // terminal count
-
-      if ((val & 0x20) == 1)
+      if ((val & 0x20) == 0x20)
 	; // RESET
 
       break;
@@ -309,11 +311,23 @@ FDC::out_F1(word_t addr, byte_t val)
   switch (_state)
     {
     case FDC_STATE_IDLE:
+      DBG(2, form("KCemu/FDC/out_F1",
+		  "FDC::out(): addr = %04x, val = %02x [%c] FDC_STATE_IDLE\n",
+		  addr, val, isprint(val) ? val : '.'));
       _cur_cmd = _cmds[val & 0x1f];
       _cur_cmd->start(val);
       break;
     case FDC_STATE_COMMAND:
-       _cur_cmd->write_arg(val);
+      DBG(2, form("KCemu/FDC/out_F1",
+		  "FDC::out(): addr = %04x, val = %02x [%c] FDC_STATE_COMMAND\n",
+		  addr, val, isprint(val) ? val : '.'));
+      _cur_cmd->write_arg(val);
+      break;
+    case FDC_STATE_DATA:
+      DBG(2, form("KCemu/FDC/out_F1",
+		  "FDC::out(): addr = %04x, val = %02x [%c] FDC_STATE_DATA\n",
+		  addr, val, isprint(val) ? val : '.'));
+      write_byte(val);
       break;
     default:
       break;
@@ -458,6 +472,29 @@ FDC::set_msr(byte_t mask, byte_t val)
               _MSR));
 }
 
+/*
+ *  handle the terminal count signal (TC)
+ *
+ *  when receiving high on this pin the floppy controller
+ *  aborts the running command (mostly read/write) and
+ *  goes into result phase
+ */
+void
+FDC::set_terminal_count(bool val)
+{
+  if (_terminal_count == val)
+    return;
+
+  _terminal_count = val;
+  if (!_terminal_count)
+    return;
+
+  if (_cur_cmd)
+    _cur_cmd->finish_cmd();
+  else
+    set_state(FDC_STATE_IDLE);
+}
+
 byte_t
 FDC::get_ST0(void)
 {
@@ -484,7 +521,9 @@ FDC::get_ST3(void)
 {
   set_ST3(ST_3_READY, ST_3_READY);
   set_ST3(ST_3_TWO_SIDE, ST_3_TWO_SIDE);
-  set_ST3(ST_3_WRITE_PROTECTED, ST_3_WRITE_PROTECTED);
+  set_ST3(ST_3_WRITE_PROTECTED, 0);
+  if (get_kc_type() == KC_TYPE_A5105)
+    set_ST3(ST_3_WRITE_PROTECTED, ST_3_WRITE_PROTECTED);
   set_ST3(ST_3_TRACK_0, get_cylinder() == 0 ? ST_3_TRACK_0 : 0);
   set_ST3(ST_3_HEAD_ADDRESS, get_head() == 1 ? ST_3_HEAD_ADDRESS : 0);
   set_ST3(ST_3_UNIT_SELECT_MASK, _selected_unit);

@@ -36,7 +36,7 @@ using namespace std;
 byte_t
 NullPort::in(word_t addr)
 {
-  byte_t val = 0x01;
+  byte_t val = 0xff;
 
   DBG(1, form("KCemu/Ports/NullPort/in",
               "NullPort: in() addr = %04x (returning %02x)\n",

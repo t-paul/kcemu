@@ -21,6 +21,7 @@
 
 #include <ctype.h>
 #include <string.h>
+#include <unistd.h>
 
 #include "kc/system.h"
 
@@ -168,8 +169,11 @@ byte_t
 FDC_CMD::read_byte(void)
 {
   DBG(1, form("KCemu/warning",
-              "FDC_CMD::read_byte() called! [%s]\n",
+              "FDC_CMD::read_byte() called! [current cmd is '%s']\n",
               get_name()));
+
+  sleep(1);
+
   return 0xff;
 }
 
@@ -291,6 +295,7 @@ FDC_CMD_SENSE_DRIVE_STATUS::execute(void)
               _arg[1] & 3));
 
   get_fdc()->select_floppy(_arg[1] & 3);
+  get_fdc()->seek((_arg[1] >> 2) & 1, get_fdc()->get_cylinder(), get_fdc()->get_sector());
   get_fdc()->set_input_gate(0x40, 0x40);
 
   _result[0] = get_fdc()->get_ST3();
@@ -353,6 +358,16 @@ FDC_CMD_WRITE_DATA::execute(void)
   _buf = new byte_t[_sector_size];
 
   _idx = 0;
+
+  _result[0] = get_fdc()->get_ST0();
+  _result[1] = get_fdc()->get_ST1();
+  _result[2] = get_fdc()->get_ST2();
+  _result[3] = _arg[2];
+  _result[4] = _arg[3];
+  _result[5] = _arg[4];
+  _result[6] = _arg[5];
+
+  _data_transfer = true;
 }
 
 void
@@ -525,6 +540,10 @@ FDC_CMD_READ_DATA::fetch_next_sector(void)
   _idx = 0;
   _size = size;
 
+  _result[3] = get_fdc()->get_head();
+  _result[4] = get_fdc()->get_cylinder();
+  _result[5] = sector + 1;
+
   return true;
 }
   
@@ -578,7 +597,14 @@ FDC_CMD_RECALIBRATE::execute(void)
               _arg[1] & 3));
 
   get_fdc()->select_floppy(_arg[1] & 3);
-  get_fdc()->set_input_gate(0x40, 0x40);
+
+  // Head retracted to Track 0, sets SEEK END
+  get_fdc()->seek(get_fdc()->get_head(), 0, get_fdc()->get_sector());
+  get_fdc()->set_ST0(FDC::ST_0_IC_MASK | FDC::ST_0_SEEK_END,
+		     FDC::ST_0_IC_NORMAL_TERMINATION | FDC::ST_0_SEEK_END);
+
+  // input gate is also set in the seek function!
+  get_fdc()->set_input_gate(0x40, 0x00);
 }
 
 /********************************************************************
@@ -602,6 +628,7 @@ FDC_CMD_SENSE_INTERRUPT_STATUS::execute(void)
               ));
 
   _result[0] = get_fdc()->get_ST0();
+  _result[1] = get_fdc()->get_cylinder(); // PCN (current cylinder)
 }
 
 /********************************************************************

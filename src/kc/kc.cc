@@ -68,6 +68,11 @@
 #include "libdisk/libdisk.h"
 #include "libaudio/libaudio.h"
 
+#include "kc/pio0.h"
+#include "kc/keyb0.h"
+#include "kc/ports0.h"
+#include "kc/memory0.h"
+
 #include "kc/pio1.h"
 #include "kc/ctc1.h"
 #include "kc/keyb1.h"
@@ -105,11 +110,13 @@
 
 #ifdef HOST_OS_LINUX
 # ifdef USE_UI_GTK
+#  include "ui/gtk/ui_gtk0.h"
 #  include "ui/gtk/ui_gtk1.h"
 #  include "ui/gtk/ui_gtk3.h"
 #  include "ui/gtk/ui_gtk4.h"
 #  include "ui/gtk/ui_gtk8.h"
 #  include "ui/gtk/ui_gtk9.h"
+#  define UI_0 UI_Gtk0
 #  define UI_1 UI_Gtk1
 #  define UI_3 UI_Gtk3
 #  define UI_4 UI_Gtk4
@@ -184,24 +191,33 @@ static kc_variant_t  kcemu_kc_variant;
 static const char   *kcemu_kc_variant_name;
 
 static kc_variant_names_t kc_types[] = {
-  { "z9001",    -1, KC_TYPE_85_1,  KC_VARIANT_85_1_10     },
-  { "z9001.10", -1, KC_TYPE_85_1,  KC_VARIANT_85_1_10     },
-  { "z9001.11", -1, KC_TYPE_85_1,  KC_VARIANT_85_1_11     },
-  { "kc85/1",    1, KC_TYPE_85_1,  KC_VARIANT_85_1_10     },
-  { "hc900",    -2, KC_TYPE_85_2,  KC_VARIANT_NONE        },
-  { "hc-900",   -2, KC_TYPE_85_2,  KC_VARIANT_NONE        },
-  { "kc85/2",    2, KC_TYPE_85_2,  KC_VARIANT_NONE        },
-  { "kc85/3",    3, KC_TYPE_85_3,  KC_VARIANT_NONE        },
-  { "kc85/4",    4, KC_TYPE_85_4,  KC_VARIANT_NONE        },
-  { "kc87",     -7, KC_TYPE_87,    KC_VARIANT_87_11       },
-  { "kc87.10",  -7, KC_TYPE_87,    KC_VARIANT_87_10       },
-  { "kc87.11",   7, KC_TYPE_87,    KC_VARIANT_87_11       },
-  { "kc87.21",  -8, KC_TYPE_87,    KC_VARIANT_87_21       },
-  { "lc80",      8, KC_TYPE_LC80,  KC_VARIANT_NONE        },
-  { "bic",      -9, KC_TYPE_A5105, KC_VARIANT_A5105_K1505 },
-  { "k1505",    -9, KC_TYPE_A5105, KC_VARIANT_A5105_K1505 },
-  { "a5105",     9, KC_TYPE_A5105, KC_VARIANT_A5105_A5105 },
-  { NULL,       -1, KC_TYPE_NONE,  KC_VARIANT_NONE        },
+  { "z1013",               0, KC_TYPE_Z1013, KC_VARIANT_Z1013_64    },
+  { "z1013.01",           -1, KC_TYPE_Z1013, KC_VARIANT_Z1013_01    }, // 1MHz, 16KByte dRAM, 2KByte ROM
+  { "z1013.12",           -1, KC_TYPE_Z1013, KC_VARIANT_Z1013_12    }, // 2MHz,  1KByte sRAM, 2KByte ROM
+  { "z1013.16",           -1, KC_TYPE_Z1013, KC_VARIANT_Z1013_16    }, // 2MHz, 16KByte dRAM, 4KByte ROM
+  { "z1013.64",           -1, KC_TYPE_Z1013, KC_VARIANT_Z1013_64    },
+  { "z1013.a2",           -1, KC_TYPE_Z1013, KC_VARIANT_Z1013_A2    },
+  { "z1013.rb",           -1, KC_TYPE_Z1013, KC_VARIANT_Z1013_RB    },
+  { "z1013.surl",         -1, KC_TYPE_Z1013, KC_VARIANT_Z1013_SURL  },
+  { "z9001",              -1, KC_TYPE_85_1,  KC_VARIANT_85_1_10     },
+  { "z9001.10",           -1, KC_TYPE_85_1,  KC_VARIANT_85_1_10     },
+  { "z9001.11",           -1, KC_TYPE_85_1,  KC_VARIANT_85_1_11     },
+  { "kc85/1",              1, KC_TYPE_85_1,  KC_VARIANT_85_1_10     },
+  { "hc900",              -2, KC_TYPE_85_2,  KC_VARIANT_NONE        },
+  { "hc-900",             -2, KC_TYPE_85_2,  KC_VARIANT_NONE        },
+  { "kc85/2",              2, KC_TYPE_85_2,  KC_VARIANT_NONE        },
+  { "kc85/3",              3, KC_TYPE_85_3,  KC_VARIANT_NONE        },
+  { "kc85/4",              4, KC_TYPE_85_4,  KC_VARIANT_NONE        },
+  { "kc87",               -7, KC_TYPE_87,    KC_VARIANT_87_11       },
+  { "kc87.10",            -7, KC_TYPE_87,    KC_VARIANT_87_10       },
+  { "kc87.11",             7, KC_TYPE_87,    KC_VARIANT_87_11       },
+  { "kc87.20",            -8, KC_TYPE_87,    KC_VARIANT_87_20       },
+  { "kc87.21",            -8, KC_TYPE_87,    KC_VARIANT_87_21       },
+  { "lc80",                8, KC_TYPE_LC80,  KC_VARIANT_NONE        },
+  { "bic",                -9, KC_TYPE_A5105, KC_VARIANT_A5105_K1505 },
+  { "k1505",              -9, KC_TYPE_A5105, KC_VARIANT_A5105_K1505 },
+  { "a5105",               9, KC_TYPE_A5105, KC_VARIANT_A5105_A5105 },
+  { NULL,                 -1, KC_TYPE_NONE,  KC_VARIANT_NONE        },
 };
 
 static void
@@ -223,8 +239,9 @@ usage(char *argv0)
 	    "This is free software, and you are welcome to redistribute it\n"
 	    "under certain conditions; run `kcemu --license' for details.\n"
 	    "\n"
-	    "usage: kcemu [-1234789esthdlvLW]\n"
+	    "usage: kcemu [-01234789esthdlvLW]\n"
 	    "\n"
+	    "  -0:             run in Z1013 mode\n"
 	    "  -1:             run in Z9001 / KC 85/1 mode\n"
 	    "  -2:             run in KC 85/2 mode\n"
 	    "  -3:             run in KC 85/3 mode\n"
@@ -249,32 +266,47 @@ usage(char *argv0)
 static void
 show_types(void)
 {
-  int a, type;
+  int a, type, width;
   kc_type_t kc_type, old_type;
 
   cout << "available emulations:";
 
   a = 0;
+  width = 0;
   old_type = KC_TYPE_NONE;
   while (242) {
     type = kc_types[a].type >= 0 ? kc_types[a].type : -kc_types[a].type;
     kc_type = kc_types[a].kc_type;
 
+    width++;
     if (old_type != kc_type)
       cout << endl << "  ";
     else
-      cout << ", ";
+      cout << ",";
 
     if (kc_type == KC_TYPE_NONE)
       break;
 
     if (old_type != kc_type)
-      cout << type << ": ";
+      {
+	cout << type << ": ";
+	width = 5;
+      }
 
-    cout << kc_types[a].name;
+    if (width > 60)
+      {
+	cout << endl << "     ";
+	width = 5;
+      }
+
+    cout << " " << kc_types[a].name;
+    width += strlen(kc_types[a].name) + 1;
 
     if (kc_types[a].type >= 0)
-      cout << "*";
+      {
+	width++;
+	cout << "*";
+      }
 
     old_type = kc_type;
     a++;
@@ -897,11 +929,11 @@ main(int argc, char **argv)
   while (1)
     {
 #ifdef HAVE_GETOPT_LONG
-      c = getopt_long(argc, argv, "1234789hvDe:d:f:l:s:t:LW",
+      c = getopt_long(argc, argv, "01234789hvDe:d:f:l:s:t:LW",
                       long_options, &option_index);
 #else
 #ifdef HAVE_GETOPT
-      c = getopt(argc, argv, "1234789hvDe:d:f:l:s:LW");
+      c = getopt(argc, argv, "01234789hvDe:d:f:l:s:LW");
 #else
 #warning neither HAVE_GETOPT_LONG nor HAVE_GETOPT defined
 #warning commandline parsing disabled!
@@ -914,6 +946,9 @@ main(int argc, char **argv)
 
       switch (c)
         {
+	case '0':
+	  type = 0;
+	  break;
 	case '1':
 	  type = 1;
 	  break;
@@ -1008,9 +1043,11 @@ main(int argc, char **argv)
     {
       cmd   = new CMD("*");
       z80   = new Z80;
+      disk  = new Disk;
       ports = new Ports;
       portg = ports->register_ports("-", 0, 0x100, new NullPort, 256);
 
+      PIO0 *p0;
       PIO1_1 *p1;
       PIO2 *p2;
       PIO3 *p3;
@@ -1023,7 +1060,6 @@ main(int argc, char **argv)
       timer = NULL;
       memory = NULL;
       fdc_z80 = NULL;
-      disk = NULL;
       gdc = NULL;
       vis = NULL;
       svg = NULL;
@@ -1107,6 +1143,19 @@ main(int argc, char **argv)
 	  keyboard = k8;
 	  pio = p8;
 	  break;
+	case KC_TYPE_Z1013:
+	  fileio_set_kctype(FILEIO_Z1013);
+	  ui       = new UI_0;
+	  memory   = new Memory0;
+	  ctc      = new CTC1;
+	  p0       = new PIO0;
+	  porti    = new Ports0;
+          keyboard = new Keyboard0;
+	  tape     = new Tape(500, 1000, 2000, 0);
+	  wav      = new WavPlayer(500, 1000, 2000);
+	  tape->set_tape_callback(p0);
+	  pio      = p0;
+	  break;
 	case KC_TYPE_A5105:
 	  ui       = new UI_9;
 	  p9       = new PIO9;
@@ -1117,6 +1166,7 @@ main(int argc, char **argv)
 	  wav      = new WavPlayer(781, 1562, 3125);
 	  tape->set_tape_callback(p9);
 	  pio      = p9;
+	  break;
 	default:
 	  break;
 	}
@@ -1200,12 +1250,21 @@ main(int argc, char **argv)
           z80->daisy_chain_set_first(pio->get_first()); // highest priority
           z80->daisy_chain_set_last(pio->get_last());  // lowest priority
 	  break;
+	case KC_TYPE_Z1013:
+	  portg = ports->register_ports("PIO",    0x00, 4, pio,   10);
+	  portg = ports->register_ports("Port08", 0x08, 1, porti, 10);
+          /*
+           *  build interrupt daisy chain
+           */
+          pio->next(0);
+          z80->daisy_chain_set_first(pio->get_first()); // highest priority
+          z80->daisy_chain_set_last(pio->get_last());  // lowest priority
+	  break;
 	case KC_TYPE_A5105:
 	  gdc = new GDC;
 	  vis = new VIS;
 	  svg = new SVG;
 	  fdc_fdc = new FDC();
-	  disk = new Disk();
 	  portg = ports->register_ports("FDC", 0x40, 12, fdc_fdc, 10);
 	  portg = ports->register_ports("CTC", 0x80,  4, ctc,     10);
 	  portg = ports->register_ports("PIO", 0x90,  4, pio,     10);
@@ -1240,8 +1299,6 @@ main(int argc, char **argv)
 	    
 	    portg = ports->register_ports("FloppyIO", 0xf4, 1, fdc_io, 10);
 	    portg = ports->register_ports("FloppySHMEM", 0xf0, 4, fdc_shmem, 10);
-	    
-	    disk = new Disk();
 	  }
       
       log = new LOG();
@@ -1250,7 +1307,8 @@ main(int argc, char **argv)
 
       if ((kcemu_kc_type == KC_TYPE_85_1) ||
 	  (kcemu_kc_type == KC_TYPE_87) ||
-	  (kcemu_kc_type == KC_TYPE_LC80))
+	  (kcemu_kc_type == KC_TYPE_LC80) ||
+	  (kcemu_kc_type == KC_TYPE_Z1013))
 	tape->power(true);
 
       attach_tape();
@@ -1271,9 +1329,9 @@ main(int argc, char **argv)
       delete disk;
       delete pio;
       delete ctc;
+      delete memory;
       delete ports;
       delete ui;
-      delete memory;
       delete z80;
     }
   while (0); // (!do_quit);

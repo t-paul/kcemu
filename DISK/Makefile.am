@@ -3,6 +3,7 @@
 pkgdata_DATA = \
 	caos.dump	\
 	tools.dump	\
+	cpmz9.dump	\
 	a5105sys.dump	\
 	microdos.dump
 

@@ -152,6 +152,8 @@ public:
     
   virtual void dump(word_t addr);
   virtual void loadRAM(const char *filename);
+  virtual bool loadRAM(std::istream *is, word_t addr);
+  virtual bool loadRAM_Z1013(std::istream *is, word_t addr);
   virtual bool loadRAM(std::istream *is, bool with_block_nr = false);
   virtual void scratch_mem(byte_t *ptr, int len);
   virtual void info(void);

@@ -93,7 +93,7 @@ usage(char *argv0, int exit_value)
 	    "  -c|--create            create tape archive if it doesn't exist\n"
 	    "  -a|--add               add files (KC85/3 mode)\n"
 	    "  -1|--add1              add files (KC85/1 mode)\n"
-	    "  -A|--add-raw           add image files (will get type BASIC)\n"
+	    "  -A|--add-raw           add binary files\n"
 	    "  -r|--remove            remove file from tape archive\n"
 	    "  -x|--extract           extract file from tape archive\n"
 	    "  -d|--dump              hexdump file\n"
@@ -230,7 +230,7 @@ add_raw(KCTFile &kct_file, char *filename)
   fclose(f);
 
   err = kct_file.write(filename, buf, len, 0x0000, 0x0000,
-		       KCT_TYPE_BAS, KCT_MACHINE_ALL);
+		       KCT_TYPE_BIN, KCT_MACHINE_ALL);
 
   return err;
 }
@@ -282,6 +282,12 @@ add_file(KCTFile &kct_file, char *filename)
 static kct_error_t
 open(KCTFile &f, char *name)
 {
+  kct_error_t error;
+
+  error = f.open(name);
+  if (error == KCT_OK_READONLY)
+    return KCT_OK;
+
   if (f.open(name) != KCT_OK)
     {
       if (_create_flag)
@@ -298,6 +304,7 @@ open(KCTFile &f, char *name)
 	  return KCT_ERROR_NOENT;
 	}
     }
+
   return KCT_OK;
 }
 

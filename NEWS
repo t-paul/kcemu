@@ -4,10 +4,16 @@
 
 KCemu 0.3.7
 
+  * added Z1013 emulation
+  * added 256k RAM-Floppy module for Z1013
   * added BIC/A5105 emulation
   * added CPM-Z9 emulation (CP/M for KC87 using a floppy
-    and a 64k RAM module
+    and a 64k RAM module)
   * started emulation of the plotter XY4131
+  * added autostart for BASIC programs in KC85/1 and
+    KC87 mode (BASIC must be initialized first!); autostart
+    routine is described in MP 3/89, page 86 ("Basic-Run
+    im OS für die KC87-Familie")
   * handle BASIC DATA files (signature 0xd4, 0xd4, 0xd4)
     produced by CSAVE*"FILENAME";ARRAYNAME and BASIC
     LIST files (signature 0xd5, 0xd5, 0xd5) produced

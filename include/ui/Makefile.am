@@ -16,4 +16,5 @@ EXTRA_DIST = \
 	copying.h	\
 	window.h	\
 	hsv2rgb.h	\
+	font0.h		\
 	font1.h

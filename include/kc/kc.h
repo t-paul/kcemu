@@ -33,12 +33,14 @@ typedef enum
   KC_TYPE_85_4 	     = (1 << 3),
   KC_TYPE_87         = (1 << 4),
   KC_TYPE_LC80 	     = (1 << 5),
+  KC_TYPE_Z1013      = (1 << 6),
   KC_TYPE_A5105      = (1 << 7),
   KC_TYPE_85_1_CLASS = KC_TYPE_85_1 | KC_TYPE_87,
   KC_TYPE_85_2_CLASS = KC_TYPE_85_2 | KC_TYPE_85_3 | KC_TYPE_85_4,
   KC_TYPE_ALL        = (KC_TYPE_85_1_CLASS |
                        KC_TYPE_85_2_CLASS |
                        KC_TYPE_LC80 |
+                       KC_TYPE_Z1013 |
                        KC_TYPE_A5105)
 } kc_type_t;
 
@@ -49,7 +51,18 @@ typedef enum
   KC_VARIANT_85_1_11 	 = 1,
   KC_VARIANT_87_10   	 = 0,
   KC_VARIANT_87_11   	 = 1,
-  KC_VARIANT_87_21   	 = 2,
+  KC_VARIANT_87_20   	 = 2,
+  KC_VARIANT_87_21   	 = 3,
+  KC_VARIANT_87_30   	 = 4,
+  KC_VARIANT_87_31   	 = 5,
+  KC_VARIANT_Z1013_01    = 0,
+  KC_VARIANT_Z1013_12    = 1,
+  KC_VARIANT_Z1013_16    = 3,
+  KC_VARIANT_Z1013_64    = 4,
+  KC_VARIANT_Z1013_A2    = 5,
+  KC_VARIANT_Z1013_RB    = 6,
+  KC_VARIANT_Z1013_SURL  = 7,
+  KC_VARIANT_Z1013_TEST  = 8,
   KC_VARIANT_A5105_K1505 = 0,
   KC_VARIANT_A5105_A5105 = 1
 } kc_variant_t;

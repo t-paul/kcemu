@@ -211,6 +211,8 @@ fileio_save_wav(const char *filename, const unsigned char *data, int size)
     case FILEIO_KC85_3:
       _start_block = 1;
       break;
+    case FILEIO_Z1013: // FIXME: not implemented
+      return -1;
     }
 	
   header.MainChunkID    = 'R' | 'I' << 8 | 'F' << 16 | 'F' << 24;

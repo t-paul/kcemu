@@ -156,6 +156,9 @@ Disk::~Disk()
 disk_error_t
 Disk::attach(int disk_no, const char *filename, bool create)
 {
+  if (fdc_fdc == NULL)
+    return DISK_ERROR;
+  
   if (create)
     {
       DBG(1, form("KCemu/Disk/attach",
@@ -182,6 +185,9 @@ Disk::attach(int disk_no, const char *filename, bool create)
 disk_error_t
 Disk::detach(int disk_no)
 {
+  if (fdc_fdc == NULL)
+    return DISK_ERROR;
+
   DBG(1, form("KCemu/Disk/detach",
 	      "Disk::detach(): [disk %d] close\n",
 	      disk_no));

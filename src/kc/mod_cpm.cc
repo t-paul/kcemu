@@ -27,7 +27,6 @@
 
 #include "kc/kc.h"
 #include "kc/fdc.h"
-#include "kc/disk.h"
 #include "kc/mod_cpm.h"
 
 using namespace std;
@@ -36,16 +35,19 @@ ModuleCPMZ9::ModuleCPMZ9(ModuleCPMZ9 &tmpl) :
   ModuleInterface(tmpl.get_name(), tmpl.get_id(), tmpl.get_type())
 {
   fdc_fdc = new FDC(); // FIXME: global variable in kc.cc !!!
-  disk = new Disk(); // FIXME: global variable in kc.cc !!!
 
   _portg1 = ports->register_ports(get_name(), 0x98, 2, fdc_fdc, 0);
   _portg2 = ports->register_ports(get_name(), 0xa0, 2, fdc_fdc, 0);
+  _portgX = ports->register_ports(get_name(), 0x10, 2, fdc_fdc, 0);
+
+  set_valid(true);
 }
 
 ModuleCPMZ9::ModuleCPMZ9(const char *name) :
   ModuleInterface(name, 0, KC_MODULE_KC_85_1)
 {
-  _portg1 = _portg2 = NULL;
+  fdc_fdc = NULL;
+  _portg1 = _portg2 = _portgX = NULL;
 }
 
 ModuleCPMZ9::~ModuleCPMZ9(void)
@@ -54,13 +56,12 @@ ModuleCPMZ9::~ModuleCPMZ9(void)
     ports->unregister_ports(_portg1);
   if (_portg2)
     ports->unregister_ports(_portg2);
+  if (_portgX)
+    ports->unregister_ports(_portgX);
 
-  if (disk)
-    delete disk;
   if (fdc_fdc)
     delete fdc_fdc;
 
-  disk = NULL;
   fdc_fdc = NULL;
 }
 
@@ -78,12 +79,10 @@ ModuleCPMZ9::clone(void)
 byte_t
 ModuleCPMZ9::in(word_t addr)
 {
-  cout << "ModuleCPMZ9::in(): addr = 0x" << hex << (int)addr << endl;
   return 0xff;
 }
 
 void
 ModuleCPMZ9::out(word_t addr, byte_t val)
 {
-  cout << "ModuleCPMZ9::out(): addr = 0x" << hex << (int)addr << " / " << (int)val << endl;
 }

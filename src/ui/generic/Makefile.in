@@ -109,7 +109,7 @@ INCLUDES =  	-I../../../include
 CPPFLAGS =  	-DVERSION=\"$(VERSION)\"         -DDATADIR=\"$(pkgdatadir)\"
 
 
-libui_generic_a_SOURCES =  	ui_1.cc			ui_3.cc			ui_4.cc			ui_8.cc			ui_9.cc			scanline.cc		module.cc		tape.cc
+libui_generic_a_SOURCES =  	ui_0.cc			ui_1.cc			ui_3.cc			ui_4.cc			ui_8.cc			ui_9.cc			scanline.cc		module.cc		tape.cc
 
 mkinstalldirs = $(SHELL) $(top_srcdir)/mkinstalldirs
 CONFIG_HEADER = ../../../include/kc/config.h
@@ -121,8 +121,8 @@ DEFS = @DEFS@ -I. -I$(srcdir) -I../../../include/kc
 LDFLAGS = @LDFLAGS@
 LIBS = @LIBS@
 libui_generic_a_LIBADD = 
-libui_generic_a_OBJECTS =  ui_1.o ui_3.o ui_4.o ui_8.o ui_9.o scanline.o \
-module.o tape.o
+libui_generic_a_OBJECTS =  ui_0.o ui_1.o ui_3.o ui_4.o ui_8.o ui_9.o \
+scanline.o module.o tape.o
 AR = ar
 CXXFLAGS = @CXXFLAGS@
 CXXCOMPILE = $(CXX) $(DEFS) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS)
@@ -244,6 +244,11 @@ tape.o: tape.cc ../../../include/ui/generic/tape.h \
 	../../../include/kc/system.h ../../../include/kc/config.h \
 	../../../include/sys/sysdep.h ../../../include/ui/tape.h \
 	../../../include/libtape/kct.h
+ui_0.o: ui_0.cc ../../../include/kc/system.h \
+	../../../include/kc/config.h ../../../include/sys/sysdep.h \
+	../../../include/kc/kc.h ../../../include/kc/memory.h \
+	../../../include/kc/ic.h ../../../include/ui/font0.h \
+	../../../include/ui/generic/ui_0.h
 ui_1.o: ui_1.cc ../../../include/kc/system.h \
 	../../../include/kc/config.h ../../../include/sys/sysdep.h \
 	../../../include/kc/kc.h ../../../include/kc/pio1.h \

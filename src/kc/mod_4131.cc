@@ -132,6 +132,8 @@ ModuleXY4131::ModuleXY4131(ModuleXY4131 &tmpl) :
 	  "0 0 0 setrgbcolor\n");
 
   // pthread_create(&thread, NULL, thread_main, NULL);
+
+  set_valid(true);
 }
 
 ModuleXY4131::ModuleXY4131(const char *name) :

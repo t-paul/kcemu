@@ -149,6 +149,8 @@ loader_TAPE_load(const char *filename,
     case FILEIO_KC85_3:
       fileio_copy_blocks((*prop)->data, data, size, 1);
       break;
+    case FILEIO_Z1013:
+      return -1;
     }
 
   return 0;

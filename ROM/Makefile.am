@@ -26,6 +26,11 @@ pkgdata_DATA = \
 	m900.rom	\
 	m901.rom	\
 	floppy.rom	\
+	z1013_20.rom	\
+	z1013_a2.rom	\
+	z1013_rb.rom	\
+	z1013_ul.rom	\
+	z1013_zg.rom	\
 	k1505_00.rom	\
 	k1505_80.rom	\
 	k5651_40.rom	\

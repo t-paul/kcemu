@@ -240,25 +240,28 @@ ModuleWindow::init_device_1(const char *name)
       gtk_widget_show(_w.led[a]);
     }
 
-  color_expansion_active = false;
-  if (get_kc_type() == KC_TYPE_85_1)
-    if (get_kc_variant() == KC_VARIANT_85_1_11)
-      color_expansion_active = true;
-  if (get_kc_type() == KC_TYPE_87)
-    if (get_kc_variant() != KC_VARIANT_87_10)
-      color_expansion_active = true;
-
-  _w.color_exp = gtk_check_button_new_with_label(_("IRM Color Expansion"));
-  gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(_w.color_exp), color_expansion_active);
-  
-  gtk_table_attach(GTK_TABLE(_w.table[0]), _w.color_exp,
-		   1, 2,
-		   4, 5,
-		   (GtkAttachOptions)(GTK_EXPAND | GTK_FILL), GTK_FILL,
-		   0, 0);
-  gtk_signal_connect(GTK_OBJECT(_w.color_exp), "toggled",
-		     GTK_SIGNAL_FUNC(sf_color_expansion), NULL);
-  gtk_widget_show(_w.color_exp);
+  if (get_kc_type() & KC_TYPE_85_1_CLASS)
+    {
+      color_expansion_active = false;
+      if (get_kc_type() == KC_TYPE_85_1)
+	if (get_kc_variant() == KC_VARIANT_85_1_11)
+	  color_expansion_active = true;
+      if (get_kc_type() == KC_TYPE_87)
+	if (get_kc_variant() != KC_VARIANT_87_10)
+	  color_expansion_active = true;
+      
+      _w.color_exp = gtk_check_button_new_with_label(_("IRM Color Expansion"));
+      gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(_w.color_exp), color_expansion_active);
+      
+      gtk_table_attach(GTK_TABLE(_w.table[0]), _w.color_exp,
+		       1, 2,
+		       4, 5,
+		       (GtkAttachOptions)(GTK_EXPAND | GTK_FILL), GTK_FILL,
+		       0, 0);
+      gtk_signal_connect(GTK_OBJECT(_w.color_exp), "toggled",
+			 GTK_SIGNAL_FUNC(sf_color_expansion), NULL);
+      gtk_widget_show(_w.color_exp);
+    }
 }
 
 void
@@ -293,13 +296,14 @@ ModuleWindow::init(void)
   if (RC::instance()->get_int("Floppy Disk Basis") && (get_kc_type() & KC_TYPE_85_2_CLASS))
     init_device(_("Floppy Disk Basis [F0]"), 0xf0, 3);
 
-  for (a = _nr_of_bd;a > 0;a--)
-    {
-      sprintf(buf, _("D002: Busdriver [%02X]"), 16 * a);
-      init_device(buf, 16 * a, 15);
-    }
+  if (get_kc_type() & KC_TYPE_85_2_CLASS)
+    for (a = _nr_of_bd;a > 0;a--)
+      {
+	sprintf(buf, _("D002: Busdriver [%02X]"), 16 * a);
+	init_device(buf, 16 * a, 15);
+      }
 
-  if (get_kc_type() & KC_TYPE_85_1_CLASS)
+  if ((get_kc_type() & KC_TYPE_85_1_CLASS) || (get_kc_type() == KC_TYPE_Z1013))
     init_device_1(_("Basis Device"));
   else
     init_device(_("Basis Device"), 0, 12);

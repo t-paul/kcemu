@@ -37,11 +37,13 @@ kcemu_SOURCES = \
 	ctc_fdc.cc	\
 	ctc_base.cc	\
 	cb_list.cc	\
+	keyb0.cc	\
 	keyb1.cc	\
 	keyb3.cc	\
 	keyb8.cc	\
 	keyb9.cc	\
 	memory.cc	\
+	memory0.cc	\
 	memory1.cc	\
 	memory2.cc	\
 	memory3.cc	\
@@ -58,6 +60,7 @@ kcemu_SOURCES = \
 	fdc_cmd.cc	\
 	floppy.cc	\
 	pio.cc		\
+	pio0.cc		\
 	pio1.cc		\
 	pio2.cc		\
 	pio3.cc		\
@@ -65,6 +68,7 @@ kcemu_SOURCES = \
 	pio8.cc		\
 	pio9.cc		\
 	ports.cc	\
+	ports0.cc	\
 	ports4.cc	\
 	module.cc	\
 	mod_ram.cc	\
@@ -75,6 +79,7 @@ kcemu_SOURCES = \
 	mod_64k.cc	\
 	mod_rom.cc	\
 	mod_rom1.cc	\
+	mod_ramf.cc	\
 	mod_4131.cc	\
 	mod_disk.cc	\
 	mod_list.cc	\

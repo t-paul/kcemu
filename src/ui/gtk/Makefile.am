@@ -19,6 +19,7 @@ CPPFLAGS = \
 libui_gtk_a_SOURCES = \
 	gtkledline.c	\
 	ui_gtk.cc	\
+	ui_gtk0.cc	\
 	ui_gtk1.cc	\
 	ui_gtk3.cc	\
 	ui_gtk4.cc	\

@@ -283,19 +283,57 @@ Memory::loadRAM(const char *filename)
 void
 Memory::loadRAM(const char *filename, word_t addr)
 {
-    int c;
-    ifstream is;
+  ifstream is;
     
-    is.open(filename, ios::in | ios::binary);
-    if (!is)
-      return;
+  is.open(filename, ios::in | ios::binary);
+  if (!is)
+    return;
 
-    while (242)
-      {
-        c = is.get();
-        if (c == EOF) return;
-        memWrite8(addr++, c);
-      }
+  loadRAM(&is, addr);
+}
+
+bool
+Memory::loadRAM(istream *is, word_t addr)
+{
+  int c;
+
+  while (242)
+    {
+      c = is->get();
+      if (c == EOF)
+	break;
+
+      memWrite8(addr++, c);
+    }
+
+  return true;
+}
+
+bool
+Memory::loadRAM_Z1013(istream *is, word_t addr)
+{
+  int a, c;
+
+  /*
+   *  skip header
+   */
+  for (a = 0;a < 36;a++)
+    c = is->get();
+
+  a = 0;
+  while (242)
+    {
+      c = is->get();
+      if (c == EOF)
+	break;
+
+      if (((a % 36) > 1) && ((a % 36) < 34))
+	memWrite8(addr++, c);
+
+      a++;
+    }
+
+  return true;
 }
 
 bool

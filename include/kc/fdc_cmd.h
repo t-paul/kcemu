@@ -50,7 +50,6 @@ class FDC_CMD
   
   virtual void execute(void) = 0;
   virtual void execute_cmd(void);
-  virtual void finish_cmd(void);
 
  public:
   FDC_CMD(FDC *fdc, int args, int results, const char *name);
@@ -62,6 +61,7 @@ class FDC_CMD
   virtual void start(byte_t val);
   virtual bool write_arg(byte_t val);
   virtual byte_t read_result(void);
+  virtual void finish_cmd(void);
 
   virtual byte_t read_byte(void);
   virtual int get_read_idx(void);
