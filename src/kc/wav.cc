@@ -249,8 +249,9 @@ bool
 WavPlayer::play()
 {
 #ifdef HOST_OS_LINUX
-  char buf[1000]; /* FIXME: */
-  const char *filename, *shortname, *fmt;
+  char buf[1000];
+  char *shortname;
+  const char *filename, *fmt;
 
   DBG(1, form("KCemu/WavPlayer",
               "WavPlayer::play()\n"));
@@ -262,11 +263,7 @@ WavPlayer::play()
   if (filename == NULL)
     return false;
 
-  shortname = strrchr(filename, '/');
-  if (shortname)
-    shortname++;
-  else
-    shortname = filename;
+  shortname = sys_basename(filename);
 
   fmt = libaudio_get_type(_prop);
 
@@ -274,9 +271,10 @@ WavPlayer::play()
   _sample_size = libaudio_get_sample_size(_prop);
   _channels = libaudio_get_channels(_prop);
 
-  sprintf(buf, _("Reading %s `%s' (%d/%d/%d)."),
+  snprintf(buf, sizeof(buf), _("Reading %s `%s' (%d/%d/%d)."),
 	  fmt, shortname, _sample_freq, _sample_size, _channels);
   Status::instance()->setMessage(buf);
+  free(shortname);
 
   init_filter_kernel();
 

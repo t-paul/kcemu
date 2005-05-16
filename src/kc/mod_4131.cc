@@ -144,6 +144,7 @@ ModuleXY4131::ModuleXY4131(const char *name) :
   ModuleInterface(name, 0, KC_MODULE_KC_85_1)
 {
   ready = false;
+  set_valid(true);
 }
 
 ModuleXY4131::~ModuleXY4131(void)

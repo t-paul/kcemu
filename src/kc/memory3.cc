@@ -166,6 +166,12 @@ Memory3::enableIRM(int v)
 void
 Memory3::reset(bool power_on)
 {
+  _m_ram->set_active(true);
+  _m_irm->set_active(true);
+  _m_caos->set_active(true);
+  _m_basic->set_active(true);
+  reload_mem_ptr();
+
   if (!power_on)
     return;
 

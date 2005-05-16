@@ -64,7 +64,7 @@ Z80_WRMEM(dword A, byte V)
 }
 
 void
-Z80_Out(byte Port, byte Value)
+Z80_Out(word Port, byte Value)
 {
   DBG(3, form("KCemu/Z80FDC/OutZ80",
 	      "OutZ80(): %04x: %04x -> %02x\n",
@@ -73,7 +73,7 @@ Z80_Out(byte Port, byte Value)
 }
 
 byte
-Z80_In(byte Port)
+Z80_In(word Port)
 {
   byte_t Value;
 
@@ -226,7 +226,8 @@ Z80_FDC::reset(bool power_on)
   Z80_GetRegs(&r);
   r.PC.D = 0xfc00;
   Z80_SetRegs(&r);
-  Z80_Trace = 0;
+
+  Z80_Trace = DBG_check("KCemu/Z80core2/trace") ? 1 : 0;
 
   _cb_list.clear();
 }

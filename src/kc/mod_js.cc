@@ -31,7 +31,9 @@
 
 #include "kc/system.h"
 
+#include "kc/rc.h"
 #include "kc/z80.h"
+#include "kc/daisy.h"
 #include "kc/mod_js.h"
 
 #include "ui/status.h"
@@ -43,8 +45,8 @@ using namespace std;
 PIOJoystick::PIOJoystick(void) : Callback("PIOJoystick")
 {
   _is_open = false;
-
   js_open();
+
   z80->addCallback(35000, this, NULL);
   register_callback_A_in(this);
 }
@@ -55,13 +57,54 @@ PIOJoystick::~PIOJoystick(void)
   js_close();
 }
 
+const char *
+PIOJoystick::check_joystick_device(void)
+{
+  const char *dev = RC::instance()->get_string("Joystick Device", NULL);
+  if (dev != NULL)
+    return dev;
+
+  const char *devices[] = {
+    "/dev/input/js0",
+    "/dev/input/js1",
+    "/dev/input/js2",
+    "/dev/input/js3",
+    "/dev/js0",
+    "/dev/js1",
+    "/dev/js2",
+    "/dev/js3",
+    NULL,
+  };
+
+  for (int a = 0;devices[a] != NULL;a++)
+    {
+      if (access(devices[a], R_OK) == 0)
+	return devices[a];
+    }
+
+  return NULL;
+}
+
+const char *
+PIOJoystick::get_joystick_device(void)
+{
+  return _device;
+}
+
+void
+PIOJoystick::set_joystick_device(const char *device)
+{
+  if (_device != NULL)
+    free(_device);
+
+  _device = (device == NULL) ? NULL : strdup(device);
+}
+
 bool
 PIOJoystick::js_open(void)
 {
-  bool ok;
   int version;
-  char name[250];
-  char buf[1024];
+  char name[1024];
 
   _number_of_axes = 0;
   _number_of_buttons = 0;
@@ -69,8 +112,17 @@ PIOJoystick::js_open(void)
   _idle_counter = IDLE_COUNTER_INIT;
   _up = _down = _left = _right = _button0 = _button1 = 0;
 
-  ok = true;
-  _fd = open("/dev/js0", O_RDONLY | O_NONBLOCK);
+  if (get_joystick_device() == NULL)
+    {
+      const char *dev = check_joystick_device();
+      if (dev == NULL)
+	return false;
+
+      set_joystick_device(dev);
+    }
+
+  bool ok = true;
+  _fd = open(get_joystick_device(), O_RDONLY | O_NONBLOCK);
   if (_fd < 0)
     ok = false;
 
@@ -98,6 +150,7 @@ PIOJoystick::js_open(void)
       if (_is_open)
 	{
 	  Status::instance()->setMessage(_("Joystick removed!"));
+	  set_joystick_device(NULL);
 	  _is_open = false;
 	}
       return false;
@@ -105,12 +158,14 @@ PIOJoystick::js_open(void)
 
   if (!_is_open)
     {
-      snprintf(buf, 1024,
-	       _("Joystick (%d.%d.%d): %s"),
+      char buf[1024];
+      snprintf(buf, sizeof(buf),
+	       _("Joystick (%d.%d.%d): %s on %s"),
 	       0xff & (version >> 16),
 	       0xff & (version >>  8),
 	       0xff &  version,
-	       name);
+	       name,
+	       get_joystick_device());
       Status::instance()->setMessage(buf);
       _is_open = true;
     }
@@ -125,6 +180,12 @@ PIOJoystick::js_close(void)
     close(_fd);
 
   _fd = -1;
+}
+
+bool
+PIOJoystick::is_open(void)
+{
+  return _is_open;
 }
 
 void
@@ -162,7 +223,7 @@ PIOJoystick::callback(void *data)
    *  If initialization of the joystick driver failes we simply
    *  ignore the fact and keep trying so if a joystick is plugged
    *  in and the driver is loaded (e.g. autoloaded by the hotplug
-   *  USB system) we pick it up and use it.
+   *  USB system) we pick it up and use it againx.
    */
   while (_fd >= 0)
     {
@@ -320,11 +381,42 @@ ModuleJoystick::ModuleJoystick(ModuleJoystick &tmpl) :
   ModuleInterface(tmpl.get_name(), tmpl.get_id(), tmpl.get_type())
 {
   _pio = new PIOJoystick();
-  _pio->next(pio->get_first());
-  _pio->iei(1);
-  _portg = ports->register_ports("JOYSTICK", 0x90, 4, _pio, 0);
 
-  set_valid(true);
+  _portg = NULL;
+  if (_pio->is_open())
+    {
+      daisy->add_last(_pio);
+      _portg = ports->register_ports("JOYSTICK", 0x90, 4, _pio, 0);
+      set_valid(true);
+    }
+  else
+    {
+      char buf[1024];
+
+      if (_pio->get_joystick_device() == NULL)
+	{
+	  snprintf(buf, sizeof(buf),
+		   _("Couldn't find any readable joystick device!\n\n"
+		     "If your joystick is connected properly and the correct\n"
+		     "driver is loaded give the device name of your joystick\n"
+		     "in the 'Joystick Device' section of the configuration\n"
+		     "file."));
+	}
+      else
+	{
+	  snprintf(buf, sizeof(buf),
+		   _("Couldn't open joystick device (%s)!\n\n"
+		     "Make sure you have the joystick properly connected\n"
+		     "and loaded the correct driver for it.\n\n"
+		     "Also check the 'Joystick Device' section in the\n"
+		     "configuration file if the device name shown above\n"
+		     "looks bogus.\n"),
+		   _pio->get_joystick_device());
+	}
+
+      set_error_text(buf);
+      set_valid(false);
+    }
 }
 
 ModuleJoystick::ModuleJoystick(const char *name, byte_t id) :
@@ -332,12 +424,16 @@ ModuleJoystick::ModuleJoystick(const char *name, byte_t id) :
 {
   _pio = NULL;
   _portg = NULL;
+  set_valid(true);
 }
 
 ModuleJoystick::~ModuleJoystick(void)
 {
   if (_portg != NULL)
-    ports->unregister_ports(_portg);
+    {
+      daisy->remove(_pio);
+      ports->unregister_ports(_portg);
+    }
 
   if (_pio != NULL)
     delete _pio;

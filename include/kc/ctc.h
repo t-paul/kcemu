@@ -103,7 +103,7 @@ class CTC : public InterfaceCircuit, public PortInterface, public Callback
   virtual void try_trigger_irq(int channel);
 
  public:
-  CTC(void);
+  CTC(const char *name);
   virtual ~CTC(void);
 
   virtual bool irq_0(void) = 0;

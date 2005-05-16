@@ -37,8 +37,6 @@
 ModuleRAMFloppy::ModuleRAMFloppy(ModuleRAMFloppy &tmpl) :
   ModuleInterface(tmpl.get_name(), tmpl.get_id(), tmpl.get_type())
 {
-  int a;
-
   _addr = 0;
 
   _ram = NULL;
@@ -48,11 +46,19 @@ ModuleRAMFloppy::ModuleRAMFloppy(ModuleRAMFloppy &tmpl) :
   _port = _master->allocate_port();
 
   if (_port < 0)
-    return;
+    {
+      char buf[1024];
+      snprintf(buf, sizeof(buf),
+	       _("It's not possible to have more than two RAM-Floppy\n"
+		 "modules. The first one is running on port 98h and\n"
+		 "the second one on port 58h."));
+      set_error_text(buf);
+      return;
+    }
 
   _ram = new byte_t[0x40000];
 
-  for (a = 0;a < 0x20000;a++)
+  for (int a = 0;a < 0x20000;a++)
     _ram[a] = 0xe5;
 
   init();
@@ -72,6 +78,8 @@ ModuleRAMFloppy::ModuleRAMFloppy(const char *name) :
 
   _disk_a = -0x98;
   _disk_b = -0x58;
+
+  set_valid(true);
 }
 
 ModuleRAMFloppy::~ModuleRAMFloppy(void)

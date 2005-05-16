@@ -87,47 +87,56 @@ PIO3::out(word_t addr, byte_t val)
     }
 }
 
+byte_t
+PIO3::in_A_DATA(void)
+{
+  byte_t ret = PIO::in_A_DATA();
+
+  if (_mode[A] == MODE_INPUT)
+    ret = 0x07;
+
+  return ret;
+}
+
 void
 PIO3::change_A(byte_t changed, byte_t val)
 {
   if (changed & 0x01)
     {
       DBG(2, form("KCemu/PIO/3/change/A",
-                  "PIO A: CAOS ROM E [%d]\n",
+                  "PIO A: LED ROM [%d]\n",
                   (val & 1)));
-      memory->enableCAOS_E(val & 0x01);
+
+      memory->enableCAOS_E(val & 1);
     }
   if (changed & 0x02)
     {
       DBG(2, form("KCemu/PIO/3/change/A",
-                  "PIO A: RAM 0 [%d]\n",
+                  "PIO A: LED RAM [%d]\n",
                   ((val >> 1) & 1)));
-      //memory->enableRAM_0(val & 0x02);
     }
   if (changed & 0x04)
     {
       DBG(2, form("KCemu/PIO/3/change/A",
-                  "PIO A: IRM [%d]\n",
+                  "PIO A: LED IRM [%d]\n",
                   ((val >> 2) & 1)));
-      memory->enableIRM(val & 0x04);
     }
   if (changed & 0x08)
     {
       DBG(2, form("KCemu/PIO/3/change/A",
-                  "PIO A: write protect RAM 0 [%d]\n",
+                  "PIO A: ??? [%d]\n",
                   ((val >> 3) & 1)));
-      //memory->protectRAM_0(val & 0x08);
     }
   if (changed & 0x10)
     {
       DBG(2, form("KCemu/PIO/3/change/A",
-                  "PIO A: K OUT (unused) [%d]\n",
+                  "PIO A: NMI/CAOS SWITCH [%d]\n",
                   ((val >> 4) & 1)));
     }
   if (changed & 0x20)
     {
       DBG(2, form("KCemu/PIO/3/change/A",
-                  "PIO A: LED [%d]\n",
+                  "PIO A: LED TAPE [%d]\n",
                   ((val >> 5) & 1)));
     }
   if (changed & 0x40)
@@ -148,34 +157,22 @@ PIO3::change_A(byte_t changed, byte_t val)
 
 void PIO3::change_B(byte_t changed, byte_t val)
 {
-  if (changed & 0x01)
-    {
-      DBG(2, form("KCemu/PIO/3/change/B",
-		  "PIO B: flip-flop [%d]\n",
-		  (val & 1)));
-    }
-  if (changed & 0x0e)
+  if (changed & 0x1f)
     {
       DBG(2, form("KCemu/PIO/3/change/B",
 		  "PIO B: volume [%d]\n",
-		  ((val >> 1) & 7)));
-    }
-  if (changed & 0x10)
-    {
-      DBG(2, form("KCemu/PIO/3/change/B",
-		  "PIO B: unused 0x10 [%d]\n",
-		  ((val >> 4) & 1)));
+		  (val & 0x1f)));
     }
   if (changed & 0x20)
     {
       DBG(2, form("KCemu/PIO/3/change/B",
-                  "PIO B: RAM 8 [%d]\n",
+                  "PIO B: unused [%d]\n",
                   ((val >> 5) & 1)));
     }
   if (changed & 0x40)
     {
       DBG(2, form("KCemu/PIO/3/change/B",
-                  "PIO B: RAM 8 write protect [%d]\n",
+                  "PIO B: unused [%d]\n",
                   ((val >> 6) & 1)));
     }
   if (changed & 0x80)

@@ -33,7 +33,7 @@
 
 using namespace std;
 
-CTC::CTC(void) : InterfaceCircuit("CTC"), Callback("CTC")
+CTC::CTC(const char *name) : InterfaceCircuit(name), Callback(name)
 {
   _irq_valid[0] = 0;
   _irq_valid[1] = 1;

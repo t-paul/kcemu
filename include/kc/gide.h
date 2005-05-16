@@ -26,6 +26,15 @@
 
 #include "kc/ports.h"
 
+typedef struct hard_disk_config
+{
+  int nr_of_cylinders;
+  int nr_of_heads;
+  int nr_of_sectors;
+  const char *name;
+  const char *filename;
+} hard_disk_config_t;
+
 class GIDE : public PortInterface
 {
  private:
@@ -40,6 +49,13 @@ class GIDE : public PortInterface
     GIDE_STATUS_BUSY           = (1 << 7),
   };
 
+  enum {
+    GIDE_RTC_REG_F_TEST        = (1 << 3),
+    GIDE_RTC_REG_F_12_24       = (1 << 2),
+    GIDE_RTC_REG_F_STOP        = (1 << 1),
+    GIDE_RTC_REG_F_RESET       = (1 << 0),
+  };
+
  private:
   int _cylinder;
   int _sector;
@@ -48,8 +64,18 @@ class GIDE : public PortInterface
   int _drive;
   int _status;
   int _error;
+  word_t _rtc_register;
+  byte_t _sector_buffer[512];
+  hard_disk_config_t _hard_disk_config[2];
+
+ private:
+  void set_drive_id(void);
+  void set_drive_id_word(byte_t *buf, int val);
+  void set_drive_id_string(byte_t *buf, int maxlen, const char *str);
+  bool seek(FILE *file, int cylinder, int head, int sector);
 
  protected:
+  byte_t in_rtc(word_t addr);
   byte_t in_data(void);
   byte_t in_error(void);
   byte_t in_sector_count();
@@ -59,6 +85,8 @@ class GIDE : public PortInterface
   byte_t in_drive_head();
   byte_t in_status(void);
 
+  void out_rtc(word_t addr, byte_t val);
+  void out_data(byte_t val);
   void out_command(byte_t val);
   void out_digital_output(byte_t val);
   void out_sector_count(byte_t val);
@@ -66,6 +94,8 @@ class GIDE : public PortInterface
   void out_cylinder_low(byte_t val);
   void out_cylinder_high(byte_t val);
   void out_drive_head(byte_t val);
+
+  void set_status(byte_t mask, byte_t val);
 
  public:
   GIDE(void);

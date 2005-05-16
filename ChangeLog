@@ -1,5 +1,65 @@
-2004-08-20  Torsten Paul  <tp@dali>
+2005-05-15  Torsten Paul  <Torsten.Paul@gmx.de>
 
+	* src/kc/mod_rom1.cc: round module size up to 4k boundary and
+	initialize content with 0xff
+
+	* include/kc/module.h, src/kc/module.cc, src/kc/mod_list.cc: added
+	the possibility to show an error text when a module can not be
+	inserted (e.g. if it's only possible to have exactly one module of
+	a specific type)
+
+	* src/kc/mod_js.cc: added configuration for joystick device and
+	better auto probing for some default joystick devices; currently
+	always the first joystick is selected.
+
+	* src/kc/keyb1.cc: changed kc85/1 keyboard handling with respect
+	to shifted keys; it should be possible now to enter characters
+	that are shifted in the pc layout but not shifted in the kc layout
+
+2005-05-14  Torsten Paul  <Torsten.Paul@gmx.de>
+
+	* include/kc/gide.h, src/kc/gide.cc: GIDE support is now working
+	to the extend that it's possible to boot from hard disk. current
+	implementation has two fixed hard disks, master drive is a Seagate
+	ST-157A (42MB) and slave drive is a MyZ80 compatible hard disk.
+	not yet solved is the problem of initializing the directory area
+	of the hard disk file. without this only the first sector of the
+	directory is usable.
+
+2005-05-01  Torsten Paul  <Torsten.Paul@gmx.de>
+
+	* src/kc/memory3.cc: reinitialize memory layout on reset
+
+	* src/kc/mod_ram.cc: fix configuration changes; address changes
+	were only honoured when the active flag was changed too
+
+	* src/kc/mod_disk.cc: fix initialization
+
+2005-04-30  Torsten Paul  <Torsten.Paul@gmx.de>
+
+	* src/kc/pio3.cc: fix meaning of the internal pio ports (according
+	to schematics, due to lack of system handbook)
+
+	* src/kc/pio.cc: handle byte input mode (which is the PIO default)
+
+2005-04-24  Torsten Paul  <Torsten.Paul@gmx.de>
+
+	* include/z80core2/z80io.h: fixed definition of I/O functions
+	to allow usage 16-bit port address; this is neccessary for the
+	GIDE/RTC input
+
+2005-04-23  Torsten Paul  <Torsten.Paul@gmx.de>
+
+	* src/kc/fdc_cmd.cc: changed the "format a track" to work with the
+	caosdisk command
+
+	* include/kc/daisy.h, src/kc/daisy.cc: separated interrupt daisy
+	chain handling so it can be used from module code
+
+	* include/kc/mod_dio.h, src/kc/mod_dio.cc, include/kc/ctc_dio.h,
+	include/kc/pio_dio.h, src/kc/ctc_dio.cc, src/kc/pio_dio.cc: added
+	digital in/out module (M001)
+	
 2004-08-14  Torsten Paul  <Torsten.Paul@gmx.de>
 
 	* include/kc/disk.h, src/kc/disk.cc: added method to create new

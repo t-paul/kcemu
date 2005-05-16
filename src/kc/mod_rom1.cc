@@ -75,9 +75,11 @@ ModuleROM1::ModuleROM1(const char *filename,
 {
   _group = NULL;
   _addr = addr;
-  _size = size;
   _set_romdi = set_romdi;
+
+  _size = (size + 0x3ff) & 0xfc00;
   _rom = new byte_t[_size];
+  memset(_rom, 0xff, _size);
 
   set_valid(Memory::load_rom(filename, _rom, size, false));
 }

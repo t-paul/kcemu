@@ -34,26 +34,37 @@ ModuleFDC::ModuleFDC(ModuleFDC &tmpl) :
   _portg = NULL;
   _master = &tmpl;
 
-  if (fdc_fdc)
-    return;
-
-  if (_master->get_count() > 0)
-    return;
-
-  _master->set_count(1);
-  _fdc_type = _master->_fdc_type;
-
-  switch (_fdc_type)
+  if ((_master->get_count() == 0) && (fdc_fdc == NULL))
     {
-    case FDC_INTERFACE_SCHNEIDER:
-      fdc_fdc = new FDC0S(); // global in kc.cc
-      _portg = ports->register_ports("FDC", 0xf0, 10, fdc_fdc, 0);
-      break;
-    case FDC_INTERFACE_KRAMER:
-      return; // not yet implemented
-    }
+      _master->set_count(1);
+      _fdc_type = _master->_fdc_type;
 
-  set_valid(true);
+      switch (_fdc_type)
+	{
+	case FDC_INTERFACE_SCHNEIDER:
+	  fdc_fdc = new FDC0S(); // global in kc.cc
+	  _portg = ports->register_ports("FDC", 0xf0, 10, fdc_fdc, 0);
+	  break;
+	case FDC_INTERFACE_KRAMER:
+	  return; // not yet implemented
+	}
+
+      set_valid(true);
+    }
+  else
+    {
+      char buf[1024];
+      snprintf(buf, sizeof(buf),
+	       _("It's not possible to have more than one\n"
+		 "module of type %s!\n\n"
+		 "(And due to some technical points of the emulator\n"
+		 "it's also not possible to have both the Kramer and\n"
+		 "Schneider variant of the floppy module active at\n"
+		 "the same time.)"),
+	       get_name());
+      set_error_text(buf);
+      set_valid(false);
+    }
 }
 
 ModuleFDC::ModuleFDC(const char *name, fdc_interface_type_t fdc_type) :
@@ -62,6 +73,16 @@ ModuleFDC::ModuleFDC(const char *name, fdc_interface_type_t fdc_type) :
   _count = 0;
   _portg = NULL;
   _fdc_type = fdc_type;
+
+  switch (_fdc_type)
+    {
+    case FDC_INTERFACE_SCHNEIDER:
+      set_valid(true);
+      break;
+    case FDC_INTERFACE_KRAMER:
+      set_valid(false); // not yet implemented
+      break;
+    }
 }
 
 ModuleFDC::~ModuleFDC(void)

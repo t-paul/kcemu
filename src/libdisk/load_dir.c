@@ -39,16 +39,16 @@
 #define SIZE_TO_REC(x) (((x) + (RECORD_SIZE - 1)) / RECORD_SIZE)
 
 // directory size in bytes
-#define DIR_SIZE(dpb)              (DIR_ENTRY_SIZE * (dpb->drm + 1))
+#define DIR_SIZE(dpb)              (DIR_ENTRY_SIZE * ((dpb)->drm + 1))
 
 // disk size in bytes
-#define DISK_SIZE(dpb)             (RECORD_SIZE * (dpb->dsm + 1))
+#define DISK_SIZE(dpb)             (RECORD_SIZE * (((dpb)->dsm + 1) << ((dpb)->bsh)))
 
 // sector size in bytes
-#define SECTOR_SIZE(dpb)           (RECORD_SIZE <
+#define SECTOR_SIZE(dpb)           (RECORD_SIZE << ((dpb)->bsh))
 
 // size of allocation unit
-#define AU_SIZE(dpb)               (RECORD_SIZE << dpb->bsh)
+#define AU_SIZE(dpb)               (RECORD_SIZE << (dpb)->bsh)
 
 #define SIZE_TO_AU(dpb,x)          (((x) + (AU_SIZE(dpb) - 1)) / AU_SIZE(dpb))
 
@@ -545,7 +545,7 @@ write_system_block(char *path, char *buf, int block, int len)
   if (chdir(path) < 0)
     return -1;
 
-  f = fopen(".system", "r+b");
+  f = fopen(SYSTEM_NAME, "r+b");
   if (f == NULL)
     return -1;
 

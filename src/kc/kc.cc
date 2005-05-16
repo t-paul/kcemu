@@ -64,6 +64,7 @@
 #include "kc/wav.h"
 #include "kc/tape.h"
 #include "kc/disk.h"
+#include "kc/daisy.h"
 #include "kc/timer.h"
 #include "kc/module.h"
 #include "kc/mod_list.h"
@@ -192,6 +193,7 @@
 using namespace std;
 
 Z80        *z80;
+DaisyChain *daisy;
 UI         *ui;
 Ports      *ports;
 Ports      *ports_fdc;
@@ -222,7 +224,6 @@ Ports           *fdc_ports;
 FDC             *fdc_fdc;
 CTC             *fdc_ctc;
 GIDE            *fdc_gide;
-
 
 int   kcemu_ui_scale;
 int   kcemu_ui_debug;
@@ -1357,7 +1358,8 @@ main(int argc, char **argv)
       z80   = new Z80;
       disk  = new Disk;
       ports = new Ports;
-      portg = ports->register_ports("-", 0, 0x100, new NullPort, 256);
+      daisy = new DaisyChain;
+      portg = ports->register_ports("-", 0, 0x100, new NullPort("NullPort"), 256);
 
       PIO0 *p0;
       PIO1_1 *p1;
@@ -1542,15 +1544,10 @@ main(int argc, char **argv)
 	  portg = ports->register_ports("CTC",  0x80, 4, ctc,  10);
 	  portg = ports->register_ports("PIO1", 0x88, 4, pio,  10);
 	  portg = ports->register_ports("PIO2", 0x90, 4, pio2, 10);
-	  /*
-           *  build interrupt daisy chain
-           */
-	  ctc->next(pio->get_first());
-	  pio->next(pio2->get_first());
-	  pio2->next(0);
-	  ctc->iei(1);
-	  z80->daisy_chain_set_first(pio->get_first()); // highest priority
-	  z80->daisy_chain_set_last(pio->get_last());  // lowest priority
+
+	  daisy->add_last(ctc);
+	  daisy->add_last(pio);
+	  daisy->add_last(pio2);
 	  break;
 	case KC_TYPE_85_2:
 	case KC_TYPE_85_3:
@@ -1562,14 +1559,9 @@ main(int argc, char **argv)
 	  portg = ports->register_ports("Module", 0x80, 1, module, 10);
 	  portg = ports->register_ports("PIO",    0x88, 4, pio,    10);
 	  portg = ports->register_ports("CTC",    0x8c, 4, ctc,    10);
-	  /*
-           *  build interrupt daisy chain
-           */
-	  ctc->next(pio->get_first());
-	  pio->next(0);
-	  ctc->iei(1);
-	  z80->daisy_chain_set_first(ctc->get_first()); // highest priority
-	  z80->daisy_chain_set_last(ctc->get_last());  // lowest priority
+
+	  daisy->add_last(ctc);
+	  daisy->add_last(pio);
 	  break;
 	case KC_TYPE_85_4:
 	case KC_TYPE_85_5:
@@ -1583,14 +1575,9 @@ main(int argc, char **argv)
 	  portg = ports->register_ports("Port86", 0x86, 1, porti,  10);
 	  portg = ports->register_ports("PIO",    0x88, 4, pio,    10);
 	  portg = ports->register_ports("CTC",    0x8c, 4, ctc,    10);
-	  /*
-           *  build interrupt daisy chain
-           */
-	  ctc->next(pio->get_first());
-	  pio->next(0);
-	  ctc->iei(1);
-	  z80->daisy_chain_set_first(ctc->get_first()); // highest priority
-	  z80->daisy_chain_set_last(ctc->get_last());  // lowest priority
+
+	  daisy->add_last(ctc);
+	  daisy->add_last(pio);
 	  break;
 	case KC_TYPE_LC80:
 	  sound = new Sound8;
@@ -1600,31 +1587,23 @@ main(int argc, char **argv)
 	  portg = ports->register_ports("CTC",  0xec, 4, ctc,  10);
 	  portg = ports->register_ports("PIO1", 0xf4, 4, pio,  10);
 	  portg = ports->register_ports("PIO2", 0xf8, 4, pio2, 10);
-	  /*
-           *  build interrupt daisy chain
-           */
-	  ctc->next(pio->get_first());
-	  pio->next(pio2->get_first());
-	  pio2->next(0);
-	  ctc->iei(1);
-	  z80->daisy_chain_set_first(pio->get_first()); // highest priority
-	  z80->daisy_chain_set_last(pio->get_last());  // lowest priority
+
+	  daisy->add_last(ctc);
+	  daisy->add_last(pio);
+	  daisy->add_last(pio2);
 	  break;
 	case KC_TYPE_Z1013:
 	  portg = ports->register_ports("PIO",    0x00, 4, pio,   10);
 	  portg = ports->register_ports("Port08", 0x08, 1, porti, 10);
-	  /*
-           *  build interrupt daisy chain
-           */
-	  pio->next(0);
-	  z80->daisy_chain_set_first(pio->get_first()); // highest priority
-	  z80->daisy_chain_set_last(pio->get_last());  // lowest priority
+
+	  daisy->add_last(pio);
 	  break;
 	case KC_TYPE_A5105:
 	  gdc = new GDC;
 	  vis = new VIS;
 	  svg = new SVG;
 	  fdc_fdc = new FDC9();
+
 	  portg = ports->register_ports("FDC", 0x40, 12, fdc_fdc, 10);
 	  portg = ports->register_ports("CTC", 0x80,  4, ctc,     10);
 	  portg = ports->register_ports("PIO", 0x90,  4, pio,     10);
@@ -1632,11 +1611,8 @@ main(int argc, char **argv)
 	  portg = ports->register_ports("VIS", 0x9c,  3, vis,     10);
 	  portg = ports->register_ports("SVG", 0xa0, 12, svg,     10);
 
-	  ctc->next(pio->get_first());
-	  pio->next(0);
-	  ctc->iei(1);
-	  z80->daisy_chain_set_first(ctc->get_first()); // highest priority
-	  z80->daisy_chain_set_last(ctc->get_last());  // lowest priority
+	  daisy->add_last(ctc);
+	  daisy->add_last(pio);
 	  break;
 	case KC_TYPE_POLY880:
 	  portg = ports->register_ports("PIO1",   0x80, 4, pio,   10);
@@ -1672,7 +1648,7 @@ main(int argc, char **argv)
 	    fdc_ctc = new CTC_FDC();
 	    fdc_gide = new GIDE();
 
-	    fdc_ports->register_ports("-", 0, 0x100, new NullPort(), 256);
+	    fdc_ports->register_ports("-", 0, 0x100, new NullPort("NullPort (FDC)"), 256);
 	    fdc_ports->register_ports("GIDE", 0, 16, fdc_gide, 10);
 	    fdc_ports->register_ports("FDC", 0xf0, 12, fdc_fdc, 10);
 	    fdc_ports->register_ports("CTC", 0xfc, 4, fdc_ctc, 10);

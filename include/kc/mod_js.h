@@ -51,6 +51,8 @@ class PIOJoystick : public PIO, public PIOCallbackInterface, public Callback
 
   byte_t _val;
 
+  char *_device;
+
  protected:
   virtual bool js_open(void);
   virtual void js_close(void);
@@ -60,6 +62,11 @@ class PIOJoystick : public PIO, public PIOCallbackInterface, public Callback
  public:
   PIOJoystick(void);
   virtual ~PIOJoystick(void);
+
+  virtual bool is_open(void);
+  virtual const char * check_joystick_device(void);
+  virtual const char * get_joystick_device(void);
+  virtual void set_joystick_device(const char *device);
 
   virtual byte_t in(word_t addr);
   virtual void out(word_t addr, byte_t val);
@@ -81,7 +88,7 @@ class PIOJoystick : public PIO, public PIOCallbackInterface, public Callback
 class ModuleJoystick : public ModuleInterface, public PortInterface
 {
  private:
-  PIO *_pio;
+  PIOJoystick *_pio;
   PortGroup *_portg;
 
  public:

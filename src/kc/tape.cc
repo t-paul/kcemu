@@ -62,8 +62,9 @@ public:
       bool ret;
       istream *is;
       word_t addr;
-      const char *name, *shortname;
-      char buf[100]; /* FIXME: */
+      const char *name;
+      char *shortname;
+      char buf[1000];
       kct_file_props_t props;
 
       if (!args)
@@ -89,12 +90,9 @@ public:
           if (!ret)
 	    break;
 
-	  shortname = strrchr(name, '/');
-	  if (shortname)
-	    shortname++;
-	  else
-	    shortname = name;
-	  sprintf(buf, _("File `%s' loaded."), shortname);
+	  shortname = sys_basename(name);
+	  snprintf(buf, sizeof(buf), _("File `%s' loaded."), shortname);
+	  free(shortname);
 	  Status::instance()->setMessage(buf);
 	  if (context != 1)
 	    break;
@@ -150,9 +148,10 @@ public:
   void execute(CMD_Args *args, CMD_Context context)
     {
       bool create;
-      char buf[100]; /* FIXME: */
+      char buf[1000];
       tape_error_t err;
-      const char *filename, *shortname;
+      char *shortname;
+      const char *filename;
 
       create = false;
       filename = NULL;
@@ -218,12 +217,9 @@ public:
               break;
             case TAPE_OK:
 	    case TAPE_OK_READONLY:
-              shortname = strrchr(filename, '/');
-              if (shortname)
-                shortname++;
-              else
-                shortname = filename;
-              sprintf(buf, _("tape-archive `%s' attached."), shortname);
+              shortname = sys_basename(filename);
+              snprintf(buf, sizeof(buf), _("tape-archive `%s' attached."), shortname);
+	      free(shortname);
               Status::instance()->setMessage(buf);
 	      /*  args should have 'filename' still set here! */
 	      CMD_EXEC_ARGS("ui-tape-attached", args);

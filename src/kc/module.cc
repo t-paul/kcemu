@@ -40,6 +40,7 @@ ModuleInterface::ModuleInterface(const char *name,
   _valid = false;
   _name = strdup(name);
   _mod_type = mod_type;
+  _error_text = NULL;
 }
 
 ModuleInterface::~ModuleInterface(void)
@@ -84,6 +85,21 @@ bool
 ModuleInterface::is_valid(void)
 {
   return _valid;
+}
+
+const char *
+ModuleInterface::get_error_text(void)
+{
+  return _error_text;
+}
+
+void
+ModuleInterface::set_error_text(const char *text)
+{
+  if (_error_text != NULL)
+    free(_error_text);
+
+  _error_text = (text == NULL) ? NULL : strdup(text);
 }
 
 Module::Module(void)

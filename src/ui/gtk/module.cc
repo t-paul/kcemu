@@ -103,6 +103,8 @@ ModuleWindow::create_menu(int slot)
 	continue;
 
       menuitem = gtk_radio_menu_item_new_with_label(group, (*it)->get_name());
+      if ((*it)->get_mod() != NULL)
+	gtk_widget_set_sensitive(menuitem, (*it)->get_mod()->is_valid());
       gtk_object_set_user_data(GTK_OBJECT(menuitem), (*it));
       gtk_signal_connect(GTK_OBJECT(menuitem), "activate",
 			 GTK_SIGNAL_FUNC(sf_activate), (gpointer)slot);
@@ -289,6 +291,9 @@ ModuleWindow::init2(void)
 
   _nr_of_bd = module_list->get_nr_of_busdrivers();
 
+  /*
+   *  window
+   */
   _window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
   gtk_widget_set_name(_window, "ModuleWindow");
   gtk_window_set_title(GTK_WINDOW(_window), _("KCemu: Module"));

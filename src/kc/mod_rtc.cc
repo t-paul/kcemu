@@ -35,14 +35,23 @@ ModuleRTC::ModuleRTC(ModuleRTC &tmpl) :
   _portg = NULL;
   _master = &tmpl;
 
-  if (_master->get_count() > 0)
-    return;
-
-  _master->set_count(1);
-  _base_port = _master->_base_port;
-  _portg = ports->register_ports("RTC", _base_port, 16, this, 0);
-
-  set_valid(true);
+  if (_master->get_count() == 0)
+    {
+      _master->set_count(1);
+      _base_port = _master->_base_port;
+      _portg = ports->register_ports("RTC", _base_port, 16, this, 0);
+      set_valid(true);
+    }
+  else
+    {
+      char buf[1024];
+      snprintf(buf, sizeof(buf),
+	       _("It's not possible to have more than one\n"
+		 "module of type %s!"),
+	       get_name());
+      set_error_text(buf);
+      set_valid(false);
+    }
 }
 
 ModuleRTC::ModuleRTC(const char *name, int base_port) :
@@ -51,6 +60,8 @@ ModuleRTC::ModuleRTC(const char *name, int base_port) :
   _count = 0;
   _portg = NULL;
   _base_port = base_port;
+
+  set_valid(true);
 }
 
 ModuleRTC::~ModuleRTC(void)

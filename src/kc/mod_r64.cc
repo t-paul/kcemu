@@ -76,6 +76,7 @@ ModuleRAM64::ModuleRAM64(const char *name) :
   _portg = NULL;
   _ram[0] = _ram[1] = _ram[2] = _ram[3] = NULL;
   _group[0] = _group[1] = _group[2] = _group[3] = NULL;
+  set_valid(true);
 }
 
 ModuleRAM64::~ModuleRAM64(void)

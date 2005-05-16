@@ -31,6 +31,7 @@
 
 #include "kc/kc.h"
 #include "kc/z80.h"
+#include "kc/daisy.h"
 #include "kc/timer.h"
 #include "kc/ports.h"
 #include "kc/memory.h"
@@ -246,9 +247,7 @@ Z80::Z80(void)
   _tracedelay = 100000;
 
   _irq_line = 0;
-  _daisy_chain_first = 0;
-  _daisy_chain_last = 0;
-  _daisy_chain_irq_mask = 1;
+  _irq_mask = 1;
 
   _do_quit = false;
 }
@@ -324,11 +323,8 @@ Z80::run(void)
       //if (_regs.PC.W <= 0x8000)
       //z80->printPC(); cout << endl;
 
-      //if ((_regs.PC.W == 0xe0d5) && (RdZ80(0xe0d5) == 0xed) && (_regs.BC.W < 5))
-      //debug(true);
-
-      if (_regs.PC.W == 0xfbbe)
-	z80->debug(true);
+      //if (_regs.PC.W == 0xfbbe)
+      //z80->debug(true);
 
       if (_singlestep)
 	{
@@ -544,30 +540,18 @@ Z80::irq_enabled(void)
   return (_regs.IFF & 1) != 0;
 }
 
-void
-Z80::daisy_chain_set_first(InterfaceCircuit *ic)
-{
-  _daisy_chain_first = ic;
-}
-
-void
-Z80::daisy_chain_set_last(InterfaceCircuit *ic)
-{
-  _daisy_chain_last = ic;
-}
-
 dword_t
-Z80::daisy_chain_get_irqmask(void)
+Z80::get_irq_mask(void)
 {
-  dword_t val = _daisy_chain_irq_mask;
+  dword_t val = _irq_mask;
 
   if (val == 0)
     {
       DBG(0, form("KCemu/warning",
-                  "daisy_chain_get_irqmask(): too many interrupt sources!\n"));
+                  "get_irq_mask(): too many interrupt sources!\n"));
     }
 
-  _daisy_chain_irq_mask <<= 1;
+  _irq_mask <<= 1;
 
   return val;
 }
@@ -593,31 +577,13 @@ Z80::reset_irq_line(dword_t mask)
 word_t
 Z80::irq_ack(void)
 {
-  if (_daisy_chain_last == 0)
-    {
-      return IRQ_NOT_ACK;
-    }
-
-  //_daisy_chain_first->debug();
-  word_t val = _daisy_chain_last->ack();
-  //_daisy_chain_first->debug();
-  //sleep(1);
-  return val;
+  return daisy->irq_ack();
 }
 
 void
 Z80::reti(void)
 {
-  //ic_list_t::iterator it;
-
-  if (_daisy_chain_last)
-    {
-      _daisy_chain_last->reti_ED();
-      _daisy_chain_last->reti_4D();
-    }
-
-  //for (it = _ic_list.begin();it != _ic_list.end();it++)
-  //(*it)->reti();
+  daisy->reti();
 }
 
 int

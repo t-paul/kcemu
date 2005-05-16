@@ -418,47 +418,49 @@ FDC::set_state(fdc_state_t state)
 {
   _state = state;
 
-  _MSR = 0;
+  byte_t msr = get_msr() & 0x0f;
   switch (_state)
     {
     case FDC_STATE_IDLE:
-      _MSR |= ST_MAIN_RQM;
+      msr |= ST_MAIN_RQM;
       DBG(2, form("KCemu/FDC/state",
 		  "FDC::set_state(): FDC_STATE_IDLE    -> MSR: %02x\n",
-		  _MSR));
+		  msr));
       break;
     case FDC_STATE_COMMAND:
-      _MSR |= ST_MAIN_READ_WRITE;
-      _MSR |= ST_MAIN_RQM;
+      msr |= ST_MAIN_READ_WRITE;
+      msr |= ST_MAIN_RQM;
       DBG(2, form("KCemu/FDC/state",
 		  "FDC::set_state(): FDC_STATE_COMMAND -> MSR: %02x\n",
-		  _MSR));
+		  msr));
       break;
     case FDC_STATE_EXECUTE:
-      _MSR |= ST_MAIN_NON_DMA;
-      _MSR |= ST_MAIN_DIO;
+      msr |= ST_MAIN_NON_DMA;
+      msr |= ST_MAIN_DIO;
       DBG(2, form("KCemu/FDC/state",
 		  "FDC::set_state(): FDC_STATE_EXECUTE -> MSR: %02x\n",
-		  _MSR));
+		  msr));
       break;
     case FDC_STATE_DATA:
-      _MSR |= ST_MAIN_READ_WRITE;
-      _MSR |= ST_MAIN_NON_DMA;
-      _MSR |= ST_MAIN_DIO;
-      _MSR |= ST_MAIN_RQM;
+      msr |= ST_MAIN_READ_WRITE;
+      msr |= ST_MAIN_NON_DMA;
+      msr |= ST_MAIN_DIO;
+      msr |= ST_MAIN_RQM;
       DBG(2, form("KCemu/FDC/state",
 		  "FDC::set_state(): FDC_STATE_DATA    -> MSR: %02x\n",
-		  _MSR));
+		  msr));
       break;
     case FDC_STATE_RESULT:
-      _MSR |= ST_MAIN_READ_WRITE;
-      _MSR |= ST_MAIN_DIO;
-      _MSR |= ST_MAIN_RQM;
+      msr |= ST_MAIN_READ_WRITE;
+      msr |= ST_MAIN_DIO;
+      msr |= ST_MAIN_RQM;
       DBG(2, form("KCemu/FDC/state",
 		  "FDC::set_state(): FDC_STATE_RESULT  -> MSR: %02x\n",
-		  _MSR));
+		  msr));
       break;
     }
+
+  set_msr(0xf0, msr);
 }
 
 bool
@@ -471,12 +473,15 @@ FDC::seek(byte_t head, byte_t cylinder, byte_t sector)
   _cur_floppy->set_cylinder(cylinder);
   _cur_floppy->set_sector(sector);
 
-  if (_cur_floppy->seek())
-    set_input_gate(0x40, 0x40);
-  else
-    set_input_gate(0x40, 0x00);
+  bool seek_ok = _cur_floppy->seek();
 
-  return true;
+  byte_t unit_bit = 1 << _selected_unit;
+  set_input_gate(0x40, seek_ok ? 0x40 : 0x00);
+  
+  // do not set busy bit, we do seek in zero time
+  //set_msr(unit_bit, seek_ok ? 0 : unit_bit);
+
+  return seek_ok;
 }
 
 byte_t
@@ -504,7 +509,7 @@ void
 FDC::set_msr(byte_t mask, byte_t val)
 {
   _MSR = ((_MSR & ~mask) | (val & mask));
-  DBG(2, form("KCemu/FDC/msr",
+  DBG(2, form("KCemu/FDC/MSR",
 	      "FDC::set_msr(): MSR: %02x\n",
 	      _MSR));
 }
@@ -572,24 +577,36 @@ void
 FDC::set_ST0(byte_t mask, byte_t val)
 {
   _ST0 = (~mask & _ST0) | (mask & val);
+  DBG(2, form("KCemu/FDC/ST0",
+	      "FDC::set_ST0(): ST0: %02x\n",
+	      _ST0));
 }
 
 void
 FDC::set_ST1(byte_t mask, byte_t val)
 {
   _ST1 = (~mask & _ST1) | (mask & val);
+  DBG(2, form("KCemu/FDC/ST1",
+	      "FDC::set_ST1(): ST1: %02x\n",
+	      _ST1));
 }
 
 void
 FDC::set_ST2(byte_t mask, byte_t val)
 {
   _ST2 = (~mask & _ST2) | (mask & val);
+  DBG(2, form("KCemu/FDC/ST2",
+	      "FDC::set_ST2(): ST2: %02x\n",
+	      _ST2));
 }
 
 void
 FDC::set_ST3(byte_t mask, byte_t val)
 {
   _ST3 = (~mask & _ST3) | (mask & val);
+  DBG(2, form("KCemu/FDC/ST3",
+	      "FDC::set_ST3(): ST3: %02x\n",
+	      _ST3));
 }
 
 void

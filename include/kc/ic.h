@@ -79,6 +79,8 @@ public:
 
   virtual void prev(InterfaceCircuit *ic);
   virtual void next(InterfaceCircuit *ic);
+  virtual InterfaceCircuit * get_prev();
+  virtual InterfaceCircuit * get_next();
   virtual InterfaceCircuit * get_first();
   virtual InterfaceCircuit * get_last();
 

@@ -98,7 +98,7 @@ class FDC : public InterfaceCircuit, public PortInterface
     ST_0_ALL_MASK                = 0xff,
     ST_0_IC_MASK                 = 0xc0,   /* Interrupt Code */
     ST_0_IC_NORMAL_TERMINATION     = 0x00, /* Normal Termination of Command */
-    ST_0_IC_ABNORMAL_TERMINATION   = 0x40, /* Abnormal Tremination of Command */
+    ST_0_IC_ABNORMAL_TERMINATION   = 0x40, /* Abnormal Termination of Command */
     ST_0_IC_INVALID_COMMAND        = 0x80, /* Invalid Command issued */
     ST_0_IC_FDD_NOT_READY          = 0xc0, /* Abnormal Termination, not ready */
     ST_0_SEEK_END                  = 0x20, /* Seek End */

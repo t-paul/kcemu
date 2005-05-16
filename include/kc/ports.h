@@ -35,7 +35,13 @@ public:
 
 class NullPort : public PortInterface
 {
+private:
+  char *_name;
+
 public:
+  NullPort(const char *name);
+  virtual ~NullPort(void);
+
   virtual byte_t in(word_t addr);
   virtual void out(word_t addr, byte_t val);
 };

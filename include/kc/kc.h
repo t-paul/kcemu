@@ -85,6 +85,7 @@ typedef struct
 
 class Z80;
 class Z80_FDC;
+class DaisyChain;
 class UI;
 class Ports;
 class Module;
@@ -107,6 +108,7 @@ class VIS;
 class Poly880;
 
 extern Z80             *z80;
+extern DaisyChain      *daisy;
 extern UI              *ui;
 extern Ports           *ports;
 extern PortInterface   *porti;

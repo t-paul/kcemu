@@ -130,8 +130,6 @@ Module192k::Module192k(Module192k &tmpl) :
 Module192k::Module192k(const char *d2, const char *d3, const char *d5, const char *name) :
   ModuleInterface(name, 0, KC_MODULE_KC_85_1)
 {
-  bool valid = true;
-
   init();
 
   _master = true;
@@ -144,6 +142,7 @@ Module192k::Module192k(const char *d2, const char *d3, const char *d5, const cha
   memset(_rom_D3, 0, 32768);
   memset(_rom_D5, 0, 16384);
 
+  bool valid = true;
   if (!Memory::load_rom(d2, _rom_D2, 65536, false))
     valid = false;
   if (!Memory::load_rom(d3, _rom_D3, 32768, false))
@@ -163,6 +162,8 @@ Module192k::Module192k(const char *d2, const char *d3, const char *d5, const cha
       _rom_D3 = NULL;
       _rom_D5 = NULL;
     }
+
+  set_valid(valid);
 }
 
 Module192k::~Module192k(void)

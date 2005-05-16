@@ -40,6 +40,9 @@ class Keyboard1 : public Keyboard, public PIOCallbackInterface
     int sym;
     int code;
   } _keybuf[MAX_KEYS];
+
+  int  _shift;
+  int  _control;
   bool _in_callback;
 
  protected:

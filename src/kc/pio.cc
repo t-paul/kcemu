@@ -38,13 +38,16 @@ using namespace std;
 
 PIO::PIO(void) : InterfaceCircuit("PIO")
 {
+  _first_out[A] = true;
+  _first_out[B] = true;
+  
   _cb_a_in  = 0;
   _cb_a_out = 0;
   _cb_b_in  = 0;
   _cb_b_out = 0;
   reset(true);
   z80->register_ic(this);
-  _z80_irq_mask = z80->daisy_chain_get_irqmask();
+  _z80_irq_mask = z80->get_irq_mask();
 }
 
 PIO::~PIO(void)
@@ -60,7 +63,7 @@ PIO::reset(bool power_on)
   _irq_vector[A] = _irq_vector[B] = 0;
   _ready[A]      = _ready[B]      = 1;
   _strobe[A]     = _strobe[B]     = 0;
-  _mode[A]       = _mode[B]       = 0;
+  _mode[A]       = _mode[B]       = MODE_INPUT;
 
   _irq_enable[A] = _irq_enable[B] = 0;
   _irq_active[A] = _irq_active[B] = 0;
@@ -86,7 +89,8 @@ PIO::reset(bool power_on)
 }
 
 byte_t
-PIO::in_A_DATA(void) {
+PIO::in_A_DATA(void)
+{
   int cb;
   byte_t ret;
 
@@ -94,7 +98,7 @@ PIO::in_A_DATA(void) {
   if (_cb_a_in)
     cb = _cb_a_in->callback_A_in();
 
-  if (_mode[A] == 3)
+  if (_mode[A] == MODE_CONTROL)
     {
       if (cb >= 0)
 	_ext[A] = cb;
@@ -125,7 +129,7 @@ PIO::in_B_DATA(void) {
   if (_cb_b_in)
     cb = _cb_b_in->callback_B_in();
 
-  if (_mode[B] == 3)
+  if (_mode[B] == MODE_CONTROL)
     {
       if (cb >= 0)
 	_ext[B] = cb;
@@ -176,6 +180,18 @@ PIO::out_A_DATA(byte_t val)
               "PIO::out(): port A DATA (mode %d): val = %02x\n",
               _mode[B], val));
 
+  if (_mode[A] == MODE_INPUT)
+    {
+      _value[A] = val;
+      return;
+    }
+
+  if (_first_out[A])
+    {
+      _value[A] = ~val;
+      _first_out[A] = false;
+    }
+
   change_A(_value[A] ^ val, val);
   _value[A] = val;
   _ready[A] = 1;
@@ -191,6 +207,18 @@ PIO::out_B_DATA(byte_t val)
               "PIO::out(): port B DATA (mode %d): val = %02x\n",
               _mode[B], val));
 
+  if (_mode[B] == MODE_INPUT)
+    {
+      _value[B] = val;
+      return;
+    }
+
+  if (_first_out[B])
+    {
+      _value[B] = ~val;
+      _first_out[B] = false;
+    }
+
   change_B(_value[B] ^ val, val);
   _value[B]   = val;
   _irq[B]     = 1;
@@ -203,6 +231,7 @@ PIO::out_B_DATA(byte_t val)
 void
 PIO::out_CTRL(int port, byte_t val)
 {
+  byte_t old_mode;
   char p = (port == A) ? 'A' : 'B';
 
   if (port == A)
@@ -230,9 +259,10 @@ PIO::out_CTRL(int port, byte_t val)
       _bit_mode[port] = val;
       _bit_mode_follows[port] = false;
 
-#ifdef PIO_OUT_CTRL_DEBUG
-      cout.form("PIO: [%c] new bit mode: %02x (0 = out/ 1 = in)\n", p, _bit_mode[port]);
-#endif
+      DBG(2, form("KCemu/PIO/control",
+		  "PIO: [%c] new bit mode: %02x (0 = out/ 1 = in)\n",
+		  p, _bit_mode[port]));
+
       return;
     }
 
@@ -251,9 +281,11 @@ PIO::out_CTRL(int port, byte_t val)
        */
       _irq_mask[port] = ~val;
       _irq_mask_follows[port] = false;
-#ifdef PIO_OUT_CTRL_DEBUG
-      cout.form("PIO: [%c] new irq mask (inverted): %02x\n", p, _irq_mask[port]);
-#endif
+
+      DBG(2, form("KCemu/PIO/control",
+		  "PIO: [%c] new irq mask (inverted): %02x\n",
+		  p, _irq_mask[port]));
+
       return;
     }
   
@@ -267,10 +299,12 @@ PIO::out_CTRL(int port, byte_t val)
   if ((val & 1) == 0)
     {
       _irq_vector[port] = val;
-#ifdef PIO_OUT_CTRL_DEBUG
-      cout.form("PIO: [%c] new irq vector: 0x%02x\n", p, val);
-#endif
-      return;
+
+      DBG(2, form("KCemu/PIO/control",
+		  "PIO: [%c] new irq vector: 0x%02x\n",
+		  p, val));
+
+	  return;
     }
   
   switch (val & 0x0f)
@@ -286,16 +320,18 @@ PIO::out_CTRL(int port, byte_t val)
       _irq[port] = (val >> 7) & 0x01;
       if (_irq[port])
         {
-#ifdef PIO_OUT_CTRL_DEBUG
-          cout.form("PIO: [%c] irq enabled\n", p);
-#endif
+	  DBG(2, form("KCemu/PIO/control",
+		      "PIO: [%c] irq enabled\n",
+		      p));
+
           _irq_enable[port] = 1;
         }
       else
         {
-#ifdef PIO_OUT_CTRL_DEBUG
-          cout.form("PIO: [%c] irq disabled\n", p);
-#endif
+	  DBG(2, form("KCemu/PIO/control",
+		      "PIO: [%c] irq disabled\n",
+		      p));
+
           _irq_enable[port] = 0;
         }
       break;
@@ -311,37 +347,38 @@ PIO::out_CTRL(int port, byte_t val)
       _irq[port] = (val >> 7) & 1;
       if (_irq[port])
         {
-#ifdef PIO_OUT_CTRL_DEBUG
-          cout.form("PIO: [%c] irq enabled\n", p);
-#endif
+	  DBG(2, form("KCemu/PIO/control",
+		      "PIO: [%c] irq enabled\n",
+		      p));
+
           _irq_enable[port] = 1;
         }
       else
         {
-#ifdef PIO_OUT_CTRL_DEBUG
-          cout.form("PIO: [%c] irq disabled\n", p);
-#endif
+	  DBG(2, form("KCemu/PIO/control",
+		      "PIO: [%c] irq disabled\n",
+		      p));
+
           _irq_enable[port] = 0;
         }
-      
+	    
       _irq_and_or[port] = (val >> 6) & 1;
-#ifdef PIO_OUT_CTRL_DEBUG
-      if (_irq_and_or[port])
-        cout.form("PIO: [%c] AND/OR mode set to AND\n", p);
-      else
-        cout.form("PIO: [%c] AND/OR mode set to OR\n", p);
-#endif
-      
+      DBG(2, form("KCemu/PIO/control",
+		  "PIO: [%c] AND/OR mode set to %s\n",
+		  p, _irq_and_or[port] ? "AND" : "OR"));
+
       _irq_h_l[port] = (val >> 5) & 1;
-#ifdef PIO_OUT_CTRL_DEBUG
-      if (_irq_h_l[port])
-        cout.form("PIO: [%c] H/L mode set to H\n", p);
-      else
-        cout.form("PIO: [%c] H/L mode set to L\n", p);
-#endif
+      DBG(2, form("KCemu/PIO/control",
+		  "PIO: [%c] H/L mode set to %c\n",
+		  p, _irq_h_l[port] ? 'H' : 'L'));
       
       if (val & 0x10)
-        _irq_mask_follows[port] = true;
+	{
+	  _irq_mask_follows[port] = true;
+	  DBG(2, form("KCemu/PIO/control",
+		      "PIO: [%c] irq mask will be set with next control write\n",
+		      p));
+	}
       
       break;
       
@@ -353,39 +390,47 @@ PIO::out_CTRL(int port, byte_t val)
        *  +----+----+---+---+---+---+---+---+
        */
     case 0x0f:
+      old_mode = _mode[port];
       _mode[port] = (val >> 6) & 0x03;
-#ifdef PIO_OUT_CTRL_DEBUG
-      cout.form("PIO: [%c] new mode: %d - ", p, _mode[port]);
-#endif
+
       switch (_mode[port])
         {
-        case 0:
-#ifdef PIO_OUT_CTRL_DEBUG
-          cout << "byte output" << endl;
-#endif
+        case MODE_OUTPUT:
+	  DBG(2, form("KCemu/PIO/control",
+		      "PIO: [%c] new mode: %d - BYTE OUTPUT\n",
+		      p, _mode[port]));
           break;
-        case 1:
-#ifdef PIO_OUT_CTRL_DEBUG
-          cout << "byte input" << endl;
-#endif
+        case MODE_INPUT:
+	  DBG(2, form("KCemu/PIO/control",
+		      "PIO: [%c] new mode: %d - BYTE INPUT\n",
+		      p, _mode[port]));
           break;
-        case 2:
-#ifdef PIO_OUT_CTRL_DEBUG
-          cout << "byte input/output" << endl;
-#endif
+        case MODE_BIDIRECTIONAL:
+	  DBG(2, form("KCemu/PIO/control",
+		      "PIO: [%c] new mode: %d - BIDIRECTIONAL\n",
+		      p, _mode[port]));
           break;
-        case 3:
-#ifdef PIO_OUT_CTRL_DEBUG
-          cout << "bit mode" << endl;
-#endif
+        case MODE_CONTROL:
+	  DBG(2, form("KCemu/PIO/control",
+		      "PIO: [%c] new mode: %d - CONTROL (bit mode)\n",
+		      p, _mode[port]));
           _bit_mode_follows[port] = true;
           break;
         }
+
+      if (old_mode == MODE_INPUT)
+	{
+	  if (port == A)
+	    out_A_DATA(_value[A]);
+	  else
+	    out_B_DATA(_value[B]);
+	}
+
       break;
     default:
-      cout << "PIO: [" << p << "] ??? unknon control byte: "
-	   << hex << setw(2) << setfill('0') << val
-	   << endl;
+      DBG(2, form("KCemu/PIO/control",
+		  "PIO: [%c] ??? unknown control byte %02x (%d)\n",
+		  p, val, val));
       break;
     }
 }

@@ -100,6 +100,16 @@ IRM Memory Access: 1
 
 ##############################################################################
 #
+#  Debugging für die Grafik-Darstellung ein-/ausschalten
+#  (funktioniert nur ohne Skalierung!)
+#
+#  Werte: 	0 = aus
+#		1 = an
+#
+Display Debug: 0
+
+##############################################################################
+#
 #  Einschalten der Emulation des V24-Moduls über die serielle
 #  Schnittstelle (Die Emulation ist nicht vollständig und ziemlich
 #  fehlerbehaftet, daher sollte diese Option normalerweise auf
@@ -133,21 +143,46 @@ V24-Baudrate: 19200
 
 ##############################################################################
 #
+#  Joystick Device
+#
+#  Wird hier kein Device angegeben werden die folgenden Gerätedateien
+#  auf Verfügbarkeit geprüft und die erste lesbare ausgewählt:
+#
+#	/dev/input/js0
+#	/dev/input/js1
+#	/dev/input/js2
+#	/dev/input/js3
+#	/dev/js0
+#	/dev/js1
+#	/dev/js2
+#	/dev/js3
+#
+#Joystick Device: /dev/input/js0
+
+##############################################################################
+#
 #  Module, die beim Start des Emulators eingelegt sein sollen
 #
 #  Die Zahlen müssen in Hex angegeben werden, sprich nach der 00000009
 #  kommt erstmal 0000000A.
 #
 #  Werte:	(kc85/2-4)
+#		M001		Digital I/O
 #		M003		V24-Modul
+#		M006		Basic-Modul für KC85/2 (Einsprung mit JUMP x)
+#		M008		Joystick Modul
 #		M011		64k RAM
-#		M022		Expander RAM (16k)
 #		M012		Texor
+#		M022		Expander RAM (16k)
 #		M026		Forth
 #		M027		Development
+#		M032		256k Segmented RAM
+#		M034		512k Segmented RAM
+#		M035		1M Segmented RAM
+#		M035x4		4M RAM
+#		M036		128k Segmented RAM
 #		M900		WordPro '86 (KC85/3)
 #		M901		WordPro '86 (KC85/4)
-#		BASIC		Basic-Modul für KC85/2
 #
 #		(kc85/1, kc87)
 #		RAM4		RAM Modul (16k/4000h) für KC85/1
@@ -181,8 +216,37 @@ V24-Baudrate: 19200
 #		RAM4000		RAM Modul 4000h-7fffh
 #		RAM8000		RAM Modul 8000h-ffffh
 #
-Module_00000000: M011
-Module_00000001: M011
+#Module_00000000: M011
+#Module_00000001: M011
+
+##############################################################################
+#
+#  Selbst definierbare ROM-Module
+#  (zur Zeit nur ROM-Module KC85/2-5, Groesse 1k bis max. 16k in 1k Schritten)
+#
+
+#  Kürzel für den Modul, kann beim Start des Emulators als Wert für den
+#  Parameter -M übergeben werden
+#
+Custom ROM Module_00000000: CAOS24
+
+#  Name des Moduls der in der Modul-Liste angezeigt wird (optional,
+#  wenn nicht gesetzt wird das Kürzel benutzt)
+#
+Custom ROM Module (Name)_00000000: CAOS 2.4
+
+#  Strukturbyte des Moduls (optional, default is 0xfb)
+#
+Custom ROM Module (Id)_00000000: 0xfb
+
+#  Größe des Moduls (optional, default ist 8k, es können Werte zwischen
+#  1k und 16k in Schritten von 1k angegeben werden)
+#
+Custom ROM Module (Size)_00000000: 0x4000
+
+#  Filename mit dem Inhalt des ROM-Moduls
+#
+Custom ROM Module (File)_00000000: /tmp/roms/caos24.rom
 
 ##############################################################################
 #
@@ -226,6 +290,30 @@ Frame Skip: 0
 #
 Floppy Disk Basis: 1
 
+#  Einschalten des 2. Floppy ROMs auf der Moduladresse F8
+#  Die Versionen der jeweiligen ROMs auf Adresse F8 und FC
+#  ist abhängig von der Version des emulierten KCs.
+#
+#Enable Second Floppy ROM: 1
+
+#  Tauschen der Floppy ROMs der Adressen F8 und FC
+#
+#  Default (sprich ohne Tausch) der Modul-Versionen ist:
+#
+#                KC85/2  KC85/3  KC85/4  KC85/5
+#  Adresse FC     V2.0    V2.0    V2.0    V3.1
+#  Adresse F8     V3.1    V3.1    V3.1    V2.0
+#
+#  Das Tauschen der Versionen funktioniert auch wenn der
+#  Modul auf F8 nicht aktiviert ist. Dann wird lediglich
+#  die Version des FC Moduls modifiziert.
+#
+#  Ok, ok. Die komplizierte Logik kommt nur daher, daß
+#  sich das so am leichtesten einbauen ließ. Eine schönere
+#  Variante gibt's vielleicht später mal ;-).
+#
+#Swap Floppy ROMs: 1
+
 ##############################################################################
 #
 #  In den emulierten Diskettenlaufwerken eingelegte Disketten
@@ -235,6 +323,25 @@ Floppy Disk Basis: 1
 #
 Floppy Disk 1: /home/tp/projects/KCemu/DISK/microdos.dump
 Floppy Disk 2: /home/tp/projects/KCemu/DISK/caos.dump
+
+##############################################################################
+#
+#  Definition der Image-Files für die GIDE-Emulation. Falls die
+#  Dateien nicht existieren werden sie beim Schreibzugriff erzeugt.
+#  Dabei ist zu beachten, daß der Directory-Bereich mit e5h initialisiert
+#  werden muß damit das Anlegen von Dateien funktioniert.
+#
+#  Als Festplatten sind zur Zeit festgelegt:
+#
+#  Master: Seagate ST-157A (42MB), C/H/S = 560/6/26
+#  Slave:  MyZ80 Hard Disk Emulation (8MB), C/H/S = 128/1/32
+#
+#  Um mit MyZ80 Files kompatibel zu sein, erfolgt im Augenblick der Zugriff
+#  auf die Image-Dateien immer mit einem Offset von 0x100, d.h. die ersten
+#  256 Bytes werden nicht benutzt.
+#
+Hard Disk 0: /tmp/hd0.img
+Hard Disk 1: /tmp/hd1.img
 
 ##############################################################################
 #

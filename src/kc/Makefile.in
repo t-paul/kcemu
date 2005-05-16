@@ -53,28 +53,29 @@ am__installdirs = "$(DESTDIR)$(bindir)"
 binPROGRAMS_INSTALL = $(INSTALL_PROGRAM)
 PROGRAMS = $(bin_PROGRAMS) $(noinst_PROGRAMS)
 am__kcemu_SOURCES_DIST = debug.cc kc.cc rc.cc ic.cc ctc.cc ctc1.cc \
-	ctc3.cc ctc6.cc ctc8.cc ctc9.cc ctc_fdc.cc ctc_base.cc \
-	cb_list.cc keyb0.cc keyb1.cc keyb3.cc keyb6.cc keyb8.cc \
-	keyb9.cc memory.cc memory0.cc memory1.cc memory2.cc memory3.cc \
-	memory4.cc memory6.cc memory7.cc memory8.cc memory9.cc \
-	sh_mem.cc disk_io.cc gdc.cc vis.cc svg.cc gide.cc fdc.cc \
-	fdc0s.cc fdc4.cc fdc7.cc fdc9.cc fdc_cmd.cc floppy.cc pio.cc \
-	pio0.cc pio1.cc pio2.cc pio3.cc pio4.cc pio6.cc pio8.cc \
-	pio9.cc ports.cc ports0.cc ports4.cc ports6.cc module.cc \
-	mod_ram.cc mod_ram1.cc mod_r64.cc mod_cpm.cc mod_ram8.cc \
-	mod_64k.cc mod_segm.cc mod_128k.cc mod_256k.cc mod_512k.cc \
-	mod_1m.cc mod_4m.cc mod_rom.cc mod_rom1.cc mod_romb.cc \
-	mod_boot.cc mod_192k.cc mod_ramf.cc mod_fdc.cc mod_gdc.cc \
-	mod_rtc.cc mod_disk.cc mod_v24.cc mod_js.cc mod_4131.cc \
-	mod_list.cc tape.cc disk.cc timer.cc timer1.cc timer3.cc \
-	poly880.cc z80.cc z80_fdc.cc wav.cc sound.cc sound3.cc \
-	sound8.cc disass.cc
+	ctc3.cc ctc6.cc ctc8.cc ctc9.cc ctc_fdc.cc pio_dio.cc \
+	ctc_dio.cc ctc_base.cc cb_list.cc daisy.cc keyb0.cc keyb1.cc \
+	keyb3.cc keyb6.cc keyb8.cc keyb9.cc memory.cc memory0.cc \
+	memory1.cc memory2.cc memory3.cc memory4.cc memory6.cc \
+	memory7.cc memory8.cc memory9.cc sh_mem.cc disk_io.cc gdc.cc \
+	vis.cc svg.cc gide.cc fdc.cc fdc0s.cc fdc4.cc fdc7.cc fdc9.cc \
+	fdc_cmd.cc floppy.cc pio.cc pio0.cc pio1.cc pio2.cc pio3.cc \
+	pio4.cc pio6.cc pio8.cc pio9.cc ports.cc ports0.cc ports4.cc \
+	ports6.cc module.cc mod_dio.cc mod_ram.cc mod_ram1.cc \
+	mod_r64.cc mod_cpm.cc mod_ram8.cc mod_64k.cc mod_segm.cc \
+	mod_128k.cc mod_256k.cc mod_512k.cc mod_1m.cc mod_4m.cc \
+	mod_rom.cc mod_rom1.cc mod_romb.cc mod_boot.cc mod_192k.cc \
+	mod_320k.cc mod_ramf.cc mod_fdc.cc mod_gdc.cc mod_rtc.cc \
+	mod_disk.cc mod_v24.cc mod_js.cc mod_4131.cc mod_list.cc \
+	tape.cc disk.cc timer.cc timer1.cc timer3.cc poly880.cc z80.cc \
+	z80_fdc.cc wav.cc sound.cc sound3.cc sound8.cc disass.cc
 @TARGET_LINUX_TRUE@am__objects_1 = mod_v24.$(OBJEXT) mod_js.$(OBJEXT) \
 @TARGET_LINUX_TRUE@	mod_4131.$(OBJEXT)
 am_kcemu_OBJECTS = debug.$(OBJEXT) kc.$(OBJEXT) rc.$(OBJEXT) \
 	ic.$(OBJEXT) ctc.$(OBJEXT) ctc1.$(OBJEXT) ctc3.$(OBJEXT) \
 	ctc6.$(OBJEXT) ctc8.$(OBJEXT) ctc9.$(OBJEXT) ctc_fdc.$(OBJEXT) \
-	ctc_base.$(OBJEXT) cb_list.$(OBJEXT) keyb0.$(OBJEXT) \
+	pio_dio.$(OBJEXT) ctc_dio.$(OBJEXT) ctc_base.$(OBJEXT) \
+	cb_list.$(OBJEXT) daisy.$(OBJEXT) keyb0.$(OBJEXT) \
 	keyb1.$(OBJEXT) keyb3.$(OBJEXT) keyb6.$(OBJEXT) \
 	keyb8.$(OBJEXT) keyb9.$(OBJEXT) memory.$(OBJEXT) \
 	memory0.$(OBJEXT) memory1.$(OBJEXT) memory2.$(OBJEXT) \
@@ -87,15 +88,16 @@ am_kcemu_OBJECTS = debug.$(OBJEXT) kc.$(OBJEXT) rc.$(OBJEXT) \
 	pio2.$(OBJEXT) pio3.$(OBJEXT) pio4.$(OBJEXT) pio6.$(OBJEXT) \
 	pio8.$(OBJEXT) pio9.$(OBJEXT) ports.$(OBJEXT) ports0.$(OBJEXT) \
 	ports4.$(OBJEXT) ports6.$(OBJEXT) module.$(OBJEXT) \
-	mod_ram.$(OBJEXT) mod_ram1.$(OBJEXT) mod_r64.$(OBJEXT) \
-	mod_cpm.$(OBJEXT) mod_ram8.$(OBJEXT) mod_64k.$(OBJEXT) \
-	mod_segm.$(OBJEXT) mod_128k.$(OBJEXT) mod_256k.$(OBJEXT) \
-	mod_512k.$(OBJEXT) mod_1m.$(OBJEXT) mod_4m.$(OBJEXT) \
-	mod_rom.$(OBJEXT) mod_rom1.$(OBJEXT) mod_romb.$(OBJEXT) \
-	mod_boot.$(OBJEXT) mod_192k.$(OBJEXT) mod_ramf.$(OBJEXT) \
-	mod_fdc.$(OBJEXT) mod_gdc.$(OBJEXT) mod_rtc.$(OBJEXT) \
-	mod_disk.$(OBJEXT) $(am__objects_1) mod_list.$(OBJEXT) \
-	tape.$(OBJEXT) disk.$(OBJEXT) timer.$(OBJEXT) timer1.$(OBJEXT) \
+	mod_dio.$(OBJEXT) mod_ram.$(OBJEXT) mod_ram1.$(OBJEXT) \
+	mod_r64.$(OBJEXT) mod_cpm.$(OBJEXT) mod_ram8.$(OBJEXT) \
+	mod_64k.$(OBJEXT) mod_segm.$(OBJEXT) mod_128k.$(OBJEXT) \
+	mod_256k.$(OBJEXT) mod_512k.$(OBJEXT) mod_1m.$(OBJEXT) \
+	mod_4m.$(OBJEXT) mod_rom.$(OBJEXT) mod_rom1.$(OBJEXT) \
+	mod_romb.$(OBJEXT) mod_boot.$(OBJEXT) mod_192k.$(OBJEXT) \
+	mod_320k.$(OBJEXT) mod_ramf.$(OBJEXT) mod_fdc.$(OBJEXT) \
+	mod_gdc.$(OBJEXT) mod_rtc.$(OBJEXT) mod_disk.$(OBJEXT) \
+	$(am__objects_1) mod_list.$(OBJEXT) tape.$(OBJEXT) \
+	disk.$(OBJEXT) timer.$(OBJEXT) timer1.$(OBJEXT) \
 	timer3.$(OBJEXT) poly880.$(OBJEXT) z80.$(OBJEXT) \
 	z80_fdc.$(OBJEXT) wav.$(OBJEXT) sound.$(OBJEXT) \
 	sound3.$(OBJEXT) sound8.$(OBJEXT) disass.$(OBJEXT)
@@ -136,7 +138,8 @@ am__depfiles_maybe = depfiles
 @AMDEP_TRUE@	./$(DEPDIR)/ctc1.Po ./$(DEPDIR)/ctc3.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/ctc6.Po ./$(DEPDIR)/ctc8.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/ctc9.Po ./$(DEPDIR)/ctc_base.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/ctc_fdc.Po ./$(DEPDIR)/debug.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/ctc_dio.Po ./$(DEPDIR)/ctc_fdc.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/daisy.Po ./$(DEPDIR)/debug.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/disass.Po ./$(DEPDIR)/disk.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/disk_io.Po ./$(DEPDIR)/fdc.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/fdc0s.Po ./$(DEPDIR)/fdc4.Po \
@@ -154,10 +157,11 @@ am__depfiles_maybe = depfiles
 @AMDEP_TRUE@	./$(DEPDIR)/memory7.Po ./$(DEPDIR)/memory8.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/memory9.Po ./$(DEPDIR)/mod_128k.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/mod_192k.Po ./$(DEPDIR)/mod_1m.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/mod_256k.Po ./$(DEPDIR)/mod_4131.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/mod_4m.Po ./$(DEPDIR)/mod_512k.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/mod_64k.Po ./$(DEPDIR)/mod_boot.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/mod_cpm.Po ./$(DEPDIR)/mod_disk.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/mod_256k.Po ./$(DEPDIR)/mod_320k.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/mod_4131.Po ./$(DEPDIR)/mod_4m.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/mod_512k.Po ./$(DEPDIR)/mod_64k.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/mod_boot.Po ./$(DEPDIR)/mod_cpm.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/mod_dio.Po ./$(DEPDIR)/mod_disk.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/mod_fdc.Po ./$(DEPDIR)/mod_gdc.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/mod_js.Po ./$(DEPDIR)/mod_list.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/mod_r64.Po ./$(DEPDIR)/mod_ram.Po \
@@ -170,16 +174,17 @@ am__depfiles_maybe = depfiles
 @AMDEP_TRUE@	./$(DEPDIR)/pio1.Po ./$(DEPDIR)/pio2.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/pio3.Po ./$(DEPDIR)/pio4.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/pio6.Po ./$(DEPDIR)/pio8.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/pio9.Po ./$(DEPDIR)/poly880.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/ports.Po ./$(DEPDIR)/ports0.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/ports4.Po ./$(DEPDIR)/ports6.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/rc.Po ./$(DEPDIR)/sh_mem.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/sound.Po ./$(DEPDIR)/sound3.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/sound8.Po ./$(DEPDIR)/svg.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/tape.Po ./$(DEPDIR)/timer.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/timer1.Po ./$(DEPDIR)/timer3.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/vis.Po ./$(DEPDIR)/wav.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/z80.Po ./$(DEPDIR)/z80_fdc.Po
+@AMDEP_TRUE@	./$(DEPDIR)/pio9.Po ./$(DEPDIR)/pio_dio.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/poly880.Po ./$(DEPDIR)/ports.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/ports0.Po ./$(DEPDIR)/ports4.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/ports6.Po ./$(DEPDIR)/rc.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/sh_mem.Po ./$(DEPDIR)/sound.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/sound3.Po ./$(DEPDIR)/sound8.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/svg.Po ./$(DEPDIR)/tape.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/timer.Po ./$(DEPDIR)/timer1.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/timer3.Po ./$(DEPDIR)/vis.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/wav.Po ./$(DEPDIR)/z80.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/z80_fdc.Po
 COMPILE = $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) \
 	$(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS)
 CCLD = $(CC)
@@ -368,8 +373,11 @@ kcemu_SOURCES = \
 	ctc8.cc		\
 	ctc9.cc		\
 	ctc_fdc.cc	\
+	pio_dio.cc	\
+	ctc_dio.cc	\
 	ctc_base.cc	\
 	cb_list.cc	\
+	daisy.cc	\
 	keyb0.cc	\
 	keyb1.cc	\
 	keyb3.cc	\
@@ -413,6 +421,7 @@ kcemu_SOURCES = \
 	ports4.cc	\
 	ports6.cc	\
 	module.cc	\
+	mod_dio.cc	\
 	mod_ram.cc	\
 	mod_ram1.cc	\
 	mod_r64.cc	\
@@ -430,6 +439,7 @@ kcemu_SOURCES = \
 	mod_romb.cc	\
 	mod_boot.cc	\
 	mod_192k.cc	\
+	mod_320k.cc	\
 	mod_ramf.cc	\
 	mod_fdc.cc	\
 	mod_gdc.cc	\
@@ -574,7 +584,9 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ctc8.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ctc9.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ctc_base.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ctc_dio.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ctc_fdc.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/daisy.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/debug.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/disass.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/disk.Po@am__quote@
@@ -611,12 +623,14 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/mod_192k.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/mod_1m.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/mod_256k.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/mod_320k.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/mod_4131.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/mod_4m.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/mod_512k.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/mod_64k.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/mod_boot.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/mod_cpm.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/mod_dio.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/mod_disk.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/mod_fdc.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/mod_gdc.Po@am__quote@
@@ -643,6 +657,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/pio6.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/pio8.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/pio9.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/pio_dio.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/poly880.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ports.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ports0.Po@am__quote@

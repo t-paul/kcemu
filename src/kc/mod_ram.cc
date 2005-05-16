@@ -61,10 +61,11 @@ ModuleRAM::~ModuleRAM(void)
 void
 ModuleRAM::m_out(word_t addr, byte_t val)
 {
-  word_t a;
-  
-  if (((_val & 3) ^ (val & 3)) == 0) return;
-  a = (val & 0xc0) << 8;
+  if (((_val & 0xc3) ^ (val & 0xc3)) == 0)
+    return;
+
+  word_t a = (val & 0xc0) << 8;
+
   if (_group)
     {
       memory->unregister_memory(_group);

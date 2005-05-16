@@ -125,7 +125,22 @@ InterfaceCircuit::next(InterfaceCircuit *ic)
 {
   _next = ic;
   if (ic != NULL)
-    ic->prev(this);
+    {
+      ic->prev(this);
+      ic->iei(ieo());
+    }
+}
+
+InterfaceCircuit *
+InterfaceCircuit::get_prev()
+{
+  return _prev;
+}
+
+InterfaceCircuit *
+InterfaceCircuit::get_next()
+{
+  return _next;
 }
 
 InterfaceCircuit *

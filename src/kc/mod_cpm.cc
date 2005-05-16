@@ -47,6 +47,7 @@ ModuleCPMZ9::ModuleCPMZ9(const char *name) :
   ModuleInterface(name, 0, KC_MODULE_KC_85_1)
 {
   _portg1 = _portg2 = _portgX = NULL;
+  set_valid(true);
 }
 
 ModuleCPMZ9::~ModuleCPMZ9(void)

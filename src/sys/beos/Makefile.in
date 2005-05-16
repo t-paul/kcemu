@@ -52,13 +52,14 @@ AR = ar
 ARFLAGS = cru
 libsys_beos_a_AR = $(AR) $(ARFLAGS)
 libsys_beos_a_LIBADD =
-am_libsys_beos_a_OBJECTS = sys_usleep.$(OBJEXT) \
+am_libsys_beos_a_OBJECTS = sys_usleep.$(OBJEXT) sys_basename.$(OBJEXT) \
 	sys_localtime.$(OBJEXT) sys_gettimeofday.$(OBJEXT)
 libsys_beos_a_OBJECTS = $(am_libsys_beos_a_OBJECTS)
 DEFAULT_INCLUDES = -I. -I$(srcdir) -I$(top_builddir)/include/kc
 depcomp = $(SHELL) $(top_srcdir)/depcomp
 am__depfiles_maybe = depfiles
-@AMDEP_TRUE@DEP_FILES = ./$(DEPDIR)/sys_gettimeofday.Po \
+@AMDEP_TRUE@DEP_FILES = ./$(DEPDIR)/sys_basename.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/sys_gettimeofday.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/sys_localtime.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/sys_usleep.Po
 COMPILE = $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) \
@@ -214,6 +215,7 @@ INCLUDES = \
 
 libsys_beos_a_SOURCES = \
 	sys_usleep.c \
+	sys_basename.c \
 	sys_localtime.c \
 	sys_gettimeofday.c
 
@@ -264,6 +266,7 @@ mostlyclean-compile:
 distclean-compile:
 	-rm -f *.tab.c
 
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/sys_basename.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/sys_gettimeofday.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/sys_localtime.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/sys_usleep.Po@am__quote@

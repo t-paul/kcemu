@@ -63,9 +63,10 @@ public:
   void execute(CMD_Args *args, CMD_Context context)
     {
       bool create;
-      char buf[100]; /* FIXME: */
+      char buf[1000];
       disk_error_t err;
-      const char *filename, *shortname;
+      char *shortname;
+      const char *filename;
 
       create = false;
       filename = NULL;
@@ -131,12 +132,9 @@ public:
                 }
               break;
             case DISK_OK:
-              shortname = strrchr(filename, '/');
-              if (shortname)
-                shortname++;
-              else
-                shortname = filename;
-              sprintf(buf, _("disk-file `%s' attached."), shortname);
+              shortname = sys_basename(filename);
+              snprintf(buf, sizeof(buf), _("disk-file `%s' attached."), shortname);
+	      free(shortname);
               Status::instance()->setMessage(buf);
               break;
             default:

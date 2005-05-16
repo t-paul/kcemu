@@ -76,6 +76,7 @@ private:
   mod_list_t _mod_list;
 
 protected:
+  virtual void add_custom_modules(void);
   virtual void init_modules(int max_modules);
 
 public:

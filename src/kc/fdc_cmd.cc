@@ -294,9 +294,6 @@ FDC_CMD_SENSE_DRIVE_STATUS::execute(void)
               _arg[1] & 3));
 
   get_fdc()->select_floppy(_arg[1] & 3);
-  get_fdc()->seek((_arg[1] >> 2) & 1, get_fdc()->get_cylinder(), get_fdc()->get_sector());
-  get_fdc()->set_input_gate(0x40, 0x40);
-
   _result[0] = get_fdc()->get_ST3();
 }
 
@@ -610,10 +607,14 @@ FDC_CMD_RECALIBRATE::execute(void)
 
   get_fdc()->select_floppy(_arg[1] & 3);
 
-  // Head retracted to Track 0, sets SEEK END
-  get_fdc()->seek(get_fdc()->get_head(), 0, get_fdc()->get_sector());
-  get_fdc()->set_ST0(FDC::ST_0_IC_MASK | FDC::ST_0_SEEK_END,
-		     FDC::ST_0_IC_NORMAL_TERMINATION | FDC::ST_0_SEEK_END);
+  // Head retracted to Track 0, always sets SEEK END, if not track 0
+  // signal is received from the floppy the EC bit is set
+  if (get_fdc()->seek(get_fdc()->get_head(), 0, get_fdc()->get_sector()))
+    get_fdc()->set_ST0(FDC::ST_0_IC_MASK | FDC::ST_0_SEEK_END | FDC::ST_0_EC,
+		       FDC::ST_0_IC_NORMAL_TERMINATION | FDC::ST_0_SEEK_END);
+  else
+    get_fdc()->set_ST0(FDC::ST_0_IC_MASK | FDC::ST_0_SEEK_END | FDC::ST_0_EC,
+		       FDC::ST_0_IC_ABNORMAL_TERMINATION | FDC::ST_0_SEEK_END | FDC::ST_0_EC);
 
   // input gate is also set in the seek function!
   get_fdc()->set_input_gate(0x40, 0x00);
@@ -758,8 +759,10 @@ FDC_CMD_FORMAT_A_TRACK::execute(void)
   get_fdc()->select_floppy(_arg[1] & 3);
   get_fdc()->set_input_gate(0x40, 0x40);
 
-  _idx = 0;
+  _ridx = 0;
+  _widx = 0;
   _cur_sector = 1;
+  _formatted_sectors = 0;
   _sectors_per_track = _arg[3];
   if (_buf != NULL)
     delete _buf;
@@ -794,7 +797,8 @@ FDC_CMD_FORMAT_A_TRACK::format(void)
               _cur_sector, _sectors_per_track,
               _head, _cylinder, _sector, _bytes_per_sector));
 
-  _idx = 0;
+  _ridx = 0;
+  _widx = 0;
 
   f = get_fdc()->get_floppy();
   if (f != 0)
@@ -807,6 +811,29 @@ FDC_CMD_FORMAT_A_TRACK::format(void)
     get_fdc()->set_input_gate(0x40, 0x00);
 
   _cur_sector++;
+  _formatted_sectors++;
+}
+
+byte_t
+FDC_CMD_FORMAT_A_TRACK::read_byte(void)
+{
+  switch (_ridx)
+    {
+    case 0:
+      _ridx++;
+      return _cylinder;
+    case 1:
+      _ridx++;
+      return _head;
+    case 2:
+      _ridx++;
+      return _sector + 1;
+    case 3:
+      _ridx = 0;
+      return _bytes_per_sector;
+    }
+
+  return 0;
 }
 
 void
@@ -816,23 +843,31 @@ FDC_CMD_FORMAT_A_TRACK::write_byte(byte_t val)
               "FDC_CMD_FORMAT_A_TRACK::write_byte(): 0x%02x (%3d, '%c')\n",
               val, val, isprint(val) ? val : '.'));
 
-  switch (_idx)
+  switch (_widx)
     {
     case 0:
       _cylinder = val;
-      _idx++;
+      _widx++;
       break;
     case 1:
       _head = val;
-      _idx++;
+      _widx++;
       break;
     case 2:
       _sector = val;
-      _idx++;
+      _widx++;
       break;
     case 3:
       _bytes_per_sector = val;
+      _widx = 0;
       format();
+
+      if (_formatted_sectors == _sectors_per_track)
+	{
+	  _data_transfer = false;
+	  finish_cmd();
+	}
+
       break;
     }
 }
@@ -865,11 +900,15 @@ FDC_CMD_SEEK::execute(void)
   get_fdc()->select_floppy(_arg[1] & 3);
 
   // input gate is also set in the seek function!
-  get_fdc()->seek((_arg[1] >> 2) & 1, _arg[2], 1);
-  get_fdc()->set_input_gate(0x40, 0x00);
+  if (get_fdc()->seek((_arg[1] >> 2) & 1, _arg[2], 1))
+    get_fdc()->set_ST0(FDC::ST_0_IC_MASK | FDC::ST_0_SEEK_END | FDC::ST_0_EC,
+		       FDC::ST_0_IC_NORMAL_TERMINATION | FDC::ST_0_SEEK_END);
+  else
+    get_fdc()->set_ST0(FDC::ST_0_IC_MASK | FDC::ST_0_SEEK_END | FDC::ST_0_EC,
+		       FDC::ST_0_IC_ABNORMAL_TERMINATION | FDC::ST_0_SEEK_END | FDC::ST_0_EC);
 
-  get_fdc()->set_ST0(FDC::ST_0_IC_MASK | FDC::ST_0_SEEK_END,
-		     FDC::ST_0_IC_NORMAL_TERMINATION | FDC::ST_0_SEEK_END);
+  // input gate is also set in the seek function!
+  get_fdc()->set_input_gate(0x40, 0x00);
 }
 
 /********************************************************************

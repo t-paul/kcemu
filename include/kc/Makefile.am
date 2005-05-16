@@ -14,8 +14,11 @@ EXTRA_DIST = \
 	ctc8.h		\
 	ctc9.h		\
 	ctc_fdc.h	\
+	pio_dio.h	\
+	ctc_dio.h	\
 	ctc_base.h	\
 	cb_list.h	\
+	daisy.h		\
 	keyboard.h	\
 	keyb0.h		\
 	keyb0k.h	\
@@ -68,6 +71,7 @@ EXTRA_DIST = \
 	fdc_cmd.h	\
 	floppy.h	\
 	module.h	\
+	mod_dio.h	\
 	mod_ram.h	\
 	mod_ram1.h	\
 	mod_r64.h	\
@@ -83,6 +87,7 @@ EXTRA_DIST = \
 	mod_rom1.h	\
 	mod_romb.h	\
 	mod_192k.h	\
+	mod_320k.h	\
 	mod_ramf.h	\
 	mod_fdc.h	\
 	mod_gdc.h	\

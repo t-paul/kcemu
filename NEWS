@@ -4,6 +4,10 @@
 
 KCemu 0.3.8
 
+  * initial support for GIDE interface that allows to connect
+    up to two IDE hard disks (or CF-Cards) to the KC85
+  * added module digital in/out (M001) that contains one
+    PIO and one CTC
   * added emulation of the so called KC85/5 which is a KC85/4
     with expanded RAM (replaced internal 64k system RAM with
     256k) and ROM (16k CAOS, 32k BASIC+USER); it uses the new

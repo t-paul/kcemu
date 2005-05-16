@@ -28,6 +28,7 @@
 class PIO3 : public PIO, public TapeCallback
 {
 protected:
+  virtual byte_t in_A_DATA(void);
   virtual void change_A(byte_t changed, byte_t val);
   virtual void change_B(byte_t changed, byte_t val);
 

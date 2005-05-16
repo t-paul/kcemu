@@ -42,6 +42,7 @@ private:
   bool _valid;
   byte_t _id;
   char *_name;
+  char *_error_text;
   mod_type_t _mod_type;
 
 public:
@@ -58,6 +59,9 @@ public:
   virtual mod_type_t get_type(void);
   virtual void set_valid(bool valid);
   virtual bool is_valid(void);
+
+  virtual const char * get_error_text(void);
+  virtual void set_error_text(const char *text);
 };
 
 class Module : public PortInterface

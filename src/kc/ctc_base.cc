@@ -29,10 +29,10 @@
 
 #include "libdbg/dbg.h"
 
-CTC_Base::CTC_Base(void) : CTC()
+CTC_Base::CTC_Base(void) : CTC("CTC")
 {
   z80->register_ic(this);
-  _z80_irq_mask = z80->daisy_chain_get_irqmask();
+  _z80_irq_mask = z80->get_irq_mask();
 }
 
 CTC_Base::~CTC_Base(void)

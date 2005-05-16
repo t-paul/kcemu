@@ -37,17 +37,27 @@ ModuleGDC::ModuleGDC(ModuleGDC &tmpl) :
   _portg = NULL;
   _master = &tmpl;
 
-  if (_master->get_count() > 0)
-    return;
+  if (_master->get_count() == 0)
+    {
+      _master->set_count(1);
 
-  _master->set_count(1);
+      gdc = new GDC(); // global in kc.cc
+      _portg = ports->register_ports("GDC", 0x18,  2, gdc, 0);
 
-  gdc = new GDC(); // global in kc.cc
-  _portg = ports->register_ports("GDC", 0x18,  2, gdc, 0);
+      ui->set_mode(UI_0::UI_GENERIC_MODE_GDC);
 
-  ui->set_mode(UI_0::UI_GENERIC_MODE_GDC);
-
-  set_valid(true);
+      set_valid(true);
+    }
+  else
+    {
+      char buf[1024];
+      snprintf(buf, sizeof(buf),
+	       _("It's not possible to have more than one\n"
+		 "module of type %s!"),
+	       get_name());
+      set_error_text(buf);
+      set_valid(false);
+    }
 }
 
 ModuleGDC::ModuleGDC(const char *name) :
@@ -55,6 +65,7 @@ ModuleGDC::ModuleGDC(const char *name) :
 {
   _portg = NULL;
   _count = 0;
+  set_valid(true);
 }
 
 ModuleGDC::~ModuleGDC(void)

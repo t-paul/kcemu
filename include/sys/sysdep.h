@@ -1,6 +1,6 @@
 /*
  *  KCemu -- the KC 85/3 and KC 85/4 Emulator
- *  Copyright (C) 1997-2001 Torsten Paul
+ *  Copyright (C) 1997-2005 Torsten Paul
  *
  *  $Id: sysdep.h,v 1.1 2002/06/09 14:24:32 torsten_paul Exp $
  *
@@ -57,6 +57,17 @@ void sys_gettimeofday(long *tv_sec, long *tv_usec);
  *  in the specified variables.
  */
 void sys_gettimeofday(long *tv_sec, long *tv_usec);
+
+/*
+ *  return basename (filename without directory) for a given
+ *  full pathname
+ *
+ *  works like basename() but doesn't handle NULL arguments
+ *  and special values like "/".
+ *  the returned string is allocated with strdup() so it must
+ *  be freed with free().
+ */
+char * sys_basename(const char *path);
 
 #ifdef __cplusplus
 }

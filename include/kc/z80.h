@@ -63,9 +63,7 @@ class Z80
 	long _tracedelay;
 
 	dword_t _irq_line;
-	dword_t _daisy_chain_irq_mask;
-	InterfaceCircuit *_daisy_chain_first;
-	InterfaceCircuit *_daisy_chain_last;
+	dword_t _irq_mask;
 
 	typedef std::list<InterfaceCircuit *> ic_list_t;
 
@@ -105,9 +103,7 @@ class Z80
 	void remove_callback_listener(Callback *cb);
 	inline unsigned long long getCounter(void) { return _counter; }
 
-	void daisy_chain_set_first(InterfaceCircuit *ic);
-	void daisy_chain_set_last(InterfaceCircuit *ic);
-	dword_t daisy_chain_get_irqmask(void);
+	dword_t get_irq_mask(void);
 	void set_irq_line(dword_t mask);
 	void reset_irq_line(dword_t mask);
 	word_t irq_ack(void);

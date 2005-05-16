@@ -134,6 +134,7 @@
 
 #include "kc/kc.h"
 #include "kc/rc.h"
+#include "kc/mod_dio.h"
 #include "kc/mod_ram.h"
 #include "kc/mod_ram1.h"
 #include "kc/mod_r64.h"
@@ -150,6 +151,7 @@
 #include "kc/mod_romb.h"
 #include "kc/mod_boot.h"
 #include "kc/mod_192k.h"
+#include "kc/mod_320k.h"
 #include "kc/mod_fdc.h"
 #include "kc/mod_gdc.h"
 #include "kc/mod_rtc.h"
@@ -164,6 +166,7 @@
 #endif /* HOST_OS_LINUX */
 
 #include "ui/ui.h"
+#include "ui/error.h"
 
 #include "libdbg/dbg.h"
 
@@ -274,7 +277,7 @@ ModuleList::ModuleList(void)
   ptr = new char[strlen(kcemu_datadir) + 14];
   strcpy(ptr, kcemu_datadir);
   strcat(ptr, "/zm30__c0.851");
-  m = new ModuleROM1(ptr, "ZM30", 0xc000, 0x1c00, true);
+  m = new ModuleROM1(ptr, "ZM30", 0xc000, 0x0d00, true);
   _mod_list.push_back(new ModuleListEntry(_("ZM30 (c000h-ccffh)"), m, KC_TYPE_85_1_CLASS));
   delete[] ptr;
 
@@ -351,6 +354,16 @@ ModuleList::ModuleList(void)
   delete[] ptr_d5;
 
   /*
+   *  320k ROM Modul (kc85/1)
+   */
+  ptr = new char[strlen(kcemu_datadir) + 11];
+  strcpy(ptr, kcemu_datadir);
+  strcat(ptr, "/super.rom");
+  m = new Module320k(ptr, "Super");
+  _mod_list.push_back(new ModuleListEntry(_("320k ROM Module"), m, KC_TYPE_85_1_CLASS));
+  delete [] ptr;
+
+  /*
    *  128 KByte ROM bank module (kc85/1)
    */
   ptr = new char[strlen(kcemu_datadir) + 14];
@@ -408,13 +421,19 @@ ModuleList::ModuleList(void)
   _mod_list.push_back(new ModuleListEntry(_("CPM-Z9 64k RAM"), m, KC_TYPE_85_1_CLASS));
 
   /*
+   *  Digital I/O (kc85/2-4)
+   */
+  m = new ModuleDIO("M001", 0xef);
+  _mod_list.push_back(new ModuleListEntry(_("M001: Digital In / Out"), m, KC_TYPE_85_2_CLASS));
+
+  /*
    *  V24 module
    */
 #ifdef HOST_OS_LINUX
   if (RC::instance()->get_int("Enable V24-Module"))
     {
       m = new ModuleV24("M003", 0xee);
-      entry = new ModuleListEntry(_("M003: V24 (not working!)"), m, KC_TYPE_85_2_CLASS);
+      entry = new ModuleListEntry(_("M003: V24"), m, KC_TYPE_85_2_CLASS);
       _mod_list.push_back(entry);
     }
 
@@ -424,12 +443,12 @@ ModuleList::ModuleList(void)
   ptr = new char[strlen(kcemu_datadir) + 10];
   strcpy(ptr, kcemu_datadir);
   strcat(ptr, "/m006.rom");
-  m = new ModuleROM(ptr, "BASIC", 0x4000, 0xfb);
+  m = new ModuleROM(ptr, "M006", 0x4000, 0xfb);
   _mod_list.push_back(new ModuleListEntry(_("M006: Basic"), m, KC_TYPE_85_2_CLASS));
   delete[] ptr;
 
   /*
-   *  RAM module 16k (kc85/2-4)
+   *  Joystick module (kc85/2-4)
    */
   m = new ModuleJoystick("M008", 0xff);
   _mod_list.push_back(new ModuleListEntry(_("M008: Joystick"), m, KC_TYPE_85_2_CLASS));
@@ -543,7 +562,7 @@ ModuleList::ModuleList(void)
 
   _init_floppy_basis_f8 = 0;
   if (get_kc_type() & KC_TYPE_85_2_CLASS)
-    if (RC::instance()->get_int("Floppy Disk Basis"))
+    if (RC::instance()->get_int("Floppy Disk Basis", 0))
       _init_floppy_basis_f8 = entry;
 
   /*
@@ -559,8 +578,25 @@ ModuleList::ModuleList(void)
 
   _init_floppy_basis_fc = 0;
   if (get_kc_type() & KC_TYPE_85_2_CLASS)
-    if (RC::instance()->get_int("Floppy Disk Basis"))
+    if (RC::instance()->get_int("Floppy Disk Basis", 0))
       _init_floppy_basis_fc = entry;
+  
+  bool swap_floppy_roms = (get_kc_type() == KC_TYPE_85_5) ? true : false;
+  if (RC::instance()->get_int("Swap Floppy ROMs", 0))
+    swap_floppy_roms = !swap_floppy_roms;
+
+  if (get_kc_type() & KC_TYPE_85_2_CLASS)
+    if (RC::instance()->get_int("Floppy Disk Basis", 0))
+      if (swap_floppy_roms)
+	{
+	  // entry is still set to the FC module...
+	  _init_floppy_basis_fc = _init_floppy_basis_f8;
+	  _init_floppy_basis_f8 = entry;
+	}
+    
+  if (get_kc_type() & KC_TYPE_85_2_CLASS)
+    if (!RC::instance()->get_int("Enable Second Floppy ROM", 0))
+      _init_floppy_basis_f8 = 0;
 
   _nr_of_bd = RC::instance()->get_int("Busdrivers");
   if (_nr_of_bd < 0)
@@ -591,7 +627,43 @@ ModuleList::ModuleList(void)
       break;
     }
 
+  add_custom_modules();
+
   init_modules(cnt);
+}
+
+void
+ModuleList::add_custom_modules(void)
+{
+  for (int a = 0;a < 10;a++)
+    {
+      const char *name = RC::instance()->get_string_i(a, "Custom ROM Module");
+      const char *text = RC::instance()->get_string_i(a, "Custom ROM Module (Name)");
+      int id = RC::instance()->get_int_i(a, "Custom ROM Module (Id)");
+      const char *file = RC::instance()->get_string_i(a, "Custom ROM Module (File)");
+      int size = RC::instance()->get_int_i(a, "Custom ROM Module (Size)");
+
+      if ((name == NULL) || (file == NULL))
+	continue;
+
+      if (id == 0)
+	id = 0xfb;
+
+      size &= 0xfc00;
+
+      if (size == 0)
+	size = 0x2000;
+
+      if (size > 0x4000)
+	size = 0x4000;
+
+      if (text == NULL)
+	text = name;
+
+      ModuleInterface *m = new ModuleROM(file, name, size, id);
+      ModuleListEntry *entry = new ModuleListEntry(text, m, KC_TYPE_85_2_CLASS);
+      _mod_list.push_back(entry);
+    }
 }
 
 void
@@ -732,6 +804,9 @@ ModuleList::insert(int slot, ModuleListEntry *entry)
 	}
       else
 	{
+	  const char *error_text = mod->get_error_text();
+	  if (error_text != NULL)
+	    Error::instance()->info(error_text);
 	  m = NULL;
 	  delete mod;
 	}

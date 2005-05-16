@@ -44,6 +44,19 @@ class PIO : public InterfaceCircuit, public PortInterface
     B = 1,
   };
 
+  enum {
+    MODE_OUTPUT        = 0,
+    MODE_INPUT         = 1,
+    MODE_BIDIRECTIONAL = 2,
+    MODE_CONTROL       = 3,
+  };
+
+  /*
+   *  track first out instruction to allow complete
+   *  initialisation
+   */
+  bool _first_out[2];
+
     /*
      *  external value
      */

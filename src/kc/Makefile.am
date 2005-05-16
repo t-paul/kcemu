@@ -41,8 +41,11 @@ kcemu_SOURCES = \
 	ctc8.cc		\
 	ctc9.cc		\
 	ctc_fdc.cc	\
+	pio_dio.cc	\
+	ctc_dio.cc	\
 	ctc_base.cc	\
 	cb_list.cc	\
+	daisy.cc	\
 	keyb0.cc	\
 	keyb1.cc	\
 	keyb3.cc	\
@@ -86,6 +89,7 @@ kcemu_SOURCES = \
 	ports4.cc	\
 	ports6.cc	\
 	module.cc	\
+	mod_dio.cc	\
 	mod_ram.cc	\
 	mod_ram1.cc	\
 	mod_r64.cc	\
@@ -103,6 +107,7 @@ kcemu_SOURCES = \
 	mod_romb.cc	\
 	mod_boot.cc	\
 	mod_192k.cc	\
+	mod_320k.cc	\
 	mod_ramf.cc	\
 	mod_fdc.cc	\
 	mod_gdc.cc	\

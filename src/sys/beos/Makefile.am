@@ -7,5 +7,6 @@ INCLUDES = \
 
 libsys_beos_a_SOURCES = \
 	sys_usleep.c \
+	sys_basename.c \
 	sys_localtime.c \
 	sys_gettimeofday.c

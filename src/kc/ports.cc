@@ -33,14 +33,24 @@
 
 using namespace std;
 
+NullPort::NullPort(const char *name)
+{
+  _name = strdup(name);
+}
+
+NullPort::~NullPort(void)
+{
+  free(_name);
+}
+
 byte_t
 NullPort::in(word_t addr)
 {
   byte_t val = 0xff;
 
   DBG(2, form("KCemu/Ports/NullPort/in",
-	      "NullPort: in() addr = %04x (returning %02x)\n",
-	      addr, val));
+	      "%s: in() addr = %04x (returning %02x)\n",
+	      _name, addr, val));
 
   return val;
 }
@@ -49,8 +59,8 @@ void
 NullPort::out(word_t addr, byte_t val)
 {
   DBG(2, form("KCemu/Ports/NullPort/out",
-	      "NullPort: out() addr = %04x, val = %02x\n",
-	      addr, val));
+	      "%s: out() addr = %04x, val = %02x\n",
+	      _name, addr, val));
 }
 
 PortGroup::PortGroup(const char *name, PortInterface *p,

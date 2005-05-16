@@ -64,7 +64,7 @@ write_bit(FILE *out)
 {
   unsigned char c;
   
-  c = 0x80 - (110 * _value);
+  c = 0x80 - (126 * _value);
   fwrite(&c, 1, 1, out);
 }
 

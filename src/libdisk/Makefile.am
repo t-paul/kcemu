@@ -2,6 +2,8 @@
 
 bin_PROGRAMS = tdtodump
 
+EXTRA_DIST = extract-system-tracks.sh
+
 noinst_LIBRARIES = libdisk.a
 
 AM_CPPFLAGS = \

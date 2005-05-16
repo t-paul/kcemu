@@ -169,6 +169,11 @@ Memory2::protectRAM(int v)
 void
 Memory2::reset(bool power_on)
 {
+  _m_ram->set_readonly(false);
+  _m_ram->set_active(true);
+  _m_irm->set_active(true);
+  _m_caos->set_active(true);
+
   if (!power_on)
     return;
 

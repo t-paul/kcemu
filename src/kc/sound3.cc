@@ -61,7 +61,10 @@ Sound3::sound_callback(void *userdata, unsigned char *stream, int len)
   diff = cur - counter;
 
   int a = 0;
-  op = *(self->_sndop_list.begin());
+
+  if (!self->_sndop_list.empty())
+    op = *(self->_sndop_list.begin());
+
   while (a < len)
     {
       idx =  counter + (a * diff) / len;

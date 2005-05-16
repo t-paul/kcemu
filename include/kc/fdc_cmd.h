@@ -231,7 +231,8 @@ class FDC_CMD_READ_DELETED_DATA : public FDC_CMD
 class FDC_CMD_FORMAT_A_TRACK : public FDC_CMD
 {
  private:
-  int _idx;
+  int _ridx;
+  int _widx;
   int _head;
   int _cylinder;
   int _sector;
@@ -239,6 +240,7 @@ class FDC_CMD_FORMAT_A_TRACK : public FDC_CMD
   int _bytes_per_sector;
   int _sectors_per_track;
   int _cur_sector;
+  int _formatted_sectors;
   byte_t *_buf;
   
  protected:
@@ -248,6 +250,7 @@ class FDC_CMD_FORMAT_A_TRACK : public FDC_CMD
   FDC_CMD_FORMAT_A_TRACK(FDC *fdc);
   virtual ~FDC_CMD_FORMAT_A_TRACK(void);
 
+  virtual byte_t read_byte(void);
   virtual void write_byte(byte_t val);
   virtual void format(void);
 };

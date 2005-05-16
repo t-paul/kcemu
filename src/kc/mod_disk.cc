@@ -32,6 +32,7 @@
 
 ModuleDisk::ModuleDisk(ModuleDisk &tmpl) : ModuleROM(tmpl)
 {
+  _val = 0;
   _addr = 0;
 }
 
@@ -39,6 +40,7 @@ ModuleDisk::ModuleDisk(const char *filename, const char *name,
                      dword_t size, byte_t id) :
   ModuleROM(filename, name, size, id, 0)
 {
+  _val = 0;
   _addr = 0;
 }
 

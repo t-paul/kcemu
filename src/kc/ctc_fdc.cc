@@ -50,7 +50,7 @@
  *   3          FBE6h   F4C8h
  */
 
-CTC_FDC::CTC_FDC(void)
+CTC_FDC::CTC_FDC(void) : CTC("CTC (FDC)")
 {
 }
 
