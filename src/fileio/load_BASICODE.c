@@ -19,6 +19,7 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
+#include <ctype.h>
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
@@ -34,7 +35,7 @@ loader_BASICODE_check(const char *filename,
    *  BASICODE
    */
   if (size >= 5)
-    if (strncmp(data, "1000 ", 5) == 0)
+    if (memcmp(data, "1000 ", 5) == 0)
       return 1;
 
   return 0;

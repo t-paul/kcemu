@@ -167,7 +167,7 @@ loader_ogg_read_sample(libaudio_prop_t *prop)
 
   if (data->idx >= data->size)
     {
-      len = ov_read(&data->file, data->buf, BUF_SIZE, 0, 2, 1, &bitstream);
+      len = ov_read(&data->file, (char *)data->buf, BUF_SIZE, 0, 2, 1, &bitstream);
       if (len <= 0)
 	{
 	  data->eof = 1;

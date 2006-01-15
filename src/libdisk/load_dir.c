@@ -230,7 +230,7 @@ static void dump_sector(unsigned char *sector, int length);
 static void cache_sector_data(dir_data_t *data, int c, int h, int s, unsigned char *buf, int len);
 
 static void
-set_filename(char *buf, char *filename)
+set_filename(unsigned char *buf, char *filename)
 {
   int a;
   char *ptr;
@@ -440,7 +440,7 @@ loader_dir_close(libdisk_prop_t *prop)
 }
 
 static int
-read_block(dir_data_t *data, char *buf, int idx, long offset, int len)
+read_block(dir_data_t *data, unsigned char *buf, int idx, long offset, int len)
 {
   FILE *f;
   char pwd[4096]; // FIXME: fix getcwd()!
@@ -471,7 +471,7 @@ read_block(dir_data_t *data, char *buf, int idx, long offset, int len)
 }
 
 static int
-write_block(dir_data_t *data, char *buf, int idx, long offset, int len)
+write_block(dir_data_t *data, unsigned char *buf, int idx, long offset, int len)
 {
   FILE *f;
   char pwd[4096]; // FIXME: fix getcwd()!
@@ -501,7 +501,7 @@ write_block(dir_data_t *data, char *buf, int idx, long offset, int len)
 }
 
 static int
-read_system_block(char *path, char *buf, int block, int len)
+read_system_block(char *path, unsigned char *buf, int block, int len)
 {
   FILE *f;
   char pwd[4096]; // FIXME: fix getcwd()!
@@ -532,7 +532,7 @@ read_system_block(char *path, char *buf, int block, int len)
 }
 
 static int
-write_system_block(char *path, char *buf, int block, int len)
+write_system_block(char *path, unsigned char *buf, int block, int len)
 {
   FILE *f;
   char pwd[4096]; // FIXME: fix getcwd()!

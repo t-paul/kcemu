@@ -41,13 +41,13 @@
 
 typedef struct mp3_data
 {
-  FILE *f;
-  int   eof; // 1: EOF in file, 2: EOF in decoded data
-  int   pcm_idx;
-  int   pcm_size;
-  char  f_buf[FILE_BUF_SIZE];
-  short pcm_l[PCM_BUF_SIZE];
-  short pcm_r[PCM_BUF_SIZE];
+  FILE          *f;
+  int            eof; // 1: EOF in file, 2: EOF in decoded data
+  int            pcm_idx;
+  int            pcm_size;
+  unsigned char  f_buf[FILE_BUF_SIZE];
+  short          pcm_l[PCM_BUF_SIZE];
+  short          pcm_r[PCM_BUF_SIZE];
   mp3data_struct mp3data;
 } mp3_data_t;
 

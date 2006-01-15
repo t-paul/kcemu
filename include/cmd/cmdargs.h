@@ -27,6 +27,9 @@
 class CMD_Change_Listener
 {
  public:
+  CMD_Change_Listener(void) {}
+  virtual ~CMD_Change_Listener(void) {}
+
   virtual void cmd_args_changed(void) = 0;
 };
 

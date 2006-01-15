@@ -29,6 +29,9 @@
 class PortInterface
 {
 public:
+  PortInterface(void) {}
+  virtual ~PortInterface() {}
+
   virtual byte_t in(word_t addr) = 0;
   virtual void out(word_t addr, byte_t val) = 0;
 };

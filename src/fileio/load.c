@@ -202,6 +202,10 @@ fileio_get_image(fileio_prop_t *prop, unsigned char *buf)
       a = 14;
       len = prop->size - 13;
       break;
+    case FILEIO_TYPE_BASICODE:
+      a = 0;
+      len = prop->size;
+      break;
     }
 
   while (len-- > 0)
@@ -250,7 +254,7 @@ fill_header_COM(unsigned char *data,
 }
 
 void
-fileio_copy_blocks(char *dptr, const char * sptr, long size, int block)
+fileio_copy_blocks(unsigned char *dptr, const unsigned char *sptr, long size, int block)
 {
   long len;
 

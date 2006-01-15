@@ -27,6 +27,9 @@
 class ROMDIInterface
 {
  public:
+  ROMDIInterface(void) {}
+  virtual ~ROMDIInterface(void) {}
+
   virtual void romdi(bool val) = 0;
 };
 

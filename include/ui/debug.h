@@ -25,6 +25,9 @@
 class DebugInterface
 {
  public:
+  DebugInterface(void) {}
+  virtual ~DebugInterface(void) {}
+
   /**
    *  called before each instruction when
    *  tracing is enabled

@@ -29,6 +29,9 @@
 class UI_ModuleInterface
 {
  public:
+  UI_ModuleInterface(void) {}
+  virtual ~UI_ModuleInterface(void) {}
+
   /**
    *  insert a module into the specified slot
    *  the ModuleInterface that is given here has to be the

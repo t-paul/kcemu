@@ -33,6 +33,9 @@
 class CTCCallbackInterface
 {
  public:
+  CTCCallbackInterface(void) {}
+  virtual ~CTCCallbackInterface(void) {}
+
   virtual void ctc_callback_ZC(int channel) = 0;
   virtual void ctc_callback_TC(int channel, long tc) = 0;
   virtual void ctc_callback_start(int channel) = 0;

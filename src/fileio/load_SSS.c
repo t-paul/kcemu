@@ -102,7 +102,7 @@ loader_SSS_load(const char *filename,
 {
   int b;
   long xsize, len;
-  char *sptr, *dptr;
+  unsigned char *sptr, *dptr;
 
   *prop = (fileio_prop_t *)malloc(sizeof(fileio_prop_t));
   if (*prop == NULL)
@@ -137,7 +137,7 @@ loader_SSS_load(const char *filename,
 	{
 	  memset(dptr, 0xd3, 3);
 	  memset(dptr + 3, 0x20, 8);
-	  memcpy(dptr + 3, (*prop)->name, strlen((*prop)->name));
+	  memcpy(dptr + 3, (*prop)->name, strlen((char *)(*prop)->name));
 	  dptr += 11;
 	  len -= 11;
 	}

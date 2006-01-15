@@ -475,7 +475,7 @@ FDC::seek(byte_t head, byte_t cylinder, byte_t sector)
 
   bool seek_ok = _cur_floppy->seek();
 
-  byte_t unit_bit = 1 << _selected_unit;
+  //byte_t unit_bit = 1 << _selected_unit;
   set_input_gate(0x40, seek_ok ? 0x40 : 0x00);
   
   // do not set busy bit, we do seek in zero time

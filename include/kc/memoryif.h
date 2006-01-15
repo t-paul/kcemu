@@ -27,6 +27,9 @@
 class MemoryInterface
 {
  public:
+  MemoryInterface(void) {}
+  virtual ~MemoryInterface(void) {}
+
   virtual byte_t memory_read_byte(word_t addr) = 0;
   virtual void memory_write_byte(word_t addr, byte_t val) = 0;
 };

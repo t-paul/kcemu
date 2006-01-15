@@ -27,6 +27,9 @@
 class TapeInterface
 {
  public:
+  TapeInterface(void) {}
+  virtual ~TapeInterface(void) {}
+
   virtual void tapeAttach(const char *name) = 0;
   virtual void tapeDetach(void) = 0;
   virtual void tapePower(bool power) = 0;

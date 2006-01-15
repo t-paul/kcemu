@@ -28,7 +28,7 @@
 #include <X11/Xmu/WinUtil.h>
 
 void
-send(Display *disp, const char *cmd, int len)
+send(Display *disp, const unsigned char *cmd, int len)
 {
   Atom atom, type_ret;
   int a, format_ret;
@@ -62,11 +62,12 @@ send(Display *disp, const char *cmd, int len)
     }
 }
 
-const char *
+const unsigned char *
 pack_args(int argc, char **argv, int *len_ret)
 {
 	int a, len;
-	char *args, *ptr;
+	char *ptr;
+	unsigned char *args;
 	
 	printf("argc = %d\n", argc);
 
@@ -76,12 +77,12 @@ pack_args(int argc, char **argv, int *len_ret)
 		len += strlen(argv[a]) + 1;
 	}
 	
-	if (!(args = (char *)malloc(len)))
+	if (!(args = (unsigned char *)malloc(len)))
 		return 0;
 
-	ptr = args;
+	ptr = (char *)args;
 	for (a = 1;a < argc;a++) {
-		strcpy(ptr, argv[a]);
+	        strcpy(ptr, argv[a]);
 		ptr += strlen(argv[a]) + 1;
 	}
 	
@@ -94,7 +95,7 @@ main(int argc, char **argv)
 {
   Display *disp;
   int len;
-  const char *args;
+  const unsigned char *args;
   
   if (argc < 2)
 	  return 1;

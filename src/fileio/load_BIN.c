@@ -53,7 +53,7 @@ loader_BIN_check(const char *filename,
 }
 
 static void
-copy_blocks(char *dptr, const char *sptr, long size)
+copy_blocks(unsigned char *dptr, const unsigned char *sptr, long size)
 {
   while (size >= 130)
     {

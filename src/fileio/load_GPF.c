@@ -71,7 +71,7 @@ loader_GPF_load(const char *filename,
     ptr++;
   else
     ptr = filename;
-  strncpy((*prop)->name, ptr, 11);
+  memcpy((*prop)->name, ptr, 11);
   (*prop)->name[11] = '\0';
   for (a = 0;a < 11;a++)
     (*prop)->name[a] = toupper((*prop)->name[a]);

@@ -55,7 +55,7 @@ list_file(FILE *f, const char *name)
 			addr = buf[18] | (buf[19] << 8);
 			start = buf[22] | (buf[23] << 8);
 			autostart = (buf[17] > 2);
-			strncpy(kcname, &buf[1], 11);
+			memcpy(kcname, &buf[1], 11);
 			kcname[11] = '\0';
 
 			printf("%-40s ", fname);

@@ -25,6 +25,9 @@
 class ErrorListener
 {
  public:
+  ErrorListener(void) {}
+  virtual ~ErrorListener(void) {}
+
   virtual void errorInfo(const char *msg) = 0;
 };
 

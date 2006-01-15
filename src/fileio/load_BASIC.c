@@ -55,7 +55,7 @@ loader_BASIC_load(const char *filename,
 {
   int b;
   long xsize, len;
-  char *sptr, *dptr;
+  unsigned char *sptr, *dptr;
 
   *prop = (fileio_prop_t *)malloc(sizeof(fileio_prop_t));
   if (*prop == NULL)

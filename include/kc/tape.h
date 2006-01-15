@@ -59,6 +59,9 @@ typedef enum
 
 class TapeCallback {
  public:
+  TapeCallback(void) {}
+  virtual ~TapeCallback(void) {}
+
   virtual void tape_callback(byte_t val) = 0;
 };
 

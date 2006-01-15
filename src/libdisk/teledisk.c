@@ -216,9 +216,11 @@ read_header(FILE *f)
     unsigned char minute;
     unsigned char second;
   } h;
+  /*
   const char *month[] = {
     "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
   };
+  */
 
   /*
    *  check file identifier

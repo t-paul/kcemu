@@ -25,6 +25,9 @@
 class StatusListener
 {
  public:
+  StatusListener(void) {}
+  virtual ~StatusListener(void) {}
+
   virtual void setStatus(const char *msg) = 0;
 };
 
