@@ -1,7 +1,7 @@
 /*
  *  KCemu -- the KC 85/3 and KC 85/4 Emulator
  *  Copyright (C) 1997-2005 Torsten Paul
- *  Copyright (C) 2005 Alexander Schön
+ *  Copyright (C) 2005 Alexander Schn
  *
  *  $Id$
  *
@@ -25,6 +25,8 @@
 #include <iostream>
 
 #include "kc/system.h"
+
+#include "ui/status.h"
 
 #include "kc/kc.h"
 #include "kc/z80.h"
@@ -64,9 +66,9 @@ Module320k::Module320k(const char *filename, const char *name) :
   for (int a = 0;a < 5;a++)
     _group[a] = NULL;
 
-  _rom = new byte_t[0x50000];
+  _rom = new byte_t[0x280000];
 
-  set_valid(Memory::load_rom(filename, &_rom[0x00000], 0x50000, false));
+  set_valid(Memory::load_rom(filename, &_rom[0x00000], 0x280000, false));
 }
 
 Module320k::~Module320k(void)
@@ -92,7 +94,7 @@ Module320k::register_memory_bank(byte_t bank)
     _group[a] = memory->register_memory(get_name(),
 					0xc000 + a * 0x800,
 					0x0800,
-					_rom + a * 0x10000 + bank * 0x800,
+					_rom + a * 0x80000 + bank * 0x800,
 					0,
 					true);
 }
@@ -137,11 +139,16 @@ Module320k::in(word_t addr)
 void
 Module320k::out(word_t addr, byte_t val)
 {
-  val &= 0x1f;
+  val &= 0xff;
   if (val == _bank)
     return;
 
   _bank = val;
+
+  char buf[1024];
+  const char *fmt = _("2,5 MB Modul Bank (%d / %02xh)");
+  snprintf(buf, sizeof(buf), fmt, _bank, _bank);
+  Status::instance()->setMessage(buf);
 
   unregister_memory_bank();
   register_memory_bank(_bank);
