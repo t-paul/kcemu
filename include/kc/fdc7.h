@@ -32,6 +32,9 @@ class FDC7 : public FDC
   FDC7(void);
   virtual ~FDC7(void);
 
+  virtual long long get_counter();
+  virtual void add_callback(unsigned long long offset, Callback *cb, void *data);
+
   /*
    *  PortInterface
    */

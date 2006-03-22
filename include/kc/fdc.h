@@ -25,6 +25,7 @@
 #include "kc/system.h"
 
 #include "kc/ic.h"
+#include "kc/cb.h"
 #include "kc/ports.h"
 #include "kc/fdc_cmd.h"
 #include "kc/floppy.h"
@@ -69,7 +70,7 @@ class FloppyState
   }
 };
 
-class FDC : public InterfaceCircuit, public PortInterface
+class FDC : public InterfaceCircuit, public PortInterface, public Callback
 {
  public:
   typedef enum {
@@ -83,6 +84,7 @@ class FDC : public InterfaceCircuit, public PortInterface
   enum {
     NR_OF_FLOPPIES = 4,
   
+    ST_MAIN_BUSY_MASK = 0x0f,
     ST_MAIN_FDD0_BUSY = 0x01, /* FDD number 0 is in the seek mode */
     ST_MAIN_FDD1_BUSY = 0x02, /* FDD number 1 is in the seek mode */
     ST_MAIN_FDD2_BUSY = 0x04, /* FDD number 2 is in the seek mode */
@@ -163,6 +165,8 @@ class FDC : public InterfaceCircuit, public PortInterface
   FDC(void);
   virtual ~FDC(void);
 
+  void callback(void *data);
+
   virtual byte_t in_data(word_t addr);
   virtual void out_data(word_t addr, byte_t val);
 
@@ -177,6 +181,7 @@ class FDC : public InterfaceCircuit, public PortInterface
   void select_floppy(int floppy_nr);
   void set_state(fdc_state_t state);
   bool seek(byte_t head, byte_t cylinder, byte_t sector);
+  bool seek_internal(byte_t head, byte_t cylinder, byte_t sector);
   byte_t get_input_gate(void);
   void set_input_gate(byte_t mask, byte_t val);
   byte_t get_msr(void);
@@ -192,6 +197,9 @@ class FDC : public InterfaceCircuit, public PortInterface
   void set_ST1(byte_t mask, byte_t val);
   void set_ST2(byte_t mask, byte_t val);
   void set_ST3(byte_t mask, byte_t val);
+
+  virtual long long get_counter() = 0;
+  virtual void add_callback(unsigned long long offset, Callback *cb, void *data) = 0;
 
   /*
    *  PortInterface

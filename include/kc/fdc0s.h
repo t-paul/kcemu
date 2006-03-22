@@ -32,6 +32,9 @@ class FDC0S : public FDC
   FDC0S(void);
   virtual ~FDC0S(void);
 
+  virtual long long get_counter();
+  virtual void add_callback(unsigned long long offset, Callback *cb, void *data);
+
   /*
    *  PortInterface
    */

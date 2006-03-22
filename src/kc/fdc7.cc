@@ -24,6 +24,7 @@
 #include "kc/system.h"
 
 #include "kc/kc.h"
+#include "kc/z80.h"
 #include "kc/fdc7.h"
 
 #include "libdbg/dbg.h"
@@ -34,6 +35,18 @@ FDC7::FDC7(void)
 
 FDC7::~FDC7(void)
 {
+}
+
+long long
+FDC7::get_counter()
+{
+  return z80->getCounter();
+}
+
+void
+FDC7::add_callback(unsigned long long offset, Callback *cb, void *data)
+{
+  z80->addCallback(offset, cb, data);
 }
 
 byte_t

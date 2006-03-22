@@ -381,7 +381,7 @@ FDC_CMD_WRITE_DATA::write_byte(byte_t val)
       f = get_fdc()->get_floppy();
       if (f != 0)
         {
-          get_fdc()->seek(_head, _cylinder, _sector);
+          get_fdc()->seek_internal(_head, _cylinder, _sector);
           f->write_sector(_buf, _sector_size);
         }
     }
@@ -438,7 +438,8 @@ FDC_CMD_READ_DATA::execute(void)
               _arg[7],
               _arg[8]));
   get_fdc()->select_floppy(_arg[1] & 3);
-  get_fdc()->seek(_arg[3], _arg[2], _arg[4]);
+  get_fdc()->set_input_gate(0x40, 0x40);
+  get_fdc()->seek_internal(_arg[3], _arg[2], _arg[4]);
   f = get_fdc()->get_floppy();
   if (f == 0)
     return;
@@ -539,9 +540,9 @@ FDC_CMD_READ_DATA::fetch_next_sector(void)
   if (sector >= cnt)
     return false;
 
-  get_fdc()->seek(get_fdc()->get_head(),
-                  get_fdc()->get_cylinder(),
-                  sector + 1);
+  get_fdc()->seek_internal(get_fdc()->get_head(),
+			   get_fdc()->get_cylinder(),
+			   sector + 1);
   len = f->read_sector(_buf, size);
   if (len != size)
     return false;
@@ -609,15 +610,7 @@ FDC_CMD_RECALIBRATE::execute(void)
 
   // Head retracted to Track 0, always sets SEEK END, if not track 0
   // signal is received from the floppy the EC bit is set
-  if (get_fdc()->seek(get_fdc()->get_head(), 0, get_fdc()->get_sector()))
-    get_fdc()->set_ST0(FDC::ST_0_IC_MASK | FDC::ST_0_SEEK_END | FDC::ST_0_EC,
-		       FDC::ST_0_IC_NORMAL_TERMINATION | FDC::ST_0_SEEK_END);
-  else
-    get_fdc()->set_ST0(FDC::ST_0_IC_MASK | FDC::ST_0_SEEK_END | FDC::ST_0_EC,
-		       FDC::ST_0_IC_ABNORMAL_TERMINATION | FDC::ST_0_SEEK_END | FDC::ST_0_EC);
-
-  // input gate is also set in the seek function!
-  get_fdc()->set_input_gate(0x40, 0x00);
+  get_fdc()->seek(get_fdc()->get_head(), 0, get_fdc()->get_sector());
 }
 
 /********************************************************************
@@ -898,17 +891,7 @@ FDC_CMD_SEEK::execute(void)
               _arg[2]));
 
   get_fdc()->select_floppy(_arg[1] & 3);
-
-  // input gate is also set in the seek function!
-  if (get_fdc()->seek((_arg[1] >> 2) & 1, _arg[2], 1))
-    get_fdc()->set_ST0(FDC::ST_0_IC_MASK | FDC::ST_0_SEEK_END | FDC::ST_0_EC,
-		       FDC::ST_0_IC_NORMAL_TERMINATION | FDC::ST_0_SEEK_END);
-  else
-    get_fdc()->set_ST0(FDC::ST_0_IC_MASK | FDC::ST_0_SEEK_END | FDC::ST_0_EC,
-		       FDC::ST_0_IC_ABNORMAL_TERMINATION | FDC::ST_0_SEEK_END | FDC::ST_0_EC);
-
-  // input gate is also set in the seek function!
-  get_fdc()->set_input_gate(0x40, 0x00);
+  get_fdc()->seek((_arg[1] >> 2) & 1, _arg[2], 1);
 }
 
 /********************************************************************

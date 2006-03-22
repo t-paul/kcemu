@@ -23,6 +23,7 @@
 
 #include "kc/system.h"
 
+#include "kc/z80.h"
 #include "kc/fdc9.h"
 
 #include "libdbg/dbg.h"
@@ -33,6 +34,18 @@ FDC9::FDC9(void)
 
 FDC9::~FDC9(void)
 {
+}
+
+long long
+FDC9::get_counter()
+{
+  return z80->getCounter();
+}
+
+void
+FDC9::add_callback(unsigned long long offset, Callback *cb, void *data)
+{
+  z80->addCallback(offset, cb, data);
 }
 
 byte_t

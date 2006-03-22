@@ -24,6 +24,7 @@
 #include "kc/system.h"
 
 #include "kc/fdc4.h"
+#include "kc/z80_fdc.h"
 
 #include "libdbg/dbg.h"
 
@@ -37,6 +38,18 @@ FDC4::FDC4(void)
 
 FDC4::~FDC4(void)
 {
+}
+
+long long
+FDC4::get_counter()
+{
+  return fdc_z80->get_counter();
+}
+
+void
+FDC4::add_callback(unsigned long long offset, Callback *cb, void *data)
+{
+  fdc_z80->add_callback(offset, cb, data);
 }
 
 byte_t
