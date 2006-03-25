@@ -96,7 +96,21 @@ libdisk_open(libdisk_prop_t **prop, const char *path)
 void
 libdisk_close(libdisk_prop_t **prop)
 {
-  // FIXME: not yet implemented
+  libdisk_prop_t *p;
+
+  if (prop == NULL)
+    return;
+
+  p = (*prop);
+  if (p == NULL)
+    return;
+
+  if (p->loader != NULL)
+    if (p->loader->close != NULL)
+      p->loader->close(p);
+
+  free(p);
+  *prop = 0;
 }
 
 int
