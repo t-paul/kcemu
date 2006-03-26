@@ -309,8 +309,9 @@ GIDE::in_data(void)
 	      "GIDE::in():  DATA READ %02xh [%c] (%3d)\n",
 	      val,
 	      isprint(val) ? val : '.',
-	      x++));
+	      x));
 
+  x++;
 
   if (x == 512)
     {
