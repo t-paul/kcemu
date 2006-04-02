@@ -84,6 +84,8 @@ EXTRA_DIST = \
 	mod_1m.h	\
 	mod_4m.h	\
 	mod_rom.h	\
+	mod_urom.h	\
+	mod_auto.h	\
 	mod_rom1.h	\
 	mod_romb.h	\
 	mod_192k.h	\

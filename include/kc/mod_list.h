@@ -78,6 +78,9 @@ private:
 protected:
   virtual void add_custom_modules(void);
   virtual void init_modules(int max_modules);
+  virtual int init_modules_autostart(int idx);
+  virtual int init_modules_configfile(int idx, int max_modules);
+  virtual int init_modules_commandline(int idx, int max_modules, const char *param);
 
 public:
   ModuleList(void);

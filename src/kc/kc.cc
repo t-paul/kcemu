@@ -236,6 +236,8 @@ char *kcemu_tape;
 char *kcemu_disk;
 char *kcemu_emulate;
 char *kcemu_modules;
+char *kcemu_autostart_file;
+char *kcemu_autostart_addr;
 
 static kc_type_t     kcemu_kc_type;
 static kc_variant_t  kcemu_kc_variant;
@@ -404,6 +406,8 @@ usage(char *argv0)
 	    "  -7:              run in KC 87 mode\n"
 	    "  -8:              run in LC 80 mode\n"
 	    "  -9:              run in BIC/A5105 mode\n"
+	    "  -a --autostart:  autostart program on startup (kc85/3 - kc85/5 only)\n"
+	    "  -A --address:    override start address of autostart program\n"
 	    "  -e --emulate:    emulate the specified system (use -v/-V to list types)\n"
 	    "  -s --scale:      scale display (allowed values: 1, 2 and 3)\n"
 	    "  -t --tape:       attach tape on startup\n"
@@ -1139,6 +1143,8 @@ main(int argc, char **argv)
 #ifdef HAVE_GETOPT_LONG
   static struct option long_options[] =
   {
+    { "autostart",     1, 0, 'a' },
+    { "address",       1, 0, 'A' },
     { "help",          0, 0, 'h' },
     { "tape",          1, 0, 't' },
     { "scale",         1, 0, 's' },
@@ -1184,6 +1190,8 @@ main(int argc, char **argv)
   kcemu_disk = 0;
   kcemu_emulate = 0;
   kcemu_modules = 0;
+  kcemu_autostart_file = 0;
+  kcemu_autostart_addr = 0;
   kcemu_ui_scale = 0;
   kcemu_ui_debug = -1;
   kcemu_ui_fullscreen = 0;
@@ -1208,11 +1216,11 @@ main(int argc, char **argv)
   while (1)
     {
 #ifdef HAVE_GETOPT_LONG
-      c = getopt_long(argc, argv, "0123456789hvDEe:d:f:l:s:t:H:M:FLWV",
+      c = getopt_long(argc, argv, "0123456789hvDEA:a:e:d:f:l:s:t:H:M:FLWV",
 		      long_options, &option_index);
 #else
 #ifdef HAVE_GETOPT
-      c = getopt(argc, argv, "0123456789hvDEe:d:f:l:s:H:M:FLWV");
+      c = getopt(argc, argv, "0123456789hvDEA:a:e:d:f:l:s:H:M:FLWV");
 #else
 #warning neither HAVE_GETOPT_LONG nor HAVE_GETOPT defined
 #warning commandline parsing disabled!
@@ -1257,6 +1265,12 @@ main(int argc, char **argv)
 	  break;
 	case '9':
 	  type = 9;
+	  break;
+	case 'a':
+	  kcemu_autostart_file = strdup(optarg);
+	  break;
+	case 'A':
+	  kcemu_autostart_addr = strdup(optarg);
 	  break;
 	case 'd':
 	  free(kcemu_datadir);

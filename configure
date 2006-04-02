@@ -309,7 +309,7 @@ ac_includes_default="\
 # include <unistd.h>
 #endif"
 
-ac_subst_vars='SHELL PATH_SEPARATOR PACKAGE_NAME PACKAGE_TARNAME PACKAGE_VERSION PACKAGE_STRING PACKAGE_BUGREPORT exec_prefix prefix program_transform_name bindir sbindir libexecdir datadir sysconfdir sharedstatedir localstatedir libdir includedir oldincludedir infodir mandir build_alias host_alias target_alias DEFS ECHO_C ECHO_N ECHO_T LIBS INSTALL_PROGRAM INSTALL_SCRIPT INSTALL_DATA CYGPATH_W PACKAGE VERSION ACLOCAL AUTOCONF AUTOMAKE AUTOHEADER MAKEINFO install_sh STRIP ac_ct_STRIP INSTALL_STRIP_PROGRAM mkdir_p AWK SET_MAKE am__leading_dot AMTAR am__tar am__untar build build_cpu build_vendor build_os host host_cpu host_vendor host_os target target_cpu target_vendor target_os CC CFLAGS LDFLAGS CPPFLAGS ac_ct_CC EXEEXT OBJEXT DEPDIR am__include am__quote AMDEP_TRUE AMDEP_FALSE AMDEPBACKSLASH CCDEPMODE am__fastdepCC_TRUE am__fastdepCC_FALSE CXX CXXFLAGS ac_ct_CXX CXXDEPMODE am__fastdepCXX_TRUE am__fastdepCXX_FALSE LN_S RANLIB ac_ct_RANLIB CPP EGREP ALLOCA GLIBC21 LIBICONV USE_NLS MSGFMT GMSGFMT XGETTEXT INTLBISON BUILD_INCLUDED_LIBINTL USE_INCLUDED_LIBINTL CATALOGS CATOBJEXT GMOFILES INTLLIBS INTLOBJS POFILES POSUB DATADIRNAME INSTOBJEXT GENCAT MKINSTALLDIRS INTL_LIBTOOL_SUFFIX_PREFIX TARGET_BEOS_TRUE TARGET_BEOS_FALSE TARGET_MINGW_TRUE TARGET_MINGW_FALSE TARGET_LINUX_TRUE TARGET_LINUX_FALSE USE_INCLUDED_GETOPT_TRUE USE_INCLUDED_GETOPT_FALSE SNDFILE_LIBS AUDIOFILE_LIBS MP3LAME_LIBS VORBIS_LIBS F_L_A_C_LIBS PKG_CONFIG GTK_CFLAGS GTK_LIBS SDL_CONFIG SDL_CFLAGS SDL_LIBS TARGET_UI_GTK_TRUE TARGET_UI_GTK_FALSE TARGET_UI_SDL_TRUE TARGET_UI_SDL_FALSE CPPUNIT_CONFIG CPPUNIT_CFLAGS CPPUNIT_LIBS LIBOBJS LTLIBOBJS'
+ac_subst_vars='SHELL PATH_SEPARATOR PACKAGE_NAME PACKAGE_TARNAME PACKAGE_VERSION PACKAGE_STRING PACKAGE_BUGREPORT exec_prefix prefix program_transform_name bindir sbindir libexecdir datadir sysconfdir sharedstatedir localstatedir libdir includedir oldincludedir infodir mandir build_alias host_alias target_alias DEFS ECHO_C ECHO_N ECHO_T LIBS INSTALL_PROGRAM INSTALL_SCRIPT INSTALL_DATA CYGPATH_W PACKAGE VERSION ACLOCAL AUTOCONF AUTOMAKE AUTOHEADER MAKEINFO install_sh STRIP ac_ct_STRIP INSTALL_STRIP_PROGRAM mkdir_p AWK SET_MAKE am__leading_dot AMTAR am__tar am__untar build build_cpu build_vendor build_os host host_cpu host_vendor host_os target target_cpu target_vendor target_os CC CFLAGS LDFLAGS CPPFLAGS ac_ct_CC EXEEXT OBJEXT DEPDIR am__include am__quote AMDEP_TRUE AMDEP_FALSE AMDEPBACKSLASH CCDEPMODE am__fastdepCC_TRUE am__fastdepCC_FALSE CXX CXXFLAGS ac_ct_CXX CXXDEPMODE am__fastdepCXX_TRUE am__fastdepCXX_FALSE LN_S RANLIB ac_ct_RANLIB CPP EGREP ALLOCA GLIBC21 LIBICONV USE_NLS MSGFMT GMSGFMT XGETTEXT INTLBISON BUILD_INCLUDED_LIBINTL USE_INCLUDED_LIBINTL CATALOGS CATOBJEXT GMOFILES INTLLIBS INTLOBJS POFILES POSUB DATADIRNAME INSTOBJEXT GENCAT MKINSTALLDIRS INTL_LIBTOOL_SUFFIX_PREFIX HAVE_ASL HAVE_P2BIN COMPILE_Z80_ASM_TRUE COMPILE_Z80_ASM_FALSE TARGET_BEOS_TRUE TARGET_BEOS_FALSE TARGET_MINGW_TRUE TARGET_MINGW_FALSE TARGET_LINUX_TRUE TARGET_LINUX_FALSE USE_INCLUDED_GETOPT_TRUE USE_INCLUDED_GETOPT_FALSE SNDFILE_LIBS AUDIOFILE_LIBS MP3LAME_LIBS VORBIS_LIBS F_L_A_C_LIBS PKG_CONFIG GTK_CFLAGS GTK_LIBS SDL_CONFIG SDL_CFLAGS SDL_LIBS TARGET_UI_GTK_TRUE TARGET_UI_GTK_FALSE TARGET_UI_SDL_TRUE TARGET_UI_SDL_FALSE CPPUNIT_CONFIG CPPUNIT_CFLAGS CPPUNIT_LIBS LIBOBJS LTLIBOBJS'
 ac_subst_files=''
 
 # Initialize some variables set by options.
@@ -6962,6 +6962,105 @@ _ACEOF
 
 
 
+# Extract the first word of "asl", so it can be a program name with args.
+set dummy asl; ac_word=$2
+echo "$as_me:$LINENO: checking for $ac_word" >&5
+echo $ECHO_N "checking for $ac_word... $ECHO_C" >&6
+if test "${ac_cv_prog_HAVE_ASL+set}" = set; then
+  echo $ECHO_N "(cached) $ECHO_C" >&6
+else
+  if test -n "$HAVE_ASL"; then
+  ac_cv_prog_HAVE_ASL="$HAVE_ASL" # Let the user override the test.
+else
+as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
+for as_dir in $PATH
+do
+  IFS=$as_save_IFS
+  test -z "$as_dir" && as_dir=.
+  for ac_exec_ext in '' $ac_executable_extensions; do
+  if $as_executable_p "$as_dir/$ac_word$ac_exec_ext"; then
+    ac_cv_prog_HAVE_ASL=""yes""
+    echo "$as_me:$LINENO: found $as_dir/$ac_word$ac_exec_ext" >&5
+    break 2
+  fi
+done
+done
+
+  test -z "$ac_cv_prog_HAVE_ASL" && ac_cv_prog_HAVE_ASL=""no""
+fi
+fi
+HAVE_ASL=$ac_cv_prog_HAVE_ASL
+if test -n "$HAVE_ASL"; then
+  echo "$as_me:$LINENO: result: $HAVE_ASL" >&5
+echo "${ECHO_T}$HAVE_ASL" >&6
+else
+  echo "$as_me:$LINENO: result: no" >&5
+echo "${ECHO_T}no" >&6
+fi
+
+# Extract the first word of "p2bin", so it can be a program name with args.
+set dummy p2bin; ac_word=$2
+echo "$as_me:$LINENO: checking for $ac_word" >&5
+echo $ECHO_N "checking for $ac_word... $ECHO_C" >&6
+if test "${ac_cv_prog_HAVE_P2BIN+set}" = set; then
+  echo $ECHO_N "(cached) $ECHO_C" >&6
+else
+  if test -n "$HAVE_P2BIN"; then
+  ac_cv_prog_HAVE_P2BIN="$HAVE_P2BIN" # Let the user override the test.
+else
+as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
+for as_dir in $PATH
+do
+  IFS=$as_save_IFS
+  test -z "$as_dir" && as_dir=.
+  for ac_exec_ext in '' $ac_executable_extensions; do
+  if $as_executable_p "$as_dir/$ac_word$ac_exec_ext"; then
+    ac_cv_prog_HAVE_P2BIN=""yes""
+    echo "$as_me:$LINENO: found $as_dir/$ac_word$ac_exec_ext" >&5
+    break 2
+  fi
+done
+done
+
+  test -z "$ac_cv_prog_HAVE_P2BIN" && ac_cv_prog_HAVE_P2BIN=""no""
+fi
+fi
+HAVE_P2BIN=$ac_cv_prog_HAVE_P2BIN
+if test -n "$HAVE_P2BIN"; then
+  echo "$as_me:$LINENO: result: $HAVE_P2BIN" >&5
+echo "${ECHO_T}$HAVE_P2BIN" >&6
+else
+  echo "$as_me:$LINENO: result: no" >&5
+echo "${ECHO_T}no" >&6
+fi
+
+
+
+
+if false; then
+  COMPILE_Z80_ASM_TRUE=
+  COMPILE_Z80_ASM_FALSE='#'
+else
+  COMPILE_Z80_ASM_TRUE='#'
+  COMPILE_Z80_ASM_FALSE=
+fi
+
+if test "x$HAVE_ASL" = "xyes"; then
+  if test "x$HAVE_P2BIN" = "xyes"; then
+
+
+if true; then
+  COMPILE_Z80_ASM_TRUE=
+  COMPILE_Z80_ASM_FALSE='#'
+else
+  COMPILE_Z80_ASM_TRUE='#'
+  COMPILE_Z80_ASM_FALSE=
+fi
+
+  fi
+fi
+
+
 
 
 if false; then
@@ -10549,7 +10648,7 @@ echo "$as_me: WARNING:
 
 fi
 
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        ac_config_files="$ac_config_files Makefile include/Makefile include/kc/Makefile include/kc/kramermc/Makefile include/kc/muglerpc/Makefile include/sys/Makefile include/getopt/Makefile include/cmd/Makefile include/ui/Makefile include/ui/gtk/Makefile include/ui/sdl/Makefile include/ui/sdlmtk/Makefile include/ui/beos/Makefile include/ui/generic/Makefile include/fileio/Makefile include/libdbg/Makefile include/libtape/Makefile include/libdisk/Makefile include/libaudio/Makefile include/z80core/Makefile include/z80core2/Makefile src/Makefile src/kc/Makefile src/kc/kramermc/Makefile src/kc/muglerpc/Makefile src/sys/Makefile src/sys/beos/Makefile src/sys/mingw/Makefile src/sys/linux/Makefile src/getopt/Makefile src/cmd/Makefile src/ui/Makefile src/ui/gtk/Makefile src/ui/sdl/Makefile src/ui/sdlmtk/Makefile src/ui/beos/Makefile src/ui/generic/Makefile src/fileio/Makefile src/libdbg/Makefile src/libtape/Makefile src/libdisk/Makefile src/libaudio/Makefile src/util/Makefile src/z80core/Makefile src/z80core2/Makefile test/Makefile test/kc/Makefile test/libaudio/Makefile test/libaudio/data/Makefile ROM/Makefile PRG/Makefile DISK/Makefile images/Makefile doc/Makefile intl/Makefile man/Makefile man/man1/Makefile debian/Makefile po/Makefile.in KCemuSetup.iss"
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            ac_config_files="$ac_config_files Makefile include/Makefile include/kc/Makefile include/kc/kramermc/Makefile include/kc/muglerpc/Makefile include/sys/Makefile include/getopt/Makefile include/cmd/Makefile include/ui/Makefile include/ui/gtk/Makefile include/ui/sdl/Makefile include/ui/sdlmtk/Makefile include/ui/beos/Makefile include/ui/generic/Makefile include/fileio/Makefile include/libdbg/Makefile include/libtape/Makefile include/libdisk/Makefile include/libaudio/Makefile include/z80core/Makefile include/z80core2/Makefile asm/Makefile asm/autostart/Makefile src/Makefile src/kc/Makefile src/kc/kramermc/Makefile src/kc/muglerpc/Makefile src/sys/Makefile src/sys/beos/Makefile src/sys/mingw/Makefile src/sys/linux/Makefile src/getopt/Makefile src/cmd/Makefile src/ui/Makefile src/ui/gtk/Makefile src/ui/sdl/Makefile src/ui/sdlmtk/Makefile src/ui/beos/Makefile src/ui/generic/Makefile src/fileio/Makefile src/libdbg/Makefile src/libtape/Makefile src/libdisk/Makefile src/libaudio/Makefile src/util/Makefile src/z80core/Makefile src/z80core2/Makefile test/Makefile test/kc/Makefile test/libaudio/Makefile test/libaudio/data/Makefile ROM/Makefile PRG/Makefile DISK/Makefile images/Makefile doc/Makefile intl/Makefile man/Makefile man/man1/Makefile debian/Makefile po/Makefile.in KCemuSetup.iss"
           ac_config_commands="$ac_config_commands default"
 cat >confcache <<\_ACEOF
 # This file is a shell script that caches the results of configure
@@ -10660,6 +10759,20 @@ if test -z "${am__fastdepCXX_TRUE}" && test -z "${am__fastdepCXX_FALSE}"; then
   { { echo "$as_me:$LINENO: error: conditional \"am__fastdepCXX\" was never defined.
 Usually this means the macro was only invoked conditionally." >&5
 echo "$as_me: error: conditional \"am__fastdepCXX\" was never defined.
+Usually this means the macro was only invoked conditionally." >&2;}
+   { (exit 1); exit 1; }; }
+fi
+if test -z "${COMPILE_Z80_ASM_TRUE}" && test -z "${COMPILE_Z80_ASM_FALSE}"; then
+  { { echo "$as_me:$LINENO: error: conditional \"COMPILE_Z80_ASM\" was never defined.
+Usually this means the macro was only invoked conditionally." >&5
+echo "$as_me: error: conditional \"COMPILE_Z80_ASM\" was never defined.
+Usually this means the macro was only invoked conditionally." >&2;}
+   { (exit 1); exit 1; }; }
+fi
+if test -z "${COMPILE_Z80_ASM_TRUE}" && test -z "${COMPILE_Z80_ASM_FALSE}"; then
+  { { echo "$as_me:$LINENO: error: conditional \"COMPILE_Z80_ASM\" was never defined.
+Usually this means the macro was only invoked conditionally." >&5
+echo "$as_me: error: conditional \"COMPILE_Z80_ASM\" was never defined.
 Usually this means the macro was only invoked conditionally." >&2;}
    { (exit 1); exit 1; }; }
 fi
@@ -11213,6 +11326,8 @@ do
   "include/libaudio/Makefile" ) CONFIG_FILES="$CONFIG_FILES include/libaudio/Makefile" ;;
   "include/z80core/Makefile" ) CONFIG_FILES="$CONFIG_FILES include/z80core/Makefile" ;;
   "include/z80core2/Makefile" ) CONFIG_FILES="$CONFIG_FILES include/z80core2/Makefile" ;;
+  "asm/Makefile" ) CONFIG_FILES="$CONFIG_FILES asm/Makefile" ;;
+  "asm/autostart/Makefile" ) CONFIG_FILES="$CONFIG_FILES asm/autostart/Makefile" ;;
   "src/Makefile" ) CONFIG_FILES="$CONFIG_FILES src/Makefile" ;;
   "src/kc/Makefile" ) CONFIG_FILES="$CONFIG_FILES src/kc/Makefile" ;;
   "src/kc/kramermc/Makefile" ) CONFIG_FILES="$CONFIG_FILES src/kc/kramermc/Makefile" ;;
@@ -11424,6 +11539,10 @@ s,@INSTOBJEXT@,$INSTOBJEXT,;t t
 s,@GENCAT@,$GENCAT,;t t
 s,@MKINSTALLDIRS@,$MKINSTALLDIRS,;t t
 s,@INTL_LIBTOOL_SUFFIX_PREFIX@,$INTL_LIBTOOL_SUFFIX_PREFIX,;t t
+s,@HAVE_ASL@,$HAVE_ASL,;t t
+s,@HAVE_P2BIN@,$HAVE_P2BIN,;t t
+s,@COMPILE_Z80_ASM_TRUE@,$COMPILE_Z80_ASM_TRUE,;t t
+s,@COMPILE_Z80_ASM_FALSE@,$COMPILE_Z80_ASM_FALSE,;t t
 s,@TARGET_BEOS_TRUE@,$TARGET_BEOS_TRUE,;t t
 s,@TARGET_BEOS_FALSE@,$TARGET_BEOS_FALSE,;t t
 s,@TARGET_MINGW_TRUE@,$TARGET_MINGW_TRUE,;t t

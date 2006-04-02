@@ -103,6 +103,8 @@ kcemu_SOURCES = \
 	mod_1m.cc	\
 	mod_4m.cc	\
 	mod_rom.cc	\
+	mod_urom.cc	\
+	mod_auto.cc	\
 	mod_rom1.cc	\
 	mod_romb.cc	\
 	mod_boot.cc	\

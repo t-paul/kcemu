@@ -1,8 +1,8 @@
 /*
  *  KCemu -- the KC 85/3 and KC 85/4 Emulator
- *  Copyright (C) 1997-2001 Torsten Paul
+ *  Copyright (C) 1997-2006 Torsten Paul
  *
- *  $Id: mod_disk.h,v 1.2 2001/04/14 15:14:29 tp Exp $
+ *  $Id$
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -19,24 +19,38 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-#ifndef __kc_mod_disk_h
-#define __kc_mod_disk_h
+#include "kc/system.h"
 
-#include "kc/memory.h"
-#include "kc/mod_rom.h"
+#include "kc/kc.h"
+#include "kc/mod_urom.h"
 
-class ModuleDisk : public ModuleROM
+#include "libdbg/dbg.h"
+
+using namespace std;
+
+ModuleUserROM::ModuleUserROM(ModuleUserROM &tmpl) :
+  ModuleROM(tmpl)
 {
- public:
-  ModuleDisk(ModuleDisk &tmpl);
-  ModuleDisk(const char *filename, const char *name,
-             dword_t size, byte_t id);
-  virtual ~ModuleDisk(void);
+}
 
-  virtual word_t get_addr(byte_t val);
+ModuleUserROM::ModuleUserROM(const char *filename, const char *name, dword_t size, byte_t id) :
+  ModuleROM(filename, name, size, id)
+{
+}
 
-  virtual void m_out(word_t addr, byte_t val);
-  virtual ModuleInterface * clone(void);
-};
+ModuleUserROM::~ModuleUserROM(void)
+{
+}
 
-#endif /* __kc_mod_disk_h */
+word_t
+ModuleUserROM::get_addr(byte_t val)
+{
+  return (val & 0xe0) << 8;
+}
+
+ModuleInterface *
+ModuleUserROM::clone(void)
+{
+  return new ModuleUserROM(*this);
+}
+

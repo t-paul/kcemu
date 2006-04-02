@@ -144,6 +144,8 @@ extern char *kcemu_modules;
 extern char *kcemu_homedir;
 extern char *kcemu_datadir;
 extern char *kcemu_localedir;
+extern char *kcemu_autostart_file;
+extern char *kcemu_autostart_addr;
 
 kc_type_t get_kc_type(void);
 kc_variant_t get_kc_variant(void);

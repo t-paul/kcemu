@@ -33,19 +33,23 @@
 ModuleDisk::ModuleDisk(ModuleDisk &tmpl) : ModuleROM(tmpl)
 {
   _val = 0;
-  _addr = 0;
 }
 
 ModuleDisk::ModuleDisk(const char *filename, const char *name,
-                     dword_t size, byte_t id) :
-  ModuleROM(filename, name, size, id, 0)
+		       dword_t size, byte_t id) :
+  ModuleROM(filename, name, size, id)
 {
   _val = 0;
-  _addr = 0;
 }
 
 ModuleDisk::~ModuleDisk(void)
 {
+}
+
+word_t
+ModuleDisk::get_addr(byte_t val)
+{
+  return (val & 0x20) ? 0xe000 : 0xc000;
 }
 
 /*
@@ -69,10 +73,7 @@ ModuleDisk::m_out(word_t addr, byte_t val)
   if (((_val & 0x25) ^ (val & 0x25)) == 0)
     return;
 
-  if (val & 0x20)
-    _addr = 0xe000;
-  else
-    _addr = 0xc000;
+  word_t map_addr = get_addr(val);
 
   DBG(2, form("KCemu/ModuleDisk/out",
 	      "ModuleDisk::out(): addr = %04x, val = %02x, old val = %02x\n",
@@ -83,7 +84,7 @@ ModuleDisk::m_out(word_t addr, byte_t val)
     {
       DBG(2, form("KCemu/ModuleDisk/out",
                   "ModuleDisk::out(): new map address is %04x\n",
-                  _addr));
+                  map_addr));
       reg = unreg = true;
     }
 
@@ -110,7 +111,7 @@ ModuleDisk::m_out(word_t addr, byte_t val)
       }
 
   if (reg)
-    _group = memory->register_memory(get_name(), _addr, _size,
+    _group = memory->register_memory(get_name(), map_addr, _size,
                                      _rom, (addr >> 8), true);
 
   _val = val;

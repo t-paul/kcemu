@@ -118,6 +118,20 @@ fi
 AC_MSG_RESULT($DBG_LEVEL)
 AC_DEFINE_UNQUOTED(DBG_LEVEL, $DBG_LEVEL, "debug level")
 
+dnl ----------------------------
+dnl  check for arnold assembler
+dnl ----------------------------
+
+AC_CHECK_PROG(HAVE_ASL, asl, "yes", "no")
+AC_CHECK_PROG(HAVE_P2BIN, p2bin, "yes", "no")
+
+AM_CONDITIONAL(COMPILE_Z80_ASM, false)
+if test "x$HAVE_ASL" = "xyes"; then
+  if test "x$HAVE_P2BIN" = "xyes"; then
+    AM_CONDITIONAL(COMPILE_Z80_ASM, true)
+  fi
+fi
+    
 dnl -----------------------------------
 dnl  check on which system we will run
 dnl -----------------------------------
@@ -504,6 +518,8 @@ AC_OUTPUT([
 	include/libaudio/Makefile
 	include/z80core/Makefile
 	include/z80core2/Makefile
+	asm/Makefile
+	asm/autostart/Makefile
 	src/Makefile
 	src/kc/Makefile
 	src/kc/kramermc/Makefile

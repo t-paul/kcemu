@@ -128,6 +128,7 @@
  *  Mit '*' gekennzeichnete Module kamen offenbar nicht in den Handel! 
  */
 
+#include <string>
 #include <string.h>
 
 #include "kc/system.h"
@@ -147,6 +148,8 @@
 #include "kc/mod_1m.h"
 #include "kc/mod_4m.h"
 #include "kc/mod_rom.h"
+#include "kc/mod_urom.h"
+#include "kc/mod_auto.h"
 #include "kc/mod_rom1.h"
 #include "kc/mod_romb.h"
 #include "kc/mod_boot.h"
@@ -165,10 +168,14 @@
 #include "kc/mod_js.h"
 #endif /* HOST_OS_LINUX */
 
+#include "fileio/load.h"
+
 #include "ui/ui.h"
 #include "ui/error.h"
 
 #include "libdbg/dbg.h"
+
+using namespace std;
 
 ModuleList::ModuleList(void)
 {
@@ -660,7 +667,7 @@ ModuleList::add_custom_modules(void)
       if (text == NULL)
 	text = name;
 
-      ModuleInterface *m = new ModuleROM(file, name, size, id);
+      ModuleInterface *m = new ModuleUserROM(file, name, size, id);
       ModuleListEntry *entry = new ModuleListEntry(text, m, KC_TYPE_85_2_CLASS);
       _mod_list.push_back(entry);
     }
@@ -669,15 +676,11 @@ ModuleList::add_custom_modules(void)
 void
 ModuleList::init_modules(int max_modules)
 {
-  int idx, mode;
-  const char *mod;
-  char *ptr, *buffer;
-
   for (int a = 0;a < 4 * MAX_BD + 2;a++)
     _init_mod[a] = NULL;
 
-  mode = 1;
-  ptr = kcemu_modules;
+  int mode = 1;
+  const char *ptr = kcemu_modules;
   if (ptr)
     {
       if (*ptr == '+')
@@ -686,22 +689,139 @@ ModuleList::init_modules(int max_modules)
 	mode = 0;
     }
 
-  idx = 0;
+  int idx = init_modules_autostart(0);
   if (mode == 1)
-    for (int a = 0;a < max_modules;a++)
-      {
-	mod = RC::instance()->get_string_i(a, "Module");
-	if (mod)
-	  _init_mod[idx++] = strdup(mod);
-      }
+    idx = init_modules_configfile(idx, max_modules);
 
-  if (kcemu_modules == NULL)
-    return;
-  
-  buffer = new char[strlen(ptr) + 1];
-  strcpy(buffer, ptr);
+  init_modules_commandline(idx, max_modules, ptr);
+}
 
-  ptr = strtok(buffer, ",");
+int
+ModuleList::init_modules_autostart(int idx)
+{
+  if (!(get_kc_type() & KC_TYPE_85_2_CLASS))
+    return idx;
+
+  if (kcemu_autostart_file == NULL)
+    return idx;
+
+  DBG(2, form("KCemu/ModuleAutoStart/page",
+	      "ModuleAutoStart: trying file '%s'\n",
+	      kcemu_autostart_file));
+
+  fileio_prop_t *ptr, *prop;
+  if (fileio_load_file(kcemu_autostart_file, &prop) != 0)
+    return idx;
+
+  int size = 0x10000;
+  byte_t *rom = new byte_t[size];
+  memset(rom, 0xff, size);
+
+  byte_t init[0x200];
+  memset(init, 0xff, 0x200);
+  string datadir = string(kcemu_datadir);
+  string autostart = datadir + "/lib/z80/kc853.bin";
+  FILE *f = fopen(autostart.c_str(), "rb");
+  if (f != NULL)
+    {
+      fread(init, 1, 0x200, f);
+      fclose(f);
+    }
+
+  int page = 0;
+  int info_idx = 0x10;
+  byte_t *rom_ptr = rom + 0x200;
+  for (ptr = prop;ptr != NULL;ptr = ptr->next)
+    {
+      DBG(2, form("KCemu/ModuleAutoStart/page",
+		  "ModuleAutoStart: load = %04x, size = %ld, start = %04x\n",
+		  ptr->load_addr, ptr->size, ptr->start_addr));
+
+      byte_t *img = new byte_t[ptr->size];
+      int image_size = fileio_get_image(ptr, img);
+
+      byte_t *img_ptr = img;
+      int load_addr = ptr->load_addr;
+      while (image_size > 0)
+	{
+	  if (page == 3)
+	    break;
+
+	  page++;
+
+	  int len = image_size < 0x3e00 ? image_size : 0x3e00;
+	  
+	  memcpy(rom_ptr, img_ptr, len);
+
+	  if (info_idx == 0x10)
+	    {
+	      int start_addr = ptr->start_addr;
+	      if (kcemu_autostart_addr != NULL)
+		{
+		  start_addr = strtoul(kcemu_autostart_addr, NULL, 0) & 0xffff;
+		  DBG(2, form("KCemu/ModuleAutoStart/page",
+			      "ModuleAutoStart: overriding start address with %04xh\n",
+			      start_addr));
+		}
+
+	      memcpy(&init[2], ptr->name, 12);
+	      init[info_idx++] = start_addr & 0xff;
+	      init[info_idx++] = start_addr >> 8;
+	    }
+
+	  init[info_idx++] = load_addr & 0xff;
+	  init[info_idx++] = load_addr >> 8;
+	  init[info_idx++] = len & 0xff;
+	  init[info_idx++] = len >> 8;
+
+	  init[info_idx++] = len > 0x1000;
+	  init[info_idx++] = 0;
+
+	  rom_ptr += 0x4000;
+	  img_ptr += 0x3e00;
+	  load_addr += 0x3e00;
+	  image_size -= 0x3e00;
+	}
+
+      delete[] img;
+    }
+
+  for (int a = 0;a < 4;a++)
+    memcpy(rom + a * 0x4000, init, 0x200);
+
+  ModuleInterface *m = new ModuleAutoStart(&rom[0], "Autostart", 0x10000, 0x01);
+  _mod_list.push_back(new ModuleListEntry(_("Autostart"), m, KC_TYPE_85_2_CLASS));
+
+  _init_mod[idx++] = strdup("Autostart");
+
+  fileio_free_prop(&prop);
+
+  return idx;
+}
+
+int
+ModuleList::init_modules_configfile(int idx, int max_modules)
+{
+  for (int a = 0;a < max_modules;a++)
+    {
+      const char *mod = RC::instance()->get_string_i(a, "Module");
+      if (mod)
+	_init_mod[idx++] = strdup(mod);
+    }
+
+  return idx;
+}
+
+int
+ModuleList::init_modules_commandline(int idx, int max_modules, const char *param)
+{
+  if (param == NULL)
+    return idx;
+
+  char *buffer = new char[strlen(param) + 1];
+  strcpy(buffer, param);
+
+  char *ptr = strtok(buffer, ",");
   while (ptr != 0)
     {
       _init_mod[idx++] = strdup(ptr);
@@ -709,6 +829,8 @@ ModuleList::init_modules(int max_modules)
     }
 
   delete[] buffer;
+
+  return idx;
 }
 
 ModuleList::~ModuleList(void)
