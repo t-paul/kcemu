@@ -3,8 +3,10 @@
 LIBS =
 SUFFIXES = .asm .bin
 
+Z80FILES = kc853.bin
+
 if COMPILE_Z80_ASM
-noinst_PROGRAMS = kc853.bin
+noinst_PROGRAMS = $(Z80FILES)
 endif
 
 kc853_bin_SOURCES = kc853.asm
@@ -15,9 +17,9 @@ asmdir = $(pkgdatadir)/asm/autostart
 asm_DATA = kc853.asm
 
 z80libdir = $(pkgdatadir)/lib/z80
-z80lib_DATA = $(noinst_PROGRAMS)
+z80lib_DATA = $(Z80FILES)
 
 .asm.o:
 	asl $< -o $@
 
-EXTRA_DIST = $(asm_DATA) $(noinst_PROGRAMS)
+EXTRA_DIST = $(asm_DATA) $(Z80FILES)

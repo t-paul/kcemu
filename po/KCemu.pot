@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2006-04-01 20:37+0200\n"
+"POT-Creation-Date: 2006-04-02 20:41+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -40,26 +40,26 @@ msgid ""
 "programs add this file to a tape-archive!"
 msgstr ""
 
-#: src/kc/kc.cc:250
+#: src/kc/kc.cc:251
 msgid ""
 "    Z1013 with 16k RAM and 2k ROM, running at 1MHz. This was the\n"
 "    first version with cheap circuits so the CPU was clocked at only 1MHz\n"
 "    The ROM containes the Z1013 monitor version 2.02.\n"
 msgstr ""
 
-#: src/kc/kc.cc:255
+#: src/kc/kc.cc:256
 msgid ""
 "    Z1013 with 1k sRAM and 2k ROM, running at 2MHz. Industry\n"
 "    version with only 1k static RAM. Monitor version 2.02.\n"
 msgstr ""
 
-#: src/kc/kc.cc:259
+#: src/kc/kc.cc:260
 msgid ""
 "    Z1013 with 16k RAM and 2k ROM, running at 2MHz. Successor of\n"
 "    the Z1013.01 but with industry grade circuits clocked at 2MHz.\n"
 msgstr ""
 
-#: src/kc/kc.cc:263
+#: src/kc/kc.cc:264
 msgid ""
 "    Z1013 with 64k RAM and 2x2k ROM, running at 2MHz. The ROM\n"
 "    contains two system images with 2k each. Loaded is the first\n"
@@ -67,7 +67,7 @@ msgid ""
 "    shipped by the manufacturer.\n"
 msgstr ""
 
-#: src/kc/kc.cc:269
+#: src/kc/kc.cc:270
 msgid ""
 "    Z1013 with 64k RAM and 2k ROM, running at 2MHz. The ROM\n"
 "    contains two system images with 2k each. Loaded is the second\n"
@@ -75,14 +75,14 @@ msgid ""
 "    8x8 matrix.\n"
 msgstr ""
 
-#: src/kc/kc.cc:275
+#: src/kc/kc.cc:276
 msgid ""
 "    Z1013 with 64k RAM and 4k ROM. The ROM is the extended\n"
 "    version tagged 2.028 RB that has a different keyboard driver for\n"
 "    the keyboard K7659.\n"
 msgstr ""
 
-#: src/kc/kc.cc:280
+#: src/kc/kc.cc:281
 msgid ""
 "    Z1013 with 64k RAM and 4k ROM. The ROM contains the 'Super\n"
 "    Ur-Lader 5.0' that can read arbitrary tape files as system monitor.\n"
@@ -90,44 +90,44 @@ msgid ""
 "    programs to switch off the system ROM.\n"
 msgstr ""
 
-#: src/kc/kc.cc:286
+#: src/kc/kc.cc:287
 msgid ""
 "    Z1013 with 64k RAM and 4k ROM. The ROM contains the Bootloader\n"
 "    BL4 that can load monitor images from floppy disk or can start the\n"
 "    CP/M system.\n"
 msgstr ""
 
-#: src/kc/kc.cc:294
+#: src/kc/kc.cc:295
 msgid ""
 "    Z9001 (later called KC 85/1) with monochrome display, no internal BASIC\n"
 "    ROM. This computer has 16k RAM and 4k ROM with the robotron z9001 "
 "system.\n"
 msgstr ""
 
-#: src/kc/kc.cc:298
+#: src/kc/kc.cc:299
 msgid "    Like the z9001.10 but with color extension card.\n"
 msgstr ""
 
-#: src/kc/kc.cc:310
+#: src/kc/kc.cc:311
 msgid ""
 "    HC900 (later called KC 85/2) with 16k RAM and 8k ROM. System is called\n"
 "    HC-CAOS 2.2 (home computer - cassette aided operating system). BASIC\n"
 "    is only available as external module.\n"
 msgstr ""
 
-#: src/kc/kc.cc:315
+#: src/kc/kc.cc:316
 msgid ""
 "    KC 85/3 with 16k RAM, 8k system ROM with HC-CAOS 3.1 and 8k BASIC ROM.\n"
 msgstr ""
 
-#: src/kc/kc.cc:318
+#: src/kc/kc.cc:319
 msgid ""
 "    KC 85/4 with 64k RAM, 64k screen memory, 12k system ROM with HC-CAOS "
 "4.2\n"
 "    and 8k BASIC ROM.\n"
 msgstr ""
 
-#: src/kc/kc.cc:322
+#: src/kc/kc.cc:323
 msgid ""
 "    Inofficial successor of the KC 85/4 with 256k RAM, 64k screen memory,\n"
 "    16k system ROM with HC-CAOS 4.4, 8k BASIC ROM and 24k User ROM. It is\n"
@@ -135,55 +135,55 @@ msgid ""
 "    hard-disk support.\n"
 msgstr ""
 
-#: src/kc/kc.cc:328
+#: src/kc/kc.cc:329
 msgid "    Polycomputer 880.\n"
 msgstr ""
 
-#: src/kc/kc.cc:334
+#: src/kc/kc.cc:335
 msgid "    Like the KC 87.11 but without the color extension card.\n"
 msgstr ""
 
-#: src/kc/kc.cc:337
+#: src/kc/kc.cc:338
 msgid "    Successor of the Z9001 with internal 10k BASIC ROM.\n"
 msgstr ""
 
-#: src/kc/kc.cc:340
+#: src/kc/kc.cc:341
 msgid "    Like the KC 87.21 but without the color extension card.\n"
 msgstr ""
 
-#: src/kc/kc.cc:343
+#: src/kc/kc.cc:344
 msgid ""
 "    New series with extended BASIC ROM (still 10k but with some routines "
 "for\n"
 "    plotter support were added).\n"
 msgstr ""
 
-#: src/kc/kc.cc:347
+#: src/kc/kc.cc:348
 msgid "    Single board computer LC 80 with 1k RAM and 2k ROM.\n"
 msgstr ""
 
-#: src/kc/kc.cc:350
+#: src/kc/kc.cc:351
 msgid "    BIC/A5105, only the base device is emulated, no floppy device.\n"
 msgstr ""
 
-#: src/kc/kc.cc:356
+#: src/kc/kc.cc:357
 msgid "    BIC/A5105, the full system including the floppy device.\n"
 msgstr ""
 
-#: src/kc/kc.cc:359
+#: src/kc/kc.cc:360
 msgid ""
 "    Micro-Computer presented in the book \"Praktische Microcomputertechnik"
 "\"\n"
 "    by Manfred Kramer.\n"
 msgstr ""
 
-#: src/kc/kc.cc:366
+#: src/kc/kc.cc:367
 msgid ""
 "    CP/M based Micro-Computer presented in the magazine \"Funkamateur\"\n"
 "    by A. Mugler and H. Mathes.\n"
 msgstr ""
 
-#: src/kc/kc.cc:392
+#: src/kc/kc.cc:393
 msgid ""
 "\n"
 "KCemu comes with ABSOLUTELY NO WARRANTY; for details run `kcemu --"
@@ -191,7 +191,7 @@ msgid ""
 "This is free software, and you are welcome to redistribute it\n"
 "under certain conditions; run `kcemu --license' for details.\n"
 "\n"
-"usage: kcemu [-01234789estfhdlvVHFLW]\n"
+"usage: kcemu [-0123456789aAestfhdlvVHFELW]\n"
 "\n"
 "  -0:              run in Z1013 mode\n"
 "  -1:              run in Z9001 / KC 85/1 mode\n"
@@ -199,10 +199,12 @@ msgid ""
 "  -3:              run in KC 85/3 mode\n"
 "  -4:              run in KC 85/4 mode (default)\n"
 "  -5:              run in KC 85/5 mode\n"
+"  -6:              run in Poly-880 mode\n"
 "  -7:              run in KC 87 mode\n"
 "  -8:              run in LC 80 mode\n"
 "  -9:              run in BIC/A5105 mode\n"
 "  -a --autostart:  autostart program on startup (kc85/3 - kc85/5 only)\n"
+"  -A --address:    override start address of autostart program\n"
 "  -e --emulate:    emulate the specified system (use -v/-V to list types)\n"
 "  -s --scale:      scale display (allowed values: 1, 2 and 3)\n"
 "  -t --tape:       attach tape on startup\n"
@@ -219,11 +221,11 @@ msgid ""
 "  -W --warranty:   show warranty\n"
 msgstr ""
 
-#: src/kc/kc.cc:483
+#: src/kc/kc.cc:486
 msgid "available emulations:"
 msgstr ""
 
-#: src/kc/kc.cc:546
+#: src/kc/kc.cc:549
 msgid ""
 "\n"
 "\t\t    GNU GENERAL PUBLIC LICENSE\n"
@@ -487,7 +489,7 @@ msgid ""
 "\n"
 msgstr ""
 
-#: src/kc/kc.cc:808
+#: src/kc/kc.cc:811
 msgid ""
 "\n"
 "NO WARRANTY\n"
@@ -515,7 +517,7 @@ msgid ""
 "\n"
 msgstr ""
 
-#: src/kc/kc.cc:835
+#: src/kc/kc.cc:838
 msgid ""
 "\n"
 "                     END OF TERMS AND CONDITIONS\n"
@@ -787,7 +789,7 @@ msgstr ""
 msgid "Floppy Disk Basis FC"
 msgstr ""
 
-#: src/kc/mod_list.cc:779
+#: src/kc/mod_list.cc:793
 msgid "Autostart"
 msgstr ""
 
