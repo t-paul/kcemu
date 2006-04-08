@@ -558,7 +558,8 @@ AC_OUTPUT([
 	man/man1/Makefile
 	debian/Makefile
 	po/Makefile.in
-	KCemuSetup.iss],
+	setup/Makefile
+	setup/KCemuSetup.nsi],
 	[sed -e "/POTFILES =/r po/POTFILES" po/Makefile.in > po/Makefile])
 
 
