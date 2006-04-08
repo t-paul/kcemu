@@ -19,7 +19,6 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-#include <string.h>
 #include <stdlib.h>
 #include <fstream>
 
@@ -35,9 +34,6 @@ using namespace std;
 
 Memory7::Memory7(void) : Memory()
 {
-  int l;
-  char *ptr;
-  kc_variant_t v;
   struct {
     MemAreaGroup **group;
     const char    *name;
@@ -61,27 +57,25 @@ Memory7::Memory7(void) : Memory()
     { 0, },
   };
 
-  l = strlen(kcemu_datadir);
-  ptr = new char[l + 14];
-  strcpy(ptr, kcemu_datadir);
+  string datadir(kcemu_datadir);
+  string z9001_romdir = datadir + "/roms/z9001";
 
-  v = get_kc_variant();
+  string z9001_os_rom;
+  string z9001_basic_rom;
+  kc_variant_t v = get_kc_variant();
   if ((v == KC_VARIANT_87_20) || (v == KC_VARIANT_87_21))
     {
-      strcpy(ptr + l, "/os____f0.87b");
-      load_rom(ptr, &_rom_os, 0x1000, true);
-      strcpy(ptr + l, "/basic_c0.87b");
-      load_rom(ptr, &_rom_basic, 0x2800, true);
+      z9001_os_rom = z9001_romdir + "/os____f0.87b";
+      z9001_basic_rom = z9001_romdir + "/basic_c0.87b";
     }
   else
     {
-      strcpy(ptr + l, "/os____f0.851");
-      load_rom(ptr, &_rom_os, 0x1000, true);
-      strcpy(ptr + l, "/basic_c0.87a");
-      load_rom(ptr, &_rom_basic, 0x2800, true);
+      z9001_os_rom = z9001_romdir + "/os____f0.851";
+      z9001_basic_rom = z9001_romdir + "/basic_c0.87a";
     }
 
-  delete[] ptr;
+  load_rom(z9001_os_rom.c_str(), &_rom_os, 0x1000, true);
+  load_rom(z9001_basic_rom.c_str(), &_rom_basic, 0x2800, true);
 
   memset(&_irm[0], 0x70, 0x400);
 

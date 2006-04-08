@@ -179,11 +179,12 @@ using namespace std;
 
 ModuleList::ModuleList(void)
 {
-  int cnt;
-  char *ptr;
   ModuleInterface *m;
-  ModuleListEntry *entry;
-  
+
+  string datadir(kcemu_datadir);
+  string kc85_romdir = datadir + "/roms/kc85";
+  string z9001_romdir = datadir + "/roms/z9001";
+
   /*
    *  placeholder for a not present module ;-)
    */
@@ -248,12 +249,9 @@ ModuleList::ModuleList(void)
   /*
    *  basic (kc85/1)
    */
-  ptr = new char[strlen(kcemu_datadir) + 14];
-  strcpy(ptr, kcemu_datadir);
-  strcat(ptr, "/basic_c0.851");
-  m = new ModuleROM1(ptr, "BASIC", 0xc000, 0x2800);
+  string z9001_basic_rom = z9001_romdir + "/basic_c0.851";
+  m = new ModuleROM1(z9001_basic_rom.c_str(), "BASIC", 0xc000, 0x2800);
   _mod_list.push_back(new ModuleListEntry(_("Basic Module (c000h-e7ffh)"), m, KC_TYPE_85_1));
-  delete[] ptr;
 
   /*
    *  plotter module (kc85/1, kc87.10, kc87.11)
@@ -263,12 +261,9 @@ ModuleList::ModuleList(void)
    *  like the XY4131. To actually use the plotter an additional driver is needed
    *  though.
    */
-  ptr = new char[strlen(kcemu_datadir) + 14];
-  strcpy(ptr, kcemu_datadir);
-  strcat(ptr, "/basic_c0.87b");
-  m = new ModuleROM1(ptr, "PLOTTER", 0xc000, 0x2800);
+  string z9001_plotter_rom = z9001_romdir + "/basic_c0.87b";
+  m = new ModuleROM1(z9001_plotter_rom.c_str(), "PLOTTER", 0xc000, 0x2800);
   _mod_list.push_back(new ModuleListEntry(_("Plotter Module (c000h-e7ffh)"), m, KC_TYPE_85_1));
-  delete[] ptr;
 
   /*
    *  RAM modules 16k at 4000h and 8000h (kc85/1)
@@ -281,104 +276,75 @@ ModuleList::ModuleList(void)
   /*
    *  ZM30 (kc85/1)
    */
-  ptr = new char[strlen(kcemu_datadir) + 14];
-  strcpy(ptr, kcemu_datadir);
-  strcat(ptr, "/zm30__c0.851");
-  m = new ModuleROM1(ptr, "ZM30", 0xc000, 0x0d00, true);
+  string z9001_zm30_rom = z9001_romdir + "/zm30__c0.851";
+  m = new ModuleROM1(z9001_zm30_rom.c_str(), "ZM30", 0xc000, 0x0d00, true);
   _mod_list.push_back(new ModuleListEntry(_("ZM30 (c000h-ccffh)"), m, KC_TYPE_85_1_CLASS));
-  delete[] ptr;
 
   /*
    *  edas (kc85/1)
    */
-  ptr = new char[strlen(kcemu_datadir) + 14];
-  strcpy(ptr, kcemu_datadir);
-  strcat(ptr, "/edas__c0.851");
-  m = new ModuleROM1(ptr, "EDAS", 0xc000, 0x2800, true);
+  string z9001_edas_rom = z9001_romdir + "/edas__c0.851";
+  m = new ModuleROM1(z9001_edas_rom.c_str(), "EDAS", 0xc000, 0x2800, true);
   _mod_list.push_back(new ModuleListEntry(_("EDAS (c000h-e7ffh)"), m, KC_TYPE_85_1_CLASS));
-  delete[] ptr;
 
   /*
    *  idas (kc85/1)
    */
-  ptr = new char[strlen(kcemu_datadir) + 14];
-  strcpy(ptr, kcemu_datadir);
-  strcat(ptr, "/idas__c0.851");
-  m = new ModuleROM1(ptr, "IDAS", 0xc000, 0x2800, true);
+  string z9001_idas_rom = z9001_romdir + "/idas__c0.851";
+  m = new ModuleROM1(z9001_idas_rom.c_str(), "IDAS", 0xc000, 0x2800, true);
   _mod_list.push_back(new ModuleListEntry(_("IDAS / ZM (c000h-e7ffh)"), m, KC_TYPE_85_1_CLASS));
-  delete[] ptr;
 
   /*
    *  bitex (kc85/1)
    */
-  ptr = new char[strlen(kcemu_datadir) + 14];
-  strcpy(ptr, kcemu_datadir);
-  strcat(ptr, "/bitex_c0.851");
-  m = new ModuleROM1(ptr, "BITEX", 0xc000, 0x1800, true);
+  string z9001_bitex_rom = z9001_romdir + "/bitex_c0.851";
+  m = new ModuleROM1(z9001_bitex_rom.c_str(), "BITEX", 0xc000, 0x1800, true);
   _mod_list.push_back(new ModuleListEntry(_("BITEX (c000h-d7ffh)"), m, KC_TYPE_85_1_CLASS));
-  delete[] ptr;
 
   /*
    *  zsid (kc85/1)
    */
   /*
-  ptr = new char[strlen(kcemu_datadir) + 14];
-  strcpy(ptr, kcemu_datadir);
-  strcat(ptr, "/zsid__c0.851");
-  m = new ModuleROM1(ptr, "ZSID", 0xc000, 0x2800, true);
+  string z9001_zsid_rom = z9001_romdir + "/zsid__c0.851";
+  m = new ModuleROM1(z9001_zsid_rom.c_str(), "ZSID", 0xc000, 0x2800, true);
   _mod_list.push_back(new ModuleListEntry(_("ZSID (c000h-e7ffh)"), m, KC_TYPE_85_1_CLASS));
-  delete[] ptr;
   */
 
   /*
    *  r80 (kc85/1)
    */
   /*
-  ptr = new char[strlen(kcemu_datadir) + 14];
-  strcpy(ptr, kcemu_datadir);
-  strcat(ptr, "/r80___c0.851");
-  m = new ModuleROM1(ptr, "R80", 0xc000, 0x1c00, true);
+  string z9001_r80_rom = z9001_romdir + "/r80___c0.851";
+  m = new ModuleROM1(z9001_r80_rom.c_str(), "R80", 0xc000, 0x1c00, true);
   _mod_list.push_back(new ModuleListEntry(_("R80 (c000h-dbffh)"), m, KC_TYPE_85_1_CLASS));
-  delete[] ptr;
   */
 
   /*
    *  192 KByte RAM/EPROM module (kc85/1)
    */
-  ptr = new char[strlen(kcemu_datadir) + 14];
-  strcpy(ptr, kcemu_datadir);
-  char * ptr_d2 = strcat(ptr, "/192k__d2.851");
-  ptr = new char[strlen(kcemu_datadir) + 14];
-  strcpy(ptr, kcemu_datadir);
-  char * ptr_d3 = strcat(ptr, "/192k__d3.851");
-  ptr = new char[strlen(kcemu_datadir) + 14];
-  strcpy(ptr, kcemu_datadir);
-  char * ptr_d5 = strcat(ptr, "/192k__d5.851");
-  m = new Module192k(ptr_d2, ptr_d3, ptr_d5, "192k");
+  string z9001_192k_d2_rom = z9001_romdir + "/192k__d2.851";
+  string z9001_192k_d3_rom = z9001_romdir + "/192k__d3.851";
+  string z9001_192k_d5_rom = z9001_romdir + "/192k__d5.851";
+
+  m = new Module192k(z9001_192k_d2_rom.c_str(),
+		     z9001_192k_d3_rom.c_str(),
+		     z9001_192k_d5_rom.c_str(),
+		     "192k");
   _mod_list.push_back(new ModuleListEntry(_("192 KByte RAM/EPROM"), m, KC_TYPE_85_1_CLASS));
-  delete[] ptr_d2;
-  delete[] ptr_d3;
-  delete[] ptr_d5;
 
   /*
-   *  320k ROM Modul (kc85/1)
+   *  2,5Mb ROM Modul (kc85/1)
    */
-  ptr = new char[strlen(kcemu_datadir) + 11];
-  strcpy(ptr, kcemu_datadir);
-  strcat(ptr, "/super.rom");
-  m = new Module320k(ptr, "Super");
+  string z9001_super_rom = z9001_romdir + "/super.rom";
+  m = new Module320k(z9001_super_rom.c_str(), "Super");
   _mod_list.push_back(new ModuleListEntry(_("320k ROM Module"), m, KC_TYPE_85_1_CLASS));
-  delete [] ptr;
 
   /*
    *  128 KByte ROM bank module (kc85/1)
    */
-  ptr = new char[strlen(kcemu_datadir) + 14];
-  strcpy(ptr, kcemu_datadir);
-  strcat(ptr, "/rom_bank.851");
-  m = new ModuleROMBank(ptr, "ROMBANK");
+  string z9001_rombank_rom = z9001_romdir + "/rom_bank.851";
+  m = new ModuleROMBank(z9001_rombank_rom.c_str(), "ROMBANK");
   _mod_list.push_back(new ModuleListEntry(_("128k ROM Bank"), m, KC_TYPE_85_1_CLASS));
-  delete[] ptr;
 
   /*
    *  IRM Expansion for color display (kc85/1)
@@ -408,12 +374,9 @@ ModuleList::ModuleList(void)
   /*
    *  CPM-Z9 boot rom module (kc85/1)
    */
-  ptr = new char[strlen(kcemu_datadir) + 14];
-  strcpy(ptr, kcemu_datadir);
-  strcat(ptr, "/cpmz9_c0.851");
-  m = new ModuleBOOT(ptr, "CPM-Z9-BOOT", 0xc000, 0x0800, true);
+  string z9001_z9_boot_rom = z9001_romdir + "/cpmz9_c0.851";
+  m = new ModuleBOOT(z9001_z9_boot_rom.c_str(), "CPM-Z9-BOOT", 0xc000, 0x0800, true);
   _mod_list.push_back(new ModuleListEntry(_("CPM-Z9 BOOT (c000h-c7ffh)"), m, KC_TYPE_85_1_CLASS));
-  delete[] ptr;
 
   /*
    *  CPM-Z9 floppy module (kc85/1)
@@ -440,23 +403,21 @@ ModuleList::ModuleList(void)
   if (RC::instance()->get_int("Enable V24-Module"))
     {
       m = new ModuleV24("M003", 0xee);
-      entry = new ModuleListEntry(_("M003: V24"), m, KC_TYPE_85_2_CLASS);
-      _mod_list.push_back(entry);
+      _mod_list.push_back(new ModuleListEntry(_("M003: V24"), m, KC_TYPE_85_2_CLASS));
     }
+#endif /* HOST_OS_LINUX */
 
   /*
    *  basic (kc85/2) (this is actually 16k and includes a new system rom!)
    */
-  ptr = new char[strlen(kcemu_datadir) + 10];
-  strcpy(ptr, kcemu_datadir);
-  strcat(ptr, "/m006.rom");
-  m = new ModuleROM(ptr, "M006", 0x4000, 0xfb);
+  string kc85_m006_rom = kc85_romdir + "/m006.rom";
+  m = new ModuleROM(kc85_m006_rom.c_str(), "M006", 0x4000, 0xfb);
   _mod_list.push_back(new ModuleListEntry(_("M006: Basic"), m, KC_TYPE_85_2_CLASS));
-  delete[] ptr;
 
   /*
    *  Joystick module (kc85/2-4)
    */
+#ifdef HOST_OS_LINUX
   m = new ModuleJoystick("M008", 0xff);
   _mod_list.push_back(new ModuleListEntry(_("M008: Joystick"), m, KC_TYPE_85_2_CLASS));
 #endif /* HOST_OS_LINUX */
@@ -470,12 +431,9 @@ ModuleList::ModuleList(void)
   /*
    *  texor
    */
-  ptr = new char[strlen(kcemu_datadir) + 10];
-  strcpy(ptr, kcemu_datadir);
-  strcat(ptr, "/m012.rom");
-  m = new ModuleROM(ptr, "M012", 0x2000, 0xfb);
+  string kc85_m012_rom = kc85_romdir + "/m012.rom";
+  m = new ModuleROM(kc85_m012_rom.c_str(), "M012", 0x2000, 0xfb);
   _mod_list.push_back(new ModuleListEntry(_("M012: Texor"), m, KC_TYPE_85_2_CLASS));
-  delete[] ptr;
 
   /*
    *  RAM module 16k (kc85/2-4)
@@ -486,23 +444,16 @@ ModuleList::ModuleList(void)
   /*
    *  forth
    */
-  ptr = new char[strlen(kcemu_datadir) + 10];
-  strcpy(ptr, kcemu_datadir);
-  strcat(ptr, "/m026.rom");
-  m = new ModuleROM(ptr, "M026", 0x2000, 0xfb);
+  string kc85_m026_rom = kc85_romdir + "/m026.rom";
+  m = new ModuleROM(kc85_m026_rom.c_str(), "M026", 0x2000, 0xfb);
   _mod_list.push_back(new ModuleListEntry(_("M026: Forth"), m, KC_TYPE_85_2_CLASS));
-  delete[] ptr;
 
   /*
    *  development
    */
-  ptr = new char[strlen(kcemu_datadir) + 10];
-  strcpy(ptr, kcemu_datadir);
-  strcat(ptr, "/m027.rom");
-  m = new ModuleROM(ptr, "M027", 0x2000, 0xfb);
-  entry = new ModuleListEntry(_("M027: Development"), m, KC_TYPE_85_2_CLASS);
-  _mod_list.push_back(entry);
-  delete[] ptr;
+  string kc85_m027_rom = kc85_romdir + "/m027.rom";
+  m = new ModuleROM(kc85_m027_rom.c_str(), "M027", 0x2000, 0xfb);
+  _mod_list.push_back(new ModuleListEntry(_("M027: Development"), m, KC_TYPE_85_2_CLASS));
 
   /*
    *  RAM module 256k (kc85/2-4)
@@ -537,56 +488,42 @@ ModuleList::ModuleList(void)
   /*
    *  wordpro ROM version for kc85/3
    */
-  ptr = new char[strlen(kcemu_datadir) + 10];
-  strcpy(ptr, kcemu_datadir);
-  strcat(ptr, "/m900.rom");
-  m = new ModuleROM(ptr, "M900", 0x2000, 0xfb);
-  entry = new ModuleListEntry(_("M900: WordPro '86 (KC85/3)"), m, KC_TYPE_85_3);
-  _mod_list.push_back(entry);
-  delete[] ptr;
+  string kc85_m900_rom = kc85_romdir + "/m900.rom";
+  m = new ModuleROM(kc85_m900_rom.c_str(), "M900", 0x2000, 0xfb);
+  _mod_list.push_back(new ModuleListEntry(_("M900: WordPro '86 (KC85/3)"), m, KC_TYPE_85_3));
 
   /*
    *  wordpro ROM version for kc85/4
    */
-  ptr = new char[strlen(kcemu_datadir) + 10];
-  strcpy(ptr, kcemu_datadir);
-  strcat(ptr, "/m901.rom");
-  m = new ModuleROM(ptr, "M901", 0x2000, 0xfb);
-  entry = new ModuleListEntry(_("M901: WordPro '86 (KC85/4)"), m, KC_TYPE_85_4);
-  _mod_list.push_back(entry);
-  delete[] ptr;
+  string kc85_m901_rom = kc85_romdir + "/m901.rom";
+  m = new ModuleROM(kc85_m901_rom.c_str(), "M901", 0x2000, 0xfb);
+  _mod_list.push_back(new ModuleListEntry(_("M901: WordPro '86 (KC85/4)"), m, KC_TYPE_85_4));
 
   /*
-   *  Floppy Disk Basis Extension ROM (F8)
+   *  Floppy Disk Basis Extension ROM (Version 3.1 at slot F8)
    */
-  ptr = new char[strlen(kcemu_datadir) + 14];
-  strcpy(ptr, kcemu_datadir);
-  strcat(ptr, "/floppyf8.rom");
-  m = new ModuleDisk(ptr, "Floppy Disk Basis F8", 0x2000, 0xa7);
-  entry = new ModuleListEntry(_("Floppy Disk Basis F8"), m, KC_TYPE_NONE);
-  _mod_list.push_back(entry);
-  delete[] ptr;
+  string kc85_floppy_f8_rom = kc85_romdir + "/floppy31.rom";
+  m = new ModuleDisk(kc85_floppy_f8_rom.c_str(), "Floppy Disk Basis F8", 0x2000, 0xa7);
+  ModuleListEntry *mod_floppy_f8 = new ModuleListEntry(_("Floppy Disk Basis F8"), m, KC_TYPE_NONE);
+  _mod_list.push_back(mod_floppy_f8);
 
   _init_floppy_basis_f8 = 0;
   if (get_kc_type() & KC_TYPE_85_2_CLASS)
     if (RC::instance()->get_int("Floppy Disk Basis", 0))
-      _init_floppy_basis_f8 = entry;
+      _init_floppy_basis_f8 = mod_floppy_f8;
 
   /*
-   *  Floppy Disk Basis ROM (FC)
+   *  Floppy Disk Basis ROM (Version 2.0 at slot FC)
    */
-  ptr = new char[strlen(kcemu_datadir) + 12];
-  strcpy(ptr, kcemu_datadir);
-  strcat(ptr, "/floppy.rom");
-  m = new ModuleDisk(ptr, "Floppy Disk Basis FC", 0x2000, 0xa7);
-  entry = new ModuleListEntry(_("Floppy Disk Basis FC"), m, KC_TYPE_NONE);
-  _mod_list.push_back(entry);
-  delete[] ptr;
+  string kc85_floppy_fc_rom = kc85_romdir + "/floppy20.rom";
+  m = new ModuleDisk(kc85_floppy_fc_rom.c_str(), "Floppy Disk Basis FC", 0x2000, 0xa7);
+  ModuleListEntry *mod_floppy_fc = new ModuleListEntry(_("Floppy Disk Basis FC"), m, KC_TYPE_NONE);
+  _mod_list.push_back(mod_floppy_fc);
 
   _init_floppy_basis_fc = 0;
   if (get_kc_type() & KC_TYPE_85_2_CLASS)
     if (RC::instance()->get_int("Floppy Disk Basis", 0))
-      _init_floppy_basis_fc = entry;
+      _init_floppy_basis_fc = mod_floppy_fc;
   
   bool swap_floppy_roms = (get_kc_type() == KC_TYPE_85_5) ? true : false;
   if (RC::instance()->get_int("Swap Floppy ROMs", 0))
@@ -596,9 +533,8 @@ ModuleList::ModuleList(void)
     if (RC::instance()->get_int("Floppy Disk Basis", 0))
       if (swap_floppy_roms)
 	{
-	  // entry is still set to the FC module...
 	  _init_floppy_basis_fc = _init_floppy_basis_f8;
-	  _init_floppy_basis_f8 = entry;
+	  _init_floppy_basis_f8 = mod_floppy_fc;
 	}
     
   if (get_kc_type() & KC_TYPE_85_2_CLASS)
@@ -615,6 +551,7 @@ ModuleList::ModuleList(void)
   if (get_kc_type() & KC_TYPE_LC80)
     _nr_of_bd = 1;
 
+  int cnt;
   switch (get_kc_type())
     {
     case KC_TYPE_85_1:

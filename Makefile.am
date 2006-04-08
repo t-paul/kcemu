@@ -2,7 +2,21 @@
 
 docdir = $(datadir)/doc/kcemu
 
-SUBDIRS = include asm ROM PRG DISK intl src test images doc man debian setup po
+SUBDIRS = \
+	include \
+	intl \
+	src \
+	test \
+	asm \
+	roms \
+	tapes \
+	disks \
+	images \
+	doc \
+	man \
+	debian \
+	setup \
+	po
 
 if TARGET_MINGW
 e = README.de TODO THANKS COPYING COPYING.de KCemuSetup.iss

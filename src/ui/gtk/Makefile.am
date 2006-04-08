@@ -1,8 +1,10 @@
 ## Process this file with automake to produce Makefile.in
 
+keymapdir = $(pkgdatadir)/keymaps
+
 noinst_LIBRARIES = libui_gtk.a
 
-pkgdata_DATA = \
+KEYMAPS = \
 	kc851.key \
 	kc851_keyboard.xpm \
 	kc851_keyboard_pressed.xpm \
@@ -16,7 +18,9 @@ pkgdata_DATA = \
 	lc80_keyboard.xpm \
 	lc80_keyboard_pressed.xpm
 
-EXTRA_DIST = $(pkgdata_DATA)
+keymap_DATA = $(KEYMAPS)
+
+EXTRA_DIST = $(KEYMAPS)
 
 INCLUDES = \
 	-I../../../include \

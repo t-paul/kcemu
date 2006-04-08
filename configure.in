@@ -548,9 +548,17 @@ AC_OUTPUT([
 	test/kc/Makefile
 	test/libaudio/Makefile
 	test/libaudio/data/Makefile
-	ROM/Makefile
-	PRG/Makefile
-	DISK/Makefile
+	roms/Makefile
+	roms/z1013/Makefile
+	roms/z9001/Makefile
+	roms/kc85/Makefile
+	roms/poly880/Makefile
+	roms/lc80/Makefile
+	roms/a5105/Makefile
+	roms/kramermc/Makefile
+	roms/muglerpc/Makefile
+	tapes/Makefile
+	disks/Makefile
 	images/Makefile
 	doc/Makefile
 	intl/Makefile

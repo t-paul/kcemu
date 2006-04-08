@@ -19,7 +19,6 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-#include <string.h>
 #include <stdlib.h>
 #include <fstream>
 
@@ -35,8 +34,6 @@ using namespace std;
 
 Memory1::Memory1(void) : Memory()
 {
-  int l;
-  char *ptr;
   struct {
     MemAreaGroup **group;
     const char    *name;
@@ -59,12 +56,11 @@ Memory1::Memory1(void) : Memory()
     { 0, },
   };
 
-  l = strlen(kcemu_datadir);
-  ptr = new char[l + 14];
-  strcpy(ptr, kcemu_datadir);
+  string datadir(kcemu_datadir);
+  string z9001_romdir = datadir + "/roms/z9001";
+  string z9001_os_rom = z9001_romdir + "/os____f0.851";
 
-  strcpy(ptr + l, "/os____f0.851");
-  load_rom(ptr, &_rom_os, 0x1000, true);
+  load_rom(z9001_os_rom.c_str(), &_rom_os, 0x1000, true);
 
   memset(&_irm[0], 0x70, 0x400);
 

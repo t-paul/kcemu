@@ -240,9 +240,9 @@ Disk::attach(int disk_no, const char *filename, bool create)
 	}
       else
 	{
-	  ptr = (char *)malloc(strlen(kcemu_datadir) + strlen(filename) + 5);
+	  ptr = (char *)malloc(strlen(kcemu_datadir) + strlen(filename) + 11);
 	  strcpy(ptr, kcemu_datadir);
-	  strcat(ptr, "/");
+	  strcat(ptr, "/disks/");
 	  strcat(ptr, filename);
 	  if (access(ptr, R_OK) != 0)
 	    strcat(ptr, ".gz");

@@ -1,6 +1,8 @@
 ## Process this file with automake to produce Makefile.in
 
-pkgdata_DATA = \
+diskdir = $(pkgdatadir)/disks
+
+DISKS = \
 	caos.dump	\
 	tools.dump	\
 	cpmz9.dump	\
@@ -9,4 +11,6 @@ pkgdata_DATA = \
 	z1013cpm.dump	\
 	z1013gdc.dump
 
-EXTRA_DIST = $(pkgdata_DATA)
+disk_DATA = $(DISKS)
+
+EXTRA_DIST = $(DISKS)

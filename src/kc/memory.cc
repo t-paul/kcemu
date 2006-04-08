@@ -35,6 +35,8 @@
 #include "kc/memory.h"
 #include "ui/status.h"
 
+#include "libdbg/dbg.h"
+
 using namespace std;
 
 byte_t *MemArea::_scratch_r;
@@ -295,6 +297,10 @@ bool
 Memory::load_rom(const char *filename, void *buf, long len, bool force)
 {
   ifstream is;
+
+  DBG(1, form("KCemu/Memory/load_rom",
+	      "Memory::load_rom(): loading '%s' (size = %04xh, force = %s)\n",
+	      filename, len, force ? "yes" : "no"));
 
   is.open(filename, ios::in | ios::binary);
   if (!is)

@@ -25,6 +25,8 @@
 
 #include "kc/system.h"
 
+#include "kc/z80.h" // DEBUG
+
 #include "kc/fdc.h"
 #include "kc/fdc_cmd.h"
 #include "kc/floppy.h"
@@ -172,6 +174,8 @@ FDC_CMD::read_byte(void)
   DBG(1, form("KCemu/warning",
               "FDC_CMD::read_byte() called! [current cmd is '%s']\n",
               get_name()));
+
+  z80->debug(true);
 
   return 0xff;
 }

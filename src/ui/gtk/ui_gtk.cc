@@ -895,8 +895,6 @@ UI_Gtk::gtk_resize(void)
 void
 UI_Gtk::init(int *argc, char ***argv)
 {
-  char *filename, *tmp;
-
   self = this;
   _shift_lock = false;
   _speed_limit = true;
@@ -924,20 +922,16 @@ UI_Gtk::init(int *argc, char ***argv)
   /*
    *  load gtk ressource files
    */
-  filename = new char [strlen(kcemu_datadir) + 14];
-  strcpy(filename, kcemu_datadir);
-  strcat(filename, "/.kcemurc.gtk");
-  gtk_rc_parse(filename);
-  delete[] filename;
+  string datadir(kcemu_datadir);
+  string rc_filename = datadir + "/.kcemurc.gtk";
+  gtk_rc_parse(rc_filename.c_str());
   
-  tmp = kcemu_homedir;
+  const char *tmp = kcemu_homedir;
   if (tmp)
     {
-      filename = new char[strlen(tmp) + 14];
-      strcpy(filename, tmp);
-      strcat(filename, "/.kcemurc.gtk");
-      gtk_rc_parse(filename);
-      delete[] filename;
+      string homedir(tmp);
+      string home_rc_filename = homedir + "/.kcemurc.gtk";
+      gtk_rc_parse(home_rc_filename.c_str());
     }
   else
     cerr << "Warning: HOME not set! can't locate file `.kcemurc.gtk'" << endl;

@@ -1003,9 +1003,6 @@ set_kc_type(int type, const char *variant)
 void
 attach_tape(void)
 {
-  char *ptr;
-  const char *tmp;
-
   if (kcemu_tape != 0)
     {
       tape->attach(kcemu_tape);
@@ -1013,20 +1010,18 @@ attach_tape(void)
     }
   else
     {
-      tmp = RC::instance()->get_string("Tape File", "files.kct");
+      const char *tmp = RC::instance()->get_string("Tape File", "files.kct");
       if (tmp)
 	{
-	  ptr = (char *)malloc(strlen(kcemu_datadir) + strlen(tmp) + 2);
-	  if (tmp[0] == '/')
-	    strcpy(ptr, tmp);
-	  else
+	  string tapefile;
+	  
+	  if (tmp[0] != '/')
 	    {
-	      strcpy(ptr, kcemu_datadir);
-	      strcat(ptr, "/");
-	      strcat(ptr, tmp);
+	      tapefile += kcemu_datadir;
+	      tapefile += "/tapes/";
 	    }
-	  tape->attach(ptr);
-	  free(ptr);
+	  tapefile += tmp;
+	  tape->attach(tapefile.c_str());
 	}
     }
 }

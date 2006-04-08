@@ -19,7 +19,6 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-#include <string.h>
 #include <stdlib.h>
 #include <fstream>
 
@@ -48,9 +47,6 @@ Memory4::Memory4(void)
 void
 Memory4::init_4(void)
 {
-  int l;
-  char *ptr;
-
   _ram_size = 0x10000;
   _ram = new byte_t[_ram_size];
   _rom_caosc = new byte_t[0x1000];
@@ -92,18 +88,15 @@ Memory4::init_4(void)
   for (int a = 2;a < 16;a++)
     _m_ram_8[a] = NULL;
 
-  l = strlen(kcemu_datadir);
-  ptr = new char[l + 14];
-  strcpy(ptr, kcemu_datadir);
+  string datadir(kcemu_datadir);
+  string kc85_romdir = datadir + "/roms/kc85";
+  string kc85_caosc_rom = kc85_romdir + "/caos__c0.854";
+  string kc85_caose_rom = kc85_romdir + "/caos__e0.854";
+  string kc85_basic_rom = kc85_romdir + "/basic_c0.854";
 
-  strcpy(ptr + l, "/caos__c0.854");
-  load_rom(ptr, &_rom_caosc[0], 0x1000, true);
-  strcpy(ptr + l, "/caos__e0.854");
-  load_rom(ptr, &_rom_caose[0], 0x2000, true);
-  strcpy(ptr + l, "/basic_c0.854");
-  load_rom(ptr, &_rom_basic[0], 0x2000, true);
-
-  delete[] ptr;
+  load_rom(kc85_caosc_rom.c_str(), &_rom_caosc[0], 0x1000, true);
+  load_rom(kc85_caose_rom.c_str(), &_rom_caose[0], 0x2000, true);
+  load_rom(kc85_basic_rom.c_str(), &_rom_basic[0], 0x2000, true);
 
   for (mptr = &m[0];mptr->name;mptr++)
     {
@@ -129,9 +122,6 @@ Memory4::init_4(void)
 void
 Memory4::init_5(void)
 {
-  int l;
-  char *ptr;
-
   _ram_size = 0x40000;
   _ram = new byte_t[_ram_size];
   _rom_caosc = new byte_t[0x2000];
@@ -187,18 +177,15 @@ Memory4::init_5(void)
     { 0, },
   };
 
-  l = strlen(kcemu_datadir);
-  ptr = new char[l + 14];
-  strcpy(ptr, kcemu_datadir);
+  string datadir(kcemu_datadir);
+  string kc85_romdir = datadir + "/roms/kc85";
+  string kc85_caosc_rom = kc85_romdir + "/caos__c0.855";
+  string kc85_caose_rom = kc85_romdir + "/caos__e0.855";
+  string kc85_basic_rom = kc85_romdir + "/basic_c0.855";
 
-  strcpy(ptr + l, "/caos__c0.855");
-  load_rom(ptr, &_rom_caosc[0], 0x2000, true);
-  strcpy(ptr + l, "/caos__e0.855");
-  load_rom(ptr, &_rom_caose[0], 0x2000, true);
-  strcpy(ptr + l, "/basic_c0.855");
-  load_rom(ptr, &_rom_basic[0], 0x8000, true);
-
-  delete[] ptr;
+  load_rom(kc85_caosc_rom.c_str(), &_rom_caosc[0], 0x2000, true);
+  load_rom(kc85_caose_rom.c_str(), &_rom_caose[0], 0x2000, true);
+  load_rom(kc85_basic_rom.c_str(), &_rom_basic[0], 0x8000, true);
 
   for (mptr = &m[0];mptr->name;mptr++)
     {

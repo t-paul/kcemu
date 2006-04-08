@@ -19,8 +19,6 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-#include <stdio.h>
-#include <string.h>
 #include <stdlib.h>
 
 #include <fstream>
@@ -35,8 +33,6 @@ using namespace std;
 
 Memory9::Memory9(void) : Memory()
 {
-  int l;
-  char *ptr;
   struct {
     MemAreaGroup **group;
     const char    *name;
@@ -60,22 +56,17 @@ Memory9::Memory9(void) : Memory()
     { 0, },
   };
 
-  l = strlen(kcemu_datadir);
-  ptr = new char[l + 14];
+  string datadir(kcemu_datadir);
+  string a5105_romdir = datadir + "/roms/a5105";
+  string a5105_cgg_00_rom = a5105_romdir + "/k1505_00.rom";
+  string a5105_cgg_80_rom = a5105_romdir + "/k1505_80.rom";
+  string a5105_dse_40_rom = a5105_romdir + "/k5651_40.rom";
+  string a5105_dse_60_rom = a5105_romdir + "/k5651_60.rom";
 
-  strcpy(ptr, kcemu_datadir);
-
-  strcpy(ptr + l, "/k1505_00.rom");
-  load_rom(ptr, &_rom_slot0[0x0000], 0x8000, true);
-
-  strcpy(ptr + l, "/k1505_80.rom");
-  load_rom(ptr, &_rom_slot0[0x8000], 0x2000, true);
-
-  strcpy(ptr + l, "/k5651_40.rom");
-  load_rom(ptr, &_rom_slot1[0x0000], 0x2000, true);
-
-  strcpy(ptr + l, "/k5651_60.rom");
-  load_rom(ptr, &_rom_slot1[0x2000], 0x2000, true);
+  load_rom(a5105_cgg_00_rom.c_str(), &_rom_slot0[0x0000], 0x8000, true);
+  load_rom(a5105_cgg_80_rom.c_str(), &_rom_slot0[0x8000], 0x2000, true);
+  load_rom(a5105_dse_40_rom.c_str(), &_rom_slot1[0x0000], 0x2000, true);
+  load_rom(a5105_dse_60_rom.c_str(), &_rom_slot1[0x2000], 0x2000, true);
 
   for (mptr = &m[0];mptr->name;mptr++)
     {

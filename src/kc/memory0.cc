@@ -19,7 +19,6 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-#include <string.h>
 #include <stdlib.h>
 
 #include <fstream>
@@ -37,8 +36,6 @@ using namespace std;
 
 Memory0::Memory0(void) : Memory()
 {
-  int l;
-  char *ptr;
   struct {
     MemAreaGroup **group;
     const char    *name;
@@ -69,40 +66,40 @@ Memory0::Memory0(void) : Memory()
     { &_m_rom_f8, "ROM",    0xf800, 0x00800, &_rom[0x0800],   0, 1, 1, KC_VARIANT_Z1013_BL4  },
     { 0, },
   };
-  
-  l = strlen(kcemu_datadir);
-  ptr = new char[l + 14];
-  strcpy(ptr, kcemu_datadir);
 
   _portg = NULL;
+
+  int romsize = 0x0800;
+  string datadir(kcemu_datadir);
+  string z1013_romdir = datadir + "/roms/z1013";
+  string z1013_char_rom = z1013_romdir + "/z1013_zg.rom";
+  string z1013_system_rom;
+
   switch (get_kc_variant())
     {
     case KC_VARIANT_Z1013_A2:
-      strcpy(ptr + l, "/z1013_a2.rom");
-      load_rom(ptr, &_rom, 0x0800, true);
+      z1013_system_rom = z1013_romdir + "/z1013_a2.rom";
       break;
     case KC_VARIANT_Z1013_RB:
-      strcpy(ptr + l, "/z1013_rb.rom");
-      load_rom(ptr, &_rom, 0x1000, true);
+      romsize = 0x1000;
+      z1013_system_rom = z1013_romdir + "/z1013_rb.rom";
       break;
     case KC_VARIANT_Z1013_SURL:
-      strcpy(ptr + l, "/z1013_ul.rom");
-      load_rom(ptr, &_rom, 0x0800, true);
+      z1013_system_rom = z1013_romdir + "/z1013_ul.rom";
       _portg = ports->register_ports("MEMORY0", 4, 1, this, 0);
       break;
     case KC_VARIANT_Z1013_BL4:
-      strcpy(ptr + l, "/z1013_bl.rom");
-      load_rom(ptr, &_rom, 2432, true);
+      romsize = 2432;
+      z1013_system_rom = z1013_romdir + "/z1013_bl.rom";
       _portg = ports->register_ports("MEMORY0", 4, 1, this, 0);
       break;
     default:
-      strcpy(ptr + l, "/z1013_20.rom");
-      load_rom(ptr, &_rom, 0x0800, true);
+      z1013_system_rom = z1013_romdir + "/z1013_20.rom";
       break;
     }
 
-  strcpy(ptr + l, "/z1013_zg.rom");
-  load_rom(ptr, &_chr, 0x1000, true);
+  load_rom(z1013_system_rom.c_str(), &_rom, romsize, true);
+  load_rom(z1013_char_rom.c_str(), &_chr, 0x1000, true);
 
   for (mptr = &m[0];mptr->name;mptr++)
     {

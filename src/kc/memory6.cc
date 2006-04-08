@@ -19,7 +19,6 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-#include <string.h>
 #include <stdlib.h>
 #include <fstream>
 
@@ -33,8 +32,6 @@ using namespace std;
 
 Memory6::Memory6(void) : Memory()
 {
-  int l;
-  char *ptr;
   struct {
     MemAreaGroup **group;
     const char    *name;
@@ -56,13 +53,11 @@ Memory6::Memory6(void) : Memory()
     { 0, },
   };
 
-  l = strlen(kcemu_datadir);
-  ptr = new char[l + 14];
-  strcpy(ptr, kcemu_datadir);
+  string datadir(kcemu_datadir);
+  string poly880_romdir = datadir + "/roms/poly880";
+  string poly880_system_rom = poly880_romdir + "/poly_880.rom";
 
-  strcpy(ptr + l, "/poly_880.rom");
-  load_rom(ptr, &_rom, 0x1000, true);
-  free(ptr);
+  load_rom(poly880_system_rom.c_str(), &_rom, 0x1000, true);
 
   /*
    *  The content of the poly880 rom is stored inverted. We use

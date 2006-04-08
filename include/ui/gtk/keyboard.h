@@ -63,6 +63,8 @@ class KeyboardWindow : public UI_Gtk_Window
   void draw_key_normal(struct _key_struct *key);
   void draw_key_pressed(struct _key_struct *key);
 
+  GdkPixbuf * load_pixmap(const char *keymap_dir, char *filename_buffer);
+
   void debug_regions(GdkEventMotion *event);
 
   static gboolean sf_expose(GtkWidget *widget, GdkEventExpose *event, gpointer data);

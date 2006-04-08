@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: KCemu v0.3.7\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2006-04-02 20:41+0200\n"
+"POT-Creation-Date: 2006-04-08 23:16+0200\n"
 "PO-Revision-Date: 2006-04-02 20:43+0100\n"
 "Last-Translator: Torsten Paul <Torsten.Paul@gmx.de>\n"
 "Language-Team: German <Torsten.Paul@gmx.de>\n"
@@ -1221,187 +1221,187 @@ msgstr "Disketten-Datei `%s' aktiviert."
 msgid "Can't attach disk-file."
 msgstr "Kann Disketten-Datei nicht aktivieren."
 
-#: src/kc/mod_list.cc:191
+#: src/kc/mod_list.cc:192
 msgid "<no module>"
 msgstr "<kein Modul>"
 
-#: src/kc/mod_list.cc:202
+#: src/kc/mod_list.cc:203
 msgid "RAM Module (1k/2400h)"
 msgstr "RAM Module (1k/2400h)"
 
-#: src/kc/mod_list.cc:204
+#: src/kc/mod_list.cc:205
 msgid "RAM Module (2k/2800h)"
 msgstr "RAM Module (2k/2800h)"
 
-#: src/kc/mod_list.cc:206
+#: src/kc/mod_list.cc:207
 msgid "RAM Module (4k/3000h)"
 msgstr "RAM Module (4k/3000h)"
 
-#: src/kc/mod_list.cc:208 src/kc/mod_list.cc:277
+#: src/kc/mod_list.cc:209 src/kc/mod_list.cc:272
 msgid "RAM Module (16k/4000h)"
 msgstr "RAM Module (16k/4000h)"
 
-#: src/kc/mod_list.cc:210
+#: src/kc/mod_list.cc:211
 msgid "RAM Module (32k/8000h)"
 msgstr "RAM Module (32k/8000h)"
 
-#: src/kc/mod_list.cc:216
+#: src/kc/mod_list.cc:217
 msgid "256k RAM Floppy"
 msgstr "256k RAM Floppy"
 
-#: src/kc/mod_list.cc:222
+#: src/kc/mod_list.cc:223
 msgid "FDC (Schneider)"
 msgstr "FDC (Schneider)"
 
-#: src/kc/mod_list.cc:228
+#: src/kc/mod_list.cc:229
 msgid "FDC (Kramer)"
 msgstr "FDC (Kramer)"
 
-#: src/kc/mod_list.cc:234
+#: src/kc/mod_list.cc:235
 msgid "GDC 82720"
 msgstr "GDC 82720"
 
-#: src/kc/mod_list.cc:240
+#: src/kc/mod_list.cc:241
 msgid "RTC (port 20h-2fh)"
 msgstr "RTC (Port 20h-2fh)"
 
-#: src/kc/mod_list.cc:246
+#: src/kc/mod_list.cc:247
 msgid "RTC (port 70h-7fh)"
 msgstr "RTC (port 70h-7fh)"
 
-#: src/kc/mod_list.cc:255
+#: src/kc/mod_list.cc:254
 msgid "Basic Module (c000h-e7ffh)"
 msgstr "Basic Modul (c000h-e7ffh)"
 
-#: src/kc/mod_list.cc:270
+#: src/kc/mod_list.cc:266
 msgid "Plotter Module (c000h-e7ffh)"
 msgstr "Plotter Modul (c000h-e7ffh)"
 
-#: src/kc/mod_list.cc:279
+#: src/kc/mod_list.cc:274
 msgid "RAM Module (16k/8000h)"
 msgstr "RAM Module (16k/8000h)"
 
-#: src/kc/mod_list.cc:288
+#: src/kc/mod_list.cc:281
 msgid "ZM30 (c000h-ccffh)"
 msgstr "ZM30 (c000h-ccffh)"
 
-#: src/kc/mod_list.cc:298
+#: src/kc/mod_list.cc:288
 msgid "EDAS (c000h-e7ffh)"
 msgstr "EDAS (c000h-e7ffh)"
 
-#: src/kc/mod_list.cc:308
+#: src/kc/mod_list.cc:295
 msgid "IDAS / ZM (c000h-e7ffh)"
 msgstr "IDAS / ZM (c000h-e7ffh)"
 
-#: src/kc/mod_list.cc:318
+#: src/kc/mod_list.cc:302
 msgid "BITEX (c000h-d7ffh)"
 msgstr "BITEX (c000h-d7ffh)"
 
-#: src/kc/mod_list.cc:358
+#: src/kc/mod_list.cc:333
 msgid "192 KByte RAM/EPROM"
 msgstr "192 KByte RAM/EPROM"
 
-#: src/kc/mod_list.cc:370
+#: src/kc/mod_list.cc:340
 msgid "320k ROM Module"
 msgstr "320k ROM Modul"
 
-#: src/kc/mod_list.cc:380
+#: src/kc/mod_list.cc:347
 msgid "128k ROM Bank"
 msgstr "128k ROM Bank"
 
-#: src/kc/mod_list.cc:390 src/ui/gtk/module.cc:257
+#: src/kc/mod_list.cc:356 src/ui/gtk/module.cc:257
 msgid "IRM Color Expansion"
 msgstr "IRM Color Expansion"
 
-#: src/kc/mod_list.cc:405
+#: src/kc/mod_list.cc:371
 msgid "Plotter XY4131"
 msgstr "Plotter XY4131"
 
-#: src/kc/mod_list.cc:415
+#: src/kc/mod_list.cc:379
 msgid "CPM-Z9 BOOT (c000h-c7ffh)"
 msgstr "CPM-Z9 BOOT (c000h-c7ffh)"
 
-#: src/kc/mod_list.cc:422
+#: src/kc/mod_list.cc:385
 msgid "CPM-Z9 Floppy"
 msgstr "CPM-Z9 Floppy"
 
-#: src/kc/mod_list.cc:428
+#: src/kc/mod_list.cc:391
 msgid "CPM-Z9 64k RAM"
 msgstr "CPM-Z9 64k RAM"
 
-#: src/kc/mod_list.cc:434
+#: src/kc/mod_list.cc:397
 msgid "M001: Digital In / Out"
 msgstr "M001: Digital In / Out"
 
-#: src/kc/mod_list.cc:443
+#: src/kc/mod_list.cc:406
 msgid "M003: V24"
 msgstr "M003: V24"
 
-#: src/kc/mod_list.cc:454
+#: src/kc/mod_list.cc:415
 msgid "M006: Basic"
 msgstr "M006: Basic"
 
-#: src/kc/mod_list.cc:461
+#: src/kc/mod_list.cc:422
 msgid "M008: Joystick"
 msgstr "M008: Joystick"
 
-#: src/kc/mod_list.cc:468
+#: src/kc/mod_list.cc:429
 msgid "M011: 64k RAM"
 msgstr "M011: 64k RAM"
 
-#: src/kc/mod_list.cc:477
+#: src/kc/mod_list.cc:436
 msgid "M012: Texor"
 msgstr "M012: Texor"
 
-#: src/kc/mod_list.cc:484
+#: src/kc/mod_list.cc:442
 msgid "M022: Expander RAM (16k)"
 msgstr "M022: Expander RAM (16k)"
 
-#: src/kc/mod_list.cc:493
+#: src/kc/mod_list.cc:449
 msgid "M026: Forth"
 msgstr "M026: Forth"
 
-#: src/kc/mod_list.cc:503
+#: src/kc/mod_list.cc:456
 msgid "M027: Development"
 msgstr "M027: Development"
 
-#: src/kc/mod_list.cc:511
+#: src/kc/mod_list.cc:462
 msgid "M032: 256k Segmented RAM"
 msgstr "M032: 256k Segmented RAM"
 
-#: src/kc/mod_list.cc:517
+#: src/kc/mod_list.cc:468
 msgid "M034: 512k Segmented RAM"
 msgstr "M034: 512k Segmented RAM"
 
-#: src/kc/mod_list.cc:523
+#: src/kc/mod_list.cc:474
 msgid "M035: 1M Segmented RAM"
 msgstr "M035: 1M Segmented RAM"
 
-#: src/kc/mod_list.cc:529
+#: src/kc/mod_list.cc:480
 msgid "M035x4: 4M RAM"
 msgstr "M035x4: 4M RAM"
 
-#: src/kc/mod_list.cc:535
+#: src/kc/mod_list.cc:486
 msgid "M036: 128k Segmented RAM"
 msgstr "M036: 128k Segmented RAM"
 
-#: src/kc/mod_list.cc:544
+#: src/kc/mod_list.cc:493
 msgid "M900: WordPro '86 (KC85/3)"
 msgstr "M900: WordPro '86 (KC85/3)"
 
-#: src/kc/mod_list.cc:555
+#: src/kc/mod_list.cc:500
 msgid "M901: WordPro '86 (KC85/4)"
 msgstr "M901: WordPro '86 (KC85/4)"
 
-#: src/kc/mod_list.cc:566
+#: src/kc/mod_list.cc:507
 msgid "Floppy Disk Basis F8"
 msgstr "Floppy Disk Basis F8"
 
-#: src/kc/mod_list.cc:582
+#: src/kc/mod_list.cc:520
 msgid "Floppy Disk Basis FC"
 msgstr "Floppy Disk Basis FC"
 
-#: src/kc/mod_list.cc:793
+#: src/kc/mod_list.cc:730
 msgid "Autostart"
 msgstr "Autostart"
 
@@ -1474,7 +1474,7 @@ msgstr "Über den KC-Emulator"
 #.
 #: src/ui/gtk/about.cc:121 src/ui/gtk/color.cc:243 src/ui/gtk/copying.cc:143
 #: src/ui/gtk/disk.cc:310 src/ui/gtk/info.cc:557 src/ui/gtk/module.cc:341
-#: src/ui/gtk/tape.cc:462 src/ui/gtk/keyboard.cc:647 src/ui/gtk/wav.cc:250
+#: src/ui/gtk/tape.cc:462 src/ui/gtk/keyboard.cc:632 src/ui/gtk/wav.cc:250
 msgid "Close"
 msgstr "Schließen"
 
@@ -1957,11 +1957,11 @@ msgstr "Aktivieren"
 msgid "Detach"
 msgstr "Deaktivieren"
 
-#: src/ui/gtk/keyboard.cc:577
+#: src/ui/gtk/keyboard.cc:562
 msgid "KCemu: Keyboard"
 msgstr "KCemu: Tastatur"
 
-#: src/ui/gtk/keyboard.cc:631
+#: src/ui/gtk/keyboard.cc:616
 msgid ""
 "\n"
 "  Sorry, keyboard display not configured.  \n"
@@ -2069,7 +2069,7 @@ msgstr "/_Konfiguration"
 msgid "/Configuration/_Colors"
 msgstr "/Konfiguration/_Farben"
 
-#: src/ui/gtk/ui_gtk.cc:645 src/ui/gtk/ui_gtk.cc:788 src/ui/gtk/ui_gtk.cc:1024
+#: src/ui/gtk/ui_gtk.cc:645 src/ui/gtk/ui_gtk.cc:788 src/ui/gtk/ui_gtk.cc:1018
 msgid "/Configuration/_Display Effects"
 msgstr "/Konfiguration/_Effekte"
 

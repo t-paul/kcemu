@@ -19,7 +19,6 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-#include <string.h>
 #include <stdlib.h>
 #include <fstream>
 
@@ -33,8 +32,6 @@ using namespace std;
 
 MemoryMuglerPC::MemoryMuglerPC(void) : Memory()
 {
-  int l;
-  char *ptr;
   struct {
     MemAreaGroup **group;
     const char    *name;
@@ -61,15 +58,13 @@ MemoryMuglerPC::MemoryMuglerPC(void) : Memory()
     { 0, },
   };
 
-  l = strlen(kcemu_datadir);
-  ptr = new char[l + 14];
-  strcpy(ptr, kcemu_datadir);
+  string datadir(kcemu_datadir);
+  string muglerpc_romdir = datadir + "/roms/muglerpc";
+  string muglerpc_system_rom = muglerpc_romdir + "/muglerpc.pcm";
+  string muglerpc_chargen_rom = muglerpc_romdir + "/chargen.pcm";
 
-  strcpy(ptr + l, "/muglerpc.pcm");
-  load_rom(ptr, &_rom, 0x2000, true);
-
-  strcpy(ptr + l, "/chargen.pcm");
-  load_rom(ptr, &_rom_chargen, 0x0800, true);
+  load_rom(muglerpc_system_rom.c_str(), &_rom, 0x2000, true);
+  load_rom(muglerpc_chargen_rom.c_str(), &_rom_chargen, 0x0800, true);
 
   for (mptr = &m[0];mptr->name;mptr++)
     {

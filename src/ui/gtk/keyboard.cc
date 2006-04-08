@@ -19,10 +19,6 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-#include <stdio.h>
-#include <string.h>
-
-#include <stdio.h>
 #include <string.h>
 
 #include "kc/system.h"
@@ -39,7 +35,7 @@
 
 #include "libdbg/dbg.h"
 
-// #define DEBUG_REGIONS 1
+using namespace std;
 
 static struct {
   const char *name;
@@ -275,9 +271,8 @@ KeyboardWindow::sf_motion_notify(GtkWidget *widget, GdkEventMotion *event, gpoin
 
   if (!self->_key_pressed)
     {
-#ifdef DEBUG_REGIONS
-      self->debug_regions(event);
-#endif /* DEBUG_REGIONS */
+      if (DBG_check("KCemu/KeyboardWindow/debug_regions"))
+	self->debug_regions(event);
       return TRUE;
     }
 
@@ -321,7 +316,6 @@ KeyboardWindow::get_key_val(const char *key)
 void
 KeyboardWindow::debug_regions(GdkEventMotion *event)
 {
-#ifdef DEBUG_REGIONS
   static GdkColor     red;
   static GdkColor     blue;
   static GdkGC       *gc;
@@ -369,7 +363,6 @@ KeyboardWindow::debug_regions(GdkEventMotion *event)
 	    }
 	}
     }
-#endif /* DEBUG_REGIONS */
 }
 
 void
@@ -378,7 +371,6 @@ KeyboardWindow::init_key_regions(void)
   int a;
   FILE *f;
   int state;
-  char *ptr;
   char buf[1024];
   GdkRectangle r;
   const char *filename = NULL;
@@ -419,17 +411,14 @@ KeyboardWindow::init_key_regions(void)
       break;
     }
 
-
   if (filename == NULL)
     return;
 
-  ptr = new char[strlen(kcemu_datadir) + strlen(filename) + 2];
-  strcpy(ptr, kcemu_datadir);
-  strcat(ptr, "/");
-  strcat(ptr, filename);
+  string datadir(kcemu_datadir);
+  string keymap_dir = datadir + "/keymaps/";
+  string keymap_filename = keymap_dir + filename;
 
-  f = fopen(ptr, "rb");
-  delete[] ptr;
+  f = fopen(keymap_filename.c_str(), "rb");
   if (f == NULL)
     return;
 
@@ -439,24 +428,12 @@ KeyboardWindow::init_key_regions(void)
       return;
     }
 
-  ptr = strchr(buf, '\n');
-  if (ptr != NULL)
-    *ptr = '\0';
-
-  ptr = new char[strlen(kcemu_datadir) + strlen(buf) + 2];
-  strcpy(ptr, kcemu_datadir);
-  strcat(ptr, "/");
-  strcat(ptr, buf);
-
-  _pixbuf_normal = gdk_pixbuf_new_from_file(ptr, NULL);
+  _pixbuf_normal = load_pixmap(keymap_dir.c_str(), buf);
   if (_pixbuf_normal == NULL)
     {
-      printf("can't load keyboard pixmap '%s'\n", ptr);
       fclose(f);
-      delete[] ptr;
       return;
     }
-  delete[] ptr;
 
   if (fgets(buf, 1024, f) == NULL)
     {
@@ -464,24 +441,12 @@ KeyboardWindow::init_key_regions(void)
       return;
     }
 
-  ptr = strchr(buf, '\n');
-  if (ptr != NULL)
-    *ptr = '\0';
-
-  ptr = new char[strlen(kcemu_datadir) + strlen(buf) + 2];
-  strcpy(ptr, kcemu_datadir);
-  strcat(ptr, "/");
-  strcat(ptr, buf);
-
-  _pixbuf_pressed = gdk_pixbuf_new_from_file(ptr, NULL);
+  _pixbuf_pressed = load_pixmap(keymap_dir.c_str(), buf);
   if (_pixbuf_pressed == NULL)
     {
-      printf("can't load keyboard pixmap '%s'\n", ptr);
       fclose(f);
-      delete[] ptr;
       return;
     }
-  delete[] ptr;
 
   a = -1;
   state = 0;
@@ -493,7 +458,7 @@ KeyboardWindow::init_key_regions(void)
       if (buf[0] == '#')
 	continue;
 
-      ptr = strchr(buf, '\n');
+      char *ptr = strchr(buf, '\n');
       if (ptr != NULL)
 	*ptr = '\0';
 
@@ -560,11 +525,31 @@ KeyboardWindow::init_key_regions(void)
   a++;
   _keys[a].key = NULL;
 
-#ifdef DEBUG_REGIONS
-  printf("%d key definitions loaded.\n", a);
-#endif /* DEBUG_REGIONS */
+  DBG(0, form("KCemu/KeyboardWindow/debug_regions",
+	      "%d key definitions loaded.\n", a));
 
   fclose(f);
+}
+
+GdkPixbuf *
+KeyboardWindow::load_pixmap(const char *keymap_dir, char *filename_buffer)
+{
+  char *ptr = strchr(filename_buffer, '\n');
+  if (ptr != NULL)
+    *ptr = '\0';
+
+  string dir(keymap_dir);
+  string filename = dir + filename_buffer;
+  GdkPixbuf *pixbuf = gdk_pixbuf_new_from_file(filename.c_str(), NULL);
+
+  if (pixbuf == NULL)
+    {
+      DBG(0, form("KCemu/warning",
+                  "KeyboardWindow::load_pixmap((): can't load keyboard pixmap '%s'\n",
+                  filename.c_str()));
+    }
+
+  return pixbuf;
 }
 
 void

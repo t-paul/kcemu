@@ -19,7 +19,6 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-#include <string.h>
 #include <stdlib.h>
 #include <fstream>
 
@@ -31,10 +30,10 @@
 
 #include "ui/ui.h"
 
+using namespace std;
+
 Memory8::Memory8(void) : Memory()
 {
-  int l;
-  char *ptr;
   struct {
     MemAreaGroup **group;
     const char    *name;
@@ -52,14 +51,13 @@ Memory8::Memory8(void) : Memory()
     { 0, },
   };
 
-  l = strlen(kcemu_datadir);
-  ptr = new char[l + 14];
-  strcpy(ptr, kcemu_datadir);
+  string datadir(kcemu_datadir);
+  string lc80_romdir = datadir + "/roms/lc80";
+  string lc80_system_00_rom = lc80_romdir + "/lc80__00.rom";
+  string lc80_system_08_rom = lc80_romdir + "/lc80__08.rom";
 
-  strcpy(ptr + l, "/lc80__00.rom");
-  load_rom(ptr, &_rom1, 0x0400, true);
-  strcpy(ptr + l, "/lc80__08.rom");
-  load_rom(ptr, &_rom2, 0x0400, true);
+  load_rom(lc80_system_00_rom.c_str(), &_rom1, 0x0400, true);
+  load_rom(lc80_system_08_rom.c_str(), &_rom2, 0x0400, true);
 
   for (mptr = &m[0];mptr->name;mptr++)
     {

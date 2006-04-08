@@ -10648,7 +10648,7 @@ echo "$as_me: WARNING:
 
 fi
 
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      ac_config_files="$ac_config_files Makefile include/Makefile include/kc/Makefile include/kc/kramermc/Makefile include/kc/muglerpc/Makefile include/sys/Makefile include/getopt/Makefile include/cmd/Makefile include/ui/Makefile include/ui/gtk/Makefile include/ui/sdl/Makefile include/ui/sdlmtk/Makefile include/ui/beos/Makefile include/ui/generic/Makefile include/fileio/Makefile include/libdbg/Makefile include/libtape/Makefile include/libdisk/Makefile include/libaudio/Makefile include/z80core/Makefile include/z80core2/Makefile asm/Makefile asm/autostart/Makefile src/Makefile src/kc/Makefile src/kc/kramermc/Makefile src/kc/muglerpc/Makefile src/sys/Makefile src/sys/beos/Makefile src/sys/mingw/Makefile src/sys/linux/Makefile src/getopt/Makefile src/cmd/Makefile src/ui/Makefile src/ui/gtk/Makefile src/ui/sdl/Makefile src/ui/sdlmtk/Makefile src/ui/beos/Makefile src/ui/generic/Makefile src/fileio/Makefile src/libdbg/Makefile src/libtape/Makefile src/libdisk/Makefile src/libaudio/Makefile src/util/Makefile src/z80core/Makefile src/z80core2/Makefile test/Makefile test/kc/Makefile test/libaudio/Makefile test/libaudio/data/Makefile ROM/Makefile PRG/Makefile DISK/Makefile images/Makefile doc/Makefile intl/Makefile man/Makefile man/man1/Makefile debian/Makefile po/Makefile.in setup/Makefile setup/KCemuSetup.nsi"
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      ac_config_files="$ac_config_files Makefile include/Makefile include/kc/Makefile include/kc/kramermc/Makefile include/kc/muglerpc/Makefile include/sys/Makefile include/getopt/Makefile include/cmd/Makefile include/ui/Makefile include/ui/gtk/Makefile include/ui/sdl/Makefile include/ui/sdlmtk/Makefile include/ui/beos/Makefile include/ui/generic/Makefile include/fileio/Makefile include/libdbg/Makefile include/libtape/Makefile include/libdisk/Makefile include/libaudio/Makefile include/z80core/Makefile include/z80core2/Makefile asm/Makefile asm/autostart/Makefile src/Makefile src/kc/Makefile src/kc/kramermc/Makefile src/kc/muglerpc/Makefile src/sys/Makefile src/sys/beos/Makefile src/sys/mingw/Makefile src/sys/linux/Makefile src/getopt/Makefile src/cmd/Makefile src/ui/Makefile src/ui/gtk/Makefile src/ui/sdl/Makefile src/ui/sdlmtk/Makefile src/ui/beos/Makefile src/ui/generic/Makefile src/fileio/Makefile src/libdbg/Makefile src/libtape/Makefile src/libdisk/Makefile src/libaudio/Makefile src/util/Makefile src/z80core/Makefile src/z80core2/Makefile test/Makefile test/kc/Makefile test/libaudio/Makefile test/libaudio/data/Makefile roms/Makefile roms/z1013/Makefile roms/z9001/Makefile roms/kc85/Makefile roms/poly880/Makefile roms/lc80/Makefile roms/a5105/Makefile roms/kramermc/Makefile roms/muglerpc/Makefile tapes/Makefile disks/Makefile images/Makefile doc/Makefile intl/Makefile man/Makefile man/man1/Makefile debian/Makefile po/Makefile.in setup/Makefile setup/KCemuSetup.nsi"
           ac_config_commands="$ac_config_commands default"
 cat >confcache <<\_ACEOF
 # This file is a shell script that caches the results of configure
@@ -11356,9 +11356,17 @@ do
   "test/kc/Makefile" ) CONFIG_FILES="$CONFIG_FILES test/kc/Makefile" ;;
   "test/libaudio/Makefile" ) CONFIG_FILES="$CONFIG_FILES test/libaudio/Makefile" ;;
   "test/libaudio/data/Makefile" ) CONFIG_FILES="$CONFIG_FILES test/libaudio/data/Makefile" ;;
-  "ROM/Makefile" ) CONFIG_FILES="$CONFIG_FILES ROM/Makefile" ;;
-  "PRG/Makefile" ) CONFIG_FILES="$CONFIG_FILES PRG/Makefile" ;;
-  "DISK/Makefile" ) CONFIG_FILES="$CONFIG_FILES DISK/Makefile" ;;
+  "roms/Makefile" ) CONFIG_FILES="$CONFIG_FILES roms/Makefile" ;;
+  "roms/z1013/Makefile" ) CONFIG_FILES="$CONFIG_FILES roms/z1013/Makefile" ;;
+  "roms/z9001/Makefile" ) CONFIG_FILES="$CONFIG_FILES roms/z9001/Makefile" ;;
+  "roms/kc85/Makefile" ) CONFIG_FILES="$CONFIG_FILES roms/kc85/Makefile" ;;
+  "roms/poly880/Makefile" ) CONFIG_FILES="$CONFIG_FILES roms/poly880/Makefile" ;;
+  "roms/lc80/Makefile" ) CONFIG_FILES="$CONFIG_FILES roms/lc80/Makefile" ;;
+  "roms/a5105/Makefile" ) CONFIG_FILES="$CONFIG_FILES roms/a5105/Makefile" ;;
+  "roms/kramermc/Makefile" ) CONFIG_FILES="$CONFIG_FILES roms/kramermc/Makefile" ;;
+  "roms/muglerpc/Makefile" ) CONFIG_FILES="$CONFIG_FILES roms/muglerpc/Makefile" ;;
+  "tapes/Makefile" ) CONFIG_FILES="$CONFIG_FILES tapes/Makefile" ;;
+  "disks/Makefile" ) CONFIG_FILES="$CONFIG_FILES disks/Makefile" ;;
   "images/Makefile" ) CONFIG_FILES="$CONFIG_FILES images/Makefile" ;;
   "doc/Makefile" ) CONFIG_FILES="$CONFIG_FILES doc/Makefile" ;;
   "intl/Makefile" ) CONFIG_FILES="$CONFIG_FILES intl/Makefile" ;;

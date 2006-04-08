@@ -19,7 +19,6 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-#include <string.h>
 #include <stdlib.h>
 #include <fstream>
 
@@ -33,8 +32,6 @@ using namespace std;
 
 MemoryKramerMC::MemoryKramerMC(void) : Memory()
 {
-  int l;
-  char *ptr;
   struct {
     MemAreaGroup **group;
     const char    *name;
@@ -59,30 +56,23 @@ MemoryKramerMC::MemoryKramerMC(void) : Memory()
     { 0, },
   };
 
-  l = strlen(kcemu_datadir);
-  ptr = new char[l + 14];
-  strcpy(ptr, kcemu_datadir);
+  string datadir(kcemu_datadir);
+  string kramermc_romdir = datadir + "/roms/kramermc";
+  string kramermc_io_mon_rom   = kramermc_romdir + "/io-mon.kmc";
+  string kramermc_debugger_rom = kramermc_romdir + "/debugger.kmc";
+  string kramermc_reass_rom    = kramermc_romdir + "/reass.kmc";
+  string kramermc_basic_rom    = kramermc_romdir + "/basic.kmc";
+  string kramermc_editor_rom   = kramermc_romdir + "/editor.kmc";
+  string kramermc_ass_rom      = kramermc_romdir + "/ass.kmc";
+  string kramermc_chargen_rom  = kramermc_romdir + "/chargen.kmc";
 
-  strcpy(ptr + l, "/io-mon.kmc");
-  load_rom(ptr, &_rom_io_monitor, 0x0400, true);
-
-  strcpy(ptr + l, "/debugger.kmc");
-  load_rom(ptr, &_rom_debugger, 0x0400, true);
-
-  strcpy(ptr + l, "/reass.kmc");
-  load_rom(ptr, &_rom_reassembler, 0x0400, true);
-
-  strcpy(ptr + l, "/basic.kmc");
-  load_rom(ptr, &_rom_basic, 0x3000, true);
-
-  strcpy(ptr + l, "/editor.kmc");
-  load_rom(ptr, &_rom_editor, 0x0400, true);
-
-  strcpy(ptr + l, "/ass.kmc");
-  load_rom(ptr, &_rom_assembler, 0x1c00, true);
-
-  strcpy(ptr + l, "/chargen.kmc");
-  load_rom(ptr, &_rom_chargen, 0x0800, true);
+  load_rom(kramermc_io_mon_rom.c_str(),   &_rom_io_monitor, 0x0400, true);
+  load_rom(kramermc_debugger_rom.c_str(), &_rom_debugger, 0x0400, true);
+  load_rom(kramermc_reass_rom.c_str(),    &_rom_reassembler, 0x0400, true);
+  load_rom(kramermc_basic_rom.c_str(),    &_rom_basic, 0x3000, true);
+  load_rom(kramermc_editor_rom.c_str(),   &_rom_editor, 0x0400, true);
+  load_rom(kramermc_ass_rom.c_str(),      &_rom_assembler, 0x1c00, true);
+  load_rom(kramermc_chargen_rom.c_str(),  &_rom_chargen, 0x0800, true);
 
   for (mptr = &m[0];mptr->name;mptr++)
     {

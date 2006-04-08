@@ -1,5 +1,7 @@
 ## Process this file with automake to produce Makefile.in
 
+icondir = $(pkgdatadir)/icons
+
 ICONS = \
 	kcemu-bic.xpm \
 	kcemu-kc85.xpm \
@@ -22,11 +24,11 @@ WINICONS = \
 	rm -f /tmp/ico.icon.$$$$ /tmp/ico.alpha.1.$$$$
 
 if TARGET_LINUX
-pkgdata_DATA = $(ICONS)
+icon_DATA = $(ICONS)
 endif
 
 if TARGET_MINGW
-pkgdata_DATA = $(WINICONS)
+icon_DATA = $(WINICONS)
 endif
 
 all : $(ICONS) $(WINICONS)

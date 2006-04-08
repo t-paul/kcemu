@@ -479,8 +479,8 @@ FDC::get_ST3(void)
   set_ST3(ST_3_READY, ST_3_READY);
   set_ST3(ST_3_TWO_SIDE, ST_3_TWO_SIDE);
   set_ST3(ST_3_WRITE_PROTECTED, 0);
-  if (get_kc_type() == KC_TYPE_A5105)
-    set_ST3(ST_3_WRITE_PROTECTED, ST_3_WRITE_PROTECTED);
+  //if (get_kc_type() == KC_TYPE_A5105)
+  //set_ST3(ST_3_WRITE_PROTECTED, ST_3_WRITE_PROTECTED);
   set_ST3(ST_3_TRACK_0, get_cylinder() == 0 ? ST_3_TRACK_0 : 0);
   set_ST3(ST_3_HEAD_ADDRESS, get_head() == 1 ? ST_3_HEAD_ADDRESS : 0);
   set_ST3(ST_3_UNIT_SELECT_MASK, _selected_unit);

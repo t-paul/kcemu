@@ -19,7 +19,6 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-#include <string.h>
 #include <stdlib.h>
 #include <fstream>
 
@@ -31,10 +30,10 @@
 
 #include "ui/ui.h"
 
+using namespace std;
+
 Memory3::Memory3(void) : Memory()
 {
-  int l;
-  char *ptr;
   struct {
     MemAreaGroup **group;
     const char    *name;
@@ -53,15 +52,13 @@ Memory3::Memory3(void) : Memory()
     { 0, },
   };
 
-  l = strlen(kcemu_datadir);
-  ptr = new char[l + 14];
-  strcpy(ptr, kcemu_datadir);
+  string datadir(kcemu_datadir);
+  string kc85_romdir = datadir + "/roms/kc85";
+  string kc85_caos_rom = kc85_romdir + "/caos__e0.853";
+  string kc85_basic_rom = kc85_romdir + "/basic_c0.853";
 
-  strcpy(ptr + l, "/caos__e0.853");
-  load_rom(ptr, &_rom_caos, 0x2000, true);
-  strcpy(ptr + l, "/basic_c0.853");
-  load_rom(ptr, &_rom_basic, 0x2000, true);
-  delete[] ptr;
+  load_rom(kc85_caos_rom.c_str(), &_rom_caos, 0x2000, true);
+  load_rom(kc85_basic_rom.c_str(), &_rom_basic, 0x2000, true);
 
   _access_color = false;
 
