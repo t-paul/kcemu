@@ -264,6 +264,7 @@ FDC::set_state(fdc_state_t state)
   _state = state;
 
   byte_t msr = get_msr() & 0x0f;
+  byte_t dio = get_msr() & ST_MAIN_DIO;
   switch (_state)
     {
     case FDC_STATE_IDLE:
@@ -289,8 +290,10 @@ FDC::set_state(fdc_state_t state)
     case FDC_STATE_DATA:
       msr |= ST_MAIN_READ_WRITE;
       msr |= ST_MAIN_NON_DMA;
-      msr |= ST_MAIN_DIO;
       msr |= ST_MAIN_RQM;
+      // don't change the direction register, this is set by the command
+      // (1 while doing read, 0 while doing write command data transfer)
+      msr |= dio;
       DBG(2, form("KCemu/FDC/state",
 		  "FDC::set_state(): FDC_STATE_DATA    -> MSR: %02x\n",
 		  msr));
@@ -479,8 +482,6 @@ FDC::get_ST3(void)
   set_ST3(ST_3_READY, ST_3_READY);
   set_ST3(ST_3_TWO_SIDE, ST_3_TWO_SIDE);
   set_ST3(ST_3_WRITE_PROTECTED, 0);
-  //if (get_kc_type() == KC_TYPE_A5105)
-  //set_ST3(ST_3_WRITE_PROTECTED, ST_3_WRITE_PROTECTED);
   set_ST3(ST_3_TRACK_0, get_cylinder() == 0 ? ST_3_TRACK_0 : 0);
   set_ST3(ST_3_HEAD_ADDRESS, get_head() == 1 ? ST_3_HEAD_ADDRESS : 0);
   set_ST3(ST_3_UNIT_SELECT_MASK, _selected_unit);

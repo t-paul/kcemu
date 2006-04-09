@@ -273,12 +273,20 @@ class FDC_CMD_SEEK : public FDC_CMD
  */
 class FDC_CMD_SCAN_EQUAL : public FDC_CMD
 {
+ private:
+  int _idx;
+  int _sector_size;
+  int _head, _cylinder, _sector;
+  byte_t *_buf;
+
  protected:
   virtual void execute(void);
   
  public:
   FDC_CMD_SCAN_EQUAL(FDC *fdc);
   virtual ~FDC_CMD_SCAN_EQUAL(void);
+
+  virtual void write_byte(byte_t val);
 };
 
 /*

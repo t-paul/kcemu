@@ -175,8 +175,6 @@ FDC_CMD::read_byte(void)
               "FDC_CMD::read_byte() called! [current cmd is '%s']\n",
               get_name()));
 
-  z80->debug(true);
-
   return 0xff;
 }
 
@@ -367,22 +365,27 @@ FDC_CMD_WRITE_DATA::execute(void)
   _result[5] = _arg[4];
   _result[6] = _arg[5];
 
+  get_fdc()->set_msr(FDC::ST_MAIN_READ_WRITE | FDC::ST_MAIN_RQM | FDC::ST_MAIN_DIO,
+		     FDC::ST_MAIN_READ_WRITE | FDC::ST_MAIN_RQM);
+
   _data_transfer = true;
 }
 
 void
 FDC_CMD_WRITE_DATA::write_byte(byte_t val)
 {
-  Floppy *f;
-
   DBG(2, form("KCemu/FDC_CMD/write_byte",
-              "FDC_CMD_WRITE_DATA::write_byte(): 0x%02x (%3d, '%c')\n",
+              "FDC_CMD_WRITE_DATA::write_byte(): c/h/s %d/%d/%d [%4d]: 0x%02x (%3d, '%c')\n",
+	      get_fdc()->get_cylinder(),
+	      get_fdc()->get_head(),
+	      get_fdc()->get_sector(),
+	      _idx,
               val, val, isprint(val) ? val : '.'));
 
   _buf[_idx++] = val;
   if (_idx == _sector_size)
     {
-      f = get_fdc()->get_floppy();
+      Floppy *f = get_fdc()->get_floppy();
       if (f != 0)
         {
           get_fdc()->seek_internal(_head, _cylinder, _sector);
@@ -579,7 +582,7 @@ FDC_CMD_READ_DATA::read_byte(void)
     b = _buf[_idx++];  
 
   DBG(2, form("KCemu/FDC_CMD/read_byte",
-              "FDC_CMD_READ_DATA::read_byte(): c/h/s %d/%d/%d [%d]: 0x%02x (%3d, '%c')\n",
+              "FDC_CMD_READ_DATA::read_byte():   c/h/s %d/%d/%d [%4d]: 0x%02x (%3d, '%c')\n",
 	      get_fdc()->get_cylinder(),
 	      get_fdc()->get_head(),
 	      get_fdc()->get_sector(),
@@ -904,18 +907,128 @@ FDC_CMD_SEEK::execute(void)
 FDC_CMD_SCAN_EQUAL::FDC_CMD_SCAN_EQUAL(FDC *fdc)
   : FDC_CMD(fdc, 9, 7, "SCAN EQUAL")
 {
+  _buf = 0;
 }
 
 FDC_CMD_SCAN_EQUAL::~FDC_CMD_SCAN_EQUAL(void)
 {
+  if (_buf != 0)
+    delete _buf;
 }
 
 void
 FDC_CMD_SCAN_EQUAL::execute(void)
 {
   DBG(2, form("KCemu/FDC_CMD/SCAN_EQUAL",
-              "FDC: SCAN EQUAL: ---------------------------------\n"
-              "FDC: SCAN EQUAL: ---------------------------------\n"));
+              "FDC: SCAN EQUAL: ----------------------------------\n"
+              "FDC: SCAN EQUAL: Head Select          = %d\n"
+              "FDC: SCAN EQUAL: Drive Select         = %d\n"
+              "FDC: SCAN EQUAL: Cylinder             = %d\n"
+              "FDC: SCAN EQUAL: Head                 = %d\n"
+              "FDC: SCAN EQUAL: Sector               = %d\n"
+              "FDC: SCAN EQUAL: Number of Data Bytes = %d\n"
+              "FDC: SCAN EQUAL: End of Track         = %d\n"
+              "FDC: SCAN EQUAL: Gap Length           = %d\n"
+              "FDC: SCAN EQUAL: Date Length          = %d\n"
+              "FDC: SCAN EQUAL: ----------------------------------\n",
+              (_arg[1] >> 2) & 1,
+              _arg[1] & 3,
+              _arg[2],
+              _arg[3],
+              _arg[4],
+              _arg[5],
+              _arg[6],
+              _arg[7],
+              _arg[8]));
+
+  get_fdc()->select_floppy(_arg[1] & 3);
+  get_fdc()->set_input_gate(0x40, 0x40);
+
+  _head = _arg[3];
+  _cylinder = _arg[2];
+  _sector = _arg[4];
+  get_fdc()->seek_internal(_head, _cylinder, _sector);
+
+  Floppy *f = get_fdc()->get_floppy();
+  if (f == NULL)
+    return;
+
+  _result[0] = get_fdc()->get_ST0();
+  _result[1] = get_fdc()->get_ST1();
+  _result[2] = get_fdc()->get_ST2();
+  _result[3] = _arg[2];
+  _result[4] = _arg[3];
+  _result[5] = _arg[4];
+  _result[6] = _arg[5];
+
+  get_fdc()->set_ST2(FDC::ST_2_SCAN_MASK, 0);
+
+  int size = f->get_sector_size();
+  if (size <= 0)
+    {
+      get_fdc()->set_ST0(FDC::ST_0_IC_MASK, FDC::ST_0_IC_ABNORMAL_TERMINATION);
+      _result[0] = get_fdc()->get_ST0();
+      _result[1] = get_fdc()->get_ST1();
+      return;
+    }
+
+  if (_buf != 0)
+    delete _buf;
+  _buf = new byte_t[size];
+
+  int len = f->read_sector(_buf, size);
+  if (len != size)
+    {
+      get_fdc()->set_ST0(FDC::ST_0_IC_MASK, FDC::ST_0_IC_ABNORMAL_TERMINATION);
+      _result[0] = get_fdc()->get_ST0();
+      _result[1] = get_fdc()->get_ST1();
+      return;
+    }
+
+  _idx = 0;
+  _sector_size = size;
+
+  get_fdc()->set_msr(FDC::ST_MAIN_READ_WRITE | FDC::ST_MAIN_RQM | FDC::ST_MAIN_DIO,
+		     FDC::ST_MAIN_READ_WRITE | FDC::ST_MAIN_RQM);
+
+  _data_transfer = true;
+}
+
+void
+FDC_CMD_SCAN_EQUAL::write_byte(byte_t val)
+{
+  byte_t b = _buf[_idx];
+  DBG(2, form("KCemu/FDC_CMD/write_byte",
+              "FDC_CMD_SCAN_EQUAL::write_byte(): c/h/s %d/%d/%d [%4d]: "
+	      "0x%02x (%3d, '%c') == 0x%02x (%3d, '%c')\n",
+	      get_fdc()->get_cylinder(),
+	      get_fdc()->get_head(),
+	      get_fdc()->get_sector(),
+	      _idx,
+              val, val, isprint(val) ? val : '.',
+	      b, b, isprint(b) ? b : '.'));
+
+  if (b != val)
+    {
+      get_fdc()->set_ST2(FDC::ST_2_SCAN_MASK, FDC::ST_2_SCAN_NOT_SATISFIED);
+      _result[0] = get_fdc()->get_ST0();
+      _result[1] = get_fdc()->get_ST1();
+      _result[2] = get_fdc()->get_ST2();
+      _data_transfer = false;
+      finish_cmd();
+    }
+
+  _idx++;
+
+  if (_idx == _sector_size)
+    {
+      get_fdc()->set_ST2(FDC::ST_2_SCAN_MASK, FDC::ST_2_SCAN_EQUAL_HIT);
+      _result[0] = get_fdc()->get_ST0();
+      _result[1] = get_fdc()->get_ST1();
+      _result[2] = get_fdc()->get_ST2();
+      _data_transfer = false;
+      finish_cmd();
+    }
 }
 
 /********************************************************************

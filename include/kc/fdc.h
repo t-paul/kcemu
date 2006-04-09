@@ -125,6 +125,19 @@ class FDC : public InterfaceCircuit, public PortInterface, public Callback
     ST_1_MISSING_ADDRESS_MARK      = 0x01,
 
     /*
+     *  STATUS REGISTER 2
+     */
+    ST_2_UNUSED                    = 0x80,
+    ST_2_CONTROL_MARK              = 0x40,
+    ST_2_DATA_ERROR_IN_DATA        = 0x20,
+    ST_2_WRONG_CYLINDER            = 0x10,
+    ST_2_SCAN_MASK               = 0x0c,
+    ST_2_SCAN_EQUAL_HIT            = 0x08,
+    ST_2_SCAN_NOT_SATISFIED        = 0x04,
+    ST_2_BAD_CYLINDER              = 0x02,
+    ST_2_MISSING_ADDRESS_MARK      = 0x01,
+
+    /*
      *  STATUS REGISTER 3
      */
     ST_3_ALL_MASK                = 0xff,
