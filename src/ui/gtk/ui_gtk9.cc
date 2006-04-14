@@ -82,25 +82,33 @@ UI_Gtk9::allocate_colors(double saturation_fg,
 			 double white_level)
 {
   int a;
-  
+
+  black_level = 0.0;
+  white_level = 0.80;
+
   hsv_to_gdk_color(  0,             0,   black_level, &_col[ 0]); /* black */
-  hsv_to_gdk_color(270, saturation_fg, brightness_fg, &_col[ 1]); /* blue + 30° */
-  hsv_to_gdk_color(150, saturation_fg, brightness_fg, &_col[ 4]); /* green + 30° */
-  hsv_to_gdk_color(210, saturation_fg, brightness_fg, &_col[ 5]); /* cyan + 30° */
-  hsv_to_gdk_color( 30, saturation_fg, brightness_fg, &_col[ 2]); /* red + 30° */
-  hsv_to_gdk_color(330, saturation_fg, brightness_fg, &_col[ 3]); /* magenta + 30° */
-  hsv_to_gdk_color( 90, saturation_fg, brightness_fg, &_col[ 6]); /* yellow + 30° */
+  hsv_to_gdk_color(240, saturation_fg, brightness_fg, &_col[ 1]); /* blue */
+  hsv_to_gdk_color(120, saturation_fg, brightness_fg, &_col[ 2]); /* green */
+  hsv_to_gdk_color(180, saturation_fg, brightness_fg, &_col[ 3]); /* cyan */
+  hsv_to_gdk_color(  0, saturation_fg, brightness_fg, &_col[ 4]); /* red */
+  hsv_to_gdk_color(300, saturation_fg, brightness_fg, &_col[ 5]); /* magenta */
+  hsv_to_gdk_color( 60, saturation_fg, brightness_fg, &_col[ 6]); /* yellow */
   hsv_to_gdk_color(  0,             0,   white_level, &_col[ 7]); /* white */
+
+  saturation_fg *= 0.80;
+  brightness_fg = 1.0;
+  black_level = 0.40;
+  white_level = 1.0;
 
   hsv_to_gdk_color(  0,             0,   black_level, &_col[ 8]); /* black */
   hsv_to_gdk_color(240, saturation_fg, brightness_fg, &_col[ 9]); /* blue */
-  hsv_to_gdk_color(120, saturation_fg, brightness_fg, &_col[12]); /* green */
-  hsv_to_gdk_color(180, saturation_fg, brightness_fg, &_col[13]); /* cyan */
-  hsv_to_gdk_color(  0, saturation_fg, brightness_fg, &_col[10]); /* red */
-  hsv_to_gdk_color(300, saturation_fg, brightness_fg, &_col[11]); /* magenta */
+  hsv_to_gdk_color(120, saturation_fg, brightness_fg, &_col[10]); /* green */
+  hsv_to_gdk_color(180, saturation_fg, brightness_fg, &_col[11]); /* cyan */
+  hsv_to_gdk_color(  0, saturation_fg, brightness_fg, &_col[12]); /* red */
+  hsv_to_gdk_color(300, saturation_fg, brightness_fg, &_col[13]); /* magenta */
   hsv_to_gdk_color( 60, saturation_fg, brightness_fg, &_col[14]); /* yellow */
   hsv_to_gdk_color(  0,             0,   white_level, &_col[15]); /* white */
-  
+
   _colormap = gdk_colormap_get_system();
   for (a = 0;a < 16;a++)
     gdk_color_alloc(_colormap, &_col[a]);

@@ -135,6 +135,9 @@ UI_9::set_char(int x, int y, int c, int fg, int bg, int width, int lines)
   x *= 8;
   y *= lines;
   y += 20;
+
+  // move smaller screen a little bit to
+  // the center of the window
   if (lines < 10)
     y += (10 - lines) * 12;
   
@@ -144,8 +147,8 @@ UI_9::set_char(int x, int y, int c, int fg, int bg, int width, int lines)
 
       if (gdc->get_cursor(addr, yy))
 	{
-	  col_fg = bg & 7;
-	  col_bg = fg & 7;
+	  col_fg = bg;
+	  col_bg = fg; // not truncated to 3 bit!
 	}
       else
 	{
@@ -163,6 +166,14 @@ UI_9::set_char(int x, int y, int c, int fg, int bg, int width, int lines)
 
       y++;
       c++;
+    }
+
+  // fill space between lines (if any) with the background color
+  for (yy = 8;yy < lines;yy++)
+    {
+      for (xx = 0;xx < 8;xx++)
+	set_pixel(x + xx + 32, y, bg);
+      y++;
     }
 }
 
@@ -237,7 +248,8 @@ UI_9::generic_update_text(int width, int height, int lines, bool clear_cache)
 	    continue;
 
 	  fg = c & 15;
-	  bg = (c >> 4) & 7;
+	  bg = (c >> 5) & 7;
+
 	  set_char(x, y, p, fg, bg, width, lines);
 	}
     }
@@ -258,7 +270,7 @@ UI_9::generic_update_graphic_2(bool clear_cache)
 	a = x & 7;
 	col = (gdc->get_mem(offset + 40 * y + x / 8) >> a) & 1;
 	col += 2 * ((gdc->get_col(offset + 40 * y + x / 8) >> a) & 1);
-	set_pixel(x + 32, y + 20, col);
+	set_pixel(x + 32, y + 44, vis->get_color(col));
       }
 }
 
@@ -270,12 +282,12 @@ UI_9::generic_update_graphic_3(bool clear_cache)
   long offset = gdc->get_pram_SAD(0);
 
   for (y = 0;y < 200;y++)
-    for (x = 0;x < 320;x++)
+    for (x = 0;x < 640;x++)
       {
 	a = x & 7;
 	col = (gdc->get_mem(offset + 80 * y + x / 8) >> a) & 1;
 	col += 2 * ((gdc->get_col(offset + 80 * y + x / 8) >> a) & 1);
-	set_pixel(x + 32, y + 20, col);
+	set_pixel(x + 32, y + 44, vis->get_color(col));
       }
 }
 
@@ -298,7 +310,7 @@ UI_9::generic_update_graphic_5(bool clear_cache)
 	    val += (mem >> (a + 3)) & 2;
 	    val += ((4 * col) >> a) & 4;
 	    val += (col >> (a + 1)) & 8;
-	    set_pixel(4 * x + a + 32, y + 20, val);
+	    set_pixel(4 * x + a + 32, y + 44, val);
 	  }
       }
 }
@@ -347,10 +359,18 @@ UI_9::generic_update(bool clear_cache)
 	  break;
 	}
     }
+
   if (border != old_border)
     clear_cache = true;
+
   if (nr_of_lines != old_nr_of_lines)
     clear_cache = true;
+
+  if (vis->is_color_palette_changed())
+    {
+      clear_cache = true;
+      vis->reset_color_palette_changed();
+    }
 
   old_mode = mode;
   old_border = border;

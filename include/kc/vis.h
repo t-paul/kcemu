@@ -33,8 +33,10 @@ class VIS : public PortInterface, public InterfaceCircuit
   int _idx;
   int _mode;
   int _border;
+  int _color[4];
   byte_t _char[0x0800];
   byte_t _changed[0x100];
+  int _color_palette_changed;
 
  public:
   VIS(void);
@@ -47,8 +49,12 @@ class VIS : public PortInterface, public InterfaceCircuit
   virtual void set_mode(int mode);
   virtual int get_border(void);
   virtual void set_border(int border);
+  virtual int get_color(int idx);
+  virtual void set_color(int idx, int color);
   virtual int get_changed(byte_t idx);
   virtual void reset_changed(void);
+  virtual int is_color_palette_changed(void);
+  virtual void reset_color_palette_changed(void);
 
   virtual byte_t * get_memory(void);
 

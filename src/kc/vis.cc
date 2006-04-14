@@ -174,6 +174,14 @@ VIS::out(word_t addr, byte_t val)
 	set_mode(5);
       else if ((val & 0xf0) == 0x20)
 	set_border(val & 0x0f);
+      else if ((val & 0xf0) == 0x30)
+	set_color(0, val & 0x0f);
+      else if ((val & 0xf0) == 0x40)
+	set_color(1, val & 0x0f);
+      else if ((val & 0xf0) == 0x50)
+	set_color(2, val & 0x0f);
+      else if ((val & 0xf0) == 0x60)
+	set_color(3, val & 0x0f);
 
       last_val = val;
 
@@ -212,9 +220,32 @@ void
 VIS::set_border(int border)
 {
   DBG(1, form("KCemu/VIS/border",
-	      "VIS::out(): border change %d -> %d\n",
+	      "VIS::out(): border change %2d -> %2d\n",
 	      _border, border));
   _border = border;
+}
+
+int
+VIS::get_color(int idx)
+{
+  idx &= 3;
+  return _color[idx];
+}
+
+void
+VIS::set_color(int idx, int color)
+{
+  idx &= 3;
+  DBG(1, form("KCemu/VIS/color",
+	      "VIS::out(): color change [%d] %2d -> %2d [%2d/%2d/%2d/%2d]\n",
+	      idx, _color[idx], color,
+	      _color[0], _color[1], _color[2], _color[3]));
+
+  if (_color[idx] != color)
+    {
+      _color[idx] = color;
+      _color_palette_changed = 1;
+    }
 }
 
 int
@@ -227,6 +258,18 @@ void
 VIS::reset_changed(void)
 {
   memset(_changed, 0, 0x100);
+}
+
+int
+VIS::is_color_palette_changed(void)
+{
+  return _color_palette_changed;
+}
+
+void
+VIS::reset_color_palette_changed(void)
+{
+  _color_palette_changed = 0;
 }
 
 byte_t *
@@ -258,7 +301,12 @@ VIS::reset(bool power_on)
   
   _mode = 0;
   _border = 0;
-  
+  _color[0] = 0;
+  _color[1] = 0;
+  _color[2] = 0;
+  _color[3] = 0;
+  _color_palette_changed = 0;
+
   if (power_on)
     for (a = 0;a < 0x0800;a++)
       _char[a] = 0;
