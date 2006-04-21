@@ -57,7 +57,7 @@ GIDE::GIDE(void)
   _hard_disk_config[0].filename = RC::instance()->get_string("Hard Disk 0", NULL);
 
   // MyZ80 hard disk format
-  _hard_disk_config[1].nr_of_cylinders = 128;
+  _hard_disk_config[1].nr_of_cylinders = 512;
   _hard_disk_config[1].nr_of_heads = 1;
   _hard_disk_config[1].nr_of_sectors = 32;
   _hard_disk_config[1].name = "KCemu virtual hard disk (MyZ80)";
