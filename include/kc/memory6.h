@@ -30,7 +30,10 @@
 class Memory6 : public Memory
 {
  private:
-  byte_t _rom[0x1000];
+  byte_t _rom0[0x0400];
+  byte_t _rom1[0x0400];
+  byte_t _rom2[0x0400];
+  byte_t _rom3[0x0400];
   byte_t _ram[0x0400];
 
   MemAreaGroup *_m_scr;    /* scratch memory */
