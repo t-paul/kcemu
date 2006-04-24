@@ -144,6 +144,7 @@ extern char *kcemu_modules;
 extern char *kcemu_homedir;
 extern char *kcemu_datadir;
 extern char *kcemu_localedir;
+extern char *kcemu_configfile;
 extern char *kcemu_autostart_file;
 extern char *kcemu_autostart_addr;
 

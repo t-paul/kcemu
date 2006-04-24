@@ -236,6 +236,7 @@ char *kcemu_tape;
 char *kcemu_disk;
 char *kcemu_emulate;
 char *kcemu_modules;
+char *kcemu_configfile;
 char *kcemu_autostart_file;
 char *kcemu_autostart_addr;
 
@@ -395,7 +396,7 @@ usage(char *argv0)
 	    "This is free software, and you are welcome to redistribute it\n"
 	    "under certain conditions; run `kcemu --license' for details.\n"
 	    "\n"
-	    "usage: kcemu [-0123456789aAestfhdlvVHFELW]\n"
+	    "usage: kcemu [-0123456789aAcestfhdlvVHFELW]\n"
 	    "\n"
 	    "  -0:              run in Z1013 mode\n"
 	    "  -1:              run in Z9001 / KC 85/1 mode\n"
@@ -409,6 +410,7 @@ usage(char *argv0)
 	    "  -9:              run in BIC/A5105 mode\n"
 	    "  -a --autostart:  autostart program on startup (kc85/3 - kc85/5 only)\n"
 	    "  -A --address:    override start address of autostart program\n"
+	    "  -c --config:     read (additional) configuration from given file\n"
 	    "  -e --emulate:    emulate the specified system (use -v/-V to list types)\n"
 	    "  -s --scale:      scale display (allowed values: 1, 2 and 3)\n"
 	    "  -t --tape:       attach tape on startup\n"
@@ -1141,6 +1143,7 @@ main(int argc, char **argv)
   {
     { "autostart",     1, 0, 'a' },
     { "address",       1, 0, 'A' },
+    { "config",        1, 0, 'c' },
     { "help",          0, 0, 'h' },
     { "tape",          1, 0, 't' },
     { "scale",         1, 0, 's' },
@@ -1186,6 +1189,7 @@ main(int argc, char **argv)
   kcemu_disk = 0;
   kcemu_emulate = 0;
   kcemu_modules = 0;
+  kcemu_configfile = 0;
   kcemu_autostart_file = 0;
   kcemu_autostart_addr = 0;
   kcemu_ui_scale = 0;
@@ -1212,11 +1216,11 @@ main(int argc, char **argv)
   while (1)
     {
 #ifdef HAVE_GETOPT_LONG
-      c = getopt_long(argc, argv, "0123456789hvDEA:a:e:d:f:l:s:t:H:M:FLWV",
+      c = getopt_long(argc, argv, "0123456789hvDEA:a:c:e:d:f:l:s:t:H:M:FLWV",
 		      long_options, &option_index);
 #else
 #ifdef HAVE_GETOPT
-      c = getopt(argc, argv, "0123456789hvDEA:a:e:d:f:l:s:H:M:FLWV");
+      c = getopt(argc, argv, "0123456789hvDEA:a:c:e:d:f:l:s:H:M:FLWV");
 #else
 #warning neither HAVE_GETOPT_LONG nor HAVE_GETOPT defined
 #warning commandline parsing disabled!
@@ -1256,9 +1260,6 @@ main(int argc, char **argv)
 	case '8':
 	  type = 8;
 	  break;
-	case 'e':
-	  kcemu_emulate = strdup(optarg);
-	  break;
 	case '9':
 	  type = 9;
 	  break;
@@ -1268,9 +1269,15 @@ main(int argc, char **argv)
 	case 'A':
 	  kcemu_autostart_addr = strdup(optarg);
 	  break;
+	case 'c':
+	  kcemu_configfile = strdup(optarg);
+	  break;
 	case 'd':
 	  free(kcemu_datadir);
 	  kcemu_datadir = strdup(optarg);
+	  break;
+	case 'e':
+	  kcemu_emulate = strdup(optarg);
 	  break;
 	case 'l':
 	  free(kcemu_localedir);

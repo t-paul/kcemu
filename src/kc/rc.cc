@@ -1,6 +1,6 @@
 /*
  *  KCemu -- the KC 85/3 and KC 85/4 Emulator
- *  Copyright (C) 1997-2001 Torsten Paul
+ *  Copyright (C) 1997-2006 Torsten Paul
  *
  *  $Id: rc.cc,v 1.6 2002/10/31 01:46:35 torsten_paul Exp $
  *
@@ -56,24 +56,23 @@ static void deallocate(RC::rc_map_pair_t p)
                   
 RC::RC(void)
 {
-  char *filename, *tmp;
-  
   /*
    *  inserting into the map rejects new items that have a
    *  key that is already present
    *  so we need to read the personal file first
    */
-  tmp = kcemu_homedir;
-  if (tmp)
+
+  if (kcemu_configfile != NULL)
     {
-      filename = new char[strlen(tmp) + 10];
-      strcpy(filename, tmp);
-      strcat(filename, "/.kcemurc");
-      load_file(filename);
-      delete[] filename;
+      load_file(kcemu_configfile);
     }
-  else
-    cerr << "Warning: HOME not set! can't locate file `.kcemurc'" << endl;
+
+  if (kcemu_homedir != NULL)
+    {
+      string dir(kcemu_homedir);
+      string filename = dir + "/.kcemurc";
+      load_file(filename.c_str());
+    }
 
   /*
    *  load .kcemurc from current directory
@@ -83,11 +82,9 @@ RC::RC(void)
   /*
    *  load .kcemurc from data directory
    */
-  filename = new char [strlen(kcemu_datadir) + 10];
-  strcpy(filename, kcemu_datadir);
-  strcat(filename, "/.kcemurc");
-  load_file(filename);
-  delete[] filename;
+  string datadir(kcemu_datadir);
+  string filename = datadir + "/.kcemurc";
+  load_file(filename.c_str());
 
   DBG(0, form("KCemu/RC",
               "--- dumping ressource database ---\n\n"));
@@ -111,7 +108,14 @@ RC::load_file(const char *filename)
   
   is.open(filename);
   if (!is)
-    return;
+    {
+      DBG(0, form("KCemu/RC",
+		  "RC: can't open file '%s'\n", filename));
+      return;
+    }
+
+  DBG(0, form("KCemu/RC",
+	      "RC: reading configuration from '%s'\n", filename));
 
   while (242)
     {
