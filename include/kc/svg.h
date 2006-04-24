@@ -29,10 +29,22 @@
 class SVG : public PortInterface
 {
  private:
+  enum {
+    A = 0,
+    B = 1,
+    C = 2,
+  };
+
+ private:
+  byte_t _val_a0;
+  byte_t _val_a1;
   byte_t _val_a8;
   byte_t _val_aa;
   byte_t _val_ab;
   int    _page_info[4];
+  int    _sound_reg[14];
+  int    _sound_val[3];
+  int    _sound_freq[3];
 
  protected:
   void set_page(int page, int slot);
