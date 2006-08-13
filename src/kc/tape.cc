@@ -137,6 +137,8 @@ class CMD_tape_attach : public CMD
 {
 private:
   Tape *_t;
+  static const char * _path;
+
 public:
   CMD_tape_attach(Tape *t) : CMD("tape-attach")
     {
@@ -168,6 +170,8 @@ public:
             {
               args->set_string_arg("ui-file-select-title",
                                    _("Select tape-archive..."));
+	      if (_path)
+		args->set_string_arg("ui-file-select-path", _path);
               args->add_callback("ui-file-select-CB-ok", this, 1);
               args->add_callback("ui-file-select-CB-cancel", this, 1);
               CMD_EXEC_ARGS("ui-file-select", args);
@@ -200,7 +204,8 @@ public:
       
       if (filename)
         {
-          err = tape->attach(filename, create);
+	  _path = filename;
+	  err = tape->attach(filename, create);
           switch (err)
             {
             case TAPE_NOENT:
@@ -232,10 +237,14 @@ public:
     }
 };
 
+const char * CMD_tape_attach::_path = NULL;
+
 class CMD_tape_export : public CMD
 {
 private:
   Tape *_t;
+  static const char * _path;
+
 public:
   CMD_tape_export(Tape *t) : CMD("tape-export")
     {
@@ -263,6 +272,8 @@ public:
           if (!filename)
             {
               args->set_string_arg("ui-file-select-title", _("Export As..."));
+	      if (_path)
+		args->set_string_arg("ui-file-select-path", _path);
               args->add_callback("ui-file-select-CB-ok", this, 1);
               args->add_callback("ui-file-select-CB-cancel", this, 1);
               CMD_EXEC_ARGS("ui-file-select", args);
@@ -273,6 +284,8 @@ public:
             filename = args->get_string_arg("filename");
 	  if (!filename)
 	    return;
+
+	  _path = filename;
 
 	  if (tape->export_tap(tapename, filename) == TAPE_OK)
 	    {
@@ -293,6 +306,8 @@ public:
 	  if (!filename)
 	    {
               args->set_string_arg("ui-file-select-title", _("Export As..."));
+	      if (_path)
+		args->set_string_arg("ui-file-select-path", _path);
               args->add_callback("ui-file-select-CB-ok", this, 3);
               args->add_callback("ui-file-select-CB-cancel", this, 3);
               CMD_EXEC_ARGS("ui-file-select", args);
@@ -304,6 +319,8 @@ public:
 	  if (!filename)
 	    return;
 
+	  _path = filename;
+	  
 	  if (tape->export_wav(tapename, filename) == TAPE_OK)
 	    {
 	      sprintf(buf, _("File `%s' saved."), filename);
@@ -319,10 +336,14 @@ public:
     }
 };
 
+const char * CMD_tape_export::_path = NULL;
+
 class CMD_tape_add_file : public CMD
 {
 private:
   Tape *_t;
+  static const char * _path;
+
 public:
   CMD_tape_add_file(Tape *t) : CMD("tape-add-file")
     {
@@ -350,6 +371,8 @@ public:
 	      a = new CMD_Args();
 	      a->set_string_arg("ui-file-select-title",
 				_("Select file..."));
+	      if (_path)
+		a->set_string_arg("ui-file-select-path", _path);
 	      a->add_callback("ui-file-select-CB-ok", this, 1);
 	      CMD_EXEC_ARGS("ui-file-select", a);
 	      return;
@@ -360,6 +383,7 @@ public:
           if (!filename)
             return;
 
+	  _path = filename;
 	  _t->add(filename);
 	  break;
 
@@ -388,6 +412,8 @@ public:
         }
     }
 };
+
+const char * CMD_tape_add_file::_path = NULL;
 
 class CMD_tape_play : public CMD
 {
