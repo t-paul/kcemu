@@ -333,11 +333,18 @@ ModuleList::ModuleList(void)
   _mod_list.push_back(new ModuleListEntry(_("192 KByte RAM/EPROM"), m, KC_TYPE_85_1_CLASS));
 
   /*
+   *  KC-Pascal module (kc85/1)
+   */
+  string z9001_kcpascal_rom = z9001_romdir + "/kcpascal.851";
+  m = new ModuleROM1(z9001_kcpascal_rom.c_str(), "KC-Pascal", 0x4000, 0x8000);
+  _mod_list.push_back(new ModuleListEntry(_("KC-Pascal Module"), m, KC_TYPE_85_1_CLASS));
+
+  /*
    *  2,5Mb ROM Modul (kc85/1)
    */
-  string z9001_super_rom = z9001_romdir + "/super.rom";
-  m = new Module320k(z9001_super_rom.c_str(), "Super");
-  _mod_list.push_back(new ModuleListEntry(_("320k ROM Module"), m, KC_TYPE_85_1_CLASS));
+  string z9001_mega_rom = z9001_romdir + "/mega_rom.851";
+  m = new Module320k(z9001_mega_rom.c_str(), "Mega-ROM");
+  _mod_list.push_back(new ModuleListEntry(_("Mega-ROM Module"), m, KC_TYPE_85_1_CLASS));
 
   /*
    *  128 KByte ROM bank module (kc85/1)

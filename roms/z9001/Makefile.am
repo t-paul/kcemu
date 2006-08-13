@@ -19,6 +19,8 @@ ROMS = \
 	rom_bank.851 \
 	zm30__c0.851 \
 	zsid__c0.851 \
+	kcpascal.851 \
+	mega_rom.851 \
 	os_rb20.rom \
 	os_rb21.rom
 
