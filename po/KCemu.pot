@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2006-08-13 20:47+0200\n"
+"POT-Creation-Date: 2006-08-17 19:59+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -691,106 +691,110 @@ msgid "192 KByte RAM/EPROM"
 msgstr ""
 
 #: src/kc/mod_list.cc:340
-msgid "Mega-ROM Module"
+msgid "KC-Pascal Module"
 msgstr ""
 
 #: src/kc/mod_list.cc:347
+msgid "Mega-ROM Module"
+msgstr ""
+
+#: src/kc/mod_list.cc:354
 msgid "128k ROM Bank"
 msgstr ""
 
-#: src/kc/mod_list.cc:356 src/ui/gtk/module.cc:257
+#: src/kc/mod_list.cc:363 src/ui/gtk/module.cc:257
 msgid "IRM Color Expansion"
 msgstr ""
 
-#: src/kc/mod_list.cc:371
+#: src/kc/mod_list.cc:378
 msgid "Plotter XY4131"
 msgstr ""
 
-#: src/kc/mod_list.cc:379
+#: src/kc/mod_list.cc:386
 msgid "CPM-Z9 BOOT (c000h-c7ffh)"
 msgstr ""
 
-#: src/kc/mod_list.cc:385
+#: src/kc/mod_list.cc:392
 msgid "CPM-Z9 Floppy"
 msgstr ""
 
-#: src/kc/mod_list.cc:391
+#: src/kc/mod_list.cc:398
 msgid "CPM-Z9 64k RAM"
 msgstr ""
 
-#: src/kc/mod_list.cc:397
+#: src/kc/mod_list.cc:404
 msgid "M001: Digital In / Out"
 msgstr ""
 
-#: src/kc/mod_list.cc:406
+#: src/kc/mod_list.cc:413
 msgid "M003: V24"
 msgstr ""
 
-#: src/kc/mod_list.cc:415
+#: src/kc/mod_list.cc:422
 msgid "M006: Basic"
 msgstr ""
 
-#: src/kc/mod_list.cc:422
+#: src/kc/mod_list.cc:429
 msgid "M008: Joystick"
 msgstr ""
 
-#: src/kc/mod_list.cc:429
+#: src/kc/mod_list.cc:436
 msgid "M011: 64k RAM"
 msgstr ""
 
-#: src/kc/mod_list.cc:436
+#: src/kc/mod_list.cc:443
 msgid "M012: Texor"
 msgstr ""
 
-#: src/kc/mod_list.cc:442
+#: src/kc/mod_list.cc:449
 msgid "M022: Expander RAM (16k)"
 msgstr ""
 
-#: src/kc/mod_list.cc:449
+#: src/kc/mod_list.cc:456
 msgid "M026: Forth"
 msgstr ""
 
-#: src/kc/mod_list.cc:456
+#: src/kc/mod_list.cc:463
 msgid "M027: Development"
 msgstr ""
 
-#: src/kc/mod_list.cc:462
+#: src/kc/mod_list.cc:469
 msgid "M032: 256k Segmented RAM"
 msgstr ""
 
-#: src/kc/mod_list.cc:468
+#: src/kc/mod_list.cc:475
 msgid "M034: 512k Segmented RAM"
 msgstr ""
 
-#: src/kc/mod_list.cc:474
+#: src/kc/mod_list.cc:481
 msgid "M035: 1M Segmented RAM"
 msgstr ""
 
-#: src/kc/mod_list.cc:480
+#: src/kc/mod_list.cc:487
 msgid "M035x4: 4M RAM"
 msgstr ""
 
-#: src/kc/mod_list.cc:486
+#: src/kc/mod_list.cc:493
 msgid "M036: 128k Segmented RAM"
 msgstr ""
 
-#: src/kc/mod_list.cc:493
+#: src/kc/mod_list.cc:500
 msgid "M900: WordPro '86 (KC85/3)"
 msgstr ""
 
-#: src/kc/mod_list.cc:500
+#: src/kc/mod_list.cc:507
 msgid "M901: WordPro '86 (KC85/4)"
 msgstr ""
 
-#: src/kc/mod_list.cc:507
+#: src/kc/mod_list.cc:514
 msgid "Floppy Disk Basis F8"
 msgstr ""
 
-#: src/kc/mod_list.cc:520
+#: src/kc/mod_list.cc:527
 msgid "Floppy Disk Basis FC"
 msgstr ""
 
-#: src/kc/mod_list.cc:730
+#: src/kc/mod_list.cc:737
 msgid "Autostart"
 msgstr ""
 
