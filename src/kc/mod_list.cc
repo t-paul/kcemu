@@ -419,7 +419,7 @@ ModuleList::ModuleList(void)
    */
   string kc85_m006_rom = kc85_romdir + "/m006.rom";
   m = new ModuleROM(kc85_m006_rom.c_str(), "M006", 0x4000, 0xfb);
-  _mod_list.push_back(new ModuleListEntry(_("M006: Basic"), m, KC_TYPE_85_2_CLASS));
+  _mod_list.push_back(new ModuleListEntry(_("M006: Basic"), m, (kc_type_t)(KC_TYPE_85_2 | KC_TYPE_85_3)));
 
   /*
    *  Joystick module (kc85/2-4)
