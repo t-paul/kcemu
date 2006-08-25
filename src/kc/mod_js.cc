@@ -44,7 +44,9 @@ using namespace std;
 
 PIOJoystick::PIOJoystick(void) : Callback("PIOJoystick")
 {
+  _device = NULL;
   _is_open = false;
+
   js_open();
 
   z80->addCallback(35000, this, NULL);
