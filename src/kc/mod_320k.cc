@@ -39,9 +39,11 @@ Module320k::Module320k(Module320k &tmpl) :
   ModuleInterface(tmpl.get_name(), tmpl.get_id(), tmpl.get_type()),
   InterfaceCircuit(tmpl.get_name())
 {
+  _bank = 0xff;
+  _master = false;
+
   _rom = tmpl._rom;
 
-  _bank = 0xff;
   register_memory_bank(0);
 
   if (get_kc_type() == KC_TYPE_87)
