@@ -22,7 +22,7 @@
 #ifndef __ui_sdl_ui_sdl_h
 #define __ui_sdl_ui_sdl_h
 
-#include <SDL/SDL.h>
+#include <SDL.h>
 
 #include "ui/ui.h"
 

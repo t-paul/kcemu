@@ -22,7 +22,7 @@
 #include "kc/system.h"
 
 #if ENABLE_SOUND
-#include <SDL/SDL.h>
+#include <SDL.h>
 #endif /* ENABLE_SOUND */
 
 #include "kc/sound.h"
