@@ -37,17 +37,7 @@
 #include "ui/statusl.h"
 #include "ui/commands.h"
 #include "ui/gtk/cmd.h"
-#include "ui/gtk/wav.h"
-#include "ui/gtk/tape.h"
-#include "ui/gtk/disk.h"
-#include "ui/gtk/info.h"
-#include "ui/gtk/about.h"
-#include "ui/gtk/debug.h"
-#include "ui/gtk/color.h"
-#include "ui/gtk/module.h"
-#include "ui/gtk/keyboard.h"
-#include "ui/gtk/copying.h"
-#include "ui/gtk/tapeadd.h"
+
 #include "ui/gtk/fbrowse.h"
 #include "ui/gtk/dialog.h"
 #include "ui/gtk/hedit.h"
@@ -69,20 +59,23 @@ class UI_Gtk : public StatusListener, public ErrorListener, public UI
   int        _cur_auto_skip;
   int        _max_auto_skip;
     
-    DebugWindow      *_debug_window;
-    AboutWindow      *_about_window;
-    ColorWindow      *_color_window;
-    CopyingWindow    *_copying_window;
-    TapeWindow       *_tape_window;
-    TapeAddWindow    *_tape_add_window;
-    DiskWindow       *_disk_window;
-    ModuleWindow     *_module_window;
-    KeyboardWindow   *_keyboard_window;
-    InfoWindow       *_info_window;
-    EditHeaderWindow *_edit_header_window;
-    DialogWindow     *_dialog_window;
-    WavWindow        *_wav_window;
-    FileBrowser      *_file_browser;
+  UI_Gtk_Window *_debug_window;
+  UI_Gtk_Window *_about_window;
+  UI_Gtk_Window *_help_window;
+  UI_Gtk_Window *_thanks_window;
+  UI_Gtk_Window *_color_window;
+  UI_Gtk_Window *_copying_window;
+  UI_Gtk_Window *_tape_window;
+  UI_Gtk_Window *_tape_add_window;
+  UI_Gtk_Window *_disk_window;
+  UI_Gtk_Window *_module_window;
+  UI_Gtk_Window *_keyboard_window;
+  UI_Gtk_Window *_info_window;
+  UI_Gtk_Window *_wav_window;
+
+  FileBrowser      *_file_browser;
+  DialogWindow     *_dialog_window;
+  EditHeaderWindow *_edit_header_window;
 
     struct {
       GtkWidget *window;

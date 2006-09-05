@@ -1,6 +1,6 @@
 /*
  *  KCemu -- the KC 85/3 and KC 85/4 Emulator
- *  Copyright (C) 1997-2001 Torsten Paul
+ *  Copyright (C) 1997-2006 Torsten Paul
  *
  *  $Id: module.h,v 1.7 2002/10/31 01:38:07 torsten_paul Exp $
  *
@@ -47,8 +47,6 @@ private:
     GtkWidget *led[NR_OF_SLOTS];
     GtkWidget *color_exp;
     GSList    *g[NR_OF_SLOTS];
-    GtkWidget *separator;
-    GtkWidget *close;
   } _w;
 
   CMD *_cmd;

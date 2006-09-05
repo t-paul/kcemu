@@ -1,6 +1,6 @@
 /*
  *  KCemu -- the KC 85/3 and KC 85/4 Emulator
- *  Copyright (C) 1997-2001 Torsten Paul
+ *  Copyright (C) 1997-2006 Torsten Paul
  *
  *  $Id: tape.cc,v 1.22 2002/10/31 01:38:12 torsten_paul Exp $
  *
@@ -30,6 +30,7 @@
 
 #include "ui/status.h"
 #include "ui/gtk/tape.h"
+#include "ui/gtk/glade/interface.h"
 
 #include "ui/gtk/cmd.h"
 
@@ -188,14 +189,10 @@ public:
 };
 
 void
-TapeWindow::sf_tape_file_select(GtkWidget *widget, gint row, gint column, 
-                                GdkEventButton * bevent, gpointer data)
+TapeWindow::sf_tape_file_select(GtkTreeSelection *selection, gpointer data)
 {
   TapeWindow *self = (TapeWindow *)data;
-  
-  self->_selected = row;
-  if (bevent && (bevent->type == GDK_2BUTTON_PRESS))
-    CMD_EXEC("ui-tape-run-selected");
+  self->set_selected_index(selection);
 }
 
 void
@@ -216,7 +213,6 @@ TapeWindow::sf_tape_archive_select(GtkWidget *widget, gpointer data)
 void
 TapeWindow::sf_power_expose(TapeWindow *self)
 {
-
   int width, height;
   GdkColor *col;
   static GdkGC *gc = NULL;
@@ -227,7 +223,7 @@ TapeWindow::sf_power_expose(TapeWindow *self)
   if (gc == NULL)
     gc = gdk_gc_new(self->_w.led_power->window);
 
-  width = self->_w.led_power->allocation.width ;
+  width = self->_w.led_power->allocation.width;
   height = self->_w.led_power->allocation.height;
 
   if (self->_power)
@@ -255,12 +251,6 @@ TapeWindow::sf_power_expose(TapeWindow *self)
 void
 TapeWindow::init(void)
 {
-  /*
-    GtkTooltips *tips;
-    tips = gtk_tooltips_new();
-    gtk_tooltips_enable(tips);
-  */
-
   GtkItemFactory *ifactP;
   GtkAccelGroup *agroupP;
   GtkItemFactoryEntry entriesP[] = {
@@ -307,171 +297,98 @@ TapeWindow::init(void)
   _w.m_delete = gtk_item_factory_get_widget(ifactP, _("/Delete File"));
   _w.m_rename = gtk_item_factory_get_widget(ifactP, _("/Rename File"));
   _w.m_export = gtk_item_factory_get_widget(ifactP, _("/Export File"));
-  
+  _w.m_wav    = gtk_item_factory_get_widget(ifactP, _("/Export Wav"));
   /*
    *  tape window
    */
-  _window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
-  gtk_widget_set_name(_window, "TapeWindow");
-  gtk_window_set_title(GTK_WINDOW(_window), _("KCemu: Tape"));
-  gtk_window_position(GTK_WINDOW(_window), GTK_WIN_POS_MOUSE);
+  _window = create_tape_window();
   gtk_signal_connect(GTK_OBJECT(_window), "delete_event",
                      GTK_SIGNAL_FUNC(cmd_exec_sft),
                      (char *)"ui-tape-window-toggle"); // FIXME:
   
-  /*
-   *  vbox
-   */
-  _w.vbox = gtk_vbox_new(FALSE, 0);
-  gtk_container_add(GTK_CONTAINER(_window), _w.vbox);
-  gtk_widget_show(_w.vbox);
+  _w.treeview = get_widget("main_treeview");
+  gtk_signal_connect(GTK_OBJECT(_w.treeview), "button_press_event",
+		     GTK_SIGNAL_FUNC(sf_tape_button_press),
+		     this);
 
-  /*
-   *  combo hbox, combo label, combo box
-   */
-  _w.combo_hbox = gtk_hbox_new(FALSE, 0);
-  gtk_container_add(GTK_CONTAINER(_w.vbox), _w.combo_hbox);
-  gtk_widget_show(_w.combo_hbox);
-
-  _w.combo_label = gtk_label_new(_("Tape:"));
-  gtk_box_pack_start(GTK_BOX(_w.combo_hbox), _w.combo_label, FALSE, FALSE, 6);
-  gtk_widget_show(_w.combo_label);
-
-  GList *popdown = NULL;
-  for (int a = 0;;a++)
-    {
-      const char *fname = RC::instance()->get_string_i(a, "Tape File List");
-      if (fname == NULL)
-	break;
-      if (access(fname, R_OK) == 0)
-	popdown = g_list_append(popdown, (void *)fname);
-    }
-  _w.combo = gtk_combo_new();
-  gtk_box_pack_start(GTK_BOX(_w.combo_hbox), _w.combo, TRUE, TRUE, 0);
-  gtk_combo_set_value_in_list(GTK_COMBO(_w.combo), FALSE, TRUE);
-  gtk_combo_set_use_arrows(GTK_COMBO(_w.combo), FALSE);
-  gtk_entry_set_editable(GTK_ENTRY(GTK_COMBO(_w.combo)->entry), FALSE);
-  if (popdown)
-    gtk_combo_set_popdown_strings(GTK_COMBO(_w.combo), popdown);
-  gtk_signal_connect(GTK_OBJECT(GTK_COMBO(_w.combo)->entry), "changed",
-		     GTK_SIGNAL_FUNC(sf_tape_archive_select), _w.combo);
-  gtk_widget_show(_w.combo);
-
-  /*
-   *  tape list
-   */
-  _w.sw = gtk_scrolled_window_new(NULL, NULL);
-  gtk_widget_set_usize(_w.sw, 300, 400);
-  gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(_w.sw),
-                                 GTK_POLICY_AUTOMATIC,
-                                 GTK_POLICY_AUTOMATIC);
-  gtk_box_pack_start(GTK_BOX(_w.vbox), _w.sw, TRUE, TRUE, 0);
-  gtk_widget_show(_w.sw);
-
-  _w.clist = gtk_clist_new_with_titles(5, titles);
-  gtk_clist_set_selection_mode(GTK_CLIST(_w.clist), GTK_SELECTION_BROWSE);
-  gtk_clist_column_titles_passive(GTK_CLIST(_w.clist));
-  gtk_clist_set_reorderable(GTK_CLIST(_w.clist), TRUE);
-  gtk_signal_connect(GTK_OBJECT(_w.clist), "button_press_event",
-                     GTK_SIGNAL_FUNC(sf_tape_button_press), this);
-  gtk_signal_connect(GTK_OBJECT(_w.clist), "select_row",
-                     GTK_SIGNAL_FUNC(sf_tape_file_select), this);
-  gtk_scrolled_window_add_with_viewport(GTK_SCROLLED_WINDOW(_w.sw), _w.clist);
-  gtk_widget_show(_w.clist);
-  
-  /*
-   *  hbox
-   */
-  _w.hbox = gtk_hbox_new(FALSE, 0);
-  gtk_box_pack_start(GTK_BOX(_w.vbox), _w.hbox, FALSE, TRUE, 0);
-  gtk_widget_show(_w.hbox);
-
-  /*
-   *  power drawing area
-   */
-  _w.led_power = gtk_drawing_area_new();
-  gtk_drawing_area_size(GTK_DRAWING_AREA(_w.led_power), 20, 5);
-  gtk_signal_connect_object(GTK_OBJECT(_w.led_power), "expose_event",
-                            GTK_SIGNAL_FUNC(TapeWindow::sf_power_expose),
-                            (GtkObject *)this);
-  gtk_box_pack_start(GTK_BOX(_w.hbox), _w.led_power, FALSE, TRUE, 0);
-  gtk_widget_show(_w.led_power);
-  
-  /*
-   *  scale
-   */
-  _scale_value = 0.0;
-  _w.scale_adj = gtk_adjustment_new (_scale_value,
-                                   0.0, 101.0, 0.1, 1.0, 1.0);
-  gtk_signal_connect(GTK_OBJECT(_w.scale_adj), "value_changed",
-                     GTK_SIGNAL_FUNC(TapeWindow::sf_tape_scale_changed), this);
-  _w.scale = gtk_hscale_new(GTK_ADJUSTMENT(_w.scale_adj));
-  //gtk_range_set_update_policy(GTK_RANGE(_w.scale), GTK_UPDATE_DELAYED);
-  gtk_scale_set_draw_value(GTK_SCALE(_w.scale), FALSE);
-  gtk_box_pack_start(GTK_BOX(_w.hbox), _w.scale, TRUE, TRUE, 0);
-  gtk_widget_show(_w.scale);
-  
-  /*
-   *  button box
-   */
-  _w.bbox = gtk_hbutton_box_new();
-  gtk_button_box_set_spacing(GTK_BUTTON_BOX(_w.bbox), 0);
-  gtk_button_box_set_layout(GTK_BUTTON_BOX(_w.bbox), GTK_BUTTONBOX_SPREAD);
-  gtk_button_box_set_child_size(GTK_BUTTON_BOX(_w.bbox), 0, 0);
-  gtk_box_pack_start(GTK_BOX(_w.vbox), _w.bbox, FALSE, TRUE, 0);
-  gtk_widget_show(_w.bbox);
-  
-  /*
-   *  buttons
-   */
-  _w.b_stop = gtk_button_new_with_label(_("Stop"));
-  gtk_signal_connect(GTK_OBJECT(_w.b_stop), "clicked",
-                     GTK_SIGNAL_FUNC(cmd_exec_sf),
-                     (gpointer)"ui-tape-stop");
-  gtk_container_add(GTK_CONTAINER(_w.bbox), _w.b_stop);
-  gtk_widget_show(_w.b_stop);
-  
-  _w.b_record = gtk_toggle_button_new_with_label(_("Record"));
-  gtk_signal_connect(GTK_OBJECT(_w.b_record), "clicked",
-                     GTK_SIGNAL_FUNC(cmd_exec_sftb),
-                     (gpointer)"tape-record");
-  gtk_container_add(GTK_CONTAINER(_w.bbox), _w.b_record);
-  gtk_widget_show(_w.b_record);
-  
-  _w.b_play = gtk_toggle_button_new_with_label(_("Play"));
+  _w.b_play = get_widget("control_button_play");
   gtk_signal_connect(GTK_OBJECT(_w.b_play), "clicked",
                      GTK_SIGNAL_FUNC(cmd_exec_sftb),
                      (gpointer)"ui-tape-play-selected");
-  gtk_container_add(GTK_CONTAINER(_w.bbox), _w.b_play);
-  gtk_widget_show(_w.b_play);
-  
-  _w.b_attach = gtk_button_new_with_label(_("Attach"));
+
+  _w.b_stop = get_widget("control_button_stop");
+  gtk_signal_connect(GTK_OBJECT(_w.b_stop), "clicked",
+                     GTK_SIGNAL_FUNC(cmd_exec_sf),
+                     (gpointer)"ui-tape-stop");
+
+  _w.b_record = get_widget("control_button_record");
+  gtk_signal_connect(GTK_OBJECT(_w.b_record), "clicked",
+                     GTK_SIGNAL_FUNC(cmd_exec_sftb),
+                     (gpointer)"tape-record");
+
+  _w.b_prev = get_widget("control_button_previous");
+  _w.b_next = get_widget("control_button_next");
+
+  _w.b_attach = get_widget("file_button_open");
   gtk_signal_connect(GTK_OBJECT(_w.b_attach), "clicked",
                      GTK_SIGNAL_FUNC(cmd_exec_sf),
                      (gpointer)"ui-tape-attach");
-  gtk_container_add(GTK_CONTAINER(_w.bbox), _w.b_attach);
-  gtk_widget_show(_w.b_attach);
-  
-  _w.b_detach = gtk_button_new_with_label(_("Detach"));
+
+  _w.b_detach = get_widget("file_button_close");;
   gtk_signal_connect(GTK_OBJECT(_w.b_detach), "clicked",
-                     GTK_SIGNAL_FUNC(cmd_exec_sf),
-                     (gpointer)"ui-tape-detach");
-  gtk_container_add(GTK_CONTAINER(_w.bbox), _w.b_detach);
-  gtk_widget_show(_w.b_detach);
-  
-  _w.b_close = gtk_button_new_with_label(_("Close"));
-  gtk_signal_connect(GTK_OBJECT(_w.b_close), "clicked",
-                     GTK_SIGNAL_FUNC(cmd_exec_sf),
-                     (gpointer)"ui-tape-window-toggle");
-  gtk_container_add(GTK_CONTAINER(_w.bbox), _w.b_close);
-  gtk_widget_show(_w.b_close);
-  
-  gtk_widget_set_sensitive(_w.b_stop, FALSE);
-  gtk_widget_set_sensitive(_w.b_play, FALSE);
-  gtk_widget_set_sensitive(_w.b_record, FALSE);
-  gtk_widget_set_sensitive(_w.b_detach, FALSE);
+		     GTK_SIGNAL_FUNC(cmd_exec_sf),
+		     (gpointer)"ui-tape-detach");
+
+  _w.led_power = get_widget("progress_led");
+  gtk_signal_connect_object(GTK_OBJECT(_w.led_power), "expose_event",
+                            GTK_SIGNAL_FUNC(TapeWindow::sf_power_expose),
+                            (GtkObject *)this);
+
+  _w.list_store = gtk_list_store_new(TREEVIEW_N_COLUMNS,
+				     G_TYPE_STRING,
+				     G_TYPE_STRING,
+				     G_TYPE_STRING,
+				     G_TYPE_STRING,
+				     G_TYPE_STRING);
+
+  for (int a = 0;a < TREEVIEW_N_COLUMNS;a++)
+    {
+      GtkTreeViewColumn *column = gtk_tree_view_column_new();
+      GtkCellRenderer *renderer = gtk_cell_renderer_text_new();
+
+      gtk_tree_view_column_set_title(column, titles[a]);
+
+      if (a < 2)
+	{
+	  gtk_tree_view_column_pack_start(column, renderer, FALSE);
+	}
+      else
+	{
+	  gtk_tree_view_column_pack_end(column, renderer, FALSE);
+	}
+	
+      gtk_tree_view_column_set_attributes(column, renderer, "text", a, NULL);
+      gtk_tree_view_column_set_resizable(column, TRUE);
+      gtk_tree_view_column_set_expand(column, TRUE);
+      gtk_tree_view_append_column(GTK_TREE_VIEW(_w.treeview), column);
+    }
+
+  gtk_tree_view_set_model(GTK_TREE_VIEW(_w.treeview), GTK_TREE_MODEL(_w.list_store));
+  gtk_tree_view_columns_autosize(GTK_TREE_VIEW(_w.treeview));
+
+  GtkTreeSelection *select = gtk_tree_view_get_selection(GTK_TREE_VIEW(_w.treeview));
+  gtk_tree_selection_set_mode(select, GTK_SELECTION_SINGLE);
+  g_signal_connect(G_OBJECT(select), "changed",
+                  G_CALLBACK(sf_tape_file_select),
+                  this);
+  /*
+   *  Scale
+   */
+  _w.scale = get_widget("progress_hscale");
+  _w.scale_adj = gtk_range_get_adjustment(GTK_RANGE(_w.scale));
 
   allocate_colors();
+  init_dialog("ui-tape-window-toggle", "window-tape");
 
   CMD *cmd;
   cmd = new CMD_ui_tape_window_toggle(this);
@@ -511,14 +428,18 @@ int
 TapeWindow::sf_tape_button_press(GtkWidget */*widget*/, GdkEventButton *event,
                                  gpointer data)
 {
-  gint ret, row, column;
   TapeWindow *self = (TapeWindow *)data;
+  
+  GtkTreePath *path;
+  gboolean ret = gtk_tree_view_get_path_at_pos(GTK_TREE_VIEW(self->_w.treeview), 
+					       (int)event->x, (int)event->y,
+					       &path, NULL, NULL, NULL);
 
-  ret = gtk_clist_get_selection_info(GTK_CLIST(self->_w.clist),
-				     (int)event->x, (int)event->y,
-				     &row, &column);
   if (ret)
-    gtk_clist_select_row(GTK_CLIST(self->_w.clist), row, 0);
+    {
+      gint *indices = gtk_tree_path_get_indices(path);
+      self->_selected = indices[0];
+    }
 
   if ((event->button == 1) && (event->type == GDK_2BUTTON_PRESS))
     {
@@ -532,6 +453,7 @@ TapeWindow::sf_tape_button_press(GtkWidget */*widget*/, GdkEventButton *event,
       gtk_widget_set_sensitive(self->_w.m_delete, ret);
       gtk_widget_set_sensitive(self->_w.m_rename, ret);
       gtk_widget_set_sensitive(self->_w.m_export, ret);
+      gtk_widget_set_sensitive(self->_w.m_wav, ret);
       gtk_menu_popup(GTK_MENU(self->_w.menu), NULL, NULL, NULL, NULL, 3,
                      event->time);
     }
@@ -539,7 +461,26 @@ TapeWindow::sf_tape_button_press(GtkWidget */*widget*/, GdkEventButton *event,
   /*
    *  run other event handlers too...
    */
-  return true;
+  return false;
+}
+
+void
+TapeWindow::set_selected_index(GtkTreeSelection *selection)
+{
+  GtkTreeModel *model;
+  GList* path_list = gtk_tree_selection_get_selected_rows(selection, &model);
+  if (path_list == NULL)
+    return;
+  
+  GtkTreePath *path = (GtkTreePath *)g_list_nth_data(path_list, 0);
+  gint *indices = gtk_tree_path_get_indices(path);
+  if (indices == NULL)
+    return;
+  
+  _selected = indices[0];
+  
+  g_list_foreach(path_list, (GFunc)gtk_tree_path_free, NULL);
+  g_list_free(path_list);
 }
 
 void
@@ -608,14 +549,16 @@ TapeWindow::tapeGetSelected(void)
 const char *
 TapeWindow::tapeGetName(int idx)
 {
-  int ret;
   char *name;
   
-  ret = gtk_clist_get_text(GTK_CLIST(_w.clist), idx, 0, &name);
-  if (ret == 0)
-    return NULL;
+  GtkTreePath *path = gtk_tree_path_new_from_indices(idx, -1);
+  g_assert(path != NULL);
 
-  /* cout.form("TapeWindow::tapeGetSelected(): %d -> %s\n", idx, name); */
+  GtkTreeIter iter;
+  gtk_tree_model_get_iter(GTK_TREE_MODEL(_w.list_store), &iter, path);
+  gtk_tree_path_free(path);
+  gtk_tree_model_get(GTK_TREE_MODEL(_w.list_store), &iter, 0, &name, -1);
+
   return name;
 }
 
@@ -624,31 +567,23 @@ TapeWindow::tapeProgress(int val)
 {
   _scale_value = val;
   GTK_ADJUSTMENT(_w.scale_adj)->value = val;
-  gtk_signal_emit_by_name(_w.scale_adj, "value_changed");
+  gtk_signal_emit_by_name(GTK_OBJECT(_w.scale_adj), "value_changed");
 }
 
 void
 TapeWindow::tapeNext(void)
 {
-  int i, old;
-  GList *list;
+  GtkTreeModel *model;
+  GtkTreeIter iter;
 
-  i = 0;
-  old = _selected;
+  GtkTreeSelection *selection = gtk_tree_view_get_selection(GTK_TREE_VIEW(_w.treeview));
+  if (!gtk_tree_selection_get_selected(selection, &model, &iter))
+    return;
 
-  list = GTK_CLIST(_w.clist)->selection;
-  if (list)
-    i = GPOINTER_TO_INT(list->data);
-
-  /* sets _selected via callback! (sf_tape_file_select) */
-  gtk_clist_select_row(GTK_CLIST(_w.clist), i + 1, 0);
-
-  list = GTK_CLIST(_w.clist)->selection;
-  if (list)
-    i = GPOINTER_TO_INT(list->data);
-
-  if (old != i)
+  if (gtk_tree_model_iter_next(model, &iter))
     {
+      // sets _selected via callback! (sf_tape_file_select)
+      gtk_tree_selection_select_iter(selection, &iter);
       CMD_Args *a = new CMD_Args();
       a->set_int_arg("tape-play-delay", 10);
       CMD_EXEC_ARGS("ui-tape-play-selected", a);
@@ -659,7 +594,7 @@ void
 TapeWindow::clear_list(void)
 {
   _nr_of_files = 0;
-  gtk_clist_clear(GTK_CLIST(_w.clist));
+  gtk_list_store_clear(_w.list_store);
   gtk_widget_set_sensitive(_w.b_stop, FALSE);
   gtk_widget_set_sensitive(_w.b_play, FALSE);
   gtk_widget_set_sensitive(_w.b_record, FALSE);
@@ -677,52 +612,63 @@ TapeWindow::tapeAddFile(const char    *name,
 			long           size,
 			unsigned char  type)
 {
-  char buf2[40];
-  char buf3[40];
-  char buf4[40];
-  const char *data[5];
+  char buf_load[40];
+  char buf_start[40];
+  char buf_size[40];
+
+  const char *ptr_type;
+  const char *ptr_load;
+  const char *ptr_start;
   kct_file_type_t t = (kct_file_type_t)type;
 
-  sprintf(buf2, "%04lxh", load);
+  snprintf(buf_load, 40, "%04lxh", load);
   if (start != 0xffff)
-    sprintf(buf3, "%04lxh", start);
+    snprintf(buf_start, 40, "%04lxh", start);
   else
-    sprintf(buf3, "-");
-  sprintf(buf4, "%ld", size);
+    snprintf(buf_start, 40, "-");
+  snprintf(buf_size, 40, "%ld", size);
 
-  data[2] = "-";
-  data[3] = "-";
+  ptr_load = "-";
+  ptr_start = "-";
   switch (t) {
   case KCT_TYPE_COM:
-    data[1] = "COM";
-    data[2] = buf2;
-    data[3] = buf3;
+    ptr_type = "COM";
+    ptr_load = buf_load;
+    ptr_start = buf_start;
     break;
   case KCT_TYPE_BAS:
-    data[1] = "BAS";
+    ptr_type = "BAS";
     break;
   case KCT_TYPE_DATA:
-    data[1] = "DATA";
+    ptr_type = "DATA";
     break;
   case KCT_TYPE_LIST:
-    data[1] = "LIST";
+    ptr_type = "LIST";
     break;
   case KCT_TYPE_BAS_P:
-    data[1] = "BAS*";
+    ptr_type = "BAS*";
     break;
   case KCT_TYPE_BIN:
-    data[1] = "BIN";
+    ptr_type = "BIN";
     break;
   case KCT_TYPE_BASICODE:
-    data[1] = "BAC";
+    ptr_type = "BAC";
     break;
   default:
-    data[1] = "???";
+    ptr_type = "???";
     break;
   }
-  data[0] = name;
-  data[4] = buf4;
-  gtk_clist_append(GTK_CLIST(_w.clist), (char **)data);
+
+  GtkTreeIter iter;
+  gtk_list_store_append(_w.list_store, &iter);
+  gtk_list_store_set(_w.list_store, &iter,
+		     TREEVIEW_COLUMN_NAME, name,
+		     TREEVIEW_COLUMN_TYPE, ptr_type,
+		     TREEVIEW_COLUMN_LOAD, ptr_load,
+		     TREEVIEW_COLUMN_START, ptr_start,
+		     TREEVIEW_COLUMN_SIZE, buf_size,
+		     -1);
+
   _nr_of_files++;
   if (_nr_of_files == 1)
     {
@@ -730,7 +676,6 @@ TapeWindow::tapeAddFile(const char    *name,
       gtk_widget_set_sensitive(_w.b_play, TRUE);
       gtk_widget_set_sensitive(_w.b_record, TRUE);
     }
-  gtk_clist_columns_autosize(GTK_CLIST(_w.clist));
 }
 
 void
@@ -740,7 +685,14 @@ TapeWindow::tapeRemoveFile(int idx)
     clear_list();
   else
     {
-      gtk_clist_remove(GTK_CLIST(_w.clist), idx);
+      GtkTreePath *path = gtk_tree_path_new_from_indices(idx, -1);
+      g_assert(path != NULL);
+
+      GtkTreeIter iter;
+      gtk_tree_model_get_iter(GTK_TREE_MODEL(_w.list_store), &iter, path);
+      gtk_tree_path_free(path);
+      gtk_list_store_remove(_w.list_store, &iter);
+
       _nr_of_files--;
     }
 }

@@ -1,5 +1,7 @@
 ## Process this file with automake to produce Makefile.in
 
+SUBDIRS = glade
+
 EXTRA_DIST = \
 	ui_gtk.h		\
 	ui_gtk0.h		\
@@ -15,11 +17,13 @@ EXTRA_DIST = \
 	cmds.h			\
 	util.h			\
 	disk.h			\
+	help.h			\
 	tape.h			\
 	tapeadd.h		\
 	info.h			\
 	debug.h			\
 	about.h			\
+	thanks.h		\
 	color.h			\
 	module.h		\
 	keyboard.h		\
@@ -30,9 +34,4 @@ EXTRA_DIST = \
 	image.h			\
 	hedit.h			\
 	wav.h			\
-	gtkledline.h		\
-	open.xpm		\
-	pause.xpm		\
-	play.xpm		\
-	stop.xpm		\
-	kcemu.xpm
+	gtkledline.h

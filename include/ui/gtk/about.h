@@ -1,6 +1,6 @@
 /*
  *  KCemu -- the KC 85/3 and KC 85/4 Emulator
- *  Copyright (C) 1997-2001 Torsten Paul
+ *  Copyright (C) 1997-2006 Torsten Paul
  *
  *  $Id: about.h,v 1.10 2002/10/31 01:38:07 torsten_paul Exp $
  *
@@ -31,18 +31,7 @@
 class AboutWindow : public UI_Gtk_Window
 {
  private:
-  struct {
-    GtkWidget *vbox;
-    GtkWidget *pixmap;
-    GtkWidget *name;
-    GtkWidget *copyright;
-    GtkWidget *info;
-    GtkWidget *separator;
-    GtkWidget *close;
-  } _w;
-
   static char APP_NAME[];
-  static char APP_COPYRIGHT[];
 
   CMD *_cmd;
 

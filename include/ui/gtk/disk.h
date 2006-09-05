@@ -1,6 +1,6 @@
 /*
  *  KCemu -- the KC 85/3 and KC 85/4 Emulator
- *  Copyright (C) 1997-2001 Torsten Paul
+ *  Copyright (C) 1997-2006 Torsten Paul
  *
  *  $Id: disk.h,v 1.5 2002/06/09 14:24:32 torsten_paul Exp $
  *
@@ -47,14 +47,18 @@ class DiskWindow : public UI_Gtk_Window
     guint combo_signal_id[NR_OF_DISKS];
   } _w;
 
+  CMD *_cmd_attach;
+  CMD *_cmd_update;
+  CMD *_cmd_window_toggle;
+
  protected:
   void init(void);
 
   static void sf_disk_attach(GtkWidget *widget, gpointer data);
 
  public:
-  DiskWindow(void) { init(); }
-  virtual ~DiskWindow(void) {}
+  DiskWindow(void);
+  virtual ~DiskWindow(void);
 
   virtual void set_name(int idx, const char *name);
 };

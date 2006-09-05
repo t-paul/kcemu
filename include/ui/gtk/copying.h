@@ -1,6 +1,6 @@
 /*
  *  KCemu -- the KC 85/3 and KC 85/4 Emulator
- *  Copyright (C) 1997-2001 Torsten Paul
+ *  Copyright (C) 1997-2006 Torsten Paul
  *
  *  $Id: copying.h,v 1.7 2002/06/09 14:24:32 torsten_paul Exp $
  *
@@ -32,15 +32,10 @@
 class CopyingWindow : public UI_Gtk_Window
 {
  private:
-  struct
-  {
-    GtkWidget *vbox;
-    GtkWidget *label_copying;
+  struct {
+    GtkWidget *label_license;
     GtkWidget *label_warranty;
-    GtkWidget *label_vbox;
     GtkWidget *scrolled_window;
-    GtkWidget *separator;
-    GtkWidget *close;
   } _w;
 
   CMD *_cmd;

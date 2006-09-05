@@ -24,20 +24,27 @@
 
 #include <gtk/gtk.h>
 
+#include "cmd/cmd.h"
+
 #include "ui/window.h"
 
 class UI_Gtk_Window : public UI_Window
 {
  private:
   bool _visible;
+  CMD_Args *_help_args;
+
  protected:
   GtkWidget *_window;
 
   virtual void init(void) = 0;
 
+  static void sf_help(GtkWidget *widget, gpointer data);
+  static void sf_help_recursive(GtkWidget *widget, gpointer data);
+  
  public:
-  UI_Gtk_Window(void) { _window = 0; _visible = false; }
-  virtual ~UI_Gtk_Window(void) {}
+  UI_Gtk_Window(void);
+  virtual ~UI_Gtk_Window(void);
 
   void show(void);
   void hide(void);
@@ -45,8 +52,10 @@ class UI_Gtk_Window : public UI_Window
 
   bool is_visible(void);
 
-  GtkWidget * create_pixmap_widget(GtkWidget *parent, char **data);
-  GtkWidget * create_button_with_pixmap(GtkWidget *parent, char **data);
+  GtkWidget * get_window(void);
+  GtkWidget * get_widget(const char *name);
+
+  void init_dialog(const char *close_button_func, const char *help_topic);
 };
 
 #endif /* __ui_gtk_window_h */

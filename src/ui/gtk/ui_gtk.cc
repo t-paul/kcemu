@@ -48,6 +48,21 @@
 
 #include "ui/gtk/debug.h"
 #include "ui/gtk/ui_gtk.h"
+#include "ui/gtk/glade/glade_util.h"
+
+#include "ui/gtk/wav.h"
+#include "ui/gtk/help.h"
+#include "ui/gtk/tape.h"
+#include "ui/gtk/disk.h"
+#include "ui/gtk/info.h"
+#include "ui/gtk/about.h"
+#include "ui/gtk/debug.h"
+#include "ui/gtk/color.h"
+#include "ui/gtk/thanks.h"
+#include "ui/gtk/module.h"
+#include "ui/gtk/keyboard.h"
+#include "ui/gtk/copying.h"
+#include "ui/gtk/tapeadd.h"
 
 #include "libdbg/dbg.h"
 
@@ -646,8 +661,13 @@ UI_Gtk::create_main_window(void)
     { _("/Configuration/sep"),                    NULL,     NULL,            0,                                       "<Separator>" },
     { _("/Configuration/No _Speed Limit"),        NULL,     CF(cmd_exec_mc), CD("ui-speed-limit-toggle"),             "<ToggleItem>" },
     { _("/_Help"),                 		  NULL,     NULL,            0,                                       "<LastBranch>" },
-    { _("/Help/_About KCemu"),      		  NULL,     CF(cmd_exec_mc), CD("ui-about-window-toggle"),            NULL },
+    { _("/Help/_Help"),         	          NULL,     CF(cmd_exec_mc), CD("ui-help-window-toggle-home"),        NULL },
+    { _("/Help/Help _Index"),         	          NULL,     CF(cmd_exec_mc), CD("ui-help-window-toggle-index"),       NULL },
+    { _("/Help/_Context Help"),                   NULL,     CF(cmd_exec_mc), CD("ui-help-window-context-help"),       NULL },
     { _("/Help/sep3"),             		  NULL,     NULL,            0,                                       "<Separator>" },
+    { _("/Help/_About KCemu"),      		  NULL,     CF(cmd_exec_mc), CD("ui-about-window-toggle"),            NULL },
+    { _("/Help/_Thanks!"),      	          NULL,     CF(cmd_exec_mc), CD("ui-thanks-window-toggle"),           NULL },
+    { _("/Help/sep4"),             		  NULL,     NULL,            0,                                       "<Separator>" },
     { _("/Help/KCemu _Licence"),    		  NULL,     CF(cmd_exec_mc), CD("ui-copying-window-toggle"),          NULL },
     { _("/Help/No _Warranty!"),     		  NULL,     CF(cmd_exec_mc), CD("ui-warranty-window-toggle"),         NULL },
   };
@@ -780,6 +800,48 @@ UI_Gtk::create_main_window(void)
   gtk_statusbar_set_has_resize_grip(GTK_STATUSBAR(_main.st_statusbar), false);
   gtk_misc_set_padding(GTK_MISC(GTK_STATUSBAR(_main.st_statusbar)->label), 4, 0); // hmm, is there a better way?
   gtk_widget_show(_main.st_statusbar);
+
+  /*
+   *  help context
+   */
+  switch (get_kc_type())
+    {
+    case KC_TYPE_85_1:
+    case KC_TYPE_87:
+      g_object_set_data(G_OBJECT(_main.window), "help-topic", (gpointer)"sys-z9001");
+      break;
+    case KC_TYPE_85_2:
+    case KC_TYPE_85_3:
+    case KC_TYPE_85_4:
+      g_object_set_data(G_OBJECT(_main.window), "help-topic", (gpointer)"sys-kc85");
+      break;
+    case KC_TYPE_85_5:
+      g_object_set_data(G_OBJECT(_main.window), "help-topic", (gpointer)"sys-kc855");
+      break;
+    case KC_TYPE_LC80:
+      g_object_set_data(G_OBJECT(_main.window), "help-topic", (gpointer)"sys-lc80");
+      break;
+    case KC_TYPE_Z1013:
+      g_object_set_data(G_OBJECT(_main.window), "help-topic", (gpointer)"sys-z1013");
+      break;
+    case KC_TYPE_A5105:
+      g_object_set_data(G_OBJECT(_main.window), "help-topic", (gpointer)"sys-a5105");
+      break;
+    case KC_TYPE_POLY880:
+      g_object_set_data(G_OBJECT(_main.window), "help-topic", (gpointer)"sys-poly880");
+      break;
+    case KC_TYPE_KRAMERMC:
+      g_object_set_data(G_OBJECT(_main.window), "help-topic", (gpointer)"sys-kramermc");
+      break;
+    case KC_TYPE_MUGLERPC:
+      g_object_set_data(G_OBJECT(_main.window), "help-topic", (gpointer)"sys-muglerpc");
+      break;
+    case KC_TYPE_ALL:
+    case KC_TYPE_NONE:
+    case KC_TYPE_85_1_CLASS:
+    case KC_TYPE_85_2_CLASS:
+      break;
+    }
 }
 
 void
@@ -812,6 +874,8 @@ UI_Gtk::~UI_Gtk(void)
   gtk_widget_destroy(_main.window);
         
   delete _about_window;
+  delete _help_window;
+  delete _thanks_window;
   delete _color_window;
   delete _tape_window;
   delete _tape_add_window;
@@ -919,12 +983,19 @@ UI_Gtk::init(int *argc, char ***argv)
 
   gtk_init(argc, argv);
 
+  string datadir(kcemu_datadir);
+
   /*
    *  load gtk ressource files
    */
-  string datadir(kcemu_datadir);
   string rc_filename = datadir + "/.kcemurc.gtk";
   gtk_rc_parse(rc_filename.c_str());
+
+  /*
+   *  initialize image directory
+   */
+  string image_directory = datadir + "/images";
+  add_pixmap_directory(image_directory.c_str());
   
   const char *tmp = kcemu_homedir;
   if (tmp)
@@ -948,6 +1019,8 @@ UI_Gtk::init(int *argc, char ***argv)
   _main.window = NULL;
 
   _about_window       = new AboutWindow();
+  _help_window        = new HelpWindow();
+  _thanks_window      = new ThanksWindow();
   _color_window       = new ColorWindow();
   _tape_window        = new TapeWindow();
   _tape_add_window    = new TapeAddWindow();
@@ -962,12 +1035,14 @@ UI_Gtk::init(int *argc, char ***argv)
   _dialog_window      = new DialogWindow();
   _file_browser       = new FileBrowser();
 
-  allocate_colors(_color_window->get_saturation_fg(),
-		  _color_window->get_saturation_bg(),
-		  _color_window->get_brightness_fg(),
-		  _color_window->get_brightness_bg(),
-		  _color_window->get_black_level(),
-		  _color_window->get_white_level());
+  ColorWindow *color_window = (ColorWindow *)_color_window;
+  
+  allocate_colors(color_window->get_saturation_fg(),
+		  color_window->get_saturation_bg(),
+		  color_window->get_brightness_fg(),
+		  color_window->get_brightness_bg(),
+		  color_window->get_black_level(),
+		  color_window->get_white_level());
 
   /* this _must_ come last due to some initialization for menus */
   create_main_window();
@@ -976,7 +1051,7 @@ UI_Gtk::init(int *argc, char ***argv)
 
   CMD *cmd;
   cmd = new CMD_ui_toggle(this);
-  cmd = new CMD_update_colortable(this, _color_window);
+  cmd = new CMD_update_colortable(this, color_window);
 
   setup_ui_defaults();
 
@@ -1485,19 +1560,19 @@ UI_Gtk::gtk_update(byte_t *bitmap, byte_t *dirty, int dirty_size, int width, int
 UI_ModuleInterface *
 UI_Gtk::getModuleInterface(void)
 {
-  return _module_window;
+  return (ModuleWindow *)_module_window;
 }
 
 TapeInterface *
 UI_Gtk::getTapeInterface(void)
 {
-  return _tape_window;
+  return (TapeWindow *)_tape_window;
 }
 
 DebugInterface *
 UI_Gtk::getDebugInterface(void)
 {
-  return _debug_window;
+  return (DebugWindow *)_debug_window;
 }
 
 void
@@ -1514,55 +1589,5 @@ UI_Gtk::setStatus(const char *msg)
 void
 UI_Gtk::errorInfo(const char *msg)
 {
-  static GtkWidget *w;
-  GtkWidget *vbox;
-  GtkWidget *label;
-  GtkWidget *separator;
-  GtkWidget *ok;
-
-  w = gtk_window_new(GTK_WINDOW_TOPLEVEL);
-  gtk_window_set_title(GTK_WINDOW(w), "Info");
-  gtk_window_position(GTK_WINDOW(w), GTK_WIN_POS_MOUSE);
-  gtk_signal_connect(GTK_OBJECT(w), "destroy",
-                     GTK_SIGNAL_FUNC(gtk_widget_destroyed), &w);
-
-  /*
-   *  vbox
-   */
-  vbox = gtk_vbox_new(FALSE, 0);
-  gtk_container_border_width(GTK_CONTAINER(vbox), 6);
-  gtk_container_add(GTK_CONTAINER(w), vbox);
-  gtk_widget_show(vbox);
-
-  /*
-   *  label
-   */
-  label = gtk_label_new(msg);
-  gtk_box_pack_start(GTK_BOX(vbox), label, FALSE, TRUE, 6);
-  gtk_widget_show(label);
-
-  /*
-   *  separator
-   */
-  separator = gtk_hseparator_new();
-  gtk_box_pack_start(GTK_BOX(vbox), separator, FALSE, FALSE, 5);
-  gtk_widget_show(separator);
-
-  /*
-   *  ok button
-   */
-  ok = gtk_button_new_with_label("Ok");
-  gtk_signal_connect_object(GTK_OBJECT(ok), "clicked",
-                            GTK_SIGNAL_FUNC(gtk_widget_destroy),
-                            GTK_OBJECT(w));
-  gtk_box_pack_start(GTK_BOX(vbox), ok, FALSE, TRUE, 0);
-  GTK_WIDGET_SET_FLAGS(ok, GTK_CAN_DEFAULT);
-  gtk_widget_grab_default(ok);
-  gtk_widget_show(ok);
-
-  /*
-   *  show dialog and make it modal
-   */
-  gtk_widget_show(w);
-  gtk_grab_add(w);
+  _dialog_window->show_dialog_ok(_("Info"), msg);
 }

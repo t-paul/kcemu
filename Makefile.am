@@ -16,6 +16,7 @@ SUBDIRS = \
 	man \
 	debian \
 	setup \
+	glade \
 	po
 
 if TARGET_MINGW

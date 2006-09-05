@@ -34,3 +34,11 @@ src/ui/sdl/ui_sdl3.cc
 src/ui/sdl/ui_sdl4.cc
 src/ui/sdl/ui_sdl8.cc
 src/ui/sdl/ui_sdl9.cc
+./src/ui/gtk/glade/about_interface.c
+./src/ui/gtk/glade/audio_interface.c
+./src/ui/gtk/glade/copying_interface.c
+./src/ui/gtk/glade/disk_interface.c
+./src/ui/gtk/glade/help_interface.c
+./src/ui/gtk/glade/module_interface.c
+./src/ui/gtk/glade/tape_interface.c
+./src/ui/gtk/glade/thanks_interface.c

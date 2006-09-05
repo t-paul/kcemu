@@ -132,7 +132,7 @@ kcemu_SOURCES = \
 	disass.cc
 
 if TARGET_UI_GTK
-UILIBS_GTK = ../ui/gtk/libui_gtk.a
+UILIBS_GTK = ../ui/gtk/libui_gtk.a ../ui/gtk/glade/libui_glade.a
 endif
 
 if TARGET_UI_SDL

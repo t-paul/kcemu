@@ -1,6 +1,6 @@
 /*
  *  KCemu -- the KC 85/3 and KC 85/4 Emulator
- *  Copyright (C) 1997-2001 Torsten Paul
+ *  Copyright (C) 1997-2006 Torsten Paul
  *
  *  $Id: window.cc,v 1.4 2002/10/31 01:38:12 torsten_paul Exp $
  *
@@ -20,6 +20,21 @@
  */
 
 #include "ui/gtk/window.h"
+
+#include "ui/gtk/cmd.h"
+#include "ui/gtk/glade/glade_util.h"
+
+UI_Gtk_Window::UI_Gtk_Window(void)
+{
+  _window = 0;
+  _visible = false;
+  _help_args = new CMD_Args();
+}
+
+UI_Gtk_Window::~UI_Gtk_Window(void)
+{
+  delete _help_args;
+}
 
 void
 UI_Gtk_Window::show(void)
@@ -60,34 +75,87 @@ UI_Gtk_Window::is_visible(void)
 }
 
 GtkWidget *
-UI_Gtk_Window::create_pixmap_widget(GtkWidget *parent, char **data)
+UI_Gtk_Window::get_window(void)
 {
-  GtkStyle  *style;
-  GdkPixmap *pixmap;
-  GdkBitmap *pixmap_mask;
-  GtkWidget *pixmap_widget;
-
-  style = gtk_widget_get_style(parent);
-  pixmap = gdk_pixmap_create_from_xpm_d(parent->window,
-					&pixmap_mask,
-					&style->bg[GTK_STATE_NORMAL],
-					data);
-  pixmap_widget = gtk_pixmap_new(pixmap, pixmap_mask);
-  return pixmap_widget;
+  return _window;
 }
 
 GtkWidget *
-UI_Gtk_Window::create_button_with_pixmap(GtkWidget *parent, char **data)
+UI_Gtk_Window::get_widget(const char *name)
 {
-  GtkWidget *button;
-  GtkWidget *pixmap;
+  g_assert(GTK_IS_WIDGET(_window));
 
-  button = gtk_button_new();
-  gtk_container_set_border_width(GTK_CONTAINER(button), 0);
-  pixmap = create_pixmap_widget(parent, data);
-  gtk_widget_show(pixmap);
-  gtk_container_add(GTK_CONTAINER(button), pixmap);
+  GtkWidget *widget = lookup_widget(_window, name);
+  g_assert(GTK_IS_WIDGET(widget));
 
-  return button;
+  return widget;
 }
 
+void
+UI_Gtk_Window::sf_help(GtkWidget *widget, gpointer data)
+{
+  UI_Gtk_Window *w = (UI_Gtk_Window *)data;
+
+  char *help_topic = (char *)g_object_get_data(G_OBJECT(widget), "help-topic");
+  if (help_topic == NULL)
+    return;
+
+  w->_help_args->set_string_arg("help-topic", help_topic);
+
+  CMD_EXEC_ARGS("ui-help-window-show", w->_help_args);
+}
+
+void
+UI_Gtk_Window::sf_help_recursive(GtkWidget *widget, gpointer data)
+{
+  UI_Gtk_Window *w = (UI_Gtk_Window *)data;
+
+  while (widget != NULL)
+    {
+      char *help_topic = (char *)g_object_get_data(G_OBJECT(widget), "help-topic");
+      if (help_topic != NULL)
+	{
+	  w->_help_args->set_string_arg("help-topic", help_topic);
+	  CMD_EXEC_ARGS("ui-help-window-show", w->_help_args);
+	  break;
+	}
+      
+      widget = gtk_widget_get_parent(widget);
+    }
+}
+
+void
+UI_Gtk_Window::init_dialog(const char *close_button_func, const char *help_topic)
+{
+  g_object_set_data(G_OBJECT(_window), "help-topic", (gpointer)help_topic);
+  
+  if (close_button_func != NULL)
+    {
+      GtkWidget *button_close = get_widget("dialog_button_close");
+      g_assert(GTK_IS_BUTTON(button_close));
+      
+      g_signal_connect(G_OBJECT(button_close), "clicked",
+		       G_CALLBACK(cmd_exec_sf),
+		       (gpointer)close_button_func);
+      
+      GTK_WIDGET_SET_FLAGS(button_close, GTK_CAN_DEFAULT);
+      gtk_widget_grab_default(button_close);
+    }
+  
+  if (help_topic != NULL)
+    {
+      GtkWidget *button_help = get_widget("dialog_button_help");
+      g_assert(GTK_IS_BUTTON(button_help));
+      
+      g_object_set_data(G_OBJECT(button_help), "help-topic", (gpointer)help_topic);
+      
+      g_signal_connect(G_OBJECT(button_help), "clicked", G_CALLBACK(sf_help), (gpointer)this);
+    }
+  
+  GtkWidget *header_label = get_widget("header_label");
+  g_assert(GTK_IS_LABEL(header_label));
+  
+  PangoFontDescription *font_desc = pango_font_description_from_string("Sans Bold 18");
+  gtk_widget_modify_font(header_label, font_desc);
+  pango_font_description_free(font_desc);
+}

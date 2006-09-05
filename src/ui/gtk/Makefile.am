@@ -1,5 +1,7 @@
 ## Process this file with automake to produce Makefile.in
 
+SUBDIRS = glade
+
 keymapdir = $(pkgdatadir)/keymaps
 
 noinst_LIBRARIES = libui_gtk.a
@@ -45,7 +47,9 @@ libui_gtk_a_SOURCES = \
 	tape.cc			\
 	tapeadd.cc		\
 	info.cc			\
+	help.cc			\
 	about.cc		\
+	thanks.cc		\
 	color.cc		\
 	module.cc		\
 	keyboard.cc		\

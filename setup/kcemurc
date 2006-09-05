@@ -1,0 +1,14 @@
+#
+#  KCemu -- the KC 85/3 and KC 85/4 Emulator
+#  Copyright (C) 1997-2006 Torsten Paul
+#
+#  $Id$
+#
+
+Display Effect: 1
+IRM Memory Access: 1
+Full Flash Support: 1
+Flash Offset: 50
+Floppy Disk Basis: 1
+Busdrivers: 1
+Enable Sound: 0

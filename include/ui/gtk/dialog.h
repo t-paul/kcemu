@@ -1,6 +1,6 @@
 /*
  *  KCemu -- the KC 85/3 and KC 85/4 Emulator
- *  Copyright (C) 1997-2001 Torsten Paul
+ *  Copyright (C) 1997-2006 Torsten Paul
  *
  *  $Id: dialog.h,v 1.4 2002/06/09 14:24:32 torsten_paul Exp $
  *
@@ -26,12 +26,13 @@
 
 #include "kc/system.h"
 
+#include "ui/gtk/window.h"
+
 #include "cmd/cmd.h"
 
-class DialogWindow : public CMD
+class DialogWindow : public UI_Gtk_Window, public CMD
 {
  private:
-  GtkWidget *_dialog;
   CMD_Args *_args;
 
  public:
@@ -39,9 +40,10 @@ class DialogWindow : public CMD
   virtual ~DialogWindow(void);
   
  protected:
+  void init(void);
   void init_ok(const char *title, const char *text);
   void init_yes_no(const char *title, const char *text);
-  GtkWidget * init_misc(const char *title, const char *text);
+  void init_misc(const char *title, const char *text);
 
   static void ok(GtkWidget */*widget*/, gpointer data);
   static void no(GtkWidget */*widget*/, gpointer data);
@@ -52,6 +54,9 @@ class DialogWindow : public CMD
 
  public:
   void execute(CMD_Args *args, CMD_Context context);
+
+  void show_dialog_ok(const char *title, const char *text);
+  void show_dialog_yes_no(const char *title, const char *text);
 };
 
 

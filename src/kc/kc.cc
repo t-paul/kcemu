@@ -1062,16 +1062,54 @@ attach_disk(void)
 }
 
 char *
+get_datadir_from_program_path(void)
+{
+  char *ptr = sys_getprogrampath();
+  if (ptr == NULL)
+    return NULL;
+
+  int a = strlen(ptr);
+  if (a < 4)
+    {
+      free(ptr);
+      return NULL;
+    }
+
+  if (strncasecmp(ptr + a - 4, "bin", 3) != 0)
+    {
+      free(ptr);
+      return NULL;
+    }
+
+  ptr[a - 4] = '\0';
+  char sep = ptr[a - 5];
+
+  char buf[2048];
+  int size = sizeof(buf);
+  if (snprintf(buf, size, "%sshare%cKCemu", ptr, sep) >= size)
+    {
+      free(ptr);
+      return NULL;
+    }
+
+  return strdup(buf);
+}
+
+char *
 get_kcemu_datadir(void)
 {
   char *ptr = getenv("KCEMU_DATADIR");
   if (ptr)
     return strdup(ptr);
 
-  if (access("share/KCemu/caos__c0.854", F_OK) == 0)
+  ptr = get_datadir_from_program_path();
+  if (ptr != NULL)
+    return ptr;
+
+  if (access("share/KCemu/roms/kc85/caos__c0.854", F_OK) == 0)
     return strdup("share/KCemu");
 
-  if (access("../share/KCemu/caos__c0.854", F_OK) == 0)
+  if (access("../share/KCemu/roms/kc85/caos__c0.854", F_OK) == 0)
     return strdup("../share/KCemu");
 
   return strdup(KCEMU_DATADIR);

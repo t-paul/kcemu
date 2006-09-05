@@ -41,6 +41,7 @@ AC_ARG_WITH(cppunit-exec-prefix,[  --with-cppunit-exec-prefix=PFX  Exec prefix w
   AC_MSG_CHECKING(for Cppunit - version >= $cppunit_version_min)
   no_cppunit=""
   if test "$CPPUNIT_CONFIG" = "no" ; then
+    AC_MSG_RESULT(no)
     no_cppunit=yes
   else
     CPPUNIT_CFLAGS=`$CPPUNIT_CONFIG --cflags`
@@ -56,10 +57,21 @@ AC_ARG_WITH(cppunit-exec-prefix,[  --with-cppunit-exec-prefix=PFX  Exec prefix w
 
     cppunit_major_min=`echo $cppunit_version_min | \
            sed 's/\([[0-9]]*\).\([[0-9]]*\).\([[0-9]]*\)/\1/'`
+    if test "x${cppunit_major_min}" = "x" ; then
+       cppunit_major_min=0
+    fi
+    
     cppunit_minor_min=`echo $cppunit_version_min | \
            sed 's/\([[0-9]]*\).\([[0-9]]*\).\([[0-9]]*\)/\2/'`
+    if test "x${cppunit_minor_min}" = "x" ; then
+       cppunit_minor_min=0
+    fi
+    
     cppunit_micro_min=`echo $cppunit_version_min | \
            sed 's/\([[0-9]]*\).\([[0-9]]*\).\([[0-9]]*\)/\3/'`
+    if test "x${cppunit_micro_min}" = "x" ; then
+       cppunit_micro_min=0
+    fi
 
     cppunit_version_proper=`expr \
         $cppunit_major_version \> $cppunit_major_min \| \
@@ -311,20 +323,21 @@ AC_ARG_ENABLE(sdltest, [  --disable-sdltest       Do not try to compile and run 
 		    , enable_sdltest=yes)
 
   if test x$sdl_exec_prefix != x ; then
-     sdl_args="$sdl_args --exec-prefix=$sdl_exec_prefix"
-     if test x${SDL_CONFIG+set} != xset ; then
-        SDL_CONFIG=$sdl_exec_prefix/bin/sdl-config
-     fi
+    sdl_args="$sdl_args --exec-prefix=$sdl_exec_prefix"
+    if test x${SDL_CONFIG+set} != xset ; then
+      SDL_CONFIG=$sdl_exec_prefix/bin/sdl-config
+    fi
   fi
   if test x$sdl_prefix != x ; then
-     sdl_args="$sdl_args --prefix=$sdl_prefix"
-     if test x${SDL_CONFIG+set} != xset ; then
-        SDL_CONFIG=$sdl_prefix/bin/sdl-config
-     fi
+    sdl_args="$sdl_args --prefix=$sdl_prefix"
+    if test x${SDL_CONFIG+set} != xset ; then
+      SDL_CONFIG=$sdl_prefix/bin/sdl-config
+    fi
   fi
 
-  AC_REQUIRE([AC_CANONICAL_TARGET])
-  PATH="$prefix/bin:$prefix/usr/bin:$PATH"
+  if test "x$prefix" != xNONE; then
+    PATH="$prefix/bin:$prefix/usr/bin:$PATH"
+  fi
   AC_PATH_PROG(SDL_CONFIG, sdl-config, no, [$PATH])
   min_sdl_version=ifelse([$1], ,0.11.0,$1)
   AC_MSG_CHECKING(for SDL - version >= $min_sdl_version)
@@ -412,6 +425,7 @@ int main (int argc, char *argv[])
 
 ],, no_sdl=yes,[echo $ac_n "cross compiling; assumed OK... $ac_c"])
        CFLAGS="$ac_save_CFLAGS"
+       CXXFLAGS="$ac_save_CXXFLAGS"
        LIBS="$ac_save_LIBS"
      fi
   fi
@@ -461,7 +475,6 @@ int main(int argc, char *argv[])
        fi
      fi
      SDL_CFLAGS=""
-     SDL_CXXFLAGS=""
      SDL_LIBS=""
      ifelse([$3], , :, [$3])
   fi

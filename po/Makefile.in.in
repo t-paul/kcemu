@@ -82,7 +82,7 @@ all-no:
 # have been downloaded.
 
 $(srcdir)/$(PACKAGE).pot: $(POTFILES) $(srcdir)/POTFILES.in
-	$(XGETTEXT) --default-domain=$(PACKAGE) --directory=$(top_srcdir) \
+	$(XGETTEXT) --from-code=utf-8 --default-domain=$(PACKAGE) --directory=$(top_srcdir) \
 	  --add-comments --keyword=_ --keyword=N_ \
 	  --files-from=$(srcdir)/POTFILES.in \
 	&& test ! -f $(PACKAGE).po \

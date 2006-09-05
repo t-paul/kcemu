@@ -52,6 +52,7 @@ public:
       register_cmd("kc-wav-play", 2);
       register_cmd("kc-wav-record", 3);
       register_cmd("kc-wav-stop", 4);
+      register_cmd("kc-wav-close", 5);
     }
   
   virtual ~CMD_kc_play_wav(void)
@@ -115,6 +116,10 @@ public:
         case 4:
           _p->stop();
           break;
+	case 5:
+	  _p->close();
+	  CMD_EXEC("ui-wav-file-closed");
+	  break;
         }
     }
 };

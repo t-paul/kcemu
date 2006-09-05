@@ -195,7 +195,7 @@ dnl --------------------------------------
 dnl  checks for various library functions
 dnl --------------------------------------
 AC_TYPE_SIGNAL
-AC_CHECK_FUNCS(gettimeofday strstr strchr strrchr strtol mtrace)
+AC_CHECK_FUNCS(gettimeofday strstr strchr strrchr strtol strcasecmp strncasecmp mtrace)
 AC_CHECK_FUNC(localtime_r, AC_DEFINE(HAVE_LOCALTIME_R, 1, "localtime_r"))
 AC_CHECK_FUNC(localtime, AC_DEFINE(HAVE_LOCALTIME, 1, "localtime"))
 AC_CHECK_FUNC(getopt,
@@ -507,6 +507,7 @@ AC_OUTPUT([
 	include/cmd/Makefile
 	include/ui/Makefile
 	include/ui/gtk/Makefile
+	include/ui/gtk/glade/Makefile
 	include/ui/sdl/Makefile
 	include/ui/sdlmtk/Makefile
 	include/ui/beos/Makefile
@@ -532,6 +533,7 @@ AC_OUTPUT([
 	src/cmd/Makefile
 	src/ui/Makefile
 	src/ui/gtk/Makefile
+	src/ui/gtk/glade/Makefile
 	src/ui/sdl/Makefile
 	src/ui/sdlmtk/Makefile
 	src/ui/beos/Makefile
@@ -560,14 +562,27 @@ AC_OUTPUT([
 	tapes/Makefile
 	disks/Makefile
 	images/Makefile
+	images/original/Makefile
 	doc/Makefile
+	doc/kcemu-help.xml
 	intl/Makefile
 	man/Makefile
 	man/man1/Makefile
 	debian/Makefile
 	po/Makefile.in
+	glade/Makefile
+	glade/about/Makefile
+	glade/audio/Makefile
+	glade/copying/Makefile
+	glade/dialog/Makefile
+	glade/disk/Makefile
+	glade/help/Makefile
+	glade/module/Makefile
+	glade/tape/Makefile
+	glade/thanks/Makefile
 	setup/Makefile
-	setup/KCemuSetup.nsi],
+	setup/KCemuSetup.nsi
+	setup/KCemuSetup_gtk2.4.nsi],
 	[sed -e "/POTFILES =/r po/POTFILES" po/Makefile.in > po/Makefile])
 
 

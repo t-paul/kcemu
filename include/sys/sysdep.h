@@ -69,6 +69,17 @@ void sys_gettimeofday(long *tv_sec, long *tv_usec);
  */
 char * sys_basename(const char *path);
 
+/*
+ *  return the directory of the currently running program
+ *
+ *  returns where the executable is located, not the current
+ *  working directory! if it's not possible to retrieve this
+ *  information the function returns NULL.
+ *
+ *  the returned string should be freed with free().
+ */
+char * sys_getprogrampath(void);
+
 #ifdef __cplusplus
 }
 #endif

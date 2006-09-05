@@ -1,6 +1,6 @@
 /*
  *  KCemu -- the KC 85/3 and KC 85/4 Emulator
- *  Copyright (C) 1997-2001 Torsten Paul
+ *  Copyright (C) 1997-2006 Torsten Paul
  *
  *  $Id: module.cc,v 1.12 2002/10/31 01:38:12 torsten_paul Exp $
  *
@@ -30,6 +30,7 @@
 #include "ui/gtk/cmd.h"
 #include "ui/gtk/module.h"
 #include "ui/gtk/gtkledline.h"
+#include "ui/gtk/glade/interface.h"
 
 class CMD_ui_module_window_toggle : public CMD
 {
@@ -294,10 +295,7 @@ ModuleWindow::init2(void)
   /*
    *  window
    */
-  _window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
-  gtk_widget_set_name(_window, "ModuleWindow");
-  gtk_window_set_title(GTK_WINDOW(_window), _("KCemu: Module"));
-  gtk_window_position(GTK_WINDOW(_window), GTK_WIN_POS_MOUSE);
+  _window = create_module_window();
   gtk_signal_connect(GTK_OBJECT(_window), "delete_event",
 		     GTK_SIGNAL_FUNC(cmd_exec_sft),
 		     (char *)"ui-module-window-toggle"); // FIXME:
@@ -305,10 +303,7 @@ ModuleWindow::init2(void)
   /*
    *  vbox
    */
-  _w.vbox = gtk_vbox_new(FALSE, 2);
-  gtk_container_border_width(GTK_CONTAINER(_w.vbox), 6);
-  gtk_container_add(GTK_CONTAINER(_window), _w.vbox);
-  gtk_widget_show(_w.vbox);
+  _w.vbox = get_widget("main_vbox");
 
   if (RC::instance()->get_int("Floppy Disk Basis") && (get_kc_type() & KC_TYPE_85_2_CLASS))
     init_device(_("Floppy Disk Basis [F0]"), 0xf0, 3);
@@ -328,25 +323,46 @@ ModuleWindow::init2(void)
     init_device(_("Basis Device"), 0, 12);
 
   /*
-   *  separator
+   *  help context
    */
-  _w.separator = gtk_hseparator_new();
-  gtk_box_pack_start(GTK_BOX(_w.vbox), _w.separator,
-		     FALSE, FALSE, 5);
-  gtk_widget_show(_w.separator);
+  switch (get_kc_type())
+    {
+    case KC_TYPE_85_1:
+    case KC_TYPE_87:
+      g_object_set_data(G_OBJECT(_w.vbox), "help-topic", (gpointer)"window-module-z9001");
+      break;
+    case KC_TYPE_85_2:
+    case KC_TYPE_85_3:
+    case KC_TYPE_85_4:
+    case KC_TYPE_85_5:
+      g_object_set_data(G_OBJECT(_w.vbox), "help-topic", (gpointer)"window-module-kc85");
+      break;
+    case KC_TYPE_LC80:
+      //g_object_set_data(G_OBJECT(_w.vbox), "help-topic", (gpointer)"window-module-lc80");
+      break;
+    case KC_TYPE_Z1013:
+      g_object_set_data(G_OBJECT(_w.vbox), "help-topic", (gpointer)"window-module-z1013");
+      break;
+    case KC_TYPE_A5105:
+      //g_object_set_data(G_OBJECT(_w.vbox), "help-topic", (gpointer)"window-module-a5105");
+      break;
+    case KC_TYPE_POLY880:
+      //g_object_set_data(G_OBJECT(_w.vbox), "help-topic", (gpointer)"window-module-poly880");
+      break;
+    case KC_TYPE_KRAMERMC:
+      //g_object_set_data(G_OBJECT(_w.vbox), "help-topic", (gpointer)"window-module-kramermc");
+      break;
+    case KC_TYPE_MUGLERPC:
+      //g_object_set_data(G_OBJECT(_w.vbox), "help-topic", (gpointer)"window-module-muglerpc");
+      break;
+    case KC_TYPE_ALL:
+    case KC_TYPE_NONE:
+    case KC_TYPE_85_1_CLASS:
+    case KC_TYPE_85_2_CLASS:
+      break;
+    }
 
-  /*
-   *  close button
-   */
-  _w.close = gtk_button_new_with_label(_("Close"));
-  gtk_box_pack_start(GTK_BOX(_w.vbox), _w.close,
-		     FALSE, FALSE, 5);
-  gtk_signal_connect(GTK_OBJECT(_w.close), "clicked",
-		     GTK_SIGNAL_FUNC(cmd_exec_sf),
-		     (gpointer)"ui-module-window-toggle");
-  GTK_WIDGET_SET_FLAGS(_w.close, GTK_CAN_DEFAULT);
-  gtk_widget_grab_default(_w.close);
-  gtk_widget_show(_w.close);
+  init_dialog("ui-module-window-toggle", "window-module");
 }
 
 /*

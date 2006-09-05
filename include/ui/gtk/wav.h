@@ -1,6 +1,6 @@
 /*
  *  KCemu -- the KC 85/3 and KC 85/4 Emulator
- *  Copyright (C) 1997-2002 Torsten Paul
+ *  Copyright (C) 1997-2006 Torsten Paul
  *
  *  $Id: wav.h,v 1.1 2002/10/31 01:38:07 torsten_paul Exp $
  *
@@ -38,22 +38,14 @@ class WavWindow : public UI_Gtk_Window
   };
 
   struct {
-    GtkWidget *vbox;
-    GtkWidget *frame;
-    GtkWidget *canvas;
-    GtkWidget *separator1;
-    GtkWidget *hbox1;
-    GtkWidget *stop;
-    GtkWidget *pause;
-    GtkWidget *play;
-    GtkWidget *hbox2;
-    GtkWidget *entry;
-    GtkWidget *browse;
-    GtkWidget *open;
-    GtkWidget *separator2;
-    GtkWidget *close;
-
-    GdkGC *gc;
+    GtkWidget   *canvas;
+    GtkWidget   *comboboxentry;
+    GtkWidget   *open;
+    GtkWidget   *close;
+    GtkWidget   *play;
+    GtkWidget   *stop;
+    GtkWidget   *record;
+    GdkGC       *gc;
     GtkTooltips *tooltips;
   } _w;
 

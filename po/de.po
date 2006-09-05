@@ -7,12 +7,12 @@ msgid ""
 msgstr ""
 "Project-Id-Version: KCemu v0.3.8\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2006-08-17 19:59+0200\n"
-"PO-Revision-Date: 2006-08-21 15:09+0200\n"
+"POT-Creation-Date: 2006-09-05 20:22+0200\n"
+"PO-Revision-Date: 2006-09-05 20:23+0100\n"
 "Last-Translator: Torsten Paul <Torsten.Paul@gmx.de>\n"
 "Language-Team: German <Torsten.Paul@gmx.de>\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=utf-8\n"
+"Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
 #: src/cmd/image.cc:102
@@ -1203,7 +1203,7 @@ msgstr "Diskette auswählen..."
 
 #: src/kc/disk.cc:125 src/kc/tape.cc:214
 msgid "create file?"
-msgstr "Datei erzeugen?"
+msgstr "Datei anlegen?"
 
 #: src/kc/disk.cc:127 src/kc/tape.cc:216
 #, c-format
@@ -1212,7 +1212,7 @@ msgid ""
 "Do you want to create it?"
 msgstr ""
 "Die Datei '%s' existiert nicht.\n"
-"Wollen Sie, daß sie erzeugt wird?"
+"Wollen Sie, daß sie angelegt wird?"
 
 #: src/kc/disk.cc:136
 #, c-format
@@ -1315,7 +1315,7 @@ msgstr "Mega-ROM Modul"
 msgid "128k ROM Bank"
 msgstr "128k ROM Bank"
 
-#: src/kc/mod_list.cc:363 src/ui/gtk/module.cc:257
+#: src/kc/mod_list.cc:363 src/ui/gtk/module.cc:258
 msgid "IRM Color Expansion"
 msgstr "IRM Color Expansion"
 
@@ -1471,19 +1471,6 @@ msgstr ""
 "Kassetten-Archiv hinzuzufügen oder den Abbrechen-Knopf\n"
 "drücken, um die Datei zu überspringen."
 
-#: src/ui/gtk/about.cc:66
-msgid "About KCemu"
-msgstr "Über den KC-Emulator"
-
-#.
-#. *  close button
-#.
-#: src/ui/gtk/about.cc:121 src/ui/gtk/color.cc:243 src/ui/gtk/copying.cc:143
-#: src/ui/gtk/disk.cc:310 src/ui/gtk/info.cc:557 src/ui/gtk/module.cc:341
-#: src/ui/gtk/tape.cc:462 src/ui/gtk/keyboard.cc:632 src/ui/gtk/wav.cc:250
-msgid "Close"
-msgstr "Schließen"
-
 #: src/ui/gtk/color.cc:78
 msgid "KCemu: Color Configuration"
 msgstr "KCemu: Farbkonfiguration"
@@ -1536,9 +1523,13 @@ msgstr "Schwarz Wert"
 msgid "White Level"
 msgstr "Weiß Wert"
 
-#: src/ui/gtk/copying.cc:79
-msgid "KCemu: Copying"
-msgstr "KCemu: Lizenz"
+#.
+#. *  close button
+#.
+#: src/ui/gtk/color.cc:243 src/ui/gtk/info.cc:557 src/ui/gtk/keyboard.cc:632
+#: src/ui/gtk/wav.cc:148
+msgid "Close"
+msgstr "Schließen"
 
 #: src/ui/gtk/debug.cc:239
 msgid "KCemu: Debugger"
@@ -1556,59 +1547,9 @@ msgstr "Einzelschritt"
 msgid "Execute Step"
 msgstr "Instruktion ausführen"
 
-#: src/ui/gtk/dialog.cc:49
+#: src/ui/gtk/dialog.cc:52
 msgid "???"
 msgstr "???"
-
-#.
-#. *  OK button
-#.
-#.
-#. *  ok button
-#.
-#: src/ui/gtk/dialog.cc:166 src/ui/gtk/image.cc:197
-msgid "OK"
-msgstr "OK"
-
-#.
-#. *  yes button
-#.
-#: src/ui/gtk/dialog.cc:190
-msgid "Yes"
-msgstr "Ja"
-
-#.
-#. *  no button
-#.
-#: src/ui/gtk/dialog.cc:201
-msgid "No"
-msgstr "Nein"
-
-#: src/ui/gtk/disk.cc:193
-msgid "KCemu: Disk"
-msgstr "KCemu: Diskette"
-
-#.
-#. *  label
-#.
-#: src/ui/gtk/disk.cc:220
-#, c-format
-msgid "Disk %d"
-msgstr "Diskette %d"
-
-#.
-#. *  browse button
-#.
-#: src/ui/gtk/disk.cc:278
-msgid "Browse"
-msgstr "Durchsuchen"
-
-#.
-#. *  eject button
-#.
-#: src/ui/gtk/disk.cc:291
-msgid "Eject"
-msgstr "Auswerfen"
 
 #: src/ui/gtk/fbrowse.cc:41
 msgid "Select File..."
@@ -1707,6 +1648,13 @@ msgid "Start Program after Loading"
 msgstr "Programm nach dem Laden starten"
 
 #.
+#. *  ok button
+#.
+#: src/ui/gtk/image.cc:197
+msgid "OK"
+msgstr "OK"
+
+#.
 #. *  cancel button
 #.
 #: src/ui/gtk/image.cc:209 src/ui/gtk/tapeadd.cc:189
@@ -1797,25 +1745,21 @@ msgstr "CTC"
 msgid "Update"
 msgstr "Aktualisieren"
 
-#: src/ui/gtk/module.cc:216
+#: src/ui/gtk/module.cc:217
 #, c-format
 msgid "Slot %d"
 msgstr "Modul %d"
 
-#: src/ui/gtk/module.cc:299
-msgid "KCemu: Module"
-msgstr "KCemu: Module"
-
-#: src/ui/gtk/module.cc:314
+#: src/ui/gtk/module.cc:309
 msgid "Floppy Disk Basis [F0]"
 msgstr "Floppy Disk Grundgerät [F0]"
 
-#: src/ui/gtk/module.cc:319
+#: src/ui/gtk/module.cc:314
 #, c-format
 msgid "D002: Busdriver [%02X]"
 msgstr "D002: Bus-Treiber [%02X]"
 
-#: src/ui/gtk/module.cc:324 src/ui/gtk/module.cc:326 src/ui/gtk/module.cc:328
+#: src/ui/gtk/module.cc:319 src/ui/gtk/module.cc:321 src/ui/gtk/module.cc:323
 msgid "Basis Device"
 msgstr "Grundgerät"
 
@@ -1837,131 +1781,104 @@ msgstr "Tapename:"
 msgid "Ok"
 msgstr "Ok"
 
-#: src/ui/gtk/tape.cc:79
+#: src/ui/gtk/tape.cc:80
 msgid "Please enter the new name for the file."
 msgstr "Bitte den Namen für die neue Datei eingeben."
 
-#: src/ui/gtk/tape.cc:267
+#: src/ui/gtk/tape.cc:257
 msgid "/_Run File"
 msgstr "/Datei _Ausführen"
 
-#: src/ui/gtk/tape.cc:268
+#: src/ui/gtk/tape.cc:258
 msgid "/_Load File"
 msgstr "/Datei _Laden"
 
-#: src/ui/gtk/tape.cc:269
+#: src/ui/gtk/tape.cc:259
 msgid "/_Export File"
 msgstr "/Datei _Exportieren"
 
-#: src/ui/gtk/tape.cc:270
+#: src/ui/gtk/tape.cc:260
 msgid "/Export _Wav"
 msgstr "/WAV Exportieren"
 
-#: src/ui/gtk/tape.cc:271 src/ui/gtk/ui_gtk.cc:661
+#: src/ui/gtk/tape.cc:261 src/ui/gtk/ui_gtk.cc:681
 msgid "/sep1"
 msgstr "/sep1"
 
-#: src/ui/gtk/tape.cc:272
+#: src/ui/gtk/tape.cc:262
 msgid "/Edit _Header"
 msgstr "/_Header Ändern"
 
-#: src/ui/gtk/tape.cc:273
+#: src/ui/gtk/tape.cc:263
 msgid "/Re_name File"
 msgstr "/Datei _Umbenennen"
 
-#: src/ui/gtk/tape.cc:274
+#: src/ui/gtk/tape.cc:264
 msgid "/_Delete File"
 msgstr "/_Datei Löschen"
 
-#: src/ui/gtk/tape.cc:275 src/ui/gtk/ui_gtk.cc:668
+#: src/ui/gtk/tape.cc:265 src/ui/gtk/ui_gtk.cc:688
 msgid "/sep2"
 msgstr "/sep2"
 
-#: src/ui/gtk/tape.cc:276
+#: src/ui/gtk/tape.cc:266
 msgid "/_Add File"
 msgstr "/Datei _Hinzufügen"
 
-#: src/ui/gtk/tape.cc:281
+#: src/ui/gtk/tape.cc:271
 msgid "Name"
 msgstr "Name"
 
-#: src/ui/gtk/tape.cc:282
+#: src/ui/gtk/tape.cc:272
 msgid "Type"
 msgstr "Typ"
 
-#: src/ui/gtk/tape.cc:283
+#: src/ui/gtk/tape.cc:273
 msgid "Load"
 msgstr "Load"
 
-#: src/ui/gtk/tape.cc:284
+#: src/ui/gtk/tape.cc:274
 msgid "Start"
 msgstr "Start"
 
-#: src/ui/gtk/tape.cc:285
+#: src/ui/gtk/tape.cc:275
 msgid "Size"
 msgstr "Größe"
 
 #.
 #. *  popup menu
 #.
-#: src/ui/gtk/tape.cc:297 src/ui/gtk/tape.cc:303
+#: src/ui/gtk/tape.cc:287 src/ui/gtk/tape.cc:293
 msgid "<TapeP>"
 msgstr "<TapeP>"
 
-#: src/ui/gtk/tape.cc:304
+#: src/ui/gtk/tape.cc:294
 msgid "/Run File"
 msgstr "/Datei Ausführen"
 
-#: src/ui/gtk/tape.cc:305
+#: src/ui/gtk/tape.cc:295
 msgid "/Load File"
 msgstr "/Datei Laden"
 
-#: src/ui/gtk/tape.cc:306
+#: src/ui/gtk/tape.cc:296
 msgid "/Edit Header"
 msgstr "/Header Ändern"
 
-#: src/ui/gtk/tape.cc:307
+#: src/ui/gtk/tape.cc:297
 msgid "/Delete File"
 msgstr "/Datei Löschen"
 
-#: src/ui/gtk/tape.cc:308
+#: src/ui/gtk/tape.cc:298
 msgid "/Rename File"
 msgstr "/Datei Umbenennen"
 
-#: src/ui/gtk/tape.cc:309
+#: src/ui/gtk/tape.cc:299
 msgid "/Export File"
 msgstr "/Datei Exportieren"
 
-#: src/ui/gtk/tape.cc:316
-msgid "KCemu: Tape"
-msgstr "KCemu: Kassetten-Archiv"
-
-#: src/ui/gtk/tape.cc:336
-msgid "Tape:"
-msgstr "Tape:"
-
-#.
-#. *  buttons
-#.
-#: src/ui/gtk/tape.cc:427 src/ui/gtk/wav.cc:209
-msgid "Stop"
-msgstr "Stop"
-
-#: src/ui/gtk/tape.cc:434
-msgid "Record"
-msgstr "Aufnahme"
-
-#: src/ui/gtk/tape.cc:441 src/ui/gtk/wav.cc:237
-msgid "Play"
-msgstr "Abspielen"
-
-#: src/ui/gtk/tape.cc:448
-msgid "Attach"
-msgstr "Aktivieren"
-
-#: src/ui/gtk/tape.cc:455
-msgid "Detach"
-msgstr "Deaktivieren"
+#: src/ui/gtk/tape.cc:300
+msgid "/Export Wav"
+msgstr "/WAV Exportieren"
 
 #: src/ui/gtk/keyboard.cc:562
 msgid "KCemu: Keyboard"
@@ -1975,182 +1892,214 @@ msgstr ""
 "\n"
 "Tastatur-Ansicht noch nicht konfiguriert.\n"
 
-#: src/ui/gtk/wav.cc:115
-msgid "KCemu: Audio Player"
-msgstr "KCemu: Audio Player"
-
-#: src/ui/gtk/wav.cc:196
+#: src/ui/gtk/wav.cc:138
 msgid "Open"
 msgstr "Öffnen"
 
-#: src/ui/gtk/ui_gtk.cc:622
+#: src/ui/gtk/wav.cc:158
+msgid "Play"
+msgstr "Abspielen"
+
+#: src/ui/gtk/wav.cc:168
+msgid "Stop"
+msgstr "Stop"
+
+#: src/ui/gtk/wav.cc:178
+msgid "Record"
+msgstr "Aufnahme"
+
+#: src/ui/gtk/ui_gtk.cc:637
 msgid "/_File"
 msgstr "/_Datei"
 
-#: src/ui/gtk/ui_gtk.cc:623
+#: src/ui/gtk/ui_gtk.cc:638
 msgid "/File/_Run..."
 msgstr "/Datei/_Ausführen..."
 
-#: src/ui/gtk/ui_gtk.cc:624
+#: src/ui/gtk/ui_gtk.cc:639
 msgid "/File/_Load..."
 msgstr "/Datei/_Laden..."
 
-#: src/ui/gtk/ui_gtk.cc:625
+#: src/ui/gtk/ui_gtk.cc:640
 msgid "/File/_Tape..."
 msgstr "/Datei/_Kassette..."
 
-#: src/ui/gtk/ui_gtk.cc:626
+#: src/ui/gtk/ui_gtk.cc:641
 msgid "/File/_Disk..."
 msgstr "/Datei/_Diskette..."
 
-#: src/ui/gtk/ui_gtk.cc:627
+#: src/ui/gtk/ui_gtk.cc:642
 msgid "/File/_Module..."
 msgstr "/Datei/_Module..."
 
-#: src/ui/gtk/ui_gtk.cc:628
+#: src/ui/gtk/ui_gtk.cc:643
 msgid "/File/_Audio..."
 msgstr "/Datei/A_udio..."
 
-#: src/ui/gtk/ui_gtk.cc:629
+#: src/ui/gtk/ui_gtk.cc:644
 msgid "/File/sep1"
 msgstr "/Datei/sep1"
 
-#: src/ui/gtk/ui_gtk.cc:630
+#: src/ui/gtk/ui_gtk.cc:645
 msgid "/File/R_eset"
 msgstr "/Datei/_Reset"
 
-#: src/ui/gtk/ui_gtk.cc:631
+#: src/ui/gtk/ui_gtk.cc:646
 msgid "/File/_Power On"
 msgstr "/Datei/_Einschalten"
 
-#: src/ui/gtk/ui_gtk.cc:632
+#: src/ui/gtk/ui_gtk.cc:647
 msgid "/File/sep2"
 msgstr "/Datei/sep2"
 
-#: src/ui/gtk/ui_gtk.cc:633
+#: src/ui/gtk/ui_gtk.cc:648
 msgid "/File/_Quit Emulator"
 msgstr "/Datei/Emulator _beenden"
 
-#: src/ui/gtk/ui_gtk.cc:634 src/ui/gtk/ui_gtk.cc:662
+#: src/ui/gtk/ui_gtk.cc:649 src/ui/gtk/ui_gtk.cc:682
 msgid "/_View"
 msgstr "/_Ansicht"
 
-#: src/ui/gtk/ui_gtk.cc:635
+#: src/ui/gtk/ui_gtk.cc:650
 msgid "/View/Zoom x_1"
 msgstr "/Ansicht/Zoom x_1"
 
-#: src/ui/gtk/ui_gtk.cc:636
+#: src/ui/gtk/ui_gtk.cc:651
 msgid "/View/Zoom x_2"
 msgstr "/Ansicht/Zoom x_2"
 
-#: src/ui/gtk/ui_gtk.cc:637
+#: src/ui/gtk/ui_gtk.cc:652
 msgid "/View/Zoom x_3"
 msgstr "/Ansicht/Zoom x_3"
 
-#: src/ui/gtk/ui_gtk.cc:638 src/ui/gtk/ui_gtk.cc:663
+#: src/ui/gtk/ui_gtk.cc:653 src/ui/gtk/ui_gtk.cc:683
 msgid "/View/_Keyboard"
 msgstr "/Ansicht/_Tastatur"
 
-#: src/ui/gtk/ui_gtk.cc:639 src/ui/gtk/ui_gtk.cc:664
+#: src/ui/gtk/ui_gtk.cc:654 src/ui/gtk/ui_gtk.cc:684
 msgid "/View/_Debugger"
 msgstr "/Ansicht/_Debugger"
 
-#: src/ui/gtk/ui_gtk.cc:640 src/ui/gtk/ui_gtk.cc:665
+#: src/ui/gtk/ui_gtk.cc:655 src/ui/gtk/ui_gtk.cc:685
 msgid "/View/_Info"
 msgstr "/Ansicht/_Information"
 
-#: src/ui/gtk/ui_gtk.cc:641 src/ui/gtk/ui_gtk.cc:666
+#: src/ui/gtk/ui_gtk.cc:656 src/ui/gtk/ui_gtk.cc:686
 msgid "/View/_Menubar"
 msgstr "/Ansicht/_Menüleiste"
 
-#: src/ui/gtk/ui_gtk.cc:642 src/ui/gtk/ui_gtk.cc:667
+#: src/ui/gtk/ui_gtk.cc:657 src/ui/gtk/ui_gtk.cc:687
 msgid "/View/_Statusbar"
 msgstr "/Ansicht/_Statusleiste"
 
-#: src/ui/gtk/ui_gtk.cc:643
+#: src/ui/gtk/ui_gtk.cc:658
 msgid "/_Configuration"
 msgstr "/_Konfiguration"
 
-#: src/ui/gtk/ui_gtk.cc:644
+#: src/ui/gtk/ui_gtk.cc:659
 msgid "/Configuration/_Colors"
 msgstr "/Konfiguration/_Farben"
 
-#: src/ui/gtk/ui_gtk.cc:645 src/ui/gtk/ui_gtk.cc:788 src/ui/gtk/ui_gtk.cc:1018
+#: src/ui/gtk/ui_gtk.cc:660 src/ui/gtk/ui_gtk.cc:850 src/ui/gtk/ui_gtk.cc:1093
 msgid "/Configuration/_Display Effects"
 msgstr "/Konfiguration/_Effekte"
 
-#: src/ui/gtk/ui_gtk.cc:646
+#: src/ui/gtk/ui_gtk.cc:661
 msgid "/Configuration/sep"
 msgstr "/Konfiguration/sep"
 
-#: src/ui/gtk/ui_gtk.cc:647
+#: src/ui/gtk/ui_gtk.cc:662
 msgid "/Configuration/No _Speed Limit"
 msgstr "/Konfiguration/Maximale _Geschwindigkeit"
 
-#: src/ui/gtk/ui_gtk.cc:648
+#: src/ui/gtk/ui_gtk.cc:663
 msgid "/_Help"
 msgstr "/_Hilfe"
 
-#: src/ui/gtk/ui_gtk.cc:649
-msgid "/Help/_About KCemu"
-msgstr "/Hilfe/_Über KCemu"
+#: src/ui/gtk/ui_gtk.cc:664
+msgid "/Help/_Help"
+msgstr "/Hilfe/_Hilfe"
 
-#: src/ui/gtk/ui_gtk.cc:650
+#: src/ui/gtk/ui_gtk.cc:665
+msgid "/Help/Help _Index"
+msgstr "/Hilfe/Hilfe _Inhalt"
+
+#: src/ui/gtk/ui_gtk.cc:666
+msgid "/Help/_Context Help"
+msgstr "/Hilfe/_Kontext Hilfe"
+
+#: src/ui/gtk/ui_gtk.cc:667
 msgid "/Help/sep3"
 msgstr "/Hilfe/sep3"
 
-#: src/ui/gtk/ui_gtk.cc:651
+#: src/ui/gtk/ui_gtk.cc:668
+msgid "/Help/_About KCemu"
+msgstr "/Hilfe/_Über KCemu"
+
+#: src/ui/gtk/ui_gtk.cc:669
+msgid "/Help/_Thanks!"
+msgstr "/Hilfe/_Danksagung"
+
+#: src/ui/gtk/ui_gtk.cc:670
+msgid "/Help/sep4"
+msgstr "/Hilfe/sep4"
+
+#: src/ui/gtk/ui_gtk.cc:671
 msgid "/Help/KCemu _Licence"
 msgstr "/Hilfe/KCemu _Lizenz"
 
-#: src/ui/gtk/ui_gtk.cc:652
+#: src/ui/gtk/ui_gtk.cc:672
 msgid "/Help/No _Warranty!"
 msgstr "/Hilfe/Keine _Gewährleistung!"
 
-#: src/ui/gtk/ui_gtk.cc:655
+#: src/ui/gtk/ui_gtk.cc:675
 msgid "/_Run..."
 msgstr "/_Ausführen..."
 
-#: src/ui/gtk/ui_gtk.cc:656
+#: src/ui/gtk/ui_gtk.cc:676
 msgid "/_Load..."
 msgstr "/_Laden..."
 
-#: src/ui/gtk/ui_gtk.cc:657
+#: src/ui/gtk/ui_gtk.cc:677
 msgid "/_Tape..."
 msgstr "/_Kassette..."
 
-#: src/ui/gtk/ui_gtk.cc:658
+#: src/ui/gtk/ui_gtk.cc:678
 msgid "/_Disk..."
 msgstr "/_Diskette..."
 
-#: src/ui/gtk/ui_gtk.cc:659
+#: src/ui/gtk/ui_gtk.cc:679
 msgid "/_Module..."
 msgstr "/_Modul..."
 
-#: src/ui/gtk/ui_gtk.cc:660
+#: src/ui/gtk/ui_gtk.cc:680
 msgid "/_Audio..."
 msgstr "/_Audio..."
 
-#: src/ui/gtk/ui_gtk.cc:669
+#: src/ui/gtk/ui_gtk.cc:689
 msgid "/R_eset"
 msgstr "/_Reset"
 
-#: src/ui/gtk/ui_gtk.cc:670
+#: src/ui/gtk/ui_gtk.cc:690
 msgid "/_Power On"
 msgstr "/_Einschalten"
 
-#: src/ui/gtk/ui_gtk.cc:671
+#: src/ui/gtk/ui_gtk.cc:691
 msgid "/sep3"
 msgstr "/sep3"
 
-#: src/ui/gtk/ui_gtk.cc:672
+#: src/ui/gtk/ui_gtk.cc:692
 msgid "/_Quit Emulator"
 msgstr "/Emulator _beenden"
 
-#: src/ui/gtk/ui_gtk.cc:835
+#: src/ui/gtk/ui_gtk.cc:899
 #, c-format
 msgid "%s (%s)"
 msgstr "%s (%s)"
+
+#: src/ui/gtk/ui_gtk.cc:1592
+msgid "Info"
+msgstr "Info"
 
 #: src/ui/gtk/ui_gtk0.cc:73 src/ui/sdl/ui_sdl0.cc:88
 msgid "Z1013 Emulator"
@@ -2183,3 +2132,264 @@ msgstr "LC80 Emulator"
 #: src/ui/gtk/ui_gtk9.cc:73 src/ui/sdl/ui_sdl9.cc:103
 msgid "A5105 Emulator"
 msgstr "A5105 Emulator"
+
+#: src/ui/gtk/glade/about_interface.c:50
+msgid "KCemu: About"
+msgstr "KCemu: Über KCemu"
+
+#: src/ui/gtk/glade/about_interface.c:70
+msgid "About"
+msgstr "Über KCemu"
+
+#: src/ui/gtk/glade/about_interface.c:93
+msgid "[ Version ]"
+msgstr "[ Version ]"
+
+#: src/ui/gtk/glade/about_interface.c:101
+msgid "(c) 1997-2006 Torsten Paul"
+msgstr "(c) 1997-2006 Torsten Paul"
+
+#: src/ui/gtk/glade/about_interface.c:108
+msgid "<Torsten.Paul@gmx.de>"
+msgstr "<Torsten.Paul@gmx.de>"
+
+#: src/ui/gtk/glade/about_interface.c:115
+msgid "[ Build ]"
+msgstr "[ Build ]"
+
+#: src/ui/gtk/glade/audio_interface.c:70
+msgid "KCemu: Audio"
+msgstr "KCemu: Audio Player"
+
+#: src/ui/gtk/glade/audio_interface.c:89
+msgid "Audio"
+msgstr "Audio"
+
+#: src/ui/gtk/glade/copying_interface.c:50
+msgid "KCemu: Licence & Warranty"
+msgstr "KCemu: Lizenz & Haftung"
+
+#: src/ui/gtk/glade/copying_interface.c:70
+msgid "License & Warranty"
+msgstr "Lizenz & Haftung"
+
+#: src/ui/gtk/glade/copying_interface.c:106
+msgid "[ Licence ]"
+msgstr "[ Lizenz ]"
+
+#: src/ui/gtk/glade/copying_interface.c:113
+msgid "[ Warranty ]"
+msgstr "[ Haftung ]"
+
+#: src/ui/gtk/glade/disk_interface.c:70
+msgid "KCemu: Disk"
+msgstr "KCemu: Diskette"
+
+#: src/ui/gtk/glade/disk_interface.c:90
+msgid "Disk"
+msgstr "Diskette"
+
+#: src/ui/gtk/glade/disk_interface.c:111
+msgid "Disk 1:"
+msgstr "Diskette 1:"
+
+#: src/ui/gtk/glade/disk_interface.c:120
+msgid "Disk 2:"
+msgstr "Diskette 2:"
+
+#: src/ui/gtk/glade/disk_interface.c:129
+msgid "Disk 3:"
+msgstr "Diskette 3:"
+
+#: src/ui/gtk/glade/disk_interface.c:138
+msgid "Disk 4:"
+msgstr "Diskette 4:"
+
+#: src/ui/gtk/glade/help_interface.c:57
+msgid "KCemu: Help"
+msgstr "KCemu: Hilfe"
+
+#: src/ui/gtk/glade/help_interface.c:76
+msgid "Help"
+msgstr "Hilfe"
+
+#: src/ui/gtk/glade/module_interface.c:46
+msgid "KCemu: Module"
+msgstr "KCemu: Module"
+
+#: src/ui/gtk/glade/module_interface.c:65
+msgid "Module"
+msgstr "Modul"
+
+#: src/ui/gtk/glade/tape_interface.c:83
+msgid "KCemu: Tape"
+msgstr "KCemu: Kassetten-Archiv"
+
+#: src/ui/gtk/glade/tape_interface.c:102
+msgid "Tape"
+msgstr "Kassette"
+
+#: src/ui/gtk/glade/thanks_interface.c:78
+msgid "KCemu: Thanks"
+msgstr "KCemu: Danksagung"
+
+#: src/ui/gtk/glade/thanks_interface.c:98
+msgid "Thanks"
+msgstr "Danksagung"
+
+#: src/ui/gtk/glade/thanks_interface.c:128
+msgid ""
+"I'd like to say thanks to many people who helped to bring KCemu to the point "
+"where it is now. The following list just lists some of them in no particular "
+"order..."
+msgstr ""
+
+#: src/ui/gtk/glade/thanks_interface.c:154
+msgid ""
+"Marat Fayzullin\n"
+"        for the Z80 emulation core used for the main processor\n"
+"        (I needed to tweak some bits of the emulation core; see\n"
+"        src/z80core/README for the list of changes)\n"
+"Marcel de Kogel\n"
+"        for the Z80 emulation core used for the KC floppy\n"
+"        processor\n"
+"Thomas Bretz\n"
+"        for the OS/2 port of KCemu (see http://www.d4m.de/)\n"
+"Thomas Ludwig\n"
+"        for the great KC website at http://www.kc85emu.de/ and\n"
+"        lots of bugreports and hints how to make KCemu better\n"
+"Holger Krull\n"
+"        for providing lots of information about the LC 80\n"
+"        computer (see http://www.lc80.de/)\n"
+"Kev Thacker\n"
+"        for interesting insights concerning the floppy emulation\n"
+"        (he's also the author of the KC driver for M.E.S.S. the\n"
+"        Multi-Emulator Super System, see http://mess.emuverse.com/)\n"
+"Volker Pohlers\n"
+"        for help with the windows port, technical information and\n"
+"        bugreports\n"
+"Alexander Schön\n"
+"        for starting the windows port, lots of tips and for providing\n"
+"        a huge pile of files for use with the emulator or with\n"
+"        information about the various systems"
+msgstr ""
+"Marat Fayzullin\n"
+"        für den Z80 Prozessor Emulator\n"
+"Marcel de Kogel\n"
+"        für die Z80 Prozessor Emulator der bei der Emulation\n"
+"        des KC85 Floppy systems zum Einsatz kommt\n"
+"Thomas Bretz\n"
+"        für die OS/2 Portierung (siehe http://www.d4m.de/)\n"
+"Thomas Ludwig\n"
+"        für die großartigen Webseiten zum KC (http://www.kc85emu.de/),\n"
+"        Tips und Verbesserungsvorschläge sowie die Hilfe bei der\n"
+"        Fehlersuche\n"
+"Holger Krull\n"
+"        für Informationen zum LC 80 (siehe http://www.lc80.de/) und\n"
+"        Z1013 (siehe http://www.z1013.de/)\n"
+"Kev Thacker\n"
+"        für Tips & Tricks zur Floppy-Emulation\n"
+"        siehe http://mess.emuverse.com/ für seine KC Emulation für\n"
+"        M.E.S.S. (Multi-Emulator Super System)\n"
+"Volker Pohlers\n"
+"        für seine Hilfe zur Windows-Version von KCemu und die\n"
+"        unermüdliche Unterstützung mit technischen Informationen\n"
+"        zu den verschiedenen emulierten Systemen\n"
+"        (siehe http://hc-ddr.hucki.net/)\n"
+"Alexander Schön\n"
+"        für den Beginn der Windows-Version, Tips und Vorschläge\n"
+"        zur Verbesserung des Emulators und die Motivation weiterzumachen"
+
+#: src/ui/gtk/glade/thanks_interface.c:156
+msgid "People"
+msgstr "Personen"
+
+#: src/ui/gtk/glade/thanks_interface.c:166
+msgid ""
+"Lots of tools and libraries made it easier to write KCemu. Many thanks to "
+"the people behind all those projects for their work..."
+msgstr ""
+
+#: src/ui/gtk/glade/thanks_interface.c:195
+msgid "libSDL - Simple DirectMedia Layer"
+msgstr "libSDL - Simple DirectMedia Layer"
+
+#: src/ui/gtk/glade/thanks_interface.c:229
+msgid "GTK+ - The GIMP Toolkit"
+msgstr "GTK+ - The GIMP Toolkit"
+
+#: src/ui/gtk/glade/thanks_interface.c:239
+msgid "http://www.libsdl.org/\n"
+msgstr "http://www.libsdl.org/\n"
+
+#: src/ui/gtk/glade/thanks_interface.c:249
+msgid "FLAC - Free Lossless Audio Codec"
+msgstr "FLAC - Free Lossless Audio Codec"
+
+#: src/ui/gtk/glade/thanks_interface.c:259
+msgid "http://flac.sourceforge.net/\n"
+msgstr "http://flac.sourceforge.net/\n"
+
+#: src/ui/gtk/glade/thanks_interface.c:269
+msgid "http://www.gtk.org/\n"
+msgstr "http://www.gtk.org/\n"
+
+#: src/ui/gtk/glade/thanks_interface.c:279
+msgid "LAME - LAME Ain't an MP3 Encoder"
+msgstr "LAME - LAME Ain't an MP3 Encoder"
+
+#: src/ui/gtk/glade/thanks_interface.c:289
+msgid "http://lame.sourceforge.net/\n"
+msgstr "http://lame.sourceforge.net/\n"
+
+#: src/ui/gtk/glade/thanks_interface.c:307
+msgid "Open Clip Art Library"
+msgstr "Open Clip Art Library"
+
+#: src/ui/gtk/glade/thanks_interface.c:317
+msgid "http://openclipart.org/\n"
+msgstr "http://openclipart.org/\n"
+
+#: src/ui/gtk/glade/thanks_interface.c:342
+msgid "Ogg & Vorbis libraries"
+msgstr "Ogg & Vorbis libraries"
+
+#: src/ui/gtk/glade/thanks_interface.c:352
+msgid "http://www.vorbis.com/\n"
+msgstr "http://www.vorbis.com/\n"
+
+#: src/ui/gtk/glade/thanks_interface.c:369
+msgid "libsndfile"
+msgstr "libsndfile"
+
+#: src/ui/gtk/glade/thanks_interface.c:379
+msgid "http://www.mega-nerd.com/libsndfile/\n"
+msgstr "http://www.mega-nerd.com/libsndfile/\n"
+
+#: src/ui/gtk/glade/thanks_interface.c:389
+msgid "Projects & Libraries"
+msgstr "Projekte & Bibliotheken"
+
+#~ msgid "Yes"
+#~ msgstr "Ja"
+
+#~ msgid "No"
+#~ msgstr "Nein"
+
+#~ msgid "Libraries & Projects"
+#~ msgstr "Projekte & Bibliotheken"
+
+#~ msgid "KCemu: Copying"
+#~ msgstr "KCemu: Lizenz"
+
+#~ msgid "Browse"
+#~ msgstr "Durchsuchen"
+
+#~ msgid "Eject"
+#~ msgstr "Auswerfen"
+
+#~ msgid "Attach"
+#~ msgstr "Aktivieren"
+
+#~ msgid "Detach"
+#~ msgstr "Deaktivieren"

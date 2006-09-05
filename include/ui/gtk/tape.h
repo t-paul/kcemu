@@ -1,6 +1,6 @@
 /*
  *  KCemu -- the KC 85/3 and KC 85/4 Emulator
- *  Copyright (C) 1997-2001 Torsten Paul
+ *  Copyright (C) 1997-2006 Torsten Paul
  *
  *  $Id: tape.h,v 1.12 2002/06/09 14:24:32 torsten_paul Exp $
  *
@@ -32,31 +32,46 @@
 class TapeWindow : public UI_Gtk_Window, public TapeInterface
 {
  private:
+  enum {
+    TREEVIEW_COLUMN_NAME,
+    TREEVIEW_COLUMN_TYPE,
+    TREEVIEW_COLUMN_LOAD,
+    TREEVIEW_COLUMN_START,
+    TREEVIEW_COLUMN_SIZE,
+    TREEVIEW_N_COLUMNS
+  };
+
   struct {
+    GtkWidget *treeview;
+    GtkWidget *b_play;
+    GtkWidget *b_stop;
+    GtkWidget *b_record;
+    GtkWidget *b_next;
+    GtkWidget *b_prev;
+    GtkWidget *b_attach;
+    GtkWidget *b_detach;
+
+    GtkListStore *list_store;
+    GtkAdjustment *scale_adj;
+
+    GtkWidget *b_close;
     GtkWidget *vbox;
     GtkWidget *combo_hbox;
     GtkWidget *combo_label;
     GtkWidget *combo;
     GtkWidget *sw;
-    GtkWidget *clist;
     GtkWidget *hbox;
     GtkWidget *led_power;
     GtkWidget *scale;
     GtkWidget *bbox;
-    GtkWidget *b_close;
-    GtkWidget *b_detach;
-    GtkWidget *b_attach;
-    GtkWidget *b_stop;
-    GtkWidget *b_record;
-    GtkWidget *b_play;
     GtkWidget *m_run;
     GtkWidget *m_load;
     GtkWidget *m_edit;
     GtkWidget *m_delete;
     GtkWidget *m_rename;
     GtkWidget *m_export;
+    GtkWidget *m_wav;
     GtkWidget *menu;
-    GtkObject *scale_adj;
   } _w;
   
   int    _nr_of_files;
@@ -75,12 +90,12 @@ class TapeWindow : public UI_Gtk_Window, public TapeInterface
   static void sf_tape_button(GtkWidget *widget, int x);
   static int sf_tape_button_press(GtkWidget *widget, GdkEventButton *event,
                                    gpointer data);
-  static void sf_tape_file_select(GtkWidget *widget, gint row, gint column, 
-                                  GdkEventButton * bevent, gpointer data);
+  static void sf_tape_file_select(GtkTreeSelection *selection, gpointer data);
   static void sf_tape_archive_select(GtkWidget *widget, gpointer data);
     
   void init(void);
   void allocate_colors(void);
+  void set_selected_index(GtkTreeSelection *selection);
   virtual void clear_list(void);
 
  public:
