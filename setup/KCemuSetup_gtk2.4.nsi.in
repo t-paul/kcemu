@@ -57,7 +57,6 @@ Section "!KCemu" SEC01
   SetOverwrite try
   File /r "kcemu\bin"
   File /r "kcemu\lib"
-  File /r "kcemu\man"
   File /r "kcemu\share"
   File "/oname=share\kcemu\.kcemurc" "kcemu\share\KCemu\kcemurc"
   CreateDirectory "$SMPROGRAMS\KCemu"
@@ -211,23 +210,67 @@ Section Uninstall
 
   Delete "$INSTDIR\lib\charset.alias"
 
-  Delete "$INSTDIR\man\man1\kc2img.1"
-  Delete "$INSTDIR\man\man1\kc2raw.1"
-  Delete "$INSTDIR\man\man1\kc2tap.1"
-  Delete "$INSTDIR\man\man1\kc2wav.1"
-  Delete "$INSTDIR\man\man1\kcemu-remote.1"
-  Delete "$INSTDIR\man\man1\kcemu.1x"
-  Delete "$INSTDIR\man\man1\kctape.1"
-  Delete "$INSTDIR\man\man1\tdtodump.1"
+  Delete "$INSTDIR\share\man\man1\kc2img.1"
+  Delete "$INSTDIR\share\man\man1\kc2raw.1"
+  Delete "$INSTDIR\share\man\man1\kc2tap.1"
+  Delete "$INSTDIR\share\man\man1\kc2wav.1"
+  Delete "$INSTDIR\share\man\man1\kcemu-remote.1"
+  Delete "$INSTDIR\share\man\man1\kcemu.1x"
+  Delete "$INSTDIR\share\man\man1\kctape.1"
+  Delete "$INSTDIR\share\man\man1\tdtodump.1"
 
   Delete "$INSTDIR\share\doc\kcemu\changelog"
 
   Delete "$INSTDIR\share\locale\locale.alias"
   Delete "$INSTDIR\share\locale\de\LC_MESSAGES\KCemu.mo"
 
+  Delete "$INSTDIR\share\KCemu\kcemurc"
+  Delete "$INSTDIR\share\KCemu\.kcemurc"
+
   Delete "$INSTDIR\share\KCemu\asm\autostart\kc853.asm"
 
   Delete "$INSTDIR\share\KCemu\lib\z80\kc853.bin"
+
+  Delete "$INSTDIR\share\KCemu\doc\kcemu-help.xml"
+  Delete "$INSTDIR\share\KCemu\doc\kcemu.png"
+  Delete "$INSTDIR\share\KCemu\doc\kcemurc.sample"
+  Delete "$INSTDIR\share\KCemu\doc\sys-a5105.jpg"
+  Delete "$INSTDIR\share\KCemu\doc\sys-kc85.jpg"
+  Delete "$INSTDIR\share\KCemu\doc\sys-kc855.jpg"
+  Delete "$INSTDIR\share\KCemu\doc\sys-lc80.jpg"
+  Delete "$INSTDIR\share\KCemu\doc\sys-poly880.jpg"
+  Delete "$INSTDIR\share\KCemu\doc\sys-z1013.jpg"
+  Delete "$INSTDIR\share\KCemu\doc\sys-z9001.jpg"
+  Delete "$INSTDIR\share\KCemu\doc\window-audio.png"
+  Delete "$INSTDIR\share\KCemu\doc\window-disk.png"
+  Delete "$INSTDIR\share\KCemu\doc\window-module-kc85.png"
+  Delete "$INSTDIR\share\KCemu\doc\window-module-z1013.png"
+  Delete "$INSTDIR\share\KCemu\doc\window-module-z9001.png"
+  Delete "$INSTDIR\share\KCemu\doc\window-tape.png"
+
+  Delete "$INSTDIR\share\KCemu\images\kcemu.png"
+  Delete "$INSTDIR\share\KCemu\images\logo-flac.png"
+  Delete "$INSTDIR\share\KCemu\images\logo-gtk.png"
+  Delete "$INSTDIR\share\KCemu\images\logo-lame.png"
+  Delete "$INSTDIR\share\KCemu\images\logo-libsdl.png"
+  Delete "$INSTDIR\share\KCemu\images\logo-libsndfile.png"
+  Delete "$INSTDIR\share\KCemu\images\logo-openclipartlibrary.png"
+  Delete "$INSTDIR\share\KCemu\images\logo-vorbisdotcom.png"
+  Delete "$INSTDIR\share\KCemu\images\media-end.png"
+  Delete "$INSTDIR\share\KCemu\images\media-play.png"
+  Delete "$INSTDIR\share\KCemu\images\media-record.png"
+  Delete "$INSTDIR\share\KCemu\images\media-start.png"
+  Delete "$INSTDIR\share\KCemu\images\media-stop.png"
+  Delete "$INSTDIR\share\KCemu\images\window-about.png"
+  Delete "$INSTDIR\share\KCemu\images\window-audio.png"
+  Delete "$INSTDIR\share\KCemu\images\window-copying.png"
+  Delete "$INSTDIR\share\KCemu\images\window-disk.png"
+  Delete "$INSTDIR\share\KCemu\images\window-help.png"
+  Delete "$INSTDIR\share\KCemu\images\window-info.png"
+  Delete "$INSTDIR\share\KCemu\images\window-module.png"
+  Delete "$INSTDIR\share\KCemu\images\window-question.png"
+  Delete "$INSTDIR\share\KCemu\images\window-tape.png"
+  Delete "$INSTDIR\share\KCemu\images\window-thanks.png"
 
   Delete "$INSTDIR\share\KCemu\roms\z1013\z1013_20.rom"
   Delete "$INSTDIR\share\KCemu\roms\z1013\z1013_a2.rom"
@@ -252,6 +295,8 @@ Section Uninstall
   Delete "$INSTDIR\share\KCemu\roms\z9001\rom_bank.851"
   Delete "$INSTDIR\share\KCemu\roms\z9001\zm30__c0.851"
   Delete "$INSTDIR\share\KCemu\roms\z9001\zsid__c0.851"
+  Delete "$INSTDIR\share\KCemu\roms\z9001\kcpascal.851"
+  Delete "$INSTDIR\share\KCemu\roms\z9001\mega_rom.851"
   Delete "$INSTDIR\share\KCemu\roms\z9001\os_rb20.rom"
   Delete "$INSTDIR\share\KCemu\roms\z9001\os_rb21.rom"
 
@@ -273,7 +318,8 @@ Section Uninstall
   Delete "$INSTDIR\share\KCemu\roms\kc85\m900.rom"
   Delete "$INSTDIR\share\KCemu\roms\kc85\m901.rom"
 
-  Delete "$INSTDIR\share\KCemu\roms\poly880\poly_880.rom"
+  Delete "$INSTDIR\share\KCemu\roms\poly880\poly880a.rom"
+  Delete "$INSTDIR\share\KCemu\roms\poly880\poly880b.rom"
 
   Delete "$INSTDIR\share\KCemu\roms\lc80\lc80__00.rom"
   Delete "$INSTDIR\share\KCemu\roms\lc80\lc80__08.rom"
@@ -293,6 +339,13 @@ Section Uninstall
 
   Delete "$INSTDIR\share\KCemu\roms\muglerpc\chargen.pcm"
   Delete "$INSTDIR\share\KCemu\roms\muglerpc\muglerpc.pcm"
+
+  Delete "$INSTDIR\share\KCemu\icons\kcemu-bic.ico"
+  Delete "$INSTDIR\share\KCemu\icons\kcemu-kc85.ico"
+  Delete "$INSTDIR\share\KCemu\icons\kcemu-kc87.ico"
+  Delete "$INSTDIR\share\KCemu\icons\kcemu-lc80.ico"
+  Delete "$INSTDIR\share\KCemu\icons\kcemu-poly880.ico"
+  Delete "$INSTDIR\share\KCemu\icons\kcemu-z1013.ico"
 
   Delete "$INSTDIR\share\KCemu\keymaps\kc851.key"
   Delete "$INSTDIR\share\KCemu\keymaps\kc851_keyboard.xpm"
@@ -317,14 +370,6 @@ Section Uninstall
 
   Delete "$INSTDIR\share\KCemu\tapes\files.kct"
   Delete "$INSTDIR\share\KCemu\tapes\z1013.kct"
-
-  Delete "$INSTDIR\share\KCemu\kcemu-bic.ico"
-  Delete "$INSTDIR\share\KCemu\kcemu-kc85.ico"
-  Delete "$INSTDIR\share\KCemu\kcemu-kc87.ico"
-  Delete "$INSTDIR\share\KCemu\kcemu-lc80.ico"
-  Delete "$INSTDIR\share\KCemu\kcemu-poly880.ico"
-  Delete "$INSTDIR\share\KCemu\kcemu-z1013.ico"
-  Delete "$INSTDIR\share\KCemu\kcemurc.sample"
 
   Delete "$SMPROGRAMS\KCemu\Uninstall.lnk"
   Delete "$SMPROGRAMS\KCemu\Website.lnk"
@@ -413,8 +458,8 @@ Section Uninstall
 
   # GTK END
 
-  RMDir "$INSTDIR\man\man1"
-  RMDir "$INSTDIR\man"
+  RMDir "$INSTDIR\share\man\man1"
+  RMDir "$INSTDIR\share\man"
   RMDir "$INSTDIR\share\KCemu\roms\z1013"
   RMDir "$INSTDIR\share\KCemu\roms\z9001"
   RMDir "$INSTDIR\share\KCemu\roms\kc85"
@@ -431,6 +476,9 @@ Section Uninstall
   RMDir "$INSTDIR\share\KCemu\lib"
   RMDir "$INSTDIR\share\KCemu\asm\autostart"
   RMDir "$INSTDIR\share\KCemu\asm"
+  RMDir "$INSTDIR\share\KCemu\doc"
+  RMDir "$INSTDIR\share\KCemu\icons"
+  RMDir "$INSTDIR\share\KCemu\images"
   RMDir "$INSTDIR\share\KCemu"
   RMDir "$INSTDIR\share\locale\de\LC_MESSAGES"
   RMDir "$INSTDIR\share\locale\de"
