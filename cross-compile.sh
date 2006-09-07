@@ -7,7 +7,7 @@ GTK_CUR_PACKAGES_DIR="/a/download/win32-dev/gtk-win32/gtk-2.8.20"
 DEP_PACKAGES_DIR="/a/download/win32-dev/gtk-win32/dependencies"
 SDL_PACKAGES_DIR="/a/download/win32-dev/libsdl"
 KCEMU_DIR="/home/tp/projects/kcemu"
-KCEMU_VERSION="0.3.8beta5"
+KCEMU_VERSION="0.3.8beta6"
 
 ################################################################
 
