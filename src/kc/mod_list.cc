@@ -571,6 +571,7 @@ ModuleList::ModuleList(void)
     case KC_TYPE_85_2:
     case KC_TYPE_85_3:
     case KC_TYPE_85_4:
+    case KC_TYPE_85_5:
       cnt = 4 * _nr_of_bd + 2;
       break;
     default:
