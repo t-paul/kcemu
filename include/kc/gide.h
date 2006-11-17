@@ -47,6 +47,7 @@ class GIDE : public PortInterface
     GIDE_STATUS_WRITE_FAULT    = (1 << 5),
     GIDE_STATUS_READY          = (1 << 6),
     GIDE_STATUS_BUSY           = (1 << 7),
+    GIDE_STATUS_ALL            = 0xff,
   };
 
   enum {
@@ -62,8 +63,8 @@ class GIDE : public PortInterface
   int _sector_count;
   int _head;
   int _drive;
-  int _status;
   int _error;
+  byte_t _status;
   word_t _rtc_register;
   byte_t _sector_buffer[512];
   hard_disk_config_t _hard_disk_config[2];

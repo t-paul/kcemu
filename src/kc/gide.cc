@@ -64,7 +64,7 @@ GIDE::GIDE(void)
   _hard_disk_config[1].filename = RC::instance()->get_string("Hard Disk 1", NULL);
 
   _error = 0;
-  set_status(0, GIDE_STATUS_READY
+  set_status(GIDE_STATUS_ALL, GIDE_STATUS_READY
 	     | GIDE_STATUS_SEEK_COMPLETE
 	     | GIDE_STATUS_DATA_REQUEST);
 }
