@@ -7,11 +7,10 @@ Z80FILES = kc853.bin
 
 if COMPILE_Z80_ASM
 noinst_PROGRAMS = $(Z80FILES)
-endif
-
 kc853_bin_SOURCES = kc853.asm
 kc853_bin_LINK = p2bin -r '$$-$$'
 kc853_bin_LDADD =
+endif
 
 asmdir = $(pkgdatadir)/asm/autostart
 asm_DATA = kc853.asm
