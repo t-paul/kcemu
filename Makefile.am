@@ -2,9 +2,10 @@
 
 docdir = $(datadir)/doc/kcemu
 
+ACLOCAL_AMFLAGS = -I config -I config/m4
+
 SUBDIRS = \
 	include \
-	intl \
 	src \
 	test \
 	asm \
@@ -24,8 +25,6 @@ e = README.de TODO THANKS COPYING COPYING.de KCemuSetup.iss
 else
 e = README.de TODO THANKS COPYING COPYING.de
 endif
-
-EXTRA_DIST = $(e)
 
 install-data-local:
 	$(mkinstalldirs) $(DESTDIR)$(docdir)

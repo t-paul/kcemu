@@ -1,3 +1,10 @@
+2006-11-17  gettextize  <bug-gnu-gettext@gnu.org>
+
+	* Makefile.am (SUBDIRS): Add intl, m4, po.
+	(EXTRA_DIST): Add m4/ChangeLog.
+	* configure.in (AC_OUTPUT): Add intl/Makefile, po/Makefile.in,
+	Remove command that created po/Makefile.
+
 2005-05-15  Torsten Paul  <Torsten.Paul@gmx.de>
 
 	* src/kc/mod_rom1.cc: round module size up to 4k boundary and

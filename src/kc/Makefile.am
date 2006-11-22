@@ -15,7 +15,7 @@ endif
 INCLUDES = \
 	-I../../include
 
-localedir = $(prefix)/@DATADIRNAME@/locale
+localedir = $(prefix)/share/locale
 
 AM_CPPFLAGS = \
 	-DKCEMU_PACKAGE=\"$(PACKAGE)\" \

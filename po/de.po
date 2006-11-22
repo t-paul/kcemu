@@ -6,8 +6,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: KCemu v0.3.8\n"
-"Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2006-09-05 20:22+0200\n"
+"Report-Msgid-Bugs-To: Torsten.Paul@gmx.de\n"
+"POT-Creation-Date: 2006-11-17 23:59+0100\n"
 "PO-Revision-Date: 2006-09-05 20:23+0100\n"
 "Last-Translator: Torsten Paul <Torsten.Paul@gmx.de>\n"
 "Language-Team: German <Torsten.Paul@gmx.de>\n"
@@ -1407,7 +1407,7 @@ msgstr "Floppy Disk Basis F8"
 msgid "Floppy Disk Basis FC"
 msgstr "Floppy Disk Basis FC"
 
-#: src/kc/mod_list.cc:737
+#: src/kc/mod_list.cc:738
 msgid "Autostart"
 msgstr "Autostart"
 
@@ -1475,57 +1475,30 @@ msgstr ""
 msgid "KCemu: Color Configuration"
 msgstr "KCemu: Farbkonfiguration"
 
-#.
-#. *  foreground
-#.
 #: src/ui/gtk/color.cc:103
 msgid "Foreground"
 msgstr "Vordergrund"
 
-#.
-#. *  background
-#.
 #: src/ui/gtk/color.cc:115
 msgid "Background"
 msgstr "Hintergrund"
 
-#.
-#. *  foreground saturation
-#.
-#.
-#. *  background saturation
-#.
 #: src/ui/gtk/color.cc:127 src/ui/gtk/color.cc:163
 msgid "Saturation"
 msgstr "Sättigung"
 
-#.
-#. *  foreground brightness (= value of HSV)
-#.
-#.
-#. *  background brightness (= value of HSV)
-#.
 #: src/ui/gtk/color.cc:145 src/ui/gtk/color.cc:181
 msgid "Brightness"
 msgstr "Helligkeit"
 
-#.
-#. *  black level (= value of HSV for black pixels)
-#.
 #: src/ui/gtk/color.cc:199
 msgid "Black Level"
 msgstr "Schwarz Wert"
 
-#.
-#. *  white level (= value of HSV for white pixels)
-#.
 #: src/ui/gtk/color.cc:217
 msgid "White Level"
 msgstr "Weiß Wert"
 
-#.
-#. *  close button
-#.
 #: src/ui/gtk/color.cc:243 src/ui/gtk/info.cc:557 src/ui/gtk/keyboard.cc:632
 #: src/ui/gtk/wav.cc:148
 msgid "Close"
@@ -1585,37 +1558,22 @@ msgstr "Fehler in der angegebenen Start-Adresse!"
 msgid "File Properties"
 msgstr "Datei Eigenschaften"
 
-#.
-#. *  tapename
-#.
 #: src/ui/gtk/hedit.cc:199
 msgid "Name in tape-directory:"
 msgstr "Name in tape-directory:"
 
-#.
-#. *  kc name
-#.
 #: src/ui/gtk/hedit.cc:212
 msgid "Name in KC file-header:"
 msgstr "Name in KC file-header:"
 
-#.
-#. *  load addr
-#.
 #: src/ui/gtk/hedit.cc:225 src/ui/gtk/image.cc:156
 msgid "Load address:"
 msgstr "Lade-Adresse:"
 
-#.
-#. *  start addr
-#.
 #: src/ui/gtk/hedit.cc:238 src/ui/gtk/image.cc:169
 msgid "Start address:"
 msgstr "Start-Adresse:"
 
-#.
-#. *  autostart
-#.
 #: src/ui/gtk/hedit.cc:251
 msgid "autostart"
 msgstr "automatisch starten"
@@ -1624,9 +1582,6 @@ msgstr "automatisch starten"
 msgid "Input Image Properties"
 msgstr "Input Image Properties"
 
-#.
-#. *  label
-#.
 #: src/ui/gtk/image.cc:133
 msgid ""
 "It was not possible to automatically determine the\n"
@@ -1647,16 +1602,10 @@ msgstr ""
 msgid "Start Program after Loading"
 msgstr "Programm nach dem Laden starten"
 
-#.
-#. *  ok button
-#.
 #: src/ui/gtk/image.cc:197
 msgid "OK"
 msgstr "OK"
 
-#.
-#. *  cancel button
-#.
 #: src/ui/gtk/image.cc:209 src/ui/gtk/tapeadd.cc:189
 msgid "Cancel"
 msgstr "Abbrechen"
@@ -1677,23 +1626,14 @@ msgstr "byte input/output"
 msgid "bit input/output"
 msgstr "bit input/output"
 
-#.
-#. *  mode
-#.
 #: src/ui/gtk/info.cc:328
 msgid "Mode:"
 msgstr "Mode:"
 
-#.
-#. *  irq
-#.
 #: src/ui/gtk/info.cc:347 src/ui/gtk/info.cc:421
 msgid "IRQ:"
 msgstr "IRQ:"
 
-#.
-#. *  irq vector
-#.
 #: src/ui/gtk/info.cc:366 src/ui/gtk/info.cc:440
 msgid "IRQ Vector:"
 msgstr "IRQ Vector:"
@@ -1738,9 +1678,6 @@ msgstr "PIO"
 msgid "CTC"
 msgstr "CTC"
 
-#.
-#. *  update button
-#.
 #: src/ui/gtk/info.cc:547
 msgid "Update"
 msgstr "Aktualisieren"
@@ -1767,16 +1704,10 @@ msgstr "Grundgerät"
 msgid "KCemu: Rename File"
 msgstr "KCemu: Datei umbenennen"
 
-#.
-#. *  tapename
-#.
 #: src/ui/gtk/tapeadd.cc:132
 msgid "Tapename:"
 msgstr "Tapename:"
 
-#.
-#. *  ok button
-#.
 #: src/ui/gtk/tapeadd.cc:178
 msgid "Ok"
 msgstr "Ok"
@@ -1845,9 +1776,6 @@ msgstr "Start"
 msgid "Size"
 msgstr "Größe"
 
-#.
-#. *  popup menu
-#.
 #: src/ui/gtk/tape.cc:287 src/ui/gtk/tape.cc:293
 msgid "<TapeP>"
 msgstr "<TapeP>"

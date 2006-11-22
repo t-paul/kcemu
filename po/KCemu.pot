@@ -1,5 +1,5 @@
 # SOME DESCRIPTIVE TITLE.
-# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# Copyright (C) YEAR Torsten Paul
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
@@ -7,8 +7,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2006-09-05 20:22+0200\n"
+"Report-Msgid-Bugs-To: Torsten.Paul@gmx.de\n"
+"POT-Creation-Date: 2006-11-17 23:59+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -794,7 +794,7 @@ msgstr ""
 msgid "Floppy Disk Basis FC"
 msgstr ""
 
-#: src/kc/mod_list.cc:737
+#: src/kc/mod_list.cc:738
 msgid "Autostart"
 msgstr ""
 
@@ -856,57 +856,30 @@ msgstr ""
 msgid "KCemu: Color Configuration"
 msgstr ""
 
-#.
-#. *  foreground
-#.
 #: src/ui/gtk/color.cc:103
 msgid "Foreground"
 msgstr ""
 
-#.
-#. *  background
-#.
 #: src/ui/gtk/color.cc:115
 msgid "Background"
 msgstr ""
 
-#.
-#. *  foreground saturation
-#.
-#.
-#. *  background saturation
-#.
 #: src/ui/gtk/color.cc:127 src/ui/gtk/color.cc:163
 msgid "Saturation"
 msgstr ""
 
-#.
-#. *  foreground brightness (= value of HSV)
-#.
-#.
-#. *  background brightness (= value of HSV)
-#.
 #: src/ui/gtk/color.cc:145 src/ui/gtk/color.cc:181
 msgid "Brightness"
 msgstr ""
 
-#.
-#. *  black level (= value of HSV for black pixels)
-#.
 #: src/ui/gtk/color.cc:199
 msgid "Black Level"
 msgstr ""
 
-#.
-#. *  white level (= value of HSV for white pixels)
-#.
 #: src/ui/gtk/color.cc:217
 msgid "White Level"
 msgstr ""
 
-#.
-#. *  close button
-#.
 #: src/ui/gtk/color.cc:243 src/ui/gtk/info.cc:557 src/ui/gtk/keyboard.cc:632
 #: src/ui/gtk/wav.cc:148
 msgid "Close"
@@ -961,37 +934,22 @@ msgstr ""
 msgid "File Properties"
 msgstr ""
 
-#.
-#. *  tapename
-#.
 #: src/ui/gtk/hedit.cc:199
 msgid "Name in tape-directory:"
 msgstr ""
 
-#.
-#. *  kc name
-#.
 #: src/ui/gtk/hedit.cc:212
 msgid "Name in KC file-header:"
 msgstr ""
 
-#.
-#. *  load addr
-#.
 #: src/ui/gtk/hedit.cc:225 src/ui/gtk/image.cc:156
 msgid "Load address:"
 msgstr ""
 
-#.
-#. *  start addr
-#.
 #: src/ui/gtk/hedit.cc:238 src/ui/gtk/image.cc:169
 msgid "Start address:"
 msgstr ""
 
-#.
-#. *  autostart
-#.
 #: src/ui/gtk/hedit.cc:251
 msgid "autostart"
 msgstr ""
@@ -1000,9 +958,6 @@ msgstr ""
 msgid "Input Image Properties"
 msgstr ""
 
-#.
-#. *  label
-#.
 #: src/ui/gtk/image.cc:133
 msgid ""
 "It was not possible to automatically determine the\n"
@@ -1017,16 +972,10 @@ msgstr ""
 msgid "Start Program after Loading"
 msgstr ""
 
-#.
-#. *  ok button
-#.
 #: src/ui/gtk/image.cc:197
 msgid "OK"
 msgstr ""
 
-#.
-#. *  cancel button
-#.
 #: src/ui/gtk/image.cc:209 src/ui/gtk/tapeadd.cc:189
 msgid "Cancel"
 msgstr ""
@@ -1047,23 +996,14 @@ msgstr ""
 msgid "bit input/output"
 msgstr ""
 
-#.
-#. *  mode
-#.
 #: src/ui/gtk/info.cc:328
 msgid "Mode:"
 msgstr ""
 
-#.
-#. *  irq
-#.
 #: src/ui/gtk/info.cc:347 src/ui/gtk/info.cc:421
 msgid "IRQ:"
 msgstr ""
 
-#.
-#. *  irq vector
-#.
 #: src/ui/gtk/info.cc:366 src/ui/gtk/info.cc:440
 msgid "IRQ Vector:"
 msgstr ""
@@ -1108,9 +1048,6 @@ msgstr ""
 msgid "CTC"
 msgstr ""
 
-#.
-#. *  update button
-#.
 #: src/ui/gtk/info.cc:547
 msgid "Update"
 msgstr ""
@@ -1137,16 +1074,10 @@ msgstr ""
 msgid "KCemu: Rename File"
 msgstr ""
 
-#.
-#. *  tapename
-#.
 #: src/ui/gtk/tapeadd.cc:132
 msgid "Tapename:"
 msgstr ""
 
-#.
-#. *  ok button
-#.
 #: src/ui/gtk/tapeadd.cc:178
 msgid "Ok"
 msgstr ""
@@ -1215,9 +1146,6 @@ msgstr ""
 msgid "Size"
 msgstr ""
 
-#.
-#. *  popup menu
-#.
 #: src/ui/gtk/tape.cc:287 src/ui/gtk/tape.cc:293
 msgid "<TapeP>"
 msgstr ""

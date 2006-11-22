@@ -1,0 +1,6 @@
+#!/bin/sh
+
+aclocal -I config -I config/m4
+autoheader
+automake --add-missing --copy
+autoconf
