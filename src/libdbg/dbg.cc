@@ -212,6 +212,12 @@ DBG_class::load_file(const char *filename)
 }
 
 void
+DBG_class::set_output_stream(std::ostream *os)
+{
+  _o = os;
+}
+
+void
 DBG_class::add_path(const char *path, bool allow_subkeys)
 {
   _tree.add(path, allow_subkeys);
@@ -229,6 +235,7 @@ DBG_class::form(const char *path, const char *format ...)
   va_start(ap, format);
   vsnprintf(buf, 8192, format, ap);
   *_o << buf;
+  _o->flush();
   va_end(ap);
 }
 
@@ -239,6 +246,7 @@ DBG_class::print(const char *path, const char *msg)
     return;
 
   *_o << "DEBUG: " << path << " - " << msg;
+  _o->flush();
 }
 
 void
@@ -248,6 +256,7 @@ DBG_class::println(const char *path, const char *msg)
     return;
 
   *_o << "DEBUG: " << path << " - " << msg << std::endl;
+  _o->flush();
 }
 
 bool

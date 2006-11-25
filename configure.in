@@ -29,12 +29,7 @@ dnl ---------------------
 dnl  set package version
 dnl ---------------------
 
-PACKAGE=KCemu
-
-KCEMU_MAJOR_VERSION=0
-KCEMU_MINOR_VERSION=3
-KCEMU_MICRO_VERSION=8
-KCEMU_EXTRA_VERSION=beta6
+source VERSION
 
 if test $KCEMU_MICRO_VERSION -eq 0
 then

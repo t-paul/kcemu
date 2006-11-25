@@ -1,6 +1,6 @@
 /*
  *  KCemu -- the KC 85/3 and KC 85/4 Emulator
- *  Copyright (C) 1997-2004 Torsten Paul
+ *  Copyright (C) 1997-2006 Torsten Paul
  *
  *  $Id: kc.cc,v 1.32 2002/10/31 01:46:35 torsten_paul Exp $
  *
@@ -232,6 +232,7 @@ int   kcemu_ui_display_effect;
 char *kcemu_homedir;
 char *kcemu_datadir;
 char *kcemu_localedir;
+char *kcemu_debug_output;
 char *kcemu_tape;
 char *kcemu_disk;
 char *kcemu_emulate;
@@ -382,7 +383,7 @@ banner(void)
 {
   cout << ("   _  ______\n"
 	   "  | |/ / ___|___ _ __ ___  _   _               KCemu " KCEMU_VERSION "\n"
-	   "  | ' / |   / _ \\ '_ ` _ \\| | | |      (c) 1997-2003 Torsten Paul\n"
+	   "  | ' / |   / _ \\ '_ ` _ \\| | | |      (c) 1997-2006 Torsten Paul\n"
 	   "  | . \\ |__|  __/ | | | | | |_| |        <Torsten.Paul@gmx.de>\n"
 	   "  |_|\\_\\____\\___|_| |_| |_|\\__,_|     http://kcemu.sourceforge.net/\n");
 }
@@ -396,35 +397,37 @@ usage(char *argv0)
 	    "This is free software, and you are welcome to redistribute it\n"
 	    "under certain conditions; run `kcemu --license' for details.\n"
 	    "\n"
-	    "usage: kcemu [-0123456789aAcestfhdlvVHFELW]\n"
+	    "usage: kcemu [-0123456789aAcestfhdlvVHFMELW]\n"
 	    "\n"
-	    "  -0:              run in Z1013 mode\n"
-	    "  -1:              run in Z9001 / KC 85/1 mode\n"
-	    "  -2:              run in KC 85/2 mode\n"
-	    "  -3:              run in KC 85/3 mode\n"
-	    "  -4:              run in KC 85/4 mode (default)\n"
-	    "  -5:              run in KC 85/5 mode\n"
-	    "  -6:              run in Poly-880 mode\n"
-	    "  -7:              run in KC 87 mode\n"
-	    "  -8:              run in LC 80 mode\n"
-	    "  -9:              run in BIC/A5105 mode\n"
-	    "  -a --autostart:  autostart program on startup (kc85/3 - kc85/5 only)\n"
-	    "  -A --address:    override start address of autostart program\n"
-	    "  -c --config:     read (additional) configuration from given file\n"
-	    "  -e --emulate:    emulate the specified system (use -v/-V to list types)\n"
-	    "  -s --scale:      scale display (allowed values: 1, 2 and 3)\n"
-	    "  -t --tape:       attach tape on startup\n"
-	    "  -f --floppy:     attach disk on startup\n"
-	    "  -h --help:       display help\n"
-	    "  -d --datadir:    set data directory (for ROM images)\n"
-	    "  -l --localedir:  set locale directory\n"
-	    "  -v --version:    show KCemu version and configuration\n"
-	    "  -V --viewlist:   view verbose list of available emulations\n"
-	    "  -H --home:       overwrite setting for home directory\n"
-	    "  -F --fullscreen: start in fullscreen mode (if supported by gui)\n"
-	    "  -E --effects:    enable display effects for scaled screen output\n"
-	    "  -L --license:    show license\n"
-	    "  -W --warranty:   show warranty\n");
+	    "  -0:                run in Z1013 mode\n"
+	    "  -1:                run in Z9001 / KC 85/1 mode\n"
+	    "  -2:                run in KC 85/2 mode\n"
+	    "  -3:                run in KC 85/3 mode\n"
+	    "  -4:                run in KC 85/4 mode (default)\n"
+	    "  -5:                run in KC 85/5 mode\n"
+	    "  -6:                run in Poly-880 mode\n"
+	    "  -7:                run in KC 87 mode\n"
+	    "  -8:                run in LC 80 mode\n"
+	    "  -9:                run in BIC/A5105 mode\n"
+	    "  -a --autostart:    autostart program on startup (kc85/3 - kc85/5 only)\n"
+	    "  -A --address:      override start address of autostart program\n"
+	    "  -c --config:       read (additional) configuration from given file\n"
+	    "  -e --emulate:      emulate the specified system (use -v/-V to list types)\n"
+	    "  -s --scale:        scale display (allowed values: 1, 2 and 3)\n"
+	    "  -t --tape:         attach tape on startup\n"
+	    "  -f --floppy:       attach disk on startup\n"
+	    "  -h --help:         display help\n"
+	    "  -d --datadir:      set data directory (for ROM images)\n"
+	    "  -l --localedir:    set locale directory\n"
+	    "  -o --debug-output: write debug output to file\n"
+	    "  -v --version:      show KCemu version and configuration\n"
+	    "  -V --viewlist:     view verbose list of available emulations\n"
+	    "  -H --home:         overwrite setting for home directory\n"
+	    "  -F --fullscreen:   start in fullscreen mode (if supported by gui)\n"
+            "  -M --modules:      insert modules on startup (e.g. -M M011,M027)\n"
+	    "  -E --effects:      enable display effects for scaled screen output\n"
+	    "  -L --license:      show license\n"
+	    "  -W --warranty:     show warranty\n");
 
   exit(0);
 }
@@ -1131,6 +1134,19 @@ get_kcemu_localedir(void)
   return strdup(KCEMU_LOCALEDIR);
 }
 
+void
+open_debug_output(char *filename)
+{
+  if (filename == NULL)
+    return;
+
+  ofstream *ofs = new ofstream(filename);
+  if (!(*ofs))
+    return;
+
+  DBGI()->set_output_stream(ofs);
+}
+
 #ifdef HOST_OS_MINGW
 void
 close_output(void)
@@ -1189,6 +1205,7 @@ main(int argc, char **argv)
     { "home",          1, 0, 'H' },
     { "datadir",       1, 0, 'd' },
     { "floppy",        1, 0, 'f' },
+    { "debug-output",  1, 0, 'o' },
     { "localedir",     1, 0, 'l' },
     { "license",       0, 0, 'L' },
     { "warranty",      0, 0, 'W' },
@@ -1228,6 +1245,7 @@ main(int argc, char **argv)
   kcemu_emulate = 0;
   kcemu_modules = 0;
   kcemu_configfile = 0;
+  kcemu_debug_output = 0;
   kcemu_autostart_file = 0;
   kcemu_autostart_addr = 0;
   kcemu_ui_scale = 0;
@@ -1254,11 +1272,11 @@ main(int argc, char **argv)
   while (1)
     {
 #ifdef HAVE_GETOPT_LONG
-      c = getopt_long(argc, argv, "0123456789hvDEA:a:c:e:d:f:l:s:t:H:M:FLWV",
+      c = getopt_long(argc, argv, "0123456789hvDEA:a:c:e:d:f:o:l:s:t:H:M:FLWV",
 		      long_options, &option_index);
 #else
 #ifdef HAVE_GETOPT
-      c = getopt(argc, argv, "0123456789hvDEA:a:c:e:d:f:l:s:H:M:FLWV");
+      c = getopt(argc, argv, "0123456789hvDEA:a:c:e:d:f:o:l:s:H:M:FLWV");
 #else
 #warning neither HAVE_GETOPT_LONG nor HAVE_GETOPT defined
 #warning commandline parsing disabled!
@@ -1321,6 +1339,9 @@ main(int argc, char **argv)
 	  free(kcemu_localedir);
 	  kcemu_localedir = strdup(optarg);
 	  break;
+	case 'o':
+	  kcemu_debug_output = strdup(optarg);
+	  break;
 	case 's':
 	  kcemu_ui_scale = strtoul(optarg, NULL, 0);
 	  break;
@@ -1367,6 +1388,8 @@ main(int argc, char **argv)
 	  break;
 	}
     }
+
+  open_debug_output(kcemu_debug_output);
 
 #ifdef HOST_OS_MINGW
   close_output();

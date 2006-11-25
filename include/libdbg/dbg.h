@@ -81,16 +81,17 @@ class DBG_class
 
  protected:
   DBG_class(void);
-  virtual ~DBG_class(void);
 
   void load_file(const char *filename);
 
  public:
+  virtual ~DBG_class(void);
   static DBG_class * instance(void);
 
   void clear();
   void load_config(void);
   
+  void set_output_stream(std::ostream *os);
   void add_path(const char *path, bool allow_subkeys = false);
   void print(const char *path, const char *msg);
   void println(const char *path, const char *msg);

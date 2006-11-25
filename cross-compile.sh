@@ -7,7 +7,22 @@ GTK_CUR_PACKAGES_DIR="/a/download/win32-dev/gtk-win32/gtk-2.8.20"
 DEP_PACKAGES_DIR="/a/download/win32-dev/gtk-win32/dependencies"
 SDL_PACKAGES_DIR="/a/download/win32-dev/libsdl"
 KCEMU_DIR="/home/tp/projects/kcemu"
-KCEMU_VERSION="0.3.8beta6"
+
+source VERSION
+
+################################################################
+
+if test $KCEMU_MICRO_VERSION -eq 0
+then
+	KCEMU_VERSION=${KCEMU_MAJOR_VERSION}.${KCEMU_MINOR_VERSION}
+else
+	KCEMU_VERSION=${KCEMU_MAJOR_VERSION}.${KCEMU_MINOR_VERSION}.${KCEMU_MICRO_VERSION}
+fi
+
+if test x"$KCEMU_EXTRA_VERSION" != x
+then
+        KCEMU_VERSION=${KCEMU_VERSION}${KCEMU_EXTRA_VERSION}
+fi
 
 ################################################################
 
@@ -111,14 +126,22 @@ unpack_cur_libs_gtk_2_8_20 () {
 }
 
 compile_kcemu () {
-	export BUILD=`cd "KCemu-${KCEMU_VERSION}" && ./config.guess`
+	export BUILD=`cd "KCemu-${KCEMU_VERSION}" && ./config/config.guess`
 	echo "*"
 	echo "* Building on '$BUILD' for target '$TARGET'..."
 	echo "*"
 
 	(
 	  cd "KCemu-${KCEMU_VERSION}" || exit 5
-	  ./configure --build="$BUILD" --host="$TARGET" --target="$TARGET" --prefix="$INSTALL_DIR" --enable-sound && make install
+	  ./configure \
+	  		--build="$BUILD" \
+			--host="$TARGET" \
+			--target="$TARGET" \
+			--program-prefix="" \
+			--prefix="$INSTALL_DIR" \
+			--with-debug-level=1 \
+			--enable-sound \
+		&& make install
 	)
 }
 
@@ -127,6 +150,13 @@ mkdir "$BUILD_DIR"
 mkdir -p "$DEV_DIR" || exit 2
 mkdir -p "$CUR_DIR" || exit 3
 cd "$BUILD_DIR" || exit 4
+
+#
+#  show banner
+#
+echo "*"
+echo "*  cross compiling KCemu version $KCEMU_VERSION"
+echo "*"
 
 #
 #  prepare pkg-config to use the mingw lib not the system one

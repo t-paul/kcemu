@@ -20,11 +20,7 @@ SUBDIRS = \
 	glade \
 	po
 
-if TARGET_MINGW
-e = README.de TODO THANKS COPYING COPYING.de KCemuSetup.iss
-else
-e = README.de TODO THANKS COPYING COPYING.de
-endif
+EXTRA_DIST = VERSION README.de TODO THANKS COPYING COPYING.de
 
 install-data-local:
 	$(mkinstalldirs) $(DESTDIR)$(docdir)
