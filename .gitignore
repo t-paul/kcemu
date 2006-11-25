@@ -177,6 +177,7 @@ doc/kcemu-help.xml
 include/kc/config.h
 include/kc/stamp-h1
 po/POTFILES
+po/de.mo
 po/de.gmo
 po/remove-potcdate.sed
 po/stamp-po

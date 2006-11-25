@@ -25,3 +25,5 @@ EXTRA_DIST = VERSION README.de TODO THANKS COPYING COPYING.de
 install-data-local:
 	$(mkinstalldirs) $(DESTDIR)$(docdir)
 	cp ChangeLog $(DESTDIR)$(docdir)/changelog
+
+CONFIG_STATUS_DEPENDENCIES = VERSION
