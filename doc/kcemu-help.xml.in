@@ -34,6 +34,7 @@
 1.1. <link ref="about">Über KCemu</link>
 1.2. <link ref="license">Lizenz</link>
 1.3. <link ref="commandline">Kommandozeilenparameter</link>
+1.4. <link ref="keycommands">Tastenbedienung</link>
 
 <size value="1">2. <i><link ref="sys">Emulierte Systeme</link></i></size>
 <size value="-3"> </size>
@@ -133,6 +134,9 @@
   -h --help:       diese Hilfe anzeigen
   -d --datadir:    Setzen des Daten-Verzeichnisses (für ROM-Images)
   -l --localedir:  Setzen des Locale-Verzeichnisses für die Sprachanpassung
+  -M --modul:      Modul(e) für die ersten Steckplätze definieren
+      -MM022,M011,...  Einstellungen der Konfigurationsdatei werden überschrieben
+      -M+M022,M011,... zusätzliche Module zu denen aus der Konfigurationsadtei 
   -v --version:    Anzeige der KCemu Version und Konfiguration
   -V --viewlist:   Ausführliche Liste der emulierten Typen
   -H --home:       Überschreiben der Einstellung für das Homeverzeichnis
@@ -140,6 +144,35 @@
   -E --effects:    Anzeige mit Screen-Effekten bei vergrößerter Darstellung
   -L --license:    Anzeige der Lizenz
   -W --warranty:   Anzeige des Haftungsausschlusses
+
+
+</p>
+
+<p><size value="2"><ref name="keycommands"/>1.4. Tastenbedienung</size>
+
+  Die normale Tastenebene steht einschließlich den F-Tasten dem emulierten KC-System
+  zur Verfügung, darüber hinaus ist eine Steuerung des Emulators über die folgenden
+  Tastenkombinationen möglich:
+
+  ALT + 1          Zoom x 1
+  ALT + 2          Zoom x 2
+  ALT + 3          Zoom x 3
+  ALT + A          Menü Ansicht (ALT+V in engl. Version)
+  ALT + C          Konfiguration der Farbeinstellung
+  ALT + D          Diskette...
+  ALT + E          Menü Emulator
+  ALT + G          Maximale Geschwindigkeit ein/aus
+  ALT + H          Menü Hilfe
+  ALT + I          Information über CPU / PIO / CTC
+  ALT + K          Tastatur
+  ALT + L          Laden...
+  ALT + M          Module...
+  ALT + O          Menü Optionen
+  ALT + P          Einschalten (Power On)
+  ALT + Q (ALT-F4) Emulator beenden
+  ALT + R          Reset des KC
+  ALT + T          Kassette
+  ALT + U          Audio...
 
 </p>
 
