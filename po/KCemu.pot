@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: Torsten.Paul@gmx.de\n"
-"POT-Creation-Date: 2007-01-10 00:08+0100\n"
+"POT-Creation-Date: 2007-01-10 22:34+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1231,51 +1231,51 @@ msgid "Record"
 msgstr ""
 
 #: src/ui/gtk/ui_gtk.cc:637
-msgid "/_File"
+msgid "/_Emulator"
 msgstr ""
 
 #: src/ui/gtk/ui_gtk.cc:638
-msgid "/File/_Run..."
+msgid "/Emulator/_Run..."
 msgstr ""
 
 #: src/ui/gtk/ui_gtk.cc:639
-msgid "/File/_Load..."
+msgid "/Emulator/_Load..."
 msgstr ""
 
 #: src/ui/gtk/ui_gtk.cc:640
-msgid "/File/_Tape..."
+msgid "/Emulator/_Tape..."
 msgstr ""
 
 #: src/ui/gtk/ui_gtk.cc:641
-msgid "/File/_Disk..."
+msgid "/Emulator/_Disk..."
 msgstr ""
 
 #: src/ui/gtk/ui_gtk.cc:642
-msgid "/File/_Module..."
+msgid "/Emulator/_Module..."
 msgstr ""
 
 #: src/ui/gtk/ui_gtk.cc:643
-msgid "/File/_Audio..."
+msgid "/Emulator/A_udio..."
 msgstr ""
 
 #: src/ui/gtk/ui_gtk.cc:644
-msgid "/File/sep1"
+msgid "/Emulator/sep1"
 msgstr ""
 
 #: src/ui/gtk/ui_gtk.cc:645
-msgid "/File/R_eset"
+msgid "/Emulator/R_eset"
 msgstr ""
 
 #: src/ui/gtk/ui_gtk.cc:646
-msgid "/File/_Power On"
+msgid "/Emulator/_Power On"
 msgstr ""
 
 #: src/ui/gtk/ui_gtk.cc:647
-msgid "/File/sep2"
+msgid "/Emulator/sep2"
 msgstr ""
 
 #: src/ui/gtk/ui_gtk.cc:648
-msgid "/File/_Quit Emulator"
+msgid "/Emulator/_Quit Emulator"
 msgstr ""
 
 #: src/ui/gtk/ui_gtk.cc:649 src/ui/gtk/ui_gtk.cc:682
@@ -1315,23 +1315,23 @@ msgid "/View/_Statusbar"
 msgstr ""
 
 #: src/ui/gtk/ui_gtk.cc:658
-msgid "/_Configuration"
+msgid "/_Options"
 msgstr ""
 
 #: src/ui/gtk/ui_gtk.cc:659
-msgid "/Configuration/_Colors"
+msgid "/Options/_Colors"
 msgstr ""
 
 #: src/ui/gtk/ui_gtk.cc:660 src/ui/gtk/ui_gtk.cc:853 src/ui/gtk/ui_gtk.cc:1096
-msgid "/Configuration/_Display Effects"
+msgid "/Options/_Display Effects"
 msgstr ""
 
 #: src/ui/gtk/ui_gtk.cc:661
-msgid "/Configuration/sep"
+msgid "/Options/sep"
 msgstr ""
 
 #: src/ui/gtk/ui_gtk.cc:662
-msgid "/Configuration/No _Speed Limit"
+msgid "/Options/No _Speed Limit"
 msgstr ""
 
 #: src/ui/gtk/ui_gtk.cc:663
