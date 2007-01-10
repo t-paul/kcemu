@@ -212,6 +212,18 @@ ModuleWindow::init_device_1(const char *name, int nr_of_slots)
   gtk_container_add(GTK_CONTAINER(_w.frame[0]), _w.table[0]);
   gtk_widget_show(_w.table[0]);
 
+  if (nr_of_slots == 0)
+    {
+      _w.l[0] = gtk_label_new(_("No module slots available for this computer."));
+      gtk_misc_set_alignment(GTK_MISC(_w.l[0]), 0, 0.5);
+      gtk_table_attach(GTK_TABLE(_w.table[0]), _w.l[0],
+		       0, 2,
+		       0, 1,
+		       (GtkAttachOptions)(GTK_EXPAND | GTK_FILL), GTK_FILL,
+		       0, 0);
+      gtk_widget_show(_w.l[0]);
+    }
+
   for (a = 0;a < nr_of_slots;a++)
     {
       snprintf(buf, 10, _("Slot %d"), nr_of_slots - a);
@@ -315,13 +327,6 @@ ModuleWindow::init2(void)
 	init_device(buf, 16 * a, 15);
       }
 
-  if (get_kc_type() & KC_TYPE_85_1_CLASS)
-    init_device_1(_("Basis Device"), 4);
-  else if (get_kc_type() == KC_TYPE_Z1013)
-    init_device_1(_("Basis Device"), 8);
-  else
-    init_device(_("Basis Device"), 0, 12);
-
   /*
    *  help context
    */
@@ -329,31 +334,43 @@ ModuleWindow::init2(void)
     {
     case KC_TYPE_85_1:
     case KC_TYPE_87:
+      init_device_1(_("Basis Device"), 4);
       g_object_set_data(G_OBJECT(_w.vbox), "help-topic", (gpointer)"window-module-z9001");
       break;
     case KC_TYPE_85_2:
     case KC_TYPE_85_3:
     case KC_TYPE_85_4:
     case KC_TYPE_85_5:
+    init_device(_("Basis Device"), 0, 12);
       g_object_set_data(G_OBJECT(_w.vbox), "help-topic", (gpointer)"window-module-kc85");
       break;
     case KC_TYPE_LC80:
+      init_device_1(_("Basis Device"), 6);
       //g_object_set_data(G_OBJECT(_w.vbox), "help-topic", (gpointer)"window-module-lc80");
       break;
     case KC_TYPE_Z1013:
+      init_device_1(_("Basis Device"), 8);
       g_object_set_data(G_OBJECT(_w.vbox), "help-topic", (gpointer)"window-module-z1013");
       break;
     case KC_TYPE_A5105:
+      init_device_1(_("Basis Device"), 0);
       //g_object_set_data(G_OBJECT(_w.vbox), "help-topic", (gpointer)"window-module-a5105");
       break;
     case KC_TYPE_POLY880:
+      init_device_1(_("Basis Device"), 0);
       //g_object_set_data(G_OBJECT(_w.vbox), "help-topic", (gpointer)"window-module-poly880");
       break;
     case KC_TYPE_KRAMERMC:
+      init_device_1(_("Basis Device"), 0);
       //g_object_set_data(G_OBJECT(_w.vbox), "help-topic", (gpointer)"window-module-kramermc");
       break;
     case KC_TYPE_MUGLERPC:
+      init_device_1(_("Basis Device"), 0);
       //g_object_set_data(G_OBJECT(_w.vbox), "help-topic", (gpointer)"window-module-muglerpc");
+      break;
+    case KC_TYPE_VCS80:
+      init_device_1(_("Basis Device"), 6);
+      //g_object_set_data(G_OBJECT(_w.vbox), "help-topic", (gpointer)"window-module-vcs80");
       break;
     case KC_TYPE_ALL:
     case KC_TYPE_NONE:

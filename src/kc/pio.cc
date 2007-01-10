@@ -104,8 +104,8 @@ PIO::in_A_DATA(void)
 	_ext[A] = cb;
       ret = (_value[A] & ~_bit_mode[A]) | (_ext[A] & _bit_mode[A]);
       DBG(2, form("KCemu/PIO/A/in_DATA",
-		  "PIO::in():  port A DATA (mode %d): val = %02x, mask = %02x, ext = %02x\n",
-		  _mode[A], ret, _bit_mode[A], _ext[A]));
+		  "PIO::in():  %04xh: port A DATA (mode %d): val = %02x, mask = %02x, ext = %02x\n",
+		  z80->getPC(), _mode[A], ret, _bit_mode[A], _ext[A]));
     }
   else
     {
@@ -113,8 +113,8 @@ PIO::in_A_DATA(void)
       if (cb >= 0)
 	ret = cb;
       DBG(2, form("KCemu/PIO/A/in_DATA",
-		  "PIO::in():  port A DATA (mode %d): val = %02x\n",
-		  _mode[A], ret));
+		  "PIO::in():  %04xh: port A DATA (mode %d): val = %02x\n",
+		  z80->getPC(), _mode[A], ret));
     }
 
   return ret;
@@ -135,8 +135,8 @@ PIO::in_B_DATA(void) {
 	_ext[B] = cb;
       ret = (_value[B] & ~_bit_mode[B]) | (_ext[B] & _bit_mode[B]);
       DBG(2, form("KCemu/PIO/B/in_DATA",
-		  "PIO::in():  port B DATA (mode %d): val = %02x, mask = %02x, ext = %02x\n",
-		  _mode[B], ret, _bit_mode[B], _ext[B]));
+		  "PIO::in():  %04xh: port B DATA (mode %d): val = %02x, mask = %02x, ext = %02x\n",
+		  z80->getPC(), _mode[B], ret, _bit_mode[B], _ext[B]));
     }
   else
     {
@@ -144,8 +144,8 @@ PIO::in_B_DATA(void) {
       if (cb >= 0)
 	ret = cb;
       DBG(2, form("KCemu/PIO/B/in_DATA",
-		  "PIO::in():  port B DATA (mode %d): val = %02x\n",
-		  _mode[B], ret));
+		  "PIO::in():  %04xh: port B DATA (mode %d): val = %02x\n",
+		  z80->getPC(), _mode[B], ret));
     }
 
   return ret;
@@ -156,8 +156,8 @@ PIO::in_A_CTRL(void) {
   byte_t ret = 0xff;
 
   DBG(2, form("KCemu/PIO/A/in_CTRL",
-              "PIO::in():  port A CTRL (mode %d): val = %02x\n",
-              _mode[A], ret));
+              "PIO::in():  %04xh: port A CTRL (mode %d): val = %02x\n",
+              z80->getPC(), _mode[A], ret));
 
   return ret; /* FIXME: */
 }
@@ -167,8 +167,8 @@ PIO::in_B_CTRL(void) {
   byte_t ret = 0xff;
 
   DBG(2, form("KCemu/PIO/B/in_CTRL",
-              "PIO::in():  port B CTRL (mode %d): val = %02x\n",
-              _mode[B], ret));
+              "PIO::in():  %04xh: port B CTRL (mode %d): val = %02x\n",
+              z80->getPC(), _mode[B], ret));
 
   return ret; /* FIXME: */
 }
@@ -177,8 +177,8 @@ void
 PIO::out_A_DATA(byte_t val)
 {
   DBG(2, form("KCemu/PIO/A/out_DATA",
-              "PIO::out(): port A DATA (mode %d): val = %02x\n",
-              _mode[B], val));
+              "PIO::out(): %04xh: port A DATA (mode %d): val = %02x\n",
+              z80->getPC(), _mode[B], val));
 
   if (_mode[A] == MODE_INPUT)
     {
@@ -204,8 +204,8 @@ void
 PIO::out_B_DATA(byte_t val)
 {
   DBG(2, form("KCemu/PIO/B/out_DATA",
-              "PIO::out(): port B DATA (mode %d): val = %02x\n",
-              _mode[B], val));
+              "PIO::out(): %04xh: port B DATA (mode %d): val = %02x\n",
+              z80->getPC(), _mode[B], val));
 
   if (_mode[B] == MODE_INPUT)
     {
@@ -237,14 +237,14 @@ PIO::out_CTRL(int port, byte_t val)
   if (port == A)
     {
       DBG(2, form("KCemu/PIO/A/out_CTRL",
-		  "PIO::out(): port A CTRL (mode %d): val = %02x\n",
-		  _mode[A], val));
+		  "PIO::out(): %04xh: port A CTRL (mode %d): val = %02x\n",
+		  z80->getPC(), _mode[A], val));
     }
   else
     {
       DBG(2, form("KCemu/PIO/B/out_CTRL",
-		  "PIO::out(): port B CTRL (mode %d): val = %02x\n",
-		  _mode[B], val));
+		  "PIO::out(): %04xh: port B CTRL (mode %d): val = %02x\n",
+		  z80->getPC(), _mode[B], val));
     }
 
   /*
@@ -260,8 +260,8 @@ PIO::out_CTRL(int port, byte_t val)
       _bit_mode_follows[port] = false;
 
       DBG(2, form("KCemu/PIO/control",
-		  "PIO: [%c] new bit mode: %02x (0 = out/ 1 = in)\n",
-		  p, _bit_mode[port]));
+		  "PIO: %04xh: [%c] new bit mode: %02x (0 = out/ 1 = in)\n",
+		  z80->getPC(), p, _bit_mode[port]));
 
       return;
     }
@@ -283,8 +283,8 @@ PIO::out_CTRL(int port, byte_t val)
       _irq_mask_follows[port] = false;
 
       DBG(2, form("KCemu/PIO/control",
-		  "PIO: [%c] new irq mask (inverted): %02x\n",
-		  p, _irq_mask[port]));
+		  "PIO: %04xh: [%c] new irq mask (inverted): %02x\n",
+		  z80->getPC(), p, _irq_mask[port]));
 
       return;
     }
@@ -301,8 +301,8 @@ PIO::out_CTRL(int port, byte_t val)
       _irq_vector[port] = val;
 
       DBG(2, form("KCemu/PIO/control",
-		  "PIO: [%c] new irq vector: 0x%02x\n",
-		  p, val));
+		  "PIO: %04xh: [%c] new irq vector: 0x%02x\n",
+		  z80->getPC(), p, val));
 
 	  return;
     }
@@ -321,16 +321,16 @@ PIO::out_CTRL(int port, byte_t val)
       if (_irq[port])
         {
 	  DBG(2, form("KCemu/PIO/control",
-		      "PIO: [%c] irq enabled\n",
-		      p));
+		      "PIO: %04xh: [%c] irq enabled\n",
+		      z80->getPC(), p));
 
           _irq_enable[port] = 1;
         }
       else
         {
 	  DBG(2, form("KCemu/PIO/control",
-		      "PIO: [%c] irq disabled\n",
-		      p));
+		      "PIO: %04xh: [%c] irq disabled\n",
+		      z80->getPC(), p));
 
           _irq_enable[port] = 0;
         }
@@ -348,36 +348,36 @@ PIO::out_CTRL(int port, byte_t val)
       if (_irq[port])
         {
 	  DBG(2, form("KCemu/PIO/control",
-		      "PIO: [%c] irq enabled\n",
-		      p));
+		      "PIO: %04xh: [%c] irq enabled\n",
+		      z80->getPC(), p));
 
           _irq_enable[port] = 1;
         }
       else
         {
 	  DBG(2, form("KCemu/PIO/control",
-		      "PIO: [%c] irq disabled\n",
-		      p));
+		      "PIO: %04xh: [%c] irq disabled\n",
+		      z80->getPC(), p));
 
           _irq_enable[port] = 0;
         }
 	    
       _irq_and_or[port] = (val >> 6) & 1;
       DBG(2, form("KCemu/PIO/control",
-		  "PIO: [%c] AND/OR mode set to %s\n",
-		  p, _irq_and_or[port] ? "AND" : "OR"));
+		  "PIO: %04xh:  [%c] AND/OR mode set to %s\n",
+		  z80->getPC(), p, _irq_and_or[port] ? "AND" : "OR"));
 
       _irq_h_l[port] = (val >> 5) & 1;
       DBG(2, form("KCemu/PIO/control",
-		  "PIO: [%c] H/L mode set to %c\n",
-		  p, _irq_h_l[port] ? 'H' : 'L'));
+		  "PIO: %04xh: [%c] H/L mode set to %c\n",
+		  z80->getPC(), p, _irq_h_l[port] ? 'H' : 'L'));
       
       if (val & 0x10)
 	{
 	  _irq_mask_follows[port] = true;
 	  DBG(2, form("KCemu/PIO/control",
-		      "PIO: [%c] irq mask will be set with next control write\n",
-		      p));
+		      "PIO: %04xh: [%c] irq mask will be set with next control write\n",
+		      z80->getPC(), p));
 	}
       
       break;
@@ -397,23 +397,23 @@ PIO::out_CTRL(int port, byte_t val)
         {
         case MODE_OUTPUT:
 	  DBG(2, form("KCemu/PIO/control",
-		      "PIO: [%c] new mode: %d - BYTE OUTPUT\n",
-		      p, _mode[port]));
+		      "PIO: %04xh: [%c] new mode: %d - BYTE OUTPUT\n",
+		      z80->getPC(), p, _mode[port]));
           break;
         case MODE_INPUT:
 	  DBG(2, form("KCemu/PIO/control",
-		      "PIO: [%c] new mode: %d - BYTE INPUT\n",
-		      p, _mode[port]));
+		      "PIO: %04xh: [%c] new mode: %d - BYTE INPUT\n",
+		      z80->getPC(), p, _mode[port]));
           break;
         case MODE_BIDIRECTIONAL:
 	  DBG(2, form("KCemu/PIO/control",
-		      "PIO: [%c] new mode: %d - BIDIRECTIONAL\n",
-		      p, _mode[port]));
+		      "PIO: %04xh: [%c] new mode: %d - BIDIRECTIONAL\n",
+		      z80->getPC(), p, _mode[port]));
           break;
         case MODE_CONTROL:
 	  DBG(2, form("KCemu/PIO/control",
-		      "PIO: [%c] new mode: %d - CONTROL (bit mode)\n",
-		      p, _mode[port]));
+		      "PIO: %04xh: [%c] new mode: %d - CONTROL (bit mode)\n",
+		      z80->getPC(), p, _mode[port]));
           _bit_mode_follows[port] = true;
           break;
         }
@@ -429,8 +429,8 @@ PIO::out_CTRL(int port, byte_t val)
       break;
     default:
       DBG(2, form("KCemu/PIO/control",
-		  "PIO: [%c] ??? unknown control byte %02x (%d)\n",
-		  p, val, val));
+		  "PIO: %04xh: [%c] ??? unknown control byte %02x (%d)\n",
+		  z80->getPC(), p, val, val));
       break;
     }
 }
@@ -451,15 +451,15 @@ void
 PIO::set_EXT(int port, byte_t mask, byte_t val)
 {
   byte_t old;
-#if 0
   char p = "AB"[port];
-#endif
 
+  /*
   if (_irq_active[port] )
     {
       cout << "PIO::set_EXT() - irq active" << endl;
       return;
     }
+  */
 
   old = _ext_fn[port];
   _ext[port] = ((_ext[port] & ~mask) | (val & mask));
@@ -481,14 +481,14 @@ PIO::set_EXT(int port, byte_t mask, byte_t val)
         _ext_fn[port] = ((_ext[port] & _irq_mask[port]) != _irq_mask[port]);
     }
 
-#if 0
-  printf("PIO: [%c] _ext_fn: A/O = %d, H/L = %d, mask = 0x%02x\n",
-	 port, _irq_and_or[port], _irq_h_l[port], _irq_mask[port]);
-  printf("PIO: [%c] _ext_fn: old = %02x, _ext_fn = %02x\n",
-	 port, old, _ext_fn[port]);
-#endif
+  bool do_trigger_irq = (old == 0) && (_ext_fn[port] == 1);
+
+  DBG(2, form("KCemu/PIO/external",
+	      "PIO: %04xh: [%c] _ext_fn: A/O = %d, H/L = %d, mask = 0x%02x, old = %02x, _ext_fn = %02x%s\n",
+	      z80->getPC(), p, _irq_and_or[port], _irq_h_l[port], _irq_mask[port], old, _ext_fn[port],
+	      do_trigger_irq ? " IRQ!" : ""));
   
-  if ((old == 0) && (_ext_fn[port] == 1))
+  if (do_trigger_irq)
     trigger_irq(port);
 }
 
@@ -518,7 +518,8 @@ void
 PIO::irqreq(void)
 {
   DBG(2, form("KCemu/PIO/reti",
-	      "PIO::irqreq()\n"));
+	      "PIO::irqreq(): %04xh\n",
+	      z80->getPC()));
   z80->set_irq_line(_z80_irq_mask);
 }
 

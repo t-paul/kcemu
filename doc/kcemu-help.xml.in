@@ -47,6 +47,7 @@
 2.7. <link ref="sys-a5105">BIC / A5105</link>
 2.8. <link ref="sys-kramermc">Kramer-Microcomputer</link>
 2.9. <link ref="sys-muglerpc">PC/M / Mugler-PC</link>
+2.10. <link ref="sys-vcs80">VCS 80</link>
 
 <size value="1">3. <i>Funktionen</i></size>
 <size value="-3"> </size>
@@ -81,6 +82,7 @@
   - <link ref="sys-a5105">BIC / A5105</link>
   - <link ref="sys-kramermc">Kramer-Micro-Computer</link>
   - <link ref="sys-muglerpc">PC/M / Mugler-PC</link>
+  - <link ref="sys-vcs80">VCS 80</link>
 
 
 </p>
@@ -173,6 +175,7 @@
   ALT + R          Reset des KC
   ALT + T          Kassette
   ALT + U          Audio...
+
 
 </p>
 
@@ -359,7 +362,7 @@
 
 </p>
 
-<p><size value="2"><ref name="sys-lc80"/>2.4. LC80</size>
+<p><size value="2"><ref name="sys-lc80"/>2.5. LC80</size>
 
 VEB Mikroelektronik Erfurt
 
@@ -368,7 +371,7 @@ VEB Mikroelektronik Erfurt
 
 </p>
 
-<p><size value="2"><ref name="sys-poly880"/>2.5. Polycomputer 880</size>
+<p><size value="2"><ref name="sys-poly880"/>2.6. Polycomputer 880</size>
 
 VEB Polytechnik Karl-Marx-Stadt
 
@@ -377,7 +380,7 @@ VEB Polytechnik Karl-Marx-Stadt
 
 </p>
 
-<p><size value="2"><ref name="sys-a5105"/>2.6. BIC / A5105</size>
+<p><size value="2"><ref name="sys-a5105"/>2.7. BIC / A5105</size>
 
 VEB Robotron-Meßelektronik "Otto Schön" Dresden
 
@@ -386,17 +389,28 @@ VEB Robotron-Meßelektronik "Otto Schön" Dresden
 
 </p>
 
-<p><size value="2"><ref name="sys-kramermc"/>2.7. Kramer-Microcomputer</size>
+<p><size value="2"><ref name="sys-kramermc"/>2.8. Kramer-Microcomputer</size>
 
   Dieser Computer wurde im Buch "Praktische Microcomputertechnik"
   von M. Kramer vorgestellt und war als erweiterbares System konzipiert.
 
 </p>
 
-<p><size value="2"><ref name="sys-muglerpc"/>2.8. PC/M / Mugler-PC</size>
+<p><size value="2"><ref name="sys-muglerpc"/>2.9. PC/M / Mugler-PC</size>
 
   Der PC/M wurde als CP/M-fähiger Selbstbaucomputer in einer Artikelreihe
   der Zeitschrift "Funkamateur" von A. Mugler und H. Mathes vorgestellt.
+
+</p>
+
+<p><size value="2"><ref name="sys-vcs80"/>2.10. VCS 80</size>
+
+  Für Lern- und Testzwecke entwickeltes minimales Mikrorechnersystem.
+  Industielle Vorbilder sind der LC80 und der Polycomputer 880. Ziel
+  waren vor allem minimale Bauelementekosten um den Nachbau für den
+  Amateur zu ermöglichen.
+  Vorgestellt wurde der VCS80 von Eckhard Schiller in der Zeitschrift
+  "radio fernsehen elektronik" (rfe) Ausgabe 3/1983.
 
 </p>
 

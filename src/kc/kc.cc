@@ -142,6 +142,10 @@
 #include "kc/muglerpc/memory.h"
 #include "kc/muglerpc/keyboard.h"
 
+#include "kc/vcs80/pio.h"
+#include "kc/vcs80/memory.h"
+#include "kc/vcs80/keyboard.h"
+
 #ifdef USE_UI_GTK
 # include "ui/gtk/ui_gtk0.h"
 # include "ui/gtk/ui_gtk1.h"
@@ -152,6 +156,7 @@
 # include "ui/gtk/ui_gtk9.h"
 # include "ui/gtk/ui_gtk_kramermc.h"
 # include "ui/gtk/ui_gtk_muglerpc.h"
+# include "ui/gtk/ui_gtk_vcs80.h"
 # define UI_0 UI_Gtk0
 # define UI_1 UI_Gtk1
 # define UI_3 UI_Gtk3
@@ -161,6 +166,7 @@
 # define UI_9 UI_Gtk9
 # define UI_KramerMC UI_Gtk_KramerMC
 # define UI_MuglerPC UI_Gtk_MuglerPC
+# define UI_VCS80    UI_Gtk_VCS80
 #endif /* USE_UI_GTK */
 #ifdef USE_UI_SDL
 # include "ui/sdl/ui_sdl0.h"
@@ -374,6 +380,10 @@ static kc_variant_names_t kc_types[] = {
   },
   { "pcm",                -1, KC_TYPE_MUGLERPC, KC_VARIANT_NONE,
     ">mugler-pc"
+  },
+  { "vcs80",              -1, KC_TYPE_VCS80, KC_VARIANT_NONE,
+    N_("    Minimal Z80 learning system presented in the magazine \"rfe\"\n"
+       "    by Eckhard Schiller.\n")
   },
   { NULL,                 -1, KC_TYPE_NONE,  KC_VARIANT_NONE,         NULL },
 };
@@ -1451,6 +1461,7 @@ main(int argc, char **argv)
       Keyboard8 *k8;
       KeyboardKramerMC *k_kramer;
       KeyboardMuglerPC *k_mugler;
+      KeyboardVCS80 *k_vcs80;
 
       timer = NULL;
       memory = NULL;
@@ -1604,6 +1615,15 @@ main(int argc, char **argv)
 	  keyboard = k_mugler;
 	  pio->register_callback_A_in(k_mugler);
 	  break;
+	case KC_TYPE_VCS80:
+	  ui       = new UI_VCS80;
+	  pio      = new PIOVCS80;
+	  memory   = new MemoryVCS80;
+	  tape     = new Tape(500, 1000, 2000, 0); // FIXME:
+	  k_vcs80  = new KeyboardVCS80;
+	  keyboard = k_vcs80;
+	  pio->register_callback_A_in(k_vcs80);
+	  break;
 	default:
 	  DBG(0, form("KCemu/internal_error",
 		      "KCemu: setup with undefined system type\n"));
@@ -1707,6 +1727,10 @@ main(int argc, char **argv)
 	  portg = ports->register_ports("CTC (user)",   0x8c, 4, ctc2,  10);
 	  portg = ports->register_ports("PIO (user)",   0x90, 4, pio2,  10);
 	  portg = ports->register_ports("Port 94h",     0x94, 4, porti, 10);
+	  break;
+	case KC_TYPE_VCS80:
+	  portg = ports->register_ports("PIO", 0x04, 4, pio, 10);
+	  daisy->add_last(pio);
 	  break;
 	default:
 	  DBG(0, form("KCemu/internal_error",

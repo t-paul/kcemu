@@ -16,6 +16,7 @@ libui_generic_a_SOURCES = \
 	ui_led.cc	\
 	ui_kramermc.cc	\
 	ui_muglerpc.cc	\
+	ui_vcs80.cc	\
 	scanline.cc	\
 	memaccess.cc	\
 	module.cc	\

@@ -18,7 +18,10 @@ KEYMAPS = \
 	poly880_keyboard_pressed.xpm \
 	lc80.key \
 	lc80_keyboard.xpm \
-	lc80_keyboard_pressed.xpm
+	lc80_keyboard_pressed.xpm \
+	vcs80.key \
+	vcs80_keyboard_pressed.xpm \
+	vcs80_keyboard.xpm
 
 keymap_DATA = $(KEYMAPS)
 
@@ -41,6 +44,7 @@ libui_gtk_a_SOURCES = \
 	ui_gtk9.cc		\
 	ui_gtk_kramermc.cc	\
 	ui_gtk_muglerpc.cc	\
+	ui_gtk_vcs80.cc		\
 	cmd.cc			\
 	window.cc		\
 	disk.cc			\

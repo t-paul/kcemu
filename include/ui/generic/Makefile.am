@@ -11,6 +11,7 @@ EXTRA_DIST = \
 	ui_led.h	\
 	ui_kramermc.h	\
 	ui_muglerpc.h	\
+	ui_vcs80.h	\
 	tape.h		\
 	module.h	\
 	scanline.h	\

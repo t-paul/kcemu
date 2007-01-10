@@ -187,17 +187,17 @@ UI_LED::generic_draw_point(int x, int y, byte_t col, bool clear_cache)
 
 /*
  *
- *                  LC 80          POLY 880
- *
- *                    4              32              
- *      -a-	     ---      	     ---      
- *     |   |	 2  |   | 1   	 64 |   | 128   
- *     b   f	    | 8 |     	    |16 |     
- *      -g-	     ---      	     ---      
- *     |   |	 64 |   | 32  	  1 |   | 4
- *     c   e	    |   |     	    |   |     
- *      -d- (h)	     ---      	     ---      
- * 		     128  (16)	      2  (8)
+ *                  LC 80          POLY 880        VCS 80    
+ *					                       
+ *                    4              32               1              
+ *      -a-	     ---      	     ---             ---       
+ *     |   |	 2  |   | 1   	 64 |   | 128    64 |   | 2   
+ *     b   f	    | 8 |     	    |16 |           |32 |      
+ *      -g-	     ---      	     ---             ---       
+ *     |   |	 64 |   | 32  	  1 |   | 4      16 |   | 4    
+ *     c   e	    |   |     	    |   |           |   |      
+ *      -d- (h)	     ---      	     ---             ---       
+ * 		     128  (16)	      2  (8)          8  (-)   
  */
 void
 UI_LED::generic_draw_digit(int x, int y, int index, byte_t led_value, bool clear_cache)

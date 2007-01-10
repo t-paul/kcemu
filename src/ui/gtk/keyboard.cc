@@ -393,6 +393,9 @@ KeyboardWindow::init_key_regions(void)
     case KC_TYPE_POLY880:
       filename = "poly880.key";
       break;
+    case KC_TYPE_VCS80:
+      filename = "vcs80.key";
+      break;
     case KC_TYPE_Z1013:
     case KC_TYPE_A5105:
     case KC_TYPE_KRAMERMC:

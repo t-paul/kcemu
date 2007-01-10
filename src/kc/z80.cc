@@ -323,7 +323,7 @@ Z80::run(void)
       //if (_regs.PC.W <= 0x8000)
       //z80->printPC(); cout << endl;
 
-      //if (_regs.PC.W == 0xfbbe)
+      //if (_regs.PC.W == 0x0170)
       //z80->debug(true);
 
       if (_singlestep)

@@ -192,11 +192,10 @@ ModuleList::ModuleList(void)
   _mod_list.push_back(new ModuleListEntry(_("<no module>"), m, KC_TYPE_ALL));
 
   /*
-   *  RAM modules 1k at 2400h-27ffh,
-   *                    2800h-2fffh,
-   *                    3000h-3fffh,
-   *                    4000h-7fffh,
-   *                    8000h-ffffh
+   *  RAM modules at 2400h-27ffh / 1k
+   *                 2800h-2fffh / 2k
+   *                 3000h-3fffh / 4k
+   *
    *  (lc80)
    */
   m = new ModuleRAM8("RAM2400", 0x2400, 0x0400);
@@ -205,10 +204,31 @@ ModuleList::ModuleList(void)
   _mod_list.push_back(new ModuleListEntry(_("RAM Module (2k/2800h)"), m, KC_TYPE_LC80));
   m = new ModuleRAM8("RAM3000", 0x3000, 0x1000);
   _mod_list.push_back(new ModuleListEntry(_("RAM Module (4k/3000h)"), m, KC_TYPE_LC80));
+
+  /*
+   *  RAM modules at 0800h-0fffh / 2k
+   *                 1000h-1fffh / 4k
+   *                 2000h-3fffh / 8k
+   *
+   *  (vcs80)
+   */
+  m = new ModuleRAM8("RAM0800", 0x0800, 0x0800);
+  _mod_list.push_back(new ModuleListEntry(_("RAM Module (2k/0800h)"), m, KC_TYPE_VCS80));
+  m = new ModuleRAM8("RAM1000", 0x1000, 0x1000);
+  _mod_list.push_back(new ModuleListEntry(_("RAM Module (4k/1000h)"), m, KC_TYPE_VCS80));
+  m = new ModuleRAM8("RAM2000", 0x2000, 0x2000);
+  _mod_list.push_back(new ModuleListEntry(_("RAM Module (8k/2000h)"), m, KC_TYPE_VCS80));
+
+  /*
+   *  RAM modules at 4000h-7fffh / 16k
+   *                 8000h-ffffh / 32k
+   *
+   *  (lc80 + vcs80)
+   */
   m = new ModuleRAM8("RAM4000", 0x4000, 0x4000);
-  _mod_list.push_back(new ModuleListEntry(_("RAM Module (16k/4000h)"), m, KC_TYPE_LC80));
+  _mod_list.push_back(new ModuleListEntry(_("RAM Module (16k/4000h)"), m, (kc_type_t)(KC_TYPE_LC80 | KC_TYPE_VCS80)));
   m = new ModuleRAM8("RAM8000", 0x8000, 0x8000);
-  _mod_list.push_back(new ModuleListEntry(_("RAM Module (32k/8000h)"), m, KC_TYPE_LC80));
+  _mod_list.push_back(new ModuleListEntry(_("RAM Module (32k/8000h)"), m, (kc_type_t)(KC_TYPE_LC80 | KC_TYPE_VCS80)));
 
   /*
    *  256k RAM floppy (Z1013)

@@ -1,6 +1,6 @@
 ## Process this file with automake to produce Makefile.in
 
-SUBDIRS = kramermc muglerpc
+SUBDIRS = kramermc muglerpc vcs80
 
 bin_PROGRAMS = kcemu
 
@@ -157,6 +157,7 @@ endif
 kcemu_LDADD = \
 	kramermc/libkramermc.a		\
 	muglerpc/libmuglerpc.a		\
+	vcs80/libvcs80.a		\
 	../z80core/libz80.a		\
 	../z80core2/libz80.a		\
 	../fileio/libfileio.a		\

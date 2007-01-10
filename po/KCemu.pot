@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: Torsten.Paul@gmx.de\n"
-"POT-Creation-Date: 2006-11-25 21:28+0100\n"
+"POT-Creation-Date: 2007-01-10 00:08+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -40,26 +40,26 @@ msgid ""
 "programs add this file to a tape-archive!"
 msgstr ""
 
-#: src/kc/kc.cc:253
+#: src/kc/kc.cc:259
 msgid ""
 "    Z1013 with 16k RAM and 2k ROM, running at 1MHz. This was the\n"
 "    first version with cheap circuits so the CPU was clocked at only 1MHz\n"
 "    The ROM containes the Z1013 monitor version 2.02.\n"
 msgstr ""
 
-#: src/kc/kc.cc:258
+#: src/kc/kc.cc:264
 msgid ""
 "    Z1013 with 1k sRAM and 2k ROM, running at 2MHz. Industry\n"
 "    version with only 1k static RAM. Monitor version 2.02.\n"
 msgstr ""
 
-#: src/kc/kc.cc:262
+#: src/kc/kc.cc:268
 msgid ""
 "    Z1013 with 16k RAM and 2k ROM, running at 2MHz. Successor of\n"
 "    the Z1013.01 but with industry grade circuits clocked at 2MHz.\n"
 msgstr ""
 
-#: src/kc/kc.cc:266
+#: src/kc/kc.cc:272
 msgid ""
 "    Z1013 with 64k RAM and 2x2k ROM, running at 2MHz. The ROM\n"
 "    contains two system images with 2k each. Loaded is the first\n"
@@ -67,7 +67,7 @@ msgid ""
 "    shipped by the manufacturer.\n"
 msgstr ""
 
-#: src/kc/kc.cc:272
+#: src/kc/kc.cc:278
 msgid ""
 "    Z1013 with 64k RAM and 2k ROM, running at 2MHz. The ROM\n"
 "    contains two system images with 2k each. Loaded is the second\n"
@@ -75,14 +75,14 @@ msgid ""
 "    8x8 matrix.\n"
 msgstr ""
 
-#: src/kc/kc.cc:278
+#: src/kc/kc.cc:284
 msgid ""
 "    Z1013 with 64k RAM and 4k ROM. The ROM is the extended\n"
 "    version tagged 2.028 RB that has a different keyboard driver for\n"
 "    the keyboard K7659.\n"
 msgstr ""
 
-#: src/kc/kc.cc:283
+#: src/kc/kc.cc:289
 msgid ""
 "    Z1013 with 64k RAM and 4k ROM. The ROM contains the 'Super\n"
 "    Ur-Lader 5.0' that can read arbitrary tape files as system monitor.\n"
@@ -90,44 +90,44 @@ msgid ""
 "    programs to switch off the system ROM.\n"
 msgstr ""
 
-#: src/kc/kc.cc:289
+#: src/kc/kc.cc:295
 msgid ""
 "    Z1013 with 64k RAM and 4k ROM. The ROM contains the Bootloader\n"
 "    BL4 that can load monitor images from floppy disk or can start the\n"
 "    CP/M system.\n"
 msgstr ""
 
-#: src/kc/kc.cc:297
+#: src/kc/kc.cc:303
 msgid ""
 "    Z9001 (later called KC 85/1) with monochrome display, no internal BASIC\n"
 "    ROM. This computer has 16k RAM and 4k ROM with the robotron z9001 "
 "system.\n"
 msgstr ""
 
-#: src/kc/kc.cc:301
+#: src/kc/kc.cc:307
 msgid "    Like the z9001.10 but with color extension card.\n"
 msgstr ""
 
-#: src/kc/kc.cc:313
+#: src/kc/kc.cc:319
 msgid ""
 "    HC900 (later called KC 85/2) with 16k RAM and 8k ROM. System is called\n"
 "    HC-CAOS 2.2 (home computer - cassette aided operating system). BASIC\n"
 "    is only available as external module.\n"
 msgstr ""
 
-#: src/kc/kc.cc:318
+#: src/kc/kc.cc:324
 msgid ""
 "    KC 85/3 with 16k RAM, 8k system ROM with HC-CAOS 3.1 and 8k BASIC ROM.\n"
 msgstr ""
 
-#: src/kc/kc.cc:321
+#: src/kc/kc.cc:327
 msgid ""
 "    KC 85/4 with 64k RAM, 64k screen memory, 12k system ROM with HC-CAOS "
 "4.2\n"
 "    and 8k BASIC ROM.\n"
 msgstr ""
 
-#: src/kc/kc.cc:325
+#: src/kc/kc.cc:331
 msgid ""
 "    Inofficial successor of the KC 85/4 with 256k RAM, 64k screen memory,\n"
 "    16k system ROM with HC-CAOS 4.4, 8k BASIC ROM and 24k User ROM. It is\n"
@@ -135,55 +135,61 @@ msgid ""
 "    hard-disk support.\n"
 msgstr ""
 
-#: src/kc/kc.cc:331
+#: src/kc/kc.cc:337
 msgid "    Polycomputer 880.\n"
 msgstr ""
 
-#: src/kc/kc.cc:337
+#: src/kc/kc.cc:343
 msgid "    Like the KC 87.11 but without the color extension card.\n"
 msgstr ""
 
-#: src/kc/kc.cc:340
+#: src/kc/kc.cc:346
 msgid "    Successor of the Z9001 with internal 10k BASIC ROM.\n"
 msgstr ""
 
-#: src/kc/kc.cc:343
+#: src/kc/kc.cc:349
 msgid "    Like the KC 87.21 but without the color extension card.\n"
 msgstr ""
 
-#: src/kc/kc.cc:346
+#: src/kc/kc.cc:352
 msgid ""
 "    New series with extended BASIC ROM (still 10k but with some routines "
 "for\n"
 "    plotter support were added).\n"
 msgstr ""
 
-#: src/kc/kc.cc:350
+#: src/kc/kc.cc:356
 msgid "    Single board computer LC 80 with 1k RAM and 2k ROM.\n"
 msgstr ""
 
-#: src/kc/kc.cc:353
+#: src/kc/kc.cc:359
 msgid "    BIC/A5105, only the base device is emulated, no floppy device.\n"
 msgstr ""
 
-#: src/kc/kc.cc:359
+#: src/kc/kc.cc:365
 msgid "    BIC/A5105, the full system including the floppy device.\n"
 msgstr ""
 
-#: src/kc/kc.cc:362
+#: src/kc/kc.cc:368
 msgid ""
 "    Micro-Computer presented in the book \"Praktische Microcomputertechnik"
 "\"\n"
 "    by Manfred Kramer.\n"
 msgstr ""
 
-#: src/kc/kc.cc:369
+#: src/kc/kc.cc:375
 msgid ""
 "    CP/M based Micro-Computer presented in the magazine \"Funkamateur\"\n"
 "    by A. Mugler and H. Mathes.\n"
 msgstr ""
 
-#: src/kc/kc.cc:395
+#: src/kc/kc.cc:385
+msgid ""
+"    Minimal Z80 learning system presented in the magazine \"rfe\"\n"
+"    by Eckhard Schiller.\n"
+msgstr ""
+
+#: src/kc/kc.cc:405
 msgid ""
 "\n"
 "KCemu comes with ABSOLUTELY NO WARRANTY; for details run `kcemu --"
@@ -224,11 +230,11 @@ msgid ""
 "  -W --warranty:     show warranty\n"
 msgstr ""
 
-#: src/kc/kc.cc:491
+#: src/kc/kc.cc:501
 msgid "available emulations:"
 msgstr ""
 
-#: src/kc/kc.cc:554
+#: src/kc/kc.cc:564
 msgid ""
 "\n"
 "\t\t    GNU GENERAL PUBLIC LICENSE\n"
@@ -492,7 +498,7 @@ msgid ""
 "\n"
 msgstr ""
 
-#: src/kc/kc.cc:816
+#: src/kc/kc.cc:826
 msgid ""
 "\n"
 "NO WARRANTY\n"
@@ -520,7 +526,7 @@ msgid ""
 "\n"
 msgstr ""
 
-#: src/kc/kc.cc:843
+#: src/kc/kc.cc:853
 msgid ""
 "\n"
 "                     END OF TERMS AND CONDITIONS\n"
@@ -616,187 +622,199 @@ msgstr ""
 msgid "<no module>"
 msgstr ""
 
-#: src/kc/mod_list.cc:203
+#: src/kc/mod_list.cc:202
 msgid "RAM Module (1k/2400h)"
 msgstr ""
 
-#: src/kc/mod_list.cc:205
+#: src/kc/mod_list.cc:204
 msgid "RAM Module (2k/2800h)"
 msgstr ""
 
-#: src/kc/mod_list.cc:207
+#: src/kc/mod_list.cc:206
 msgid "RAM Module (4k/3000h)"
 msgstr ""
 
-#: src/kc/mod_list.cc:209 src/kc/mod_list.cc:272
+#: src/kc/mod_list.cc:216
+msgid "RAM Module (2k/0800h)"
+msgstr ""
+
+#: src/kc/mod_list.cc:218
+msgid "RAM Module (4k/1000h)"
+msgstr ""
+
+#: src/kc/mod_list.cc:220
+msgid "RAM Module (8k/2000h)"
+msgstr ""
+
+#: src/kc/mod_list.cc:229 src/kc/mod_list.cc:292
 msgid "RAM Module (16k/4000h)"
 msgstr ""
 
-#: src/kc/mod_list.cc:211
+#: src/kc/mod_list.cc:231
 msgid "RAM Module (32k/8000h)"
 msgstr ""
 
-#: src/kc/mod_list.cc:217
+#: src/kc/mod_list.cc:237
 msgid "256k RAM Floppy"
 msgstr ""
 
-#: src/kc/mod_list.cc:223
+#: src/kc/mod_list.cc:243
 msgid "FDC (Schneider)"
 msgstr ""
 
-#: src/kc/mod_list.cc:229
+#: src/kc/mod_list.cc:249
 msgid "FDC (Kramer)"
 msgstr ""
 
-#: src/kc/mod_list.cc:235
+#: src/kc/mod_list.cc:255
 msgid "GDC 82720"
 msgstr ""
 
-#: src/kc/mod_list.cc:241
+#: src/kc/mod_list.cc:261
 msgid "RTC (port 20h-2fh)"
 msgstr ""
 
-#: src/kc/mod_list.cc:247
+#: src/kc/mod_list.cc:267
 msgid "RTC (port 70h-7fh)"
 msgstr ""
 
-#: src/kc/mod_list.cc:254
+#: src/kc/mod_list.cc:274
 msgid "Basic Module (c000h-e7ffh)"
 msgstr ""
 
-#: src/kc/mod_list.cc:266
+#: src/kc/mod_list.cc:286
 msgid "Plotter Module (c000h-e7ffh)"
 msgstr ""
 
-#: src/kc/mod_list.cc:274
+#: src/kc/mod_list.cc:294
 msgid "RAM Module (16k/8000h)"
 msgstr ""
 
-#: src/kc/mod_list.cc:281
+#: src/kc/mod_list.cc:301
 msgid "ZM30 (c000h-ccffh)"
 msgstr ""
 
-#: src/kc/mod_list.cc:288
+#: src/kc/mod_list.cc:308
 msgid "EDAS (c000h-e7ffh)"
 msgstr ""
 
-#: src/kc/mod_list.cc:295
+#: src/kc/mod_list.cc:315
 msgid "IDAS / ZM (c000h-e7ffh)"
 msgstr ""
 
-#: src/kc/mod_list.cc:302
+#: src/kc/mod_list.cc:322
 msgid "BITEX (c000h-d7ffh)"
 msgstr ""
 
-#: src/kc/mod_list.cc:333
+#: src/kc/mod_list.cc:353
 msgid "192 KByte RAM/EPROM"
 msgstr ""
 
-#: src/kc/mod_list.cc:340
+#: src/kc/mod_list.cc:360
 msgid "KC-Pascal Module"
 msgstr ""
 
-#: src/kc/mod_list.cc:347
+#: src/kc/mod_list.cc:367
 msgid "Mega-ROM Module"
 msgstr ""
 
-#: src/kc/mod_list.cc:354
+#: src/kc/mod_list.cc:374
 msgid "128k ROM Bank"
 msgstr ""
 
-#: src/kc/mod_list.cc:363 src/ui/gtk/module.cc:258
+#: src/kc/mod_list.cc:383 src/ui/gtk/module.cc:270
 msgid "IRM Color Expansion"
 msgstr ""
 
-#: src/kc/mod_list.cc:378
+#: src/kc/mod_list.cc:398
 msgid "Plotter XY4131"
 msgstr ""
 
-#: src/kc/mod_list.cc:386
+#: src/kc/mod_list.cc:406
 msgid "CPM-Z9 BOOT (c000h-c7ffh)"
 msgstr ""
 
-#: src/kc/mod_list.cc:392
+#: src/kc/mod_list.cc:412
 msgid "CPM-Z9 Floppy"
 msgstr ""
 
-#: src/kc/mod_list.cc:398
+#: src/kc/mod_list.cc:418
 msgid "CPM-Z9 64k RAM"
 msgstr ""
 
-#: src/kc/mod_list.cc:404
+#: src/kc/mod_list.cc:424
 msgid "M001: Digital In / Out"
 msgstr ""
 
-#: src/kc/mod_list.cc:413
+#: src/kc/mod_list.cc:433
 msgid "M003: V24"
 msgstr ""
 
-#: src/kc/mod_list.cc:422
+#: src/kc/mod_list.cc:442
 msgid "M006: Basic"
 msgstr ""
 
-#: src/kc/mod_list.cc:429
+#: src/kc/mod_list.cc:449
 msgid "M008: Joystick"
 msgstr ""
 
-#: src/kc/mod_list.cc:436
+#: src/kc/mod_list.cc:456
 msgid "M011: 64k RAM"
 msgstr ""
 
-#: src/kc/mod_list.cc:443
+#: src/kc/mod_list.cc:463
 msgid "M012: Texor"
 msgstr ""
 
-#: src/kc/mod_list.cc:449
+#: src/kc/mod_list.cc:469
 msgid "M022: Expander RAM (16k)"
 msgstr ""
 
-#: src/kc/mod_list.cc:456
+#: src/kc/mod_list.cc:476
 msgid "M026: Forth"
 msgstr ""
 
-#: src/kc/mod_list.cc:463
+#: src/kc/mod_list.cc:483
 msgid "M027: Development"
 msgstr ""
 
-#: src/kc/mod_list.cc:469
+#: src/kc/mod_list.cc:489
 msgid "M032: 256k Segmented RAM"
 msgstr ""
 
-#: src/kc/mod_list.cc:475
+#: src/kc/mod_list.cc:495
 msgid "M034: 512k Segmented RAM"
 msgstr ""
 
-#: src/kc/mod_list.cc:481
+#: src/kc/mod_list.cc:501
 msgid "M035: 1M Segmented RAM"
 msgstr ""
 
-#: src/kc/mod_list.cc:487
+#: src/kc/mod_list.cc:507
 msgid "M035x4: 4M RAM"
 msgstr ""
 
-#: src/kc/mod_list.cc:493
+#: src/kc/mod_list.cc:513
 msgid "M036: 128k Segmented RAM"
 msgstr ""
 
-#: src/kc/mod_list.cc:500
+#: src/kc/mod_list.cc:520
 msgid "M900: WordPro '86 (KC85/3)"
 msgstr ""
 
-#: src/kc/mod_list.cc:507
+#: src/kc/mod_list.cc:527
 msgid "M901: WordPro '86 (KC85/4)"
 msgstr ""
 
-#: src/kc/mod_list.cc:514
+#: src/kc/mod_list.cc:534
 msgid "Floppy Disk Basis F8"
 msgstr ""
 
-#: src/kc/mod_list.cc:527
+#: src/kc/mod_list.cc:547
 msgid "Floppy Disk Basis FC"
 msgstr ""
 
-#: src/kc/mod_list.cc:738
+#: src/kc/mod_list.cc:758
 msgid "Autostart"
 msgstr ""
 
@@ -882,7 +900,7 @@ msgstr ""
 msgid "White Level"
 msgstr ""
 
-#: src/ui/gtk/color.cc:243 src/ui/gtk/info.cc:557 src/ui/gtk/keyboard.cc:632
+#: src/ui/gtk/color.cc:243 src/ui/gtk/info.cc:557 src/ui/gtk/keyboard.cc:635
 #: src/ui/gtk/wav.cc:148
 msgid "Close"
 msgstr ""
@@ -1055,20 +1073,26 @@ msgid "Update"
 msgstr ""
 
 #: src/ui/gtk/module.cc:217
+msgid "No module slots available for this computer."
+msgstr ""
+
+#: src/ui/gtk/module.cc:229
 #, c-format
 msgid "Slot %d"
 msgstr ""
 
-#: src/ui/gtk/module.cc:309
+#: src/ui/gtk/module.cc:321
 msgid "Floppy Disk Basis [F0]"
 msgstr ""
 
-#: src/ui/gtk/module.cc:314
+#: src/ui/gtk/module.cc:326
 #, c-format
 msgid "D002: Busdriver [%02X]"
 msgstr ""
 
-#: src/ui/gtk/module.cc:319 src/ui/gtk/module.cc:321 src/ui/gtk/module.cc:323
+#: src/ui/gtk/module.cc:337 src/ui/gtk/module.cc:344 src/ui/gtk/module.cc:348
+#: src/ui/gtk/module.cc:352 src/ui/gtk/module.cc:356 src/ui/gtk/module.cc:360
+#: src/ui/gtk/module.cc:364 src/ui/gtk/module.cc:368 src/ui/gtk/module.cc:372
 msgid "Basis Device"
 msgstr ""
 
@@ -1180,11 +1204,11 @@ msgstr ""
 msgid "/Export Wav"
 msgstr ""
 
-#: src/ui/gtk/keyboard.cc:562
+#: src/ui/gtk/keyboard.cc:565
 msgid "KCemu: Keyboard"
 msgstr ""
 
-#: src/ui/gtk/keyboard.cc:616
+#: src/ui/gtk/keyboard.cc:619
 msgid ""
 "\n"
 "  Sorry, keyboard display not configured.  \n"
@@ -1298,7 +1322,7 @@ msgstr ""
 msgid "/Configuration/_Colors"
 msgstr ""
 
-#: src/ui/gtk/ui_gtk.cc:660 src/ui/gtk/ui_gtk.cc:850 src/ui/gtk/ui_gtk.cc:1093
+#: src/ui/gtk/ui_gtk.cc:660 src/ui/gtk/ui_gtk.cc:853 src/ui/gtk/ui_gtk.cc:1096
 msgid "/Configuration/_Display Effects"
 msgstr ""
 
@@ -1390,12 +1414,12 @@ msgstr ""
 msgid "/_Quit Emulator"
 msgstr ""
 
-#: src/ui/gtk/ui_gtk.cc:899
+#: src/ui/gtk/ui_gtk.cc:902
 #, c-format
 msgid "%s (%s)"
 msgstr ""
 
-#: src/ui/gtk/ui_gtk.cc:1592
+#: src/ui/gtk/ui_gtk.cc:1595
 msgid "Info"
 msgstr ""
 

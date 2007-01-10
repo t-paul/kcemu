@@ -836,6 +836,9 @@ UI_Gtk::create_main_window(void)
     case KC_TYPE_MUGLERPC:
       g_object_set_data(G_OBJECT(_main.window), "help-topic", (gpointer)"sys-muglerpc");
       break;
+    case KC_TYPE_VCS80:
+      g_object_set_data(G_OBJECT(_main.window), "help-topic", (gpointer)"sys-vcs80");
+      break;
     case KC_TYPE_ALL:
     case KC_TYPE_NONE:
     case KC_TYPE_85_1_CLASS:
