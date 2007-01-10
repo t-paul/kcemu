@@ -653,10 +653,10 @@ GIDE::in_rtc(word_t addr)
       val = day / 10;
       break;
     case 0x08:
-      val = (month + 1) % 10;
+      val = month % 10;
       break;
     case 0x09:
-      val = (month + 1) / 10;
+      val = month / 10;
       break;
     case 0x0a:
       val = year % 10;
