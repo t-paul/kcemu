@@ -116,66 +116,65 @@
 
   Es stehen die folgenden Kommandozeilenparameter zur Verfügung:
 
-  -0:              Starten im <link ref="sys-z1013">Z1013</link> Modus
-  -1:              Starten im <link ref="sys-z9001">Z9001 / KC 85/1</link> Modus
-  -2:              Starten im <link ref="sys-kc85">KC 85/2</link> Modus
-  -3:              Starten im <link ref="sys-kc85">KC 85/3</link> Modus
-  -4:              Starten im <link ref="sys-kc85">KC 85/4</link> Modus (default)
-  -5:              Starten im <link ref="sys-kc855">KC 85/5</link> Modus
-  -6:              Starten im <link ref="sys-poly880">Poly-880</link> Modus
-  -7:              Starten im <link ref="sys-z9001">KC 87</link> Modus
-  -8:              Starten im <link ref="sys-lc80">LC 80</link> Modus
-  -9:              Starten im <link ref="sys-a5105">BIC/A5105</link> Modus
-  -a --autostart:  Automatischer Start des angegebenen Programms (nur kc85/3 - kc85/5)
-  -A --address:    Startadresse für das automatisch zu startende Programm
-  -c --config:     zusätzliche Einstellungen aus angegebenen File lesen
-  -e --emulate:    Emuliere das angegebene System (-v liefert Liste der Typen)
-  -s --scale:      Vergrößerung der Anzeige (erlaubt sind die Werte 1, 2 und 3)
-  -t --tape:       Aktivieren eines Tape-Archives beim Start
-  -f --floppy:     Aktivieren eines Disketten-Images beim Start
-  -h --help:       diese Hilfe anzeigen
-  -d --datadir:    Setzen des Daten-Verzeichnisses (für ROM-Images)
-  -l --localedir:  Setzen des Locale-Verzeichnisses für die Sprachanpassung
-  -M --modul:      Modul(e) für die ersten Steckplätze definieren
-      -MM022,M011,...  Einstellungen der Konfigurationsdatei werden überschrieben
-      -M+M022,M011,... zusätzliche Module zu denen aus der Konfigurationsadtei 
-  -v --version:    Anzeige der KCemu Version und Konfiguration
-  -V --viewlist:   Ausführliche Liste der emulierten Typen
-  -H --home:       Überschreiben der Einstellung für das Homeverzeichnis
-  -F --fullscreen: Start im Vollbild-Modus (wenn durch GUI unterstützt)
-  -E --effects:    Anzeige mit Screen-Effekten bei vergrößerter Darstellung
-  -L --license:    Anzeige der Lizenz
-  -W --warranty:   Anzeige des Haftungsausschlusses
+<m> -0              </m>Starten im <link ref="sys-z1013">Z1013</link> Modus
+<m> -1              </m>Starten im <link ref="sys-z9001">Z9001 / KC 85/1</link> Modus
+<m> -2              </m>Starten im <link ref="sys-kc85">KC 85/2</link> Modus
+<m> -3              </m>Starten im <link ref="sys-kc85">KC 85/3</link> Modus
+<m> -4              </m>Starten im <link ref="sys-kc85">KC 85/4</link> Modus (default)
+<m> -5              </m>Starten im <link ref="sys-kc855">KC 85/5</link> Modus
+<m> -6              </m>Starten im <link ref="sys-poly880">Poly-880</link> Modus
+<m> -7              </m>Starten im <link ref="sys-z9001">KC 87</link> Modus
+<m> -8              </m>Starten im <link ref="sys-lc80">LC 80</link> Modus
+<m> -9              </m>Starten im <link ref="sys-a5105">BIC/A5105</link> Modus
+<m> -a --autostart  </m>Automatischer Start des angegebenen Programms (KC 85/3 - /5)
+<m> -A --address    </m>Startadresse für das automatisch zu startende Programm
+<m> -c --config     </m>zusätzliche Einstellungen aus angegebenen File lesen
+<m> -e --emulate    </m>Emuliere das angegebene System (-v liefert Liste der Typen)
+<m> -s --scale      </m>Vergrößerung der Anzeige (erlaubt sind die Werte 1, 2 und 3)
+<m> -t --tape       </m>Aktivieren eines Tape-Archives beim Start
+<m> -f --floppy     </m>Aktivieren eines Disketten-Images beim Start
+<m> -h --help       </m>diese Hilfe anzeigen
+<m> -d --datadir    </m>Setzen des Daten-Verzeichnisses (für ROM-Images)
+<m> -l --localedir  </m>Setzen des Locale-Verzeichnisses für die Sprachanpassung
+<m> -M --modules    </m>Modul(e) für die ersten Steckplätze definieren
+<m> -MM022,M011,..  </m>Einstellungen der Konfigurationsdatei werden überschrieben
+<m> -M+M022,M011,.. </m>zusätzliche Module zu denen aus der Konfigurationsdatei 
+<m> -v --version    </m>Anzeige der KCemu Version und Konfiguration
+<m> -V --viewlist   </m>Ausführliche Liste der emulierten Typen
+<m> -H --home       </m>Überschreiben der Einstellung für das Homeverzeichnis
+<m> -F --fullscreen </m>Start im Vollbild-Modus (wenn durch GUI unterstützt)
+<m> -E --effects    </m>Anzeige mit Screen-Effekten bei vergrößerter Darstellung
+<m> -L --license    </m>Anzeige der Lizenz
+<m> -W --warranty   </m>Anzeige des Haftungsausschlusses
 
 
 </p>
 
 <p><size value="2"><ref name="keycommands"/>1.4. Tastenbedienung</size>
 
-  Die normale Tastenebene steht einschließlich den F-Tasten dem emulierten KC-System
-  zur Verfügung, darüber hinaus ist eine Steuerung des Emulators über die folgenden
-  Tastenkombinationen möglich:
-
-  ALT + 1          Zoom x 1
-  ALT + 2          Zoom x 2
-  ALT + 3          Zoom x 3
-  ALT + A          Menü Ansicht (ALT+V in engl. Version)
-  ALT + C          Konfiguration der Farbeinstellung
-  ALT + D          Diskette...
-  ALT + E          Menü Emulator
-  ALT + G          Maximale Geschwindigkeit ein/aus
-  ALT + H          Menü Hilfe
-  ALT + I          Information über CPU / PIO / CTC
-  ALT + K          Tastatur
-  ALT + L          Laden...
-  ALT + M          Module...
-  ALT + O          Menü Optionen
-  ALT + P          Einschalten (Power On)
-  ALT + Q (ALT-F4) Emulator beenden
-  ALT + R          Reset des KC
-  ALT + T          Kassette
-  ALT + U          Audio...
-
+  Der Emulator kann über die folgenden Tastenkombinationen gesteuert werden:
+<m>
+ ALT + 1          Zoom x 1
+ ALT + 2          Zoom x 2
+ ALT + 3          Zoom x 3
+ ALT + A          Menü "Ansicht" (nur deutsche Version)
+ ALT + C          Konfiguration der Farbeinstellung
+ ALT + D          Diskette...
+ ALT + E          Menü "Emulator"
+ ALT + G          Maximale Geschwindigkeit ein/aus
+ ALT + H          Menü "Hilfe"
+ ALT + I          Information über CPU / PIO / CTC
+ ALT + K          Tastatur
+ ALT + L          Laden...
+ ALT + M          Module...
+ ALT + O          Menü "Optionen"
+ ALT + P          Einschalten (Power On)
+ ALT + Q (ALT-F4) Emulator beenden
+ ALT + R          Reset
+ ALT + T          Kassette (Tape)
+ ALT + U          Audio...
+ ALT + V          Menü "View" (nur englische Version)
+</m>
 
 </p>
 

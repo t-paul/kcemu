@@ -46,6 +46,7 @@ class HelpWindow : public UI_Gtk_Window
     GtkTextTag    *tag_italic;
     GtkTextTag    *tag_underline;
     GtkTextTag    *tag_center;
+    GtkTextTag    *tag_monospaced;
     GtkTextTag    *tag_size[7];
     GtkTextBuffer *text_buffer;
   } _w;
@@ -54,11 +55,12 @@ class HelpWindow : public UI_Gtk_Window
   GList *_history_ptr;
 
   enum {
-    PARSE_FLAGS_DEFAULT   = 0,
-    PARSE_FLAGS_BOLD      = (1 << 0),
-    PARSE_FLAGS_ITALIC    = (1 << 1),
-    PARSE_FLAGS_UNDERLINE = (1 << 2),
-    PARSE_FLAGS_CENTER    = (1 << 3),
+    PARSE_FLAGS_DEFAULT    = 0,
+    PARSE_FLAGS_BOLD       = (1 << 0),
+    PARSE_FLAGS_ITALIC     = (1 << 1),
+    PARSE_FLAGS_UNDERLINE  = (1 << 2),
+    PARSE_FLAGS_CENTER     = (1 << 3),
+    PARSE_FLAGS_MONOSPACED = (1 << 4),
   };
 
   typedef enum {

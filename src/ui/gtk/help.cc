@@ -305,6 +305,10 @@ HelpWindow::sf_parser_start_element_handler(GMarkupParseContext *context, const 
     {
       w->parse_flags |= PARSE_FLAGS_CENTER;
     }
+  else if (strcmp(element_name, "m") == 0)
+    {
+      w->parse_flags |= PARSE_FLAGS_MONOSPACED;
+    }
   else if (strcmp(element_name, "p") == 0)
     {
       w->parse_state = PARSE_STATE_TEXT;
@@ -335,6 +339,10 @@ HelpWindow::sf_parser_end_element_handler(GMarkupParseContext *context, const gc
   if (strcmp(element_name, "c") == 0)
     {
       w->parse_flags &= ~PARSE_FLAGS_CENTER;
+    }
+  if (strcmp(element_name, "m") == 0)
+    {
+      w->parse_flags &= ~PARSE_FLAGS_MONOSPACED;
     }
   if (strcmp(element_name, "p") == 0)
     {
@@ -427,6 +435,7 @@ HelpWindow::init2(void)
   _w.tag_italic = gtk_text_buffer_create_tag(_w.text_buffer, "italic", "style", PANGO_STYLE_ITALIC, NULL);
   _w.tag_underline = gtk_text_buffer_create_tag(_w.text_buffer, "underline", "underline", PANGO_UNDERLINE_DOUBLE, NULL);
   _w.tag_center = gtk_text_buffer_create_tag(_w.text_buffer, "center", "justification", GTK_JUSTIFY_CENTER, NULL);
+  _w.tag_monospaced = gtk_text_buffer_create_tag(_w.text_buffer, "monospaced", "font", "Monospace", NULL);
   
   _w.tag_size[0] = gtk_text_buffer_create_tag(_w.text_buffer, "size -3", "scale", PANGO_SCALE_XX_SMALL, NULL);
   _w.tag_size[1] = gtk_text_buffer_create_tag(_w.text_buffer, "size -2", "scale", PANGO_SCALE_X_SMALL, NULL);
@@ -548,9 +557,9 @@ HelpWindow::insert_ref(const char *name)
 void
 HelpWindow::insert_text(const char *text, GtkTextTag *tag)
 {
-  GtkTextTag *tags[6];
+  GtkTextTag *tags[7];
 
-  tags[0] = tags[1] = tags[2] = tags[3] = tags[4] = tags[5] = NULL;
+  tags[0] = tags[1] = tags[2] = tags[3] = tags[4] = tags[5] = tags[6] = NULL;
 
   int i = 0;
 
@@ -562,12 +571,14 @@ HelpWindow::insert_text(const char *text, GtkTextTag *tag)
     tags[i++] = _w.tag_underline;
   if (parse_flags & PARSE_FLAGS_CENTER)
     tags[i++] = _w.tag_center;
+  if (parse_flags & PARSE_FLAGS_MONOSPACED)
+    tags[i++] = _w.tag_monospaced;
   if (_w.tag_size[text_size + 3] != NULL)
     tags[i++] = _w.tag_size[text_size + 3];
   if (tag != NULL)
     tags[i++] = tag;
 
-  gtk_text_buffer_insert_with_tags(_w.text_buffer, &iter, text, -1, tags[0], tags[1], tags[2], tags[3], tags[4], tags[5], NULL);
+  gtk_text_buffer_insert_with_tags(_w.text_buffer, &iter, text, -1, tags[0], tags[1], tags[2], tags[3], tags[4], tags[5], tags[6], NULL);
 }
 
 void
