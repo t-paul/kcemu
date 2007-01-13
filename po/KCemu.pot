@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: Torsten.Paul@gmx.de\n"
-"POT-Creation-Date: 2007-01-10 22:34+0100\n"
+"POT-Creation-Date: 2007-01-12 20:44+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1322,7 +1322,7 @@ msgstr ""
 msgid "/Options/_Colors"
 msgstr ""
 
-#: src/ui/gtk/ui_gtk.cc:660 src/ui/gtk/ui_gtk.cc:853 src/ui/gtk/ui_gtk.cc:1096
+#: src/ui/gtk/ui_gtk.cc:660 src/ui/gtk/ui_gtk.cc:891 src/ui/gtk/ui_gtk.cc:1134
 msgid "/Options/_Display Effects"
 msgstr ""
 
@@ -1414,12 +1414,12 @@ msgstr ""
 msgid "/_Quit Emulator"
 msgstr ""
 
-#: src/ui/gtk/ui_gtk.cc:902
+#: src/ui/gtk/ui_gtk.cc:940
 #, c-format
 msgid "%s (%s)"
 msgstr ""
 
-#: src/ui/gtk/ui_gtk.cc:1595
+#: src/ui/gtk/ui_gtk.cc:1633
 msgid "Info"
 msgstr ""
 

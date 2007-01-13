@@ -25,9 +25,20 @@ AM_CPPFLAGS = \
 	$(GTK_CFLAGS) \
 	$(SDL_CFLAGS)
 
+
+LINUX_EXTRA_kcemu_SOURCES = mod_v24.cc mod_js.cc mod_4131.cc
+MINGW_EXTRA_kcemu_SOURCES = kcemu.rc
+ALL_EXTRA_kcemu_SOURCES = $(LINUX_EXTRA_kcemu_SOURCES) $(MINGW_EXTRA_kcemu_SOURCES)
+
 if TARGET_LINUX
-EXTRA_kcemu_SOURCES = mod_v24.cc mod_js.cc mod_4131.cc
+EXTRA_kcemu_SOURCES = $(LINUX_EXTRA_kcemu_SOURCES)
 endif
+
+if TARGET_MINGW
+EXTRA_kcemu_SOURCES = $(MINGW_EXTRA_kcemu_SOURCES)
+endif
+
+EXTRA_DIST = $(ALL_EXTRA_kcemu_SOURCES)
 
 kcemu_SOURCES = \
 	debug.cc	\
@@ -115,7 +126,6 @@ kcemu_SOURCES = \
 	mod_gdc.cc	\
 	mod_rtc.cc	\
 	mod_disk.cc	\
-	$(EXTRA_kcemu_SOURCES) \
 	mod_list.cc	\
 	tape.cc		\
 	disk.cc		\
@@ -129,7 +139,8 @@ kcemu_SOURCES = \
 	sound.cc	\
 	sound3.cc	\
 	sound8.cc	\
-	disass.cc
+	disass.cc	\
+	$(EXTRA_kcemu_SOURCES)
 
 if TARGET_UI_GTK
 UILIBS_GTK = ../ui/gtk/libui_gtk.a ../ui/gtk/glade/libui_glade.a
@@ -189,3 +200,18 @@ kcemu_send_SOURCES = \
 
 kcemu_send_LDADD = \
 	-lncurses $(INTLLIBS)
+
+#
+# Setting icons for Windows programs with gcc
+# http://fragglet.livejournal.com/4448.html
+#
+# I found I needed the windres rule twice, in the two forms
+# shown. The first tells automake to recognise .rc files
+# (it doesn't understand the second form), while the version
+# of make I was using (GNU make) didn't seem to like the
+# second form. Weird.
+#
+.rc.o:
+	$(RC) $^ -o $@
+%.o : %.rc
+	$(RC) $^ -o $@

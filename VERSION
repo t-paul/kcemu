@@ -3,4 +3,23 @@ PACKAGE=KCemu
 KCEMU_MAJOR_VERSION=0
 KCEMU_MINOR_VERSION=3
 KCEMU_MICRO_VERSION=8
-KCEMU_EXTRA_VERSION=beta7
+KCEMU_EXTRA_VERSION=7
+KCEMU_EXTRA_VERSION_TEXT=beta
+
+################################################################
+
+if test $KCEMU_MICRO_VERSION -eq 0
+then
+        KCEMU_VERSION=${KCEMU_MAJOR_VERSION}.${KCEMU_MINOR_VERSION}
+else
+        KCEMU_VERSION=${KCEMU_MAJOR_VERSION}.${KCEMU_MINOR_VERSION}.${KCEMU_MICRO_VERSION}
+fi
+
+if test x"$KCEMU_EXTRA_VERSION_TEXT" != x
+then
+        KCEMU_VERSION=${KCEMU_VERSION}${KCEMU_EXTRA_VERSION_TEXT}${KCEMU_EXTRA_VERSION}
+else
+        KCEMU_EXTRA_VERSION=0
+fi
+
+################################################################

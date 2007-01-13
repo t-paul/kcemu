@@ -35,6 +35,12 @@ images/original/Makefile.in
 images/original/Makefile
 images/Makefile.in
 images/Makefile
+images/kcemu-winicon_16x16.alpha.pgm
+images/kcemu-winicon_16x16.ppm
+images/kcemu-winicon_32x32.alpha.pgm
+images/kcemu-winicon_32x32.ppm
+images/kcemu-winicon_48x48.alpha.pgm
+images/kcemu-winicon_48x48.ppm
 include/cmd/Makefile.in
 include/cmd/Makefile
 include/fileio/Makefile.in
@@ -115,6 +121,7 @@ src/kc/muglerpc/Makefile.in
 src/kc/muglerpc/Makefile
 src/kc/Makefile.in
 src/kc/Makefile
+src/kc/kcemu.rc
 src/libaudio/Makefile.in
 src/libaudio/Makefile
 src/libdbg/Makefile.in
@@ -183,6 +190,8 @@ po/remove-potcdate.sed
 po/stamp-po
 setup/KCemuSetup.nsi
 setup/KCemuSetup_gtk2.4.nsi
+setup/KCemuSetup_gtk2.6.nsi
+setup/KCemuSetup_gtk2.8.nsi
 src/fileio/kc2img
 src/fileio/kc2raw
 src/fileio/kc2tap

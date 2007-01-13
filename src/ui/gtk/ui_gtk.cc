@@ -801,50 +801,88 @@ UI_Gtk::create_main_window(void)
   gtk_misc_set_padding(GTK_MISC(GTK_STATUSBAR(_main.st_statusbar)->label), 4, 0); // hmm, is there a better way?
   gtk_widget_show(_main.st_statusbar);
 
-  /*
-   *  help context
-   */
+  string winicon;
+  
   switch (get_kc_type())
     {
     case KC_TYPE_85_1:
     case KC_TYPE_87:
+      winicon = "kcemu-kc87.xpm";
       g_object_set_data(G_OBJECT(_main.window), "help-topic", (gpointer)"sys-z9001");
       break;
     case KC_TYPE_85_2:
     case KC_TYPE_85_3:
     case KC_TYPE_85_4:
+      winicon = "kcemu-kc85.xpm";
       g_object_set_data(G_OBJECT(_main.window), "help-topic", (gpointer)"sys-kc85");
       break;
     case KC_TYPE_85_5:
+      winicon = "kcemu-kc85.xpm";
       g_object_set_data(G_OBJECT(_main.window), "help-topic", (gpointer)"sys-kc855");
       break;
     case KC_TYPE_LC80:
+      winicon = "kcemu-lc80.xpm";
       g_object_set_data(G_OBJECT(_main.window), "help-topic", (gpointer)"sys-lc80");
       break;
     case KC_TYPE_Z1013:
+      winicon = "kcemu-z1013.xpm";
       g_object_set_data(G_OBJECT(_main.window), "help-topic", (gpointer)"sys-z1013");
       break;
     case KC_TYPE_A5105:
+      winicon = "kcemu-bic.xpm";
       g_object_set_data(G_OBJECT(_main.window), "help-topic", (gpointer)"sys-a5105");
       break;
     case KC_TYPE_POLY880:
+      winicon = "kcemu-poly880.xpm";
       g_object_set_data(G_OBJECT(_main.window), "help-topic", (gpointer)"sys-poly880");
       break;
     case KC_TYPE_KRAMERMC:
+      winicon = "kcemu-kramermc.xpm";
       g_object_set_data(G_OBJECT(_main.window), "help-topic", (gpointer)"sys-kramermc");
       break;
     case KC_TYPE_MUGLERPC:
+      winicon = "kcemu-pcm.xpm";
       g_object_set_data(G_OBJECT(_main.window), "help-topic", (gpointer)"sys-muglerpc");
       break;
     case KC_TYPE_VCS80:
+      winicon = "kcemu-vcs80.xpm";
       g_object_set_data(G_OBJECT(_main.window), "help-topic", (gpointer)"sys-vcs80");
       break;
     case KC_TYPE_ALL:
     case KC_TYPE_NONE:
     case KC_TYPE_85_1_CLASS:
     case KC_TYPE_85_2_CLASS:
+      DBG(0, form("KCemu/internal_error",
+		  "KCemu: got unhandled value from get_kc_type(): %d\n",
+		  get_kc_type()));
       break;
     }
+
+  string datadir(kcemu_datadir);
+  string icondir = datadir + "/icons/";
+  string iconpath = icondir + winicon;
+  string iconpath16 = icondir + "kcemu-winicon_16x16.png";
+  string iconpath32 = icondir + "kcemu-winicon_32x32.png";
+  string iconpath48 = icondir + "kcemu-winicon_48x48.png";
+
+  GdkPixbuf *pixbuf16 = gdk_pixbuf_new_from_file(iconpath16.c_str(), NULL);
+  GdkPixbuf *pixbuf32 = gdk_pixbuf_new_from_file(iconpath32.c_str(), NULL);
+  GdkPixbuf *pixbuf48 = gdk_pixbuf_new_from_file(iconpath48.c_str(), NULL);
+
+  GList *icon_list = NULL;
+  if (pixbuf16 != NULL)
+    icon_list = g_list_append(icon_list, pixbuf16);
+  if (pixbuf32 != NULL)
+    icon_list = g_list_append(icon_list, pixbuf32);
+  if (pixbuf48 != NULL)
+    icon_list = g_list_append(icon_list, pixbuf48);
+
+  // set system dependend icon for main window
+  gtk_window_set_icon_from_file(GTK_WINDOW(_main.window), iconpath.c_str(), NULL);
+
+  // set default icon list for all other windows
+  if (icon_list != NULL)
+    gtk_window_set_default_icon_list(icon_list);
 }
 
 void

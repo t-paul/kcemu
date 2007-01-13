@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: KCemu v0.3.8\n"
 "Report-Msgid-Bugs-To: Torsten.Paul@gmx.de\n"
-"POT-Creation-Date: 2007-01-10 22:34+0100\n"
+"POT-Creation-Date: 2007-01-12 20:44+0100\n"
 "PO-Revision-Date: 2007-01-10 02:42+0100\n"
 "Last-Translator: Torsten Paul <Torsten.Paul@gmx.de>\n"
 "Language-Team: German <Torsten.Paul@gmx.de>\n"
@@ -1960,7 +1960,7 @@ msgstr "/_Optionen"
 msgid "/Options/_Colors"
 msgstr "/Optionen/_Farben"
 
-#: src/ui/gtk/ui_gtk.cc:660 src/ui/gtk/ui_gtk.cc:853 src/ui/gtk/ui_gtk.cc:1096
+#: src/ui/gtk/ui_gtk.cc:660 src/ui/gtk/ui_gtk.cc:891 src/ui/gtk/ui_gtk.cc:1134
 msgid "/Options/_Display Effects"
 msgstr "/Optionen/_Effekte"
 
@@ -2052,12 +2052,12 @@ msgstr "/sep3"
 msgid "/_Quit Emulator"
 msgstr "/Emulator _beenden"
 
-#: src/ui/gtk/ui_gtk.cc:902
+#: src/ui/gtk/ui_gtk.cc:940
 #, c-format
 msgid "%s (%s)"
 msgstr "%s (%s)"
 
-#: src/ui/gtk/ui_gtk.cc:1595
+#: src/ui/gtk/ui_gtk.cc:1633
 msgid "Info"
 msgstr "Info"
 

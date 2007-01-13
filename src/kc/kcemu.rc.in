@@ -1,0 +1,23 @@
+1 VERSIONINFO
+FILEVERSION @KCEMU_MAJOR_VERSION@, @KCEMU_MINOR_VERSION@, @KCEMU_MICRO_VERSION@, @KCEMU_EXTRA_VERSION@
+PRODUCTVERSION @KCEMU_MAJOR_VERSION@, @KCEMU_MINOR_VERSION@, @KCEMU_MICRO_VERSION@, @KCEMU_EXTRA_VERSION@
+FILEFLAGSMASK 0
+FILEOS 0x40000
+FILETYPE 1
+{
+ BLOCK "StringFileInfo"
+ {
+  BLOCK "040904E4"
+  {
+   VALUE "CompanyName", "Torsten Paul"
+   VALUE "FileDescription", "KCemu -- the KC 85/3 and KC 85/4 Emulator"
+   VALUE "FileVersion", "@VERSION@"
+   VALUE "InternalName", "kcemu.exe"
+   VALUE "LegalCopyright", "GNU General Public License"
+   VALUE "OriginalFilename", "kcemu.exe"
+   VALUE "ProductName", "KCemu"
+   VALUE "ProductVersion", "@VERSION@"
+  }
+ }
+}
+AppIcon ICON "../../images/kcemu-winicon.ico"

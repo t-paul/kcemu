@@ -1,6 +1,9 @@
 ## Process this file with automake to produce Makefile.in
 
-NSI_FILES = KCemuSetup.nsi KCemuSetup_gtk2.4.nsi
+NSI_FILES = KCemuSetup.nsi \
+	KCemuSetup_gtk2.4.nsi \
+	KCemuSetup_gtk2.6.nsi \
+	KCemuSetup_gtk2.8.nsi
 
 pkgdata_DATA = kcemurc
 
@@ -10,3 +13,5 @@ EXTRA_DIST = $(pkgdata_DATA) $(NSI_FILES)
 
 KCemuSetup.nsi : KCemuSetup.nsi.in
 KCemuSetup_gtk2.4.nsi : KCemuSetup_gtk2.4.nsi.in
+KCemuSetup_gtk2.6.nsi : KCemuSetup_gtk2.6.nsi.in
+KCemuSetup_gtk2.8.nsi : KCemuSetup_gtk2.8.nsi.in

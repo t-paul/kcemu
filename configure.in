@@ -31,28 +31,22 @@ dnl ---------------------
 
 source VERSION
 
-if test $KCEMU_MICRO_VERSION -eq 0
-then
-        KCEMU_VERSION=${KCEMU_MAJOR_VERSION}.${KCEMU_MINOR_VERSION}
-else
-        KCEMU_VERSION=${KCEMU_MAJOR_VERSION}.${KCEMU_MINOR_VERSION}.${KCEMU_MICRO_VERSION}
-fi
-
-if test x"$KCEMU_EXTRA_VERSION" != x
-then
-	KCEMU_VERSION=${KCEMU_VERSION}${KCEMU_EXTRA_VERSION}
-fi
-
-AC_DEFINE_UNQUOTED(KCEMU_MAJOR_VERSION, $KCEMU_MAJOR_VERSION,   "KCemu major version")
-AC_DEFINE_UNQUOTED(KCEMU_MINOR_VERSION, $KCEMU_MINOR_VERSION,   "KCemu minor version")
-AC_DEFINE_UNQUOTED(KCEMU_MICRO_VERSION, $KCEMU_MICRO_VERSION,   "KCemu micro version")
-AC_DEFINE_UNQUOTED(KCEMU_EXTRA_VERSION, "$KCEMU_EXTRA_VERSION", "KCemu extra version")
+AC_DEFINE_UNQUOTED(KCEMU_MAJOR_VERSION, $KCEMU_MAJOR_VERSION, "KCemu major version")
+AC_DEFINE_UNQUOTED(KCEMU_MINOR_VERSION, $KCEMU_MINOR_VERSION, "KCemu minor version")
+AC_DEFINE_UNQUOTED(KCEMU_MICRO_VERSION, $KCEMU_MICRO_VERSION, "KCemu micro version")
+AC_DEFINE_UNQUOTED(KCEMU_EXTRA_VERSION, $KCEMU_EXTRA_VERSION, "KCemu extra version")
+AC_DEFINE_UNQUOTED(KCEMU_EXTRA_VERSION_TEXT, "$KCEMU_EXTRA_VERSION_TEXT", "KCemu extra version text")
 AC_DEFINE_UNQUOTED(KCEMU_VERSION, "$KCEMU_VERSION", "KCemu version")
 
 VERSION=$KCEMU_VERSION
 
 AC_SUBST(PACKAGE)
 AC_SUBST(VERSION)
+AC_SUBST(KCEMU_MAJOR_VERSION)
+AC_SUBST(KCEMU_MINOR_VERSION)
+AC_SUBST(KCEMU_MICRO_VERSION)
+AC_SUBST(KCEMU_EXTRA_VERSION)
+AC_SUBST(KCEMU_EXTRA_VERSION_TEXT)
 AC_DEFINE_UNQUOTED(PACKAGE, "$PACKAGE", "package name")
 AC_DEFINE_UNQUOTED(VERSION, "$VERSION", "package version")
 
@@ -69,7 +63,7 @@ dnl -------------------
 
 ALL_LINGUAS="de"
 AM_PO_SUBDIRS
-AM_GNU_GETTEXT([external])
+AM_GNU_GETTEXT([no-libtool])
 if test "x$USE_INCLUDED_LIBINTL" = "xyes"; then
 	AC_DEFINE(USE_INCLUDED_LIBINTL, 1, "use included libintl")
 fi
@@ -102,6 +96,7 @@ AC_PROG_CXX
 AC_PROG_INSTALL
 AC_PROG_LN_S
 AC_PROG_RANLIB
+AC_CHECK_TOOL(RC, windres, :)
 
 AC_PROG_MAKE_SET
 
@@ -528,6 +523,7 @@ AC_OUTPUT([
 	asm/Makefile
 	asm/autostart/Makefile
 	src/Makefile
+	src/kc/kcemu.rc
 	src/kc/Makefile
 	src/kc/kramermc/Makefile
 	src/kc/muglerpc/Makefile
@@ -590,7 +586,9 @@ AC_OUTPUT([
 	glade/thanks/Makefile
 	setup/Makefile
 	setup/KCemuSetup.nsi
-	setup/KCemuSetup_gtk2.4.nsi],
+	setup/KCemuSetup_gtk2.4.nsi
+	setup/KCemuSetup_gtk2.6.nsi
+	setup/KCemuSetup_gtk2.8.nsi],
 	[])
 
 

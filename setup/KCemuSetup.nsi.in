@@ -16,11 +16,8 @@ SetCompressor /SOLID lzma
 
 ; MUI Settings
 !define MUI_ABORTWARNING
-;!define MUI_ICON "${NSISDIR}\Contrib\Graphics\Icons\modern-install.ico"
-;!define MUI_UNICON "${NSISDIR}\Contrib\Graphics\Icons\modern-uninstall.ico"
-
-!define MUI_ICON "kcemu\share\KCemu\icons\kcemu-kc85.ico"
-!define MUI_UNICON "kcemu\share\KCemu\icons\kcemu-kc85.ico"
+!define MUI_ICON "${NSISDIR}\Contrib\Graphics\Icons\modern-install.ico"
+!define MUI_UNICON "${NSISDIR}\Contrib\Graphics\Icons\modern-uninstall.ico"
 
 ; Welcome page
 !insertmacro MUI_PAGE_WELCOME
@@ -71,6 +68,9 @@ Section "!KCemu" SEC01
   CreateShortCut "$SMPROGRAMS\KCemu\Poly880.lnk"     "$INSTDIR\bin\kcemu.exe" '-6' "$INSTDIR\share\KCemu\icons\kcemu-poly880.ico"
   CreateShortCut "$SMPROGRAMS\KCemu\Z1013.lnk"       "$INSTDIR\bin\kcemu.exe" '-0' "$INSTDIR\share\KCemu\icons\kcemu-z1013.ico"
   CreateShortCut "$SMPROGRAMS\KCemu\Z1013 (BL4).lnk" "$INSTDIR\bin\kcemu.exe" '-e z1013.bl4' "$INSTDIR\share\KCemu\icons\kcemu-z1013.ico"
+  CreateShortCut "$SMPROGRAMS\KCemu\KramerMC.lnk"    "$INSTDIR\bin\kcemu.exe" '-e kramer-mc' "$INSTDIR\share\KCemu\icons\kcemu-kramermc.ico"
+  CreateShortCut "$SMPROGRAMS\KCemu\PCM.lnk"         "$INSTDIR\bin\kcemu.exe" '-e mugler-pc' "$INSTDIR\share\KCemu\icons\kcemu-pcm.ico"
+  CreateShortCut "$SMPROGRAMS\KCemu\VCS80.lnk"       "$INSTDIR\bin\kcemu.exe" '-e vcs80'     "$INSTDIR\share\KCemu\icons\kcemu-vcs80.ico"
 SectionEnd
 
 SectionGroup "GTK" SEC02
@@ -105,6 +105,7 @@ Section "-etc\gtk-2.0" SEC_GTK_02
   SetOverwrite try
   File "dist\etc\gtk-2.0\gdk-pixbuf.loaders"
   File "dist\etc\gtk-2.0\gtk.immodules"
+  File "dist\etc\gtk-2.0\gtkrc"
 SectionEnd
 Section "-etc\pango" SEC_GTK_03
   SetOutPath "$INSTDIR\etc\pango"
@@ -112,37 +113,43 @@ Section "-etc\pango" SEC_GTK_03
   File "dist\etc\pango\pango.aliases"
   File "dist\etc\pango\pango.modules"
 SectionEnd
-Section "-lib\gtk-2.0\2.4.0\loaders" SEC_GTK_04
-  SetOutPath "$INSTDIR\lib\gtk-2.0\2.4.0\loaders"
+Section "-lib\gtk-2.0\2.10.0\loaders" SEC_GTK_04
+  SetOutPath "$INSTDIR\lib\gtk-2.0\2.10.0\loaders"
   SetOverwrite try
-  File "dist\lib\gtk-2.0\2.4.0\loaders\libpixbufloader-ani.dll"
-  File "dist\lib\gtk-2.0\2.4.0\loaders\libpixbufloader-bmp.dll"
-  File "dist\lib\gtk-2.0\2.4.0\loaders\libpixbufloader-gif.dll"
-  File "dist\lib\gtk-2.0\2.4.0\loaders\libpixbufloader-ico.dll"
-  File "dist\lib\gtk-2.0\2.4.0\loaders\libpixbufloader-jpeg.dll"
-  File "dist\lib\gtk-2.0\2.4.0\loaders\libpixbufloader-pcx.dll"
-  File "dist\lib\gtk-2.0\2.4.0\loaders\libpixbufloader-png.dll"
-  File "dist\lib\gtk-2.0\2.4.0\loaders\libpixbufloader-pnm.dll"
-  File "dist\lib\gtk-2.0\2.4.0\loaders\libpixbufloader-ras.dll"
-  File "dist\lib\gtk-2.0\2.4.0\loaders\libpixbufloader-tga.dll"
-  File "dist\lib\gtk-2.0\2.4.0\loaders\libpixbufloader-tiff.dll"
-  File "dist\lib\gtk-2.0\2.4.0\loaders\libpixbufloader-wbmp.dll"
-  File "dist\lib\gtk-2.0\2.4.0\loaders\libpixbufloader-xbm.dll"
-  File "dist\lib\gtk-2.0\2.4.0\loaders\libpixbufloader-xpm.dll"
+  File "dist\lib\gtk-2.0\2.10.0\loaders\libpixbufloader-ani.dll"
+  File "dist\lib\gtk-2.0\2.10.0\loaders\libpixbufloader-bmp.dll"
+  File "dist\lib\gtk-2.0\2.10.0\loaders\libpixbufloader-gif.dll"
+  File "dist\lib\gtk-2.0\2.10.0\loaders\libpixbufloader-ico.dll"
+  File "dist\lib\gtk-2.0\2.10.0\loaders\libpixbufloader-jpeg.dll"
+  File "dist\lib\gtk-2.0\2.10.0\loaders\libpixbufloader-pcx.dll"
+  File "dist\lib\gtk-2.0\2.10.0\loaders\libpixbufloader-png.dll"
+  File "dist\lib\gtk-2.0\2.10.0\loaders\libpixbufloader-pnm.dll"
+  File "dist\lib\gtk-2.0\2.10.0\loaders\libpixbufloader-ras.dll"
+  File "dist\lib\gtk-2.0\2.10.0\loaders\libpixbufloader-tga.dll"
+  File "dist\lib\gtk-2.0\2.10.0\loaders\libpixbufloader-tiff.dll"
+  File "dist\lib\gtk-2.0\2.10.0\loaders\libpixbufloader-wbmp.dll"
+  File "dist\lib\gtk-2.0\2.10.0\loaders\libpixbufloader-xbm.dll"
+  File "dist\lib\gtk-2.0\2.10.0\loaders\libpixbufloader-xpm.dll"
 SectionEnd
-Section "-lib\gtk-2.0\2.4.0\immodules" SEC_GTK_05
-  SetOutPath "$INSTDIR\lib\gtk-2.0\2.4.0\immodules"
+Section "-lib\gtk-2.0\2.10.0\engines" SEC_GTK_ENGINES
+  SetOutPath "$INSTDIR\lib\gtk-2.0\2.10.0\engines"
   SetOverwrite try
-  File "dist\lib\gtk-2.0\2.4.0\immodules\im-am-et.dll"
-  File "dist\lib\gtk-2.0\2.4.0\immodules\im-cedilla.dll"
-  File "dist\lib\gtk-2.0\2.4.0\immodules\im-cyrillic-translit.dll"
-  File "dist\lib\gtk-2.0\2.4.0\immodules\im-ime.dll"
-  File "dist\lib\gtk-2.0\2.4.0\immodules\im-inuktitut.dll"
-  File "dist\lib\gtk-2.0\2.4.0\immodules\im-ipa.dll"
-  File "dist\lib\gtk-2.0\2.4.0\immodules\im-thai-broken.dll"
-  File "dist\lib\gtk-2.0\2.4.0\immodules\im-ti-er.dll"
-  File "dist\lib\gtk-2.0\2.4.0\immodules\im-ti-et.dll"
-  File "dist\lib\gtk-2.0\2.4.0\immodules\im-viqr.dll"
+  File "dist\lib\gtk-2.0\2.10.0\engines\libpixmap.dll"
+  File "dist\lib\gtk-2.0\2.10.0\engines\libwimp.dll"
+SectionEnd
+Section "-lib\gtk-2.0\2.10.0\immodules" SEC_GTK_05
+  SetOutPath "$INSTDIR\lib\gtk-2.0\2.10.0\immodules"
+  SetOverwrite try
+  File "dist\lib\gtk-2.0\2.10.0\immodules\im-am-et.dll"
+  File "dist\lib\gtk-2.0\2.10.0\immodules\im-cedilla.dll"
+  File "dist\lib\gtk-2.0\2.10.0\immodules\im-cyrillic-translit.dll"
+  File "dist\lib\gtk-2.0\2.10.0\immodules\im-ime.dll"
+  File "dist\lib\gtk-2.0\2.10.0\immodules\im-inuktitut.dll"
+  File "dist\lib\gtk-2.0\2.10.0\immodules\im-ipa.dll"
+  File "dist\lib\gtk-2.0\2.10.0\immodules\im-thai.dll"
+  File "dist\lib\gtk-2.0\2.10.0\immodules\im-ti-er.dll"
+  File "dist\lib\gtk-2.0\2.10.0\immodules\im-ti-et.dll"
+  File "dist\lib\gtk-2.0\2.10.0\immodules\im-viqr.dll"
 SectionEnd
 Section "-lib\locale\de\LC_MESSAGES" SEC_GTK_06
   SetOutPath "$INSTDIR\lib\locale\de\LC_MESSAGES"
@@ -151,20 +158,6 @@ Section "-lib\locale\de\LC_MESSAGES" SEC_GTK_06
   File "dist\lib\locale\de\LC_MESSAGES\gtk20.mo"
   File "dist\lib\locale\de\LC_MESSAGES\gtk20-properties.mo"
   File "dist\lib\locale\de\LC_MESSAGES\atk10.mo"
-SectionEnd
-Section "-lib\pango\1.5.0\modules" SEC_GTK_07
-  SetOutPath "$INSTDIR\lib\pango\1.5.0\modules"
-  SetOverwrite try
-  File "dist\lib\pango\1.5.0\modules\pango-arabic-fc.dll"
-  File "dist\lib\pango\1.5.0\modules\pango-basic-fc.dll"
-  File "dist\lib\pango\1.5.0\modules\pango-basic-win32.dll"
-  File "dist\lib\pango\1.5.0\modules\pango-hangul-fc.dll"
-  File "dist\lib\pango\1.5.0\modules\pango-hebrew-fc.dll"
-  File "dist\lib\pango\1.5.0\modules\pango-indic-fc.dll"
-  File "dist\lib\pango\1.5.0\modules\pango-khmer-fc.dll"
-  File "dist\lib\pango\1.5.0\modules\pango-syriac-fc.dll"
-  File "dist\lib\pango\1.5.0\modules\pango-thai-fc.dll"
-  File "dist\lib\pango\1.5.0\modules\pango-tibetan-fc.dll"
 SectionEnd
 SectionGroupEnd
 
@@ -346,12 +339,31 @@ Section Uninstall
   Delete "$INSTDIR\share\KCemu\roms\muglerpc\chargen.pcm"
   Delete "$INSTDIR\share\KCemu\roms\muglerpc\muglerpc.pcm"
 
+  Delete "$INSTDIR\share\KCemu\roms\vcs80\monitor.rom"
+
   Delete "$INSTDIR\share\KCemu\icons\kcemu-bic.ico"
   Delete "$INSTDIR\share\KCemu\icons\kcemu-kc85.ico"
   Delete "$INSTDIR\share\KCemu\icons\kcemu-kc87.ico"
   Delete "$INSTDIR\share\KCemu\icons\kcemu-lc80.ico"
   Delete "$INSTDIR\share\KCemu\icons\kcemu-poly880.ico"
   Delete "$INSTDIR\share\KCemu\icons\kcemu-z1013.ico"
+  Delete "$INSTDIR\share\KCemu\icons\kcemu-kramermc.ico"
+  Delete "$INSTDIR\share\KCemu\icons\kcemu-pcm.ico"
+  Delete "$INSTDIR\share\KCemu\icons\kcemu-vcs80.ico"
+  Delete "$INSTDIR\share\KCemu\icons\kcemu-winicon.ico"
+
+  Delete "$INSTDIR\share\KCemu\icons\kcemu-bic.xpm"
+  Delete "$INSTDIR\share\KCemu\icons\kcemu-kc85.xpm"
+  Delete "$INSTDIR\share\KCemu\icons\kcemu-kc87.xpm"
+  Delete "$INSTDIR\share\KCemu\icons\kcemu-lc80.xpm"
+  Delete "$INSTDIR\share\KCemu\icons\kcemu-vcs80.xpm"
+  Delete "$INSTDIR\share\KCemu\icons\kcemu-pcm.xpm"
+  Delete "$INSTDIR\share\KCemu\icons\kcemu-kramermc.xpm"
+  Delete "$INSTDIR\share\KCemu\icons\kcemu-poly880.xpm"
+  Delete "$INSTDIR\share\KCemu\icons\kcemu-z1013.xpm"
+  Delete "$INSTDIR\share\KCemu\icons\kcemu-winicon_16x16.png"
+  Delete "$INSTDIR\share\KCemu\icons\kcemu-winicon_32x32.png"
+  Delete "$INSTDIR\share\KCemu\icons\kcemu-winicon_48x48.png"
 
   Delete "$INSTDIR\share\KCemu\keymaps\kc851.key"
   Delete "$INSTDIR\share\KCemu\keymaps\kc851_keyboard.xpm"
@@ -365,6 +377,9 @@ Section Uninstall
   Delete "$INSTDIR\share\KCemu\keymaps\poly880.key"
   Delete "$INSTDIR\share\KCemu\keymaps\poly880_keyboard.xpm"
   Delete "$INSTDIR\share\KCemu\keymaps\poly880_keyboard_pressed.xpm"
+  Delete "$INSTDIR\share\KCemu\keymaps\vcs80.key"
+  Delete "$INSTDIR\share\KCemu\keymaps\vcs80_keyboard.xpm"
+  Delete "$INSTDIR\share\KCemu\keymaps\vcs80_keyboard_pressed.xpm"
 
   Delete "$INSTDIR\share\KCemu\disks\a5105sys.dump"
   Delete "$INSTDIR\share\KCemu\disks\caos.dump"
@@ -392,6 +407,9 @@ Section Uninstall
   Delete "$SMPROGRAMS\KCemu\Poly880.lnk"
   Delete "$SMPROGRAMS\KCemu\Z1013.lnk"
   Delete "$SMPROGRAMS\KCemu\Z1013 (BL4).lnk"
+  Delete "$SMPROGRAMS\KCemu\KramerMC.lnk"
+  Delete "$SMPROGRAMS\KCemu\PCM.lnk"
+  Delete "$SMPROGRAMS\KCemu\VCS80.lnk"
 
   # GTK START
 
@@ -414,6 +432,7 @@ Section Uninstall
   Delete "$INSTDIR\bin\libpangocairo-1.0-0.dll"
   Delete "$INSTDIR\bin\libpangoft2-1.0-0.dll"
   Delete "$INSTDIR\bin\libpangowin32-1.0-0.dll"
+  Delete "$INSTDIR\bin\libpng12.dll"
   Delete "$INSTDIR\bin\libpng13.dll"
   Delete "$INSTDIR\bin\jpeg62.dll"
   Delete "$INSTDIR\bin\pango-querymodules.exe"
@@ -421,6 +440,7 @@ Section Uninstall
   Delete "$INSTDIR\bin\SDL.dll"
   Delete "$INSTDIR\etc\gtk-2.0\gdk-pixbuf.loaders"
   Delete "$INSTDIR\etc\gtk-2.0\gtk.immodules"
+  Delete "$INSTDIR\etc\gtk-2.0\gtkrc"
   Delete "$INSTDIR\etc\pango\pango.aliases"
   Delete "$INSTDIR\etc\pango\pango.modules"
   Delete "$INSTDIR\lib\gtk-2.0\2.4.0\loaders\libpixbufloader-ani.dll"
@@ -447,10 +467,48 @@ Section Uninstall
   Delete "$INSTDIR\lib\gtk-2.0\2.4.0\immodules\im-ti-er.dll"
   Delete "$INSTDIR\lib\gtk-2.0\2.4.0\immodules\im-ti-et.dll"
   Delete "$INSTDIR\lib\gtk-2.0\2.4.0\immodules\im-viqr.dll"
+  Delete "$INSTDIR\lib\gtk-2.0\2.4.0\engines\libpixmap.dll"
+  Delete "$INSTDIR\lib\gtk-2.0\2.4.0\engines\libwimp.dll"
+  Delete "$INSTDIR\lib\gtk-2.0\2.10.0\loaders\libpixbufloader-ani.dll"
+  Delete "$INSTDIR\lib\gtk-2.0\2.10.0\loaders\libpixbufloader-bmp.dll"
+  Delete "$INSTDIR\lib\gtk-2.0\2.10.0\loaders\libpixbufloader-gif.dll"
+  Delete "$INSTDIR\lib\gtk-2.0\2.10.0\loaders\libpixbufloader-ico.dll"
+  Delete "$INSTDIR\lib\gtk-2.0\2.10.0\loaders\libpixbufloader-jpeg.dll"
+  Delete "$INSTDIR\lib\gtk-2.0\2.10.0\loaders\libpixbufloader-pcx.dll"
+  Delete "$INSTDIR\lib\gtk-2.0\2.10.0\loaders\libpixbufloader-png.dll"
+  Delete "$INSTDIR\lib\gtk-2.0\2.10.0\loaders\libpixbufloader-pnm.dll"
+  Delete "$INSTDIR\lib\gtk-2.0\2.10.0\loaders\libpixbufloader-ras.dll"
+  Delete "$INSTDIR\lib\gtk-2.0\2.10.0\loaders\libpixbufloader-tga.dll"
+  Delete "$INSTDIR\lib\gtk-2.0\2.10.0\loaders\libpixbufloader-tiff.dll"
+  Delete "$INSTDIR\lib\gtk-2.0\2.10.0\loaders\libpixbufloader-wbmp.dll"
+  Delete "$INSTDIR\lib\gtk-2.0\2.10.0\loaders\libpixbufloader-xbm.dll"
+  Delete "$INSTDIR\lib\gtk-2.0\2.10.0\loaders\libpixbufloader-xpm.dll"
+  Delete "$INSTDIR\lib\gtk-2.0\2.10.0\immodules\im-am-et.dll"
+  Delete "$INSTDIR\lib\gtk-2.0\2.10.0\immodules\im-cedilla.dll"
+  Delete "$INSTDIR\lib\gtk-2.0\2.10.0\immodules\im-cyrillic-translit.dll"
+  Delete "$INSTDIR\lib\gtk-2.0\2.10.0\immodules\im-ime.dll"
+  Delete "$INSTDIR\lib\gtk-2.0\2.10.0\immodules\im-inuktitut.dll"
+  Delete "$INSTDIR\lib\gtk-2.0\2.10.0\immodules\im-ipa.dll"
+  Delete "$INSTDIR\lib\gtk-2.0\2.10.0\immodules\im-thai.dll"
+  Delete "$INSTDIR\lib\gtk-2.0\2.10.0\immodules\im-ti-er.dll"
+  Delete "$INSTDIR\lib\gtk-2.0\2.10.0\immodules\im-ti-et.dll"
+  Delete "$INSTDIR\lib\gtk-2.0\2.10.0\immodules\im-viqr.dll"
+  Delete "$INSTDIR\lib\gtk-2.0\2.10.0\engines\libpixmap.dll"
+  Delete "$INSTDIR\lib\gtk-2.0\2.10.0\engines\libwimp.dll"
   Delete "$INSTDIR\lib\locale\de\LC_MESSAGES\glib20.mo"
   Delete "$INSTDIR\lib\locale\de\LC_MESSAGES\gtk20.mo"
   Delete "$INSTDIR\lib\locale\de\LC_MESSAGES\gtk20-properties.mo"
   Delete "$INSTDIR\lib\locale\de\LC_MESSAGES\atk10.mo"
+  Delete "$INSTDIR\lib\pango\1.4.0\modules\pango-arabic-fc.dll"
+  Delete "$INSTDIR\lib\pango\1.4.0\modules\pango-basic-fc.dll"
+  Delete "$INSTDIR\lib\pango\1.4.0\modules\pango-basic-win32.dll"
+  Delete "$INSTDIR\lib\pango\1.4.0\modules\pango-hangul-fc.dll"
+  Delete "$INSTDIR\lib\pango\1.4.0\modules\pango-hebrew-fc.dll"
+  Delete "$INSTDIR\lib\pango\1.4.0\modules\pango-indic-fc.dll"
+  Delete "$INSTDIR\lib\pango\1.4.0\modules\pango-khmer-fc.dll"
+  Delete "$INSTDIR\lib\pango\1.4.0\modules\pango-syriac-fc.dll"
+  Delete "$INSTDIR\lib\pango\1.4.0\modules\pango-thai-fc.dll"
+  Delete "$INSTDIR\lib\pango\1.4.0\modules\pango-tibetan-fc.dll"
   Delete "$INSTDIR\lib\pango\1.5.0\modules\pango-arabic-fc.dll"
   Delete "$INSTDIR\lib\pango\1.5.0\modules\pango-basic-fc.dll"
   Delete "$INSTDIR\lib\pango\1.5.0\modules\pango-basic-win32.dll"
@@ -474,6 +532,7 @@ Section Uninstall
   RMDir "$INSTDIR\share\KCemu\roms\a5105"
   RMDir "$INSTDIR\share\KCemu\roms\kramermc"
   RMDir "$INSTDIR\share\KCemu\roms\muglerpc"
+  RMDir "$INSTDIR\share\KCemu\roms\vcs80"
   RMDir "$INSTDIR\share\KCemu\roms"
   RMDir "$INSTDIR\share\KCemu\disks"
   RMDir "$INSTDIR\share\KCemu\tapes"
@@ -497,7 +556,12 @@ Section Uninstall
   RMDir "$INSTDIR\etc"
   RMDir "$INSTDIR\lib\gtk-2.0\2.4.0\loaders"
   RMDir "$INSTDIR\lib\gtk-2.0\2.4.0\immodules"
+  RMDir "$INSTDIR\lib\gtk-2.0\2.4.0\engines"
   RMDir "$INSTDIR\lib\gtk-2.0\2.4.0"
+  RMDir "$INSTDIR\lib\gtk-2.0\2.10.0\loaders"
+  RMDir "$INSTDIR\lib\gtk-2.0\2.10.0\immodules"
+  RMDir "$INSTDIR\lib\gtk-2.0\2.10.0\engines"
+  RMDir "$INSTDIR\lib\gtk-2.0\2.10.0"
   RMDir "$INSTDIR\lib\gtk-2.0"
   RMDir "$INSTDIR\lib\locale\de\LC_MESSAGES"
   RMDir "$INSTDIR\lib\locale\de"

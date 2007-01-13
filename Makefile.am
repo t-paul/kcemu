@@ -5,6 +5,7 @@ docdir = $(datadir)/doc/kcemu
 ACLOCAL_AMFLAGS = -I config -I config/m4
 
 SUBDIRS = \
+	intl \
 	include \
 	src \
 	test \

@@ -105,6 +105,9 @@ basic_decode_LDADD = \
 make_font_SOURCES = \
 	make-font.c
 
+make_font_LDADD = \
+        $(INTLLIBS)
+
 tape_rename_SOURCES = \
 	tape-rename.c tape-type.c
 
