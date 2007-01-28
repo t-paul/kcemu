@@ -368,6 +368,23 @@ VEB Mikroelektronik Erfurt
 <c> <img src="sys-lc80.jpg"/> </c>
 <size value="-2"><c>Foto: Ein betriebsbereiter LC80</c></size>
 
+  Vom LC80 existieren 2 Varianten mit unterschiedlicher ROM-Bestückung.
+  Die Eine besitzt 2 1k-ROMs (U505) an den Adressen 0000h und 0800h. Die
+  Andere ist mit einem 2k-EPROM (U2716) bestückt, wodurch der Monitor
+  in einem zusammenhängenden Speicherbereich von 0000h - 07ffh liegt.
+
+  Das Monitorprogramm unterscheidet sich dabei lediglich um einige an
+  die unterschiedlichen Adressbereiche angepasste Sprungbefehle. Ein
+  funktionaler Unterschied besteht nicht.
+
+  Parameter für die Emulation:
+
+  <b>* lc80, lc80.1k</b>
+    LC80 mit 1k RAM und 2 x 1k ROM (0000h-03ffh, 0800h-0bffh).
+
+  <b>* lc80.2k</b>
+    LC80 mit 1k RAM und 1 x 2k ROM (0000h-07ffh).
+  
 </p>
 
 <p><size value="2"><ref name="sys-poly880"/>2.6. Polycomputer 880</size>

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: Torsten.Paul@gmx.de\n"
-"POT-Creation-Date: 2007-01-12 20:44+0100\n"
+"POT-Creation-Date: 2007-01-28 17:50+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -159,37 +159,41 @@ msgid ""
 msgstr ""
 
 #: src/kc/kc.cc:356
-msgid "    Single board computer LC 80 with 1k RAM and 2k ROM.\n"
+msgid "    Single board computer LC 80 with 1k RAM and 2 x 1k ROM.\n"
 msgstr ""
 
-#: src/kc/kc.cc:359
-msgid "    BIC/A5105, only the base device is emulated, no floppy device.\n"
+#: src/kc/kc.cc:362
+msgid "    Single board computer LC 80 with 1k RAM and 1 x 2k ROM.\n"
 msgstr ""
 
 #: src/kc/kc.cc:365
+msgid "    BIC/A5105, only the base device is emulated, no floppy device.\n"
+msgstr ""
+
+#: src/kc/kc.cc:371
 msgid "    BIC/A5105, the full system including the floppy device.\n"
 msgstr ""
 
-#: src/kc/kc.cc:368
+#: src/kc/kc.cc:374
 msgid ""
 "    Micro-Computer presented in the book \"Praktische Microcomputertechnik"
 "\"\n"
 "    by Manfred Kramer.\n"
 msgstr ""
 
-#: src/kc/kc.cc:375
+#: src/kc/kc.cc:381
 msgid ""
 "    CP/M based Micro-Computer presented in the magazine \"Funkamateur\"\n"
 "    by A. Mugler and H. Mathes.\n"
 msgstr ""
 
-#: src/kc/kc.cc:385
+#: src/kc/kc.cc:391
 msgid ""
 "    Minimal Z80 learning system presented in the magazine \"rfe\"\n"
 "    by Eckhard Schiller.\n"
 msgstr ""
 
-#: src/kc/kc.cc:405
+#: src/kc/kc.cc:411
 msgid ""
 "\n"
 "KCemu comes with ABSOLUTELY NO WARRANTY; for details run `kcemu --"
@@ -230,11 +234,11 @@ msgid ""
 "  -W --warranty:     show warranty\n"
 msgstr ""
 
-#: src/kc/kc.cc:501
+#: src/kc/kc.cc:507
 msgid "available emulations:"
 msgstr ""
 
-#: src/kc/kc.cc:564
+#: src/kc/kc.cc:570
 msgid ""
 "\n"
 "\t\t    GNU GENERAL PUBLIC LICENSE\n"
@@ -498,7 +502,7 @@ msgid ""
 "\n"
 msgstr ""
 
-#: src/kc/kc.cc:826
+#: src/kc/kc.cc:832
 msgid ""
 "\n"
 "NO WARRANTY\n"
@@ -526,7 +530,7 @@ msgid ""
 "\n"
 msgstr ""
 
-#: src/kc/kc.cc:853
+#: src/kc/kc.cc:859
 msgid ""
 "\n"
 "                     END OF TERMS AND CONDITIONS\n"

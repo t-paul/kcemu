@@ -31,13 +31,15 @@ class Memory8 : public Memory
 {
 private:
   byte_t _ram[0x0400];
+  byte_t _rom[0x0800];
   byte_t _rom1[0x0400];
   byte_t _rom2[0x0400];
 
   MemAreaGroup *_m_scr;     /* scratch memory */
   MemAreaGroup *_m_ram;     /* RAM   2000h - 23ffh */
-  MemAreaGroup *_m_rom1;    /* ROM   0000h - 03ffh */
-  MemAreaGroup *_m_rom2;    /* ROM   0800h - 0bffh */
+  MemAreaGroup *_m_rom;     /* ROM   0000h - 07ffh (2k variant) */
+  MemAreaGroup *_m_rom1;    /* ROM   0000h - 03ffh (1k variant) */
+  MemAreaGroup *_m_rom2;    /* ROM   0800h - 0bffh (1k variant) */
 
 public:
   Memory8(void);

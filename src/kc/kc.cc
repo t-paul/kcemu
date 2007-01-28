@@ -352,8 +352,14 @@ static kc_variant_names_t kc_types[] = {
     N_("    New series with extended BASIC ROM (still 10k but with some routines for\n"
        "    plotter support were added).\n")
   },
-  { "lc80",                8, KC_TYPE_LC80,  KC_VARIANT_NONE,
-    N_("    Single board computer LC 80 with 1k RAM and 2k ROM.\n")
+  { "lc80",                8, KC_TYPE_LC80,  KC_VARIANT_LC80_1k,
+    N_("    Single board computer LC 80 with 1k RAM and 2 x 1k ROM.\n")
+  },
+  { "lc80.1k",            -8, KC_TYPE_LC80,  KC_VARIANT_LC80_1k,
+    ">lc80"
+  },
+  { "lc80.2k",            -8, KC_TYPE_LC80,  KC_VARIANT_LC80_2k,
+    N_("    Single board computer LC 80 with 1k RAM and 1 x 2k ROM.\n")
   },
   { "bic",                -9, KC_TYPE_A5105, KC_VARIANT_A5105_K1505,
     N_("    BIC/A5105, only the base device is emulated, no floppy device.\n")

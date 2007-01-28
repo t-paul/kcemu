@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: KCemu v0.3.8\n"
 "Report-Msgid-Bugs-To: Torsten.Paul@gmx.de\n"
-"POT-Creation-Date: 2007-01-12 20:44+0100\n"
-"PO-Revision-Date: 2007-01-10 02:42+0100\n"
+"POT-Creation-Date: 2007-01-28 17:50+0100\n"
+"PO-Revision-Date: 2007-01-28 18:06+0100\n"
 "Last-Translator: Torsten Paul <Torsten.Paul@gmx.de>\n"
 "Language-Team: German <Torsten.Paul@gmx.de>\n"
 "MIME-Version: 1.0\n"
@@ -131,8 +131,7 @@ msgstr ""
 #: src/kc/kc.cc:303
 msgid ""
 "    Z9001 (later called KC 85/1) with monochrome display, no internal BASIC\n"
-"    ROM. This computer has 16k RAM and 4k ROM with the robotron z9001 "
-"system.\n"
+"    ROM. This computer has 16k RAM and 4k ROM with the robotron z9001 system.\n"
 msgstr ""
 "    Z9001 (später KC 85/1 genannt) mit schwarz/weiß Darstellung\n"
 "    und ohne BASIC ROM. Das System enthält 16k RAM und 4k ROM.\n"
@@ -148,23 +147,19 @@ msgid ""
 "    is only available as external module.\n"
 msgstr ""
 "    HC900 (später KC 85/2 genannt) mit 16k RAM und 8k ROM. Als System wird\n"
-"    HC-CAOS 2.2 (Home Computer - Cassette Aided Operating System) "
-"eingesetzt.\n"
+"    HC-CAOS 2.2 (Home Computer - Cassette Aided Operating System) eingesetzt.\n"
 "    BASIC ist nur als externer Modul vorhanden.\n"
 
 #: src/kc/kc.cc:324
-msgid ""
-"    KC 85/3 with 16k RAM, 8k system ROM with HC-CAOS 3.1 and 8k BASIC ROM.\n"
+msgid "    KC 85/3 with 16k RAM, 8k system ROM with HC-CAOS 3.1 and 8k BASIC ROM.\n"
 msgstr "    KC 85/3 mit 16k RAM, 8k ROM mit HC-CAOS 3.1 und 8k BASIC ROM.\n"
 
 #: src/kc/kc.cc:327
 msgid ""
-"    KC 85/4 with 64k RAM, 64k screen memory, 12k system ROM with HC-CAOS "
-"4.2\n"
+"    KC 85/4 with 64k RAM, 64k screen memory, 12k system ROM with HC-CAOS 4.2\n"
 "    and 8k BASIC ROM.\n"
 msgstr ""
-"    KC 85/4 mit 64k RAM, 64k Bildschirmspeicher, 12k ROM mit HC-CAOS 4.2 "
-"und\n"
+"    KC 85/4 mit 64k RAM, 64k Bildschirmspeicher, 12k ROM mit HC-CAOS 4.2 und\n"
 "    8k BASIC ROM.\n"
 
 #: src/kc/kc.cc:331
@@ -174,8 +169,7 @@ msgid ""
 "    intended to be used with a modified D004 floppy device with additional\n"
 "    hard-disk support.\n"
 msgstr ""
-"    Inoffizieller Nachfolger des KC 85/4 mit 256k RAM, 64k "
-"Bildschirmspeicher,\n"
+"    Inoffizieller Nachfolger des KC 85/4 mit 256k RAM, 64k Bildschirmspeicher,\n"
 "    16k System-ROM mit HC-CAOS 4.4, 8k BASIC ROM und 24k User ROM.\n"
 
 #: src/kc/kc.cc:337
@@ -196,46 +190,47 @@ msgstr "    Wie KC 87.21 aber ohne Farberweiterung.\n"
 
 #: src/kc/kc.cc:352
 msgid ""
-"    New series with extended BASIC ROM (still 10k but with some routines "
-"for\n"
+"    New series with extended BASIC ROM (still 10k but with some routines for\n"
 "    plotter support were added).\n"
-msgstr ""
-"    Neue KC 87 Serie mit erweitertem BASIC ROM (Plotterunterstützung).\n"
+msgstr "    Neue KC 87 Serie mit erweitertem BASIC ROM (Plotterunterstützung).\n"
 
 #: src/kc/kc.cc:356
-msgid "    Single board computer LC 80 with 1k RAM and 2k ROM.\n"
+msgid "    Single board computer LC 80 with 1k RAM and 2 x 1k ROM.\n"
 msgstr ""
-"    Einplatinen-Rechner LC 80 mit 1k RAM und 2k ROM. Als Tastatur wurde\n"
+"    Einplatinen-Rechner LC 80 mit 1k RAM und 2 x 1k ROM. Als Tastatur wurde\n"
 "    ein Taschenrechner benutzt.\n"
 
-#: src/kc/kc.cc:359
+#: src/kc/kc.cc:362
+msgid "    Single board computer LC 80 with 1k RAM and 1 x 2k ROM.\n"
+msgstr ""
+"    Einplatinen-Rechner LC 80 mit 1k RAM und 1 x 2k ROM. Als Tastatur wurde\n"
+"    ein Taschenrechner benutzt.\n"
+
+#: src/kc/kc.cc:365
 msgid "    BIC/A5105, only the base device is emulated, no floppy device.\n"
 msgstr "    BIC/A5105, nur das Basis-Gerät ohne Floppy-Erweiterung.\n"
 
-#: src/kc/kc.cc:365
+#: src/kc/kc.cc:371
 msgid "    BIC/A5105, the full system including the floppy device.\n"
 msgstr "    BIC/A5105, das vollständige System mit Floppy-Erweiterung.\n"
 
-#: src/kc/kc.cc:368
+#: src/kc/kc.cc:374
 msgid ""
-"    Micro-Computer presented in the book \"Praktische Microcomputertechnik"
-"\"\n"
+"    Micro-Computer presented in the book \"Praktische Microcomputertechnik\"\n"
 "    by Manfred Kramer.\n"
 msgstr ""
-"    Mikrocomputer entwickelt von Manfred Kramer, vorgestellt im Buch "
-"\"Praktische\n"
+"    Mikrocomputer entwickelt von Manfred Kramer, vorgestellt im Buch \"Praktische\n"
 "    Microcomputertechnik\".\n"
 
-#: src/kc/kc.cc:375
+#: src/kc/kc.cc:381
 msgid ""
 "    CP/M based Micro-Computer presented in the magazine \"Funkamateur\"\n"
 "    by A. Mugler and H. Mathes.\n"
 msgstr ""
-"    CP/M basierter Kleincomputer der von A. Mugler und H. Mathes in der "
-"Zeitschrift\n"
+"    CP/M basierter Kleincomputer der von A. Mugler und H. Mathes in der Zeitschrift\n"
 "    \"Funkamateur\" vorgestellt wurde.\n"
 
-#: src/kc/kc.cc:385
+#: src/kc/kc.cc:391
 msgid ""
 "    Minimal Z80 learning system presented in the magazine \"rfe\"\n"
 "    by Eckhard Schiller.\n"
@@ -243,11 +238,10 @@ msgstr ""
 "    Minimales Z80 Lernsystem, entworfen von Eckhard Schiller, vorgestellt\n"
 "    in der Zeitschrift \"rfe\".\n"
 
-#: src/kc/kc.cc:405
+#: src/kc/kc.cc:411
 msgid ""
 "\n"
-"KCemu comes with ABSOLUTELY NO WARRANTY; for details run `kcemu --"
-"warranty'.\n"
+"KCemu comes with ABSOLUTELY NO WARRANTY; for details run `kcemu --warranty'.\n"
 "This is free software, and you are welcome to redistribute it\n"
 "under certain conditions; run `kcemu --license' for details.\n"
 "\n"
@@ -300,36 +294,31 @@ msgstr ""
 "  -7:                Starten im KC 87 Modus\n"
 "  -8:                Starten im LC 80 Modus\n"
 "  -9:                Starten im BIC/A5105 Modus\n"
-"  -a --autostart:    Automatischer Start des angegebenen Programms (nur "
-"kc85/3 - kc85/5)\n"
+"  -a --autostart:    Automatischer Start des angegebenen Programms (nur kc85/3 - kc85/5)\n"
 "  -A --address:      Startadresse für das automatisch zu startende Programm\n"
 "  -c --config:       zusätzliche Einstellungen aus angegebenen File lesen\n"
-"  -e --emulate:      Emuliere das angegebene System (-v liefert Liste der "
-"Typen)\n"
-"  -s --scale:        Vergrößerung der Anzeige (erlaubt sind die Werte 1, 2 "
-"und 3)\n"
+"  -e --emulate:      Emuliere das angegebene System (-v liefert Liste der Typen)\n"
+"  -s --scale:        Vergrößerung der Anzeige (erlaubt sind die Werte 1, 2 und 3)\n"
 "  -t --tape:         Aktivieren eines Tape-Archives beim Start\n"
 "  -f --floppy:       Aktivieren eines Disketten-Images beim Start\n"
 "  -h --help:         diese Hilfe anzeigen\n"
 "  -d --datadir:      Setzen des Daten-Verzeichnisses (für ROM-Images)\n"
-"  -l --localedir:    Setzen des Locale-Verzeichnisses für die "
-"Sprachanpassung\n"
+"  -l --localedir:    Setzen des Locale-Verzeichnisses für die Sprachanpassung\n"
 "  -o --debug-output: Debug-Ausgabe in Datei umleiten\n"
 "  -v --version:      Anzeige der KCemu Version und Konfiguration\n"
 "  -V --viewlist:     Ausführliche Liste der emulierten Typen\n"
 "  -H --home:         Überschreiben der Einstellung für das Homeverzeichnis\n"
 "  -F --fullscreen:   Start im Vollbild-Modus (wenn durch GUI unterstützt)\n"
 "  -M --modules:      Module beim Start aktivieren (e.g. -M M011,M027)\n"
-"  -E --effects:      Anzeige mit Screen-Effekten bei vergrößerter "
-"Darstellung\n"
+"  -E --effects:      Anzeige mit Screen-Effekten bei vergrößerter Darstellung\n"
 "  -L --license:      Anzeige der Lizenz\n"
 "  -W --warranty:     Anzeige des Haftungsausschlusses\n"
 
-#: src/kc/kc.cc:501
+#: src/kc/kc.cc:507
 msgid "available emulations:"
 msgstr "verfügbare Emulationen:"
 
-#: src/kc/kc.cc:564
+#: src/kc/kc.cc:570
 msgid ""
 "\n"
 "\t\t    GNU GENERAL PUBLIC LICENSE\n"
@@ -471,8 +460,7 @@ msgid ""
 "\n"
 "    a) Accompany it with the complete corresponding machine-readable\n"
 "    source code, which must be distributed under the terms of Sections\n"
-"    1 and 2 above on a medium customarily used for software interchange; "
-"or,\n"
+"    1 and 2 above on a medium customarily used for software interchange; or,\n"
 "\n"
 "    b) Accompany it with a written offer, valid for at least three\n"
 "    years, to give any third party, for a charge no more than your\n"
@@ -579,8 +567,7 @@ msgid ""
 "later version\", you have the option of following the terms and conditions\n"
 "either of that version or of any later version published by the Free\n"
 "Software Foundation.  If the Program does not specify a version number of\n"
-"this License, you may choose any version ever published by the Free "
-"Software\n"
+"this License, you may choose any version ever published by the Free Software\n"
 "Foundation.\n"
 "\n"
 "  10. If you wish to incorporate parts of the Program into other free\n"
@@ -961,7 +948,7 @@ msgstr ""
 "   Wiederverwenden von Software im allgemeinen zu fördern.\n"
 "   \n"
 
-#: src/kc/kc.cc:826
+#: src/kc/kc.cc:832
 msgid ""
 "\n"
 "NO WARRANTY\n"
@@ -969,8 +956,7 @@ msgid ""
 "  11. BECAUSE THE PROGRAM IS LICENSED FREE OF CHARGE, THERE IS NO WARRANTY\n"
 "FOR THE PROGRAM, TO THE EXTENT PERMITTED BY APPLICABLE LAW.  EXCEPT WHEN\n"
 "OTHERWISE STATED IN WRITING THE COPYRIGHT HOLDERS AND/OR OTHER PARTIES\n"
-"PROVIDE THE PROGRAM \"AS IS\" WITHOUT WARRANTY OF ANY KIND, EITHER "
-"EXPRESSED\n"
+"PROVIDE THE PROGRAM \"AS IS\" WITHOUT WARRANTY OF ANY KIND, EITHER EXPRESSED\n"
 "OR IMPLIED, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF\n"
 "MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  THE ENTIRE RISK AS\n"
 "TO THE QUALITY AND PERFORMANCE OF THE PROGRAM IS WITH YOU.  SHOULD THE\n"
@@ -1028,7 +1014,7 @@ msgstr ""
 "über die Möglichkeit solcher Schäden unterrichtet worden war.\n"
 "\n"
 
-#: src/kc/kc.cc:853
+#: src/kc/kc.cc:859
 msgid ""
 "\n"
 "                     END OF TERMS AND CONDITIONS\n"
@@ -1068,8 +1054,7 @@ msgid ""
 "when it starts in an interactive mode:\n"
 "\n"
 "    Gnomovision version 69, Copyright (C) 19yy name of author\n"
-"    Gnomovision comes with ABSOLUTELY NO WARRANTY; for details type `show "
-"w'.\n"
+"    Gnomovision comes with ABSOLUTELY NO WARRANTY; for details type `show w'.\n"
 "    This is free software, and you are welcome to redistribute it\n"
 "    under certain conditions; type `show c' for details.\n"
 "\n"
@@ -1215,11 +1200,13 @@ msgstr ""
 msgid "Select disk..."
 msgstr "Diskette auswählen..."
 
-#: src/kc/disk.cc:125 src/kc/tape.cc:214
+#: src/kc/disk.cc:125
+#: src/kc/tape.cc:214
 msgid "create file?"
 msgstr "Datei anlegen?"
 
-#: src/kc/disk.cc:127 src/kc/tape.cc:216
+#: src/kc/disk.cc:127
+#: src/kc/tape.cc:216
 #, c-format
 msgid ""
 "The file '%s' doesn't exist.\n"
@@ -1265,7 +1252,8 @@ msgstr "RAM Modul (4k/1000h)"
 msgid "RAM Module (8k/2000h)"
 msgstr "RAM Modul (8k/2000h)"
 
-#: src/kc/mod_list.cc:229 src/kc/mod_list.cc:292
+#: src/kc/mod_list.cc:229
+#: src/kc/mod_list.cc:292
 msgid "RAM Module (16k/4000h)"
 msgstr "RAM Modul (16k/4000h)"
 
@@ -1341,7 +1329,8 @@ msgstr "Mega-ROM Modul"
 msgid "128k ROM Bank"
 msgstr "128k ROM Bank"
 
-#: src/kc/mod_list.cc:383 src/ui/gtk/module.cc:270
+#: src/kc/mod_list.cc:383
+#: src/ui/gtk/module.cc:270
 msgid "IRM Color Expansion"
 msgstr "IRM Color Expansion"
 
@@ -1455,16 +1444,19 @@ msgstr "Kassetten-Datei `%s' aktiviert."
 msgid "Can't attach tape-archive."
 msgstr "Kann Kassetten-Datei nicht aktivieren."
 
-#: src/kc/tape.cc:274 src/kc/tape.cc:308
+#: src/kc/tape.cc:274
+#: src/kc/tape.cc:308
 msgid "Export As..."
 msgstr "Exportieren als..."
 
-#: src/kc/tape.cc:292 src/kc/tape.cc:326
+#: src/kc/tape.cc:292
+#: src/kc/tape.cc:326
 #, c-format
 msgid "File `%s' saved."
 msgstr "Datei `%s' gespeichert."
 
-#: src/kc/tape.cc:297 src/kc/tape.cc:331
+#: src/kc/tape.cc:297
+#: src/kc/tape.cc:331
 msgid "Can't export file."
 msgstr "Kann Datei nicht exportieren."
 
@@ -1509,11 +1501,13 @@ msgstr "Vordergrund"
 msgid "Background"
 msgstr "Hintergrund"
 
-#: src/ui/gtk/color.cc:127 src/ui/gtk/color.cc:163
+#: src/ui/gtk/color.cc:127
+#: src/ui/gtk/color.cc:163
 msgid "Saturation"
 msgstr "Sättigung"
 
-#: src/ui/gtk/color.cc:145 src/ui/gtk/color.cc:181
+#: src/ui/gtk/color.cc:145
+#: src/ui/gtk/color.cc:181
 msgid "Brightness"
 msgstr "Helligkeit"
 
@@ -1525,7 +1519,9 @@ msgstr "Schwarz Wert"
 msgid "White Level"
 msgstr "Weiß Wert"
 
-#: src/ui/gtk/color.cc:243 src/ui/gtk/info.cc:557 src/ui/gtk/keyboard.cc:635
+#: src/ui/gtk/color.cc:243
+#: src/ui/gtk/info.cc:557
+#: src/ui/gtk/keyboard.cc:635
 #: src/ui/gtk/wav.cc:148
 msgid "Close"
 msgstr "Schließen"
@@ -1562,7 +1558,8 @@ msgstr "no tape-filename given!"
 msgid "no KC-filename given!"
 msgstr "no KC-filename given!"
 
-#: src/ui/gtk/hedit.cc:106 src/ui/gtk/image.cc:89
+#: src/ui/gtk/hedit.cc:106
+#: src/ui/gtk/image.cc:89
 msgid ""
 "error in given load address!\n"
 "\n"
@@ -1576,7 +1573,8 @@ msgstr ""
 "hexadezimale Werte können durch vorangestelltes 0x (z.B. 0x1234)\n"
 "angegeben werden, oktale durch eine führende 0 (z.B. 0444)"
 
-#: src/ui/gtk/hedit.cc:119 src/ui/gtk/image.cc:105
+#: src/ui/gtk/hedit.cc:119
+#: src/ui/gtk/image.cc:105
 msgid "error in given start address!"
 msgstr "Fehler in der angegebenen Start-Adresse!"
 
@@ -1592,11 +1590,13 @@ msgstr "Name in tape-directory:"
 msgid "Name in KC file-header:"
 msgstr "Name in KC file-header:"
 
-#: src/ui/gtk/hedit.cc:225 src/ui/gtk/image.cc:156
+#: src/ui/gtk/hedit.cc:225
+#: src/ui/gtk/image.cc:156
 msgid "Load address:"
 msgstr "Lade-Adresse:"
 
-#: src/ui/gtk/hedit.cc:238 src/ui/gtk/image.cc:169
+#: src/ui/gtk/hedit.cc:238
+#: src/ui/gtk/image.cc:169
 msgid "Start address:"
 msgstr "Start-Adresse:"
 
@@ -1632,7 +1632,8 @@ msgstr "Programm nach dem Laden starten"
 msgid "OK"
 msgstr "OK"
 
-#: src/ui/gtk/image.cc:209 src/ui/gtk/tapeadd.cc:189
+#: src/ui/gtk/image.cc:209
+#: src/ui/gtk/tapeadd.cc:189
 msgid "Cancel"
 msgstr "Abbrechen"
 
@@ -1656,11 +1657,13 @@ msgstr "bit input/output"
 msgid "Mode:"
 msgstr "Mode:"
 
-#: src/ui/gtk/info.cc:347 src/ui/gtk/info.cc:421
+#: src/ui/gtk/info.cc:347
+#: src/ui/gtk/info.cc:421
 msgid "IRQ:"
 msgstr "IRQ:"
 
-#: src/ui/gtk/info.cc:366 src/ui/gtk/info.cc:440
+#: src/ui/gtk/info.cc:366
+#: src/ui/gtk/info.cc:440
 msgid "IRQ Vector:"
 msgstr "IRQ Vector:"
 
@@ -1726,9 +1729,15 @@ msgstr "Floppy Disk Grundgerät [F0]"
 msgid "D002: Busdriver [%02X]"
 msgstr "D002: Bus-Treiber [%02X]"
 
-#: src/ui/gtk/module.cc:337 src/ui/gtk/module.cc:344 src/ui/gtk/module.cc:348
-#: src/ui/gtk/module.cc:352 src/ui/gtk/module.cc:356 src/ui/gtk/module.cc:360
-#: src/ui/gtk/module.cc:364 src/ui/gtk/module.cc:368 src/ui/gtk/module.cc:372
+#: src/ui/gtk/module.cc:337
+#: src/ui/gtk/module.cc:344
+#: src/ui/gtk/module.cc:348
+#: src/ui/gtk/module.cc:352
+#: src/ui/gtk/module.cc:356
+#: src/ui/gtk/module.cc:360
+#: src/ui/gtk/module.cc:364
+#: src/ui/gtk/module.cc:368
+#: src/ui/gtk/module.cc:372
 msgid "Basis Device"
 msgstr "Grundgerät"
 
@@ -1764,7 +1773,8 @@ msgstr "/Datei _Exportieren"
 msgid "/Export _Wav"
 msgstr "/WAV Exportieren"
 
-#: src/ui/gtk/tape.cc:261 src/ui/gtk/ui_gtk.cc:681
+#: src/ui/gtk/tape.cc:261
+#: src/ui/gtk/ui_gtk.cc:681
 msgid "/sep1"
 msgstr "/sep1"
 
@@ -1780,7 +1790,8 @@ msgstr "/Datei _Umbenennen"
 msgid "/_Delete File"
 msgstr "/_Datei Löschen"
 
-#: src/ui/gtk/tape.cc:265 src/ui/gtk/ui_gtk.cc:688
+#: src/ui/gtk/tape.cc:265
+#: src/ui/gtk/ui_gtk.cc:688
 msgid "/sep2"
 msgstr "/sep2"
 
@@ -1808,7 +1819,8 @@ msgstr "Start"
 msgid "Size"
 msgstr "Größe"
 
-#: src/ui/gtk/tape.cc:287 src/ui/gtk/tape.cc:293
+#: src/ui/gtk/tape.cc:287
+#: src/ui/gtk/tape.cc:293
 msgid "<TapeP>"
 msgstr "<TapeP>"
 
@@ -1916,7 +1928,8 @@ msgstr "/Emulator/sep2"
 msgid "/Emulator/_Quit Emulator"
 msgstr "/Emulator/Emulator _beenden"
 
-#: src/ui/gtk/ui_gtk.cc:649 src/ui/gtk/ui_gtk.cc:682
+#: src/ui/gtk/ui_gtk.cc:649
+#: src/ui/gtk/ui_gtk.cc:682
 msgid "/_View"
 msgstr "/_Ansicht"
 
@@ -1932,23 +1945,28 @@ msgstr "/Ansicht/Zoom x_2"
 msgid "/View/Zoom x_3"
 msgstr "/Ansicht/Zoom x_3"
 
-#: src/ui/gtk/ui_gtk.cc:653 src/ui/gtk/ui_gtk.cc:683
+#: src/ui/gtk/ui_gtk.cc:653
+#: src/ui/gtk/ui_gtk.cc:683
 msgid "/View/_Keyboard"
 msgstr "/Ansicht/_Tastatur"
 
-#: src/ui/gtk/ui_gtk.cc:654 src/ui/gtk/ui_gtk.cc:684
+#: src/ui/gtk/ui_gtk.cc:654
+#: src/ui/gtk/ui_gtk.cc:684
 msgid "/View/_Debugger"
 msgstr "/Ansicht/_Debugger"
 
-#: src/ui/gtk/ui_gtk.cc:655 src/ui/gtk/ui_gtk.cc:685
+#: src/ui/gtk/ui_gtk.cc:655
+#: src/ui/gtk/ui_gtk.cc:685
 msgid "/View/_Info"
 msgstr "/Ansicht/_Information"
 
-#: src/ui/gtk/ui_gtk.cc:656 src/ui/gtk/ui_gtk.cc:686
+#: src/ui/gtk/ui_gtk.cc:656
+#: src/ui/gtk/ui_gtk.cc:686
 msgid "/View/_Menubar"
 msgstr "/Ansicht/_Menüleiste"
 
-#: src/ui/gtk/ui_gtk.cc:657 src/ui/gtk/ui_gtk.cc:687
+#: src/ui/gtk/ui_gtk.cc:657
+#: src/ui/gtk/ui_gtk.cc:687
 msgid "/View/_Statusbar"
 msgstr "/Ansicht/_Statusleiste"
 
@@ -1960,7 +1978,9 @@ msgstr "/_Optionen"
 msgid "/Options/_Colors"
 msgstr "/Optionen/_Farben"
 
-#: src/ui/gtk/ui_gtk.cc:660 src/ui/gtk/ui_gtk.cc:891 src/ui/gtk/ui_gtk.cc:1134
+#: src/ui/gtk/ui_gtk.cc:660
+#: src/ui/gtk/ui_gtk.cc:891
+#: src/ui/gtk/ui_gtk.cc:1134
 msgid "/Options/_Display Effects"
 msgstr "/Optionen/_Effekte"
 
@@ -2061,35 +2081,43 @@ msgstr "%s (%s)"
 msgid "Info"
 msgstr "Info"
 
-#: src/ui/gtk/ui_gtk0.cc:73 src/ui/sdl/ui_sdl0.cc:88
+#: src/ui/gtk/ui_gtk0.cc:73
+#: src/ui/sdl/ui_sdl0.cc:88
 msgid "Z1013 Emulator"
 msgstr "Z1013 Emulator"
 
-#: src/ui/gtk/ui_gtk1.cc:65 src/ui/sdl/ui_sdl1.cc:86
+#: src/ui/gtk/ui_gtk1.cc:65
+#: src/ui/sdl/ui_sdl1.cc:86
 msgid "KC 87 Emulator"
 msgstr "KC 87 Emulator"
 
-#: src/ui/gtk/ui_gtk1.cc:67 src/ui/sdl/ui_sdl1.cc:88
+#: src/ui/gtk/ui_gtk1.cc:67
+#: src/ui/sdl/ui_sdl1.cc:88
 msgid "KC 85/1 Emulator"
 msgstr "KC 85/1 Emulator"
 
-#: src/ui/gtk/ui_gtk3.cc:65 src/ui/sdl/ui_sdl3.cc:106
+#: src/ui/gtk/ui_gtk3.cc:65
+#: src/ui/sdl/ui_sdl3.cc:106
 msgid "KC 85/2 Emulator"
 msgstr "KC 85/2 Emulator"
 
-#: src/ui/gtk/ui_gtk3.cc:67 src/ui/sdl/ui_sdl3.cc:108
+#: src/ui/gtk/ui_gtk3.cc:67
+#: src/ui/sdl/ui_sdl3.cc:108
 msgid "KC 85/3 Emulator"
 msgstr "KC 85/3 Emulator"
 
-#: src/ui/gtk/ui_gtk4.cc:64 src/ui/sdl/ui_sdl4.cc:105
+#: src/ui/gtk/ui_gtk4.cc:64
+#: src/ui/sdl/ui_sdl4.cc:105
 msgid "KC 85/4 Emulator"
 msgstr "KC 85/4 Emulator"
 
-#: src/ui/gtk/ui_gtk8.cc:64 src/ui/sdl/ui_sdl8.cc:82
+#: src/ui/gtk/ui_gtk8.cc:64
+#: src/ui/sdl/ui_sdl8.cc:82
 msgid "LC80 Emulator"
 msgstr "LC80 Emulator"
 
-#: src/ui/gtk/ui_gtk9.cc:73 src/ui/sdl/ui_sdl9.cc:103
+#: src/ui/gtk/ui_gtk9.cc:73
+#: src/ui/sdl/ui_sdl9.cc:103
 msgid "A5105 Emulator"
 msgstr "A5105 Emulator"
 
@@ -2198,10 +2226,7 @@ msgid "Thanks"
 msgstr "Danksagung"
 
 #: src/ui/gtk/glade/thanks_interface.c:128
-msgid ""
-"I'd like to say thanks to many people who helped to bring KCemu to the point "
-"where it is now. The following list just lists some of them in no particular "
-"order..."
+msgid "I'd like to say thanks to many people who helped to bring KCemu to the point where it is now. The following list just lists some of them in no particular order..."
 msgstr ""
 
 #: src/ui/gtk/glade/thanks_interface.c:154
@@ -2265,9 +2290,7 @@ msgid "People"
 msgstr "Personen"
 
 #: src/ui/gtk/glade/thanks_interface.c:166
-msgid ""
-"Lots of tools and libraries made it easier to write KCemu. Many thanks to "
-"the people behind all those projects for their work..."
+msgid "Lots of tools and libraries made it easier to write KCemu. Many thanks to the people behind all those projects for their work..."
 msgstr ""
 
 #: src/ui/gtk/glade/thanks_interface.c:195
@@ -2332,24 +2355,18 @@ msgstr "Projekte & Bibliotheken"
 
 #~ msgid "Yes"
 #~ msgstr "Ja"
-
 #~ msgid "No"
 #~ msgstr "Nein"
-
 #~ msgid "Libraries & Projects"
 #~ msgstr "Projekte & Bibliotheken"
-
 #~ msgid "KCemu: Copying"
 #~ msgstr "KCemu: Lizenz"
-
 #~ msgid "Browse"
 #~ msgstr "Durchsuchen"
-
 #~ msgid "Eject"
 #~ msgstr "Auswerfen"
-
 #~ msgid "Attach"
 #~ msgstr "Aktivieren"
-
 #~ msgid "Detach"
 #~ msgstr "Deaktivieren"
+

@@ -72,6 +72,8 @@ typedef enum
   KC_VARIANT_Z1013_RB    = 6,
   KC_VARIANT_Z1013_SURL  = 7,
   KC_VARIANT_Z1013_BL4   = 8,
+  KC_VARIANT_LC80_1k     = 0,
+  KC_VARIANT_LC80_2k     = 1,
   KC_VARIANT_A5105_K1505 = 0,
   KC_VARIANT_A5105_A5105 = 1
 } kc_variant_t;

@@ -43,11 +43,13 @@ Memory8::Memory8(void) : Memory()
     int            prio;
     bool           ro;
     bool           active;
+    int            model;
   } *mptr, m[] = {
-    { &_m_scr,   "-",     0x0000, 0x10000, 0,         256, 0, 1 },
-    { &_m_rom1,  "ROM1",  0x0000,  0x0400, &_rom1[0],   0, 1, 1 },
-    { &_m_rom2,  "ROM2",  0x0800,  0x0400, &_rom2[0],   0, 1, 1 },
-    { &_m_ram,   "RAM",   0x2000,  0x0400, &_ram[0],    0, 0, 1 },
+    { &_m_scr,   "-",     0x0000, 0x10000, 0,         256, 0, 1, -1                 },
+    { &_m_rom1,  "ROM1",  0x0000,  0x0400, &_rom1[0],   0, 1, 1, KC_VARIANT_LC80_1k },
+    { &_m_rom2,  "ROM2",  0x0800,  0x0400, &_rom2[0],   0, 1, 1, KC_VARIANT_LC80_1k },
+    { &_m_rom,   "ROM",   0x0000,  0x0800, &_rom[0],    0, 1, 1, KC_VARIANT_LC80_2k },
+    { &_m_ram,   "RAM",   0x2000,  0x0400, &_ram[0],    0, 0, 1, -1                 },
     { 0, },
   };
 
@@ -55,12 +57,19 @@ Memory8::Memory8(void) : Memory()
   string lc80_romdir = datadir + "/roms/lc80";
   string lc80_system_00_rom = lc80_romdir + "/lc80__00.rom";
   string lc80_system_08_rom = lc80_romdir + "/lc80__08.rom";
+  string lc80_system_2k_rom = lc80_romdir + "/lc80__2k.rom";
 
   load_rom(lc80_system_00_rom.c_str(), &_rom1, 0x0400, true);
   load_rom(lc80_system_08_rom.c_str(), &_rom2, 0x0400, true);
+  load_rom(lc80_system_2k_rom.c_str(), &_rom,  0x0800, true);
 
   for (mptr = &m[0];mptr->name;mptr++)
     {
+      *(mptr->group) = NULL;
+
+      if ((mptr->model >= 0) && (mptr->model != get_kc_variant()))
+	continue;
+
       *(mptr->group) = new MemAreaGroup(mptr->name,
 					mptr->addr,
 					mptr->size,
