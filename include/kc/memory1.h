@@ -35,6 +35,7 @@ private:
   byte_t _ram[0x4000];
   byte_t _irm[0x0800];
   byte_t _rom_os[0x1000];
+  byte_t _rom_chargen[0x0800];
 
   MemAreaGroup *_m_scr;    /* scratch memory */
   MemAreaGroup *_m_ram;    /* RAM   0000h - 3fffh */

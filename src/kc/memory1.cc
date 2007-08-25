@@ -59,8 +59,10 @@ Memory1::Memory1(void) : Memory()
   string datadir(kcemu_datadir);
   string z9001_romdir = datadir + "/roms/z9001";
   string z9001_os_rom = z9001_romdir + "/os____f0.851";
+  string z9001_chargen_rom = z9001_romdir + "/chargen.851";
 
   load_rom(z9001_os_rom.c_str(), &_rom_os, 0x1000, true);
+  load_rom(z9001_chargen_rom.c_str(), &_rom_chargen, 0x0800, true);
 
   memset(&_irm[0], 0x70, 0x400);
 

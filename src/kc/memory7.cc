@@ -77,6 +77,9 @@ Memory7::Memory7(void) : Memory()
   load_rom(z9001_os_rom.c_str(), &_rom_os, 0x1000, true);
   load_rom(z9001_basic_rom.c_str(), &_rom_basic, 0x2800, true);
 
+  string z9001_chargen_rom = z9001_romdir + "/chargen.851";
+  load_rom(z9001_chargen_rom.c_str(), &_rom_chargen, 0x0800, true);
+
   memset(&_irm[0], 0x70, 0x400);
 
   for (mptr = &m[0];mptr->name;mptr++)
@@ -141,7 +144,7 @@ Memory7::get_irm(void)
 byte_t *
 Memory7::get_char_rom(void)
 {
-  return (byte_t *)0;
+  return (byte_t *)_rom_chargen;
 }
 
 void

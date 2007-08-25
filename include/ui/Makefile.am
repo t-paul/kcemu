@@ -15,5 +15,4 @@ EXTRA_DIST = \
 	commands.h	\
 	window.h	\
 	hsv2rgb.h	\
-	font0.h		\
-	font1.h
+	font0.h

@@ -26,8 +26,6 @@
 #include "kc/timer1.h"
 #include "kc/memory.h"
 
-#include "ui/font1.h"
-
 #include "ui/generic/ui_1.h"
 
 UI_1::UI_1(void)
@@ -85,7 +83,7 @@ void
 UI_1::generic_put_pixels(byte_t *ptr, byte_t val, word_t color)
 {
   for (int a = 0;a < 8;a++)
-    ptr[a] = (val & (1 << a)) ? (color >> 8) : color;
+    ptr[a] = (val & (128 >> a)) ? (color >> 8) : color;
 }
 
 void
@@ -132,6 +130,7 @@ UI_1::generic_update_24(int width, int height, int fchg, byte_t flash, bool clea
   int a, x, y, z, d;
 
   byte_t *irm = memory->get_irm();
+  byte_t *font = memory->get_char_rom();
   byte_t *ptr = _bitmap;
 
   z = -1;
@@ -166,7 +165,7 @@ UI_1::generic_update_24(int width, int height, int fchg, byte_t flash, bool clea
 	    color = ((color << 8) & 0x0700) | ((color >> 8) & (0x0007));
 
           for (a = 0;a < 8;a++)
-            generic_put_pixels(ptr + (a + 32) * width + x + 32, __font[8 * pix + a], color);
+            generic_put_pixels(ptr + (a + 32) * width + x + 32, font[8 * pix + a], color);
 
         }
       ptr += 8 * width;
@@ -182,6 +181,7 @@ UI_1::generic_update_20(int width, int height, int fchg, byte_t flash, bool clea
   int a, x, y, z, d;
 
   byte_t *irm = memory->get_irm();
+  byte_t *font = memory->get_char_rom();
   byte_t *ptr = _bitmap;
 
   z = -1;
@@ -214,7 +214,7 @@ UI_1::generic_update_20(int width, int height, int fchg, byte_t flash, bool clea
 	  color = (0x0011 * col) & 0x0707;
 
           for (a = 0;a < 8;a++)
-            generic_put_pixels(ptr + (a + 32) * width + x + 32, __font[8 * pix + a], color);
+            generic_put_pixels(ptr + (a + 32) * width + x + 32, font[8 * pix + a], color);
 
         }
       ptr += 10 * width;

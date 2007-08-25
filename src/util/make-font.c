@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include <ui/font1.h>
+static unsigned char __font[2048];
 
 int
 reverse(int byte)
@@ -31,18 +31,42 @@ print_char(int c)
   printf("BBX 8 8 0 -2\n");
   printf("BITMAP\n");
   for (a = 0;a < 8;a++)
-    printf("%02X\n", reverse(__font[8 * c + a]));
+    {
+      //printf("%02X\n", reverse(__font[8 * c + a]));
+      printf("%02X\n", __font[8 * c + a]);
+    }
   printf("ENDCHAR\n");
 }
 
 int
 main(int argc, char **argv)
 {
+  FILE *f;
   int a, size, b1, b2;
 
   size = 8;
-  if (argc >= 2)
-    size = atoi(argv[1]);
+
+  if (argc < 3)
+    {
+      printf("usage: %s <font file> <font name> <size>\n", argv[0]);
+      exit(1);
+    }
+
+  f = fopen(argv[1], "rb");
+  if (f == NULL)
+    {
+      printf("can't open file `%s'!\n", argv[1]);
+      exit(1);
+    }
+
+  if (fread(__font, 1, 2048, f) != 2048)
+    {
+      printf("could not read 2048 bytes from font file!\n");
+      exit(1);
+    }
+
+  if (argc >= 4)
+    size = atoi(argv[3]);
   if (size < 8)
     size = 8;
 
@@ -50,7 +74,7 @@ main(int argc, char **argv)
   b2 = (size - 8) - b1;
 
   printf("STARTFONT 2.1\n"
-	 "FONT kc87\n"
+	 "FONT %s\n"
 	 "SIZE %d 72 72\n"
 	 "FONTBOUNDINGBOX 8 %d 0 -2\n"
 	 "STARTPROPERTIES 9\n"
@@ -65,7 +89,7 @@ main(int argc, char **argv)
 	 "DEFAULT_CHAR 32\n"
 	 "ENDPROPERTIES\n"
 	 "CHARS 256\n",
-	 size, size, 7 + b1, 1 + b2);
+	 argv[2], size, size, 7 + b1, 1 + b2);
 
   for (a = 0;a < 256;a++)
     print_char(a);

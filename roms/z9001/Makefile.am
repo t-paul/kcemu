@@ -21,6 +21,7 @@ ROMS = \
 	zsid__c0.851 \
 	kcpascal.851 \
 	mega_rom.851 \
+	chargen.851 \
 	os_rb20.rom \
 	os_rb21.rom
 
