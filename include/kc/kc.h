@@ -40,6 +40,7 @@ typedef enum
   KC_TYPE_KRAMERMC   = (1 << 10),
   KC_TYPE_MUGLERPC   = (1 << 11),
   KC_TYPE_VCS80      = (1 << 12),
+  KC_TYPE_C80        = (1 << 13),
   KC_TYPE_85_1_CLASS = KC_TYPE_85_1 | KC_TYPE_87,
   KC_TYPE_85_2_CLASS = KC_TYPE_85_2 | KC_TYPE_85_3 | KC_TYPE_85_4 | KC_TYPE_85_5,
   KC_TYPE_ALL        = (KC_TYPE_85_1_CLASS |
@@ -50,7 +51,8 @@ typedef enum
 			KC_TYPE_POLY880 |
 			KC_TYPE_KRAMERMC |
 			KC_TYPE_MUGLERPC |
-			KC_TYPE_VCS80)
+			KC_TYPE_VCS80 |
+			KC_TYPE_C80)
 } kc_type_t;
 
 typedef enum
@@ -110,6 +112,7 @@ class PortInterface;
 class GDC;
 class VIS;
 class Poly880;
+class DisplayC80;
 
 extern Z80             *z80;
 extern DaisyChain      *daisy;
@@ -131,6 +134,7 @@ extern CMD             *cmd;
 extern GDC             *gdc;
 extern VIS             *vis;
 extern Poly880         *poly880;
+extern DisplayC80      *display_c80;
 
 extern Z80_FDC         *fdc_z80;     
 extern FloppyIO        *fdc_io;

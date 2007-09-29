@@ -13,6 +13,7 @@ ICONS = \
 	kcemu-kc87.xpm \
 	kcemu-lc80.xpm \
 	kcemu-vcs80.xpm \
+	kcemu-c80.xpm \
 	kcemu-pcm.xpm \
 	kcemu-kramermc.xpm \
 	kcemu-poly880.xpm \
@@ -27,6 +28,7 @@ WINICONS = \
 	kcemu-kc87.ico \
 	kcemu-lc80.ico \
 	kcemu-vcs80.ico \
+	kcemu-c80.ico \
 	kcemu-pcm.ico \
 	kcemu-kramermc.ico \
 	kcemu-poly880.ico \

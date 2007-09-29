@@ -45,6 +45,7 @@ libui_gtk_a_SOURCES = \
 	ui_gtk_kramermc.cc	\
 	ui_gtk_muglerpc.cc	\
 	ui_gtk_vcs80.cc		\
+	ui_gtk_c80.cc		\
 	cmd.cc			\
 	window.cc		\
 	disk.cc			\

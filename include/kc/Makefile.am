@@ -1,6 +1,6 @@
 ## Process this file with automake to produce Makefile.in
 
-SUBDIRS = kramermc muglerpc vcs80
+SUBDIRS = kramermc muglerpc vcs80 c80
 
 EXTRA_DIST = \
 	cb.h		\

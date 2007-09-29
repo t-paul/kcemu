@@ -111,6 +111,8 @@ decode_sector(teledisk_prop_t *prop, int track_idx, unsigned char *buf)
 
   type = fgetc(prop->f);
 
+  printf("track: %d, type = %d\n", track_idx, type);
+
   switch (type)
     {
     case 0x00:
@@ -194,67 +196,62 @@ static char *
 read_header(FILE *f)
 {
   char *buf;
+  char *density;
+  char *drive;
   int c, cnt, idx, len;
   struct {
-    unsigned char unknown00;
-    unsigned char unknown01;
-    unsigned char unknown02;
-    unsigned char unknown03;
-    unsigned char comment;
-    unsigned char unknown05;
-    unsigned char sides;
-    unsigned char unknown07;
-    unsigned char unknown08;
-    unsigned char unknown09;
-    unsigned char unknown10;
-    unsigned char unknown11;
-    unsigned char unknown12;
-    unsigned char year;
-    unsigned char month;
-    unsigned char day;
-    unsigned char hour;
-    unsigned char minute;
-    unsigned char second;
+    unsigned char  file_id[2];
+    unsigned char  volume_sequence;
+    unsigned char  check_signature;
+    unsigned char  version_number;
+    unsigned char  source_density;
+    unsigned char  drive_type;
+    unsigned char  track_density;
+    unsigned char  dos_mode;
+    unsigned char  sides;
+    unsigned short crc;
   } h;
-  /*
+
+  struct {
+    unsigned short crc;
+    unsigned short len;
+    unsigned char  year;
+    unsigned char  month;
+    unsigned char  day;
+    unsigned char  hour;
+    unsigned char  minute;
+    unsigned char  second;
+  } comment;
+
   const char *month[] = {
     "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
   };
-  */
+
+  if (fread(&h, sizeof(h), 1, f) != 1)
+    return NULL;
 
   /*
    *  check file identifier
    */
-  c = fgetc(f);
-  if (c != 'T')
+  if ((h.file_id[0] != 'T') && (h.file_id[0] != 't'))
     return NULL;
 
-  c = fgetc(f);
-  if (c != 'D')
+  if ((h.file_id[1] != 'D') && (h.file_id[1] != 'd'))
     return NULL;
 
-  c = fgetc(f);
-  if (c != 0)
+  if (h.volume_sequence != 0)
     return NULL;
-
-  /*
-   *  skip header
-   */
-  //for (a = 0;a < 19;a++)
-  //c = fgetc(f);
-
-  fread(&h, 9, 1, f); // first 9 bytes of header
 
   // check for comment
-  if ((h.comment & 0x80) == 0)
+  if ((h.track_density & 0x80) == 0)
     {
       buf = malloc(1);
       buf[0] = 0;
       return buf;
     }
 
-  // argh...
-  fread(((char *)&h) + 9, 10, 1, f); // read next 10 bytes only if no comment ???
+  if (fread(&comment, sizeof(comment), 1, f) != 1)
+    return NULL;
 
 //printf("00: %02x, %3d\n", h.unknown00, h.unknown00);
 //printf("01: %02x, %3d\n", h.unknown01, h.unknown01);
@@ -269,50 +266,76 @@ read_header(FILE *f)
 //printf("11: %02x, %3d\n", h.unknown11, h.unknown11);
 //printf("12: %02x, %3d\n", h.unknown12, h.unknown12);
 //
-//printf("sides: %d\n", h.sides);
-//printf("date: %02d. %s %04d, %02d:%02d:%02d\n",
-//	 h.day, month[h.month], h.year + 1900,
-//	 h.hour, h.minute, h.second);
+
+  switch (h.source_density)
+    {
+    case 0:
+      density = "250K bps MFM";
+      break;
+    case 1:
+      density = "300K bps MFM";
+      break;
+    case 2:
+      density = "500K bps MFM";
+      break;
+    case 128:
+      density = "250K bps FM";
+      break;
+    case 129:
+      density = "300K bps FM";
+      break;
+    case 130:
+      density = "500K bps FM";
+      break;
+    default:
+      return NULL;
+    }
+
+  switch (h.drive_type)
+    {
+    case 1:
+      drive = "360k";
+      break;
+    case 2:
+      drive = "1.2M";
+      break;
+    case 3:
+      drive = "720k";
+      break;
+    case 4:
+      drive = "1.44k";
+      break;
+    default:
+      return NULL;
+    }
+
+  printf("file_id: %c%c (vol %d, check %d)\n", h.file_id[0], h.file_id[1], h.volume_sequence, h.check_signature);
+  printf("version_number: %d.%d\n", h.version_number / 16, h.version_number & 15);
+  printf("density: %s\n", density);
+  printf("drive_type: %s\n", drive);
+  printf("sides: %d\n", h.sides);
+  printf("dos_mode: %d\n", h.dos_mode);
+  printf("comment length: %d\n", comment.len);
+  printf("date: %02d. %s %04d, %02d:%02d:%02d\n",
+	 comment.day, month[comment.month], comment.year + 1900,
+	 comment.hour, comment.minute, comment.second);
 
   /*
    *  read comment
    */
+  
+
   cnt = 0;
   idx = 0;
   len = 128;
-  buf = (char *)malloc(len);
-  while (242)
+  buf = (char *)malloc(comment.len);
+  if (fread(buf, 1, comment.len, f) != comment.len)
     {
-      c = fgetc(f);
-      if (c == EOF)
-	{
-	  free(buf);
-	  return NULL;
-	}
-
-      if ((idx + 1) >= len) // reserve 1 byte for terminating '\0' byte
-	{
-	  len += 128;
-	  buf = realloc(buf, len);
-	}
-
-      if (c != 0)
-	{
-	  if (cnt > 6)
-	    {
-	      ungetc(c, f);
-	      break;
-	    }
-
-	  cnt = 0;
-	  buf[idx++] = c;
-	  continue;
-	}
-
-      cnt++;
+      free(buf);
+      return NULL;
     }
 
-  buf[idx] = '\0';
+  printf("comment: %s\n", buf);
 
   return buf;
 }

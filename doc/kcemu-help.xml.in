@@ -48,6 +48,7 @@
 2.8. <link ref="sys-kramermc">Kramer-Microcomputer</link>
 2.9. <link ref="sys-muglerpc">PC/M / Mugler-PC</link>
 2.10. <link ref="sys-vcs80">VCS 80</link>
+2.11. <link ref="sys-c80">C-80</link>
 
 <size value="1">3. <i>Funktionen</i></size>
 <size value="-3"> </size>
@@ -83,6 +84,7 @@
   - <link ref="sys-kramermc">Kramer-Micro-Computer</link>
   - <link ref="sys-muglerpc">PC/M / Mugler-PC</link>
   - <link ref="sys-vcs80">VCS 80</link>
+  - <link ref="sys-c80">C-80</link>
 
 
 </p>
@@ -427,6 +429,15 @@ VEB Robotron-Meßelektronik "Otto Schön" Dresden
   Amateur zu ermöglichen.
   Vorgestellt wurde der VCS80 von Eckhard Schiller in der Zeitschrift
   "radio fernsehen elektronik" (rfe) Ausgabe 3/1983.
+
+</p>
+
+<p><size value="2"><ref name="sys-c80"/>2.11. C-80</size>
+
+  Von Dipl.-Ing. Joachim Czepa entwickelter Einplatinencomputer mit 8-stelliger
+  7-Segmentanzeige und Schnittstelle für Kassettenrecorder.
+  Vorgestellt wurde das System in der "Schaltungssammlung für den Amateur,
+  4. Lieferung 1986", Blatt 6-13 bis 6-18.
 
 </p>
 

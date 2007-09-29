@@ -14,6 +14,7 @@ EXTRA_DIST = \
 	ui_gtk_kramermc.h	\
 	ui_gtk_muglerpc.h	\
 	ui_gtk_vcs80.h		\
+	ui_gtk_c80.h		\
 	cmd.h			\
 	cmds.h			\
 	util.h			\

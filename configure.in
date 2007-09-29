@@ -503,6 +503,7 @@ AC_OUTPUT([
 	include/kc/kramermc/Makefile
 	include/kc/muglerpc/Makefile
 	include/kc/vcs80/Makefile
+	include/kc/c80/Makefile
 	include/sys/Makefile
 	include/getopt/Makefile
 	include/cmd/Makefile
@@ -528,6 +529,7 @@ AC_OUTPUT([
 	src/kc/kramermc/Makefile
 	src/kc/muglerpc/Makefile
 	src/kc/vcs80/Makefile
+	src/kc/c80/Makefile
 	src/sys/Makefile
 	src/sys/beos/Makefile
 	src/sys/mingw/Makefile
@@ -563,6 +565,7 @@ AC_OUTPUT([
 	roms/kramermc/Makefile
 	roms/muglerpc/Makefile
 	roms/vcs80/Makefile
+	roms/c80/Makefile
 	tapes/Makefile
 	disks/Makefile
 	images/Makefile

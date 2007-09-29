@@ -848,6 +848,10 @@ UI_Gtk::create_main_window(void)
       winicon = "kcemu-vcs80.xpm";
       g_object_set_data(G_OBJECT(_main.window), "help-topic", (gpointer)"sys-vcs80");
       break;
+    case KC_TYPE_C80:
+      winicon = "kcemu-c80.xpm";
+      g_object_set_data(G_OBJECT(_main.window), "help-topic", (gpointer)"sys-c80");
+      break;
     case KC_TYPE_ALL:
     case KC_TYPE_NONE:
     case KC_TYPE_85_1_CLASS:

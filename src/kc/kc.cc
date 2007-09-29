@@ -146,6 +146,11 @@
 #include "kc/vcs80/memory.h"
 #include "kc/vcs80/keyboard.h"
 
+#include "kc/c80/pio.h"
+#include "kc/c80/memory.h"
+#include "kc/c80/display.h"
+#include "kc/c80/keyboard.h"
+
 #ifdef USE_UI_GTK
 # include "ui/gtk/ui_gtk0.h"
 # include "ui/gtk/ui_gtk1.h"
@@ -157,6 +162,7 @@
 # include "ui/gtk/ui_gtk_kramermc.h"
 # include "ui/gtk/ui_gtk_muglerpc.h"
 # include "ui/gtk/ui_gtk_vcs80.h"
+# include "ui/gtk/ui_gtk_c80.h"
 # define UI_0 UI_Gtk0
 # define UI_1 UI_Gtk1
 # define UI_3 UI_Gtk3
@@ -167,6 +173,7 @@
 # define UI_KramerMC UI_Gtk_KramerMC
 # define UI_MuglerPC UI_Gtk_MuglerPC
 # define UI_VCS80    UI_Gtk_VCS80
+# define UI_C80    UI_Gtk_C80
 #endif /* USE_UI_GTK */
 #ifdef USE_UI_SDL
 # include "ui/sdl/ui_sdl0.h"
@@ -222,6 +229,7 @@ GDC           *gdc;
 VIS           *vis;
 SVG           *svg;
 Poly880       *poly880;
+DisplayC80    *display_c80;
 
 Z80_FDC         *fdc_z80;
 FloppyIO        *fdc_io;
@@ -390,6 +398,9 @@ static kc_variant_names_t kc_types[] = {
   { "vcs80",              -1, KC_TYPE_VCS80, KC_VARIANT_NONE,
     N_("    Minimal Z80 learning system presented in the magazine \"rfe\"\n"
        "    by Eckhard Schiller.\n")
+  },
+  { "c80",                -1, KC_TYPE_C80, KC_VARIANT_NONE,
+    N_("    Minimal Z80 learning system designed by Dipl.-Ing. Joachim Czepa.\n")
   },
   { NULL,                 -1, KC_TYPE_NONE,  KC_VARIANT_NONE,         NULL },
 };
@@ -1468,6 +1479,7 @@ main(int argc, char **argv)
       KeyboardKramerMC *k_kramer;
       KeyboardMuglerPC *k_mugler;
       KeyboardVCS80 *k_vcs80;
+      KeyboardC80 *k_c80;
 
       timer = NULL;
       memory = NULL;
@@ -1630,6 +1642,19 @@ main(int argc, char **argv)
 	  keyboard = k_vcs80;
 	  pio->register_callback_A_in(k_vcs80);
 	  break;
+	case KC_TYPE_C80:
+	  ui       = new UI_C80;
+	  pio      = new PIOC80_1;
+	  pio2     = new PIOC80_2;
+	  memory   = new MemoryC80;
+	  tape     = new Tape(500, 1000, 2000, 0); // FIXME:
+	  k_c80  = new KeyboardC80;
+	  display_c80 = new DisplayC80;
+	  keyboard = k_c80;
+	  pio->register_callback_A_in(k_c80);
+	  pio->register_callback_A_out(display_c80);
+	  pio->register_callback_B_out(display_c80);
+	  break;
 	default:
 	  DBG(0, form("KCemu/internal_error",
 		      "KCemu: setup with undefined system type\n"));
@@ -1737,6 +1762,12 @@ main(int argc, char **argv)
 	case KC_TYPE_VCS80:
 	  portg = ports->register_ports("PIO", 0x04, 4, pio, 10);
 	  daisy->add_last(pio);
+	  break;
+	case KC_TYPE_C80:
+	  portg = ports->register_ports("PIO (system)", 0xbc, 4, pio, 10);
+	  portg = ports->register_ports("PIO (user)", 0x7c, 4, pio2, 10);
+	  daisy->add_last(pio);
+	  daisy->add_last(pio2);
 	  break;
 	default:
 	  DBG(0, form("KCemu/internal_error",
