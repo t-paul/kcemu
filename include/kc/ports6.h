@@ -22,13 +22,17 @@
 #ifndef __kc_ports6_h
 #define __kc_ports6_h
 
+#include "kc/pio.h"
 #include "kc/ports.h"
 
-class Ports6 : public PortInterface
+class Ports6 : public PortInterface, public PIOCallbackInterface
 {
  private:
   byte_t _val;
   byte_t _led[8];
+
+ protected:
+  virtual void update_led_value(byte_t port_val, byte_t pio_val);
 
  public:
   Ports6(void);
@@ -37,6 +41,14 @@ class Ports6 : public PortInterface
   virtual void out(word_t addr, byte_t val);
 
   virtual byte_t get_led_value(int idx);
+
+  /*
+   *  PIOCallbackInterface
+   */
+  virtual int callback_A_in(void);
+  virtual int callback_B_in(void);
+  virtual void callback_A_out(byte_t val);
+  virtual void callback_B_out(byte_t val);
 };
 
 #endif /* __kc_ports6_h */

@@ -77,7 +77,9 @@ typedef enum
   KC_VARIANT_LC80_1k     = 0,
   KC_VARIANT_LC80_2k     = 1,
   KC_VARIANT_A5105_K1505 = 0,
-  KC_VARIANT_A5105_A5105 = 1
+  KC_VARIANT_A5105_A5105 = 1,
+  KC_VARIANT_POLY880     = 0,
+  KC_VARIANT_POLY880_SC1 = 1,
 } kc_variant_t;
 
 typedef struct

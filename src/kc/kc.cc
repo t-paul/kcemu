@@ -344,6 +344,10 @@ static kc_variant_names_t kc_types[] = {
   { "poly880",             6, KC_TYPE_POLY880, KC_VARIANT_NONE,
     N_("    Polycomputer 880.\n")
   },
+  {
+    "poly880.sc1",        -6, KC_TYPE_POLY880, KC_VARIANT_POLY880_SC1,
+    N_("    Polycomputer 880 with chess program rom from SC1")
+  },
   { "kc87",               -7, KC_TYPE_87,    KC_VARIANT_87_11,
     ">kc87.11"
   },
@@ -1609,6 +1613,7 @@ main(int argc, char **argv)
 	  keyboard = new Keyboard6;
 	  poly880  = new Poly880;
 	  pio->register_callback_B_in((Keyboard6 *)keyboard);
+	  pio->register_callback_A_out((Ports6 *)porti);
 	  break;
 	case KC_TYPE_KRAMERMC:
 	  ui       = new UI_KramerMC;
@@ -1744,10 +1749,11 @@ main(int argc, char **argv)
 	  daisy->add_last(pio);
 	  break;
 	case KC_TYPE_POLY880:
-	  portg = ports->register_ports("PIO1",   0x80, 4, pio,   10);
-	  portg = ports->register_ports("PIO2",   0x84, 4, pio2,  10);
-	  portg = ports->register_ports("CTC",    0x88, 4, ctc,   10);
-	  portg = ports->register_ports("PortFC", 0xfc, 1, porti, 10);
+	  portg = ports->register_ports("PIO1",  0x80,  4, pio,   10);
+	  portg = ports->register_ports("PIO2",  0x84,  4, pio2,  10);
+	  portg = ports->register_ports("CTC",   0x88,  4, ctc,   10);
+	  portg = ports->register_ports("DIGIT", 0xc0, 32, porti, 10);
+	  portg = ports->register_ports("DIGIT", 0xe0, 32, porti, 10);
 	  break;
 	case KC_TYPE_KRAMERMC:
 	  portg = ports->register_ports("PIO",    0xfc, 4, pio,   10);

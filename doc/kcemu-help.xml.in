@@ -396,6 +396,18 @@ VEB Polytechnik Karl-Marx-Stadt
 <c> <img src="sys-poly880.jpg"/> </c>
 <size value="-2"><c>Foto: Ein Poly880 in seinem Koffer</c></size>
 
+  Parameter für die Emulation:
+
+  <b>* poly880</b>
+    Poly 880 mit 2 x 1k ROM (0000h-03ffh, 1000h-13ffh), optional können
+    zusätzliche ROM-Dateien an die 2 freien ROM-Plätze geladen werden
+    (poly880c.rom: 2000h-23ffh, poly880d.rom: 3000h-33ffh).
+
+  <b>* poly880.sc1</b>
+    Poly 880 mit modifiziertem SC1-ROM. Im Adressbereich 0000h-0fffh
+    befindet sich ein 4k großer, an die Hardware des Poly 880 angepasster
+    ROM des Schachcomputers SC1.
+
 </p>
 
 <p><size value="2"><ref name="sys-a5105"/>2.7. BIC / A5105</size>

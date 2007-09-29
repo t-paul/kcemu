@@ -100,7 +100,6 @@ class HelpWindow : public UI_Gtk_Window
   void history_next(void);
   void history_back(void);
   
-  static gboolean context_help_idle_start(gpointer widget);
   static gboolean context_help_button_press(GtkWidget *widget, GdkEventButton *bevent, gpointer data);
 
   static void sf_button_back(GtkButton *button, gpointer data);
@@ -135,6 +134,8 @@ class HelpWindow : public UI_Gtk_Window
   virtual ~HelpWindow(void);
 
   gboolean scroll_to(const char *topic, gboolean update_history);
+
+  static gboolean context_help_idle_start(gpointer widget);
 };
 
 #endif /* __ui_gtk_help_h */

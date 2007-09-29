@@ -49,7 +49,7 @@ Ports6::in(word_t addr)
   byte_t val = 0xff;
 
   DBG(2, form("KCemu/Ports/6/in",
-	      "Ports6: in() addr = %04x (returning %02x)\n",
+	      "Ports6: in():  addr = %04x (returning %02x)\n",
 	      addr, val));
   
   return val;
@@ -58,117 +58,52 @@ Ports6::in(word_t addr)
 void
 Ports6::out(word_t addr, byte_t val)
 {
-  int a;
-
-  DBG(2, form("KCemu/Ports/6/out",
-              "Ports6: out() addr = %04x, val = %02x\n",
-              addr, val));
-  
   _val = val;
 
-  ((Keyboard6 *)keyboard)->set_line(val); // FIXME: decouple classes
+  DBG(2, form("KCemu/Ports/6/out",
+              "Ports6: out(): addr = %04x, val = %02x\n",
+              addr, val));
+  
+  // FIXME: decouple classes
+  ((Keyboard6 *)keyboard)->set_line(val);
+  byte_t pio_val = ((PIO6_1 *)pio)->get_led_value();
 
-  bool changed = false;
-  for (a = 0;a < 8;a++)
-    if (val & (128 >> a))
-      {
-	byte_t v = ((PIO6_1 *)pio)->get_led_value(); // FIXME: decouple classes
-	if (_led[a] != v)
-	  {
-	    _led[a] = v;
-	    changed = true;
-	  }
-      }
+  update_led_value(_val, pio_val);
+}
 
-#if 0
-  if (!changed)
-    return;
-
-  //printf("\x1b[H");
-
-  for (a = 0;a < 8;a++)
-    {
-      if (_led[a] & 0x20)
-	printf(" ---  ");
-      else
-	printf("      ");
-    }
-  printf("\n");
-
-  for (a = 0;a < 8;a++)
-    {
-      if (_led[a] & 0x40)
-	printf("|   ");
-      else
-	printf("    ");
-      if (_led[a] & 0x80)
-	printf("| ");
-      else
-	printf("  ");
-    }
-  printf("\n");
-
-  for (a = 0;a < 8;a++)
-    {
-      if (_led[a] & 0x40)
-	printf("|   ");
-      else
-	printf("    ");
-      if (_led[a] & 0x80)
-	printf("| ");
-      else
-	printf("  ");
-    }
-  printf("\n");
-
-  for (a = 0;a < 8;a++)
-    {
-      if (_led[a] & 0x10)
-	printf(" ---  ");
-      else
-	printf("      ");
-    }
-  printf("\n");
-
-  for (a = 0;a < 8;a++)
-    {
-      if (_led[a] & 0x01)
-	printf("|   ");
-      else
-	printf("    ");
-      if (_led[a] & 0x04)
-	printf("| ");
-      else
-	printf("  ");
-    }
-  printf("\n");
-
-  for (a = 0;a < 8;a++)
-    {
-      if (_led[a] & 0x01)
-	printf("|   ");
-      else
-	printf("    ");
-      if (_led[a] & 0x04)
-	printf("| ");
-      else
-	printf("  ");
-    }
-  printf("\n");
-
-  for (a = 0;a < 8;a++)
-    {
-      if (_led[a] & 0x02)
-	printf(" ---  ");
-      else
-	printf("      ");
-    }
-  printf("\n");
-#endif
+void
+Ports6::update_led_value(byte_t port_val, byte_t pio_val)
+{
+  for (int a = 0;a < 8;a++)
+    if (port_val & (128 >> a))
+      _led[a] = pio_val;
 }
 
 byte_t
 Ports6::get_led_value(int idx)
 {
   return _led[idx];
+}
+
+int
+Ports6::callback_A_in(void)
+{
+  return 0;
+}
+
+int
+Ports6::callback_B_in(void)
+{
+  return 0;
+}
+
+void
+Ports6::callback_A_out(byte_t val)
+{
+  update_led_value(_val, val);
+}
+
+void
+Ports6::callback_B_out(byte_t val)
+{
 }

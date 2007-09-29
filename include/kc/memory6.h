@@ -34,14 +34,16 @@ class Memory6 : public Memory
   byte_t _rom1[0x0400];
   byte_t _rom2[0x0400];
   byte_t _rom3[0x0400];
+  byte_t _rom_sc1[0x1000];
   byte_t _ram[0x0400];
 
-  MemAreaGroup *_m_scr;    /* scratch memory */
-  MemAreaGroup *_m_rom0;   /* ROM   0000h - 03ffh */
-  MemAreaGroup *_m_rom1;   /* ROM   1000h - 13ffh */
-  MemAreaGroup *_m_rom2;   /* ROM   2000h - 23ffh */
-  MemAreaGroup *_m_rom3;   /* ROM   3000h - 33ffh */
-  MemAreaGroup *_m_ram;    /* RAM   4000h - 43ffh */
+  MemAreaGroup *_m_scr;     /* scratch memory */
+  MemAreaGroup *_m_rom0;    /* ROM   0000h - 03ffh */
+  MemAreaGroup *_m_rom1;    /* ROM   1000h - 13ffh */
+  MemAreaGroup *_m_rom2;    /* ROM   2000h - 23ffh */
+  MemAreaGroup *_m_rom3;    /* ROM   3000h - 33ffh */
+  MemAreaGroup *_m_rom_sc1; /* ROM   0000h - 0fffh (SC1 chess rom) */
+  MemAreaGroup *_m_ram;     /* RAM   4000h - 43ffh */
 
  public:
   Memory6(void);

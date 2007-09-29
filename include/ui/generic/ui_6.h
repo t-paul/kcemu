@@ -28,6 +28,15 @@
 
 class UI_6 : public UI_LED
 {
+ private:
+  enum {
+    HISTORY_LEN = 4,
+    NR_OF_LEDS  = 8,
+  };
+
+  int _idx;
+  byte_t _data[NR_OF_LEDS][HISTORY_LEN];
+
  public:
   UI_6(void);
   virtual ~UI_6(void);

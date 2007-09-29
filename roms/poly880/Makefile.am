@@ -3,6 +3,7 @@
 poly880romdir = $(pkgdatadir)/roms/poly880
 
 ROMS = \
+	sc1.rom \
 	poly880a.rom \
 	poly880b.rom
 

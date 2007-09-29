@@ -62,7 +62,7 @@ PIO6_1::in(word_t addr)
     }
 
   DBG(2, form("KCemu/PIO/6a/in",
-              "PIO6_1::in(): addr = %04x, val = %02x\n",
+              "PIO6_1::in():  addr = %04x, val = %02x\n",
               addr, val));
 
   return val;
@@ -122,23 +122,29 @@ PIO6_2::~PIO6_2(void)
 byte_t
 PIO6_2::in(word_t addr)
 {
-  DBG(2, form("KCemu/PIO/6b/in",
-              "PIO6_2::in(): addr = %04x\n",
-              addr));
+  byte_t val = 0xff;
 
   switch (addr & 3)
     {
     case 0:
-      return in_A_DATA();
+      val = in_A_DATA();
+      break;
     case 1:
-      return in_A_CTRL();
+      val = in_A_CTRL();
+      break;
     case 2:
-      return in_B_DATA();
+      val = in_B_DATA();
+      break;
     case 3:
-      return in_B_CTRL();
+      val = in_B_CTRL();
+      break;
     }
 
-  return 0; // shouldn't be reached
+  DBG(2, form("KCemu/PIO/6b/in",
+              "PIO6_2::in():  addr = %04x, val = %02x\n",
+              addr, val));
+
+  return val;
 }
 
 void

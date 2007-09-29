@@ -28,6 +28,10 @@
 
 UI_6::UI_6(void) : UI_LED(560, 112, 32, 64, 1, 2, 4, 128, 16, 8)
 {
+  _idx = 0;
+  for (int a = 0;a < NR_OF_LEDS;a++)
+    for (int b = 0;b < HISTORY_LEN;b++)
+      _data[a][b] = 0;
 }
 
 UI_6::~UI_6(void)
@@ -37,13 +41,19 @@ UI_6::~UI_6(void)
 void
 UI_6::generic_update(bool clear_cache)
 {
-  byte_t led_value;
 
-  for (int a = 0;a < 8;a++)
+  for (int a = 0;a < NR_OF_LEDS;a++)
     {
-      led_value = ((Ports6 *)porti)->get_led_value(a);
+      _data[a][_idx] = ((Ports6 *)porti)->get_led_value(a);
+
+      byte_t led_value = 0;
+      for (int b = 0;b < HISTORY_LEN;b++)
+	led_value |= _data[a][b];
+
       generic_draw_digit(65 * a + 32, 12, a, led_value, clear_cache);
     }
+
+  _idx = (_idx + 1) % HISTORY_LEN;
 }
 
 int
