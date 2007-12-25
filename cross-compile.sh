@@ -1,5 +1,19 @@
 #!/bin/bash
 
+#
+#  This script is intended to help cross-compiling kcemu on
+#  linux host system. Target is Windows/MinGW.
+#
+#  As recommended at the Gtk+ for Windows web pages, compilation
+#  is done against the Gtk+-2.4 header files.
+#  (see http://www.gimp.org/~tml/gimp/win32/)
+#
+#  Two packages are generated. One with the latest Gtk+-2.6 as
+#  this is the last release that will be runnable under Windows 95.
+#  The second package requires at least Windows 2000 and uses
+#  the latest Gtk+ version available for Windows.
+#
+
 #BUILD_DIR="/tmp/kcemu.build.$$"
 BUILD_DIR="/tmp/kcemu.build"
 GTK_DEV_PACKAGES_DIR="/a/download/win32-dev/gtk-win32/gtk-2.4.14"
@@ -28,8 +42,14 @@ export SDL_CONFIG="$DEV_DIR"/bin/i386-mingw32msvc-sdl-config
 export TARGET="i586-mingw32msvc"
 
 u () {
-	echo "unpacking $1..."
-	unzip -q -o "$1"
+	if [ "x$2" = "x" ]
+	then
+		echo "unpacking $1..."
+		unzip -q -o "$1"
+	else
+		echo "unpacking $1... (to $2)"
+		unzip -q -d "$2" -o "$1"
+	fi
 }
 
 x () {
@@ -85,6 +105,11 @@ unpack_cur_libs_common () {
 	u "$DEP_PACKAGES_DIR"/zlib123-dll.zip
 	mv zlib1.dll bin
 
+	mkdir libtiff
+	u "$DEP_PACKAGES_DIR"/tiff-3.8.1-bin.zip libtiff
+	mv libtiff/bin/libtiff3.dll bin/
+	rm -rf libtiff
+
 	x "$SDL_PACKAGES_DIR"/SDL-devel-1.2.9-mingw32.tar.gz
 	mv SDL-1.2.9/bin/* bin
 	rm -rf SDL-1.2.9
@@ -133,6 +158,10 @@ unpack_cur_libs_gtk_2_8_20 () {
 
 unpack_cur_libs_gtk_2_10_7 () {
 	unpack_cur_libs_gtk gtk-2.10.7 glib-2.12.7.zip gtk+-2.10.7.zip pango-1.14.9.zip atk-1.12.3.zip cairo-1.2.6.zip
+}
+
+unpack_cur_libs_gtk_2_12_0 () {
+	unpack_cur_libs_gtk gtk+-2.12.0 glib-2.14.1.zip gtk+-2.12.0.zip pango-1.18.2.zip atk-1.20.0.zip cairo-1.4.10.zip
 }
 
 compile_kcemu () {
@@ -192,18 +221,18 @@ chmod 755 "$CROSS_PKG_CONFIG"
 #
 #  configure and compile
 #
-compile_kcemu
+compile_kcemu || exit 3
 
 #
 #  create installer for Win95 version
 #
 unpack_cur_libs_gtk_2_6_10
-makensis - < "KCemu-${KCEMU_VERSION}/setup/KCemuSetup_gtk2.6.nsi" || exit 3
+makensis - < "KCemu-${KCEMU_VERSION}/setup/KCemuSetup_gtk2.6.nsi" || exit 4
 
 #
 #  create installer for Win2000 version
 #
-unpack_cur_libs_gtk_2_10_7
-makensis - < "KCemu-${KCEMU_VERSION}/setup/KCemuSetup.nsi" || exit 4
+unpack_cur_libs_gtk_2_12_0
+makensis - < "KCemu-${KCEMU_VERSION}/setup/KCemuSetup.nsi" || exit 5
 
 exit 0

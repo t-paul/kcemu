@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: Torsten.Paul@gmx.de\n"
-"POT-Creation-Date: 2007-01-28 17:50+0100\n"
+"POT-Creation-Date: 2007-09-29 18:45+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -40,26 +40,26 @@ msgid ""
 "programs add this file to a tape-archive!"
 msgstr ""
 
-#: src/kc/kc.cc:259
+#: src/kc/kc.cc:267
 msgid ""
 "    Z1013 with 16k RAM and 2k ROM, running at 1MHz. This was the\n"
 "    first version with cheap circuits so the CPU was clocked at only 1MHz\n"
 "    The ROM containes the Z1013 monitor version 2.02.\n"
 msgstr ""
 
-#: src/kc/kc.cc:264
+#: src/kc/kc.cc:272
 msgid ""
 "    Z1013 with 1k sRAM and 2k ROM, running at 2MHz. Industry\n"
 "    version with only 1k static RAM. Monitor version 2.02.\n"
 msgstr ""
 
-#: src/kc/kc.cc:268
+#: src/kc/kc.cc:276
 msgid ""
 "    Z1013 with 16k RAM and 2k ROM, running at 2MHz. Successor of\n"
 "    the Z1013.01 but with industry grade circuits clocked at 2MHz.\n"
 msgstr ""
 
-#: src/kc/kc.cc:272
+#: src/kc/kc.cc:280
 msgid ""
 "    Z1013 with 64k RAM and 2x2k ROM, running at 2MHz. The ROM\n"
 "    contains two system images with 2k each. Loaded is the first\n"
@@ -67,7 +67,7 @@ msgid ""
 "    shipped by the manufacturer.\n"
 msgstr ""
 
-#: src/kc/kc.cc:278
+#: src/kc/kc.cc:286
 msgid ""
 "    Z1013 with 64k RAM and 2k ROM, running at 2MHz. The ROM\n"
 "    contains two system images with 2k each. Loaded is the second\n"
@@ -75,14 +75,14 @@ msgid ""
 "    8x8 matrix.\n"
 msgstr ""
 
-#: src/kc/kc.cc:284
+#: src/kc/kc.cc:292
 msgid ""
 "    Z1013 with 64k RAM and 4k ROM. The ROM is the extended\n"
 "    version tagged 2.028 RB that has a different keyboard driver for\n"
 "    the keyboard K7659.\n"
 msgstr ""
 
-#: src/kc/kc.cc:289
+#: src/kc/kc.cc:297
 msgid ""
 "    Z1013 with 64k RAM and 4k ROM. The ROM contains the 'Super\n"
 "    Ur-Lader 5.0' that can read arbitrary tape files as system monitor.\n"
@@ -90,44 +90,44 @@ msgid ""
 "    programs to switch off the system ROM.\n"
 msgstr ""
 
-#: src/kc/kc.cc:295
+#: src/kc/kc.cc:303
 msgid ""
 "    Z1013 with 64k RAM and 4k ROM. The ROM contains the Bootloader\n"
 "    BL4 that can load monitor images from floppy disk or can start the\n"
 "    CP/M system.\n"
 msgstr ""
 
-#: src/kc/kc.cc:303
+#: src/kc/kc.cc:311
 msgid ""
 "    Z9001 (later called KC 85/1) with monochrome display, no internal BASIC\n"
 "    ROM. This computer has 16k RAM and 4k ROM with the robotron z9001 "
 "system.\n"
 msgstr ""
 
-#: src/kc/kc.cc:307
+#: src/kc/kc.cc:315
 msgid "    Like the z9001.10 but with color extension card.\n"
 msgstr ""
 
-#: src/kc/kc.cc:319
+#: src/kc/kc.cc:327
 msgid ""
 "    HC900 (later called KC 85/2) with 16k RAM and 8k ROM. System is called\n"
 "    HC-CAOS 2.2 (home computer - cassette aided operating system). BASIC\n"
 "    is only available as external module.\n"
 msgstr ""
 
-#: src/kc/kc.cc:324
+#: src/kc/kc.cc:332
 msgid ""
 "    KC 85/3 with 16k RAM, 8k system ROM with HC-CAOS 3.1 and 8k BASIC ROM.\n"
 msgstr ""
 
-#: src/kc/kc.cc:327
+#: src/kc/kc.cc:335
 msgid ""
 "    KC 85/4 with 64k RAM, 64k screen memory, 12k system ROM with HC-CAOS "
 "4.2\n"
 "    and 8k BASIC ROM.\n"
 msgstr ""
 
-#: src/kc/kc.cc:331
+#: src/kc/kc.cc:339
 msgid ""
 "    Inofficial successor of the KC 85/4 with 256k RAM, 64k screen memory,\n"
 "    16k system ROM with HC-CAOS 4.4, 8k BASIC ROM and 24k User ROM. It is\n"
@@ -135,65 +135,73 @@ msgid ""
 "    hard-disk support.\n"
 msgstr ""
 
-#: src/kc/kc.cc:337
+#: src/kc/kc.cc:345
 msgid "    Polycomputer 880.\n"
 msgstr ""
 
-#: src/kc/kc.cc:343
+#: src/kc/kc.cc:349
+msgid "    Polycomputer 880 with chess program rom from SC1"
+msgstr ""
+
+#: src/kc/kc.cc:355
 msgid "    Like the KC 87.11 but without the color extension card.\n"
 msgstr ""
 
-#: src/kc/kc.cc:346
+#: src/kc/kc.cc:358
 msgid "    Successor of the Z9001 with internal 10k BASIC ROM.\n"
 msgstr ""
 
-#: src/kc/kc.cc:349
+#: src/kc/kc.cc:361
 msgid "    Like the KC 87.21 but without the color extension card.\n"
 msgstr ""
 
-#: src/kc/kc.cc:352
+#: src/kc/kc.cc:364
 msgid ""
 "    New series with extended BASIC ROM (still 10k but with some routines "
 "for\n"
 "    plotter support were added).\n"
 msgstr ""
 
-#: src/kc/kc.cc:356
+#: src/kc/kc.cc:368
 msgid "    Single board computer LC 80 with 1k RAM and 2 x 1k ROM.\n"
 msgstr ""
 
-#: src/kc/kc.cc:362
+#: src/kc/kc.cc:374
 msgid "    Single board computer LC 80 with 1k RAM and 1 x 2k ROM.\n"
 msgstr ""
 
-#: src/kc/kc.cc:365
+#: src/kc/kc.cc:377
 msgid "    BIC/A5105, only the base device is emulated, no floppy device.\n"
 msgstr ""
 
-#: src/kc/kc.cc:371
+#: src/kc/kc.cc:383
 msgid "    BIC/A5105, the full system including the floppy device.\n"
 msgstr ""
 
-#: src/kc/kc.cc:374
+#: src/kc/kc.cc:386
 msgid ""
 "    Micro-Computer presented in the book \"Praktische Microcomputertechnik"
 "\"\n"
 "    by Manfred Kramer.\n"
 msgstr ""
 
-#: src/kc/kc.cc:381
+#: src/kc/kc.cc:393
 msgid ""
 "    CP/M based Micro-Computer presented in the magazine \"Funkamateur\"\n"
 "    by A. Mugler and H. Mathes.\n"
 msgstr ""
 
-#: src/kc/kc.cc:391
+#: src/kc/kc.cc:403
 msgid ""
 "    Minimal Z80 learning system presented in the magazine \"rfe\"\n"
 "    by Eckhard Schiller.\n"
 msgstr ""
 
-#: src/kc/kc.cc:411
+#: src/kc/kc.cc:407
+msgid "    Minimal Z80 learning system designed by Dipl.-Ing. Joachim Czepa.\n"
+msgstr ""
+
+#: src/kc/kc.cc:426
 msgid ""
 "\n"
 "KCemu comes with ABSOLUTELY NO WARRANTY; for details run `kcemu --"
@@ -234,11 +242,11 @@ msgid ""
 "  -W --warranty:     show warranty\n"
 msgstr ""
 
-#: src/kc/kc.cc:507
+#: src/kc/kc.cc:522
 msgid "available emulations:"
 msgstr ""
 
-#: src/kc/kc.cc:570
+#: src/kc/kc.cc:585
 msgid ""
 "\n"
 "\t\t    GNU GENERAL PUBLIC LICENSE\n"
@@ -502,7 +510,7 @@ msgid ""
 "\n"
 msgstr ""
 
-#: src/kc/kc.cc:832
+#: src/kc/kc.cc:847
 msgid ""
 "\n"
 "NO WARRANTY\n"
@@ -530,7 +538,7 @@ msgid ""
 "\n"
 msgstr ""
 
-#: src/kc/kc.cc:859
+#: src/kc/kc.cc:874
 msgid ""
 "\n"
 "                     END OF TERMS AND CONDITIONS\n"
@@ -1326,7 +1334,7 @@ msgstr ""
 msgid "/Options/_Colors"
 msgstr ""
 
-#: src/ui/gtk/ui_gtk.cc:660 src/ui/gtk/ui_gtk.cc:891 src/ui/gtk/ui_gtk.cc:1134
+#: src/ui/gtk/ui_gtk.cc:660 src/ui/gtk/ui_gtk.cc:895 src/ui/gtk/ui_gtk.cc:1138
 msgid "/Options/_Display Effects"
 msgstr ""
 
@@ -1418,12 +1426,12 @@ msgstr ""
 msgid "/_Quit Emulator"
 msgstr ""
 
-#: src/ui/gtk/ui_gtk.cc:940
+#: src/ui/gtk/ui_gtk.cc:944
 #, c-format
 msgid "%s (%s)"
 msgstr ""
 
-#: src/ui/gtk/ui_gtk.cc:1633
+#: src/ui/gtk/ui_gtk.cc:1637
 msgid "Info"
 msgstr ""
 

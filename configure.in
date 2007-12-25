@@ -410,7 +410,7 @@ if test x"$HOST_OS" = "xLinux" -o x"$HOST_OS" = "xMinGW"; then
 	dnl ------------------
 
 	if ! test "x$enable_gtktest" = "xno" ; then
-		AM_PATH_GTK_2_0(2.2.1, have_libgtk=yes, have_libgtk=no)
+		AM_PATH_GTK_2_0(2.4.14, have_libgtk=yes, have_libgtk=no)
 	else
 		have_libgtk=yes
 		gtk_config_major_version=?

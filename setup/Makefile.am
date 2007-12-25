@@ -3,7 +3,8 @@
 NSI_FILES = KCemuSetup.nsi \
 	KCemuSetup_gtk2.4.nsi \
 	KCemuSetup_gtk2.6.nsi \
-	KCemuSetup_gtk2.8.nsi
+	KCemuSetup_gtk2.8.nsi \
+	KCemuSetup_gtk2.10.nsi
 
 pkgdata_DATA = kcemurc
 
@@ -15,3 +16,4 @@ KCemuSetup.nsi : KCemuSetup.nsi.in
 KCemuSetup_gtk2.4.nsi : KCemuSetup_gtk2.4.nsi.in
 KCemuSetup_gtk2.6.nsi : KCemuSetup_gtk2.6.nsi.in
 KCemuSetup_gtk2.8.nsi : KCemuSetup_gtk2.8.nsi.in
+KCemuSetup_gtk2.10.nsi : KCemuSetup_gtk2.10.nsi.in

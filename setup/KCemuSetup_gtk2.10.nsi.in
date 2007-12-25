@@ -96,7 +96,6 @@ Section "-bin" SEC_GTK_01
   File "dist\bin\libpangowin32-1.0-0.dll"
   File "dist\bin\libpng13.dll"
   File "dist\bin\jpeg62.dll"
-  File "dist\bin\libtiff3.dll"
   File "dist\bin\pango-querymodules.exe"
   File "dist\bin\zlib1.dll"
   File "dist\bin\SDL.dll"
@@ -114,6 +113,24 @@ Section "-etc\pango" SEC_GTK_03
   File "dist\etc\pango\pango.aliases"
   File "dist\etc\pango\pango.modules"
 SectionEnd
+Section "-lib\gtk-2.0\2.10.0\loaders" SEC_GTK_04
+  SetOutPath "$INSTDIR\lib\gtk-2.0\2.10.0\loaders"
+  SetOverwrite try
+  File "dist\lib\gtk-2.0\2.10.0\loaders\libpixbufloader-ani.dll"
+  File "dist\lib\gtk-2.0\2.10.0\loaders\libpixbufloader-bmp.dll"
+  File "dist\lib\gtk-2.0\2.10.0\loaders\libpixbufloader-gif.dll"
+  File "dist\lib\gtk-2.0\2.10.0\loaders\libpixbufloader-ico.dll"
+  File "dist\lib\gtk-2.0\2.10.0\loaders\libpixbufloader-jpeg.dll"
+  File "dist\lib\gtk-2.0\2.10.0\loaders\libpixbufloader-pcx.dll"
+  File "dist\lib\gtk-2.0\2.10.0\loaders\libpixbufloader-png.dll"
+  File "dist\lib\gtk-2.0\2.10.0\loaders\libpixbufloader-pnm.dll"
+  File "dist\lib\gtk-2.0\2.10.0\loaders\libpixbufloader-ras.dll"
+  File "dist\lib\gtk-2.0\2.10.0\loaders\libpixbufloader-tga.dll"
+  File "dist\lib\gtk-2.0\2.10.0\loaders\libpixbufloader-tiff.dll"
+  File "dist\lib\gtk-2.0\2.10.0\loaders\libpixbufloader-wbmp.dll"
+  File "dist\lib\gtk-2.0\2.10.0\loaders\libpixbufloader-xbm.dll"
+  File "dist\lib\gtk-2.0\2.10.0\loaders\libpixbufloader-xpm.dll"
+SectionEnd
 Section "-lib\gtk-2.0\2.10.0\engines" SEC_GTK_ENGINES
   SetOutPath "$INSTDIR\lib\gtk-2.0\2.10.0\engines"
   SetOverwrite try
@@ -129,7 +146,6 @@ Section "-lib\gtk-2.0\2.10.0\immodules" SEC_GTK_05
   File "dist\lib\gtk-2.0\2.10.0\immodules\im-ime.dll"
   File "dist\lib\gtk-2.0\2.10.0\immodules\im-inuktitut.dll"
   File "dist\lib\gtk-2.0\2.10.0\immodules\im-ipa.dll"
-  File "dist\lib\gtk-2.0\2.10.0\immodules\im-multipress.dll"
   File "dist\lib\gtk-2.0\2.10.0\immodules\im-thai.dll"
   File "dist\lib\gtk-2.0\2.10.0\immodules\im-ti-er.dll"
   File "dist\lib\gtk-2.0\2.10.0\immodules\im-ti-et.dll"
@@ -282,7 +298,6 @@ Section Uninstall
   Delete "$INSTDIR\share\KCemu\roms\z9001\mega_rom.851"
   Delete "$INSTDIR\share\KCemu\roms\z9001\os_rb20.rom"
   Delete "$INSTDIR\share\KCemu\roms\z9001\os_rb21.rom"
-  Delete "$INSTDIR\share\KCemu\roms\z9001\chargen.851"
 
   Delete "$INSTDIR\share\KCemu\roms\kc85\caos__e0.852"
   Delete "$INSTDIR\share\KCemu\roms\kc85\basic_c0.853"
@@ -304,11 +319,9 @@ Section Uninstall
 
   Delete "$INSTDIR\share\KCemu\roms\poly880\poly880a.rom"
   Delete "$INSTDIR\share\KCemu\roms\poly880\poly880b.rom"
-  Delete "$INSTDIR\share\KCemu\roms\poly880\sc1.rom"
 
   Delete "$INSTDIR\share\KCemu\roms\lc80\lc80__00.rom"
   Delete "$INSTDIR\share\KCemu\roms\lc80\lc80__08.rom"
-  Delete "$INSTDIR\share\KCemu\roms\lc80\lc80__2k.rom"
 
   Delete "$INSTDIR\share\KCemu\roms\a5105\k1505_00.rom"
   Delete "$INSTDIR\share\KCemu\roms\a5105\k1505_80.rom"
@@ -328,8 +341,6 @@ Section Uninstall
 
   Delete "$INSTDIR\share\KCemu\roms\vcs80\monitor.rom"
 
-  Delete "$INSTDIR\share\KCemu\roms\c80\monitor.rom"
-
   Delete "$INSTDIR\share\KCemu\icons\kcemu-bic.ico"
   Delete "$INSTDIR\share\KCemu\icons\kcemu-kc85.ico"
   Delete "$INSTDIR\share\KCemu\icons\kcemu-kc87.ico"
@@ -339,7 +350,6 @@ Section Uninstall
   Delete "$INSTDIR\share\KCemu\icons\kcemu-kramermc.ico"
   Delete "$INSTDIR\share\KCemu\icons\kcemu-pcm.ico"
   Delete "$INSTDIR\share\KCemu\icons\kcemu-vcs80.ico"
-  Delete "$INSTDIR\share\KCemu\icons\kcemu-c80.ico"
   Delete "$INSTDIR\share\KCemu\icons\kcemu-winicon.ico"
 
   Delete "$INSTDIR\share\KCemu\icons\kcemu-bic.xpm"
@@ -347,7 +357,6 @@ Section Uninstall
   Delete "$INSTDIR\share\KCemu\icons\kcemu-kc87.xpm"
   Delete "$INSTDIR\share\KCemu\icons\kcemu-lc80.xpm"
   Delete "$INSTDIR\share\KCemu\icons\kcemu-vcs80.xpm"
-  Delete "$INSTDIR\share\KCemu\icons\kcemu-c80.xpm"
   Delete "$INSTDIR\share\KCemu\icons\kcemu-pcm.xpm"
   Delete "$INSTDIR\share\KCemu\icons\kcemu-kramermc.xpm"
   Delete "$INSTDIR\share\KCemu\icons\kcemu-poly880.xpm"
@@ -426,7 +435,6 @@ Section Uninstall
   Delete "$INSTDIR\bin\libpng12.dll"
   Delete "$INSTDIR\bin\libpng13.dll"
   Delete "$INSTDIR\bin\jpeg62.dll"
-  Delete "$INSTDIR\bin\libtiff3.dll"
   Delete "$INSTDIR\bin\pango-querymodules.exe"
   Delete "$INSTDIR\bin\zlib1.dll"
   Delete "$INSTDIR\bin\SDL.dll"
@@ -481,7 +489,6 @@ Section Uninstall
   Delete "$INSTDIR\lib\gtk-2.0\2.10.0\immodules\im-ime.dll"
   Delete "$INSTDIR\lib\gtk-2.0\2.10.0\immodules\im-inuktitut.dll"
   Delete "$INSTDIR\lib\gtk-2.0\2.10.0\immodules\im-ipa.dll"
-  Delete "$INSTDIR\lib\gtk-2.0\2.10.0\immodules\im-multipress.dll"
   Delete "$INSTDIR\lib\gtk-2.0\2.10.0\immodules\im-thai.dll"
   Delete "$INSTDIR\lib\gtk-2.0\2.10.0\immodules\im-ti-er.dll"
   Delete "$INSTDIR\lib\gtk-2.0\2.10.0\immodules\im-ti-et.dll"
@@ -526,7 +533,6 @@ Section Uninstall
   RMDir "$INSTDIR\share\KCemu\roms\kramermc"
   RMDir "$INSTDIR\share\KCemu\roms\muglerpc"
   RMDir "$INSTDIR\share\KCemu\roms\vcs80"
-  RMDir "$INSTDIR\share\KCemu\roms\c80"
   RMDir "$INSTDIR\share\KCemu\roms"
   RMDir "$INSTDIR\share\KCemu\disks"
   RMDir "$INSTDIR\share\KCemu\tapes"
