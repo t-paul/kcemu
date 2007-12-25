@@ -391,6 +391,7 @@ HelpWindow::sf_parser_error_handler(GMarkupParseContext *context, GError *error,
 HelpWindow::HelpWindow(void)
 {
   _history = NULL;
+  _history_ptr = NULL;
 
   _hovering_over_link = FALSE;
   _hand_cursor = gdk_cursor_new(GDK_HAND2);
