@@ -2,12 +2,12 @@ Source: kcemu
 Section: otherosfs
 Priority: optional
 Maintainer: Torsten Paul <Torsten.Paul@gmx.de>
-Build-Depends: debhelper (>> 3.0.0)
-Standards-Version: 3.5.10
+Build-Depends: debhelper (>> 5)
+Standards-Version: 3.7.2
 
 Package: kcemu
 Architecture: any
-Depends: ${shlibs:Depends}
+Depends: ${shlibs:Depends}, ${misc:Depends}
 Description: KC 85/4 Emulator
  KCemu is an emulator for the Z80 based KC 85 home computer
  series which was quite popular in the former East-Germany.

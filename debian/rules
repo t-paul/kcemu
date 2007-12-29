@@ -1,12 +1,16 @@
 #!/usr/bin/make -f
+# -*- makefile -*-
 # Sample debian/rules that uses debhelper.
-# GNU copyright 1997 to 1999 by Joey Hess.
+# This file was originally written by Joey Hess and Craig Small.
+# As a special exception, when this file is copied by dh-make into a
+# dh-make output file, you may use that output file without restriction.
+# This special exception was added by Craig Small in version 0.37 of dh-make.
 
 # Uncomment this to turn on verbose mode.
 #export DH_VERBOSE=1
 
-# This is the debhelper compatability version to use.
-export DH_COMPAT=3
+
+
 
 configure: configure-stamp
 configure-stamp:
@@ -23,56 +27,79 @@ configure-stamp:
 
 	touch configure-stamp
 
-build: configure-stamp build-stamp
-build-stamp:
+
+build: build-stamp
+
+build-stamp: configure-stamp 
 	dh_testdir
 
+	# Add here commands to compile the package.
 	$(MAKE)
+	#docbook-to-man debian/blah.sgml > blah.1
 
-	touch build-stamp
+	touch $@
 
 clean:
 	dh_testdir
 	dh_testroot
 	rm -f build-stamp configure-stamp
 
-	-$(MAKE) distclean
+	# Add here commands to clean up after the build process.
+	$(MAKE) clean
 
-	dh_clean
+	dh_clean 
 
 install: build
 	dh_testdir
 	dh_testroot
-	dh_clean -k
+	dh_clean -k 
 	dh_installdirs
 
+	# Add here commands to install the package into debian/blah.
+	$(MAKE) DESTDIR=$(CURDIR)/debian/blah install
 	$(MAKE) install prefix=$(CURDIR)/debian/kcemu/usr \
-			exec_prefix=$(CURDIR)/debian/kcemu/usr/X11R6 \
-			mandir=$(CURDIR)/debian/kcemu/usr/X11R6/man
+		exec_prefix=$(CURDIR)/debian/kcemu/usr \
+		mandir=$(CURDIR)/debian/kcemu/usr/share/man
 	mkdir -p $(CURDIR)/debian/kcemu/usr/share/pixmaps
 	cp $(CURDIR)/images/*.xpm $(CURDIR)/debian/kcemu/usr/share/pixmaps/
 
+
 # Build architecture-independent files here.
 binary-indep: build install
+# We have nothing to do by default.
 
 # Build architecture-dependent files here.
 binary-arch: build install
 	dh_testdir
 	dh_testroot
-	dh_installdocs --noscripts
+	dh_installchangelogs 
+	dh_installdocs
+	dh_installexamples
+#	dh_install
 	dh_installmenu
+#	dh_installdebconf	
+#	dh_installlogrotate
+#	dh_installemacsen
+#	dh_installpam
+#	dh_installmime
+#	dh_python
+#	dh_installinit
+#	dh_installcron
 	dh_installinfo
-	dh_installchangelogs
+	dh_installman
 	dh_link
 	dh_strip
-	dh_compress usr/share/KCemu/microdos.dump \
-		    usr/share/KCemu/a5105sys.dump \
-		    usr/share/KCemu/tools.dump \
-		    usr/share/KCemu/caos.dump \
-		    usr/share/KCemu/cpmz9.dump \
-		    usr/share/KCemu/z1013cpm.dump \
-		    usr/share/KCemu/z1013gdc.dump
+	dh_compress \
+		usr/share/KCemu/disks/a5105sys.dump \
+		usr/share/KCemu/disks/caos.dump \
+		usr/share/KCemu/disks/cpmz9.dump \
+		usr/share/KCemu/disks/microdos.dump \
+		usr/share/KCemu/disks/tools.dump \
+		usr/share/KCemu/disks/z1013cpm.dump \
+		usr/share/KCemu/disks/z1013gdc.dump
 	dh_fixperms
+#	dh_perl
+#	dh_makeshlibs
 	dh_installdeb
 	dh_shlibdeps
 	dh_gencontrol

@@ -1,3 +1,15 @@
+kcemu (0.3.8) unstable; urgency=low
+
+  * new upstream version
+  * bump debhelper compatibility level to 5
+  * update to Standards-Version 3.7.2
+  * update copyright file
+  * do not install to /usr/X11R6/bin but /usr/bin
+  * update menu entries to section 'Applications'
+  * change rules file to reflect changed installation directories
+
+ -- Torsten Paul <Torsten.Paul@gmx.de>  Fri, 28 Dec 2007 23:04:49 +0100
+
 kcemu (0.3.7) unstable; urgency=low
 
   * new upstream version
