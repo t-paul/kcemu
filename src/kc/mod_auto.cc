@@ -57,7 +57,7 @@ ModuleAutoStart::get_size(byte_t val)
 byte_t *
 ModuleAutoStart::get_rom_ptr(byte_t val)
 {
-  int page = (val >> 2) & 0x07;
+  dword_t page = (val >> 2) & 0x07;
 
   DBG(2, form("KCemu/ModuleAutoStart/page",
 	      "ModuleAutoStart: val = %02xh, page = %d, size = %04xh (PAGE_SIZE = %04xh)\n",
