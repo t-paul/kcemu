@@ -585,6 +585,9 @@ ModuleList::ModuleList(void)
     case KC_TYPE_87:
       cnt = 4;
       break;
+    case KC_TYPE_LC80:
+      cnt = 6;
+      break;
     case KC_TYPE_Z1013:
       cnt = 8;
       break;
