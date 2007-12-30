@@ -127,7 +127,7 @@ Memory1::get_irm(void)
 byte_t *
 Memory1::get_char_rom(void)
 {
-  return (byte_t *)0;
+  return (byte_t *)_rom_chargen;
 }
 
 void
