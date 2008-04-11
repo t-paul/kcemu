@@ -1,3 +1,10 @@
+kcemu (0.4-1) unstable; urgency=low
+
+  * new upstream version
+  * update menu entries
+
+ -- Torsten Paul <Torsten.Paul@gmx.de>  Sat, 12 Apr 2008 00:54:40 +0200
+
 kcemu (0.3.8) unstable; urgency=low
 
   * new upstream version

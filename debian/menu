@@ -1,4 +1,18 @@
 ?package(kcemu):\
+  title="KCemu"\
+  section="Applications/Emulators"\
+  icon="/usr/share/pixmaps/kcemu-kc85.xpm"\
+  needs="X11"\
+  command="/usr/bin/kcemu -P"
+
+?package(kcemu):\
+  title="KCemu (KC85/5)"\
+  section="Applications/Emulators"\
+  icon="/usr/share/pixmaps/kcemu-kc85.xpm"\
+  needs="X11"\
+  command="/usr/bin/kcemu -5"
+
+?package(kcemu):\
   title="KCemu (KC85/4)"\
   section="Applications/Emulators"\
   icon="/usr/share/pixmaps/kcemu-kc85.xpm"\
@@ -60,10 +74,3 @@
   icon="/usr/share/pixmaps/kcemu-z1013.xpm"\
   needs="X11"\
   command="/usr/bin/kcemu -0"
-
-?package(kcemu):\
-  title="KCemu (Z1013/BL4)"\
-  section="Applications/Emulators"\
-  icon="/usr/share/pixmaps/kcemu-z1013.xpm"\
-  needs="X11"\
-  command="/usr/bin/kcemu -e z1013.bl4"
