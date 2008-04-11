@@ -650,7 +650,11 @@ KeyboardWindow::init(void)
       gtk_notebook_set_current_page(GTK_NOTEBOOK(_w.notebook), 1);
     }
 
+#if GLIB_CHECK_VERSION(2,14,0)
   g_timeout_add_seconds(1, timeout_callback, this);
+#else
+  g_timeout_add(1000, timeout_callback, this);
+#endif
 
   init_dialog("ui-keyboard-window-toggle", NULL);
 }
