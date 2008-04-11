@@ -36,7 +36,7 @@ UI_8::~UI_8(void)
 }
 
 void
-UI_8::generic_update(bool clear_cache)
+UI_8::generic_update(Scanline *scanline, MemAccess *memaccess, bool clear_cache)
 {
   byte_t led_value;
 
@@ -53,15 +53,4 @@ UI_8::generic_update(bool clear_cache)
   /* HALT led */
   led_value = z80->get_halt();
   generic_draw_led(18, 60, led_value ? 3 : 1, clear_cache);
-}
-
-int
-UI_8::generic_get_mode(void)
-{
-  return 0;
-}
-
-void
-UI_8::generic_set_mode(int mode)
-{
 }

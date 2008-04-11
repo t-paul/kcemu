@@ -78,7 +78,7 @@ ModuleROMBank::activate_bank()
   int size = (_bank & 1) ? 0x1800 : 0x2800;
   int offset = (_bank / 2) * 0x4000 + (_bank & 1) * 0x2800;
 
-  printf("activate bank %2d : size = %04xh, offset = %05xh\n", _bank, size, offset);
+  //printf("activate bank %2d : size = %04xh, offset = %05xh\n", _bank, size, offset);
 
   _group = memory->register_memory(get_name(), 0xc000, size, &_rom[offset], 10, 0);
 }
@@ -86,7 +86,7 @@ ModuleROMBank::activate_bank()
 void
 ModuleROMBank::m_out(word_t addr, byte_t val)
 {
-  printf("m_out %04x, %02x\n", addr, val);
+  //printf("m_out %04x, %02x\n", addr, val);
 }
 
 ModuleInterface *

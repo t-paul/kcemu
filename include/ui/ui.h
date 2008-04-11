@@ -48,6 +48,8 @@ class UI : public InterfaceCircuit, public Callback, public CMD_Caller
     virtual void update(bool full_update = false, bool clear_cache = false) = 0;
 
     virtual void init(int *argc, char ***argv)    = 0;
+    virtual void init2(void)                      = 0;
+    virtual char * select_profile(void)           = 0;
     virtual void show(void)                       = 0;
     virtual void callback(void *data)             = 0;
 

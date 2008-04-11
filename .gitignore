@@ -1,5 +1,8 @@
 Makefile.in
 Makefile
+nbproject
+KCemu.anjuta
+kcemu-Makefile.mk
 intl/Makefile
 asm/autostart/Makefile.in
 asm/autostart/Makefile
@@ -192,6 +195,7 @@ setup/KCemuSetup.nsi
 setup/KCemuSetup_gtk2.4.nsi
 setup/KCemuSetup_gtk2.6.nsi
 setup/KCemuSetup_gtk2.8.nsi
+setup/KCemuSetup_gtk2.10.nsi
 src/fileio/kc2img
 src/fileio/kc2raw
 src/fileio/kc2tap

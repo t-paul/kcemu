@@ -1,6 +1,6 @@
 ## Process this file with automake to produce Makefile.in
 
-SUBDIRS = kramermc muglerpc vcs80 c80
+SUBDIRS = prefs kramermc muglerpc vcs80 c80
 
 bin_PROGRAMS = kcemu
 
@@ -23,8 +23,8 @@ AM_CPPFLAGS = \
 	-DKCEMU_LOCALEDIR=\"$(localedir)\" \
 	-DDEBUG \
 	$(GTK_CFLAGS) \
-	$(SDL_CFLAGS)
-
+	$(SDL_CFLAGS) \
+	$(LIBGLADE_CFLAGS)
 
 LINUX_EXTRA_kcemu_SOURCES = mod_v24.cc mod_js.cc mod_4131.cc
 MINGW_EXTRA_kcemu_SOURCES = kcemu.rc
@@ -43,7 +43,6 @@ EXTRA_DIST = $(ALL_EXTRA_kcemu_SOURCES)
 kcemu_SOURCES = \
 	debug.cc	\
 	kc.cc		\
-	rc.cc		\
 	ic.cc		\
 	ctc.cc		\
 	ctc1.cc		\
@@ -143,7 +142,7 @@ kcemu_SOURCES = \
 	$(EXTRA_kcemu_SOURCES)
 
 if TARGET_UI_GTK
-UILIBS_GTK = ../ui/gtk/libui_gtk.a ../ui/gtk/glade/libui_glade.a
+UILIBS_GTK = ../ui/gtk/libui_gtk.a
 endif
 
 if TARGET_UI_SDL
@@ -181,10 +180,12 @@ kcemu_LDADD = \
 	$(UILIBS_LINUX)			\
 	../ui/generic/libui_generic.a	\
 	../ui/libui.a			\
+	prefs/libprefs.a		\
 	../libdbg/libdbg.a		\
 	../cmd/*.o			\
 	$(GTK_LIBS)			\
 	$(SDL_LIBS)			\
+	$(LIBGLADE_LIBS)		\
 	$(SNDFILE_LIBS)			\
 	$(AUDIOFILE_LIBS)		\
 	$(MP3LAME_LIBS)			\

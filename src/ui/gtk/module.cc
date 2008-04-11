@@ -20,9 +20,9 @@
  */
 
 #include "kc/system.h"
+#include "kc/prefs/types.h"
+#include "kc/prefs/prefs.h"
 
-#include "kc/kc.h"
-#include "kc/rc.h"
 #include "kc/mod_list.h"
 
 #include "cmd/cmd.h"
@@ -30,7 +30,6 @@
 #include "ui/gtk/cmd.h"
 #include "ui/gtk/module.h"
 #include "ui/gtk/gtkledline.h"
-#include "ui/gtk/glade/interface.h"
 
 class CMD_ui_module_window_toggle : public CMD
 {
@@ -51,7 +50,7 @@ public:
 };
 
 
-ModuleWindow::ModuleWindow(void)
+ModuleWindow::ModuleWindow(const char *glade_xml_file) : UI_Gtk_Window(glade_xml_file)
 {
   _cmd = new CMD_ui_module_window_toggle(this);
   init2(); // FIXME: can't use delayed init()
@@ -88,22 +87,16 @@ ModuleWindow::sf_activate(GtkWidget *widget, gpointer data)
 GtkWidget *
 ModuleWindow::create_menu(int slot)
 {
-  GtkWidget *menu;
-  GtkWidget *menuitem;
-  GSList *group;
-  ModuleList::iterator it;
-  kc_type_t type;
+  kc_type_t type = Preferences::instance()->get_kc_type();
+  GtkWidget *menu = gtk_menu_new();
 
-  type = get_kc_type();
-  menu = gtk_menu_new();
-
-  group = NULL;
-  for (it = module_list->begin();it != module_list->end();it++)
+  GSList *group = NULL;
+  for (ModuleList::iterator it = module_list->begin();it != module_list->end();it++)
     {
       if (((*it)->get_kc_type() & type) == 0)
 	continue;
 
-      menuitem = gtk_radio_menu_item_new_with_label(group, (*it)->get_name());
+      GtkWidget *menuitem = gtk_radio_menu_item_new_with_label(group, (*it)->get_name());
       if ((*it)->get_mod() != NULL)
 	gtk_widget_set_sensitive(menuitem, (*it)->get_mod()->is_valid());
       gtk_object_set_user_data(GTK_OBJECT(menuitem), (*it));
@@ -257,14 +250,16 @@ ModuleWindow::init_device_1(const char *name, int nr_of_slots)
       gtk_widget_show(_w.led[a]);
     }
 
-  if (get_kc_type() & KC_TYPE_85_1_CLASS)
+  kc_type_t type = Preferences::instance()->get_kc_type();
+  kc_variant_t variant = Preferences::instance()->get_kc_variant();
+  if (type & KC_TYPE_85_1_CLASS)
     {
       color_expansion_active = false;
-      if (get_kc_type() == KC_TYPE_85_1)
-	if (get_kc_variant() == KC_VARIANT_85_1_11)
+      if (type == KC_TYPE_85_1)
+	if (variant == KC_VARIANT_85_1_11)
 	  color_expansion_active = true;
-      if (get_kc_type() == KC_TYPE_87)
-	if (get_kc_variant() != KC_VARIANT_87_10)
+      if (type == KC_TYPE_87)
+	if (variant != KC_VARIANT_87_10)
 	  color_expansion_active = true;
 
       _w.color_exp = gtk_check_button_new_with_label(_("IRM Color Expansion"));
@@ -307,7 +302,7 @@ ModuleWindow::init2(void)
   /*
    *  window
    */
-  _window = create_module_window();
+  _window = get_widget("module_window");
   gtk_signal_connect(GTK_OBJECT(_window), "delete_event",
 		     GTK_SIGNAL_FUNC(cmd_exec_sft),
 		     (char *)"ui-module-window-toggle"); // FIXME:
@@ -317,10 +312,11 @@ ModuleWindow::init2(void)
    */
   _w.vbox = get_widget("main_vbox");
 
-  if (RC::instance()->get_int("Floppy Disk Basis") && (get_kc_type() & KC_TYPE_85_2_CLASS))
+  kc_type_t type = Preferences::instance()->get_kc_type();
+  if (Preferences::instance()->get_int_value("d004", 0) && (type & KC_TYPE_85_2_CLASS))
     init_device(_("Floppy Disk Basis [F0]"), 0xf0, 3);
 
-  if (get_kc_type() & KC_TYPE_85_2_CLASS)
+  if (type & KC_TYPE_85_2_CLASS)
     for (a = _nr_of_bd;a > 0;a--)
       {
 	sprintf(buf, _("D002: Busdriver [%02X]"), 16 * a);
@@ -330,7 +326,7 @@ ModuleWindow::init2(void)
   /*
    *  help context
    */
-  switch (get_kc_type())
+  switch (type)
     {
     case KC_TYPE_85_1:
     case KC_TYPE_87:
@@ -371,6 +367,9 @@ ModuleWindow::init2(void)
     case KC_TYPE_VCS80:
       init_device_1(_("Basis Device"), 6);
       //g_object_set_data(G_OBJECT(_w.vbox), "help-topic", (gpointer)"window-module-vcs80");
+    case KC_TYPE_C80:
+      init_device_1(_("Basis Device"), 0);
+      //g_object_set_data(G_OBJECT(_w.vbox), "help-topic", (gpointer)"window-module-c80");
       break;
     case KC_TYPE_ALL:
     case KC_TYPE_NONE:

@@ -24,8 +24,8 @@
 #include <fstream>
 
 #include "kc/system.h"
+#include "kc/prefs/prefs.h"
 
-#include "kc/kc.h"
 #include "kc/z80.h"
 #include "kc/memory0.h"
 
@@ -75,7 +75,7 @@ Memory0::Memory0(void) : Memory()
   string z1013_char_rom = z1013_romdir + "/z1013_zg.rom";
   string z1013_system_rom;
 
-  switch (get_kc_variant())
+  switch (Preferences::instance()->get_kc_variant())
     {
     case KC_VARIANT_Z1013_A2:
       z1013_system_rom = z1013_romdir + "/z1013_a2.rom";
@@ -105,7 +105,7 @@ Memory0::Memory0(void) : Memory()
     {
       *(mptr->group) = NULL;
 
-      if ((mptr->model >= 0) && (mptr->model != get_kc_variant()))
+      if ((mptr->model >= 0) && (mptr->model != Preferences::instance()->get_kc_variant()))
 	continue;
 
       *(mptr->group) = new MemAreaGroup(mptr->name,

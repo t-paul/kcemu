@@ -1,6 +1,6 @@
 /*
  *  KCemu -- the KC 85/3 and KC 85/4 Emulator
- *  Copyright (C) 1997-2001 Torsten Paul
+ *  Copyright (C) 1997-2008 Torsten Paul
  *
  *  $Id$
  *
@@ -24,7 +24,9 @@
 
 #include "kc/system.h"
 
-class UI_LED
+#include "ui/generic/ui_base.h"
+
+class UI_LED : public UI_Base
 {
  private:
   int _width;
@@ -32,19 +34,8 @@ class UI_LED
   int _a, _b, _c, _d, _e, _f, _g, _h;
 
  protected:
-  byte_t *_bitmap;
-  byte_t *_dirty;
-  int     _dirty_size;
-
- protected:
   UI_LED(int width, int height, int a, int b, int c, int d, int e, int f, int g, int h);
   virtual ~UI_LED(void);
-
-  virtual int get_real_width(void);
-  virtual int get_real_height(void);
-
-  virtual byte_t * get_dirty_buffer(void);
-  virtual int get_dirty_buffer_size(void);
 
   virtual void generic_put_pixel(int x, int y, byte_t col, bool clear_cache);
   virtual void generic_draw_led(int x, int y, byte_t col, bool clear_cache);

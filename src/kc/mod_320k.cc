@@ -25,10 +25,10 @@
 #include <iostream>
 
 #include "kc/system.h"
+#include "kc/prefs/prefs.h"
 
 #include "ui/status.h"
 
-#include "kc/kc.h"
 #include "kc/z80.h"
 #include "kc/memory7.h"
 #include "kc/mod_320k.h"
@@ -46,7 +46,7 @@ Module320k::Module320k(Module320k &tmpl) :
 
   register_memory_bank(0);
 
-  if (get_kc_type() == KC_TYPE_87)
+  if (Preferences::instance()->get_kc_type() == KC_TYPE_87)
     {
       ((Memory7 *)memory)->set_romdi(true);
       ((Memory7 *)memory)->register_romdi_handler(this);
@@ -75,7 +75,7 @@ Module320k::Module320k(const char *filename, const char *name) :
 
 Module320k::~Module320k(void)
 {
-  if (get_kc_type() == KC_TYPE_87)
+  if (Preferences::instance()->get_kc_type() == KC_TYPE_87)
     {
       ((Memory7 *)memory)->set_romdi(false);
       ((Memory7 *)memory)->unregister_romdi_handler(this);

@@ -19,7 +19,10 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-#include "kc/kc.h"
+#include "kc/system.h"
+#include "kc/prefs/types.h"
+#include "kc/prefs/prefs.h"
+
 #include "kc/z80.h"
 #include "ui/status.h"
 #include "cmd/cmd.h"
@@ -41,7 +44,7 @@ public:
         {
         case 0:
           Status::instance()->setMessage("*** RESET ***");
-	  switch (get_kc_type())
+	  switch (Preferences::instance()->get_kc_type())
 	    {
 	    case KC_TYPE_85_1:
 	    case KC_TYPE_87:
@@ -62,7 +65,7 @@ public:
           break;
         case 1:
           Status::instance()->setMessage("*** POWER ON ***");
-	  switch (get_kc_type())
+	  switch (Preferences::instance()->get_kc_type())
 	    {
 	    case KC_TYPE_87:
 	    case KC_TYPE_85_1:

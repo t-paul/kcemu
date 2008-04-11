@@ -77,6 +77,7 @@ public:
   virtual ~Module(void);
   virtual byte_t in(word_t addr);
   virtual void out(word_t addr, byte_t val);
+  virtual bool is_empty(byte_t slot);
   virtual void insert(byte_t slot, ModuleInterface *module);
   virtual void remove(byte_t slot);
   virtual void reset(bool power_on = false);

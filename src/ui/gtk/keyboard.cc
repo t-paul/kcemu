@@ -22,8 +22,9 @@
 #include <string.h>
 
 #include "kc/system.h"
+#include "kc/prefs/types.h"
+#include "kc/prefs/prefs.h"
 
-#include "kc/kc.h"
 #include "kc/keys.h"
 #include "kc/keyboard.h"
 
@@ -106,7 +107,7 @@ public:
     }
 };
 
-KeyboardWindow::KeyboardWindow(void)
+KeyboardWindow::KeyboardWindow(const char *glade_xml_file) : UI_Gtk_Window(glade_xml_file)
 {
   _key_active = FALSE;
   _key_pressed = NULL;
@@ -114,6 +115,9 @@ KeyboardWindow::KeyboardWindow(void)
   _keys[0].key = NULL;
   _pixbuf_normal = NULL;
   _pixbuf_pressed = NULL;
+    
+  _delay = 0;
+  _has_info = false;
 
   _cmd = new CMD_ui_keyboard_window_toggle(this);
 }
@@ -271,8 +275,7 @@ KeyboardWindow::sf_motion_notify(GtkWidget *widget, GdkEventMotion *event, gpoin
 
   if (!self->_key_pressed)
     {
-      if (DBG_check("KCemu/KeyboardWindow/debug_regions"))
-	self->debug_regions(event);
+      self->check_regions(event);
       return TRUE;
     }
 
@@ -298,6 +301,22 @@ KeyboardWindow::sf_motion_notify(GtkWidget *widget, GdkEventMotion *event, gpoin
   return TRUE;
 }
 
+gboolean
+KeyboardWindow::timeout_callback(gpointer data)
+{
+  KeyboardWindow *self = (KeyboardWindow *)data;
+
+  if (self->_delay == 0)
+    return TRUE;
+
+  self->_delay--;
+  if (self->_delay != 0)
+    return TRUE;
+
+  gtk_label_set_text(GTK_LABEL(self->_w.label_info), "");
+  return TRUE;
+}
+
 int
 KeyboardWindow::get_key_val(const char *key)
 {
@@ -314,7 +333,7 @@ KeyboardWindow::get_key_val(const char *key)
 }
 
 void
-KeyboardWindow::debug_regions(GdkEventMotion *event)
+KeyboardWindow::check_regions(GdkEventMotion *event)
 {
   static GdkColor     red;
   static GdkColor     blue;
@@ -324,6 +343,8 @@ KeyboardWindow::debug_regions(GdkEventMotion *event)
   int a, b;
   int n_rectangles;
   GdkRectangle *rectangles;
+
+  bool debug = DBG_check("KCemu/KeyboardWindow/debug_regions");
 
   if (colormap == NULL)
     {
@@ -339,6 +360,12 @@ KeyboardWindow::debug_regions(GdkEventMotion *event)
     {
       if (gdk_region_point_in(_keys[a].region, (int)event->x - 1, (int)event->y - 1))
 	{
+          _delay = 5;
+          gtk_label_set_text(GTK_LABEL(_w.label_info), _keys[a].info == NULL ? "" : gettext(_keys[a].info));
+
+          if (!debug)
+            continue;
+
 	  sf_expose(_w.canvas, NULL, this);
 	  gdk_gc_set_foreground(gc, &red);
 	  gdk_draw_rectangle(_w.canvas->window, gc, FALSE,
@@ -375,7 +402,7 @@ KeyboardWindow::init_key_regions(void)
   GdkRectangle r;
   const char *filename = NULL;
 
-  switch (get_kc_type())
+  switch (Preferences::instance()->get_kc_type())
     {
     case KC_TYPE_85_2:
     case KC_TYPE_85_3:
@@ -396,10 +423,13 @@ KeyboardWindow::init_key_regions(void)
     case KC_TYPE_VCS80:
       filename = "vcs80.key";
       break;
-    case KC_TYPE_Z1013:
     case KC_TYPE_A5105:
+      filename = "a5105.key";
+      break;
+    case KC_TYPE_Z1013:
     case KC_TYPE_KRAMERMC:
     case KC_TYPE_MUGLERPC:
+    case KC_TYPE_C80:
       break;
 
       /*
@@ -478,6 +508,12 @@ KeyboardWindow::init_key_regions(void)
 	      _keys[a].region = gdk_region_rectangle(&r);
 	      break;
 	    }
+          else if (buf[0] == '?')
+            {
+              _has_info = true;
+              _keys[a].info = strdup(buf + 1);
+              break;
+            }
 	  else if (buf[0] != '+')
 	    {
 	      state = -1;
@@ -497,6 +533,7 @@ KeyboardWindow::init_key_regions(void)
 	  a++;
 	  _keys[a].key = strdup(buf + 1);
 	  _keys[a].key_val = get_key_val(_keys[a].key);
+          _keys[a].info = NULL;
 	  if (_keys[a].key_val < 0)
 	    {
 	      DBG(0, form("KCemu/warning",
@@ -560,10 +597,8 @@ KeyboardWindow::init(void)
 {
   init_key_regions();
 
-  _window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
-  gtk_widget_set_name(_window, "KeyboardWindow");
+  _window = get_widget("keyboard_window");
   gtk_window_set_title(GTK_WINDOW(_window), _("KCemu: Keyboard"));
-  gtk_window_set_resizable(GTK_WINDOW(_window), FALSE);
   gtk_signal_connect(GTK_OBJECT(_window), "delete_event",
 		     GTK_SIGNAL_FUNC(cmd_exec_sft),
 		     (char *)"ui-keyboard-window-toggle"); // FIXME:
@@ -572,72 +607,50 @@ KeyboardWindow::init(void)
   gtk_signal_connect(GTK_OBJECT(_window), "key_release_event",
 		     GTK_SIGNAL_FUNC(sf_key_release), this);
 
-  /*
-   *  vbox
-   */
-  _w.vbox = gtk_vbox_new(FALSE, 2);
-  gtk_container_border_width(GTK_CONTAINER(_w.vbox), 6);
-  gtk_container_add(GTK_CONTAINER(_window), _w.vbox);
-  gtk_widget_show(_w.vbox);
-
-  _w.label = NULL;
   _w.canvas = NULL;
   _w.eventbox = NULL;
+  _w.notebook = get_widget("notebook");
+  _w.not_configured_label = get_widget("not_configured_label");
+  
+  _w.label_info = get_widget("label_info");
+  if (_has_info)
+    {
+      gtk_widget_show(_w.label_info);
+      gtk_widget_show(get_widget("hseparator_info"));
+    }
+  
   if ((_pixbuf_normal != NULL) && (_pixbuf_pressed != NULL))
     {
+      gtk_notebook_set_current_page(GTK_NOTEBOOK(_w.notebook), 0);
+      
       /*
        *  eventbox
        */
-      _w.eventbox = gtk_event_box_new();
+      _w.eventbox = get_widget("eventbox");
       gtk_signal_connect(GTK_OBJECT(_w.eventbox), "motion_notify_event",
 			 GTK_SIGNAL_FUNC(sf_motion_notify), this);
       gtk_signal_connect(GTK_OBJECT(_w.eventbox), "button_press_event",
 			 GTK_SIGNAL_FUNC(sf_button_press), this);
       gtk_signal_connect(GTK_OBJECT(_w.eventbox), "button_release_event",
 			 GTK_SIGNAL_FUNC(sf_button_release), this);
-      gtk_widget_set_events(_w.eventbox, (GDK_POINTER_MOTION_MASK |
-					  GDK_BUTTON_PRESS_MASK |
-					  GDK_BUTTON_RELEASE_MASK));
-      gtk_box_pack_start(GTK_BOX(_w.vbox), _w.eventbox, FALSE, FALSE, 5);
-      gtk_widget_show(_w.eventbox);
 
       /*
        *  canvas
        */
-      _w.canvas = gtk_drawing_area_new();
-      gtk_widget_set_events(_w.canvas, GDK_EXPOSURE_MASK);
+      _w.canvas = get_widget("drawingarea");
       gtk_signal_connect(GTK_OBJECT(_w.canvas), "expose_event",
 			 GTK_SIGNAL_FUNC(sf_expose), this);
-      gtk_container_add(GTK_CONTAINER(_w.eventbox), _w.canvas);
       gtk_widget_set_usize(_w.canvas,
 			   gdk_pixbuf_get_width(_pixbuf_normal),
 			   gdk_pixbuf_get_height(_pixbuf_normal));
-      gtk_widget_show(_w.canvas);
     }
   else
     {
-      _w.label = gtk_label_new(_("\n  Sorry, keyboard display not configured.  \n"));
-      gtk_box_pack_start(GTK_BOX(_w.vbox), _w.label, FALSE, FALSE, 5);
-      gtk_widget_show(_w.label);
+      gtk_misc_set_padding(GTK_MISC(_w.not_configured_label), 100, 50);
+      gtk_notebook_set_current_page(GTK_NOTEBOOK(_w.notebook), 1);
     }
 
-  /*
-   *  separator
-   */
-  _w.separator = gtk_hseparator_new();
-  gtk_box_pack_start(GTK_BOX(_w.vbox), _w.separator,
-		     FALSE, FALSE, 5);
-  gtk_widget_show(_w.separator);
+  g_timeout_add_seconds(1, timeout_callback, this);
 
-  /*
-   *  close button
-   */
-  _w.close = gtk_button_new_with_label(_("Close"));
-  gtk_box_pack_start(GTK_BOX(_w.vbox), _w.close, FALSE, FALSE, 5);
-  gtk_signal_connect(GTK_OBJECT(_w.close), "clicked",
-		     GTK_SIGNAL_FUNC(cmd_exec_sf),
-		     (gpointer)"ui-keyboard-window-toggle");
-  GTK_WIDGET_SET_FLAGS(_w.close, GTK_CAN_DEFAULT);
-  gtk_widget_grab_default(_w.close);
-  gtk_widget_show(_w.close);
+  init_dialog("ui-keyboard-window-toggle", NULL);
 }

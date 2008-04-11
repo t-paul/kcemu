@@ -37,6 +37,10 @@ convert_small player_stop.svg   ../media-stop.png      $COLOR_GREEN
 convert_small player_eject.svg  ../media-eject.png     $COLOR_GREEN
 convert_small player_record.svg ../media-record.png    $COLOR_RED
 
+convert_small homepage.svg      ../icon-root.png       $COLOR_GREEN
+convert_small flower.svg        ../icon-default.png    $COLOR_GREEN
+convert_small cancel.svg        ../icon-deleted.png    $COLOR_RED
+
 convert_big jabber_protocol.svg ../window-help.png     $COLOR_GREEN $GAMMA
 convert_big tux.svg             ../window-about.png    $COLOR_GREEN $GAMMA
 convert_big xmms.svg            ../window-audio.png    $COLOR_GREEN $GAMMA
@@ -47,3 +51,7 @@ convert_big kdat.svg            ../window-tape.png     $COLOR_GREEN $GAMMA
 convert_big kuser.svg           ../window-thanks.png   $COLOR_GREEN $GAMMA
 convert_big help.svg            ../window-question.png $COLOR_GREEN $GAMMA
 convert_big info.svg            ../window-info.png     $COLOR_GREEN $GAMMA
+convert_big bar6.svg            ../window-color.png    $COLOR_GREEN $GAMMA
+convert_big kxkb.svg            ../window-keyboard.png $COLOR_GREEN $GAMMA
+convert_big configure.svg       ../window-options.png  $COLOR_GREEN $GAMMA
+convert_big flower.svg          ../window-selector.png $COLOR_GREEN $GAMMA

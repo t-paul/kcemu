@@ -31,7 +31,7 @@
  *  (4)  c     d     e     f     g     h     i     j
  *  (5)  k     l     m     n     o     p     q     r
  *  (6)  s     t     u     v     w     x     y     z
- *  (7)  SHIFT       CTRL  SHLCK ALT   F5    F4    F3
+ *  (7)  SHIFT ESC   CTRL  SHLCK ALT   F5    F4    F3
  *  (8)  F2    F1                STOP              ENTER
  *  (9)  SPACE HOME  INS   DEL   LEFT  UP    DOWN  RIGHT
  */
@@ -64,7 +64,7 @@ static unsigned int __keys[] = {
   /* 0x18 [.] */ 0x00,
   /* 0x19 [.] */ 0x00,
   /* 0x1a [.] */ 0x00,
-  /* 0x1b [.] */ 0x00, /* ESC | CL LN */
+  /* 0x1b [.] */ 0x72, /* ESC | CL LN */
   /* 0x1c [.] */ 0x00,
   /* 0x1d [.] */ 0x00,
   /* 0x1e [.] */ 0x00,
@@ -300,7 +300,7 @@ static unsigned int __keys[] = {
   /* 0x103 */ 0x78,   /* F3 */
   /* 0x104 */ 0x77,   /* F4 */
   /* 0x105 */ 0x76,   /* F5 */
-  /* 0x106 */ 0x72,
+  /* 0x106 */ 0x00,
   /* 0x107 */ 0x83,
   /* 0x108 */ 0x84,
   /* 0x109 */ 0x85,

@@ -19,11 +19,14 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
+#include <string>
+
 #include "kc/system.h"
 
 #include "ui/gtk/cmd.h"
 #include "ui/gtk/about.h"
-#include "ui/gtk/glade/interface.h"
+
+using namespace std;
 
 char AboutWindow::APP_NAME[]      = ("KCemu v" KCEMU_VERSION);
 
@@ -45,7 +48,7 @@ public:
     }
 };
 
-AboutWindow::AboutWindow(void)
+AboutWindow::AboutWindow(const char *glade_xml_file) : UI_Gtk_Window(glade_xml_file)
 {
   _cmd = new CMD_about_window_toggle(this);
 }
@@ -58,13 +61,16 @@ AboutWindow::~AboutWindow(void)
 void
 AboutWindow::init(void)
 {
-  _window = create_about_window();
+  string version_text(string("<big><b>") + APP_NAME + "</b></big>");
+  
+  _window = get_widget("about_window");
   gtk_signal_connect(GTK_OBJECT(_window), "delete_event",
 		     GTK_SIGNAL_FUNC(cmd_exec_sft),
 		     (char *)"ui-about-window-toggle"); // FIXME:
 
   GtkWidget *version = get_widget("main_label_version");
-  gtk_label_set_text(GTK_LABEL(version), APP_NAME);
+  gtk_label_set_text(GTK_LABEL(version), version_text.c_str());
+  gtk_label_set_use_markup(GTK_LABEL(version), TRUE);
 
   GtkWidget *build = get_widget("main_label_build");
   gtk_label_set_text(GTK_LABEL(build), "build: " __DATE__ " / " __TIME__);

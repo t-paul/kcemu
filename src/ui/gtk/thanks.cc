@@ -23,7 +23,6 @@
 
 #include "ui/gtk/cmd.h"
 #include "ui/gtk/thanks.h"
-#include "ui/gtk/glade/interface.h"
 
 class CMD_thanks_window_toggle : public CMD
 {
@@ -43,7 +42,7 @@ public:
     }
 };
 
-ThanksWindow::ThanksWindow(void)
+ThanksWindow::ThanksWindow(const char *glade_xml_file) : UI_Gtk_Window(glade_xml_file)
 {
   _cmd = new CMD_thanks_window_toggle(this);
 }
@@ -56,7 +55,7 @@ ThanksWindow::~ThanksWindow(void)
 void
 ThanksWindow::init(void)
 {
-  _window = create_thanks_window();
+  _window = get_widget("thanks_window");
   gtk_signal_connect(GTK_OBJECT(_window), "delete_event",
 		     GTK_SIGNAL_FUNC(cmd_exec_sft),
 		     (char *)"ui-thanks-window-toggle"); // FIXME:

@@ -1,6 +1,6 @@
 /*
  *  KCemu -- the KC 85/3 and KC 85/4 Emulator
- *  Copyright (C) 1997-2001 Torsten Paul
+ *  Copyright (C) 1997-2008 Torsten Paul
  *
  *  $Id$
  *
@@ -40,12 +40,11 @@ class UI_VCS80 : public UI_LED
   UI_VCS80(void);
   virtual ~UI_VCS80(void);
 
-  virtual void generic_update(bool clear_cache = false);
-
-  virtual int  generic_get_mode(void);
-  virtual void generic_set_mode(int mode);
-
   virtual void led_update(void);
+
+  virtual void generic_signal_v_retrace(bool value);
+
+  virtual void generic_update(Scanline *scanline, MemAccess *memaccess, bool clear_cache);
 };
 
 #endif /* __ui_generic_ui_vcs80_h */

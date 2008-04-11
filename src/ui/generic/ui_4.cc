@@ -1,8 +1,8 @@
 /*
  *  KCemu -- the KC 85/3 and KC 85/4 Emulator
- *  Copyright (C) 1997-2001 Torsten Paul
+ *  Copyright (C) 1997-2008 Torsten Paul
  *
- *  $Id: ui_4.cc,v 1.2 2002/10/31 01:02:47 torsten_paul Exp $
+ *  $Id$
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -31,6 +31,8 @@ UI_4::UI_4(void)
 {
   int a, b, y;
 
+  set_real_screen_size(320, 256);
+
   y = get_real_height();
   b = (get_real_width() * y) / 8;
   _bitmap = new byte_t[get_real_width() * y];
@@ -51,7 +53,7 @@ UI_4::UI_4(void)
 
   for (a = 0;a < y;a++)
     _scn_cache[a] = 0;
-}
+  }
 
 UI_4::~UI_4(void)
 {
@@ -60,30 +62,6 @@ UI_4::~UI_4(void)
   delete[] _pix_cache;
   delete[] _col_cache;
   delete[] _scn_cache;
-}
-
-int
-UI_4::get_real_width(void)
-{
-  return 320;
-}
-
-int
-UI_4::get_real_height(void)
-{
-  return 256;
-}
-
-byte_t *
-UI_4::get_dirty_buffer(void)
-{
-  return _dirty;
-}
-
-int
-UI_4::get_dirty_buffer_size(void)
-{
-  return _dirty_size;
 }
 
 void
@@ -229,7 +207,7 @@ UI_4::generic_update_lores(Scanline *scanline, byte_t *irm, bool clear_cache)
 }
 
 void
-UI_4::generic_update(Scanline *scanline, bool clear_cache)
+UI_4::generic_update(Scanline *scanline, MemAccess *memaccess, bool clear_cache)
 {
   int a;
   int hires;
@@ -267,15 +245,4 @@ UI_4::generic_update(Scanline *scanline, bool clear_cache)
     generic_update_hires(scanline, irm, clear_cache);
   else
     generic_update_lores(scanline, irm, clear_cache);
-}
-
-int
-UI_4::generic_get_mode(void)
-{
-  return 0;
-}
-
-void
-UI_4::generic_set_mode(int mode)
-{
 }

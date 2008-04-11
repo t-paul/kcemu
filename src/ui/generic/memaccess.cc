@@ -23,9 +23,9 @@
 #include <stdlib.h> // DEBUG
 
 #include "kc/system.h"
+#include "kc/prefs/prefs.h"
 
 #include "kc/kc.h"
-#include "kc/rc.h"
 #include "kc/z80.h"
 
 #include "ui/generic/memaccess.h"
@@ -84,7 +84,7 @@ void
 MemAccess::memory_write(word_t addr)
 {
   static double line_val = 35000.0 / 288.0;
-  static int val = RC::instance()->get_int("IRM Memory Access", 0) ? 2 : 0;
+  static int val = Preferences::instance()->get_int_value("display_mem_access", 0) ? 2 : 0;
 
   DBG(3, form("KCemu/MemAccess/write",
 	      "MemAccess::memory_write(): addr = %04x\n",

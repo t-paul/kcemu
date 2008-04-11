@@ -1,6 +1,6 @@
 /*
  *  KCemu -- the KC 85/3 and KC 85/4 Emulator
- *  Copyright (C) 1997-2001 Torsten Paul
+ *  Copyright (C) 1997-2008 Torsten Paul
  *
  *  $Id$
  *
@@ -44,8 +44,8 @@ UI_LED::UI_LED(int width,
   _f = f;
   _g = g;
   _h = h;
-  _width = width;
-  _height = height;
+  
+  set_real_screen_size(width, height);
 
   _bitmap = new byte_t[len];
   _dirty_size = len / 64;
@@ -62,30 +62,6 @@ UI_LED::~UI_LED(void)
 {
   delete[] _bitmap;
   delete[] _dirty;
-}
-
-int
-UI_LED::get_real_width(void)
-{
-  return _width;
-}
-
-int
-UI_LED::get_real_height(void)
-{
-  return _height;
-}
-
-byte_t *
-UI_LED::get_dirty_buffer(void)
-{
-  return _dirty;
-}
-
-int
-UI_LED::get_dirty_buffer_size(void)
-{
-  return _dirty_size;
 }
 
 void

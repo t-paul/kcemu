@@ -17,9 +17,10 @@ SUBDIRS = \
 	doc \
 	man \
 	debian \
+	conf \
 	setup \
 	glade \
-	po
+	po 
 
 EXTRA_DIST = VERSION README.de TODO THANKS COPYING COPYING.de
 

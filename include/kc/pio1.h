@@ -28,10 +28,6 @@
 
 class PIO1_1 : public PIO, public TapeCallback
 {
- private:
-  byte_t _border;
-  byte_t _20lines;
-
  public:
   PIO1_1(void);
   virtual ~PIO1_1(void);

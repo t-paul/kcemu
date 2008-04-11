@@ -171,6 +171,7 @@ Memory2::reset(bool power_on)
   _m_ram->set_active(true);
   _m_irm->set_active(true);
   _m_caos->set_active(true);
+  reload_mem_ptr();
 
   if (!power_on)
     return;

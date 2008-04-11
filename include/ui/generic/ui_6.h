@@ -1,6 +1,6 @@
 /*
  *  KCemu -- the KC 85/3 and KC 85/4 Emulator
- *  Copyright (C) 1997-2001 Torsten Paul
+ *  Copyright (C) 1997-2008 Torsten Paul
  *
  *  $Id$
  *
@@ -41,10 +41,7 @@ class UI_6 : public UI_LED
   UI_6(void);
   virtual ~UI_6(void);
 
-  virtual void generic_update(bool clear_cache = false);
-
-  virtual int  generic_get_mode(void);
-  virtual void generic_set_mode(int mode);
+  virtual void generic_update(Scanline *scanline, MemAccess *memaccess, bool clear_cache);
 };
 
 #endif /* __ui_generic_ui_6_h */

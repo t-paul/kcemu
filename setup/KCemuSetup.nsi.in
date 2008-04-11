@@ -55,8 +55,9 @@ Section "!KCemu" SEC01
   File /r "kcemu\bin"
   File /r "kcemu\lib"
   File /r "kcemu\share"
-  File "/oname=share\kcemu\.kcemurc" "kcemu\share\KCemu\kcemurc"
+  CreateShortCut "$DESKTOP\KCemu.lnk" "$INSTDIR\bin\kcemu.exe" '-P'
   CreateDirectory "$SMPROGRAMS\KCemu"
+  CreateShortCut "$SMPROGRAMS\KCemu\KCemu.lnk"       "$INSTDIR\bin\kcemu.exe" '-P' "$INSTDIR\share\KCemu\icons\kcemu-winicon.ico"
   CreateShortCut "$SMPROGRAMS\KCemu\BIC.lnk"         "$INSTDIR\bin\kcemu.exe" '-9' "$INSTDIR\share\KCemu\icons\kcemu-bic.ico"
   CreateShortCut "$SMPROGRAMS\KCemu\KC85 - 1.lnk"    "$INSTDIR\bin\kcemu.exe" '-1' "$INSTDIR\share\KCemu\icons\kcemu-kc87.ico"
   CreateShortCut "$SMPROGRAMS\KCemu\KC85 - 2.lnk"    "$INSTDIR\bin\kcemu.exe" '-2' "$INSTDIR\share\KCemu\icons\kcemu-kc85.ico"
@@ -67,10 +68,6 @@ Section "!KCemu" SEC01
   CreateShortCut "$SMPROGRAMS\KCemu\LC80.lnk"        "$INSTDIR\bin\kcemu.exe" '-8' "$INSTDIR\share\KCemu\icons\kcemu-lc80.ico"
   CreateShortCut "$SMPROGRAMS\KCemu\Poly880.lnk"     "$INSTDIR\bin\kcemu.exe" '-6' "$INSTDIR\share\KCemu\icons\kcemu-poly880.ico"
   CreateShortCut "$SMPROGRAMS\KCemu\Z1013.lnk"       "$INSTDIR\bin\kcemu.exe" '-0' "$INSTDIR\share\KCemu\icons\kcemu-z1013.ico"
-  CreateShortCut "$SMPROGRAMS\KCemu\Z1013 (BL4).lnk" "$INSTDIR\bin\kcemu.exe" '-e z1013.bl4' "$INSTDIR\share\KCemu\icons\kcemu-z1013.ico"
-  CreateShortCut "$SMPROGRAMS\KCemu\KramerMC.lnk"    "$INSTDIR\bin\kcemu.exe" '-e kramer-mc' "$INSTDIR\share\KCemu\icons\kcemu-kramermc.ico"
-  CreateShortCut "$SMPROGRAMS\KCemu\PCM.lnk"         "$INSTDIR\bin\kcemu.exe" '-e mugler-pc' "$INSTDIR\share\KCemu\icons\kcemu-pcm.ico"
-  CreateShortCut "$SMPROGRAMS\KCemu\VCS80.lnk"       "$INSTDIR\bin\kcemu.exe" '-e vcs80'     "$INSTDIR\share\KCemu\icons\kcemu-vcs80.ico"
 SectionEnd
 
 SectionGroup "GTK" SEC02
@@ -100,6 +97,8 @@ Section "-bin" SEC_GTK_01
   File "dist\bin\pango-querymodules.exe"
   File "dist\bin\zlib1.dll"
   File "dist\bin\SDL.dll"
+  File "dist\bin\libglade-2.0-0.dll"
+  File "dist\bin\libxml2.dll"
 SectionEnd
 Section "-etc\gtk-2.0" SEC_GTK_02
   SetOutPath "$INSTDIR\etc\gtk-2.0"
@@ -111,7 +110,6 @@ SectionEnd
 Section "-etc\pango" SEC_GTK_03
   SetOutPath "$INSTDIR\etc\pango"
   SetOverwrite try
-  File "dist\etc\pango\pango.aliases"
   File "dist\etc\pango\pango.modules"
 SectionEnd
 Section "-lib\gtk-2.0\2.10.0\engines" SEC_GTK_ENGINES
@@ -120,7 +118,25 @@ Section "-lib\gtk-2.0\2.10.0\engines" SEC_GTK_ENGINES
   File "dist\lib\gtk-2.0\2.10.0\engines\libpixmap.dll"
   File "dist\lib\gtk-2.0\2.10.0\engines\libwimp.dll"
 SectionEnd
-Section "-lib\gtk-2.0\2.10.0\immodules" SEC_GTK_05
+Section "-lib\gtk-2.0\2.10.0\loaders" SEC_GTK_LOADERS
+  SetOutPath "$INSTDIR\lib\gtk-2.0\2.10.0\loaders"
+  SetOverwrite try
+  File "dist\lib\gtk-2.0\2.10.0\loaders\libpixbufloader-ani.dll"
+  File "dist\lib\gtk-2.0\2.10.0\loaders\libpixbufloader-bmp.dll"
+  File "dist\lib\gtk-2.0\2.10.0\loaders\libpixbufloader-gif.dll"
+  File "dist\lib\gtk-2.0\2.10.0\loaders\libpixbufloader-ico.dll"
+  File "dist\lib\gtk-2.0\2.10.0\loaders\libpixbufloader-jpeg.dll"
+  File "dist\lib\gtk-2.0\2.10.0\loaders\libpixbufloader-pcx.dll"
+  File "dist\lib\gtk-2.0\2.10.0\loaders\libpixbufloader-png.dll"
+  File "dist\lib\gtk-2.0\2.10.0\loaders\libpixbufloader-pnm.dll"
+  File "dist\lib\gtk-2.0\2.10.0\loaders\libpixbufloader-ras.dll"
+  File "dist\lib\gtk-2.0\2.10.0\loaders\libpixbufloader-tga.dll"
+  File "dist\lib\gtk-2.0\2.10.0\loaders\libpixbufloader-tiff.dll"
+  File "dist\lib\gtk-2.0\2.10.0\loaders\libpixbufloader-wbmp.dll"
+  File "dist\lib\gtk-2.0\2.10.0\loaders\libpixbufloader-xbm.dll"
+  File "dist\lib\gtk-2.0\2.10.0\loaders\libpixbufloader-xpm.dll"
+SectionEnd
+Section "-lib\gtk-2.0\2.10.0\immodules" SEC_GTK_IMMODULES
   SetOutPath "$INSTDIR\lib\gtk-2.0\2.10.0\immodules"
   SetOverwrite try
   File "dist\lib\gtk-2.0\2.10.0\immodules\im-am-et.dll"
@@ -135,13 +151,13 @@ Section "-lib\gtk-2.0\2.10.0\immodules" SEC_GTK_05
   File "dist\lib\gtk-2.0\2.10.0\immodules\im-ti-et.dll"
   File "dist\lib\gtk-2.0\2.10.0\immodules\im-viqr.dll"
 SectionEnd
-Section "-lib\locale\de\LC_MESSAGES" SEC_GTK_06
-  SetOutPath "$INSTDIR\lib\locale\de\LC_MESSAGES"
+Section "-share\locale\de\LC_MESSAGES" SEC_GTK_06
+  SetOutPath "$INSTDIR\share\locale\de\LC_MESSAGES"
   SetOverwrite try
-  File "dist\lib\locale\de\LC_MESSAGES\glib20.mo"
-  File "dist\lib\locale\de\LC_MESSAGES\gtk20.mo"
-  File "dist\lib\locale\de\LC_MESSAGES\gtk20-properties.mo"
-  File "dist\lib\locale\de\LC_MESSAGES\atk10.mo"
+  File "dist\share\locale\de\LC_MESSAGES\glib20.mo"
+  File "dist\share\locale\de\LC_MESSAGES\gtk20.mo"
+  File "dist\share\locale\de\LC_MESSAGES\gtk20-properties.mo"
+  File "dist\share\locale\de\LC_MESSAGES\libiconv.mo"
 SectionEnd
 SectionGroupEnd
 
@@ -230,6 +246,12 @@ Section Uninstall
   Delete "$INSTDIR\share\KCemu\doc\window-module-z1013.png"
   Delete "$INSTDIR\share\KCemu\doc\window-module-z9001.png"
   Delete "$INSTDIR\share\KCemu\doc\window-tape.png"
+  Delete "$INSTDIR\share\KCemu\doc\window-profile-1.png"
+  Delete "$INSTDIR\share\KCemu\doc\window-profile-2.png"
+  Delete "$INSTDIR\share\KCemu\doc\window-profile-3.png"
+  Delete "$INSTDIR\share\KCemu\doc\window-profile-4.png"
+  Delete "$INSTDIR\share\KCemu\doc\window-profile-5.png"
+  Delete "$INSTDIR\share\KCemu\doc\window-select-profile.png"
 
   Delete "$INSTDIR\share\KCemu\images\kcemu.png"
   Delete "$INSTDIR\share\KCemu\images\logo-flac.png"
@@ -254,6 +276,27 @@ Section Uninstall
   Delete "$INSTDIR\share\KCemu\images\window-question.png"
   Delete "$INSTDIR\share\KCemu\images\window-tape.png"
   Delete "$INSTDIR\share\KCemu\images\window-thanks.png"
+  Delete "$INSTDIR\share\KCemu\images\window-color.png"
+  Delete "$INSTDIR\share\KCemu\images\window-keyboard.png"
+  Delete "$INSTDIR\share\KCemu\images\window-options.png"
+  Delete "$INSTDIR\share\KCemu\images\window-selector.png"
+
+  Delete "$INSTDIR\share\KCemu\images\about.glade"
+  Delete "$INSTDIR\share\KCemu\images\audio.glade"
+  Delete "$INSTDIR\share\KCemu\images\color.glade"
+  Delete "$INSTDIR\share\KCemu\images\dialog.glade"
+  Delete "$INSTDIR\share\KCemu\images\disk.glade"
+  Delete "$INSTDIR\share\KCemu\images\help.glade"
+  Delete "$INSTDIR\share\KCemu\images\keyboard.glade"
+  Delete "$INSTDIR\share\KCemu\images\legal.glade"
+  Delete "$INSTDIR\share\KCemu\images\main.glade"
+  Delete "$INSTDIR\share\KCemu\images\module.glade"
+  Delete "$INSTDIR\share\KCemu\images\options.glade"
+  Delete "$INSTDIR\share\KCemu\images\selector.glade"
+  Delete "$INSTDIR\share\KCemu\images\tapeedit.glade"
+  Delete "$INSTDIR\share\KCemu\images\tape.glade"
+  Delete "$INSTDIR\share\KCemu\images\thanks.glade"
+  Delete "$INSTDIR\share\KCemu\images\savemem.glade"
 
   Delete "$INSTDIR\share\KCemu\roms\z1013\z1013_20.rom"
   Delete "$INSTDIR\share\KCemu\roms\z1013\z1013_a2.rom"
@@ -330,6 +373,15 @@ Section Uninstall
 
   Delete "$INSTDIR\share\KCemu\roms\c80\monitor.rom"
 
+  Delete "$INSTDIR\share\KCemu\icons\icon-default.png"
+  Delete "$INSTDIR\share\KCemu\icons\icon-deleted.png"
+  Delete "$INSTDIR\share\KCemu\icons\icon-root.png"
+
+  Delete "$INSTDIR\share\KCemu\icons\kcemu-winicon.ico"
+  Delete "$INSTDIR\share\KCemu\icons\kcemu-winicon_16x16.png"
+  Delete "$INSTDIR\share\KCemu\icons\kcemu-winicon_32x32.png"
+  Delete "$INSTDIR\share\KCemu\icons\kcemu-winicon_48x48.png"
+
   Delete "$INSTDIR\share\KCemu\icons\kcemu-bic.ico"
   Delete "$INSTDIR\share\KCemu\icons\kcemu-kc85.ico"
   Delete "$INSTDIR\share\KCemu\icons\kcemu-kc87.ico"
@@ -340,21 +392,28 @@ Section Uninstall
   Delete "$INSTDIR\share\KCemu\icons\kcemu-pcm.ico"
   Delete "$INSTDIR\share\KCemu\icons\kcemu-vcs80.ico"
   Delete "$INSTDIR\share\KCemu\icons\kcemu-c80.ico"
-  Delete "$INSTDIR\share\KCemu\icons\kcemu-winicon.ico"
+
+  Delete "$INSTDIR\share\KCemu\icons\icon-bic.png"
+  Delete "$INSTDIR\share\KCemu\icons\icon-kc85.png"
+  Delete "$INSTDIR\share\KCemu\icons\icon-kc87.png"
+  Delete "$INSTDIR\share\KCemu\icons\icon-lc80.png"
+  Delete "$INSTDIR\share\KCemu\icons\icon-poly880.png"
+  Delete "$INSTDIR\share\KCemu\icons\icon-z1013.png"
+  Delete "$INSTDIR\share\KCemu\icons\icon-kramermc.png"
+  Delete "$INSTDIR\share\KCemu\icons\icon-pcm.png"
+  Delete "$INSTDIR\share\KCemu\icons\icon-vcs80.png"
+  Delete "$INSTDIR\share\KCemu\icons\icon-c80.png"
 
   Delete "$INSTDIR\share\KCemu\icons\kcemu-bic.xpm"
   Delete "$INSTDIR\share\KCemu\icons\kcemu-kc85.xpm"
   Delete "$INSTDIR\share\KCemu\icons\kcemu-kc87.xpm"
   Delete "$INSTDIR\share\KCemu\icons\kcemu-lc80.xpm"
-  Delete "$INSTDIR\share\KCemu\icons\kcemu-vcs80.xpm"
-  Delete "$INSTDIR\share\KCemu\icons\kcemu-c80.xpm"
-  Delete "$INSTDIR\share\KCemu\icons\kcemu-pcm.xpm"
-  Delete "$INSTDIR\share\KCemu\icons\kcemu-kramermc.xpm"
   Delete "$INSTDIR\share\KCemu\icons\kcemu-poly880.xpm"
   Delete "$INSTDIR\share\KCemu\icons\kcemu-z1013.xpm"
-  Delete "$INSTDIR\share\KCemu\icons\kcemu-winicon_16x16.png"
-  Delete "$INSTDIR\share\KCemu\icons\kcemu-winicon_32x32.png"
-  Delete "$INSTDIR\share\KCemu\icons\kcemu-winicon_48x48.png"
+  Delete "$INSTDIR\share\KCemu\icons\kcemu-kramermc.xpm"
+  Delete "$INSTDIR\share\KCemu\icons\kcemu-pcm.xpm"
+  Delete "$INSTDIR\share\KCemu\icons\kcemu-vcs80.xpm"
+  Delete "$INSTDIR\share\KCemu\icons\kcemu-c80.xpm"
 
   Delete "$INSTDIR\share\KCemu\keymaps\kc851.key"
   Delete "$INSTDIR\share\KCemu\keymaps\kc851_keyboard.xpm"
@@ -371,6 +430,9 @@ Section Uninstall
   Delete "$INSTDIR\share\KCemu\keymaps\vcs80.key"
   Delete "$INSTDIR\share\KCemu\keymaps\vcs80_keyboard.xpm"
   Delete "$INSTDIR\share\KCemu\keymaps\vcs80_keyboard_pressed.xpm"
+  Delete "$INSTDIR\share\KCemu\keymaps\a5105.key"
+  Delete "$INSTDIR\share\KCemu\keymaps\a5105_keyboard.png"
+  Delete "$INSTDIR\share\KCemu\keymaps\a5105_keyboard_pressed.png"
 
   Delete "$INSTDIR\share\KCemu\disks\a5105sys.dump"
   Delete "$INSTDIR\share\KCemu\disks\caos.dump"
@@ -382,6 +444,23 @@ Section Uninstall
 
   Delete "$INSTDIR\share\KCemu\tapes\files.kct"
   Delete "$INSTDIR\share\KCemu\tapes\z1013.kct"
+  Delete "$INSTDIR\share\KCemu\tapes\lc80.kct"
+
+  Delete "$INSTDIR\share\KCemu\config\a5105.conf"
+  Delete "$INSTDIR\share\KCemu\config\c80.conf"
+  Delete "$INSTDIR\share\KCemu\config\default.conf"
+  Delete "$INSTDIR\share\KCemu\config\kc85-1.conf"
+  Delete "$INSTDIR\share\KCemu\config\kc85-2.conf"
+  Delete "$INSTDIR\share\KCemu\config\kc85-3.conf"
+  Delete "$INSTDIR\share\KCemu\config\kc85-4.conf"
+  Delete "$INSTDIR\share\KCemu\config\kc85-5.conf"
+  Delete "$INSTDIR\share\KCemu\config\kc87.conf"
+  Delete "$INSTDIR\share\KCemu\config\kramermc.conf"
+  Delete "$INSTDIR\share\KCemu\config\lc80.conf"
+  Delete "$INSTDIR\share\KCemu\config\pcm.conf"
+  Delete "$INSTDIR\share\KCemu\config\poly880.conf"
+  Delete "$INSTDIR\share\KCemu\config\vcs80.conf"
+  Delete "$INSTDIR\share\KCemu\config\z1013.conf"
 
   Delete "$SMPROGRAMS\KCemu\Uninstall.lnk"
   Delete "$SMPROGRAMS\KCemu\Website.lnk"
@@ -401,6 +480,7 @@ Section Uninstall
   Delete "$SMPROGRAMS\KCemu\KramerMC.lnk"
   Delete "$SMPROGRAMS\KCemu\PCM.lnk"
   Delete "$SMPROGRAMS\KCemu\VCS80.lnk"
+  Delete "$DESKTOP\KCemu.lnk"
 
   # GTK START
 
@@ -429,6 +509,8 @@ Section Uninstall
   Delete "$INSTDIR\bin\libtiff3.dll"
   Delete "$INSTDIR\bin\pango-querymodules.exe"
   Delete "$INSTDIR\bin\zlib1.dll"
+  Delete "$INSTDIR\bin\libglade-2.0-0.dll"
+  Delete "$INSTDIR\bin\libxml2.dll"
   Delete "$INSTDIR\bin\SDL.dll"
   Delete "$INSTDIR\etc\gtk-2.0\gdk-pixbuf.loaders"
   Delete "$INSTDIR\etc\gtk-2.0\gtk.immodules"
@@ -492,6 +574,10 @@ Section Uninstall
   Delete "$INSTDIR\lib\locale\de\LC_MESSAGES\gtk20.mo"
   Delete "$INSTDIR\lib\locale\de\LC_MESSAGES\gtk20-properties.mo"
   Delete "$INSTDIR\lib\locale\de\LC_MESSAGES\atk10.mo"
+  Delete "$INSTDIR\share\locale\de\LC_MESSAGES\glib20.mo"
+  Delete "$INSTDIR\share\locale\de\LC_MESSAGES\gtk20.mo"
+  Delete "$INSTDIR\share\locale\de\LC_MESSAGES\gtk20-properties.mo"
+  Delete "$INSTDIR\share\locale\de\LC_MESSAGES\libiconv.mo"
   Delete "$INSTDIR\lib\pango\1.4.0\modules\pango-arabic-fc.dll"
   Delete "$INSTDIR\lib\pango\1.4.0\modules\pango-basic-fc.dll"
   Delete "$INSTDIR\lib\pango\1.4.0\modules\pango-basic-win32.dll"
@@ -538,6 +624,7 @@ Section Uninstall
   RMDir "$INSTDIR\share\KCemu\doc"
   RMDir "$INSTDIR\share\KCemu\icons"
   RMDir "$INSTDIR\share\KCemu\images"
+  RMDir "$INSTDIR\share\KCemu\config"
   RMDir "$INSTDIR\share\KCemu"
   RMDir "$INSTDIR\share\locale\de\LC_MESSAGES"
   RMDir "$INSTDIR\share\locale\de"

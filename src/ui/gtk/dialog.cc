@@ -1,8 +1,8 @@
 /*
  *  KCemu -- the KC 85/3 and KC 85/4 Emulator
- *  Copyright (C) 1997-2006 Torsten Paul
+ *  Copyright (C) 1997-2008 Torsten Paul
  *
- *  $Id: dialog.cc,v 1.6 2002/10/31 01:38:12 torsten_paul Exp $
+ *  $Id$
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -22,14 +22,16 @@
 #include "kc/system.h"
 
 #include "ui/gtk/dialog.h"
-#include "ui/gtk/glade/interface.h"
-#include "ui/gtk/glade/glade_util.h"
 
-DialogWindow::DialogWindow(void) : CMD("ui-dialog-yes-no")
+DialogWindow::DialogWindow(const char *glade_xml_file) : UI_Gtk_Window(glade_xml_file), CMD("ui-dialog-yes-no")
 {
   _args = NULL;
+  _delete_handler_id = 0;
   register_cmd("ui-dialog-ok", 0);
   register_cmd("ui-dialog-yes-no", 1);
+  register_cmd("ui-dialog-yes-no-cancel", 2);
+  
+  init();
 }
 
 DialogWindow::~DialogWindow(void)
@@ -77,6 +79,9 @@ DialogWindow::execute(CMD_Args *args, CMD_Context context)
   case 1:
     init_yes_no(title, text);
     break;
+  case 2:
+    init_yes_no_cancel(title, text);
+    break;
   default:
     break;
   }
@@ -86,36 +91,65 @@ void
 DialogWindow::ok(GtkWidget */*widget*/, gpointer data)
 {
   DialogWindow *self = (DialogWindow *)data;
-  gtk_widget_destroy(self->_window);
 
+  self->_dialog_result = GTK_RESPONSE_OK;
+  
   if (self->_args != NULL)
     self->_args->call_callbacks("ui-dialog-ok-CB");
+  
+  self->hide();
+}
+
+void
+DialogWindow::cancel(GtkWidget */*widget*/, gpointer data)
+{
+  DialogWindow *self = (DialogWindow *)data;
+
+  self->_dialog_result = GTK_RESPONSE_CANCEL;
+
+  if (self->_args != NULL)
+    self->_args->call_callbacks("ui-dialog-cancel-CB");
+
+  self->hide();
 }
 
 void
 DialogWindow::yes(GtkWidget */*widget*/, gpointer data)
 {
   DialogWindow *self = (DialogWindow *)data;
-  gtk_widget_destroy(self->_window);
+
+  self->_dialog_result = GTK_RESPONSE_YES;
 
   if (self->_args != NULL)
     self->_args->call_callbacks("ui-dialog-yes-no-CB-yes");
+
+  self->hide();
 }
 
 void
 DialogWindow::no(GtkWidget */*widget*/, gpointer data)
 {
   DialogWindow *self = (DialogWindow *)data;
-  gtk_widget_destroy(self->_window);
+
+  self->_dialog_result = GTK_RESPONSE_NO;
 
   if (self->_args != NULL)
     self->_args->call_callbacks("ui-dialog-yes-no-CB-no");
+
+  self->hide();
 }
 
 int
 DialogWindow::delete_event_yes_no(GtkWidget *widget, GdkEvent *event, gpointer data)
 {
   no(widget, data);
+  return true;
+}
+
+int
+DialogWindow::delete_event_yes_no_cancel(GtkWidget *widget, GdkEvent *event, gpointer data)
+{
+  cancel(widget, data);
   return true;
 }
 
@@ -129,12 +163,50 @@ DialogWindow::delete_event_ok(GtkWidget *widget, GdkEvent *event, gpointer data)
 void
 DialogWindow::init(void)
 {
+  _w.button_ok = get_widget("dialog_button_ok");
+  _w.button_cancel = get_widget("dialog_button_cancel");
+  _w.button_yes = get_widget("dialog_button_yes");
+  _w.button_no = get_widget("dialog_button_no");
+
+  _w.image_info = get_widget("header_image_info");
+  _w.image_question = get_widget("header_image_question");
+
+  g_signal_connect(_w.button_ok, "clicked", G_CALLBACK(ok), this);
+  g_signal_connect(_w.button_cancel, "clicked", G_CALLBACK(cancel), this);
+  g_signal_connect(_w.button_yes, "clicked", G_CALLBACK(yes), this);
+  g_signal_connect(_w.button_no, "clicked", G_CALLBACK(no), this);
+
+  gtk_widget_hide(_w.button_ok);
+  gtk_widget_hide(_w.button_cancel);
+  gtk_widget_hide(_w.button_yes);
+  gtk_widget_hide(_w.button_no);
+
+  gtk_widget_hide(_w.image_info);
+  gtk_widget_hide(_w.image_question);
 }
 
 void
-DialogWindow::init_misc(const char *title, const char *text)
+DialogWindow::show_buttons(bool button_ok, bool button_cancel, bool button_yes, bool button_no) {
+  if (button_ok)
+    gtk_widget_show(_w.button_ok);
+  if (button_cancel)
+    gtk_widget_show(_w.button_cancel);
+  if (button_yes)
+    gtk_widget_show(_w.button_yes);
+  if (button_no)
+    gtk_widget_show(_w.button_no);
+}
+
+void
+DialogWindow::init_misc(const char *title, const char *text, GCallback callback)
 {
-  _window = create_dialog_window();
+  _dialog_result = GTK_RESPONSE_NONE;
+
+  _window = get_widget("dialog_window");
+  if (_delete_handler_id != 0) {
+      g_signal_handler_disconnect(_window, _delete_handler_id);
+  }
+  _delete_handler_id = g_signal_connect(_window, "delete_event", callback, this);
 
   gtk_window_set_title(GTK_WINDOW(_window), title);
 
@@ -153,52 +225,28 @@ DialogWindow::init_misc(const char *title, const char *text)
 void
 DialogWindow::init_ok(const char *title, const char *text)
 {
-  init_misc(title, text);
-  g_signal_connect(G_OBJECT(_window), "delete_event", G_CALLBACK(delete_event_ok), this);
-
-  /*
-   *  image
-   */
-  GtkWidget *image = get_widget("header_image_info");
-  gtk_widget_show(image);
-
-  /*
-   *  ok button
-   */
-  GtkWidget *button_ok = get_widget("dialog_button_ok");
-  gtk_widget_show(button_ok);
-  g_signal_connect(G_OBJECT(button_ok), "clicked", G_CALLBACK(ok), this);
-
-  gtk_widget_show(_window);
+  init_misc(title, text, G_CALLBACK(delete_event_ok));
+  show_buttons(true, false, false, false);
+  gtk_widget_show(_w.image_info);
+  show();
 }
 
 void
 DialogWindow::init_yes_no(const char *title, const char *text)
 {
-  init_misc(title, text);
-  g_signal_connect(G_OBJECT(_window), "delete_event", G_CALLBACK(delete_event_yes_no), this);
+  init_misc(title, text, G_CALLBACK(delete_event_yes_no));
+  show_buttons(false, false, true, true);
+  gtk_widget_show(_w.image_question);
+  show();
+}
 
-  /*
-   *  image
-   */
-  GtkWidget *image = get_widget("header_image_question");
-  gtk_widget_show(image);
-
-  /*
-   *  yes button
-   */
-  GtkWidget *button_yes = get_widget("dialog_button_yes");
-  gtk_widget_show(button_yes);
-  g_signal_connect(G_OBJECT(button_yes), "clicked", G_CALLBACK(yes), this);
-
-  /*
-   *  no button
-   */
-  GtkWidget *button_no = get_widget("dialog_button_no");
-  gtk_widget_show(button_no);
-  g_signal_connect(G_OBJECT(button_no), "clicked", G_CALLBACK(no), this);
-
-  gtk_widget_show(_window);
+void
+DialogWindow::init_yes_no_cancel(const char *title, const char *text)
+{
+  init_misc(title, text, G_CALLBACK(delete_event_yes_no_cancel));
+  show_buttons(false, true, true, true);
+  gtk_widget_show(_w.image_question);
+  show();
 }
 
 void
@@ -213,4 +261,17 @@ DialogWindow::show_dialog_yes_no(const char *title, const char *text)
 {
   _args = NULL;
   init_yes_no(title, text);
+}
+
+void
+DialogWindow::show_dialog_yes_no_cancel(const char *title, const char *text)
+{
+  _args = NULL;
+  init_yes_no_cancel(title, text);
+}
+
+int
+DialogWindow::get_dialog_result(void)
+{
+  return _dialog_result;
 }

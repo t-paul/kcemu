@@ -33,23 +33,25 @@ struct _key_struct {
   int           key_val;
   GdkRectangle  rect;
   GdkRegion    *region;
+  const char   *info;
 };
 
 class KeyboardWindow : public UI_Gtk_Window
 {
  private:
   struct {
-    GtkWidget *vbox;
+    GtkWidget *notebook;
     GtkWidget *eventbox;
     GtkWidget *canvas;
-    GtkWidget *label;
-    GtkWidget *separator;
-    GtkWidget *close;
+    GtkWidget *not_configured_label;
+    GtkWidget *label_info;
   } _w;
 
   GdkPixbuf   *_pixbuf_normal;
   GdkPixbuf   *_pixbuf_pressed;
   gboolean     _key_active;
+  gboolean     _has_info;
+  gint         _delay;
 
   struct _key_struct _keys[256];
   struct _key_struct *_key_pressed;
@@ -65,8 +67,9 @@ class KeyboardWindow : public UI_Gtk_Window
 
   GdkPixbuf * load_pixmap(const char *keymap_dir, char *filename_buffer);
 
-  void debug_regions(GdkEventMotion *event);
+  void check_regions(GdkEventMotion *event);
 
+  static gboolean timeout_callback(gpointer data);
   static gboolean sf_expose(GtkWidget *widget, GdkEventExpose *event, gpointer data);
   static gboolean sf_motion_notify(GtkWidget *widget, GdkEventMotion *event, gpointer data);
   static gboolean sf_button_press(GtkWidget *widget, GdkEventButton *event, gpointer data);
@@ -75,7 +78,7 @@ class KeyboardWindow : public UI_Gtk_Window
   static gboolean sf_key_release(GtkWidget *widget, GdkEventKey *event, gpointer data);
 
  public:
-  KeyboardWindow(void);
+  KeyboardWindow(const char *glade_xml_file);
   virtual ~KeyboardWindow(void);
 };
 

@@ -23,8 +23,8 @@
 #include <fstream>
 
 #include "kc/system.h"
+#include "kc/prefs/prefs.h"
 
-#include "kc/kc.h"
 #include "kc/z80.h"
 #include "kc/memory7.h"
 
@@ -62,7 +62,7 @@ Memory7::Memory7(void) : Memory()
 
   string z9001_os_rom;
   string z9001_basic_rom;
-  kc_variant_t v = get_kc_variant();
+  kc_variant_t v = Preferences::instance()->get_kc_variant();
   if ((v == KC_VARIANT_87_20) || (v == KC_VARIANT_87_21))
     {
       z9001_os_rom = z9001_romdir + "/os____f0.87b";

@@ -23,6 +23,7 @@
 #include <iomanip>
 
 #include "kc/system.h"
+#include "kc/prefs/prefs.h"
 
 #include "kc/z80.h"
 #include "kc/keys.h"
@@ -50,7 +51,7 @@ Keyboard0::init(void)
   _ext = 0;
   _key = 0;
   _keysym = 0;
-  _variant = get_kc_variant();
+  _variant = Preferences::instance()->get_kc_variant();
 }
 
 void

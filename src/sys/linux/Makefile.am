@@ -10,4 +10,6 @@ libsys_linux_a_SOURCES = \
 	sys_basename.c \
 	sys_localtime.c \
 	sys_gettimeofday.c \
-	sys_getprogrampath.c
+	sys_getprogrampath.c \
+	sys_gethome.c \
+	sys_mkdir.c

@@ -31,10 +31,10 @@
 
 #include "kc/system.h"
 
-#include "kc/rc.h"
 #include "kc/z80.h"
 #include "kc/daisy.h"
 #include "kc/mod_js.h"
+#include "kc/prefs/prefs.h"
 
 #include "ui/status.h"
 
@@ -62,7 +62,7 @@ PIOJoystick::~PIOJoystick(void)
 const char *
 PIOJoystick::check_joystick_device(void)
 {
-  const char *dev = RC::instance()->get_string("Joystick Device", NULL);
+  const char *dev = Preferences::instance()->get_string_value("joystick_device", NULL);
   if (dev != NULL)
     return dev;
 

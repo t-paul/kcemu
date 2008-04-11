@@ -57,7 +57,7 @@ class DiskWindow : public UI_Gtk_Window
   static void sf_disk_attach(GtkWidget *widget, gpointer data);
 
  public:
-  DiskWindow(void);
+  DiskWindow(const char *glade_xml_file);
   virtual ~DiskWindow(void);
 
   virtual void set_name(int idx, const char *name);

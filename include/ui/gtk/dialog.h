@@ -1,8 +1,8 @@
 /*
  *  KCemu -- the KC 85/3 and KC 85/4 Emulator
- *  Copyright (C) 1997-2006 Torsten Paul
+ *  Copyright (C) 1997-2008 Torsten Paul
  *
- *  $Id: dialog.h,v 1.4 2002/06/09 14:24:32 torsten_paul Exp $
+ *  $Id$
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -34,29 +34,48 @@ class DialogWindow : public UI_Gtk_Window, public CMD
 {
  private:
   CMD_Args *_args;
+  int _dialog_result;
+  gint _delete_handler_id;
 
+  struct {
+      GtkWidget *button_ok;
+      GtkWidget *button_cancel;
+      GtkWidget *button_yes;
+      GtkWidget *button_no;
+      GtkWidget *image_info;
+      GtkWidget *image_question;
+  } _w;
+  
  public:
-  DialogWindow(void);
+  DialogWindow(const char *glade_xml_file);
   virtual ~DialogWindow(void);
   
  protected:
   void init(void);
   void init_ok(const char *title, const char *text);
   void init_yes_no(const char *title, const char *text);
-  void init_misc(const char *title, const char *text);
+  void init_yes_no_cancel(const char *title, const char *text);
+  void init_misc(const char *title, const char *text, GCallback callback);
+  
+  void show_buttons(bool button_ok, bool button_cancel, bool button_yes, bool button_no);
 
   static void ok(GtkWidget */*widget*/, gpointer data);
   static void no(GtkWidget */*widget*/, gpointer data);
   static void yes(GtkWidget */*widget*/, gpointer data);
+  static void cancel(GtkWidget */*widget*/, gpointer data);
 
   static int delete_event_ok(GtkWidget *widget, GdkEvent *event, gpointer data);
   static int delete_event_yes_no(GtkWidget *widget, GdkEvent *event, gpointer data);
+  static int delete_event_yes_no_cancel(GtkWidget *widget, GdkEvent *event, gpointer data);
 
  public:
   void execute(CMD_Args *args, CMD_Context context);
 
   void show_dialog_ok(const char *title, const char *text);
   void show_dialog_yes_no(const char *title, const char *text);
+  void show_dialog_yes_no_cancel(const char *title, const char *text);
+  
+  int get_dialog_result(void);
 };
 
 

@@ -269,7 +269,7 @@ InfoWindow::create_page_cpu(void)
   GtkWidget *w;
   unsigned int a;
   struct {
-    int reg; char *name; int r1, c1, r2, c2, led;
+    int reg; const char *name; int r1, c1, r2, c2, led;
   } r[] = {
     {  A,  "A", 0, 1, 0, 1,  TRUE },
     {  F,  "F", 1, 2, 0, 1,  TRUE },

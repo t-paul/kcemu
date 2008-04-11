@@ -129,12 +129,12 @@
  */
 
 #include <string>
-#include <string.h>
 
 #include "kc/system.h"
+#include "kc/prefs/prefs.h"
+#include "kc/prefs/strlist.h"
 
 #include "kc/kc.h"
-#include "kc/rc.h"
 #include "kc/mod_dio.h"
 #include "kc/mod_ram.h"
 #include "kc/mod_ram1.h"
@@ -185,6 +185,9 @@ ModuleList::ModuleList(void)
   string kc85_romdir = datadir + "/roms/kc85";
   string z9001_romdir = datadir + "/roms/z9001";
 
+  kc_type_t kc_type = Preferences::instance()->get_kc_type();
+  kc_variant_t kc_variant = Preferences::instance()->get_kc_variant();
+  
   /*
    *  placeholder for a not present module ;-)
    */
@@ -340,6 +343,13 @@ ModuleList::ModuleList(void)
   */
 
   /*
+   *  kc-caos (kc85/1)
+   */
+  string z9001_kc_caos_rom = z9001_romdir + "/kc_caos.rom";
+  m = new ModuleROM1(z9001_kc_caos_rom.c_str(), "KC-CAOS", 0x8000, 0x1000);
+  _mod_list.push_back(new ModuleListEntry(_("KC-CAOS 3.1 (8000h-8fffh)"), m, KC_TYPE_85_1_CLASS));
+
+  /*
    *  192 KByte RAM/EPROM module (kc85/1)
    */
   string z9001_192k_d2_rom = z9001_romdir + "/192k__d2.851";
@@ -383,11 +393,12 @@ ModuleList::ModuleList(void)
   _color_expansion = new ModuleListEntry(_("IRM Color Expansion"), m, KC_TYPE_NONE);
   _mod_list.push_back(_color_expansion);
   _init_color_expansion = 0;
-  if (get_kc_type() == KC_TYPE_85_1)
-    if (get_kc_variant() == KC_VARIANT_85_1_11)
+  
+  if (kc_type == KC_TYPE_85_1)
+    if (kc_variant == KC_VARIANT_85_1_11)
       _init_color_expansion = _color_expansion;
-  if (get_kc_type() == KC_TYPE_87)
-    if ((get_kc_variant() != KC_VARIANT_87_10) && (get_kc_variant() != KC_VARIANT_87_20))
+  if (kc_type == KC_TYPE_87)
+    if ((kc_variant != KC_VARIANT_87_10) && (kc_variant != KC_VARIANT_87_20))
       _init_color_expansion = _color_expansion;
 
   /*
@@ -427,11 +438,8 @@ ModuleList::ModuleList(void)
    *  V24 module
    */
 #ifdef HOST_OS_LINUX
-  if (RC::instance()->get_int("Enable V24-Module"))
-    {
-      m = new ModuleV24("M003", 0xee);
-      _mod_list.push_back(new ModuleListEntry(_("M003: V24"), m, KC_TYPE_85_2_CLASS));
-    }
+    m = new ModuleV24("M003", 0xee);
+    _mod_list.push_back(new ModuleListEntry(_("M003: V24"), m, KC_TYPE_85_2_CLASS));
 #endif /* HOST_OS_LINUX */
 
   /*
@@ -534,9 +542,11 @@ ModuleList::ModuleList(void)
   ModuleListEntry *mod_floppy_f8 = new ModuleListEntry(_("Floppy Disk Basis F8"), m, KC_TYPE_NONE);
   _mod_list.push_back(mod_floppy_f8);
 
+  int d004_enabled = Preferences::instance()->get_int_value("d004", 0);
+  
   _init_floppy_basis_f8 = 0;
-  if (get_kc_type() & KC_TYPE_85_2_CLASS)
-    if (RC::instance()->get_int("Floppy Disk Basis", 0))
+  if (kc_type & KC_TYPE_85_2_CLASS)
+    if (d004_enabled)
       _init_floppy_basis_f8 = mod_floppy_f8;
 
   /*
@@ -548,38 +558,38 @@ ModuleList::ModuleList(void)
   _mod_list.push_back(mod_floppy_fc);
 
   _init_floppy_basis_fc = 0;
-  if (get_kc_type() & KC_TYPE_85_2_CLASS)
-    if (RC::instance()->get_int("Floppy Disk Basis", 0))
+  if (kc_type & KC_TYPE_85_2_CLASS)
+    if (d004_enabled)
       _init_floppy_basis_fc = mod_floppy_fc;
   
-  bool swap_floppy_roms = (get_kc_type() == KC_TYPE_85_5) ? true : false;
-  if (RC::instance()->get_int("Swap Floppy ROMs", 0))
+  bool swap_floppy_roms = (kc_type == KC_TYPE_85_5) ? true : false;
+  if (Preferences::instance()->get_int_value("d004_swap_roms", 0))
     swap_floppy_roms = !swap_floppy_roms;
 
-  if (get_kc_type() & KC_TYPE_85_2_CLASS)
-    if (RC::instance()->get_int("Floppy Disk Basis", 0))
+  if (kc_type & KC_TYPE_85_2_CLASS)
+    if (d004_enabled)
       if (swap_floppy_roms)
 	{
 	  _init_floppy_basis_fc = _init_floppy_basis_f8;
 	  _init_floppy_basis_f8 = mod_floppy_fc;
 	}
     
-  if (get_kc_type() & KC_TYPE_85_2_CLASS)
-    if (!RC::instance()->get_int("Enable Second Floppy ROM", 0))
+  if (kc_type & KC_TYPE_85_2_CLASS)
+    if (!Preferences::instance()->get_int_value("d004_f8", 0))
       _init_floppy_basis_f8 = 0;
 
-  _nr_of_bd = RC::instance()->get_int("Busdrivers");
+  _nr_of_bd = Preferences::instance()->get_int_value("busdrivers", 0);
   if (_nr_of_bd < 0)
     _nr_of_bd = 0;
   if (_nr_of_bd > MAX_BD)
     _nr_of_bd = MAX_BD;
-  if (get_kc_type() & KC_TYPE_85_1_CLASS)
+  if (kc_type & KC_TYPE_85_1_CLASS)
     _nr_of_bd = 0;
-  if (get_kc_type() & KC_TYPE_LC80)
+  if (kc_type & KC_TYPE_LC80)
     _nr_of_bd = 1;
 
   int cnt;
-  switch (get_kc_type())
+  switch (kc_type)
     {
     case KC_TYPE_85_1:
     case KC_TYPE_87:
@@ -610,6 +620,7 @@ ModuleList::ModuleList(void)
 void
 ModuleList::add_custom_modules(void)
 {
+#if 0
   for (int a = 0;a < 10;a++)
     {
       const char *name = RC::instance()->get_string_i(a, "Custom ROM Module");
@@ -639,6 +650,7 @@ ModuleList::add_custom_modules(void)
       ModuleListEntry *entry = new ModuleListEntry(text, m, KC_TYPE_85_2_CLASS);
       _mod_list.push_back(entry);
     }
+#endif
 }
 
 void
@@ -667,7 +679,7 @@ ModuleList::init_modules(int max_modules)
 int
 ModuleList::init_modules_autostart(int idx)
 {
-  if (!(get_kc_type() & KC_TYPE_85_2_CLASS))
+  if (!(Preferences::instance()->get_kc_type() & KC_TYPE_85_2_CLASS))
     return idx;
 
   if (kcemu_autostart_file == NULL)
@@ -770,12 +782,13 @@ ModuleList::init_modules_autostart(int idx)
 int
 ModuleList::init_modules_configfile(int idx, int max_modules)
 {
-  for (int a = 0;a < max_modules;a++)
-    {
-      const char *mod = RC::instance()->get_string_i(a, "Module");
-      if (mod)
-	_init_mod[idx++] = strdup(mod);
-    }
+  StringList list(Preferences::instance()->get_string_value("modules", ""));
+  
+  int a = 0;
+  for (StringList::iterator it = list.begin();(it != list.end()) && (a < max_modules);it++) {
+	_init_mod[idx++] = strdup((*it).c_str());
+        a++;
+  }
 
   return idx;
 }

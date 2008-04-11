@@ -30,8 +30,9 @@
 #include <gdk/gdkkeysyms.h>
 
 #include "kc/system.h"
+#include "kc/prefs/types.h"
+#include "kc/prefs/prefs.h"
 
-#include "kc/rc.h"
 #include "kc/z80.h"
 #include "kc/keys.h"
 #include "kc/memory.h" // text_update()
@@ -39,18 +40,14 @@
 
 #include "cmd/cmd.h"
 
-/*  hmm, Xlib.h defines Status as int :-( */
-#undef Status
 #include "ui/error.h"
-#include "ui/status.h"
-#include "ui/hsv2rgb.h"
 #include "ui/gtk/cmd.h"
 
 #include "ui/gtk/debug.h"
 #include "ui/gtk/ui_gtk.h"
-#include "ui/gtk/glade/glade_util.h"
 
 #include "ui/gtk/wav.h"
+#include "ui/gtk/main.h"
 #include "ui/gtk/help.h"
 #include "ui/gtk/tape.h"
 #include "ui/gtk/disk.h"
@@ -63,6 +60,23 @@
 #include "ui/gtk/keyboard.h"
 #include "ui/gtk/copying.h"
 #include "ui/gtk/tapeadd.h"
+#include "ui/gtk/options.h"
+#include "ui/gtk/selector.h"
+#include "ui/gtk/savemem.h"
+
+#include "ui/gtk/ui_gtk0.h"
+#include "ui/gtk/ui_gtk1.h"
+#include "ui/gtk/ui_gtk3.h"
+#include "ui/gtk/ui_gtk4.h"
+#include "ui/gtk/ui_gtk6.h"
+#include "ui/gtk/ui_gtk8.h"
+#include "ui/gtk/ui_gtk9.h"
+#include "ui/gtk/ui_gtk_kramermc.h"
+#include "ui/gtk/ui_gtk_muglerpc.h"
+#include "ui/gtk/ui_gtk_vcs80.h"
+#include "ui/gtk/ui_gtk_c80.h"
+
+#include "ui/generic/ui_0.h"
 
 #include "libdbg/dbg.h"
 
@@ -70,1569 +84,857 @@ using namespace std;
 
 static UI_Gtk *self;
 
-static const char * const
-cleanup_path(const char * const path)
-{
-  int len = strlen(path);
-  char *buffer = new char[len + 1];
-
-  char *dst = buffer;
-  const char * src = path;
-  for (int a = 0;a < len;a++)
-    {
-      if (*src == '_')
-	src++;
-      else
-	*dst++ = *src++;
-    }
-  *dst = '\0';
-
-  return buffer;
-}
-
-class CMD_ui_toggle : public CMD
-{
+class CMD_ui_toggle : public CMD {
 private:
-  UI_Gtk *_ui;
-  
+    UI_Gtk *_w;
+    
 public:
-  CMD_ui_toggle(UI_Gtk *ui) : CMD("ui-toggle")
-    {
-      _ui = ui;
-      register_cmd("ui-status-bar-toggle", 0);
-      register_cmd("ui-menu-bar-toggle", 1);
-      register_cmd("ui-speed-limit-toggle", 2);
-      register_cmd("ui-zoom-1", 3);
-      register_cmd("ui-zoom-2", 4);
-      register_cmd("ui-zoom-3", 5);
-      register_cmd("ui-display-effects-toggle", 6);
+    CMD_ui_toggle(UI_Gtk *w) : CMD("ui-toggle") {
+        _w = w;
+        register_cmd("ui-speed-limit-toggle", 0);
+        register_cmd("ui-zoom-1", 1);
+        register_cmd("ui-zoom-2", 2);
+        register_cmd("ui-zoom-3", 3);
+        register_cmd("ui-display-effects-toggle", 4);
     }
-  
-  void execute(CMD_Args *args, CMD_Context context)
-    {
-      switch (context)
-	{
-	case 0:
-	  _ui->status_bar_toggle();
-	  break;
-	case 1:
-	  _ui->menu_bar_toggle();
-	  break;
-	case 2:
-	  _ui->speed_limit_toggle();
-	  break;
-	case 3:
-	case 4:
-	case 5:
-	  _ui->gtk_zoom(context - 2);
-	  break;
-	case 6:
-	  _ui->display_effects_toggle();
-	  break;
-	}
+    
+    void execute(CMD_Args *args, CMD_Context context) {
+        switch (context) {
+            case 0:
+                _w->speed_limit_toggle();
+                break;
+            case 1:
+            case 2:
+            case 3:
+                _w->gtk_zoom(context);
+                break;
+            case 4:
+                _w->display_effects_toggle();
+                break;
+        }
     }
 };
 
-class CMD_update_colortable : public CMD
-{
+class CMD_update_colortable : public CMD {
 private:
-  UI_Gtk *_ui;
-  ColorWindow *_colwin;
-
+    UI_Gtk *_ui;
+    ColorWindow *_colwin;
+    
 public:
-  CMD_update_colortable(UI_Gtk *ui, ColorWindow *colwin) : CMD("ui-update-colortable")
-    {
-      _ui = ui;
-      _colwin = colwin;
-      register_cmd("ui-update-colortable");
+    CMD_update_colortable(UI_Gtk *ui, ColorWindow *colwin) : CMD("ui-update-colortable") {
+        _ui = ui;
+        _colwin = colwin;
+        register_cmd("ui-update-colortable");
     }
-
-  void execute(CMD_Args *args, CMD_Context context)
-    {
-      _ui->allocate_colors(_colwin->get_saturation_fg(),
-			   _colwin->get_saturation_bg(),
-			   _colwin->get_brightness_fg(),
-			   _colwin->get_brightness_bg(),
-			   _colwin->get_black_level(),
-			   _colwin->get_white_level());
-      _ui->update(true, true);
+    
+    void execute(CMD_Args *args, CMD_Context context) {
+        _ui->allocate_colors(_colwin->get_saturation_fg(),
+                _colwin->get_saturation_bg(),
+                _colwin->get_brightness_fg(),
+                _colwin->get_brightness_bg(),
+                _colwin->get_black_level(),
+                _colwin->get_white_level());
+        _ui->update(true, true);
     }
 };
 
 void
-UI_Gtk::attach_remote_listener(void)
-{
-  GdkAtom atom;
-
-  atom = gdk_atom_intern("_KCEMU_REMOTE_COMMAND", FALSE);
-  gdk_property_change(_main.window->window,
-                      atom, GDK_TARGET_STRING, 8, GDK_PROP_MODE_REPLACE,
-                      (unsigned char *)"", 1);
-  gdk_flush();
+        UI_Gtk::attach_remote_listener(void) {
+//  GdkAtom atom;
+//
+//  atom = gdk_atom_intern("_KCEMU_REMOTE_COMMAND", FALSE);
+//  gdk_property_change(_main.window->window,
+//                      atom, GDK_TARGET_STRING, 8, GDK_PROP_MODE_REPLACE,
+//                      (unsigned char *)"", 1);
+//  gdk_flush();
 }
 
 gboolean
 UI_Gtk::property_change(GtkWidget *widget,
-                        GdkEventProperty *event,
-                        gpointer data)
-{
-  gboolean ret;
-  guchar *prop_data;
-  char *ptr, *val, *atom;
-  GdkAtom actual_property_type;
-  gint    actual_format, actual_length;
-  CMD_Args *args;
-
-  UI_Gtk *self = (UI_Gtk *)data;
-
-  if (event == NULL)
+        GdkEventProperty *event,
+        gpointer data) {
+//  gboolean ret;
+//  guchar *prop_data;
+//  char *ptr, *val, *atom;
+//  GdkAtom actual_property_type;
+//  gint    actual_format, actual_length;
+//  CMD_Args *args;
+//
+//  UI_Gtk *self = (UI_Gtk *)data;
+//
+//  if (event == NULL)
+//    return TRUE;
+//
+//  atom = gdk_atom_name(event->atom);
+//  if (atom == NULL)
+//    return TRUE;
+//
+//  if (strcmp(atom, "_KCEMU_REMOTE_COMMAND") == 0)
+//    {
+//      DBG(1, form("KCemu/UI/remote",
+//                  "property_change: %s\n",
+//                  atom));
+//
+//      prop_data = NULL;
+//      ret = gdk_property_get(self->_main.window->window,
+//			     event->atom, GDK_TARGET_STRING,
+//			     0, (65536 / sizeof(long)), FALSE,
+//			     &actual_property_type,
+//			     &actual_format, &actual_length,
+//			     &prop_data);
+//
+//      if (!ret || (*prop_data == '\0'))
+//	{
+//	  DBG(1, form("KCemu/UI/remote",
+//		      "empty or invalid property!\n"));
+//	}
+//      else
+//	{
+//	  ptr = (char *)prop_data;
+//	  DBG(1, form("KCemu/UI/remote",
+//		      "command: %s'\n",
+//		      ptr));
+//	  args = new CMD_Args();
+//	  while (242)
+//	    {
+//	      ptr += strlen(ptr) + 1;
+//	      if ((ptr - (char *)prop_data) >= actual_length)
+//		break;
+//	      val = strchr(ptr, '=');
+//	      if (!val)
+//		continue;
+//	      *val++ = '\0';
+//	      DBG(1, form("KCemu/UI/remote",
+//			  " arg: %s -> '%s'\n",
+//			  ptr, val));
+//	      args->set_string_arg(ptr, val);
+//	    }
+//
+//	  CMD_EXEC_ARGS((const char *)prop_data, args);
+//	}
+//
+//      if (prop_data != NULL)
+//	g_free(prop_data);
+//
+//    }
+//
+//  g_free(atom);
+//
     return TRUE;
-
-  atom = gdk_atom_name(event->atom);
-  if (atom == NULL)
-    return TRUE;
-  
-  if (strcmp(atom, "_KCEMU_REMOTE_COMMAND") == 0)
-    {
-      DBG(1, form("KCemu/UI/remote",
-                  "property_change: %s\n",
-                  atom));
-      
-      prop_data = NULL;
-      ret = gdk_property_get(self->_main.window->window,
-			     event->atom, GDK_TARGET_STRING,
-			     0, (65536 / sizeof(long)), FALSE,
-			     &actual_property_type,
-			     &actual_format, &actual_length,
-			     &prop_data);
-      
-      if (!ret || (*prop_data == '\0'))
-	{
-	  DBG(1, form("KCemu/UI/remote",
-		      "empty or invalid property!\n"));
-	}
-      else
-	{
-	  ptr = (char *)prop_data;
-	  DBG(1, form("KCemu/UI/remote",
-		      "command: %s'\n",
-		      ptr));
-	  args = new CMD_Args();
-	  while (242)
-	    {
-	      ptr += strlen(ptr) + 1;
-	      if ((ptr - (char *)prop_data) >= actual_length)
-		break;
-	      val = strchr(ptr, '=');
-	      if (!val)
-		continue;
-	      *val++ = '\0';
-	      DBG(1, form("KCemu/UI/remote",
-			  " arg: %s -> '%s'\n",
-			  ptr, val));
-	      args->set_string_arg(ptr, val);
-	    }
-	  
-	  CMD_EXEC_ARGS((const char *)prop_data, args);
-	}
-      
-      if (prop_data != NULL)
-	g_free(prop_data);
-      
-    }
-  
-  g_free(atom);
-
-  return TRUE;
 }
 
 void
-UI_Gtk::idle(void)
-{
-  gtk_main_quit();
+UI_Gtk::idle(void) {
+    gtk_main_quit();
 }
 
 void
 UI_Gtk::sf_selection_received(GtkWidget *widget,
-                              GtkSelectionData *sel_data,
-                              gpointer *data)
-{
-  GdkAtom atom;
-  UI_Gtk *self;
-  CMD_Args *args;
-
-  self = (UI_Gtk *)data;
-  if (sel_data->length < 0)
-    return;
-
-  atom = gdk_atom_intern("TEXT", FALSE);
-  if (atom == GDK_NONE)
-    return;
-
-  /*
-   *  may check sel_data->type here...
-   */
-
-  // printf("selection (%d bytes) = %s\n", sel_data->length, sel_data->data);
-  args = new CMD_Args();
-  args->set_string_arg("text", (const char *)sel_data->data);
-  CMD_EXEC_ARGS("keyboard-replay", args);
+        GtkSelectionData *sel_data,
+        gpointer *data) {
+    GdkAtom atom;
+    UI_Gtk *self;
+    CMD_Args *args;
+    
+    self = (UI_Gtk *)data;
+    if (sel_data->length < 0)
+        return;
+    
+    atom = gdk_atom_intern("TEXT", FALSE);
+    if (atom == GDK_NONE)
+        return;
+    
+    /*
+     *  may check sel_data->type here...
+     */
+    
+    // printf("selection (%d bytes) = %s\n", sel_data->length, sel_data->data);
+    args = new CMD_Args();
+    args->set_string_arg("text", (const char *)sel_data->data);
+    CMD_EXEC_ARGS("keyboard-replay", args);
 }
 
 void
-UI_Gtk::sf_button_press(GtkWidget */*widget*/, GdkEventButton *event)
-{
-  GdkAtom atom;
-
-  switch (event->button)
-    {
-    case 2:
-      /* hmm, is TEXT the correct selection type ??? */
-      atom = gdk_atom_intern("TEXT", FALSE);
-      if (atom == GDK_NONE)
-        break;
-      gtk_selection_convert(self->_main.window,
-                            GDK_SELECTION_PRIMARY,
-                            atom,
-                            GDK_CURRENT_TIME);
-
-      break;
-    case 3:
-      gtk_menu_popup(GTK_MENU(self->_main.menu), NULL, NULL, NULL, NULL,
-                     3, event->time);
-      break;
+UI_Gtk::sf_expose(void) {
+    static int x = 1;
+    
+    if (ui) ui->update(1);
+    if (x) {
+        x = 0;
+        self->attach_remote_listener();
     }
 }
 
 void
-UI_Gtk::sf_expose(void)
-{
-  static int x = 1;
-
-  if (ui) ui->update(1);
-  if (x)
-    {
-      x = 0;
-      self->attach_remote_listener();
-    }      
-}
-
-void
-UI_Gtk::key_press_release(GdkEventKey *event, bool press)
-{
-  int c = 0;
-  int key_code;
-
-  key_code = event->hardware_keycode;
-
-  switch (event->keyval)
-    {
-    case GDK_Alt_L:
-    case GDK_Alt_R:
-    case GDK_Meta_L:
-    case GDK_Meta_R:
-    case GDK_Super_L:
-    case GDK_Super_R:
-    case GDK_Hyper_L:
-    case GDK_Hyper_R:          c = KC_KEY_ALT;     break;
-    case GDK_ISO_Level3_Shift:
-    case GDK_Mode_switch:      c = KC_KEY_ALT_GR;  break;
-    case GDK_Shift_L:
-    case GDK_Shift_R:          c = KC_KEY_SHIFT;   break;
-    case GDK_Control_L:
-    case GDK_Control_R:        c = KC_KEY_CONTROL; break;
-    case GDK_Left:
-    case GDK_KP_Left:          c = KC_KEY_LEFT;    break;
-    case GDK_Right:
-    case GDK_KP_Right:         c = KC_KEY_RIGHT;   break;
-    case GDK_Up:
-    case GDK_KP_Up:            c = KC_KEY_UP;      break;
-    case GDK_Down:
-    case GDK_KP_Down:          c = KC_KEY_DOWN;    break;
-    case GDK_Escape:           c = KC_KEY_ESC;     break;
-    case GDK_Home:             c = KC_KEY_HOME;    break;
-    case GDK_End:              c = KC_KEY_END;     break;
-    case GDK_Pause:            c = KC_KEY_PAUSE;   break;
-    case GDK_Print:            c = KC_KEY_PRINT;   break;
-    case GDK_Delete:
-    case GDK_KP_Delete:        c = KC_KEY_DEL;     break;
-    case GDK_Insert:
-    case GDK_KP_Insert:        c = KC_KEY_INSERT;  break;
-    case GDK_Page_Up:
-    case GDK_KP_Page_Up:       c = KC_KEY_PAGE_UP; break;
-    case GDK_Page_Down:
-    case GDK_KP_Page_Down:     c = KC_KEY_PAGE_DOWN; break;
-    case GDK_F1:
-    case GDK_KP_F1:            c = KC_KEY_F1;      break;
-    case GDK_F2:
-    case GDK_KP_F2:            c = KC_KEY_F2;      break;
-    case GDK_F3:
-    case GDK_KP_F3:            c = KC_KEY_F3;      break;
-    case GDK_F4:
-    case GDK_KP_F4:            c = KC_KEY_F4;      break;
-    case GDK_F5:               c = KC_KEY_F5;      break;
-    case GDK_F6:               c = KC_KEY_F6;      break;
-    case GDK_F7:               c = KC_KEY_F7;      break;
-    case GDK_F8:               c = KC_KEY_F8;      break;
-    case GDK_F9:               c = KC_KEY_F9;      break;
-    case GDK_F10:              c = KC_KEY_F10;     break;
-    case GDK_F11:              c = KC_KEY_F11;     break;
-    case GDK_F12:              c = KC_KEY_F12;     break;
-    case GDK_F13:              c = KC_KEY_F13;     break;
-    case GDK_F14:              c = KC_KEY_F14;     break;
-    case GDK_F15:              c = KC_KEY_F15;     break;
-    case GDK_KP_0:             c = '0';            break;
-    case GDK_KP_1:             c = '1';            break;
-    case GDK_KP_2:             c = '2';            break;
-    case GDK_KP_3:             c = '3';            break;
-    case GDK_KP_4:             c = '4';            break;
-    case GDK_KP_5:             c = '5';            break;
-    case GDK_KP_6:             c = '6';            break;
-    case GDK_KP_7:             c = '7';            break;
-    case GDK_KP_8:             c = '8';            break;
-    case GDK_KP_9:             c = '9';            break;
-    case GDK_KP_Equal:         c = '=';            break;
-    case GDK_KP_Multiply:      c = '*';            break;
-    case GDK_KP_Add:           c = '+';            break;
-    case GDK_KP_Subtract:      c = '-';            break;
-    case GDK_KP_Divide:        c = '/';            break;
-    case GDK_KP_Enter:         c = 0x0d;           break;
-    case GDK_dead_circumflex:  c = '^';            break;
-    case GDK_dead_acute:       c = '\'';           break;
-    case GDK_dead_grave:       c = '\'';           break;
-    default:
-      c = event->keyval & 0xff;
-      break;
+UI_Gtk::key_press_release(GdkEventKey *event, bool press) {
+    int c = 0;
+    int key_code;
+    
+    key_code = event->hardware_keycode;
+    
+    switch (event->keyval) {
+        case GDK_Alt_L:
+        case GDK_Alt_R:
+        case GDK_Meta_L:
+        case GDK_Meta_R:
+        case GDK_Super_L:
+        case GDK_Super_R:
+        case GDK_Hyper_L:
+        case GDK_Hyper_R:          c = KC_KEY_ALT;     break;
+        case GDK_ISO_Level3_Shift:
+        case GDK_Mode_switch:      c = KC_KEY_ALT_GR;  break;
+        case GDK_Shift_L:
+        case GDK_Shift_R:          c = KC_KEY_SHIFT;   break;
+        case GDK_Control_L:
+        case GDK_Control_R:        c = KC_KEY_CONTROL; break;
+        case GDK_Left:
+        case GDK_KP_Left:          c = KC_KEY_LEFT;    break;
+        case GDK_Right:
+        case GDK_KP_Right:         c = KC_KEY_RIGHT;   break;
+        case GDK_Up:
+        case GDK_KP_Up:            c = KC_KEY_UP;      break;
+        case GDK_Down:
+        case GDK_KP_Down:          c = KC_KEY_DOWN;    break;
+        case GDK_Escape:           c = KC_KEY_ESC;     break;
+        case GDK_Home:             c = KC_KEY_HOME;    break;
+        case GDK_End:              c = KC_KEY_END;     break;
+        case GDK_Pause:            c = KC_KEY_PAUSE;   break;
+        case GDK_Print:            c = KC_KEY_PRINT;   break;
+        case GDK_Delete:
+        case GDK_KP_Delete:        c = KC_KEY_DEL;     break;
+        case GDK_Insert:
+        case GDK_KP_Insert:        c = KC_KEY_INSERT;  break;
+        case GDK_Page_Up:
+        case GDK_KP_Page_Up:       c = KC_KEY_PAGE_UP; break;
+        case GDK_Page_Down:
+        case GDK_KP_Page_Down:     c = KC_KEY_PAGE_DOWN; break;
+        case GDK_F1:
+        case GDK_KP_F1:            c = KC_KEY_F1;      break;
+        case GDK_F2:
+        case GDK_KP_F2:            c = KC_KEY_F2;      break;
+        case GDK_F3:
+        case GDK_KP_F3:            c = KC_KEY_F3;      break;
+        case GDK_F4:
+        case GDK_KP_F4:            c = KC_KEY_F4;      break;
+        case GDK_F5:               c = KC_KEY_F5;      break;
+        case GDK_F6:               c = KC_KEY_F6;      break;
+        case GDK_F7:               c = KC_KEY_F7;      break;
+        case GDK_F8:               c = KC_KEY_F8;      break;
+        case GDK_F9:               c = KC_KEY_F9;      break;
+        case GDK_F10:              c = KC_KEY_F10;     break;
+        case GDK_F11:              c = KC_KEY_F11;     break;
+        case GDK_F12:              c = KC_KEY_F12;     break;
+        case GDK_F13:              c = KC_KEY_F13;     break;
+        case GDK_F14:              c = KC_KEY_F14;     break;
+        case GDK_F15:              c = KC_KEY_F15;     break;
+        case GDK_KP_0:             c = '0';            break;
+        case GDK_KP_1:             c = '1';            break;
+        case GDK_KP_2:             c = '2';            break;
+        case GDK_KP_3:             c = '3';            break;
+        case GDK_KP_4:             c = '4';            break;
+        case GDK_KP_5:             c = '5';            break;
+        case GDK_KP_6:             c = '6';            break;
+        case GDK_KP_7:             c = '7';            break;
+        case GDK_KP_8:             c = '8';            break;
+        case GDK_KP_9:             c = '9';            break;
+        case GDK_KP_Equal:         c = '=';            break;
+        case GDK_KP_Multiply:      c = '*';            break;
+        case GDK_KP_Add:           c = '+';            break;
+        case GDK_KP_Subtract:      c = '-';            break;
+        case GDK_KP_Divide:        c = '/';            break;
+        case GDK_KP_Enter:         c = 0x0d;           break;
+        case GDK_dead_circumflex:  c = '^';            break;
+        case GDK_dead_acute:       c = '\'';           break;
+        case GDK_dead_grave:       c = '\'';           break;
+        default:
+            c = event->keyval & 0xff;
+            break;
     }
-
-  DBG(2, form("KCemu/UI/key_kc",
-              "%s - keyval = %5d/0x%04x / keycode = %5d -> kccode = %5d/0x%04x\n",
-              press ? "press  " : "release",
-              event->keyval, event->keyval, key_code, c, c));
-  
-  if (press)
-    keyboard->keyPressed(c, key_code);
-  else
-    keyboard->keyReleased(c, key_code);
+    
+    DBG(2, form("KCemu/UI/key_kc",
+            "%s - keyval = %5d/0x%04x / keycode = %5d -> kccode = %5d/0x%04x\n",
+            press ? "press  " : "release",
+            event->keyval, event->keyval, key_code, c, c));
+    
+    if (press)
+        keyboard->keyPressed(c, key_code);
+    else
+        keyboard->keyReleased(c, key_code);
 }
 
 gboolean
-UI_Gtk::sf_key_press(GtkWidget */*widget*/, GdkEventKey *event)
-{
-  DBG(2, form("KCemu/UI/key_press",
-              "key_press:   keyval = %04x, keycode = %04x\n",
-              event->keyval, event->hardware_keycode));
-
-  /*
-   *  Don't handle the key event if the ALT modifier
-   *  is set. This allows for better handling of the
-   *  accelerator key in the menu bar.
-   */
-  if ((event->state & GDK_MOD1_MASK) == GDK_MOD1_MASK)
-    return FALSE;
-
-  key_press_release(event, true);
-  return TRUE;
+UI_Gtk::sf_key_press(GtkWidget */*widget*/, GdkEventKey *event) {
+    DBG(2, form("KCemu/UI/key_press",
+            "key_press:   keyval = %04x, keycode = %04x\n",
+            event->keyval, event->hardware_keycode));
+    
+    /*
+     *  Don't handle the key event if the ALT modifier
+     *  is set. This allows for better handling of the
+     *  accelerator key in the menu bar.
+     */
+    if ((event->state & GDK_MOD1_MASK) == GDK_MOD1_MASK)
+        return FALSE;
+    
+    key_press_release(event, true);
+    return TRUE;
 }
 
 gboolean
-UI_Gtk::sf_key_release(GtkWidget */*widget*/, GdkEventKey *event)
-{
-  DBG(2, form("KCemu/UI/key_release",
-              "key_release: keyval = %04x, keycode = %04x\n",
-              event->keyval, event->hardware_keycode));
-
-  /*
-   *  Don't handle the key event if the ALT modifier
-   *  is set. This allows for better handling of the
-   *  accelerator key in the menu bar.
-   */
-  if ((event->state & GDK_MOD1_MASK) == GDK_MOD1_MASK)
-    return FALSE;
-
-  key_press_release(event, false);
-  return TRUE;
+UI_Gtk::sf_key_release(GtkWidget */*widget*/, GdkEventKey *event) {
+    DBG(2, form("KCemu/UI/key_release",
+            "key_release: keyval = %04x, keycode = %04x\n",
+            event->keyval, event->hardware_keycode));
+    
+    /*
+     *  Don't handle the key event if the ALT modifier
+     *  is set. This allows for better handling of the
+     *  accelerator key in the menu bar.
+     */
+    if ((event->state & GDK_MOD1_MASK) == GDK_MOD1_MASK)
+        return FALSE;
+    
+    key_press_release(event, false);
+    return TRUE;
 }
 
 void
-UI_Gtk::sf_focus_in(GtkWidget * /* widget */, GdkEventFocus *event)
-{
-  DBG(2, form("KCemu/UI/focus_in",
-              "got focus\n"));
-
-  keyboard->keyReleased(-1, -1);
+UI_Gtk::sf_focus_in(GtkWidget * /* widget */, GdkEventFocus *event) {
+    DBG(2, form("KCemu/UI/focus_in",
+            "got focus\n"));
+    
+    keyboard->keyReleased(-1, -1);
 }
 
 void
-UI_Gtk::sf_focus_out(GtkWidget *widget, GdkEventFocus *event)
-{
-  DBG(2, form("KCemu/UI/focus_out",
-              "lost focus\n"));
-
-  keyboard->keyReleased(-1, -1);
+UI_Gtk::sf_focus_out(GtkWidget *widget, GdkEventFocus *event) {
+    DBG(2, form("KCemu/UI/focus_out",
+            "lost focus\n"));
+    
+    keyboard->keyReleased(-1, -1);
 }
 
 void
-UI_Gtk::sf_leave_notify(GtkWidget *widget, GdkEventCrossing *event)
-{
-  keyboard->keyReleased(-1, -1);
+UI_Gtk::sf_leave_notify(GtkWidget *widget, GdkEventCrossing *event) {
+    keyboard->keyReleased(-1, -1);
 }
 
 void
-UI_Gtk::status_bar_toggle(void)
-{
-  if (GTK_WIDGET_VISIBLE(_main.st_hbox))
-    gtk_widget_hide(_main.st_hbox);
-  else
-    gtk_widget_show(_main.st_hbox);
+UI_Gtk::speed_limit_toggle(void) {
+    _speed_limit = !_speed_limit;
 }
 
 void
-UI_Gtk::menu_bar_toggle(void)
-{
-  if (GTK_WIDGET_VISIBLE(_main.menubar))
-    gtk_widget_hide(_main.menubar);
-  else
-    gtk_widget_show(_main.menubar);
-}
-
-void
-UI_Gtk::speed_limit_toggle(void)
-{
-  _speed_limit = !_speed_limit;
-}
-
-void
-UI_Gtk::text_update(void)
-{
+UI_Gtk::text_update(void) {
 #if 0
-  static GdkFont *font = 0;
-  unsigned long val = 0;
-
-  if (font == 0)
-    font = gdk_font_load("fixed");
-
-  byte_t *irm = memory->getIRM();
-  for (int a = 0;a < 8;a++)
-    {
-      val |= (irm[40 * a + 320] & 0xf);
-      val <<= 4;
+    static GdkFont *font = 0;
+    unsigned long val = 0;
+    
+    if (font == 0)
+        font = gdk_font_load("fixed");
+    
+    byte_t *irm = memory->getIRM();
+    for (int a = 0;a < 8;a++) {
+        val |= (irm[40 * a + 320] & 0xf);
+        val <<= 4;
     }
-
-  char buf[100];
-  snprintf(buf, 100, "%08x", val);
-  gdk_draw_string(_text.canvas->window, font, _gc, 10, 10, buf);
+    
+    char buf[100];
+    snprintf(buf, 100, "%08x", val);
+    gdk_draw_string(_text.canvas->window, font, _gc, 10, 10, buf);
 #endif
 }
 
 void
-UI_Gtk::gtk_sync(void)
-{
-  static int count = 0;
-  static bool first = true;
-  static long tv_sec, tv_usec;
-  static long tv1_sec = 0, tv1_usec = 0;
-  static long tv2_sec, tv2_usec;
-  static unsigned long frame = 25;
-  static unsigned long long base, d2;
-  static long basetime_sec = 0, basetime_usec = 0;
-
-  char buf[10];
-  unsigned long timeframe, diff, fps;
-
-  if (++count >= 60)
-    {
-      count = 0;
-      sys_gettimeofday(&tv2_sec, &tv2_usec);
-      diff = ((1000000 * (tv2_sec - tv1_sec)) + (tv2_usec - tv1_usec));
-      fps = 60500000 / diff;
-      sprintf(buf, " %ld fps ", fps);
-      gtk_label_set(GTK_LABEL(_main.st_fps), buf);
-      tv1_sec = tv2_sec;
-      tv1_usec = tv2_usec;
+UI_Gtk::gtk_sync(void) {
+    static int count = 0;
+    static bool first = true;
+    static long tv_sec, tv_usec;
+    static long tv1_sec = 0, tv1_usec = 0;
+    static long tv2_sec, tv2_usec;
+    static unsigned long frame = 25;
+    static unsigned long long base, d2;
+    static long basetime_sec = 0, basetime_usec = 0;
+    
+    unsigned long timeframe, diff, fps;
+    
+    if (++count >= 60) {
+        count = 0;
+        sys_gettimeofday(&tv2_sec, &tv2_usec);
+        diff = ((1000000 * (tv2_sec - tv1_sec)) + (tv2_usec - tv1_usec));
+        fps = 60500000 / diff;
+        _main_window->set_fps(fps);
+        tv1_sec = tv2_sec;
+        tv1_usec = tv2_usec;
     }
-
-  if (first)
-    {
-      first = false;
-      sys_gettimeofday(&tv1_sec, &tv1_usec);
-      sys_gettimeofday(&basetime_sec, &basetime_usec);
-      base = (basetime_sec * 50) + basetime_usec / 20000;
-      base -= 26; // see comment below
+    
+    if (first) {
+        first = false;
+        sys_gettimeofday(&tv1_sec, &tv1_usec);
+        sys_gettimeofday(&basetime_sec, &basetime_usec);
+        base = (basetime_sec * 50) + basetime_usec / 20000;
+        base -= 26; // see comment below
     }
-
-  sys_gettimeofday(&tv_sec, &tv_usec);
-  d2 = (tv_sec * 50) + tv_usec / 20000;
-  timeframe = (unsigned long)(d2 - base);
-  frame++;
-  
-  /*
-   *  because of this test we start with frame = 25 otherwise it
-   *  would fail due to the fact that timeframe is unsigned!
-   */
-  if (frame < (timeframe - 20))
-    {
-      DBG(2, form("KCemu/UI/update",
-                  "counter = %lu, frame = %lu, timeframe = %lu\n",
-                  (unsigned long)z80->getCounter(), frame, timeframe));
-      frame = timeframe;
+    
+    sys_gettimeofday(&tv_sec, &tv_usec);
+    d2 = (tv_sec * 50) + tv_usec / 20000;
+    timeframe = (unsigned long)(d2 - base);
+    frame++;
+    
+    /*
+     *  because of this test we start with frame = 25 otherwise it
+     *  would fail due to the fact that timeframe is unsigned!
+     */
+    if (frame < (timeframe - 20)) {
+        DBG(2, form("KCemu/UI/update",
+                "counter = %lu, frame = %lu, timeframe = %lu\n",
+                (unsigned long)z80->getCounter(), frame, timeframe));
+        frame = timeframe;
     }
-
-  if (_speed_limit)
-    {
-      if (frame > (timeframe + 1))
-	{
-	  sys_usleep(20000 * (frame - timeframe - 1));
-	}
+    
+    if (_speed_limit) {
+        if (frame > (timeframe + 1)) {
+            sys_usleep(20000 * (frame - timeframe - 1));
+        }
     }
-  else
-    {
-      frame = timeframe;
+    else {
+        frame = timeframe;
     }
-
-  /*
-    if (!_auto_skip)
-    {
-    processEvents();
-    update();
+    
+    /*
+     * if (!_auto_skip)
+     * {
+     * processEvents();
+     * update();
+     * }
+     */
+    
+    sys_gettimeofday(&tv_sec, &tv_usec);
+    d2 = (tv_sec * 50) + tv_usec / 20000;
+    timeframe = (unsigned long)(d2 - base);
+    _auto_skip = false;
+    
+    if (frame < timeframe) {
+        if (++_cur_auto_skip > _max_auto_skip)
+            _cur_auto_skip = 0;
+        else
+            _auto_skip = true;
     }
-  */
+}
 
-  sys_gettimeofday(&tv_sec, &tv_usec);
-  d2 = (tv_sec * 50) + tv_usec / 20000;
-  timeframe = (unsigned long)(d2 - base);
-  _auto_skip = false;
+UI_Gtk::UI_Gtk(void) {
+    _ui = 0;
+    _init = false;
+}
 
-  if (frame < timeframe)
-    {
-      if (++_cur_auto_skip > _max_auto_skip)
-	_cur_auto_skip = 0;
-      else
-	_auto_skip = true;
-    }
+UI_Gtk::~UI_Gtk(void) {
+    delete _about_window;
+    delete _help_window;
+    delete _thanks_window;
+    delete _color_window;
+    delete _tape_window;
+    delete _tape_add_window;
+    delete _disk_window;
+    delete _save_memory_window;
+    delete _module_window;
+    delete _keyboard_window;
+    delete _copying_window;
+    delete _options_window;
+    delete _selector_window;
+    delete _debug_window;
+    delete _info_window;
+    delete _wav_window;
+    delete _edit_header_window;
+    delete _dialog_window;
+    delete _file_browser;
+    delete _main_window;
 }
 
 void
-UI_Gtk::hsv_to_gdk_color(double h, double s, double v, GdkColor *col)
-{
-  int r, g, b;
-
-  hsv2rgb(h, s, v, &r, &g, &b);
-  col->red   = r << 8;
-  col->green = g << 8;
-  col->blue  = b << 8;
-}
-
-/*
- *  define some ugly typecasts to suppress some
- *  compiler warnings :-(
- */
-#define CF(func)   ((GtkItemFactoryCallback)(func))
-#define CD(string) ((unsigned int)(string))
-
-void
-UI_Gtk::create_main_window(void)
-{
-  GtkItemFactoryEntry entries[] = {
-    { _("/_Emulator"),                NULL,     NULL,            0,                                       "<Branch>" },
-    { _("/Emulator/_Run..."),         NULL,     CF(cmd_exec_mc), CD("kc-image-run"),                      NULL },
-    { _("/Emulator/_Load..."),        "<alt>L", CF(cmd_exec_mc), CD("kc-image-load"),                     NULL },
-    { _("/Emulator/_Tape..."),        "<alt>T", CF(cmd_exec_mc), CD("ui-tape-window-toggle"),             NULL },
-    { _("/Emulator/_Disk..."),        "<alt>D", CF(cmd_exec_mc), CD("ui-disk-window-toggle"),             NULL },
-    { _("/Emulator/_Module..."),      "<alt>M", CF(cmd_exec_mc), CD("ui-module-window-toggle"),           NULL },
-    { _("/Emulator/A_udio..."),       "<alt>U", CF(cmd_exec_mc), CD("ui-wav-window-toggle"),              NULL },
-    { _("/Emulator/sep1"),            NULL,     NULL,            0,                                       "<Separator>" },
-    { _("/Emulator/R_eset"),          "<alt>R", CF(cmd_exec_mc), CD("emu-reset"),                         NULL },
-    { _("/Emulator/_Power On"),       "<alt>P", CF(cmd_exec_mc), CD("emu-power-on"),                      NULL },
-    { _("/Emulator/sep2"),            NULL,     NULL,            0,                                       "<Separator>" },
-    { _("/Emulator/_Quit Emulator"),  "<alt>Q", CF(cmd_exec_mc), CD("emu-quit"),                          NULL },
-    { _("/_View"),                    NULL,     NULL,            0,                                       "<Branch>" },
-    { _("/View/Zoom x_1"),            "<alt>1", CF(cmd_exec_mc), CD("ui-zoom-1"),                         NULL },
-    { _("/View/Zoom x_2"),            "<alt>2", CF(cmd_exec_mc), CD("ui-zoom-2"),                         NULL },
-    { _("/View/Zoom x_3"),            "<alt>3", CF(cmd_exec_mc), CD("ui-zoom-3"),                         NULL },
-    { _("/View/_Keyboard"),           "<alt>K", CF(cmd_exec_mc), CD("ui-keyboard-window-toggle"),         NULL },
-    { _("/View/_Debugger"),           NULL,     CF(cmd_exec_mc), CD("ui-debug-window-toggle"),            NULL },
-    { _("/View/_Info"),               "<alt>I", CF(cmd_exec_mc), CD("ui-info-window-toggle"),             NULL },
-    { _("/View/_Menubar"),            NULL,     CF(cmd_exec_mc), CD("ui-menu-bar-toggle"),                NULL },
-    { _("/View/_Statusbar"),          NULL,     CF(cmd_exec_mc), CD("ui-status-bar-toggle"),              NULL },
-    { _("/_Options"),        	      NULL,     NULL,            0,                                       "<Branch>" },
-    { _("/Options/_Colors"),  	      "<alt>C", CF(cmd_exec_mc), CD("ui-color-window-toggle"),            NULL },
-    { _("/Options/_Display Effects"), NULL,     CF(cmd_exec_mc), CD("ui-display-effects-toggle"),         "<ToggleItem>" },
-    { _("/Options/sep"),              NULL,     NULL,            0,                                       "<Separator>" },
-    { _("/Options/No _Speed Limit"),  "<alt>G", CF(cmd_exec_mc), CD("ui-speed-limit-toggle"),             "<ToggleItem>" },
-    { _("/_Help"),                    NULL,     NULL,            0,                                       "<LastBranch>" },
-    { _("/Help/_Help"),               NULL,     CF(cmd_exec_mc), CD("ui-help-window-toggle-home"),        NULL },
-    { _("/Help/Help _Index"),         NULL,     CF(cmd_exec_mc), CD("ui-help-window-toggle-index"),       NULL },
-    { _("/Help/_Context Help"),       NULL,     CF(cmd_exec_mc), CD("ui-help-window-context-help"),       NULL },
-    { _("/Help/sep3"),                NULL,     NULL,            0,                                       "<Separator>" },
-    { _("/Help/_About KCemu"),        NULL,     CF(cmd_exec_mc), CD("ui-about-window-toggle"),            NULL },
-    { _("/Help/_Thanks!"),            NULL,     CF(cmd_exec_mc), CD("ui-thanks-window-toggle"),           NULL },
-    { _("/Help/sep4"),                NULL,     NULL,            0,                                       "<Separator>" },
-    { _("/Help/KCemu _Licence"),      NULL,     CF(cmd_exec_mc), CD("ui-copying-window-toggle"),          NULL },
-    { _("/Help/No _Warranty!"),       NULL,     CF(cmd_exec_mc), CD("ui-warranty-window-toggle"),         NULL },
-  };
-  GtkItemFactoryEntry entriesP[] = {
-    { _("/_Run..."),                  NULL,     CF(cmd_exec_mc), CD("kc-image-run"),              	  NULL },
-    { _("/_Load..."),                 NULL,     CF(cmd_exec_mc), CD("kc-image-load"),             	  NULL },
-    { _("/_Tape..."),                 NULL,     CF(cmd_exec_mc), CD("ui-tape-window-toggle"),     	  NULL },
-    { _("/_Disk..."),                 NULL,     CF(cmd_exec_mc), CD("ui-disk-window-toggle"),     	  NULL },
-    { _("/_Module..."),               NULL,     CF(cmd_exec_mc), CD("ui-module-window-toggle"),   	  NULL },
-    { _("/_Audio..."),                NULL,     CF(cmd_exec_mc), CD("ui-wav-window-toggle"),      	  NULL },
-    { _("/sep1"),                     NULL,     NULL,            0,                               	  "<Separator>" },
-    { _("/_View"),                    NULL,     NULL,            0,                               	  "<Branch>" },
-    { _("/View/_Keyboard"),           NULL,     CF(cmd_exec_mc), CD("ui-keyboard-window-toggle"), 	  NULL },
-    { _("/View/_Debugger"),           NULL,     NULL,            0,                               	  NULL },
-    { _("/View/_Info"),               NULL,     NULL,            0,                               	  NULL },
-    { _("/View/_Menubar"),            NULL,     CF(cmd_exec_mc), CD("ui-menu-bar-toggle"),        	  NULL },
-    { _("/View/_Statusbar"),          NULL,     CF(cmd_exec_mc), CD("ui-status-bar-toggle"),      	  NULL },
-    { _("/sep2"),                     NULL,     NULL,            0,                               	  "<Separator>" },
-    { _("/R_eset"),                   NULL,     CF(cmd_exec_mc), CD("emu-reset"),                 	  NULL },
-    { _("/_Power On"),                NULL,     CF(cmd_exec_mc), CD("emu-power-on"),              	  NULL },
-    { _("/sep3"),                     NULL,     NULL,            0,                               	  "<Separator>" },
-    { _("/_Quit Emulator"),           NULL,     CF(cmd_exec_mc), CD("emu-quit"),                  	  NULL },
-  };
-  static GtkTargetEntry targetlist[] = {
-    { "STRING",        0, 1 },
-    { "TEXT",          0, 2 },
-    { "COMPOUND_TEXT", 0, 3 }
-  };
-  gint ntargets  = sizeof(targetlist) / sizeof(targetlist[0]);
-  gint nentries  = sizeof(entries)    / sizeof(entries[0]);
-  gint nentriesP = sizeof(entriesP)   / sizeof(entriesP[0]);
-
-  /*
-   *  main window
-   */
-  _main.window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
-  gtk_widget_set_name(_main.window, "MainWindow");
-  gtk_window_set_title(GTK_WINDOW(_main.window), get_title());
-  gtk_signal_connect(GTK_OBJECT(_main.window), "delete_event",
-                     GTK_SIGNAL_FUNC(cmd_exec_sft), (gpointer)"emu-quit");
-  gtk_signal_connect(GTK_OBJECT(_main.window), "property_notify_event",
-                     GTK_SIGNAL_FUNC(property_change), this);
-  gtk_signal_connect(GTK_OBJECT(_main.window), "selection_received",
-                     GTK_SIGNAL_FUNC(sf_selection_received), this);
-  gtk_selection_add_targets(_main.window, GDK_SELECTION_PRIMARY,
-                            targetlist, ntargets);
-  gtk_signal_connect(GTK_OBJECT(_main.window), "key_press_event",
-		     GTK_SIGNAL_FUNC(UI_Gtk::sf_key_press), NULL);
-  gtk_signal_connect(GTK_OBJECT(_main.window), "key_release_event",
-		     GTK_SIGNAL_FUNC(UI_Gtk::sf_key_release), NULL);
-  gtk_signal_connect(GTK_OBJECT(_main.window), "focus_in_event",
-                     GTK_SIGNAL_FUNC(&UI_Gtk::sf_focus_in), NULL);
-  gtk_signal_connect(GTK_OBJECT(_main.window), "focus_out_event",
-                     GTK_SIGNAL_FUNC(&UI_Gtk::sf_focus_out), NULL);
-  gtk_signal_connect(GTK_OBJECT(_main.window), "button_press_event",
- 		     GTK_SIGNAL_FUNC(UI_Gtk::sf_button_press), NULL);
-  gtk_widget_set_events(_main.window, (GDK_KEY_PRESS_MASK |
-                                       GDK_KEY_RELEASE_MASK |
-                                       GDK_BUTTON_PRESS_MASK |
-				       GDK_PROPERTY_CHANGE_MASK));
-
-  /*
-   *  main vbox
-   */
-  _main.vbox = gtk_vbox_new(FALSE, 0);
-  gtk_container_add(GTK_CONTAINER(_main.window), _main.vbox);
-  gtk_widget_show(_main.vbox);
-
-  /*
-   *  menubar item factory
-   */
-  _main.agroup = gtk_accel_group_new();
-  _main.ifact = gtk_item_factory_new(GTK_TYPE_MENU_BAR, "<KCemu>", _main.agroup);
-  gtk_item_factory_create_items(_main.ifact, nentries, entries, NULL);
-  gtk_window_add_accel_group(GTK_WINDOW(_main.window), _main.agroup); // FIXME
-
-  _main.agroupP = gtk_accel_group_new();
-  _main.ifactP = gtk_item_factory_new(GTK_TYPE_MENU, "<KCemuP>", _main.agroupP);
-  gtk_item_factory_create_items(_main.ifactP, nentriesP, entriesP, NULL);
-
-  /*
-   *  main menu bar
-   */
-  _main.menubar = gtk_item_factory_get_widget(_main.ifact, "<KCemu>");
-  gtk_box_pack_start(GTK_BOX(_main.vbox), _main.menubar, FALSE, TRUE, 0);
-  gtk_widget_show(_main.menubar);
-
-  /*
-   *  popup menu
-   */
-  _main.menu = gtk_item_factory_get_widget(_main.ifactP, "<KCemuP>");
-
-  /*
-   *  main canvas
-   */
-  _main.canvas = gtk_drawing_area_new();
-  gtk_drawing_area_size(GTK_DRAWING_AREA(_main.canvas),
-			get_width(), get_height());
-  gtk_box_pack_start(GTK_BOX(_main.vbox), _main.canvas, FALSE, TRUE, 0);
-  gtk_widget_show(_main.canvas);
-  gtk_widget_set_events(_main.canvas, GDK_EXPOSURE_MASK);
-  gtk_signal_connect(GTK_OBJECT(_main.canvas), "expose_event",
-		     GTK_SIGNAL_FUNC(UI_Gtk::sf_expose), NULL);
-
-  /*
-   *  status hbox
-   */
-  _main.st_hbox = gtk_hbox_new(FALSE, 0);
-  gtk_box_pack_start(GTK_BOX(_main.vbox), _main.st_hbox, FALSE, TRUE, 0);
-  gtk_widget_show(_main.st_hbox);
-
-  /*
-   *  status label for fps display
-   */
-  _main.st_frame = gtk_frame_new(NULL);
-  gtk_frame_set_shadow_type(GTK_FRAME(_main.st_frame), GTK_SHADOW_IN);
-  gtk_box_pack_start(GTK_BOX(_main.st_hbox), _main.st_frame, FALSE, TRUE, 0);
-  gtk_widget_show(_main.st_frame);
-
-  _main.st_fps = gtk_label_new("          ");
-  gtk_container_add(GTK_CONTAINER(_main.st_frame), _main.st_fps);
-  gtk_widget_show(_main.st_fps);
-
-  /*
-   *  statusbar
-   */
-  _main.st_statusbar = gtk_statusbar_new();
-  gtk_box_pack_start(GTK_BOX(_main.st_hbox), _main.st_statusbar,
-                     TRUE, TRUE, 0);
-  gtk_statusbar_set_has_resize_grip(GTK_STATUSBAR(_main.st_statusbar), false);
-  gtk_misc_set_padding(GTK_MISC(GTK_STATUSBAR(_main.st_statusbar)->label), 4, 0); // hmm, is there a better way?
-  gtk_widget_show(_main.st_statusbar);
-
-  string winicon;
-  
-  switch (get_kc_type())
-    {
-    case KC_TYPE_85_1:
-    case KC_TYPE_87:
-      winicon = "kcemu-kc87.xpm";
-      g_object_set_data(G_OBJECT(_main.window), "help-topic", (gpointer)"sys-z9001");
-      break;
-    case KC_TYPE_85_2:
-    case KC_TYPE_85_3:
-    case KC_TYPE_85_4:
-      winicon = "kcemu-kc85.xpm";
-      g_object_set_data(G_OBJECT(_main.window), "help-topic", (gpointer)"sys-kc85");
-      break;
-    case KC_TYPE_85_5:
-      winicon = "kcemu-kc85.xpm";
-      g_object_set_data(G_OBJECT(_main.window), "help-topic", (gpointer)"sys-kc855");
-      break;
-    case KC_TYPE_LC80:
-      winicon = "kcemu-lc80.xpm";
-      g_object_set_data(G_OBJECT(_main.window), "help-topic", (gpointer)"sys-lc80");
-      break;
-    case KC_TYPE_Z1013:
-      winicon = "kcemu-z1013.xpm";
-      g_object_set_data(G_OBJECT(_main.window), "help-topic", (gpointer)"sys-z1013");
-      break;
-    case KC_TYPE_A5105:
-      winicon = "kcemu-bic.xpm";
-      g_object_set_data(G_OBJECT(_main.window), "help-topic", (gpointer)"sys-a5105");
-      break;
-    case KC_TYPE_POLY880:
-      winicon = "kcemu-poly880.xpm";
-      g_object_set_data(G_OBJECT(_main.window), "help-topic", (gpointer)"sys-poly880");
-      break;
-    case KC_TYPE_KRAMERMC:
-      winicon = "kcemu-kramermc.xpm";
-      g_object_set_data(G_OBJECT(_main.window), "help-topic", (gpointer)"sys-kramermc");
-      break;
-    case KC_TYPE_MUGLERPC:
-      winicon = "kcemu-pcm.xpm";
-      g_object_set_data(G_OBJECT(_main.window), "help-topic", (gpointer)"sys-muglerpc");
-      break;
-    case KC_TYPE_VCS80:
-      winicon = "kcemu-vcs80.xpm";
-      g_object_set_data(G_OBJECT(_main.window), "help-topic", (gpointer)"sys-vcs80");
-      break;
-    case KC_TYPE_C80:
-      winicon = "kcemu-c80.xpm";
-      g_object_set_data(G_OBJECT(_main.window), "help-topic", (gpointer)"sys-c80");
-      break;
-    case KC_TYPE_ALL:
-    case KC_TYPE_NONE:
-    case KC_TYPE_85_1_CLASS:
-    case KC_TYPE_85_2_CLASS:
-      DBG(0, form("KCemu/internal_error",
-		  "KCemu: got unhandled value from get_kc_type(): %d\n",
-		  get_kc_type()));
-      break;
-    }
-
-  string datadir(kcemu_datadir);
-  string icondir = datadir + "/icons/";
-  string iconpath = icondir + winicon;
-  string iconpath16 = icondir + "kcemu-winicon_16x16.png";
-  string iconpath32 = icondir + "kcemu-winicon_32x32.png";
-  string iconpath48 = icondir + "kcemu-winicon_48x48.png";
-
-  GdkPixbuf *pixbuf16 = gdk_pixbuf_new_from_file(iconpath16.c_str(), NULL);
-  GdkPixbuf *pixbuf32 = gdk_pixbuf_new_from_file(iconpath32.c_str(), NULL);
-  GdkPixbuf *pixbuf48 = gdk_pixbuf_new_from_file(iconpath48.c_str(), NULL);
-
-  GList *icon_list = NULL;
-  if (pixbuf16 != NULL)
-    icon_list = g_list_append(icon_list, pixbuf16);
-  if (pixbuf32 != NULL)
-    icon_list = g_list_append(icon_list, pixbuf32);
-  if (pixbuf48 != NULL)
-    icon_list = g_list_append(icon_list, pixbuf48);
-
-  // set system dependend icon for main window
-  gtk_window_set_icon_from_file(GTK_WINDOW(_main.window), iconpath.c_str(), NULL);
-
-  // set default icon list for all other windows
-  if (icon_list != NULL)
-    gtk_window_set_default_icon_list(icon_list);
-}
-
-void
-UI_Gtk::setup_ui_defaults(void)
-{
-  const char *path = cleanup_path(_("/Options/_Display Effects"));
-  GtkWidget *widget = gtk_item_factory_get_widget(_main.ifact, path);
-  gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(widget), kcemu_ui_display_effect);
-  delete[] path;
-}
-
-void
-UI_Gtk::create_header_window(void)
-{
-  _header.window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
-  gtk_window_set_title(GTK_WINDOW(_header.window), "Edit Header");
-
-  gtk_widget_show(_header.window);
-}
-
-UI_Gtk::UI_Gtk(void)
-{
-  _gc = NULL;
-  _image = NULL;
-  _init = false;
-}
-
-UI_Gtk::~UI_Gtk(void)
-{
-  gtk_widget_destroy(_main.window);
-        
-  delete _about_window;
-  delete _help_window;
-  delete _thanks_window;
-  delete _color_window;
-  delete _tape_window;
-  delete _tape_add_window;
-  delete _disk_window;
-  delete _module_window;
-  delete _keyboard_window;
-  delete _copying_window;
-  delete _debug_window;
-  delete _info_window;
-  delete _wav_window;
-  delete _edit_header_window;
-  delete _dialog_window;
-  delete _file_browser;
-}
-
-void
-UI_Gtk::show_greeting(void)
-{
-  const char *msg = "KCemu v" KCEMU_VERSION;
-  const char *variant = get_kc_variant_name();
-  const char *fmt = _("%s (%s)");
-  char *status = new char[strlen(msg) + strlen(variant) + strlen(fmt) + 10];
-  sprintf(status, fmt, msg, variant);
-  Status::instance()->setMessage(status);
-  delete[] status;
-}
-
-void
-UI_Gtk::gtk_resize(void)
-{
-  /*
-   *  prevent early calls that my caused by module initialization
-   *  (e.g. Z1013 GDC module)
-   */
-  if (!_init) // set by show() function
-    return;
-
-  if (_image)
-    gdk_image_destroy(_image);
-  _image  = gdk_image_new(GDK_IMAGE_FASTEST, _visual, get_width(), get_height());
-
-  gtk_drawing_area_size(GTK_DRAWING_AREA(_main.canvas), get_width(), get_height());
-
-  if (!GTK_WIDGET_VISIBLE(_main.window))
-    gtk_widget_show(_main.window);
-
-  if (_gc)
-    gdk_gc_destroy(_gc);
-  _gc = gdk_gc_new(GTK_WIDGET(_main.canvas)->window);
-
-  _dirty_old = 0; // force reallocation of dirty buffer
-
-#if 0
-  switch (_visual->type)
-    {
-    case GDK_VISUAL_STATIC_GRAY:
-      cout << "GDK_VISUAL_STATIC_GRAY" << endl;
-      break;
-    case GDK_VISUAL_GRAYSCALE:
-      cout << "GDK_VISUAL_GRAYSCALE" << endl;
-      break;
-    case GDK_VISUAL_STATIC_COLOR:
-      cout << "GDK_VISUAL_STATIC_COLOR" << endl;
-      break;
-    case GDK_VISUAL_PSEUDO_COLOR:
-      cout << "GDK_VISUAL_PSEUDO_COLOR" << endl;
-      break;
-    case GDK_VISUAL_TRUE_COLOR:
-      cout << "GDK_VISUAL_TRUE_COLOR" << endl;
-      break;
-    case GDK_VISUAL_DIRECT_COLOR:
-      cout << "GDK_VISUAL_DIRECT_COLOR" << endl;
-      break;
-    default:
-      cout << "unknown visual type" << endl;
-      break;
-    }
-#endif
-}
-
-void
-UI_Gtk::init(int *argc, char ***argv)
-{
-  self = this;
-  _shift_lock = false;
-  _speed_limit = true;
-
-  _auto_skip = false;
-  _cur_auto_skip = 0;
-  _max_auto_skip = RC::instance()->get_int("Max Auto Skip", 6);
-
+UI_Gtk::init(int *argc, char ***argv) {
+    self = this;
+    _shift_lock = false;
+    _speed_limit = true;
+    
+    _auto_skip = false;
+    _cur_auto_skip = 0;
+    _max_auto_skip = 6;
+    
 #ifdef ENABLE_NLS
-  /*
-   *  We need to get all text in UTF-8 because this is required
-   *  for GTK versions above 2.0 (more precisely it's required by
-   *  the Pango library).
-   *
-   *  And we do it here because this way it's possible to get the
-   *  help/usage messages still in the default locale of the user.
-   *  From this point all messages that are sent to the console are
-   *  encoded in UTF-8 too.
-   */
-  bind_textdomain_codeset(PACKAGE, "UTF-8");
+    /*
+     *  We need to get all text in UTF-8 because this is required
+     *  for GTK versions above 2.0 (more precisely it's required by
+     *  the Pango library).
+     *
+     *  And we do it here because this way it's possible to get the
+     *  help/usage messages still in the default locale of the user.
+     *  From this point all messages that are sent to the console are
+     *  encoded in UTF-8 too.
+     */
+    bind_textdomain_codeset(PACKAGE, "UTF-8");
 #endif /* ENABLE_NLS */
-
-  gtk_init(argc, argv);
-
-  string datadir(kcemu_datadir);
-
-  /*
-   *  load gtk ressource files
-   */
-  string rc_filename = datadir + "/.kcemurc.gtk";
-  gtk_rc_parse(rc_filename.c_str());
-
-  /*
-   *  initialize image directory
-   */
-  string image_directory = datadir + "/images";
-  add_pixmap_directory(image_directory.c_str());
-  
-  const char *tmp = kcemu_homedir;
-  if (tmp)
-    {
-      string homedir(tmp);
-      string home_rc_filename = homedir + "/.kcemurc.gtk";
-      gtk_rc_parse(home_rc_filename.c_str());
+    
+    gtk_init(argc, argv);
+    
+    string datadir(kcemu_datadir);
+    
+    /*
+     *  load gtk ressource files
+     */
+    string rc_filename = datadir + "/.kcemurc.gtk";
+    gtk_rc_parse(rc_filename.c_str());
+    
+    const char *tmp = kcemu_homedir;
+    if (tmp) {
+        string homedir(tmp);
+        string home_rc_filename = homedir + "/.kcemurc.gtk";
+        gtk_rc_parse(home_rc_filename.c_str());
     }
-  else
-    cerr << "Warning: HOME not set! can't locate file `.kcemurc.gtk'" << endl;
-
-  /*
-   *  don't let gtk catch SIGSEGV, make core dumps ;-)
-   */
-  signal(SIGSEGV, SIG_DFL);
-
-  _main.statusbar_sec = 0;
-  Status::instance()->addStatusListener(this);
-  Error::instance()->addErrorListener(this);
-  
-  _main.window = NULL;
-
-  _about_window       = new AboutWindow();
-  _help_window        = new HelpWindow();
-  _thanks_window      = new ThanksWindow();
-  _color_window       = new ColorWindow();
-  _tape_window        = new TapeWindow();
-  _tape_add_window    = new TapeAddWindow();
-  _disk_window        = new DiskWindow();
-  _module_window      = new ModuleWindow();
-  _keyboard_window    = new KeyboardWindow();
-  _copying_window     = new CopyingWindow();
-  _debug_window       = new DebugWindow();
-  _info_window        = new InfoWindow();
-  _wav_window         = new WavWindow();
-  _edit_header_window = new EditHeaderWindow();
-  _dialog_window      = new DialogWindow();
-  _file_browser       = new FileBrowser();
-
-  ColorWindow *color_window = (ColorWindow *)_color_window;
-  
-  allocate_colors(color_window->get_saturation_fg(),
-		  color_window->get_saturation_bg(),
-		  color_window->get_brightness_fg(),
-		  color_window->get_brightness_bg(),
-		  color_window->get_black_level(),
-		  color_window->get_white_level());
-
-  /* this _must_ come last due to some initialization for menus */
-  create_main_window();
-
-  _visual = gdk_visual_get_system();
-
-  CMD *cmd;
-  cmd = new CMD_ui_toggle(this);
-  cmd = new CMD_update_colortable(this, color_window);
-
-  setup_ui_defaults();
-
-  init();
+    else
+        cerr << "Warning: HOME not set! can't locate file `.kcemurc.gtk'" << endl;
+    
+    /*
+     *  don't let gtk catch SIGSEGV, make core dumps ;-)
+     */
+    signal(SIGSEGV, SIG_DFL);
+    
+    Error::instance()->addErrorListener(this);
+    
+    _dialog_window      = new DialogWindow("dialog.glade");
+    _selector_window    = new ProfileSelectorWindow("selector.glade");
+    _help_window        = new HelpWindow("help.glade");
 }
 
 void
-UI_Gtk::show(void)
-{
-  _init = true;
-  gtk_resize();
-  gtk_window_set_resizable(GTK_WINDOW(_main.window), FALSE);
-  show_greeting();
+UI_Gtk::init2(void) {
+    create_ui();
+    _main_window        = new MainWindow("main.glade");
+    _about_window       = new AboutWindow("about.glade");
+    _thanks_window      = new ThanksWindow("thanks.glade");
+    _color_window       = new ColorWindow("color.glade");
+    _tape_window        = new TapeWindow("tape.glade");
+    _tape_add_window    = new TapeAddWindow("tapeedit.glade");
+    _disk_window        = new DiskWindow("disk.glade");
+    _module_window      = new ModuleWindow("module.glade");
+    _keyboard_window    = new KeyboardWindow("keyboard.glade");
+    _copying_window     = new CopyingWindow("legal.glade");
+    _options_window     = new OptionsWindow("options.glade");
+    _wav_window         = new WavWindow("audio.glade");
+    _save_memory_window = new SaveMemoryWindow("savemem.glade");
+    
+    _edit_header_window = new EditHeaderWindow();
+    _file_browser       = new FileBrowser();
+    
+    _debug_window       = new DebugWindow();
+    _info_window        = new InfoWindow();
+    
+    ColorWindow *color_window = (ColorWindow *)_color_window;
+    
+    allocate_colors(color_window->get_saturation_fg(),
+            color_window->get_saturation_bg(),
+            color_window->get_brightness_fg(),
+            color_window->get_brightness_bg(),
+            color_window->get_black_level(),
+            color_window->get_white_level());
+    
+    /* this _must_ come last due to some initialization for menus */
+    _main_window->show(get_width(), get_height());
+    
+    CMD *cmd;
+    cmd = new CMD_ui_toggle(this);
+    cmd = new CMD_update_colortable(this, color_window);
+    
+    GtkWidget *main_window = _main_window->get_main_window();
+    g_signal_connect(main_window, "property_notify_event", G_CALLBACK(property_change), this);
+    g_signal_connect(main_window, "selection_received", G_CALLBACK(sf_selection_received), this);
+    g_signal_connect(main_window, "key_press_event", G_CALLBACK(sf_key_press), this);
+    g_signal_connect(main_window, "key_release_event", G_CALLBACK(sf_key_release), this);
+    g_signal_connect(main_window, "focus_in_event", G_CALLBACK(sf_focus_in), this);
+    g_signal_connect(main_window, "focus_out_event", G_CALLBACK(sf_focus_out), this);
+    
+//    static GtkTargetEntry targetlist[] = {
+//        { "STRING",        0, 1 },
+//        { "TEXT",          0, 2 },
+//        { "COMPOUND_TEXT", 0, 3 }
+//    };
+//    gint ntargets  = sizeof(targetlist) / sizeof(targetlist[0]);
+//    gint nentries  = sizeof(entries)    / sizeof(entries[0]);
+//    gint nentriesP = sizeof(entriesP)   / sizeof(entriesP[0]);
+//
+//    g_selection_add_targets(_main.window, GDK_SELECTION_PRIMARY, targetlist, ntargets);
 }
 
 void
-UI_Gtk::gtk_zoom(int zoom)
-{
-  if (zoom < 1)
-    zoom = 1;
-  if (zoom > 3)
-    zoom = 3;
-
-  kcemu_ui_scale = zoom;
-
-  gtk_resize();
-  update(true, true);
+UI_Gtk::gtk_resize(void) {
+    _main_window->resize(get_width(), get_height());
 }
 
 void
-UI_Gtk::display_effects_toggle(void)
-{
-  /*
-   *  prevent early calls caused by setup_ui_defaults()
-   */
-  if (!_init) // set by show() function
-    return;
-
-  const char *path = cleanup_path(_("/Options/_Display Effects"));
-  GtkWidget *widget = gtk_item_factory_get_widget(_main.ifact, path);
-  delete[] path;
-  gboolean active = gtk_check_menu_item_get_active(GTK_CHECK_MENU_ITEM(widget));
-  kcemu_ui_display_effect = (active ? 1 : 0);
-  update(true, true);
+UI_Gtk::allocate_color_hsv(int idx, double h, double s, double v) {
+    _main_window->allocate_color_hsv(idx, h, s, v);
 }
 
 void
-UI_Gtk::gtk_enable_display_effect(int effect)
-{
-  kcemu_ui_display_effect = effect;
+UI_Gtk::allocate_color_rgb(int idx, int r, int g, int b) {
+    _main_window->allocate_color_rgb(idx, r, g, b);
 }
 
 void
-UI_Gtk::processEvents(void)
-{
-  long tv_sec, tv_usec;
-
-  if (_main.statusbar_sec != 0)
-    {
-      sys_gettimeofday(&tv_sec, &tv_usec);
-      if (tv_sec - _main.statusbar_sec > 10)
-        gtk_statusbar_pop(GTK_STATUSBAR(_main.st_statusbar), 1);
-    }
-
-  while (gtk_events_pending())
-    gtk_main_iteration();
-}
-
-#define ADD_COL(weight) \
-  r += weight * ((p >> 16) & 0xff); \
-  g += weight * ((p >>  8) & 0xff); \
-  b += weight * ((p      ) & 0xff); \
-  w += weight
-
-/*
- *  +---+---+---+
- *  | 0 | 1 | 2 |
- *  +---+---+---+
- *  | 3 | 4 | 5 |
- *  +---+---+---+
- *  | 6 | 7 | 8 |
- *  +---+---+---+
- */
-gulong
-UI_Gtk::get_col(byte_t *bitmap, int which, int idx, int width)
-{
-  gulong p;
-  long r, g, b, w;
-
-  w = 0; r = 0; g = 0; b = 0;
-
-  switch (which)
-    {
-    default:
-      return _col[bitmap[idx]].pixel;
-
-    case 1:
-      p = _col[bitmap[idx]].pixel;             ADD_COL(9);
-      p = _col[bitmap[idx - width]].pixel;     ADD_COL(3);
-      break;
-    case 3:
-      p = _col[bitmap[idx]].pixel;             ADD_COL(9);
-      p = _col[bitmap[idx - 1]].pixel;         ADD_COL(3);
-      break;
-    case 5:
-      p = _col[bitmap[idx]].pixel;             ADD_COL(9);
-      p = _col[bitmap[idx + 1]].pixel;         ADD_COL(3);
-      break;
-    case 7:
-      p = _col[bitmap[idx]].pixel;             ADD_COL(9);
-      p = _col[bitmap[idx + width]].pixel;     ADD_COL(3);
-      break;
-
-    case 0:
-      p = _col[bitmap[idx]].pixel;             ADD_COL(12);
-      p = _col[bitmap[idx - 1]].pixel;         ADD_COL(5);
-      p = _col[bitmap[idx - width]].pixel;     ADD_COL(5);
-      p = _col[bitmap[idx - width - 1]].pixel; ADD_COL(1);
-      break;
-    case 2:
-      p = _col[bitmap[idx]].pixel;             ADD_COL(12);
-      p = _col[bitmap[idx + 1]].pixel;         ADD_COL(5);
-      p = _col[bitmap[idx - width]].pixel;     ADD_COL(5);
-      p = _col[bitmap[idx - width + 1]].pixel; ADD_COL(1);
-      break;
-    case 6:
-      p = _col[bitmap[idx]].pixel;             ADD_COL(12);
-      p = _col[bitmap[idx - 1]].pixel;         ADD_COL(5);
-      p = _col[bitmap[idx + width]].pixel;     ADD_COL(5);
-      p = _col[bitmap[idx + width - 1]].pixel; ADD_COL(1);
-      break;
-    case 8:
-      p = _col[bitmap[idx]].pixel;             ADD_COL(12);
-      p = _col[bitmap[idx + 1]].pixel;         ADD_COL(5);
-      p = _col[bitmap[idx + width]].pixel;     ADD_COL(5);
-      p = _col[bitmap[idx + width + 1]].pixel; ADD_COL(1);
-      break;
-    }
-
-  r = r / w;
-  g = g / w;
-  b = b / w;
-
-  return (r << 16) | (g << 8) | b;
-}
-
-static gulong
-lighter_color(gulong col)
-{
-  static int color_add = RC::instance()->get_int("DEBUG UI_Gtk Color Add", 50);
-
-  int r = (col >> 16) & 0xff;
-  int g = (col >>  8) & 0xff;
-  int b = (col      ) & 0xff;
-
-  r += color_add;
-  g += color_add;
-  b += color_add;
-
-  if (r > 255)
-    r = 255;
-  if (g > 255)
-    g = 255;
-  if (b > 255)
-    b = 255;
-
-  return (r << 16) | (g << 8) | b;
-}
-
-static gulong
-darker_color(gulong col)
-{
-  int r = (col >> 16) & 0xff;
-  int g = (col >>  8) & 0xff;
-  int b = (col      ) & 0xff;
-
-  r = (2 * r) / 3;
-  g = (2 * g) / 3;
-  b = (2 * b) / 3;
-
-  return (r << 16) | (g << 8) | b;
+UI_Gtk::allocate_colors_by_name(const char **color_names) {
+    _main_window->allocate_colors(color_names);
 }
 
 void
-UI_Gtk::gtk_update_1(byte_t *bitmap, byte_t *dirty, int dirty_size, int width, int height)
-{
-  int d = -1;
-  for (int y = 0;y < height;y += 8)
-    {
-      for (int x = 0;x < width;x += 8)
-	{
-	  d++;
-	  if (!dirty[d])
-	    continue;
-	  
-	  int z = y * width + x;
-	  
-	  for (int yy = 0;yy < 8;yy++)
-	    {
-	      for (int xx = 0;xx < 8;xx++)
-		{
-		  gdk_image_put_pixel(_image, x + xx, y + yy, _col[bitmap[z + xx]].pixel);
-		}
-	      z += width;
-	    }
-	}
+UI_Gtk::allocate_colors(double saturation_fg, double saturation_bg, double brightness_fg, double brightness_bg, double black_level, double white_level) {
+    int idx = 0;
+    list<UI_Color> colors(_ui->get_colors());
+    for (list<UI_Color>::const_iterator it = colors.begin();it != colors.end();it++, idx++) {
+        if ((*it).is_rgb()) {
+            _main_window->allocate_color_rgb(idx, (*it).get_red(), (*it).get_green(), (*it).get_blue());
+        } else {
+            if ((*it).is_bg()) {
+                _main_window->allocate_color_hsv(idx, (*it).get_hue(), saturation_bg, brightness_bg);
+            } else {
+                _main_window->allocate_color_hsv(idx, (*it).get_hue(), saturation_fg, brightness_fg);
+            }
+        }
     }
 }
 
 void
-UI_Gtk::gtk_update_1_debug(byte_t *bitmap, byte_t *dirty, int dirty_size, int width, int height)
-{
-  static int frame_delay;
-
-  if (_dirty_old == 0)
-    {
-      _dirty_old = new byte_t[dirty_size];
-      memset(_dirty_old, 0, dirty_size);
-      frame_delay = RC::instance()->get_int("DEBUG UI_Gtk Frame Delay", 50);
-    }
-
-  int d = -1;
-  for (int y = 0;y < height;y += 8)
-    {
-      for (int x = 0;x < width;x += 8)
-	{
-	  d++;
-	  if (dirty[d])
-	    _dirty_old[d] = frame_delay;
-	  
-	  if (_dirty_old[d] == 0)
-	    continue;
-
-	  if (_dirty_old[d] > 0)
-	    _dirty_old[d]--;
-
-	  dirty[d] = 1;
-	  
-	  int z = y * width + x;
-
-	  if (_dirty_old[d])
-	    {
-	      for (int yy = 0;yy < 8;yy++)
-		{
-		  for (int xx = 0;xx < 8;xx++)
-		    {
-		      gdk_image_put_pixel(_image, x + xx, y + yy, lighter_color(_col[bitmap[z + xx]].pixel));
-		    }
-		  z += width;
-		}
-	    }
-	  else
-	    {
-	      for (int yy = 0;yy < 8;yy++)
-		{
-		  for (int xx = 0;xx < 8;xx++)
-		    {
-		      gdk_image_put_pixel(_image, x + xx, y + yy, _col[bitmap[z + xx]].pixel);
-		    }
-		  z += width;
-		}
-	    }
-	}
-    }
+UI_Gtk::show(void) {
+    _init = true;
+    gtk_resize();
 }
 
 void
-UI_Gtk::gtk_update_2(byte_t *bitmap, byte_t *dirty, int dirty_size, int width, int height)
-{
-  int d = -1;
-  for (int y = 0;y < height;y += 8)
-    {
-      for (int x = 0;x < width;x += 8)
-	{
-	  d++;
-	  if (!dirty[d])
-	    continue;
-	  
-	  int z = y * width + x;
-	  
-	  for (int yy = 0;yy < 16;yy += 2)
-	    {
-	      for (int xx = 0;xx < 16;xx += 2)
-		{
-		  gulong pix = _col[bitmap[z++]].pixel;
-		  gdk_image_put_pixel(_image, 2 * x + xx,     2 * y + yy    , pix);
-		  gdk_image_put_pixel(_image, 2 * x + xx + 1, 2 * y + yy    , pix);
-		  gdk_image_put_pixel(_image, 2 * x + xx    , 2 * y + yy + 1, pix);
-		  gdk_image_put_pixel(_image, 2 * x + xx + 1, 2 * y + yy + 1, pix);
-		}
-	      z += width - 8;
-	    }
-	}
-    }
+UI_Gtk::gtk_zoom(int zoom) {
+    if (zoom < 1)
+        zoom = 1;
+    if (zoom > 3)
+        zoom = 3;
+    
+    kcemu_ui_scale = zoom;
+    
+    gtk_resize();
+    update(true, true);
 }
 
 void
-UI_Gtk::gtk_update_2_scanline(byte_t *bitmap, byte_t *dirty, int dirty_size, int width, int height)
-{
-  int d = -1;
-  for (int y = 0;y < height;y += 8)
-    {
-      for (int x = 0;x < width;x += 8)
-	{
-	  d++;
-	  if (!dirty[d])
-	    continue;
-	  
-	  int z = y * width + x;
-	  
-	  for (int yy = 0;yy < 16;yy += 2)
-	    {
-	      for (int xx = 0;xx < 16;xx += 2)
-		{
-		  gulong pix = _col[bitmap[z++]].pixel;
-		  gdk_image_put_pixel(_image, 2 * x + xx,     2 * y + yy    , pix);
-		  gdk_image_put_pixel(_image, 2 * x + xx + 1, 2 * y + yy    , pix);
-		  gdk_image_put_pixel(_image, 2 * x + xx    , 2 * y + yy + 1, darker_color(pix));
-		  gdk_image_put_pixel(_image, 2 * x + xx + 1, 2 * y + yy + 1, darker_color(pix));
-		}
-	      z += width - 8;
-	    }
-	}
-    }
+UI_Gtk::processEvents(void) {
+    _main_window->process_events();
+    
+    while (gtk_events_pending())
+        gtk_main_iteration();
 }
 
 void
-UI_Gtk::gtk_update_3(byte_t *bitmap, byte_t *dirty, int dirty_size, int width, int height)
-{
-  int d = -1;
-  for (int y = 0;y < height;y += 8)
-    {
-      for (int x = 0;x < width;x += 8)
-	{
-	  d++;
-	  if (!dirty[d])
-	    continue;
+UI_Gtk::display_effects_toggle(void) {
+    _main_window->set_display_effect(!_main_window->get_display_effect());
+    update(true, true);
+}
 
-	  int z = y * width + x;
-	  
-	  for (int yy = 0;yy < 24;yy += 3)
-	    {
-	      for (int xx = 0;xx < 24;xx += 3)
-		{
-		  gulong pix = _col[bitmap[z++]].pixel;
-		  gdk_image_put_pixel(_image, 3 * x + xx    , 3 * y + yy    , pix);
-		  gdk_image_put_pixel(_image, 3 * x + xx + 1, 3 * y + yy    , pix);
-		  gdk_image_put_pixel(_image, 3 * x + xx + 2, 3 * y + yy    , pix);
-		  gdk_image_put_pixel(_image, 3 * x + xx    , 3 * y + yy + 1, pix);
-		  gdk_image_put_pixel(_image, 3 * x + xx + 1, 3 * y + yy + 1, pix);
-		  gdk_image_put_pixel(_image, 3 * x + xx + 2, 3 * y + yy + 1, pix);
-		  gdk_image_put_pixel(_image, 3 * x + xx    , 3 * y + yy + 2, pix);
-		  gdk_image_put_pixel(_image, 3 * x + xx + 1, 3 * y + yy + 2, pix);
-		  gdk_image_put_pixel(_image, 3 * x + xx + 2, 3 * y + yy + 2, pix);
-		}
-	      z += width - 8;
-	    } 
-	}
-    }
+/** deprecated ! */
+void
+UI_Gtk::gtk_update(byte_t *bitmap, byte_t *dirty, int dirty_size, int width, int height, bool full_update) {
+    UI_Base *ui = _ui->get_generic_ui();
+    _main_window->update(ui, get_width(), get_height(), full_update);
 }
 
 void
-UI_Gtk::gtk_update_3_smooth(byte_t *bitmap, byte_t *dirty, int dirty_size, int width, int height)
-{
-  int d = -1;
-  byte_t dirty_buf[dirty_size];
-
-  memcpy(dirty_buf, dirty, dirty_size);
-
-  for (int y = 0;y < height;y += 8)
-    {
-      for (int x = 0;x < width;x += 8)
-	{
-	  d++;
-
-	  if (dirty[d])
-	    {	  
-	      int z = y * width + x;
-	  
-	      for (int yy = 0;yy < 24;yy += 3)
-		{
-		  for (int xx = 0;xx < 24;xx += 3)
-		    {
-		      gdk_image_put_pixel(_image, 3 * x + xx    , 3 * y + yy    , get_col(bitmap, 0, z, width));
-		      gdk_image_put_pixel(_image, 3 * x + xx + 1, 3 * y + yy    , get_col(bitmap, 1, z, width));
-		      gdk_image_put_pixel(_image, 3 * x + xx + 2, 3 * y + yy    , get_col(bitmap, 2, z, width));
-		      gdk_image_put_pixel(_image, 3 * x + xx    , 3 * y + yy + 1, get_col(bitmap, 3, z, width));
-		      gdk_image_put_pixel(_image, 3 * x + xx + 1, 3 * y + yy + 1, get_col(bitmap, 4, z, width));
-		      gdk_image_put_pixel(_image, 3 * x + xx + 2, 3 * y + yy + 1, get_col(bitmap, 5, z, width));
-		      gdk_image_put_pixel(_image, 3 * x + xx    , 3 * y + yy + 2, get_col(bitmap, 6, z, width));
-		      gdk_image_put_pixel(_image, 3 * x + xx + 1, 3 * y + yy + 2, get_col(bitmap, 7, z, width));
-		      gdk_image_put_pixel(_image, 3 * x + xx + 2, 3 * y + yy + 2, get_col(bitmap, 8, z, width));		      z++;
-		    }
-		  z += width - 8;
-		} 
-	    }
-	  else
-	    {
-	      /*
-	       *  not dirty but we need to check the neighbour pixels due to
-	       *  the antialiasing
-	       */
-	      if ((d > 0) && (dirty[d - 1]))
-		{
-		  int z = y * width + x;
-		  for (int yy = 0;yy < 24;yy += 3)
-		    {
-		      gdk_image_put_pixel(_image, 3 * x, 3 * y + yy    , get_col(bitmap, 0, z, width));
-		      gdk_image_put_pixel(_image, 3 * x, 3 * y + yy + 1, get_col(bitmap, 3, z, width));
-		      gdk_image_put_pixel(_image, 3 * x, 3 * y + yy + 2, get_col(bitmap, 6, z, width));
-		      z += width;
-		    }
-		  dirty_buf[d] = 1;
-		}
-	      if (dirty[d + 1])
-		{
-		  int z = y * width + x + 7;
-		  for (int yy = 0;yy < 24;yy += 3)
-		    {
-		      gdk_image_put_pixel(_image, 3 * x + 23, 3 * y + yy    , get_col(bitmap, 2, z, width));
-		      gdk_image_put_pixel(_image, 3 * x + 23, 3 * y + yy + 1, get_col(bitmap, 5, z, width));
-		      gdk_image_put_pixel(_image, 3 * x + 23, 3 * y + yy + 2, get_col(bitmap, 8, z, width));
-		      z += width;
-		    }
-		  dirty_buf[d] = 1;
-		}
-	      if (dirty[d + width / 8])
-		{
-		  int z = (y + 7) * width + x;
-		  for (int xx = 0;xx < 24;xx += 3)
-		    {
-		      gdk_image_put_pixel(_image, 3 * x + xx    , 3 * y + 23, get_col(bitmap, 6, z, width));
-		      gdk_image_put_pixel(_image, 3 * x + xx + 1, 3 * y + 23, get_col(bitmap, 7, z, width));
-		      gdk_image_put_pixel(_image, 3 * x + xx + 2, 3 * y + 23, get_col(bitmap, 8, z, width));
-		      z++;
-		    }
-		  dirty_buf[d] = 1;
-		}
-	      if ((d > width / 8) && (dirty[d - width / 8]))
-		{
-		  int z = y * width + x;
-		  for (int xx = 0;xx < 24;xx += 3)
-		    {
-		      gdk_image_put_pixel(_image, 3 * x + xx    , 3 * y, get_col(bitmap, 0, z, width));
-		      gdk_image_put_pixel(_image, 3 * x + xx + 1, 3 * y, get_col(bitmap, 1, z, width));
-		      gdk_image_put_pixel(_image, 3 * x + xx + 2, 3 * y, get_col(bitmap, 2, z, width));
-		      z++;
-		    }
-		  dirty_buf[d] = 1;
-		}
-	    }
-	}
+UI_Gtk::update(bool full_update, bool clear_cache) {
+    Scanline *scanline = _ui->get_scanline();
+    if (scanline != NULL) {
+        scanline->update();
     }
-
-  memcpy(dirty, dirty_buf, dirty_size);
-}
-
-void
-UI_Gtk::gtk_update(byte_t *bitmap, byte_t *dirty, int dirty_size, int width, int height, bool full_update)
-{
-  switch (kcemu_ui_scale)
-    {
-    case 1:
-      if (kcemu_ui_debug)
-	gtk_update_1_debug(bitmap, dirty, dirty_size, width, height);
-      else
-	gtk_update_1(bitmap, dirty, dirty_size, width, height);
-      break;
-    case 2:
-      if (kcemu_ui_display_effect)
-	gtk_update_2_scanline(bitmap, dirty, dirty_size, width, height);
-      else
-	gtk_update_2(bitmap, dirty, dirty_size, width, height);
-      break;
-    case 3:
-      if (kcemu_ui_display_effect)
-	gtk_update_3_smooth(bitmap, dirty, dirty_size, width, height);
-      else
-	gtk_update_3(bitmap, dirty, dirty_size, width, height);
-      break;
+    
+    MemAccess *memaccess = _ui->get_mem_access();
+    if (memaccess != NULL) {
+        memaccess->update();
     }
-
-  if (full_update)
-    {
-      gdk_draw_image(GTK_WIDGET(_main.canvas)->window, _gc, _image,
-		     0, 0, 0, 0, get_width(), get_height());
-      return;
-    }
-
-  int d = -1;
-  int s = 8 * kcemu_ui_scale;
-  for (int y = 0;y < get_height();y += s)
-    {
-      for (int x = 0;x < get_width();x += s)
-	{
-	  d++;	      
-	  if (!dirty[d])
-	    continue;
-
-	  dirty[d] = 0;
-	  gdk_draw_image(GTK_WIDGET(_main.canvas)->window, _gc, _image, x, y, x, y, s, s);
-	}
-    }
+    
+    UI_Base *ui = _ui->get_generic_ui();
+    ui->generic_update(scanline, memaccess, clear_cache);
+    _main_window->update(ui, get_width(), get_height(), full_update);
+    processEvents();
+    gtk_sync();
 }
 
 UI_ModuleInterface *
-UI_Gtk::getModuleInterface(void)
-{
-  return (ModuleWindow *)_module_window;
+UI_Gtk::getModuleInterface(void) {
+    return (ModuleWindow *)_module_window;
 }
 
 TapeInterface *
-UI_Gtk::getTapeInterface(void)
-{
-  return (TapeWindow *)_tape_window;
+UI_Gtk::getTapeInterface(void) {
+    return (TapeWindow *)_tape_window;
 }
 
 DebugInterface *
-UI_Gtk::getDebugInterface(void)
-{
-  return (DebugWindow *)_debug_window;
+UI_Gtk::getDebugInterface(void) {
+    return (DebugWindow *)_debug_window;
 }
 
 void
-UI_Gtk::setStatus(const char *msg)
-{
-  long tv_sec, tv_usec;
+UI_Gtk::errorInfo(const char *msg) {
+    _dialog_window->show_dialog_ok(_("Info"), msg);
+}
 
-  sys_gettimeofday(&tv_sec, &tv_usec);
-  _main.statusbar_sec = tv_sec;
-  gtk_statusbar_pop(GTK_STATUSBAR(_main.st_statusbar), 1);
-  gtk_statusbar_push(GTK_STATUSBAR(_main.st_statusbar), 1, msg);
+char *
+UI_Gtk::select_profile(void) {
+    _selector_window->show();
+    return ((ProfileSelectorWindow *)_selector_window)->get_selected_profile();
 }
 
 void
-UI_Gtk::errorInfo(const char *msg)
-{
-  _dialog_window->show_dialog_ok(_("Info"), msg);
+UI_Gtk::create_ui(void) {
+    _callback_value_retrace = 0;
+    
+    switch (Preferences::instance()->get_kc_type()) {
+        case KC_TYPE_85_1:
+        case KC_TYPE_87:
+            _ui = new UI_Gtk1();
+            _callback_value = 35000;
+            break;
+        case KC_TYPE_85_2:
+        case KC_TYPE_85_3:
+            _ui = new UI_Gtk3();
+            _callback_value = 35000;
+            break;
+        case KC_TYPE_85_4:
+        case KC_TYPE_85_5:
+            _ui = new UI_Gtk4();
+            _callback_value = 35000;
+            break;
+        case KC_TYPE_LC80:
+            _ui = new UI_Gtk8();
+            _callback_value = 18000;
+            break;
+        case KC_TYPE_Z1013:
+            _ui = new UI_Gtk0();
+            _callback_value = 40000;
+            _callback_value_retrace = 1000;
+            break;
+        case KC_TYPE_A5105:
+            _ui = new UI_Gtk9();
+            _callback_value = 60000;
+            _callback_value_retrace = 1000;
+            break;
+        case KC_TYPE_POLY880:
+            _ui = new UI_Gtk6();
+            _callback_value = 18000;
+            break;
+        case KC_TYPE_KRAMERMC:
+            _ui = new UI_Gtk_KramerMC();
+            _callback_value = 30000;
+            break;
+        case KC_TYPE_MUGLERPC:
+            _ui = new UI_Gtk_MuglerPC();
+            _callback_value = 50000;
+            break;
+        case KC_TYPE_VCS80:
+            _ui = new UI_Gtk_VCS80();
+            _callback_value = 25000;
+            _callback_value_retrace = 4000;
+            break;
+        case KC_TYPE_C80:
+            _ui = new UI_Gtk_C80();
+            _callback_value = 50000;
+            break;
+        case KC_TYPE_ALL:
+        case KC_TYPE_NONE:
+        case KC_TYPE_85_1_CLASS:
+        case KC_TYPE_85_2_CLASS:
+            DBG(0, form("KCemu/internal_error",
+                    "KCemu: got unhandled value from get_kc_type(): %d\n",
+                    Preferences::instance()->get_kc_type()));
+            break;
+    }
+    
+    z80->register_ic(this);
+    add_callback();
+}
+
+void
+UI_Gtk::destroy_ui(void) {
+    z80->unregister_ic(this);
+    delete _ui;
+}
+
+void
+UI_Gtk::add_callback(void) {
+    z80->addCallback(_callback_value, this, (void *)0);
+    if (_callback_value_retrace > 0)
+        z80->addCallback(_callback_value_retrace, this, (void *)1);
+}
+
+void
+UI_Gtk::callback(void *data) {
+    if (data == (void *)1) {
+        if (_ui != NULL) {
+            _ui->get_generic_ui()->generic_signal_v_retrace(false);
+        }
+    } else {
+        if (_ui != NULL) {
+            update();
+            _ui->get_generic_ui()->generic_signal_v_retrace(true);
+        }
+        add_callback();
+    }
+}
+
+void
+UI_Gtk::flash(bool enable) {
+    Scanline *scanline = _ui->get_scanline();
+    if (scanline != NULL) {
+        scanline->trigger(enable);
+    }
+}
+
+int
+UI_Gtk::get_mode(void) {
+    if (_ui == NULL) {
+        DBG(1, form("KCemu/warning",
+                "UI_Gtk::get_mode(): generic ui not yet initialized!\n"));
+        return 0;
+    }
+    return _ui->get_generic_ui()->generic_get_mode();
+}
+
+void
+UI_Gtk::set_mode(int mode) {
+    if (_ui == NULL) {
+        DBG(1, form("KCemu/warning",
+                "UI_Gtk::set_mode(): generic ui not yet initialized!\n"));
+        return ;
+    }
+    _ui->get_generic_ui()->generic_set_mode(mode);
+    gtk_resize();
+    update(true, true);
+}
+
+void
+UI_Gtk::memory_read(word_t addr) {
+    MemAccess *memaccess = _ui->get_mem_access();
+    if (memaccess != NULL) {
+        memaccess->memory_read(addr);
+    }
+}
+
+void
+UI_Gtk::memory_write(word_t addr) {
+    MemAccess *memaccess = _ui->get_mem_access();
+    if (memaccess != NULL) {
+        memaccess->memory_write(addr);
+    }
+}
+
+int
+UI_Gtk::get_width(void) {
+    return kcemu_ui_scale * _ui->get_generic_ui()->get_real_width();
+}
+
+int
+UI_Gtk::get_height(void) {
+    return kcemu_ui_scale * _ui->get_generic_ui()->get_real_height();
 }

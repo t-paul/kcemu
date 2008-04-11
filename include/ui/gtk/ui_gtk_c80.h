@@ -1,6 +1,6 @@
 /*
  *  KCemu -- the KC 85/3 and KC 85/4 Emulator
- *  Copyright (C) 1997-2002 Torsten Paul
+ *  Copyright (C) 1997-2008 Torsten Paul
  *
  *  $Id$
  *
@@ -22,42 +22,12 @@
 #ifndef __ui_ui_gtk_c80_h
 #define __ui_ui_gtk_c80_h
 
-#include "ui/gtk/ui_gtk.h"
+#include "ui/gtk/ui_gtk_base.h"
 
-#include "ui/generic/ui_c80.h"
-
-class UI_Gtk_C80 : public UI_Gtk, public UI_C80
-{
- private:
-  enum {
-    C80_CB_OFFSET = 50000,
-  };
-
- public:
-  UI_Gtk_C80(void);
-  virtual ~UI_Gtk_C80(void);
-
-  virtual void update(bool full_update = false, bool clear_cache = false);
-  virtual void callback(void *data);
-  virtual void flash(bool enable);
-  virtual void memory_read(word_t addr);
-  virtual void memory_write(word_t addr);
-  virtual int  get_mode(void);
-  virtual void set_mode(int mode);
-
-  virtual void allocate_colors(double saturation_fg,
-			       double saturation_bg,
-			       double brightness_fg,
-			       double brightness_bg,
-			       double black_level,
-			       double white_level);
-
-  virtual void init(void);
-  virtual const char * get_title(void);
-  virtual int get_width(void);
-  virtual int get_height(void);
-
-  virtual void reset(bool power_on = false);
+class UI_Gtk_C80 : public UI_Gtk_Base {
+public:
+    UI_Gtk_C80(void);
+    virtual ~UI_Gtk_C80(void);
 };
 
 #endif /* __ui_ui_gtk_c80_h */

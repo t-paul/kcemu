@@ -22,7 +22,8 @@
 #ifndef __kc_keyb0_h
 #define __kc_keyb0_h
 
-#include "kc/kc.h"
+#include "kc/prefs/types.h"
+
 #include "kc/cb.h"
 #include "kc/pio.h"
 #include "kc/keyboard.h"

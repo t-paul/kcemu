@@ -24,8 +24,8 @@
 #include <fstream>
 
 #include "kc/system.h"
+#include "kc/prefs/prefs.h"
 
-#include "kc/kc.h"
 #include "kc/z80.h"
 #include "kc/memory9.h"
 
@@ -70,7 +70,7 @@ Memory9::Memory9(void) : Memory()
 
   for (mptr = &m[0];mptr->name;mptr++)
     {
-      if (mptr->basedevice || (get_kc_variant() == KC_VARIANT_A5105_A5105))
+      if (mptr->basedevice || (Preferences::instance()->get_kc_variant() == KC_VARIANT_A5105_A5105))
 	{
 	  *(mptr->group) = new MemAreaGroup(mptr->name,
 					    mptr->addr,

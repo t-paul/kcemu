@@ -256,6 +256,7 @@ static TapeTest *__tape_test;
 void
 PIO8_1::draw_leds(void)
 {
+#if 0
   int a;
 
   printf("\x1b\x5b\x48");
@@ -357,6 +358,7 @@ PIO8_1::draw_leds(void)
     }
   printf("        \n");
   printf("                                      \n");
+#endif
 }
 
 PIO8_1::PIO8_1(void)

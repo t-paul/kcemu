@@ -20,17 +20,21 @@
  */
 
 #include "kc/system.h"
+#include "kc/prefs/types.h"
+#include "kc/prefs/prefs.h"
 
-#include "kc/kc.h"
 #include "kc/pio1.h"
 #include "kc/timer1.h"
 #include "kc/memory.h"
+#include "kc/module.h"
 
 #include "ui/generic/ui_1.h"
 
 UI_1::UI_1(void)
 {
   int a;
+
+  set_real_screen_size(320 + 64, 192 + 64);
 
   _dirty_size = (get_real_width() * get_real_height()) / 64;
   _dirty = new byte_t[_dirty_size];
@@ -53,30 +57,6 @@ UI_1::~UI_1(void)
   delete[] _bitmap;
   delete[] _pix_cache;
   delete[] _col_cache;
-}
-
-int
-UI_1::get_real_width(void)
-{
-  return 320 + 64;
-}
-
-int
-UI_1::get_real_height(void)
-{
-  return 192 + 64;
-}
-
-byte_t *
-UI_1::get_dirty_buffer(void)
-{
-  return _dirty;
-}
-
-int
-UI_1::get_dirty_buffer_size(void)
-{
-  return _dirty_size;
 }
 
 void
@@ -223,11 +203,12 @@ UI_1::generic_update_20(int width, int height, int fchg, byte_t flash, bool clea
 }
 
 void
-UI_1::generic_update(bool clear_cache)
+UI_1::generic_update(Scanline *scanline, MemAccess *memaccess, bool clear_cache)
 {
   static byte_t old_flash = 0xff;
   static byte_t old_lmode = 0xff;
   static byte_t old_border = 0xff;
+  static byte_t old_color_expansion = 0xff;
 
   int fchg = 0;
   int width = get_real_width();
@@ -244,17 +225,25 @@ UI_1::generic_update(bool clear_cache)
   if (old_lmode != lmode)
     {
       old_lmode = lmode;
-      old_border = 0xff; // force drawing of screen border
       clear_cache = true;
     }
 
-  if (get_kc_type() == KC_TYPE_87)
+  bool color_expansion_installed = !module->is_empty(61);
+  if (old_color_expansion != color_expansion_installed)
     {
-      byte_t border = ((PIO1_1 *)pio)->get_border_color();
+      old_color_expansion = color_expansion_installed;
+      clear_cache = true;
+    }
+
+  if (clear_cache)
+    old_border = 0xff; // force drawing of screen border
+
+  if (color_expansion_installed || clear_cache)
+    {
+      byte_t border = color_expansion_installed ? ((PIO1_1 *)pio)->get_border_color() : 0;
       if (old_border != border)
 	{
 	  old_border = border;
-	  
 	  generic_set_border_24(width, height, border);
 	  if (lmode)
 	    generic_set_border_20(width, height, border);
@@ -265,15 +254,4 @@ UI_1::generic_update(bool clear_cache)
     generic_update_20(width, height, fchg, flash, clear_cache);
   else
     generic_update_24(width, height, fchg, flash, clear_cache);
-}
-
-int
-UI_1::generic_get_mode(void)
-{
-  return 0;
-}
-
-void
-UI_1::generic_set_mode(int mode)
-{
 }

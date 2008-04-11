@@ -1,8 +1,8 @@
 /*
  *  KCemu -- the KC 85/3 and KC 85/4 Emulator
- *  Copyright (C) 1997-2002 Torsten Paul
+ *  Copyright (C) 1997-2008 Torsten Paul
  *
- *  $Id: ui_gtk3.h,v 1.13 2002/10/31 01:38:07 torsten_paul Exp $
+ *  $Id$
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -22,43 +22,22 @@
 #ifndef __ui_ui_gtk3_h
 #define __ui_ui_gtk3_h
 
-#include "ui/gtk/ui_gtk.h"
+#include "ui/gtk/ui_gtk_base.h"
 
-#include "ui/generic/ui_3.h"
 #include "ui/generic/scanline.h"
 #include "ui/generic/memaccess.h"
 
-class UI_Gtk3 : public UI_Gtk, public UI_3
-{
- private:
-  Scanline scanline;
-  MemAccess memaccess;
+class UI_Gtk3 : public UI_Gtk_Base {
+private:
+    Scanline _scanline;
+    MemAccess _memaccess;
+    
+public:
+    UI_Gtk3(void);
+    virtual ~UI_Gtk3(void);
 
- public:
-  UI_Gtk3(void);
-  virtual ~UI_Gtk3(void);
-
-  virtual void update(bool full_update = false, bool clear_cache = false);
-  virtual void callback(void *data);
-  virtual void flash(bool enable);
-  virtual void memory_read(word_t addr);
-  virtual void memory_write(word_t addr);
-  virtual int  get_mode(void);
-  virtual void set_mode(int mode);
-
-  virtual void allocate_colors(double saturation_fg,
-			       double saturation_bg,
-			       double brightness_fg,
-			       double brightness_bg,
-			       double black_level,
-			       double white_level);
-
-  virtual void init(void);
-  virtual const char * get_title(void);
-  virtual int get_width(void);
-  virtual int get_height(void);
-
-  virtual void reset(bool power_on = false);
+    virtual Scanline * get_scanline(void);
+    virtual MemAccess * get_mem_access(void);
 };
 
 #endif /* __ui_ui_gtk3_h */

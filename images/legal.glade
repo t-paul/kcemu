@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE glade-interface SYSTEM "glade-2.0.dtd">
+<!--*- mode: xml -*-->
+<glade-interface>
+  <widget class="GtkWindow" id="copying_window">
+    <property name="title" translatable="yes">KCemu: Licence &amp; Warranty</property>
+    <property name="window_position">GTK_WIN_POS_CENTER</property>
+    <property name="type_hint">GDK_WINDOW_TYPE_HINT_DIALOG</property>
+    <child>
+      <widget class="GtkVBox" id="vbox">
+        <property name="visible">True</property>
+        <child>
+          <widget class="GtkFrame" id="header_frame">
+            <property name="visible">True</property>
+            <property name="shadow_type">GTK_SHADOW_ETCHED_OUT</property>
+            <child>
+              <widget class="GtkHBox" id="header_hbox">
+                <property name="visible">True</property>
+                <child>
+                  <widget class="GtkLabel" id="header_label">
+                    <property name="visible">True</property>
+                    <property name="xalign">0</property>
+                    <property name="xpad">6</property>
+                    <property name="label" translatable="yes">License &amp; Warranty</property>
+                  </widget>
+                </child>
+                <child>
+                  <widget class="GtkImage" id="header_image">
+                    <property name="visible">True</property>
+                    <property name="xpad">4</property>
+                    <property name="ypad">4</property>
+                    <property name="pixbuf">window-copying.png</property>
+                  </widget>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="fill">False</property>
+                    <property name="padding">6</property>
+                    <property name="position">1</property>
+                  </packing>
+                </child>
+              </widget>
+            </child>
+          </widget>
+          <packing>
+            <property name="expand">False</property>
+          </packing>
+        </child>
+        <child>
+          <widget class="GtkImage" id="image">
+            <property name="visible">True</property>
+            <property name="xpad">20</property>
+            <property name="ypad">8</property>
+            <property name="pixbuf">kcemu.png</property>
+          </widget>
+          <packing>
+            <property name="expand">False</property>
+            <property name="position">1</property>
+          </packing>
+        </child>
+        <child>
+          <widget class="GtkScrolledWindow" id="main_scrolledwindow">
+            <property name="width_request">660</property>
+            <property name="height_request">300</property>
+            <property name="visible">True</property>
+            <property name="can_focus">True</property>
+            <property name="hscrollbar_policy">GTK_POLICY_AUTOMATIC</property>
+            <child>
+              <widget class="GtkViewport" id="main_viewport">
+                <property name="visible">True</property>
+                <child>
+                  <widget class="GtkVBox" id="main_vbox">
+                    <property name="visible">True</property>
+                    <child>
+                      <widget class="GtkLabel" id="main_label_license">
+                        <property name="visible">True</property>
+                        <property name="can_focus">True</property>
+                        <property name="label" translatable="yes">[ Licence ]</property>
+                        <property name="selectable">True</property>
+                      </widget>
+                      <packing>
+                        <property name="expand">False</property>
+                        <property name="fill">False</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <widget class="GtkLabel" id="main_label_warranty">
+                        <property name="visible">True</property>
+                        <property name="can_focus">True</property>
+                        <property name="label" translatable="yes">[ Warranty ]</property>
+                        <property name="selectable">True</property>
+                      </widget>
+                      <packing>
+                        <property name="expand">False</property>
+                        <property name="fill">False</property>
+                        <property name="position">1</property>
+                      </packing>
+                    </child>
+                  </widget>
+                </child>
+              </widget>
+            </child>
+          </widget>
+          <packing>
+            <property name="padding">6</property>
+            <property name="position">2</property>
+          </packing>
+        </child>
+        <child>
+          <widget class="GtkHSeparator" id="hseparator1">
+            <property name="visible">True</property>
+          </widget>
+          <packing>
+            <property name="expand">False</property>
+            <property name="position">3</property>
+          </packing>
+        </child>
+        <child>
+          <widget class="GtkHButtonBox" id="dialog_hbuttonbox">
+            <property name="visible">True</property>
+            <property name="border_width">6</property>
+            <property name="layout_style">GTK_BUTTONBOX_END</property>
+            <child>
+              <widget class="GtkButton" id="dialog_button_close">
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+                <property name="has_focus">True</property>
+                <property name="can_default">True</property>
+                <property name="has_default">True</property>
+                <property name="label">gtk-close</property>
+                <property name="use_stock">True</property>
+                <property name="response_id">0</property>
+              </widget>
+            </child>
+          </widget>
+          <packing>
+            <property name="expand">False</property>
+            <property name="position">4</property>
+          </packing>
+        </child>
+      </widget>
+    </child>
+  </widget>
+</glade-interface>

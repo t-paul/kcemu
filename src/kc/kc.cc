@@ -25,6 +25,7 @@
 #include <iostream>
 
 #include "kc/system.h"
+#include "kc/prefs/types.h"
 
 #ifdef HOST_OS_MINGW
 #ifdef HAVE_LIBSDL
@@ -57,7 +58,6 @@
 #endif
 
 #include "kc/kc.h"
-#include "kc/rc.h"
 #include "kc/ctc.h"
 #include "kc/pio.h"
 #include "kc/z80.h"
@@ -77,6 +77,7 @@
 #include "kc/z80_fdc.h"
 #include "kc/gide.h"
 #include "kc/poly880.h"
+#include "kc/prefs/prefs.h"
 
 #include "ui/log.h"
 #include "cmd/cmd.h"
@@ -152,28 +153,7 @@
 #include "kc/c80/keyboard.h"
 
 #ifdef USE_UI_GTK
-# include "ui/gtk/ui_gtk0.h"
-# include "ui/gtk/ui_gtk1.h"
-# include "ui/gtk/ui_gtk3.h"
-# include "ui/gtk/ui_gtk4.h"
-# include "ui/gtk/ui_gtk6.h"
-# include "ui/gtk/ui_gtk8.h"
-# include "ui/gtk/ui_gtk9.h"
-# include "ui/gtk/ui_gtk_kramermc.h"
-# include "ui/gtk/ui_gtk_muglerpc.h"
-# include "ui/gtk/ui_gtk_vcs80.h"
-# include "ui/gtk/ui_gtk_c80.h"
-# define UI_0 UI_Gtk0
-# define UI_1 UI_Gtk1
-# define UI_3 UI_Gtk3
-# define UI_4 UI_Gtk4
-# define UI_6 UI_Gtk6
-# define UI_8 UI_Gtk8
-# define UI_9 UI_Gtk9
-# define UI_KramerMC UI_Gtk_KramerMC
-# define UI_MuglerPC UI_Gtk_MuglerPC
-# define UI_VCS80    UI_Gtk_VCS80
-# define UI_C80    UI_Gtk_C80
+# include "ui/gtk/ui_gtk.h"
 #endif /* USE_UI_GTK */
 #ifdef USE_UI_SDL
 # include "ui/sdl/ui_sdl0.h"
@@ -243,178 +223,24 @@ int   kcemu_ui_scale;
 int   kcemu_ui_debug;
 int   kcemu_ui_fullscreen;
 int   kcemu_ui_display_effect;
+int   kcemu_select_profile;
 char *kcemu_homedir;
 char *kcemu_datadir;
 char *kcemu_localedir;
 char *kcemu_debug_output;
 char *kcemu_tape;
 char *kcemu_disk;
-char *kcemu_emulate;
 char *kcemu_modules;
-char *kcemu_configfile;
 char *kcemu_autostart_file;
 char *kcemu_autostart_addr;
-
-static kc_type_t     kcemu_kc_type;
-static kc_variant_t  kcemu_kc_variant;
-static const char   *kcemu_kc_variant_name;
-
-static kc_variant_names_t kc_types[] = {
-  { "z1013",               0, KC_TYPE_Z1013, KC_VARIANT_Z1013_64,
-    ">z1013.64"
-  },
-  { "z1013.01",           -1, KC_TYPE_Z1013, KC_VARIANT_Z1013_01,
-    N_("    Z1013 with 16k RAM and 2k ROM, running at 1MHz. This was the\n"
-       "    first version with cheap circuits so the CPU was clocked at only 1MHz\n"
-       "    The ROM containes the Z1013 monitor version 2.02.\n")
-  },
-  { "z1013.12",           -1, KC_TYPE_Z1013, KC_VARIANT_Z1013_12,
-    N_("    Z1013 with 1k sRAM and 2k ROM, running at 2MHz. Industry\n"
-       "    version with only 1k static RAM. Monitor version 2.02.\n")
-  },
-  { "z1013.16",           -1, KC_TYPE_Z1013, KC_VARIANT_Z1013_16,
-    N_("    Z1013 with 16k RAM and 2k ROM, running at 2MHz. Successor of\n"
-       "    the Z1013.01 but with industry grade circuits clocked at 2MHz.\n")
-  },
-  { "z1013.64",           -1, KC_TYPE_Z1013, KC_VARIANT_Z1013_64,
-    N_("    Z1013 with 64k RAM and 2x2k ROM, running at 2MHz. The ROM\n"
-       "    contains two system images with 2k each. Loaded is the first\n"
-       "    image with version 2.02 that is supposed to work with the foil keypad\n"
-       "    shipped by the manufacturer.\n")
-  },
-  { "z1013.a2",           -1, KC_TYPE_Z1013, KC_VARIANT_Z1013_A2,
-    N_("    Z1013 with 64k RAM and 2k ROM, running at 2MHz. The ROM\n"
-       "    contains two system images with 2k each. Loaded is the second\n"
-       "    image with version A.2 that supports an extended keyboard with an\n"
-       "    8x8 matrix.\n")
-  },
-  { "z1013.rb",           -1, KC_TYPE_Z1013, KC_VARIANT_Z1013_RB,
-    N_("    Z1013 with 64k RAM and 4k ROM. The ROM is the extended\n"
-       "    version tagged 2.028 RB that has a different keyboard driver for\n"
-       "    the keyboard K7659.\n")
-  },
-  { "z1013.surl",         -1, KC_TYPE_Z1013, KC_VARIANT_Z1013_SURL,
-    N_("    Z1013 with 64k RAM and 4k ROM. The ROM contains the 'Super\n"
-       "    Ur-Lader 5.0' that can read arbitrary tape files as system monitor.\n"
-       "    The hardware modification port at address 4h is emulated which allows\n"
-       "    programs to switch off the system ROM.\n")
-  },
-  { "z1013.bl4",          -1, KC_TYPE_Z1013, KC_VARIANT_Z1013_BL4,
-    N_("    Z1013 with 64k RAM and 4k ROM. The ROM contains the Bootloader\n"
-       "    BL4 that can load monitor images from floppy disk or can start the\n"
-       "    CP/M system.\n")
-  },
-  { "z9001",              -1, KC_TYPE_85_1,  KC_VARIANT_85_1_10,
-    ">z9001.10"
-  },
-  { "z9001.10",           -1, KC_TYPE_85_1,  KC_VARIANT_85_1_10,
-    N_("    Z9001 (later called KC 85/1) with monochrome display, no internal BASIC\n"
-       "    ROM. This computer has 16k RAM and 4k ROM with the robotron z9001 system.\n")
-  },
-  { "z9001.11",           -1, KC_TYPE_85_1,  KC_VARIANT_85_1_11,
-    N_("    Like the z9001.10 but with color extension card.\n")
-  },
-  { "kc85/1",              1, KC_TYPE_85_1,  KC_VARIANT_85_1_10,
-    ">z9001.10"
-  },
-  { "hc900",              -2, KC_TYPE_85_2,  KC_VARIANT_NONE,
-    ">kc85/2"
-  },
-  { "hc-900",             -2, KC_TYPE_85_2,  KC_VARIANT_NONE,
-    ">kc85/2"
-  },
-  { "kc85/2",              2, KC_TYPE_85_2,  KC_VARIANT_NONE,
-    N_("    HC900 (later called KC 85/2) with 16k RAM and 8k ROM. System is called\n"
-       "    HC-CAOS 2.2 (home computer - cassette aided operating system). BASIC\n"
-       "    is only available as external module.\n")
-  },
-  { "kc85/3",              3, KC_TYPE_85_3,  KC_VARIANT_NONE,
-    N_("    KC 85/3 with 16k RAM, 8k system ROM with HC-CAOS 3.1 and 8k BASIC ROM.\n")
-  },
-  { "kc85/4",              4, KC_TYPE_85_4,  KC_VARIANT_NONE,
-    N_("    KC 85/4 with 64k RAM, 64k screen memory, 12k system ROM with HC-CAOS 4.2\n"
-       "    and 8k BASIC ROM.\n")
-  },
-  { "kc85/5",              5, KC_TYPE_85_5,  KC_VARIANT_NONE,
-    N_("    Inofficial successor of the KC 85/4 with 256k RAM, 64k screen memory,\n"
-       "    16k system ROM with HC-CAOS 4.4, 8k BASIC ROM and 24k User ROM. It is\n"
-       "    intended to be used with a modified D004 floppy device with additional\n"
-       "    hard-disk support.\n")
-  },
-  { "poly880",             6, KC_TYPE_POLY880, KC_VARIANT_NONE,
-    N_("    Polycomputer 880.\n")
-  },
-  {
-    "poly880.sc1",        -6, KC_TYPE_POLY880, KC_VARIANT_POLY880_SC1,
-    N_("    Polycomputer 880 with chess program rom from SC1")
-  },
-  { "kc87",               -7, KC_TYPE_87,    KC_VARIANT_87_11,
-    ">kc87.11"
-  },
-  { "kc87.10",            -7, KC_TYPE_87,    KC_VARIANT_87_10,
-    N_("    Like the KC 87.11 but without the color extension card.\n")
-  },
-  { "kc87.11",             7, KC_TYPE_87,    KC_VARIANT_87_11,
-    N_("    Successor of the Z9001 with internal 10k BASIC ROM.\n")
-  },
-  { "kc87.20",            -8, KC_TYPE_87,    KC_VARIANT_87_20,
-    N_("    Like the KC 87.21 but without the color extension card.\n")
-  },
-  { "kc87.21",            -8, KC_TYPE_87,    KC_VARIANT_87_21,
-    N_("    New series with extended BASIC ROM (still 10k but with some routines for\n"
-       "    plotter support were added).\n")
-  },
-  { "lc80",                8, KC_TYPE_LC80,  KC_VARIANT_LC80_1k,
-    N_("    Single board computer LC 80 with 1k RAM and 2 x 1k ROM.\n")
-  },
-  { "lc80.1k",            -8, KC_TYPE_LC80,  KC_VARIANT_LC80_1k,
-    ">lc80"
-  },
-  { "lc80.2k",            -8, KC_TYPE_LC80,  KC_VARIANT_LC80_2k,
-    N_("    Single board computer LC 80 with 1k RAM and 1 x 2k ROM.\n")
-  },
-  { "bic",                -9, KC_TYPE_A5105, KC_VARIANT_A5105_K1505,
-    N_("    BIC/A5105, only the base device is emulated, no floppy device.\n")
-  },
-  { "k1505",              -9, KC_TYPE_A5105, KC_VARIANT_A5105_K1505,
-    ">bic"
-  },
-  { "a5105",               9, KC_TYPE_A5105, KC_VARIANT_A5105_A5105,
-    N_("    BIC/A5105, the full system including the floppy device.\n")
-  },
-  { "kramer-mc",          -1, KC_TYPE_KRAMERMC, KC_VARIANT_NONE,
-    N_("    Micro-Computer presented in the book \"Praktische Microcomputertechnik\"\n"
-       "    by Manfred Kramer.\n")
-  },
-  { "kramer",             -1, KC_TYPE_KRAMERMC, KC_VARIANT_NONE,
-    ">kramer-mc"
-  },
-  { "mugler-pc",          -1, KC_TYPE_MUGLERPC, KC_VARIANT_NONE,
-    N_("    CP/M based Micro-Computer presented in the magazine \"Funkamateur\"\n"
-       "    by A. Mugler and H. Mathes.\n")
-  },
-  { "mugler",             -1, KC_TYPE_MUGLERPC, KC_VARIANT_NONE,
-    ">mugler-pc"
-  },
-  { "pcm",                -1, KC_TYPE_MUGLERPC, KC_VARIANT_NONE,
-    ">mugler-pc"
-  },
-  { "vcs80",              -1, KC_TYPE_VCS80, KC_VARIANT_NONE,
-    N_("    Minimal Z80 learning system presented in the magazine \"rfe\"\n"
-       "    by Eckhard Schiller.\n")
-  },
-  { "c80",                -1, KC_TYPE_C80, KC_VARIANT_NONE,
-    N_("    Minimal Z80 learning system designed by Dipl.-Ing. Joachim Czepa.\n")
-  },
-  { NULL,                 -1, KC_TYPE_NONE,  KC_VARIANT_NONE,         NULL },
-};
+char *kcemu_profile;
 
 static void
 banner(void)
 {
   cout << ("   _  ______\n"
 	   "  | |/ / ___|___ _ __ ___  _   _               KCemu " KCEMU_VERSION "\n"
-	   "  | ' / |   / _ \\ '_ ` _ \\| | | |      (c) 1997-2006 Torsten Paul\n"
+	   "  | ' / |   / _ \\ '_ ` _ \\| | | |      (c) 1997-2008 Torsten Paul\n"
 	   "  | . \\ |__|  __/ | | | | | |_| |        <Torsten.Paul@gmx.de>\n"
 	   "  |_|\\_\\____\\___|_| |_| |_|\\__,_|     http://kcemu.sourceforge.net/\n");
 }
@@ -430,129 +256,37 @@ usage(char *argv0)
 	    "\n"
 	    "usage: kcemu [-0123456789aAcestfhdlvVHFMELW]\n"
 	    "\n"
-	    "  -0:                run in Z1013 mode\n"
-	    "  -1:                run in Z9001 / KC 85/1 mode\n"
-	    "  -2:                run in KC 85/2 mode\n"
-	    "  -3:                run in KC 85/3 mode\n"
-	    "  -4:                run in KC 85/4 mode (default)\n"
-	    "  -5:                run in KC 85/5 mode\n"
-	    "  -6:                run in Poly-880 mode\n"
-	    "  -7:                run in KC 87 mode\n"
-	    "  -8:                run in LC 80 mode\n"
-	    "  -9:                run in BIC/A5105 mode\n"
-	    "  -a --autostart:    autostart program on startup (kc85/3 - kc85/5 only)\n"
-	    "  -A --address:      override start address of autostart program\n"
-	    "  -c --config:       read (additional) configuration from given file\n"
-	    "  -e --emulate:      emulate the specified system (use -v/-V to list types)\n"
-	    "  -s --scale:        scale display (allowed values: 1, 2 and 3)\n"
-	    "  -t --tape:         attach tape on startup\n"
-	    "  -f --floppy:       attach disk on startup\n"
-	    "  -h --help:         display help\n"
-	    "  -d --datadir:      set data directory (for ROM images)\n"
-	    "  -l --localedir:    set locale directory\n"
-	    "  -o --debug-output: write debug output to file\n"
-	    "  -v --version:      show KCemu version and configuration\n"
-	    "  -V --viewlist:     view verbose list of available emulations\n"
-	    "  -H --home:         overwrite setting for home directory\n"
-	    "  -F --fullscreen:   start in fullscreen mode (if supported by gui)\n"
-            "  -M --modules:      insert modules on startup (e.g. -M M011,M027)\n"
-	    "  -E --effects:      enable display effects for scaled screen output\n"
-	    "  -L --license:      show license\n"
-	    "  -W --warranty:     show warranty\n");
+	    "  -0:                  select Z1013 profile\n"
+	    "  -1:                  select Z9001 / KC 85/1 profile\n"
+	    "  -2:                  select KC 85/2 profile\n"
+	    "  -3:                  select KC 85/3 profile\n"
+	    "  -4:                  select KC 85/4 profile\n"
+	    "  -5:                  select KC 85/5 profile\n"
+	    "  -6:                  select Poly-880 profile\n"
+	    "  -7:                  select KC 87 profile\n"
+	    "  -8:                  select LC 80 profile\n"
+	    "  -9:                  select BIC/A5105 profile\n"
+	    "  -a --autostart:      autostart program on startup (kc85/3 - kc85/5 only)\n"
+	    "  -A --address:        override start address of autostart program\n"
+	    "  -d --datadir:        set data directory (for ROM images)\n"
+	    "  -E --effects:        enable display effects for scaled screen output\n"
+	    "  -f --floppy:         attach disk on startup\n"
+	    "  -F --fullscreen:     start in fullscreen mode (if supported by gui)\n"
+	    "  -h --help:           display help\n"
+	    "  -H --home:           overwrite setting for home directory\n"
+	    "  -l --localedir:      set locale directory\n"
+	    "  -L --license:        show license\n"
+            "  -M --modules:        insert modules on startup (e.g. -M M011,M027)\n"
+	    "  -o --debug-output:   write debug output to file\n"
+            "  -p --profile:        start with given profile\n"
+            "  -P --select-profile: show profile selector\n"
+	    "  -s --scale:          scale display (allowed values: 1, 2 and 3)\n"
+	    "  -t --tape:           attach tape on startup\n"
+	    "  -v --version:        show KCemu version and configuration\n"
+	    "  -V --viewlist:       view verbose list of available emulations\n"
+	    "  -W --warranty:       show warranty\n");
 
   exit(0);
-}
-
-static void
-show_types(void)
-{
-  int a, type, width;
-  kc_type_t kc_type, old_type;
-
-  cout << "available emulations:";
-
-  a = 0;
-  width = 0;
-  old_type = KC_TYPE_NONE;
-  while (242) {
-    type = kc_types[a].type >= 0 ? kc_types[a].type : -kc_types[a].type;
-    kc_type = kc_types[a].kc_type;
-
-    width++;
-    if (old_type != kc_type)
-      cout << endl << "  ";
-    else
-      cout << ",";
-
-    if (kc_type == KC_TYPE_NONE)
-      break;
-
-    if (old_type != kc_type)
-      {
-	cout << type << ": ";
-	width = 5;
-      }
-
-    if (width > 60)
-      {
-	cout << endl << "     ";
-	width = 5;
-      }
-
-    cout << " " << kc_types[a].name;
-    width += strlen(kc_types[a].name) + 1;
-
-    if (kc_types[a].type >= 0)
-      {
-	width++;
-	cout << "*";
-      }
-
-    old_type = kc_type;
-    a++;
-  }
-}
-
-static void
-show_types_with_desc(void)
-{
-  int a;
-  char *ptr;
-
-  cout << _("available emulations:") << endl << endl;
-
-  a = 0;
-  while (kc_types[a].kc_type != KC_TYPE_NONE)
-    {
-      ptr = "";
-      if (kc_types[a].desc[0] != '>')
-	{
-	  /*
-	   *  find all references
-	   */
-	  for (int idx = 0;kc_types[idx].kc_type != KC_TYPE_NONE;idx++)
-	    {
-	      if (kc_types[idx].desc[0] == '>')
-		if (strcmp(kc_types[a].name, &kc_types[idx].desc[1]) == 0)
-		  {
-		    cout << ptr << kc_types[idx].name;
-		    ptr = ", ";
-		  }
-	      if (strcmp(kc_types[a].name, kc_types[idx].name) == 0)
-		{
-		  cout << ptr << kc_types[idx].name;
-		  ptr = ", ";
-		}
-	    }
-	  /*
-	   *  call gettext() here because static initialization of
-	   *  internationalized strings doesn't work.
-	   */
-	  cout << endl << _(kc_types[a].desc) << endl;
-	}
-      
-      a++;
-    }
 }
 
 static void
@@ -560,7 +294,7 @@ show_version(char *argv0)
 {
   banner();
   cout << endl;
-  show_types();
+  SystemInformation::instance()->show_types();
   cout << endl;
   fileio_show_config();
   cout << endl;
@@ -575,7 +309,7 @@ show_variants(char *argv0)
 {
   banner();
   cout << endl;
-  show_types_with_desc();
+  SystemInformation::instance()->show_types_with_description();
   exit(0);
 }
 
@@ -952,90 +686,6 @@ warranty(char *argv0)
   exit(0);
 }
 
-kc_type_t
-get_kc_type(void)
-{
-  return kcemu_kc_type;
-}
-
-kc_variant_t
-get_kc_variant(void)
-{
-  return kcemu_kc_variant;
-}
-
-const char *
-get_kc_variant_name(void)
-{
-  return kcemu_kc_variant_name;
-}
-
-void
-set_kc_type(int type, const char *variant)
-{
-  int a;
-
-  /*
-   *  if no model type switch (-1, -2, ...) and no name (-e kc85/1) on
-   *  the command line we use the value from the config file
-   */
-  if ((type < 0) && (variant == NULL))
-    {
-      /*
-       *  for historical reasons we check for an integer value first
-       *  as this was defined for older emulator versions
-       *  if it's not an integer we take it to be the model name of
-       *  the computer to emulate
-       */
-      type = RC::instance()->get_int("Default KC Model", -1);
-      if (type < 0)
-	variant = RC::instance()->get_string("Default KC Model", NULL);
-    }
-
-  /*
-   *  check model names
-   */
-  if (variant != NULL)
-    {
-      for (a = 0;kc_types[a].name != NULL;a++)
-	{
-	  if (strcasecmp(variant, kc_types[a].name) == 0)
-	    {
-	      kcemu_kc_type = kc_types[a].kc_type;
-	      kcemu_kc_variant = kc_types[a].kc_variant;
-	      kcemu_kc_variant_name = kc_types[a].name;
-	      return;
-	    }
-	}
-    }
-
-  /*
-   *  if no name is given or the name is unknown check type switch;
-   *  default is type 4
-   */
-  if (type < 0)
-    type = 4;
-
-  for (a = 0;kc_types[a].name != NULL;a++)
-    {
-      if (kc_types[a].type == type)
-	{
-	  kcemu_kc_type = kc_types[a].kc_type;
-	  kcemu_kc_variant = kc_types[a].kc_variant;
-	  kcemu_kc_variant_name = kc_types[a].name;
-	  return;
-	}
-    }
-
-  /*
-   *  we should never come to this point but just in case default
-   *  to kc85/4
-   */
-  kcemu_kc_type = KC_TYPE_85_4;
-  kcemu_kc_variant = KC_VARIANT_NONE;
-  kcemu_kc_variant_name = "kc85/4";
-}
-
 void
 attach_tape(void)
 {
@@ -1046,7 +696,7 @@ attach_tape(void)
     }
   else
     {
-      const char *tmp = RC::instance()->get_string("Tape File", "files.kct");
+      const char *tmp = Preferences::instance()->get_string_value("tape_file", "files.kct");
       if (tmp)
 	{
 	  string tapefile;
@@ -1077,20 +727,20 @@ attach_disk(void)
     }
   else
     {
-      filename = RC::instance()->get_string("Floppy Disk 1", NULL);
+      filename = Preferences::instance()->get_string_value("disk_1", NULL);
       if (filename != NULL)
 	disk->attach(0, filename);
     }
 
-  filename = RC::instance()->get_string("Floppy Disk 2", NULL);
+  filename = Preferences::instance()->get_string_value("disk_2", NULL);
   if (filename != NULL)
     disk->attach(1, filename);
 
-  filename = RC::instance()->get_string("Floppy Disk 3", NULL);
+  filename = Preferences::instance()->get_string_value("disk_3", NULL);
   if (filename != NULL)
     disk->attach(2, filename);
 
-  filename = RC::instance()->get_string("Floppy Disk 4", NULL);
+  filename = Preferences::instance()->get_string_value("disk_4", NULL);
   if (filename != NULL)
     disk->attach(3, filename);
 }
@@ -1147,6 +797,30 @@ get_kcemu_datadir(void)
     return strdup("../share/KCemu");
 
   return strdup(KCEMU_DATADIR);
+}
+
+char *
+get_kcemu_homedir(void)
+{
+    string home;
+    
+    char *ptr = getenv("XDG_CONFIG_HOME");
+    if (ptr != NULL) {
+        home = ptr;
+    } else {
+        ptr = sys_gethome();
+        if (ptr != NULL) {
+            home = ptr;
+            home += "/.config";
+            free(ptr);
+        } else {
+            return NULL;
+        }
+    }
+    
+    home += "/KCemu";
+
+    return strdup(home.c_str());
 }
 
 char *
@@ -1220,31 +894,33 @@ main(int argc, char **argv)
 {
   int c;
   int type;
-  char *ptr;
   bool do_quit;
   int option_index;
+  const char *getopt_args = "0123456789a:A:d:DEf:FhH:l:LM:o:p:Ps:t:vVW";
 #ifdef HAVE_GETOPT_LONG
   static struct option long_options[] =
   {
-    { "autostart",     1, 0, 'a' },
-    { "address",       1, 0, 'A' },
-    { "config",        1, 0, 'c' },
-    { "help",          0, 0, 'h' },
-    { "tape",          1, 0, 't' },
-    { "scale",         1, 0, 's' },
-    { "emulate",       1, 0, 'e' },
-    { "home",          1, 0, 'H' },
-    { "datadir",       1, 0, 'd' },
-    { "floppy",        1, 0, 'f' },
-    { "debug-output",  1, 0, 'o' },
-    { "localedir",     1, 0, 'l' },
-    { "license",       0, 0, 'L' },
-    { "warranty",      0, 0, 'W' },
-    { "modules",       1, 0, 'M' },
-    { "version",       0, 0, 'v' },
-    { "display-debug", 0, 0, 'D' },
-    { "fullscreen",    0, 0, 'F' },
-    { 0,               0, 0, 0   }
+    { "autostart",      1, 0, 'a' },
+    { "address",        1, 0, 'A' },
+    { "datadir",        1, 0, 'd' },
+    { "display-debug",  0, 0, 'D' },
+    { "effects",        0, 0, 'E' },
+    { "floppy",         1, 0, 'f' },
+    { "fullscreen",     0, 0, 'F' },
+    { "help",           0, 0, 'h' },
+    { "home",           1, 0, 'H' },
+    { "localedir",      1, 0, 'l' },
+    { "license",        0, 0, 'L' },
+    { "modules",        1, 0, 'M' },
+    { "debug-output",   1, 0, 'o' },
+    { "profile",        1, 0, 'p' },
+    { "select-profile", 0, 0, 'P' },
+    { "scale",          1, 0, 's' },
+    { "tape",           1, 0, 't' },
+    { "version",        0, 0, 'v' },
+    { "viewlist",       0, 0, 'V' },
+    { "warranty",       0, 0, 'W' },
+    { 0,                0, 0, 0   }
   };
 #endif /* HAVE_GETOPT_LONG */
   PortGroup *portg = NULL;
@@ -1273,20 +949,19 @@ main(int argc, char **argv)
   type = -1;
   kcemu_tape = 0;
   kcemu_disk = 0;
-  kcemu_emulate = 0;
   kcemu_modules = 0;
-  kcemu_configfile = 0;
+  kcemu_profile = 0;
   kcemu_debug_output = 0;
   kcemu_autostart_file = 0;
   kcemu_autostart_addr = 0;
-  kcemu_ui_scale = 0;
+  kcemu_ui_scale = -1;
   kcemu_ui_debug = -1;
   kcemu_ui_fullscreen = 0;
   kcemu_ui_display_effect = -1;
+  kcemu_select_profile = 0;
   kcemu_datadir = get_kcemu_datadir();
+  kcemu_homedir = get_kcemu_homedir();
   kcemu_localedir = get_kcemu_localedir();
-  ptr = getenv("HOME");
-  kcemu_homedir = (ptr) ? strdup(ptr) : NULL;
 
 #ifdef HAVE_SETLOCALE
   setlocale(LC_ALL, "");
@@ -1303,11 +978,10 @@ main(int argc, char **argv)
   while (1)
     {
 #ifdef HAVE_GETOPT_LONG
-      c = getopt_long(argc, argv, "0123456789hvDEA:a:c:e:d:f:o:l:s:t:H:M:FLWV",
-		      long_options, &option_index);
+        c = getopt_long(argc, argv, getopt_args, long_options, &option_index);
 #else
 #ifdef HAVE_GETOPT
-      c = getopt(argc, argv, "0123456789hvDEA:a:c:e:d:f:o:l:s:H:M:FLWV");
+        c = getopt(argc, argv, getopt_args);
 #else
 #warning neither HAVE_GETOPT_LONG nor HAVE_GETOPT defined
 #warning commandline parsing disabled!
@@ -1356,34 +1030,18 @@ main(int argc, char **argv)
 	case 'A':
 	  kcemu_autostart_addr = strdup(optarg);
 	  break;
-	case 'c':
-	  kcemu_configfile = strdup(optarg);
-	  break;
 	case 'd':
 	  free(kcemu_datadir);
 	  kcemu_datadir = strdup(optarg);
 	  break;
-	case 'e':
-	  kcemu_emulate = strdup(optarg);
-	  break;
-	case 'l':
-	  free(kcemu_localedir);
-	  kcemu_localedir = strdup(optarg);
-	  break;
-	case 'o':
-	  kcemu_debug_output = strdup(optarg);
-	  break;
-	case 's':
-	  kcemu_ui_scale = strtoul(optarg, NULL, 0);
-	  break;
-	case 't':
-	  kcemu_tape = strdup(optarg);
-	  break;
-	case 'f':
-	  kcemu_disk = strdup(optarg);
+	case 'D':
+	  kcemu_ui_debug = 1;
 	  break;
 	case 'E':
 	  kcemu_ui_display_effect = 1;
+	  break;
+	case 'f':
+	  kcemu_disk = strdup(optarg);
 	  break;
 	case 'F':
 	  kcemu_ui_fullscreen = 1;
@@ -1393,17 +1051,30 @@ main(int argc, char **argv)
 	    free(kcemu_homedir);
 	  kcemu_homedir = strdup(optarg);
 	  break;
-	case 'M':
-	  kcemu_modules = strdup(optarg);
+	case 'l':
+	  free(kcemu_localedir);
+	  kcemu_localedir = strdup(optarg);
 	  break;
 	case 'L':
 	  license(argv[0]);
 	  break;
-	case 'W':
-	  warranty(argv[0]);
+	case 'M':
+	  kcemu_modules = strdup(optarg);
 	  break;
-	case 'D':
-	  kcemu_ui_debug = 1;
+	case 'o':
+	  kcemu_debug_output = strdup(optarg);
+	  break;
+        case 'p':
+          kcemu_profile = strdup(optarg);
+          break;
+        case 'P':
+          kcemu_select_profile = 1;
+          break;
+	case 's':
+	  kcemu_ui_scale = strtoul(optarg, NULL, 0);
+	  break;
+	case 't':
+	  kcemu_tape = strdup(optarg);
 	  break;
 	case 'v':
 	  show_version(argv[0]);
@@ -1411,7 +1082,10 @@ main(int argc, char **argv)
 	case 'V':
 	  show_variants(argv[0]);
 	  break;
-	case ':':
+	case 'W':
+	  warranty(argv[0]);
+	  break;
+        case ':':
 	case '?':
 	case 'h':
 	default:
@@ -1426,15 +1100,30 @@ main(int argc, char **argv)
   close_output();
 #endif /* HOST_OS_MINGW */
 
-  RC::init();
+  if (kcemu_homedir == NULL)
+    kcemu_homedir = strdup(".");
 
-  set_kc_type(type, kcemu_emulate);
+  string home = kcemu_homedir;
+  string sys_config_dir = string(kcemu_datadir) + "/config";
+  string user_config_dir = home + "/config";
+  string user_profiles_dir = home + "/profiles";
+
+  Preferences::init(sys_config_dir.c_str(), user_config_dir.c_str(), user_profiles_dir.c_str());
+
+  ui = new UI_Gtk();
+  ui->init(&argc, &argv);
+  
+  if (kcemu_select_profile) {
+      kcemu_profile = ui->select_profile();
+  }
+
+  Preferences::instance()->set_current_profile(kcemu_profile, type);
 
   /*
    *  check display scale
    */
-  if (kcemu_ui_scale == 0)
-    kcemu_ui_scale = RC::instance()->get_int("Display Scale", 1);
+  if (kcemu_ui_scale < 0)
+    kcemu_ui_scale = Preferences::instance()->get_int_value("display_scale", 1);
 
   if (kcemu_ui_scale < 1)
     kcemu_ui_scale = 1;
@@ -1445,7 +1134,7 @@ main(int argc, char **argv)
    *  check display effect
    */
   if (kcemu_ui_display_effect < 0)
-    kcemu_ui_display_effect = RC::instance()->get_int("Display Effect", 0);
+    kcemu_ui_display_effect = Preferences::instance()->get_int_value("display_effects", 0);
 
   if (kcemu_ui_display_effect < 0)
     kcemu_ui_display_effect = 0;
@@ -1456,10 +1145,7 @@ main(int argc, char **argv)
    *  check display debug
    */
   if (kcemu_ui_debug < 0)
-    kcemu_ui_debug = RC::instance()->get_int("Display Debug", 0);
-
-  if (kcemu_homedir == NULL)
-    kcemu_homedir = strdup(".");
+    kcemu_ui_debug = Preferences::instance()->get_int_value("display_debug", 0);
 
   do
     {
@@ -1495,7 +1181,7 @@ main(int argc, char **argv)
       pio = pio2 = NULL;
       ctc = ctc2 = NULL;
 
-      switch (kcemu_kc_type)
+      switch (Preferences::instance()->get_kc_type())
 	{
 	case KC_TYPE_87:
 	  memory   = new Memory7;
@@ -1505,7 +1191,6 @@ main(int argc, char **argv)
 	    memory   = new Memory1;
 
 	  fileio_set_kctype(FILEIO_KC85_1);
-	  ui       = new UI_1;
 	  ctc      = new CTC1;
 	  pio2     = new PIO1_2;
 	  tape     = new Tape(500, 1000, 2000, 0);
@@ -1524,7 +1209,6 @@ main(int argc, char **argv)
 	  break;
 	case KC_TYPE_85_2:
 	  memory   = new Memory2;
-	  ui       = new UI_3;
 
 	  ctc      = new CTC3;
 	  tape     = new Tape(364, 729, 1458, 1);
@@ -1536,7 +1220,6 @@ main(int argc, char **argv)
 	  break;
 	case KC_TYPE_85_3:
 	  memory   = new Memory3;
-	  ui       = new UI_3;
 
 	  p3       = new PIO3;
 	  ctc      = new CTC3;
@@ -1549,7 +1232,6 @@ main(int argc, char **argv)
 	case KC_TYPE_85_4:
 	case KC_TYPE_85_5:
 	  memory   = new Memory4;
-	  ui       = new UI_4;
 	  porti    = new Ports4;
 	  p4       = new PIO4;
 	  ctc      = new CTC3;
@@ -1560,7 +1242,6 @@ main(int argc, char **argv)
 	  pio      = p4;
 	  break;
 	case KC_TYPE_LC80:
-	  ui       = new UI_8;
 	  memory   = new Memory8;
 	  p8       = new PIO8_1;
 	  pio2     = new PIO8_2;
@@ -1577,7 +1258,6 @@ main(int argc, char **argv)
 	  break;
 	case KC_TYPE_Z1013:
 	  fileio_set_kctype(FILEIO_Z1013);
-	  ui       = new UI_0;
 	  memory   = new Memory0;
 	  ctc      = new CTC1;
 	  p0       = new PIO0;
@@ -1592,7 +1272,6 @@ main(int argc, char **argv)
 	  pio->register_callback_B_out(k0);
 	  break;
 	case KC_TYPE_A5105:
-	  ui       = new UI_9;
 	  p9       = new PIO9;
 	  ctc      = new CTC9;
 	  memory   = new Memory9;
@@ -1603,7 +1282,6 @@ main(int argc, char **argv)
 	  pio      = p9;
 	  break;
 	case KC_TYPE_POLY880:
-	  ui       = new UI_6;
 	  pio      = new PIO6_1;
 	  pio2     = new PIO6_2;
 	  ctc      = new CTC6;
@@ -1616,7 +1294,6 @@ main(int argc, char **argv)
 	  pio->register_callback_A_out((Ports6 *)porti);
 	  break;
 	case KC_TYPE_KRAMERMC:
-	  ui       = new UI_KramerMC;
 	  pio      = new PIOKramerMC;
 	  memory   = new MemoryKramerMC;
 	  k_kramer = new KeyboardKramerMC;
@@ -1626,7 +1303,6 @@ main(int argc, char **argv)
 	  pio->register_callback_B_in(k_kramer);
 	  break;
 	case KC_TYPE_MUGLERPC:
-	  ui       = new UI_MuglerPC;
 	  pio      = new PIOMuglerPCSystem;
 	  pio2     = new PIOMuglerPCUser;
 	  ctc      = new CTCMuglerPCSystem;
@@ -1639,7 +1315,6 @@ main(int argc, char **argv)
 	  pio->register_callback_A_in(k_mugler);
 	  break;
 	case KC_TYPE_VCS80:
-	  ui       = new UI_VCS80;
 	  pio      = new PIOVCS80;
 	  memory   = new MemoryVCS80;
 	  tape     = new Tape(500, 1000, 2000, 0); // FIXME:
@@ -1648,7 +1323,6 @@ main(int argc, char **argv)
 	  pio->register_callback_A_in(k_vcs80);
 	  break;
 	case KC_TYPE_C80:
-	  ui       = new UI_C80;
 	  pio      = new PIOC80_1;
 	  pio2     = new PIOC80_2;
 	  memory   = new MemoryC80;
@@ -1668,8 +1342,10 @@ main(int argc, char **argv)
 
       module      = new Module;
       module_list = new ModuleList;
+      
+      ui->init2();
 
-      switch (kcemu_kc_type)
+      switch (Preferences::instance()->get_kc_type())
 	{
 	case KC_TYPE_87:
 	case KC_TYPE_85_1:
@@ -1687,7 +1363,7 @@ main(int argc, char **argv)
 	case KC_TYPE_85_3:
 	  timer = new Timer3;
 	  sound = new Sound3;
-	  if (RC::instance()->get_int("Enable Sound"))
+	  if (Preferences::instance()->get_int_value("enable_sound", 0))
 	    sound->init();
 
 	  portg = ports->register_ports("Module", 0x80, 1, module, 10);
@@ -1701,7 +1377,7 @@ main(int argc, char **argv)
 	case KC_TYPE_85_5:
 	  timer = new Timer3;
 	  sound = new Sound3;
-	  if (RC::instance()->get_int("Enable Sound"))
+	  if (Preferences::instance()->get_int_value("enable_sound", 0))
 	    sound->init();
 
 	  portg = ports->register_ports("Module", 0x80, 1, module, 10);
@@ -1715,7 +1391,7 @@ main(int argc, char **argv)
 	  break;
 	case KC_TYPE_LC80:
 	  sound = new Sound8;
-	  if (RC::instance()->get_int("Enable Sound"))
+	  if (Preferences::instance()->get_int_value("enable_sound", 0))
 	    sound->init();
 
 	  portg = ports->register_ports("CTC",  0xec, 4, ctc,  10);
@@ -1781,8 +1457,8 @@ main(int argc, char **argv)
 	  break;
 	}
 
-      if (get_kc_type() & KC_TYPE_85_2_CLASS)
-	if (RC::instance()->get_int("Floppy Disk Basis"))
+      if (Preferences::instance()->get_kc_type() & KC_TYPE_85_2_CLASS)
+	if (Preferences::instance()->get_int_value("d004", 0))
 	  {
 	    fdc_z80 = new Z80_FDC();
 	    fdc_ports = new Ports();
@@ -1803,13 +1479,13 @@ main(int argc, char **argv)
 	  }
 
       log = new LOG();
-      ui->init(&argc, &argv);
+      
       module_list->init();
 
-      if ((kcemu_kc_type == KC_TYPE_85_1) ||
-	  (kcemu_kc_type == KC_TYPE_87) ||
-	  (kcemu_kc_type == KC_TYPE_LC80) ||
-	  (kcemu_kc_type == KC_TYPE_Z1013))
+      if ((Preferences::instance()->get_kc_type() == KC_TYPE_85_1) ||
+	  (Preferences::instance()->get_kc_type() == KC_TYPE_87) ||
+	  (Preferences::instance()->get_kc_type() == KC_TYPE_LC80) ||
+	  (Preferences::instance()->get_kc_type() == KC_TYPE_Z1013))
 	tape->power(true);
 
       attach_tape();
@@ -1837,8 +1513,6 @@ main(int argc, char **argv)
       delete z80;
     }
   while (0); // (!do_quit);
-
-  RC::done();
 
   free(kcemu_datadir);
   free(kcemu_localedir);

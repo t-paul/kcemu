@@ -27,7 +27,6 @@
 
 #include "ui/gtk/cmd.h"
 #include "ui/gtk/copying.h"
-#include "ui/gtk/glade/interface.h"
 
 using namespace std;
 
@@ -54,7 +53,7 @@ public:
     }
 };
 
-CopyingWindow::CopyingWindow(void)
+CopyingWindow::CopyingWindow(const char *glade_xml_file) : UI_Gtk_Window(glade_xml_file)
 {
   _font_desc = pango_font_description_new();
   pango_font_description_set_family(_font_desc, "Courier");
@@ -79,7 +78,7 @@ CopyingWindow::init(void)
   /*
    *  copying window
    */
-  _window = create_copying_window();
+  _window = get_widget("copying_window");
   gtk_signal_connect(GTK_OBJECT(_window), "delete_event",
 		     GTK_SIGNAL_FUNC(cmd_exec_sft),
 		     (char *)"ui-copying-window-toggle"); // FIXME:

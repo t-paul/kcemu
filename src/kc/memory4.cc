@@ -23,9 +23,8 @@
 #include <fstream>
 
 #include "kc/system.h"
+#include "kc/prefs/prefs.h"
 
-#include "kc/kc.h"
-#include "kc/rc.h"
 #include "kc/z80.h"
 #include "kc/memory4.h"
 #include "kc/mod_rom.h"
@@ -38,7 +37,7 @@ using namespace std;
 
 Memory4::Memory4(void)
 {
-  if (get_kc_type() == KC_TYPE_85_4)
+  if (Preferences::instance()->get_kc_type() == KC_TYPE_85_4)
     init_4();
   else
     init_5();
@@ -115,8 +114,6 @@ Memory4::init_4(void)
 
   reset(true);
   z80->register_ic(this);
-
-  loadRAM(RC::instance()->get_string("Load On Init", NULL));
 }
 
 void
@@ -201,8 +198,6 @@ Memory4::init_5(void)
 
   reset(true);
   z80->register_ic(this);
-
-  loadRAM(RC::instance()->get_string("Load On Init", NULL));
 }
 
 Memory4::~Memory4(void)

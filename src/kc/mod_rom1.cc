@@ -24,8 +24,8 @@
 #include <iostream>
 
 #include "kc/system.h"
+#include "kc/prefs/prefs.h"
 
-#include "kc/kc.h"
 #include "kc/memory1.h"
 #include "kc/memory7.h"
 #include "kc/mod_rom1.h"
@@ -52,7 +52,7 @@ ModuleROM1::ModuleROM1(ModuleROM1 &tmpl) :
       if (_set_romdi)
 	{
 	  set_romdi(true);
-	  switch (get_kc_type())
+	  switch (Preferences::instance()->get_kc_type())
 	    {
 	    case KC_TYPE_85_1:
 	      ((Memory1 *)memory)->register_romdi_handler(this);
@@ -92,7 +92,7 @@ ModuleROM1::~ModuleROM1(void)
   if (_set_romdi)
     {
       set_romdi(false);
-      switch (get_kc_type())
+      switch (Preferences::instance()->get_kc_type())
 	{
 	case KC_TYPE_85_1:
 	  ((Memory1 *)memory)->unregister_romdi_handler(this);
@@ -138,7 +138,7 @@ void
 ModuleROM1::set_romdi(bool val)
 {
   _set_romdi = val;
-  switch (get_kc_type())
+  switch (Preferences::instance()->get_kc_type())
     {
     case KC_TYPE_85_1:
       ((Memory1 *)memory)->set_romdi(val);

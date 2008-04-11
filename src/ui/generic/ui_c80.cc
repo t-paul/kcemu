@@ -37,22 +37,11 @@ UI_C80::~UI_C80(void)
 }
 
 void
-UI_C80::generic_update(bool clear_cache)
+UI_C80::generic_update(Scanline *scanline, MemAccess *memaccess, bool clear_cache)
 {
   for (int a = 0;a < C80_NR_OF_LEDS;a++)
     {
       byte_t led_value = display_c80->get_led_value(a);
       generic_draw_digit(65 * a + 32, 12, a, led_value, clear_cache);
     }
-}
-
-int
-UI_C80::generic_get_mode(void)
-{
-  return 0;
-}
-
-void
-UI_C80::generic_set_mode(int mode)
-{
 }

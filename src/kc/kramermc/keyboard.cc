@@ -123,13 +123,13 @@ KeyboardKramerMC::callback(void *data)
        */
       _keybuf.sym1 = 0;
       z80->addCallback(MODIFIER_RELEASE_DELAY, this, (void *)1);
-      printf("{remove shift}\n");
+      //printf("{remove shift}\n");
     }
   else
     {
       _keybuf.sym1 = _keybuf.sym2;
       _keybuf.sym2 = 0;
-      printf("{2nd key}\n");
+      //printf("{2nd key}\n");
     }
 }
 
@@ -153,8 +153,8 @@ KeyboardKramerMC::callback_B_in(void)
 
   int v = _keybuf.sym1;
 
-  if (v != old_val)
-    printf("[%02x - %3d]\n", v, v);
+  //if (v != old_val)
+    //printf("[%02x - %3d]\n", v, v);
   old_val = v;
 
   if (_keybuf.code != -1)

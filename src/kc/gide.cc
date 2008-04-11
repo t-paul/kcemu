@@ -22,8 +22,8 @@
 #include <stdio.h>
 
 #include "kc/system.h"
+#include "kc/prefs/prefs.h"
 
-#include "kc/rc.h"
 #include "kc/gide.h"
 
 #include "libdbg/dbg.h"
@@ -54,14 +54,28 @@ GIDE::GIDE(void)
   _hard_disk_config[0].nr_of_heads = 6;
   _hard_disk_config[0].nr_of_sectors = 26;
   _hard_disk_config[0].name = "KCemu virtual hard disk (ST-157A)";
-  _hard_disk_config[0].filename = RC::instance()->get_string("Hard Disk 0", NULL);
+  _hard_disk_config[0].filename = Preferences::instance()->get_string_value("hard_disk_1", NULL);
 
   // MyZ80 hard disk format
   _hard_disk_config[1].nr_of_cylinders = 512;
   _hard_disk_config[1].nr_of_heads = 1;
   _hard_disk_config[1].nr_of_sectors = 32;
   _hard_disk_config[1].name = "KCemu virtual hard disk (MyZ80)";
-  _hard_disk_config[1].filename = RC::instance()->get_string("Hard Disk 1", NULL);
+  _hard_disk_config[1].filename = Preferences::instance()->get_string_value("hard_disk_2", NULL);
+
+  DBG(2, form("KCemu/GIDE/image",
+	      "GIDE::GIDE(): hard disk 1: (C/H/S) = (%d/%d/%d) -> '%s'\n",
+          _hard_disk_config[0].nr_of_cylinders,
+          _hard_disk_config[0].nr_of_heads,
+          _hard_disk_config[0].nr_of_sectors,
+          _hard_disk_config[0].filename));
+
+  DBG(2, form("KCemu/GIDE/image",
+	      "GIDE::GIDE(): hard disk 2: (C/H/S) = (%d/%d/%d) -> '%s'\n",
+          _hard_disk_config[1].nr_of_cylinders,
+          _hard_disk_config[1].nr_of_heads,
+          _hard_disk_config[1].nr_of_sectors,
+          _hard_disk_config[1].filename));
 
   _error = 0;
   set_status(GIDE_STATUS_ALL, GIDE_STATUS_READY

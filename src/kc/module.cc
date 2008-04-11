@@ -160,6 +160,12 @@ Module::out(word_t addr, byte_t val)
     }
 }
 
+bool
+Module::is_empty(byte_t slot)
+{
+  return _module[slot] == 0;
+}
+
 void
 Module::insert(byte_t slot, ModuleInterface *module)
 {

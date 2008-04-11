@@ -6,6 +6,7 @@ INCLUDES = \
 	-I../../../include
 
 libui_generic_a_SOURCES = \
+	ui_base.cc	\
 	ui_0.cc		\
 	ui_1.cc		\
 	ui_3.cc		\

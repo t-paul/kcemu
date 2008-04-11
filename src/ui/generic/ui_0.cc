@@ -1,6 +1,6 @@
 /*
  *  KCemu -- the KC 85/3 and KC 85/4 Emulator
- *  Copyright (C) 1997-2001 Torsten Paul
+ *  Copyright (C) 1997-2008 Torsten Paul
  *
  *  $Id$
  *
@@ -19,9 +19,6 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-#include <ctype.h>
-#include <stdio.h>
-
 #include "kc/system.h"
 
 #include "kc/kc.h"
@@ -39,6 +36,7 @@ UI_0::UI_0(void)
   _col_cache = NULL;
 
   generic_set_mode(UI_GENERIC_MODE_Z1013_32x32);
+  
   init();
 }
 
@@ -71,30 +69,6 @@ UI_0::dispose(void)
     delete[] _pix_cache;
   if (_col_cache)
     delete[] _col_cache;
-}
-
-int
-UI_0::get_real_width(void)
-{
-  return _width;
-}
-
-int
-UI_0::get_real_height(void)
-{
-  return _height;
-}
-
-byte_t *
-UI_0::get_dirty_buffer(void)
-{
-  return _dirty;
-}
-
-int
-UI_0::get_dirty_buffer_size(void)
-{
-  return _dirty_size;
 }
 
 void
@@ -267,7 +241,7 @@ UI_0::generic_update_64x16(byte_t *font, bool clear_cache)
 }
 
 void
-UI_0::generic_update(bool clear_cache)
+UI_0::generic_update(Scanline *scanline, MemAccess *memaccess, bool clear_cache)
 {
   byte_t *font = memory->get_char_rom();
 
@@ -313,16 +287,13 @@ UI_0::generic_set_mode(int mode)
   switch (_mode)
     {
     case UI_GENERIC_MODE_Z1013_32x32:
-      _width = 288;
-      _height = 288;
+      set_real_screen_size(288, 288);
       break;
     case UI_GENERIC_MODE_Z1013_64x16:
-      _width = 528;
-      _height = 200;
+      set_real_screen_size(528, 200);
       break;
     case UI_GENERIC_MODE_GDC:
-      _width = 640;
-      _height = 200;
+      set_real_screen_size(640, 200);
       break;
     }
 

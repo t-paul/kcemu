@@ -1,6 +1,6 @@
 /*
  *  KCemu -- the KC 85/3 and KC 85/4 Emulator
- *  Copyright (C) 1997-2004 Torsten Paul
+ *  Copyright (C) 1997-2008 Torsten Paul
  *
  *  $Id$
  *
@@ -30,6 +30,8 @@ UI_KramerMC::UI_KramerMC(void)
 {
   int a;
 
+  set_real_screen_size(64 * 8 + 32, 16 * 8 + 32);
+
   _dirty_size = (get_real_width() * get_real_height()) / 64;
   _dirty = new byte_t[_dirty_size];
  
@@ -47,30 +49,6 @@ UI_KramerMC::~UI_KramerMC(void)
 {
 }
 
-int
-UI_KramerMC::get_real_width(void)
-{
-  return 64 * 8 + 32;
-}
- 
-int
-UI_KramerMC::get_real_height(void)
-{
-  return 16 * 8 + 32;
-}
-
-byte_t *
-UI_KramerMC::get_dirty_buffer(void)
-{
-  return _dirty;
-}
- 
-int
-UI_KramerMC::get_dirty_buffer_size(void)
-{
-  return _dirty_size;
-}
-
 void
 UI_KramerMC::generic_put_pixels(byte_t *ptr, byte_t val)
 {
@@ -79,7 +57,7 @@ UI_KramerMC::generic_put_pixels(byte_t *ptr, byte_t val)
 }
 
 void
-UI_KramerMC::generic_update(bool clear_cache)
+UI_KramerMC::generic_update(Scanline *scanline, MemAccess *memaccess, bool clear_cache)
 {
   byte_t *irm = memory->get_irm();
   byte_t *chr = memory->get_char_rom();
@@ -118,15 +96,4 @@ UI_KramerMC::generic_update(bool clear_cache)
       ptr += 8 * width;
       d += 4;
     }
-}
-
-int
-UI_KramerMC::generic_get_mode(void)
-{
-  return 0;
-}
-
-void
-UI_KramerMC::generic_set_mode(int mode)
-{
 }

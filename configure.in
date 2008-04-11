@@ -237,6 +237,18 @@ fi
 
 AC_CHECK_LIB(m, pow,,AC_MSG_WARN(Cannot link libm -- check CFLAGS/LDFLAGS))
 
+dnl -----------------------
+dnl  initialize pkg-config
+dnl -----------------------
+PKG_PROG_PKG_CONFIG(0.20)
+
+dnl ---------------------------------
+dnl  check for glade runtime library
+dnl ---------------------------------
+PKG_CHECK_MODULES(LIBGLADE, libglade-2.0 >= 2.6.2)
+AC_SUBST(LIBGLADE_CFLAGS)
+AC_SUBST(LIBGLADE_LIBS)
+
 dnl ---------------------
 dnl  check for libsndfile
 dnl ---------------------
@@ -410,7 +422,7 @@ if test x"$HOST_OS" = "xLinux" -o x"$HOST_OS" = "xMinGW"; then
 	dnl ------------------
 
 	if ! test "x$enable_gtktest" = "xno" ; then
-		AM_PATH_GTK_2_0(2.4.14, have_libgtk=yes, have_libgtk=no)
+		AM_PATH_GTK_2_0(2.6.10, have_libgtk=yes, have_libgtk=no)
 	else
 		have_libgtk=yes
 		gtk_config_major_version=?
@@ -500,6 +512,7 @@ AC_OUTPUT([
 	Makefile
 	include/Makefile
 	include/kc/Makefile
+	include/kc/prefs/Makefile
 	include/kc/kramermc/Makefile
 	include/kc/muglerpc/Makefile
 	include/kc/vcs80/Makefile
@@ -509,7 +522,6 @@ AC_OUTPUT([
 	include/cmd/Makefile
 	include/ui/Makefile
 	include/ui/gtk/Makefile
-	include/ui/gtk/glade/Makefile
 	include/ui/sdl/Makefile
 	include/ui/sdlmtk/Makefile
 	include/ui/beos/Makefile
@@ -526,6 +538,7 @@ AC_OUTPUT([
 	src/Makefile
 	src/kc/kcemu.rc
 	src/kc/Makefile
+	src/kc/prefs/Makefile
 	src/kc/kramermc/Makefile
 	src/kc/muglerpc/Makefile
 	src/kc/vcs80/Makefile
@@ -538,7 +551,6 @@ AC_OUTPUT([
 	src/cmd/Makefile
 	src/ui/Makefile
 	src/ui/gtk/Makefile
-	src/ui/gtk/glade/Makefile
 	src/ui/sdl/Makefile
 	src/ui/sdlmtk/Makefile
 	src/ui/beos/Makefile
@@ -553,6 +565,7 @@ AC_OUTPUT([
 	src/z80core2/Makefile
 	test/Makefile
 	test/kc/Makefile
+	test/kc/prefs/Makefile
 	test/libaudio/Makefile
 	test/libaudio/data/Makefile
 	roms/Makefile
@@ -567,7 +580,7 @@ AC_OUTPUT([
 	roms/vcs80/Makefile
 	roms/c80/Makefile
 	tapes/Makefile
-	disks/Makefile
+        disks/Makefile
 	images/Makefile
 	images/original/Makefile
 	doc/Makefile
@@ -587,11 +600,12 @@ AC_OUTPUT([
 	glade/module/Makefile
 	glade/tape/Makefile
 	glade/thanks/Makefile
+	conf/Makefile
 	setup/Makefile
 	setup/KCemuSetup.nsi
-	setup/KCemuSetup_gtk2.4.nsi
 	setup/KCemuSetup_gtk2.6.nsi
-	setup/KCemuSetup_gtk2.8.nsi],
+	setup/KCemuSetup_gtk2.8.nsi
+	setup/KCemuSetup_gtk2.10.nsi],
 	[])
 
 

@@ -95,8 +95,6 @@ PIO1_1::out(word_t addr, byte_t val)
 void
 PIO1_1::change_A(byte_t changed, byte_t val)
 {
-  _border  = (val >> 3) & 0x07;
-  _20lines = (val >> 2) & 0x01;
 }
 
 void
@@ -107,13 +105,13 @@ PIO1_1::change_B(byte_t changed, byte_t val)
 byte_t
 PIO1_1::get_border_color(void)
 {
-  return _border;
+  return (_value[A] >> 3) & 0x07;
 }
 
 byte_t
 PIO1_1::get_line_mode(void)
 {
-  return _20lines;
+  return (_value[A] >> 2) & 0x01;
 }
 
 void

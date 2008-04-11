@@ -39,7 +39,7 @@ class AboutWindow : public UI_Gtk_Window
   void init(void);
   
  public:
-  AboutWindow(void);
+  AboutWindow(const char *glade_xml_file);
   virtual ~AboutWindow(void);
 };
 

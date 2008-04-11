@@ -38,7 +38,6 @@
 
 #include "ui/gtk/cmd.h"
 #include "ui/gtk/help.h"
-#include "ui/gtk/glade/interface.h"
 
 #include "libdbg/dbg.h"
 
@@ -307,7 +306,7 @@ HelpWindow::sf_parser_start_element_handler(GMarkupParseContext *context, const 
     }
   else if (strcmp(element_name, "m") == 0)
     {
-      w->parse_flags |= PARSE_FLAGS_MONOSPACED;
+      w->parse_flags |= PARSE_FLAGS_MONOSPACE;
     }
   else if (strcmp(element_name, "p") == 0)
     {
@@ -342,7 +341,7 @@ HelpWindow::sf_parser_end_element_handler(GMarkupParseContext *context, const gc
     }
   if (strcmp(element_name, "m") == 0)
     {
-      w->parse_flags &= ~PARSE_FLAGS_MONOSPACED;
+      w->parse_flags &= ~PARSE_FLAGS_MONOSPACE;
     }
   if (strcmp(element_name, "p") == 0)
     {
@@ -388,7 +387,7 @@ HelpWindow::sf_parser_error_handler(GMarkupParseContext *context, GError *error,
   DBG(1, form("KCemu/Help/parser", "error: %s\n", error->message));
 }
 
-HelpWindow::HelpWindow(void)
+HelpWindow::HelpWindow(const char *glade_xml_file) : UI_Gtk_Window(glade_xml_file)
 {
   _history = NULL;
   _history_ptr = NULL;
@@ -421,7 +420,7 @@ HelpWindow::init(void)
 void
 HelpWindow::init2(void)
 {
-  _window = create_help_window();
+  _window = get_widget("help_window");
   g_signal_connect(G_OBJECT(_window), "delete_event",
 		   G_CALLBACK(cmd_exec_sft),
 		   (char *)"ui-help-window-toggle"); // FIXME:
@@ -436,7 +435,7 @@ HelpWindow::init2(void)
   _w.tag_italic = gtk_text_buffer_create_tag(_w.text_buffer, "italic", "style", PANGO_STYLE_ITALIC, NULL);
   _w.tag_underline = gtk_text_buffer_create_tag(_w.text_buffer, "underline", "underline", PANGO_UNDERLINE_DOUBLE, NULL);
   _w.tag_center = gtk_text_buffer_create_tag(_w.text_buffer, "center", "justification", GTK_JUSTIFY_CENTER, NULL);
-  _w.tag_monospaced = gtk_text_buffer_create_tag(_w.text_buffer, "monospaced", "font", "Monospace", NULL);
+  _w.tag_monospace = gtk_text_buffer_create_tag(_w.text_buffer, "monospace", "family", "Monospace", NULL);
   
   _w.tag_size[0] = gtk_text_buffer_create_tag(_w.text_buffer, "size -3", "scale", PANGO_SCALE_XX_SMALL, NULL);
   _w.tag_size[1] = gtk_text_buffer_create_tag(_w.text_buffer, "size -2", "scale", PANGO_SCALE_X_SMALL, NULL);
@@ -572,8 +571,8 @@ HelpWindow::insert_text(const char *text, GtkTextTag *tag)
     tags[i++] = _w.tag_underline;
   if (parse_flags & PARSE_FLAGS_CENTER)
     tags[i++] = _w.tag_center;
-  if (parse_flags & PARSE_FLAGS_MONOSPACED)
-    tags[i++] = _w.tag_monospaced;
+  if (parse_flags & PARSE_FLAGS_MONOSPACE)
+    tags[i++] = _w.tag_monospace;
   if (_w.tag_size[text_size + 3] != NULL)
     tags[i++] = _w.tag_size[text_size + 3];
   if (tag != NULL)

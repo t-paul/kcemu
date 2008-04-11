@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: Torsten.Paul@gmx.de\n"
-"POT-Creation-Date: 2007-09-29 18:45+0200\n"
+"POT-Creation-Date: 2008-04-11 21:52+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -16,23 +16,680 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: src/cmd/image.cc:102
+#: images/about.glade:6
+msgid "KCemu: About"
+msgstr ""
+
+#: images/about.glade:24
+msgid "About"
+msgstr ""
+
+#: images/about.glade:63
+msgid "<big><b>[ Version ]</b></big>"
+msgstr ""
+
+#: images/about.glade:77
+msgid "(c) 1997-2008 Torsten Paul"
+msgstr ""
+
+#: images/about.glade:90
+msgid "<Torsten.Paul@gmx.de>"
+msgstr ""
+
+#: images/about.glade:103
+msgid "<b>http://kcemu.sourceforge.net/</b>"
+msgstr ""
+
+#: images/about.glade:119
+msgid "[ Build ]"
+msgstr ""
+
+#: images/audio.glade:6
+msgid "KCemu: Audio"
+msgstr ""
+
+#: images/audio.glade:23
+msgid "Audio"
+msgstr ""
+
+#: images/dialog.glade:6
+msgid "KCemu"
+msgstr ""
+
+#: images/dialog.glade:26
+msgid "[ Title ]"
+msgstr ""
+
+#: images/dialog.glade:114 images/tapeedit.glade:123 images/selector.glade:170
+msgid "gtk-cancel"
+msgstr ""
+
+#: images/disk.glade:6
+msgid "KCemu: Disk"
+msgstr ""
+
+#: images/disk.glade:24
+msgid "Disk"
+msgstr ""
+
+#: images/disk.glade:316 images/options.glade:1116
+msgid "Disk 4:"
+msgstr ""
+
+#: images/disk.glade:330 images/options.glade:1102
+msgid "Disk 3:"
+msgstr ""
+
+#: images/disk.glade:344 images/options.glade:1088
+msgid "Disk 2:"
+msgstr ""
+
+#: images/disk.glade:358 images/options.glade:1074
+msgid "Disk 1:"
+msgstr ""
+
+#: images/help.glade:6
+msgid "KCemu: Help"
+msgstr ""
+
+#: images/help.glade:25
+msgid "Help"
+msgstr ""
+
+#: images/module.glade:6
+msgid "KCemu: Module"
+msgstr ""
+
+#: images/module.glade:22
+msgid "Module"
+msgstr ""
+
+#: images/tape.glade:6
+msgid "KCemu: Tape"
+msgstr ""
+
+#: images/tape.glade:23
+msgid "Tape"
+msgstr ""
+
+#: images/thanks.glade:6
+msgid "KCemu: Thanks"
+msgstr ""
+
+#: images/thanks.glade:24
+msgid "Thanks"
+msgstr ""
+
+#: images/thanks.glade:75
+msgid ""
+"I'd like to say thanks to many people who helped to bring KCemu to the point "
+"where it is now. The following list just lists some of them in no particular "
+"order..."
+msgstr ""
+
+#: images/thanks.glade:99
+msgid ""
+"Marat Fayzullin\n"
+"        for the Z80 emulation core used for the main processor\n"
+"        (I needed to tweak some bits of the emulation core; see\n"
+"        src/z80core/README for the list of changes)\n"
+"Marcel de Kogel\n"
+"        for the Z80 emulation core used for the KC floppy\n"
+"        processor\n"
+"Thomas Bretz\n"
+"        for the OS/2 port of KCemu (see http://www.d4m.de/)\n"
+"Thomas Ludwig\n"
+"        for the great KC website at http://www.kc85emu.de/ and\n"
+"        lots of bugreports and hints how to make KCemu better\n"
+"Holger Krull\n"
+"        for providing lots of information about the LC 80\n"
+"        computer (see http://www.lc80.de/)\n"
+"Kev Thacker\n"
+"        for interesting insights concerning the floppy emulation\n"
+"        (he's also the author of the KC driver for M.E.S.S. the\n"
+"        Multi-Emulator Super System, see http://mess.emuverse.com/)\n"
+"Volker Pohlers\n"
+"        for help with the windows port, technical information and\n"
+"        bugreports\n"
+"Alexander Schön\n"
+"        for starting the windows port, lots of tips and for providing\n"
+"        a huge pile of files for use with the emulator or with\n"
+"        information about the various systems"
+msgstr ""
+
+#: images/thanks.glade:137
+msgid "People"
+msgstr ""
+
+#: images/thanks.glade:154
+msgid ""
+"Lots of tools and libraries made it easier to write KCemu. Many thanks to "
+"the people behind all those projects for their work..."
+msgstr ""
+
+#: images/thanks.glade:184
+msgid "http://www.mega-nerd.com/libsndfile/\n"
+msgstr ""
+
+#: images/thanks.glade:202
+msgid "libsndfile"
+msgstr ""
+
+#: images/thanks.glade:230
+msgid "http://www.vorbis.com/\n"
+msgstr ""
+
+#: images/thanks.glade:248
+msgid "Ogg & Vorbis libraries"
+msgstr ""
+
+#: images/thanks.glade:289
+msgid "http://openclipart.org/\n"
+msgstr ""
+
+#: images/thanks.glade:307
+msgid "Open Clip Art Library"
+msgstr ""
+
+#: images/thanks.glade:337
+msgid "http://lame.sourceforge.net/\n"
+msgstr ""
+
+#: images/thanks.glade:355
+msgid "LAME - LAME Ain't an MP3 Encoder"
+msgstr ""
+
+#: images/thanks.glade:372
+msgid "http://www.gtk.org/\n"
+msgstr ""
+
+#: images/thanks.glade:390
+msgid "http://flac.sourceforge.net/\n"
+msgstr ""
+
+#: images/thanks.glade:408
+msgid "FLAC - Free Lossless Audio Codec"
+msgstr ""
+
+#: images/thanks.glade:425
+msgid "http://www.libsdl.org/\n"
+msgstr ""
+
+#: images/thanks.glade:443
+msgid "GTK+ - The GIMP Toolkit"
+msgstr ""
+
+#: images/thanks.glade:496
+msgid "libSDL - Simple DirectMedia Layer"
+msgstr ""
+
+#: images/thanks.glade:525
+msgid "Projects & Libraries"
+msgstr ""
+
+#: images/color.glade:8
+msgid "KCemu: Color Configuration"
+msgstr ""
+
+#: images/color.glade:28
+msgid "Colors"
+msgstr ""
+
+#: images/color.glade:95 images/color.glade:196
+msgid "Saturation"
+msgstr ""
+
+#: images/color.glade:128 images/color.glade:229
+msgid "Brightness"
+msgstr ""
+
+#: images/color.glade:148
+msgid "Foreground"
+msgstr ""
+
+#: images/color.glade:249
+msgid "Background"
+msgstr ""
+
+#: images/color.glade:290
+msgid "Black Level"
+msgstr ""
+
+#: images/color.glade:323
+msgid "White Level"
+msgstr ""
+
+#: images/tapeedit.glade:7 src/ui/gtk/tapeadd.cc:95
+msgid "KCemu: Rename File"
+msgstr ""
+
+#: images/tapeedit.glade:26
+msgid "Edit Tape"
+msgstr ""
+
+#: images/tapeedit.glade:57
+msgid ""
+"[ Text ]\n"
+"\n"
+"[ more text ... ]"
+msgstr ""
+
+#: images/tapeedit.glade:74
+msgid "Tape name:"
+msgstr ""
+
+#: images/tapeedit.glade:139 images/options.glade:1978
+#: images/selector.glade:184
+msgid "gtk-ok"
+msgstr ""
+
+#: images/keyboard.glade:26
+msgid "Keyboard"
+msgstr ""
+
+#: images/keyboard.glade:78
+msgid "Sorry, keyboard display not configured."
+msgstr ""
+
+#: images/options.glade:9
+msgid "KCemu: Profiles"
+msgstr ""
+
+#: images/options.glade:31
+msgid "Profiles"
+msgstr ""
+
+#: images/options.glade:77
+msgid "Create new profile..."
+msgstr ""
+
+#: images/options.glade:100
+msgid "Copy selected profile..."
+msgstr ""
+
+#: images/options.glade:164
+msgid "Expand user profile level..."
+msgstr ""
+
+#: images/options.glade:185
+msgid "Collapse user profile level..."
+msgstr ""
+
+#: images/options.glade:350
+msgid "Profile Name:"
+msgstr ""
+
+#: images/options.glade:362
+msgid "System:"
+msgstr ""
+
+#: images/options.glade:404
+msgid "Variant:"
+msgstr ""
+
+#: images/options.glade:420
+msgid "Comment:"
+msgstr ""
+
+#: images/options.glade:465
+msgid "System"
+msgstr ""
+
+#: images/options.glade:499
+msgid ""
+"This setting is only used when emulating a KC 85/3 where it enables the "
+"emulation of the display dissortion when the screen memory is accessed by "
+"the CPU."
+msgstr ""
+
+#: images/options.glade:500 images/options.glade:520 images/options.glade:660
+#: images/options.glade:1717 images/options.glade:1769
+#: images/options.glade:1818
+msgid ""
+"No\n"
+"Yes"
+msgstr ""
+
+#: images/options.glade:517
+msgid ""
+"Enable / Disable display effects for scale factors above 1.\n"
+"\n"
+"When enabled a scan-line effect will be used for scale factor of 2 and a "
+"smoothing effect for scale factor 3."
+msgstr ""
+
+#: images/options.glade:538
+msgid "Scaling factor for the emulation window. Allowed values are 1 to 3."
+msgstr ""
+
+#: images/options.glade:603
+msgid "Display IRM Access:"
+msgstr ""
+
+#: images/options.glade:617
+msgid "Display Effects:"
+msgstr ""
+
+#: images/options.glade:631
+msgid "Display Scale:"
+msgstr ""
+
+#: images/options.glade:643
+msgid "Display Debug:"
+msgstr ""
+
+#: images/options.glade:657
+msgid ""
+"Enable / Disable display debug code.\n"
+"\n"
+"When enabled the display cache behaviour will be graphically visualized. "
+"This setting is effective only if the display scale is set to 1."
+msgstr ""
+
+#: images/options.glade:715
+msgid "Display"
+msgstr ""
+
+#: images/options.glade:761
+msgid "Override modules in this profile"
+msgstr ""
+
+#: images/options.glade:809
+msgid "Module 8:"
+msgstr ""
+
+#: images/options.glade:823
+msgid "Module 7:"
+msgstr ""
+
+#: images/options.glade:837
+msgid "Module 1:"
+msgstr ""
+
+#: images/options.glade:849
+msgid "Module 2:"
+msgstr ""
+
+#: images/options.glade:863
+msgid "Module 3:"
+msgstr ""
+
+#: images/options.glade:877
+msgid "Module 4:"
+msgstr ""
+
+#: images/options.glade:891
+msgid "Module 5:"
+msgstr ""
+
+#: images/options.glade:905
+msgid "Module 6:"
+msgstr ""
+
+#: images/options.glade:1014
+msgid "Modules"
+msgstr ""
+
+#: images/options.glade:1049
+msgid "Tape:"
+msgstr ""
+
+#: images/options.glade:1186
+msgid "Audio:"
+msgstr ""
+
+#: images/options.glade:1215
+msgid "Hard Disk 1:"
+msgstr ""
+
+#: images/options.glade:1229
+msgid "Hard Disk 2:"
+msgstr ""
+
+#: images/options.glade:1652
+msgid "Media"
+msgstr ""
+
+#: images/options.glade:1687
+msgid "<b>Special settings for KC 85/2..5</b>"
+msgstr ""
+
+#: images/options.glade:1702
+msgid "D004:"
+msgstr ""
+
+#: images/options.glade:1716
+msgid "Enable or disable the D004 Floppy Basis Device."
+msgstr ""
+
+#: images/options.glade:1750
+msgid "Swap ROMs:"
+msgstr ""
+
+#: images/options.glade:1764
+msgid ""
+"Swap the F8 and FC ROMs of the D004 device.\n"
+"\n"
+"The firmware version of the ROMs depends actually on the type of the "
+"emulated system.\n"
+"\n"
+"KC85/2-4 default to the standard FC ROM version 2.0 whereas the KC85/5 "
+"system has the extended ROM version 3.1 in slot FC by default."
+msgstr ""
+
+#: images/options.glade:1803
+msgid "F8 ROM:"
+msgstr ""
+
+#: images/options.glade:1817
+msgid ""
+"Enable or disable the second D004 ROM at slot F8. The standard ROM is "
+"available at slot FC."
+msgstr ""
+
+#: images/options.glade:1852
+msgid "Busdrivers:"
+msgstr ""
+
+#: images/options.glade:1867
+msgid ""
+"Number of D002 busdriver devices to add to the system. The maximum number of "
+"emulated busdrivers is currently 4."
+msgstr ""
+
+#: images/options.glade:1910
+msgid "KC85"
+msgstr ""
+
+#: images/legal.glade:6
+msgid "KCemu: Licence & Warranty"
+msgstr ""
+
+#: images/legal.glade:24
+msgid "License & Warranty"
+msgstr ""
+
+#: images/legal.glade:77
+msgid "[ Licence ]"
+msgstr ""
+
+#: images/legal.glade:89
+msgid "[ Warranty ]"
+msgstr ""
+
+#: images/selector.glade:7
+msgid "KCemu: Select profile..."
+msgstr ""
+
+#: images/selector.glade:30
+msgid "Select Profile..."
+msgstr ""
+
+#: images/selector.glade:100
+msgid "<b>System profiles...</b>"
+msgstr ""
+
+#: images/selector.glade:146
+msgid "<b>User profiles...</b>"
+msgstr ""
+
+#: images/selector.glade:197
+msgid "gtk-quit"
+msgstr ""
+
+#: images/main.glade:20
+msgid "_Emulator"
+msgstr ""
+
+#: images/main.glade:30 images/main.glade:399
+msgid "_Run..."
+msgstr ""
+
+#: images/main.glade:38 images/main.glade:407
+msgid "_Load..."
+msgstr ""
+
+#: images/main.glade:45 images/main.glade:414
+msgid "_Save..."
+msgstr ""
+
+#: images/main.glade:53 images/main.glade:422
+msgid "_Tape..."
+msgstr ""
+
+#: images/main.glade:61 images/main.glade:430
+msgid "_Disk..."
+msgstr ""
+
+#: images/main.glade:69 images/main.glade:438
+msgid "_Module..."
+msgstr ""
+
+#: images/main.glade:77
+msgid "A_udio..."
+msgstr ""
+
+#: images/main.glade:91 images/main.glade:540
+msgid "R_eset"
+msgstr ""
+
+#: images/main.glade:99 images/main.glade:548
+msgid "_Power On"
+msgstr ""
+
+#: images/main.glade:113 images/main.glade:562
+msgid "_Quit Emulator"
+msgstr ""
+
+#: images/main.glade:125 images/main.glade:460
+msgid "_View"
+msgstr ""
+
+#: images/main.glade:135
+msgid "Zoom x_1"
+msgstr ""
+
+#: images/main.glade:143
+msgid "Zoom x_2"
+msgstr ""
+
+#: images/main.glade:151
+msgid "Zoom x_3"
+msgstr ""
+
+#: images/main.glade:165 images/main.glade:500
+msgid "_Keyboard"
+msgstr ""
+
+#: images/main.glade:179 images/main.glade:514
+msgid "_Menubar"
+msgstr ""
+
+#: images/main.glade:187 images/main.glade:522
+msgid "_Statusbar"
+msgstr ""
+
+#: images/main.glade:199
+msgid "_Options"
+msgstr ""
+
+#: images/main.glade:209
+msgid "_Colors..."
+msgstr ""
+
+#: images/main.glade:217
+msgid "_Display Effects"
+msgstr ""
+
+#: images/main.glade:225
+msgid "No _Speed Limit"
+msgstr ""
+
+#: images/main.glade:239
+msgid "_Profiles..."
+msgstr ""
+
+#: images/main.glade:251 images/main.glade:261
+msgid "_Help"
+msgstr ""
+
+#: images/main.glade:269
+msgid "Help _Index"
+msgstr ""
+
+#: images/main.glade:277
+msgid "_Context Help"
+msgstr ""
+
+#: images/main.glade:291
+msgid "_About"
+msgstr ""
+
+#: images/main.glade:299
+msgid "_Thanks!"
+msgstr ""
+
+#: images/main.glade:313
+msgid "KCemu _Licence"
+msgstr ""
+
+#: images/main.glade:321
+msgid "No _Warranty!"
+msgstr ""
+
+#: images/main.glade:446
+msgid "_Audio..."
+msgstr ""
+
+#: images/main.glade:470
+msgid "Zoom x1"
+msgstr ""
+
+#: images/main.glade:478
+msgid "Zoom x2"
+msgstr ""
+
+#: images/main.glade:486
+msgid "Zoom x3"
+msgstr ""
+
+#: src/cmd/image.cc:105 src/kc/wav.cc:81
 msgid "KCemu: Select File..."
 msgstr ""
 
-#: src/cmd/image.cc:126
+#: src/cmd/image.cc:129
 msgid "KCemu: Can't load file..."
 msgstr ""
 
-#: src/cmd/image.cc:128
+#: src/cmd/image.cc:131
 msgid "The file you selected couldn't be loaded!"
 msgstr ""
 
-#: src/cmd/image.cc:141
+#: src/cmd/image.cc:144
 msgid "KCemu: Warning..."
 msgstr ""
 
-#: src/cmd/image.cc:143
+#: src/cmd/image.cc:146
 msgid ""
 "The file you selected contains more than one\n"
 "program. Only the first program will be loaded.\n"
@@ -40,168 +697,86 @@ msgid ""
 "programs add this file to a tape-archive!"
 msgstr ""
 
-#: src/kc/kc.cc:267
+#: src/getopt/getopt.c:678
+#, c-format
+msgid "%s: option `%s' is ambiguous\n"
+msgstr ""
+
+#: src/getopt/getopt.c:702
+#, c-format
+msgid "%s: option `--%s' doesn't allow an argument\n"
+msgstr ""
+
+#: src/getopt/getopt.c:707
+#, c-format
+msgid "%s: option `%c%s' doesn't allow an argument\n"
+msgstr ""
+
+#: src/getopt/getopt.c:724 src/getopt/getopt.c:897
+#, c-format
+msgid "%s: option `%s' requires an argument\n"
+msgstr ""
+
+#: src/getopt/getopt.c:753
+#, c-format
+msgid "%s: unrecognized option `--%s'\n"
+msgstr ""
+
+#: src/getopt/getopt.c:757
+#, c-format
+msgid "%s: unrecognized option `%c%s'\n"
+msgstr ""
+
+#: src/getopt/getopt.c:783
+#, c-format
+msgid "%s: illegal option -- %c\n"
+msgstr ""
+
+#: src/getopt/getopt.c:786
+#, c-format
+msgid "%s: invalid option -- %c\n"
+msgstr ""
+
+#: src/getopt/getopt.c:816 src/getopt/getopt.c:946
+#, c-format
+msgid "%s: option requires an argument -- %c\n"
+msgstr ""
+
+#: src/getopt/getopt.c:863
+#, c-format
+msgid "%s: option `-W %s' is ambiguous\n"
+msgstr ""
+
+#: src/getopt/getopt.c:881
+#, c-format
+msgid "%s: option `-W %s' doesn't allow an argument\n"
+msgstr ""
+
+#: src/kc/disk.cc:84
+msgid "Select disk..."
+msgstr ""
+
+#: src/kc/disk.cc:124 src/kc/tape.cc:216
+msgid "create file?"
+msgstr ""
+
+#: src/kc/disk.cc:126 src/kc/tape.cc:218
+#, c-format
 msgid ""
-"    Z1013 with 16k RAM and 2k ROM, running at 1MHz. This was the\n"
-"    first version with cheap circuits so the CPU was clocked at only 1MHz\n"
-"    The ROM containes the Z1013 monitor version 2.02.\n"
+"The file '%s' doesn't exist.\n"
+"Do you want to create it?"
 msgstr ""
 
-#: src/kc/kc.cc:272
-msgid ""
-"    Z1013 with 1k sRAM and 2k ROM, running at 2MHz. Industry\n"
-"    version with only 1k static RAM. Monitor version 2.02.\n"
+#: src/kc/disk.cc:135
+#, c-format
+msgid "disk-file `%s' attached."
 msgstr ""
 
-#: src/kc/kc.cc:276
-msgid ""
-"    Z1013 with 16k RAM and 2k ROM, running at 2MHz. Successor of\n"
-"    the Z1013.01 but with industry grade circuits clocked at 2MHz.\n"
+#: src/kc/disk.cc:140
+msgid "Can't attach disk-file."
 msgstr ""
 
-#: src/kc/kc.cc:280
-msgid ""
-"    Z1013 with 64k RAM and 2x2k ROM, running at 2MHz. The ROM\n"
-"    contains two system images with 2k each. Loaded is the first\n"
-"    image with version 2.02 that is supposed to work with the foil keypad\n"
-"    shipped by the manufacturer.\n"
-msgstr ""
-
-#: src/kc/kc.cc:286
-msgid ""
-"    Z1013 with 64k RAM and 2k ROM, running at 2MHz. The ROM\n"
-"    contains two system images with 2k each. Loaded is the second\n"
-"    image with version A.2 that supports an extended keyboard with an\n"
-"    8x8 matrix.\n"
-msgstr ""
-
-#: src/kc/kc.cc:292
-msgid ""
-"    Z1013 with 64k RAM and 4k ROM. The ROM is the extended\n"
-"    version tagged 2.028 RB that has a different keyboard driver for\n"
-"    the keyboard K7659.\n"
-msgstr ""
-
-#: src/kc/kc.cc:297
-msgid ""
-"    Z1013 with 64k RAM and 4k ROM. The ROM contains the 'Super\n"
-"    Ur-Lader 5.0' that can read arbitrary tape files as system monitor.\n"
-"    The hardware modification port at address 4h is emulated which allows\n"
-"    programs to switch off the system ROM.\n"
-msgstr ""
-
-#: src/kc/kc.cc:303
-msgid ""
-"    Z1013 with 64k RAM and 4k ROM. The ROM contains the Bootloader\n"
-"    BL4 that can load monitor images from floppy disk or can start the\n"
-"    CP/M system.\n"
-msgstr ""
-
-#: src/kc/kc.cc:311
-msgid ""
-"    Z9001 (later called KC 85/1) with monochrome display, no internal BASIC\n"
-"    ROM. This computer has 16k RAM and 4k ROM with the robotron z9001 "
-"system.\n"
-msgstr ""
-
-#: src/kc/kc.cc:315
-msgid "    Like the z9001.10 but with color extension card.\n"
-msgstr ""
-
-#: src/kc/kc.cc:327
-msgid ""
-"    HC900 (later called KC 85/2) with 16k RAM and 8k ROM. System is called\n"
-"    HC-CAOS 2.2 (home computer - cassette aided operating system). BASIC\n"
-"    is only available as external module.\n"
-msgstr ""
-
-#: src/kc/kc.cc:332
-msgid ""
-"    KC 85/3 with 16k RAM, 8k system ROM with HC-CAOS 3.1 and 8k BASIC ROM.\n"
-msgstr ""
-
-#: src/kc/kc.cc:335
-msgid ""
-"    KC 85/4 with 64k RAM, 64k screen memory, 12k system ROM with HC-CAOS "
-"4.2\n"
-"    and 8k BASIC ROM.\n"
-msgstr ""
-
-#: src/kc/kc.cc:339
-msgid ""
-"    Inofficial successor of the KC 85/4 with 256k RAM, 64k screen memory,\n"
-"    16k system ROM with HC-CAOS 4.4, 8k BASIC ROM and 24k User ROM. It is\n"
-"    intended to be used with a modified D004 floppy device with additional\n"
-"    hard-disk support.\n"
-msgstr ""
-
-#: src/kc/kc.cc:345
-msgid "    Polycomputer 880.\n"
-msgstr ""
-
-#: src/kc/kc.cc:349
-msgid "    Polycomputer 880 with chess program rom from SC1"
-msgstr ""
-
-#: src/kc/kc.cc:355
-msgid "    Like the KC 87.11 but without the color extension card.\n"
-msgstr ""
-
-#: src/kc/kc.cc:358
-msgid "    Successor of the Z9001 with internal 10k BASIC ROM.\n"
-msgstr ""
-
-#: src/kc/kc.cc:361
-msgid "    Like the KC 87.21 but without the color extension card.\n"
-msgstr ""
-
-#: src/kc/kc.cc:364
-msgid ""
-"    New series with extended BASIC ROM (still 10k but with some routines "
-"for\n"
-"    plotter support were added).\n"
-msgstr ""
-
-#: src/kc/kc.cc:368
-msgid "    Single board computer LC 80 with 1k RAM and 2 x 1k ROM.\n"
-msgstr ""
-
-#: src/kc/kc.cc:374
-msgid "    Single board computer LC 80 with 1k RAM and 1 x 2k ROM.\n"
-msgstr ""
-
-#: src/kc/kc.cc:377
-msgid "    BIC/A5105, only the base device is emulated, no floppy device.\n"
-msgstr ""
-
-#: src/kc/kc.cc:383
-msgid "    BIC/A5105, the full system including the floppy device.\n"
-msgstr ""
-
-#: src/kc/kc.cc:386
-msgid ""
-"    Micro-Computer presented in the book \"Praktische Microcomputertechnik"
-"\"\n"
-"    by Manfred Kramer.\n"
-msgstr ""
-
-#: src/kc/kc.cc:393
-msgid ""
-"    CP/M based Micro-Computer presented in the magazine \"Funkamateur\"\n"
-"    by A. Mugler and H. Mathes.\n"
-msgstr ""
-
-#: src/kc/kc.cc:403
-msgid ""
-"    Minimal Z80 learning system presented in the magazine \"rfe\"\n"
-"    by Eckhard Schiller.\n"
-msgstr ""
-
-#: src/kc/kc.cc:407
-msgid "    Minimal Z80 learning system designed by Dipl.-Ing. Joachim Czepa.\n"
-msgstr ""
-
-#: src/kc/kc.cc:426
+#: src/kc/kc.cc:252
 msgid ""
 "\n"
 "KCemu comes with ABSOLUTELY NO WARRANTY; for details run `kcemu --"
@@ -211,42 +786,38 @@ msgid ""
 "\n"
 "usage: kcemu [-0123456789aAcestfhdlvVHFMELW]\n"
 "\n"
-"  -0:                run in Z1013 mode\n"
-"  -1:                run in Z9001 / KC 85/1 mode\n"
-"  -2:                run in KC 85/2 mode\n"
-"  -3:                run in KC 85/3 mode\n"
-"  -4:                run in KC 85/4 mode (default)\n"
-"  -5:                run in KC 85/5 mode\n"
-"  -6:                run in Poly-880 mode\n"
-"  -7:                run in KC 87 mode\n"
-"  -8:                run in LC 80 mode\n"
-"  -9:                run in BIC/A5105 mode\n"
-"  -a --autostart:    autostart program on startup (kc85/3 - kc85/5 only)\n"
-"  -A --address:      override start address of autostart program\n"
-"  -c --config:       read (additional) configuration from given file\n"
-"  -e --emulate:      emulate the specified system (use -v/-V to list types)\n"
-"  -s --scale:        scale display (allowed values: 1, 2 and 3)\n"
-"  -t --tape:         attach tape on startup\n"
-"  -f --floppy:       attach disk on startup\n"
-"  -h --help:         display help\n"
-"  -d --datadir:      set data directory (for ROM images)\n"
-"  -l --localedir:    set locale directory\n"
-"  -o --debug-output: write debug output to file\n"
-"  -v --version:      show KCemu version and configuration\n"
-"  -V --viewlist:     view verbose list of available emulations\n"
-"  -H --home:         overwrite setting for home directory\n"
-"  -F --fullscreen:   start in fullscreen mode (if supported by gui)\n"
-"  -M --modules:      insert modules on startup (e.g. -M M011,M027)\n"
-"  -E --effects:      enable display effects for scaled screen output\n"
-"  -L --license:      show license\n"
-"  -W --warranty:     show warranty\n"
+"  -0:                  select Z1013 profile\n"
+"  -1:                  select Z9001 / KC 85/1 profile\n"
+"  -2:                  select KC 85/2 profile\n"
+"  -3:                  select KC 85/3 profile\n"
+"  -4:                  select KC 85/4 profile\n"
+"  -5:                  select KC 85/5 profile\n"
+"  -6:                  select Poly-880 profile\n"
+"  -7:                  select KC 87 profile\n"
+"  -8:                  select LC 80 profile\n"
+"  -9:                  select BIC/A5105 profile\n"
+"  -a --autostart:      autostart program on startup (kc85/3 - kc85/5 only)\n"
+"  -A --address:        override start address of autostart program\n"
+"  -d --datadir:        set data directory (for ROM images)\n"
+"  -E --effects:        enable display effects for scaled screen output\n"
+"  -f --floppy:         attach disk on startup\n"
+"  -F --fullscreen:     start in fullscreen mode (if supported by gui)\n"
+"  -h --help:           display help\n"
+"  -H --home:           overwrite setting for home directory\n"
+"  -l --localedir:      set locale directory\n"
+"  -L --license:        show license\n"
+"  -M --modules:        insert modules on startup (e.g. -M M011,M027)\n"
+"  -o --debug-output:   write debug output to file\n"
+"  -p --profile:        start with given profile\n"
+"  -P --select-profile: show profile selector\n"
+"  -s --scale:          scale display (allowed values: 1, 2 and 3)\n"
+"  -t --tape:           attach tape on startup\n"
+"  -v --version:        show KCemu version and configuration\n"
+"  -V --viewlist:       view verbose list of available emulations\n"
+"  -W --warranty:       show warranty\n"
 msgstr ""
 
-#: src/kc/kc.cc:522
-msgid "available emulations:"
-msgstr ""
-
-#: src/kc/kc.cc:585
+#: src/kc/kc.cc:319
 msgid ""
 "\n"
 "\t\t    GNU GENERAL PUBLIC LICENSE\n"
@@ -510,7 +1081,7 @@ msgid ""
 "\n"
 msgstr ""
 
-#: src/kc/kc.cc:847
+#: src/kc/kc.cc:581
 msgid ""
 "\n"
 "NO WARRANTY\n"
@@ -538,7 +1109,7 @@ msgid ""
 "\n"
 msgstr ""
 
-#: src/kc/kc.cc:874
+#: src/kc/kc.cc:608
 msgid ""
 "\n"
 "                     END OF TERMS AND CONDITIONS\n"
@@ -606,275 +1177,320 @@ msgid ""
 "\n"
 msgstr ""
 
-#: src/kc/disk.cc:85
-msgid "Select disk..."
+#: src/kc/mod_320k.cc:151
+#, c-format
+msgid "2,5 MB Modul Bank (%d / %02xh)"
 msgstr ""
 
-#: src/kc/disk.cc:125 src/kc/tape.cc:214
-msgid "create file?"
-msgstr ""
-
-#: src/kc/disk.cc:127 src/kc/tape.cc:216
+#: src/kc/mod_fdc.cc:58
 #, c-format
 msgid ""
-"The file '%s' doesn't exist.\n"
-"Do you want to create it?"
+"It's not possible to have more than one\n"
+"module of type %s!\n"
+"\n"
+"(And due to some technical points of the emulator\n"
+"it's also not possible to have both the Kramer and\n"
+"Schneider variant of the floppy module active at\n"
+"the same time.)"
 msgstr ""
 
-#: src/kc/disk.cc:136
+#: src/kc/mod_gdc.cc:55 src/kc/mod_rtc.cc:49
 #, c-format
-msgid "disk-file `%s' attached."
+msgid ""
+"It's not possible to have more than one\n"
+"module of type %s!"
 msgstr ""
 
-#: src/kc/disk.cc:141
-msgid "Can't attach disk-file."
+#: src/kc/mod_js.cc:154
+msgid "Joystick removed!"
 msgstr ""
 
-#: src/kc/mod_list.cc:192
+#: src/kc/mod_js.cc:165
+#, c-format
+msgid "Joystick (%d.%d.%d): %s on %s"
+msgstr ""
+
+#: src/kc/mod_js.cc:401
+#, c-format
+msgid ""
+"Couldn't find any readable joystick device!\n"
+"\n"
+"If your joystick is connected properly and the correct\n"
+"driver is loaded give the device name of your joystick\n"
+"in the 'Joystick Device' section of the configuration\n"
+"file."
+msgstr ""
+
+#: src/kc/mod_js.cc:410
+#, c-format
+msgid ""
+"Couldn't open joystick device (%s)!\n"
+"\n"
+"Make sure you have the joystick properly connected\n"
+"and loaded the correct driver for it.\n"
+"\n"
+"Also check the 'Joystick Device' section in the\n"
+"configuration file if the device name shown above\n"
+"looks bogus.\n"
+msgstr ""
+
+#: src/kc/mod_list.cc:195
 msgid "<no module>"
 msgstr ""
 
-#: src/kc/mod_list.cc:202
+#: src/kc/mod_list.cc:205
 msgid "RAM Module (1k/2400h)"
 msgstr ""
 
-#: src/kc/mod_list.cc:204
+#: src/kc/mod_list.cc:207
 msgid "RAM Module (2k/2800h)"
 msgstr ""
 
-#: src/kc/mod_list.cc:206
+#: src/kc/mod_list.cc:209
 msgid "RAM Module (4k/3000h)"
 msgstr ""
 
-#: src/kc/mod_list.cc:216
+#: src/kc/mod_list.cc:219
 msgid "RAM Module (2k/0800h)"
 msgstr ""
 
-#: src/kc/mod_list.cc:218
+#: src/kc/mod_list.cc:221
 msgid "RAM Module (4k/1000h)"
 msgstr ""
 
-#: src/kc/mod_list.cc:220
+#: src/kc/mod_list.cc:223
 msgid "RAM Module (8k/2000h)"
 msgstr ""
 
-#: src/kc/mod_list.cc:229 src/kc/mod_list.cc:292
+#: src/kc/mod_list.cc:232 src/kc/mod_list.cc:295
 msgid "RAM Module (16k/4000h)"
 msgstr ""
 
-#: src/kc/mod_list.cc:231
+#: src/kc/mod_list.cc:234
 msgid "RAM Module (32k/8000h)"
 msgstr ""
 
-#: src/kc/mod_list.cc:237
+#: src/kc/mod_list.cc:240
 msgid "256k RAM Floppy"
 msgstr ""
 
-#: src/kc/mod_list.cc:243
+#: src/kc/mod_list.cc:246
 msgid "FDC (Schneider)"
 msgstr ""
 
-#: src/kc/mod_list.cc:249
+#: src/kc/mod_list.cc:252
 msgid "FDC (Kramer)"
 msgstr ""
 
-#: src/kc/mod_list.cc:255
+#: src/kc/mod_list.cc:258
 msgid "GDC 82720"
 msgstr ""
 
-#: src/kc/mod_list.cc:261
+#: src/kc/mod_list.cc:264
 msgid "RTC (port 20h-2fh)"
 msgstr ""
 
-#: src/kc/mod_list.cc:267
+#: src/kc/mod_list.cc:270
 msgid "RTC (port 70h-7fh)"
 msgstr ""
 
-#: src/kc/mod_list.cc:274
+#: src/kc/mod_list.cc:277
 msgid "Basic Module (c000h-e7ffh)"
 msgstr ""
 
-#: src/kc/mod_list.cc:286
+#: src/kc/mod_list.cc:289
 msgid "Plotter Module (c000h-e7ffh)"
 msgstr ""
 
-#: src/kc/mod_list.cc:294
+#: src/kc/mod_list.cc:297
 msgid "RAM Module (16k/8000h)"
 msgstr ""
 
-#: src/kc/mod_list.cc:301
+#: src/kc/mod_list.cc:304
 msgid "ZM30 (c000h-ccffh)"
 msgstr ""
 
-#: src/kc/mod_list.cc:308
+#: src/kc/mod_list.cc:311
 msgid "EDAS (c000h-e7ffh)"
 msgstr ""
 
-#: src/kc/mod_list.cc:315
+#: src/kc/mod_list.cc:318
 msgid "IDAS / ZM (c000h-e7ffh)"
 msgstr ""
 
-#: src/kc/mod_list.cc:322
+#: src/kc/mod_list.cc:325
 msgid "BITEX (c000h-d7ffh)"
 msgstr ""
 
-#: src/kc/mod_list.cc:353
+#: src/kc/mod_list.cc:350
+msgid "KC-CAOS 3.1 (8000h-8fffh)"
+msgstr ""
+
+#: src/kc/mod_list.cc:363
 msgid "192 KByte RAM/EPROM"
 msgstr ""
 
-#: src/kc/mod_list.cc:360
+#: src/kc/mod_list.cc:370
 msgid "KC-Pascal Module"
 msgstr ""
 
-#: src/kc/mod_list.cc:367
+#: src/kc/mod_list.cc:377
 msgid "Mega-ROM Module"
 msgstr ""
 
-#: src/kc/mod_list.cc:374
+#: src/kc/mod_list.cc:384
 msgid "128k ROM Bank"
 msgstr ""
 
-#: src/kc/mod_list.cc:383 src/ui/gtk/module.cc:270
+#: src/kc/mod_list.cc:393 src/ui/gtk/module.cc:265
 msgid "IRM Color Expansion"
 msgstr ""
 
-#: src/kc/mod_list.cc:398
+#: src/kc/mod_list.cc:409
 msgid "Plotter XY4131"
 msgstr ""
 
-#: src/kc/mod_list.cc:406
+#: src/kc/mod_list.cc:417
 msgid "CPM-Z9 BOOT (c000h-c7ffh)"
 msgstr ""
 
-#: src/kc/mod_list.cc:412
+#: src/kc/mod_list.cc:423
 msgid "CPM-Z9 Floppy"
 msgstr ""
 
-#: src/kc/mod_list.cc:418
+#: src/kc/mod_list.cc:429
 msgid "CPM-Z9 64k RAM"
 msgstr ""
 
-#: src/kc/mod_list.cc:424
+#: src/kc/mod_list.cc:435
 msgid "M001: Digital In / Out"
 msgstr ""
 
-#: src/kc/mod_list.cc:433
+#: src/kc/mod_list.cc:442
 msgid "M003: V24"
 msgstr ""
 
-#: src/kc/mod_list.cc:442
+#: src/kc/mod_list.cc:450
 msgid "M006: Basic"
 msgstr ""
 
-#: src/kc/mod_list.cc:449
+#: src/kc/mod_list.cc:457
 msgid "M008: Joystick"
 msgstr ""
 
-#: src/kc/mod_list.cc:456
+#: src/kc/mod_list.cc:464
 msgid "M011: 64k RAM"
 msgstr ""
 
-#: src/kc/mod_list.cc:463
+#: src/kc/mod_list.cc:471
 msgid "M012: Texor"
 msgstr ""
 
-#: src/kc/mod_list.cc:469
+#: src/kc/mod_list.cc:477
 msgid "M022: Expander RAM (16k)"
 msgstr ""
 
-#: src/kc/mod_list.cc:476
+#: src/kc/mod_list.cc:484
 msgid "M026: Forth"
 msgstr ""
 
-#: src/kc/mod_list.cc:483
+#: src/kc/mod_list.cc:491
 msgid "M027: Development"
 msgstr ""
 
-#: src/kc/mod_list.cc:489
+#: src/kc/mod_list.cc:497
 msgid "M032: 256k Segmented RAM"
 msgstr ""
 
-#: src/kc/mod_list.cc:495
+#: src/kc/mod_list.cc:503
 msgid "M034: 512k Segmented RAM"
 msgstr ""
 
-#: src/kc/mod_list.cc:501
+#: src/kc/mod_list.cc:509
 msgid "M035: 1M Segmented RAM"
 msgstr ""
 
-#: src/kc/mod_list.cc:507
+#: src/kc/mod_list.cc:515
 msgid "M035x4: 4M RAM"
 msgstr ""
 
-#: src/kc/mod_list.cc:513
+#: src/kc/mod_list.cc:521
 msgid "M036: 128k Segmented RAM"
 msgstr ""
 
-#: src/kc/mod_list.cc:520
+#: src/kc/mod_list.cc:528
 msgid "M900: WordPro '86 (KC85/3)"
 msgstr ""
 
-#: src/kc/mod_list.cc:527
+#: src/kc/mod_list.cc:535
 msgid "M901: WordPro '86 (KC85/4)"
 msgstr ""
 
-#: src/kc/mod_list.cc:534
+#: src/kc/mod_list.cc:542
 msgid "Floppy Disk Basis F8"
 msgstr ""
 
-#: src/kc/mod_list.cc:547
+#: src/kc/mod_list.cc:557
 msgid "Floppy Disk Basis FC"
 msgstr ""
 
-#: src/kc/mod_list.cc:758
+#: src/kc/mod_list.cc:773
 msgid "Autostart"
 msgstr ""
 
-#: src/kc/tape.cc:94
+#: src/kc/mod_ramf.cc:52
+#, c-format
+msgid ""
+"It's not possible to have more than two RAM-Floppy\n"
+"modules. The first one is running on port 98h and\n"
+"the second one on port 58h."
+msgstr ""
+
+#: src/kc/tape.cc:96
 #, c-format
 msgid "File `%s' loaded."
 msgstr ""
 
-#: src/kc/tape.cc:172
+#: src/kc/tape.cc:174
 msgid "Select tape-archive..."
 msgstr ""
 
-#: src/kc/tape.cc:226
+#: src/kc/tape.cc:228
 #, c-format
 msgid "tape-archive `%s' attached."
 msgstr ""
 
-#: src/kc/tape.cc:233
+#: src/kc/tape.cc:235
 msgid "Can't attach tape-archive."
 msgstr ""
 
-#: src/kc/tape.cc:274 src/kc/tape.cc:308
+#: src/kc/tape.cc:276 src/kc/tape.cc:310
 msgid "Export As..."
 msgstr ""
 
-#: src/kc/tape.cc:292 src/kc/tape.cc:326
+#: src/kc/tape.cc:294 src/kc/tape.cc:328
 #, c-format
 msgid "File `%s' saved."
 msgstr ""
 
-#: src/kc/tape.cc:297 src/kc/tape.cc:331
+#: src/kc/tape.cc:299 src/kc/tape.cc:333
 msgid "Can't export file."
 msgstr ""
 
-#: src/kc/tape.cc:373
+#: src/kc/tape.cc:375
 msgid "Select file..."
 msgstr ""
 
-#: src/kc/tape.cc:1759
+#: src/kc/tape.cc:1761
 msgid "The format of the selected file is not recognized."
 msgstr ""
 
-#: src/kc/tape.cc:1794
+#: src/kc/tape.cc:1796
 #, c-format
 msgid "File `%s' [%s] added."
 msgstr ""
 
-#: src/kc/tape.cc:1803
+#: src/kc/tape.cc:1805
 msgid ""
 "The file you selected has a name that is already\n"
 "present in the current tape archive.\n"
@@ -884,37 +1500,219 @@ msgid ""
 "skip this file."
 msgstr ""
 
-#: src/ui/gtk/color.cc:78
-msgid "KCemu: Color Configuration"
+#: src/kc/wav.cc:280
+#, c-format
+msgid "Reading %s `%s' (%d/%d/%d)."
 msgstr ""
 
-#: src/ui/gtk/color.cc:103
-msgid "Foreground"
+#: src/kc/prefs/types.cc:234
+msgid ""
+"    Z1013 with 16k RAM and 2k ROM, running at 1MHz. This was the\n"
+"    first version with cheap circuits so the CPU was clocked at only 1MHz\n"
+"    The ROM containes the Z1013 monitor version 2.02.\n"
 msgstr ""
 
-#: src/ui/gtk/color.cc:115
-msgid "Background"
+#: src/kc/prefs/types.cc:238
+msgid ""
+"    Z1013 with 1k sRAM and 2k ROM, running at 2MHz. Industry\n"
+"    version with only 1k static RAM. Monitor version 2.02.\n"
 msgstr ""
 
-#: src/ui/gtk/color.cc:127 src/ui/gtk/color.cc:163
-msgid "Saturation"
+#: src/kc/prefs/types.cc:241
+msgid ""
+"    Z1013 with 16k RAM and 2k ROM, running at 2MHz. Successor of\n"
+"    the Z1013.01 but with industry grade circuits clocked at 2MHz.\n"
 msgstr ""
 
-#: src/ui/gtk/color.cc:145 src/ui/gtk/color.cc:181
-msgid "Brightness"
+#: src/kc/prefs/types.cc:244
+msgid ""
+"    Z1013 with 64k RAM and 2x2k ROM, running at 2MHz. The ROM\n"
+"    contains two system images with 2k each. Loaded is the first\n"
+"    image with version 2.02 that is supposed to work with the foil keypad\n"
+"    shipped by the manufacturer.\n"
 msgstr ""
 
-#: src/ui/gtk/color.cc:199
-msgid "Black Level"
+#: src/kc/prefs/types.cc:249
+msgid ""
+"    Z1013 with 64k RAM and 2k ROM, running at 2MHz. The ROM\n"
+"    contains two system images with 2k each. Loaded is the second\n"
+"    image with version A.2 that supports an extended keyboard with an\n"
+"    8x8 matrix.\n"
 msgstr ""
 
-#: src/ui/gtk/color.cc:217
-msgid "White Level"
+#: src/kc/prefs/types.cc:254
+msgid ""
+"    Z1013 with 64k RAM and 4k ROM. The ROM is the extended\n"
+"    version tagged 2.028 RB that has a different keyboard driver for\n"
+"    the keyboard K7659.\n"
 msgstr ""
 
-#: src/ui/gtk/color.cc:243 src/ui/gtk/info.cc:557 src/ui/gtk/keyboard.cc:635
-#: src/ui/gtk/wav.cc:148
-msgid "Close"
+#: src/kc/prefs/types.cc:258
+msgid ""
+"    Z1013 with 64k RAM and 4k ROM. The ROM contains the 'Super\n"
+"    Ur-Lader 5.0' that can read arbitrary tape files as system monitor.\n"
+"    The hardware modification port at address 4h is emulated which allows\n"
+"    programs to switch off the system ROM.\n"
+msgstr ""
+
+#: src/kc/prefs/types.cc:263
+msgid ""
+"    Z1013 with 64k RAM and 4k ROM. The ROM contains the Bootloader\n"
+"    BL4 that can load monitor images from floppy disk or can start the\n"
+"    CP/M system.\n"
+msgstr ""
+
+#: src/kc/prefs/types.cc:267
+msgid ""
+"    Z9001 (later called KC 85/1) with monochrome display, no internal BASIC\n"
+"    ROM. This computer has 16k RAM and 4k ROM with the robotron z9001 "
+"system.\n"
+msgstr ""
+
+#: src/kc/prefs/types.cc:270
+msgid "    Like the z9001.10 but with color extension card.\n"
+msgstr ""
+
+#: src/kc/prefs/types.cc:272
+msgid ""
+"    HC900 (later called KC 85/2) with 16k RAM and 8k ROM. System is called\n"
+"    HC-CAOS 2.2 (home computer - cassette aided operating system). BASIC\n"
+"    is only available as external module.\n"
+msgstr ""
+
+#: src/kc/prefs/types.cc:276
+msgid ""
+"    KC 85/3 with 16k RAM, 8k system ROM with HC-CAOS 3.1 and 8k BASIC ROM.\n"
+msgstr ""
+
+#: src/kc/prefs/types.cc:278
+msgid ""
+"    KC 85/4 with 64k RAM, 64k screen memory, 12k system ROM with HC-CAOS "
+"4.2\n"
+"    and 8k BASIC ROM.\n"
+msgstr ""
+
+#: src/kc/prefs/types.cc:281
+msgid ""
+"    Inofficial successor of the KC 85/4 with 256k RAM, 64k screen memory,\n"
+"    16k system ROM with HC-CAOS 4.4, 8k BASIC ROM and 24k User ROM. It is\n"
+"    intended to be used with a modified D004 floppy device with additional\n"
+"    hard-disk support.\n"
+msgstr ""
+
+#: src/kc/prefs/types.cc:286
+msgid "    Polycomputer 880.\n"
+msgstr ""
+
+#: src/kc/prefs/types.cc:288
+msgid "    Polycomputer 880 with chess program rom from SC1.\n"
+msgstr ""
+
+#: src/kc/prefs/types.cc:290
+msgid "    Like the KC 87.11 but without the color extension card.\n"
+msgstr ""
+
+#: src/kc/prefs/types.cc:292
+msgid "    Successor of the Z9001 with internal 10k BASIC ROM.\n"
+msgstr ""
+
+#: src/kc/prefs/types.cc:294
+msgid "    Like the KC 87.21 but without the color extension card.\n"
+msgstr ""
+
+#: src/kc/prefs/types.cc:296
+msgid ""
+"    New series with extended BASIC ROM (still 10k but with some routines "
+"for\n"
+"    plotter support were added).\n"
+msgstr ""
+
+#: src/kc/prefs/types.cc:299
+msgid "    New batch of KC 87.20 with no known hardware differences.\n"
+msgstr ""
+
+#: src/kc/prefs/types.cc:301
+msgid "    New batch of KC 87.21 with no known hardware differences.\n"
+msgstr ""
+
+#: src/kc/prefs/types.cc:303
+msgid "    Single board computer LC 80 with 1k RAM and 2 x 1k ROM.\n"
+msgstr ""
+
+#: src/kc/prefs/types.cc:305
+msgid "    Single board computer LC 80 with 1k RAM and 1 x 2k ROM.\n"
+msgstr ""
+
+#: src/kc/prefs/types.cc:307
+msgid "    BIC/A5105, only the base device is emulated, no floppy device.\n"
+msgstr ""
+
+#: src/kc/prefs/types.cc:309
+msgid "    BIC/A5105, the full system including the floppy device.\n"
+msgstr ""
+
+#: src/kc/prefs/types.cc:311
+msgid ""
+"    Micro-Computer presented in the book \"Praktische Microcomputertechnik"
+"\"\n"
+"    by Manfred Kramer.\n"
+msgstr ""
+
+#: src/kc/prefs/types.cc:314
+msgid ""
+"    CP/M based Micro-Computer presented in the magazine \"Funkamateur\"\n"
+"    by A. Mugler and H. Mathes.\n"
+msgstr ""
+
+#: src/kc/prefs/types.cc:317
+msgid ""
+"    Minimal Z80 learning system presented in the magazine \"rfe\"\n"
+"    by Eckhard Schiller.\n"
+msgstr ""
+
+#: src/kc/prefs/types.cc:320
+msgid "    Minimal Z80 learning system designed by Dipl.-Ing. Joachim Czepa.\n"
+msgstr ""
+
+#: src/kc/prefs/types.cc:416
+msgid "available emulations:"
+msgstr ""
+
+#: src/libtape/kctape.cc:81
+msgid ""
+"\n"
+"KCtape is part of KCemu the KC 85/4 Emulator and comes with\n"
+"ABSOLUTELY NO WARRANTY; for details run `kcemu --warranty'.\n"
+"This is free software, and you are welcome to redistribute it\n"
+"under certain conditions; run `kcemu --license' for details.\n"
+"\n"
+"usage: kctape -t tapefile [command [command_args]]\n"
+"\n"
+" commands:\n"
+" ---------\n"
+"\n"
+"  -h|--help              show this help text\n"
+"  -v|--verbose           be verbose about what's going on\n"
+"  -t|--tape              tape archive to process\n"
+"  -l|--list              list content of tape archive\n"
+"  -c|--create            create tape archive if it doesn't exist\n"
+"  -a|--add               add files (KC85/3 mode)\n"
+"  -1|--add1              add files (KC85/1 mode)\n"
+"  -A|--add-raw           add binary files\n"
+"  -r|--remove            remove file from tape archive\n"
+"  -x|--extract           extract file from tape archive\n"
+"  -d|--dump              hexdump file\n"
+"  -o|--output            output file for extract\n"
+"  -b|--print-bam         show internal block allocation map\n"
+"  -B|--print-block-list  show internal block list\n"
+msgstr ""
+
+#: src/libtape/kctape.cc:585
+#, c-format
+msgid ""
+"ERROR: no tape specified, use the -t option to select\n"
+"       the tape archive you want to process\n"
+"\n"
 msgstr ""
 
 #: src/ui/gtk/debug.cc:239
@@ -933,7 +1731,7 @@ msgstr ""
 msgid "Execute Step"
 msgstr ""
 
-#: src/ui/gtk/dialog.cc:52
+#: src/ui/gtk/dialog.cc:54
 msgid "???"
 msgstr ""
 
@@ -1008,7 +1806,7 @@ msgstr ""
 msgid "OK"
 msgstr ""
 
-#: src/ui/gtk/image.cc:209 src/ui/gtk/tapeadd.cc:189
+#: src/ui/gtk/image.cc:209
 msgid "Cancel"
 msgstr ""
 
@@ -1084,596 +1882,163 @@ msgstr ""
 msgid "Update"
 msgstr ""
 
-#: src/ui/gtk/module.cc:217
+#: src/ui/gtk/info.cc:557 src/ui/gtk/wav.cc:146
+msgid "Close"
+msgstr ""
+
+#: src/ui/gtk/keyboard.cc:601
+msgid "KCemu: Keyboard"
+msgstr ""
+
+#: src/ui/gtk/module.cc:210
 msgid "No module slots available for this computer."
 msgstr ""
 
-#: src/ui/gtk/module.cc:229
+#: src/ui/gtk/module.cc:222
 #, c-format
 msgid "Slot %d"
 msgstr ""
 
-#: src/ui/gtk/module.cc:321
+#: src/ui/gtk/module.cc:317
 msgid "Floppy Disk Basis [F0]"
 msgstr ""
 
-#: src/ui/gtk/module.cc:326
+#: src/ui/gtk/module.cc:322
 #, c-format
 msgid "D002: Busdriver [%02X]"
 msgstr ""
 
-#: src/ui/gtk/module.cc:337 src/ui/gtk/module.cc:344 src/ui/gtk/module.cc:348
-#: src/ui/gtk/module.cc:352 src/ui/gtk/module.cc:356 src/ui/gtk/module.cc:360
-#: src/ui/gtk/module.cc:364 src/ui/gtk/module.cc:368 src/ui/gtk/module.cc:372
+#: src/ui/gtk/module.cc:333 src/ui/gtk/module.cc:340 src/ui/gtk/module.cc:344
+#: src/ui/gtk/module.cc:348 src/ui/gtk/module.cc:352 src/ui/gtk/module.cc:356
+#: src/ui/gtk/module.cc:360 src/ui/gtk/module.cc:364 src/ui/gtk/module.cc:368
+#: src/ui/gtk/module.cc:371
 msgid "Basis Device"
 msgstr ""
 
-#: src/ui/gtk/tapeadd.cc:99
-msgid "KCemu: Rename File"
-msgstr ""
-
-#: src/ui/gtk/tapeadd.cc:132
-msgid "Tapename:"
-msgstr ""
-
-#: src/ui/gtk/tapeadd.cc:178
-msgid "Ok"
-msgstr ""
-
-#: src/ui/gtk/tape.cc:80
+#: src/ui/gtk/tape.cc:78
 msgid "Please enter the new name for the file."
 msgstr ""
 
-#: src/ui/gtk/tape.cc:257
+#: src/ui/gtk/tape.cc:264
 msgid "/_Run File"
 msgstr ""
 
-#: src/ui/gtk/tape.cc:258
+#: src/ui/gtk/tape.cc:265
 msgid "/_Load File"
 msgstr ""
 
-#: src/ui/gtk/tape.cc:259
+#: src/ui/gtk/tape.cc:266
 msgid "/_Export File"
 msgstr ""
 
-#: src/ui/gtk/tape.cc:260
+#: src/ui/gtk/tape.cc:267
 msgid "/Export _Wav"
 msgstr ""
 
-#: src/ui/gtk/tape.cc:261 src/ui/gtk/ui_gtk.cc:681
+#: src/ui/gtk/tape.cc:268
 msgid "/sep1"
 msgstr ""
 
-#: src/ui/gtk/tape.cc:262
+#: src/ui/gtk/tape.cc:269
 msgid "/Edit _Header"
 msgstr ""
 
-#: src/ui/gtk/tape.cc:263
+#: src/ui/gtk/tape.cc:270
 msgid "/Re_name File"
 msgstr ""
 
-#: src/ui/gtk/tape.cc:264
+#: src/ui/gtk/tape.cc:271
 msgid "/_Delete File"
 msgstr ""
 
-#: src/ui/gtk/tape.cc:265 src/ui/gtk/ui_gtk.cc:688
+#: src/ui/gtk/tape.cc:272
 msgid "/sep2"
 msgstr ""
 
-#: src/ui/gtk/tape.cc:266
+#: src/ui/gtk/tape.cc:273
 msgid "/_Add File"
 msgstr ""
 
-#: src/ui/gtk/tape.cc:271
+#: src/ui/gtk/tape.cc:278
 msgid "Name"
 msgstr ""
 
-#: src/ui/gtk/tape.cc:272
+#: src/ui/gtk/tape.cc:279
 msgid "Type"
 msgstr ""
 
-#: src/ui/gtk/tape.cc:273
+#: src/ui/gtk/tape.cc:280
 msgid "Load"
 msgstr ""
 
-#: src/ui/gtk/tape.cc:274
+#: src/ui/gtk/tape.cc:281
 msgid "Start"
 msgstr ""
 
-#: src/ui/gtk/tape.cc:275
+#: src/ui/gtk/tape.cc:282
 msgid "Size"
 msgstr ""
 
-#: src/ui/gtk/tape.cc:287 src/ui/gtk/tape.cc:293
+#: src/ui/gtk/tape.cc:294 src/ui/gtk/tape.cc:300
 msgid "<TapeP>"
 msgstr ""
 
-#: src/ui/gtk/tape.cc:294
+#: src/ui/gtk/tape.cc:301
 msgid "/Run File"
 msgstr ""
 
-#: src/ui/gtk/tape.cc:295
+#: src/ui/gtk/tape.cc:302
 msgid "/Load File"
 msgstr ""
 
-#: src/ui/gtk/tape.cc:296
+#: src/ui/gtk/tape.cc:303
 msgid "/Edit Header"
 msgstr ""
 
-#: src/ui/gtk/tape.cc:297
+#: src/ui/gtk/tape.cc:304
 msgid "/Delete File"
 msgstr ""
 
-#: src/ui/gtk/tape.cc:298
+#: src/ui/gtk/tape.cc:305
 msgid "/Rename File"
 msgstr ""
 
-#: src/ui/gtk/tape.cc:299
+#: src/ui/gtk/tape.cc:306
 msgid "/Export File"
 msgstr ""
 
-#: src/ui/gtk/tape.cc:300
+#: src/ui/gtk/tape.cc:307
 msgid "/Export Wav"
 msgstr ""
 
-#: src/ui/gtk/keyboard.cc:565
-msgid "KCemu: Keyboard"
-msgstr ""
-
-#: src/ui/gtk/keyboard.cc:619
-msgid ""
-"\n"
-"  Sorry, keyboard display not configured.  \n"
-msgstr ""
-
-#: src/ui/gtk/wav.cc:138
-msgid "Open"
-msgstr ""
-
-#: src/ui/gtk/wav.cc:158
-msgid "Play"
-msgstr ""
-
-#: src/ui/gtk/wav.cc:168
-msgid "Stop"
-msgstr ""
-
-#: src/ui/gtk/wav.cc:178
-msgid "Record"
-msgstr ""
-
-#: src/ui/gtk/ui_gtk.cc:637
-msgid "/_Emulator"
-msgstr ""
-
-#: src/ui/gtk/ui_gtk.cc:638
-msgid "/Emulator/_Run..."
-msgstr ""
-
-#: src/ui/gtk/ui_gtk.cc:639
-msgid "/Emulator/_Load..."
-msgstr ""
-
-#: src/ui/gtk/ui_gtk.cc:640
-msgid "/Emulator/_Tape..."
-msgstr ""
-
-#: src/ui/gtk/ui_gtk.cc:641
-msgid "/Emulator/_Disk..."
-msgstr ""
-
-#: src/ui/gtk/ui_gtk.cc:642
-msgid "/Emulator/_Module..."
-msgstr ""
-
-#: src/ui/gtk/ui_gtk.cc:643
-msgid "/Emulator/A_udio..."
-msgstr ""
-
-#: src/ui/gtk/ui_gtk.cc:644
-msgid "/Emulator/sep1"
-msgstr ""
-
-#: src/ui/gtk/ui_gtk.cc:645
-msgid "/Emulator/R_eset"
-msgstr ""
-
-#: src/ui/gtk/ui_gtk.cc:646
-msgid "/Emulator/_Power On"
-msgstr ""
-
-#: src/ui/gtk/ui_gtk.cc:647
-msgid "/Emulator/sep2"
-msgstr ""
-
-#: src/ui/gtk/ui_gtk.cc:648
-msgid "/Emulator/_Quit Emulator"
-msgstr ""
-
-#: src/ui/gtk/ui_gtk.cc:649 src/ui/gtk/ui_gtk.cc:682
-msgid "/_View"
-msgstr ""
-
-#: src/ui/gtk/ui_gtk.cc:650
-msgid "/View/Zoom x_1"
-msgstr ""
-
-#: src/ui/gtk/ui_gtk.cc:651
-msgid "/View/Zoom x_2"
-msgstr ""
-
-#: src/ui/gtk/ui_gtk.cc:652
-msgid "/View/Zoom x_3"
-msgstr ""
-
-#: src/ui/gtk/ui_gtk.cc:653 src/ui/gtk/ui_gtk.cc:683
-msgid "/View/_Keyboard"
-msgstr ""
-
-#: src/ui/gtk/ui_gtk.cc:654 src/ui/gtk/ui_gtk.cc:684
-msgid "/View/_Debugger"
-msgstr ""
-
-#: src/ui/gtk/ui_gtk.cc:655 src/ui/gtk/ui_gtk.cc:685
-msgid "/View/_Info"
-msgstr ""
-
-#: src/ui/gtk/ui_gtk.cc:656 src/ui/gtk/ui_gtk.cc:686
-msgid "/View/_Menubar"
-msgstr ""
-
-#: src/ui/gtk/ui_gtk.cc:657 src/ui/gtk/ui_gtk.cc:687
-msgid "/View/_Statusbar"
-msgstr ""
-
-#: src/ui/gtk/ui_gtk.cc:658
-msgid "/_Options"
-msgstr ""
-
-#: src/ui/gtk/ui_gtk.cc:659
-msgid "/Options/_Colors"
-msgstr ""
-
-#: src/ui/gtk/ui_gtk.cc:660 src/ui/gtk/ui_gtk.cc:895 src/ui/gtk/ui_gtk.cc:1138
-msgid "/Options/_Display Effects"
-msgstr ""
-
-#: src/ui/gtk/ui_gtk.cc:661
-msgid "/Options/sep"
-msgstr ""
-
-#: src/ui/gtk/ui_gtk.cc:662
-msgid "/Options/No _Speed Limit"
-msgstr ""
-
-#: src/ui/gtk/ui_gtk.cc:663
-msgid "/_Help"
-msgstr ""
-
-#: src/ui/gtk/ui_gtk.cc:664
-msgid "/Help/_Help"
-msgstr ""
-
-#: src/ui/gtk/ui_gtk.cc:665
-msgid "/Help/Help _Index"
-msgstr ""
-
-#: src/ui/gtk/ui_gtk.cc:666
-msgid "/Help/_Context Help"
-msgstr ""
-
-#: src/ui/gtk/ui_gtk.cc:667
-msgid "/Help/sep3"
-msgstr ""
-
-#: src/ui/gtk/ui_gtk.cc:668
-msgid "/Help/_About KCemu"
-msgstr ""
-
-#: src/ui/gtk/ui_gtk.cc:669
-msgid "/Help/_Thanks!"
-msgstr ""
-
-#: src/ui/gtk/ui_gtk.cc:670
-msgid "/Help/sep4"
-msgstr ""
-
-#: src/ui/gtk/ui_gtk.cc:671
-msgid "/Help/KCemu _Licence"
-msgstr ""
-
-#: src/ui/gtk/ui_gtk.cc:672
-msgid "/Help/No _Warranty!"
-msgstr ""
-
-#: src/ui/gtk/ui_gtk.cc:675
-msgid "/_Run..."
-msgstr ""
-
-#: src/ui/gtk/ui_gtk.cc:676
-msgid "/_Load..."
-msgstr ""
-
-#: src/ui/gtk/ui_gtk.cc:677
-msgid "/_Tape..."
-msgstr ""
-
-#: src/ui/gtk/ui_gtk.cc:678
-msgid "/_Disk..."
-msgstr ""
-
-#: src/ui/gtk/ui_gtk.cc:679
-msgid "/_Module..."
-msgstr ""
-
-#: src/ui/gtk/ui_gtk.cc:680
-msgid "/_Audio..."
-msgstr ""
-
-#: src/ui/gtk/ui_gtk.cc:689
-msgid "/R_eset"
-msgstr ""
-
-#: src/ui/gtk/ui_gtk.cc:690
-msgid "/_Power On"
-msgstr ""
-
-#: src/ui/gtk/ui_gtk.cc:691
-msgid "/sep3"
-msgstr ""
-
-#: src/ui/gtk/ui_gtk.cc:692
-msgid "/_Quit Emulator"
-msgstr ""
-
-#: src/ui/gtk/ui_gtk.cc:944
-#, c-format
-msgid "%s (%s)"
-msgstr ""
-
-#: src/ui/gtk/ui_gtk.cc:1637
+#: src/ui/gtk/ui_gtk.cc:780
 msgid "Info"
 msgstr ""
 
-#: src/ui/gtk/ui_gtk0.cc:73 src/ui/sdl/ui_sdl0.cc:88
-msgid "Z1013 Emulator"
+#: src/ui/gtk/wav.cc:136
+msgid "Open"
 msgstr ""
 
-#: src/ui/gtk/ui_gtk1.cc:65 src/ui/sdl/ui_sdl1.cc:86
-msgid "KC 87 Emulator"
+#: src/ui/gtk/wav.cc:156
+msgid "Play"
 msgstr ""
 
-#: src/ui/gtk/ui_gtk1.cc:67 src/ui/sdl/ui_sdl1.cc:88
-msgid "KC 85/1 Emulator"
+#: src/ui/gtk/wav.cc:166
+msgid "Stop"
 msgstr ""
 
-#: src/ui/gtk/ui_gtk3.cc:65 src/ui/sdl/ui_sdl3.cc:106
-msgid "KC 85/2 Emulator"
+#: src/ui/gtk/wav.cc:176
+msgid "Record"
 msgstr ""
 
-#: src/ui/gtk/ui_gtk3.cc:67 src/ui/sdl/ui_sdl3.cc:108
-msgid "KC 85/3 Emulator"
+#: src/ui/gtk/options.cc:91
+msgid "Save profiles?"
 msgstr ""
 
-#: src/ui/gtk/ui_gtk4.cc:64 src/ui/sdl/ui_sdl4.cc:105
-msgid "KC 85/4 Emulator"
-msgstr ""
-
-#: src/ui/gtk/ui_gtk8.cc:64 src/ui/sdl/ui_sdl8.cc:82
-msgid "LC80 Emulator"
-msgstr ""
-
-#: src/ui/gtk/ui_gtk9.cc:73 src/ui/sdl/ui_sdl9.cc:103
-msgid "A5105 Emulator"
-msgstr ""
-
-#: src/ui/gtk/glade/about_interface.c:50
-msgid "KCemu: About"
-msgstr ""
-
-#: src/ui/gtk/glade/about_interface.c:70
-msgid "About"
-msgstr ""
-
-#: src/ui/gtk/glade/about_interface.c:93
-msgid "[ Version ]"
-msgstr ""
-
-#: src/ui/gtk/glade/about_interface.c:101
-msgid "(c) 1997-2006 Torsten Paul"
-msgstr ""
-
-#: src/ui/gtk/glade/about_interface.c:108
-msgid "<Torsten.Paul@gmx.de>"
-msgstr ""
-
-#: src/ui/gtk/glade/about_interface.c:115
-msgid "[ Build ]"
-msgstr ""
-
-#: src/ui/gtk/glade/audio_interface.c:70
-msgid "KCemu: Audio"
-msgstr ""
-
-#: src/ui/gtk/glade/audio_interface.c:89
-msgid "Audio"
-msgstr ""
-
-#: src/ui/gtk/glade/copying_interface.c:50
-msgid "KCemu: Licence & Warranty"
-msgstr ""
-
-#: src/ui/gtk/glade/copying_interface.c:70
-msgid "License & Warranty"
-msgstr ""
-
-#: src/ui/gtk/glade/copying_interface.c:106
-msgid "[ Licence ]"
-msgstr ""
-
-#: src/ui/gtk/glade/copying_interface.c:113
-msgid "[ Warranty ]"
-msgstr ""
-
-#: src/ui/gtk/glade/disk_interface.c:70
-msgid "KCemu: Disk"
-msgstr ""
-
-#: src/ui/gtk/glade/disk_interface.c:90
-msgid "Disk"
-msgstr ""
-
-#: src/ui/gtk/glade/disk_interface.c:111
-msgid "Disk 1:"
-msgstr ""
-
-#: src/ui/gtk/glade/disk_interface.c:120
-msgid "Disk 2:"
-msgstr ""
-
-#: src/ui/gtk/glade/disk_interface.c:129
-msgid "Disk 3:"
-msgstr ""
-
-#: src/ui/gtk/glade/disk_interface.c:138
-msgid "Disk 4:"
-msgstr ""
-
-#: src/ui/gtk/glade/help_interface.c:57
-msgid "KCemu: Help"
-msgstr ""
-
-#: src/ui/gtk/glade/help_interface.c:76
-msgid "Help"
-msgstr ""
-
-#: src/ui/gtk/glade/module_interface.c:46
-msgid "KCemu: Module"
-msgstr ""
-
-#: src/ui/gtk/glade/module_interface.c:65
-msgid "Module"
-msgstr ""
-
-#: src/ui/gtk/glade/tape_interface.c:83
-msgid "KCemu: Tape"
-msgstr ""
-
-#: src/ui/gtk/glade/tape_interface.c:102
-msgid "Tape"
-msgstr ""
-
-#: src/ui/gtk/glade/thanks_interface.c:78
-msgid "KCemu: Thanks"
-msgstr ""
-
-#: src/ui/gtk/glade/thanks_interface.c:98
-msgid "Thanks"
-msgstr ""
-
-#: src/ui/gtk/glade/thanks_interface.c:128
+#: src/ui/gtk/options.cc:93
 msgid ""
-"I'd like to say thanks to many people who helped to bring KCemu to the point "
-"where it is now. The following list just lists some of them in no particular "
-"order..."
-msgstr ""
-
-#: src/ui/gtk/glade/thanks_interface.c:154
-msgid ""
-"Marat Fayzullin\n"
-"        for the Z80 emulation core used for the main processor\n"
-"        (I needed to tweak some bits of the emulation core; see\n"
-"        src/z80core/README for the list of changes)\n"
-"Marcel de Kogel\n"
-"        for the Z80 emulation core used for the KC floppy\n"
-"        processor\n"
-"Thomas Bretz\n"
-"        for the OS/2 port of KCemu (see http://www.d4m.de/)\n"
-"Thomas Ludwig\n"
-"        for the great KC website at http://www.kc85emu.de/ and\n"
-"        lots of bugreports and hints how to make KCemu better\n"
-"Holger Krull\n"
-"        for providing lots of information about the LC 80\n"
-"        computer (see http://www.lc80.de/)\n"
-"Kev Thacker\n"
-"        for interesting insights concerning the floppy emulation\n"
-"        (he's also the author of the KC driver for M.E.S.S. the\n"
-"        Multi-Emulator Super System, see http://mess.emuverse.com/)\n"
-"Volker Pohlers\n"
-"        for help with the windows port, technical information and\n"
-"        bugreports\n"
-"Alexander Schön\n"
-"        for starting the windows port, lots of tips and for providing\n"
-"        a huge pile of files for use with the emulator or with\n"
-"        information about the various systems"
-msgstr ""
-
-#: src/ui/gtk/glade/thanks_interface.c:156
-msgid "People"
-msgstr ""
-
-#: src/ui/gtk/glade/thanks_interface.c:166
-msgid ""
-"Lots of tools and libraries made it easier to write KCemu. Many thanks to "
-"the people behind all those projects for their work..."
-msgstr ""
-
-#: src/ui/gtk/glade/thanks_interface.c:195
-msgid "libSDL - Simple DirectMedia Layer"
-msgstr ""
-
-#: src/ui/gtk/glade/thanks_interface.c:229
-msgid "GTK+ - The GIMP Toolkit"
-msgstr ""
-
-#: src/ui/gtk/glade/thanks_interface.c:239
-msgid "http://www.libsdl.org/\n"
-msgstr ""
-
-#: src/ui/gtk/glade/thanks_interface.c:249
-msgid "FLAC - Free Lossless Audio Codec"
-msgstr ""
-
-#: src/ui/gtk/glade/thanks_interface.c:259
-msgid "http://flac.sourceforge.net/\n"
-msgstr ""
-
-#: src/ui/gtk/glade/thanks_interface.c:269
-msgid "http://www.gtk.org/\n"
-msgstr ""
-
-#: src/ui/gtk/glade/thanks_interface.c:279
-msgid "LAME - LAME Ain't an MP3 Encoder"
-msgstr ""
-
-#: src/ui/gtk/glade/thanks_interface.c:289
-msgid "http://lame.sourceforge.net/\n"
-msgstr ""
-
-#: src/ui/gtk/glade/thanks_interface.c:307
-msgid "Open Clip Art Library"
-msgstr ""
-
-#: src/ui/gtk/glade/thanks_interface.c:317
-msgid "http://openclipart.org/\n"
-msgstr ""
-
-#: src/ui/gtk/glade/thanks_interface.c:342
-msgid "Ogg & Vorbis libraries"
-msgstr ""
-
-#: src/ui/gtk/glade/thanks_interface.c:352
-msgid "http://www.vorbis.com/\n"
-msgstr ""
-
-#: src/ui/gtk/glade/thanks_interface.c:369
-msgid "libsndfile"
-msgstr ""
-
-#: src/ui/gtk/glade/thanks_interface.c:379
-msgid "http://www.mega-nerd.com/libsndfile/\n"
-msgstr ""
-
-#: src/ui/gtk/glade/thanks_interface.c:389
-msgid "Projects & Libraries"
+"Some profiles were changed!\n"
+"\n"
+"'Yes' will save changes to disk, 'No' will reject all changes.\n"
+"'Cancel': will allow to continue editing."
 msgstr ""

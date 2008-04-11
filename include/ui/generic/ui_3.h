@@ -1,8 +1,8 @@
 /*
  *  KCemu -- the KC 85/3 and KC 85/4 Emulator
- *  Copyright (C) 1997-2001 Torsten Paul
+ *  Copyright (C) 1997-2008 Torsten Paul
  *
- *  $Id: ui_3.h,v 1.2 2002/10/31 01:02:43 torsten_paul Exp $
+ *  $Id$
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -24,18 +24,17 @@
 
 #include "kc/system.h"
 
+#include "ui/generic/ui_base.h"
+
 #include "ui/generic/scanline.h"
 #include "ui/generic/memaccess.h"
 
-class UI_3
+class UI_3 : public UI_Base
 {
  protected:
-  byte_t *_dirty;
-  byte_t *_bitmap;
   byte_t *_pix_cache;
   byte_t *_col_cache;
   byte_t *_scan_cache;
-  int     _dirty_size;
 
   int _bitswap1[256];
   int _bitswap2[256];
@@ -47,17 +46,8 @@ class UI_3
  public:
   UI_3(void);
   virtual ~UI_3(void);
-
-  virtual int get_real_width(void);
-  virtual int get_real_height(void);
-
-  virtual byte_t * get_dirty_buffer(void);
-  virtual int get_dirty_buffer_size(void);
-
-  virtual void generic_update(Scanline *scanline, MemAccess *memaccess, bool clear_cache = false);
-
-  virtual int  generic_get_mode(void);
-  virtual void generic_set_mode(int mode);
+  
+  virtual void generic_update(Scanline *scanline, MemAccess *memaccess, bool clear_cache);
 };
 
 #endif /* __ui_generic_ui_3_h */

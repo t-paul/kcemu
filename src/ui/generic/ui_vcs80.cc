@@ -41,7 +41,7 @@ UI_VCS80::~UI_VCS80(void)
 }
 
 void
-UI_VCS80::generic_update(bool clear_cache)
+UI_VCS80::generic_update(Scanline *scanline, MemAccess *memaccess, bool clear_cache)
 {
   generic_draw_digit(65 * 4 + 32, 12, 4, 0, clear_cache);
   
@@ -56,15 +56,10 @@ UI_VCS80::generic_update(bool clear_cache)
     }
 }
 
-int
-UI_VCS80::generic_get_mode(void)
-{
-  return 0;
-}
-
 void
-UI_VCS80::generic_set_mode(int mode)
+UI_VCS80::generic_signal_v_retrace(bool value)
 {
+  led_update();
 }
 
 void

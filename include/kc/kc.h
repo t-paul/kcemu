@@ -24,73 +24,6 @@
 
 #include "kc/system.h"
 
-typedef enum
-{
-  KC_TYPE_NONE       = 0,
-  KC_TYPE_85_1 	     = (1 <<  0),
-  KC_TYPE_85_2 	     = (1 <<  1),
-  KC_TYPE_85_3 	     = (1 <<  2),
-  KC_TYPE_85_4 	     = (1 <<  3),
-  KC_TYPE_85_5 	     = (1 <<  4),
-  KC_TYPE_87         = (1 <<  5),
-  KC_TYPE_LC80 	     = (1 <<  6),
-  KC_TYPE_Z1013      = (1 <<  7),
-  KC_TYPE_A5105      = (1 <<  8),
-  KC_TYPE_POLY880    = (1 <<  9),
-  KC_TYPE_KRAMERMC   = (1 << 10),
-  KC_TYPE_MUGLERPC   = (1 << 11),
-  KC_TYPE_VCS80      = (1 << 12),
-  KC_TYPE_C80        = (1 << 13),
-  KC_TYPE_85_1_CLASS = KC_TYPE_85_1 | KC_TYPE_87,
-  KC_TYPE_85_2_CLASS = KC_TYPE_85_2 | KC_TYPE_85_3 | KC_TYPE_85_4 | KC_TYPE_85_5,
-  KC_TYPE_ALL        = (KC_TYPE_85_1_CLASS |
-			KC_TYPE_85_2_CLASS |
-			KC_TYPE_LC80 |
-			KC_TYPE_Z1013 |
-			KC_TYPE_A5105 |
-			KC_TYPE_POLY880 |
-			KC_TYPE_KRAMERMC |
-			KC_TYPE_MUGLERPC |
-			KC_TYPE_VCS80 |
-			KC_TYPE_C80)
-} kc_type_t;
-
-typedef enum
-{
-  KC_VARIANT_NONE    	 = 0,
-  KC_VARIANT_85_1_10 	 = 0,
-  KC_VARIANT_85_1_11 	 = 1,
-  KC_VARIANT_87_10   	 = 0,
-  KC_VARIANT_87_11   	 = 1,
-  KC_VARIANT_87_20   	 = 2,
-  KC_VARIANT_87_21   	 = 3,
-  KC_VARIANT_87_30   	 = 4,
-  KC_VARIANT_87_31   	 = 5,
-  KC_VARIANT_Z1013_01    = 0,
-  KC_VARIANT_Z1013_12    = 1,
-  KC_VARIANT_Z1013_16    = 3,
-  KC_VARIANT_Z1013_64    = 4,
-  KC_VARIANT_Z1013_A2    = 5,
-  KC_VARIANT_Z1013_RB    = 6,
-  KC_VARIANT_Z1013_SURL  = 7,
-  KC_VARIANT_Z1013_BL4   = 8,
-  KC_VARIANT_LC80_1k     = 0,
-  KC_VARIANT_LC80_2k     = 1,
-  KC_VARIANT_A5105_K1505 = 0,
-  KC_VARIANT_A5105_A5105 = 1,
-  KC_VARIANT_POLY880     = 0,
-  KC_VARIANT_POLY880_SC1 = 1,
-} kc_variant_t;
-
-typedef struct
-{
-  char         *name;
-  int           type;
-  kc_type_t     kc_type;
-  kc_variant_t  kc_variant;
-  char         *desc;
-} kc_variant_names_t;
-
 class Z80;
 class Z80_FDC;
 class DaisyChain;
@@ -155,13 +88,8 @@ extern char *kcemu_homedir;
 extern char *kcemu_datadir;
 extern char *kcemu_localedir;
 extern char *kcemu_debug_output;
-extern char *kcemu_configfile;
 extern char *kcemu_autostart_file;
 extern char *kcemu_autostart_addr;
-
-kc_type_t get_kc_type(void);
-kc_variant_t get_kc_variant(void);
-const char * get_kc_variant_name(void);
 
 const char * kc_get_license(void);
 const char * kc_get_warranty(void);

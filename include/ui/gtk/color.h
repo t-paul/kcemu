@@ -53,12 +53,12 @@ class ColorWindow : public UI_Gtk_Window
     GtkWidget *separator;
     GtkWidget *close;
 
-    GtkObject *s_fg_adj;
-    GtkObject *s_bg_adj;
-    GtkObject *v_fg_adj;
-    GtkObject *v_bg_adj;
-    GtkObject *b_adj;
-    GtkObject *w_adj;
+    GtkAdjustment *s_fg_adj;
+    GtkAdjustment *s_bg_adj;
+    GtkAdjustment *v_fg_adj;
+    GtkAdjustment *v_bg_adj;
+    GtkAdjustment *b_adj;
+    GtkAdjustment *w_adj;
   } _w;
 
   double _saturation_fg;
@@ -74,9 +74,10 @@ class ColorWindow : public UI_Gtk_Window
   static void sf_adjustment_changed(GtkAdjustment *adj, double *data);
 
   void init(void);
+  GtkAdjustment * init_adjustment(GtkRange* range, double *val_ptr);
 
  public:
-  ColorWindow(void);
+  ColorWindow(const char *glade_xml_file);
   virtual ~ColorWindow(void);
 
   virtual double get_saturation_fg() { return _saturation_fg; }

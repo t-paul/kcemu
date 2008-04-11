@@ -27,7 +27,6 @@
 
 #include "ui/gtk/disk.h"
 #include "ui/gtk/cmd.h"
-#include "ui/gtk/glade/interface.h"
 
 #include "libdbg/dbg.h"
 
@@ -121,7 +120,7 @@ public:
   }
 };
 
-DiskWindow::DiskWindow(void)
+DiskWindow::DiskWindow(const char *glade_xml_file) : UI_Gtk_Window(glade_xml_file)
 {
   init();
 
@@ -171,13 +170,13 @@ DiskWindow::sf_disk_attach(GtkWidget *widget, gpointer data)
 void
 DiskWindow::init(void)
 {
-  static char * attach_cmd[4] = {
+  static const char * attach_cmd[4] = {
     "ui-disk-attach-1",
     "ui-disk-attach-2",
     "ui-disk-attach-3",
     "ui-disk-attach-4",
   };
-  static char * detach_cmd[4] = {
+  static const char * detach_cmd[4] = {
     "ui-disk-detach-1",
     "ui-disk-detach-2",
     "ui-disk-detach-3",
@@ -187,7 +186,7 @@ DiskWindow::init(void)
   /*
    *  disk window
    */
-  _window = create_disk_window();
+  _window = get_widget("disk_window");
   gtk_signal_connect(GTK_OBJECT(_window), "delete_event",
                      GTK_SIGNAL_FUNC(cmd_exec_sft),
                      (char *)"ui-disk-window-toggle"); // FIXME:

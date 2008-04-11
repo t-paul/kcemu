@@ -22,8 +22,8 @@
 #include <string.h>
 
 #include "kc/system.h"
+#include "kc/prefs/prefs.h"
 
-#include "kc/kc.h"
 #include "kc/z80.h"
 #include "kc/memory1.h"
 #include "kc/memory7.h"
@@ -149,7 +149,7 @@ ModuleRAM64::in_out(word_t addr)
       /*
        * FIXME: make common base class for Memory1 and Memory7
        */
-      switch (get_kc_type())
+      switch (Preferences::instance()->get_kc_type())
 	{
 	case KC_TYPE_85_1:
 	  // no romdi needed for kc85/1

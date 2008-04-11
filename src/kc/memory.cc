@@ -30,8 +30,8 @@
 #include <iomanip>
 
 #include "kc/system.h"
+#include "kc/prefs/prefs.h"
 
-#include "kc/kc.h"
 #include "kc/memory.h"
 #include "ui/status.h"
 
@@ -422,7 +422,7 @@ Memory::loadRAM(istream *is, bool with_block_nr)
     {
       load_addr = 0x0401;
       end_addr = load_addr + (ptr[11] | (ptr[12] << 8));
-      switch (get_kc_type())
+      switch (Preferences::instance()->get_kc_type())
 	{
 	case KC_TYPE_85_1:
 	case KC_TYPE_87:

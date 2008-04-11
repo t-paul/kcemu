@@ -21,125 +21,22 @@
 
 #include "kc/system.h"
 
-#include "kc/kc.h"
-#include "kc/z80.h"
+#include "ui/generic/ui_1.h"
 
 #include "ui/gtk/ui_gtk1.h"
 
-#include "libdbg/dbg.h"
-
-UI_Gtk1::UI_Gtk1(void) : UI_Gtk()
+UI_Gtk1::UI_Gtk1(void) : UI_Gtk_Base(new UI_1())
 {
-  reset();
-  z80->register_ic(this);
+    _colors.push_back(UI_Color(false, 0x00, 0x00, 0x00));
+    _colors.push_back(UI_Color(false, 0xd0, 0x00, 0x00));
+    _colors.push_back(UI_Color(false, 0x00, 0xd0, 0x00));
+    _colors.push_back(UI_Color(false, 0xd0, 0xd0, 0x00));
+    _colors.push_back(UI_Color(false, 0x00, 0x00, 0xd0));
+    _colors.push_back(UI_Color(false, 0xd0, 0x00, 0xd0));
+    _colors.push_back(UI_Color(false, 0x00, 0xd0, 0xd0));
+    _colors.push_back(UI_Color(false, 0xd0, 0xd0, 0xd0));
 }
 
 UI_Gtk1::~UI_Gtk1(void)
 {
-  z80->unregister_ic(this); 
-}
-
-void
-UI_Gtk1::callback(void * /* data */)
-{
-  z80->addCallback(CB_OFFSET, this, 0);
-  update();
-}
-
-int
-UI_Gtk1::get_width(void)
-{
-  return kcemu_ui_scale * get_real_width();
-}
-
-int
-UI_Gtk1::get_height(void)
-{
-  return kcemu_ui_scale * get_real_height();
-}
-
-const char *
-UI_Gtk1::get_title(void)
-{
-  if (get_kc_type() == KC_TYPE_87)
-    return _("KC 87 Emulator");
-
-  return _("KC 85/1 Emulator");
-}
-
-void
-UI_Gtk1::allocate_colors(double saturation_fg,
-			 double saturation_bg,
-			 double brightness_fg,
-			 double brightness_bg,
-			 double black_level,
-			 double white_level)
-{
-    int a;
-    char *color_names[] = {
-      "#000000",
-      "#d00000",
-      "#00d000",
-      "#d0d000",
-      "#0000d0",
-      "#d000d0",
-      "#00d0d0",
-      "#d0d0d0",
-      0,
-    };
-
-    _colormap = gdk_colormap_get_system();
-    for (a = 0;color_names[a];a++) {
-	gdk_color_parse(color_names[a], &_col[a]);
-	gdk_color_alloc(_colormap, &_col[a]);
-    }
-}
-
-void
-UI_Gtk1::init(void)
-{
-}
-
-void
-UI_Gtk1::update(bool full_update, bool clear_cache)
-{
-  generic_update(clear_cache);
-  gtk_update(_bitmap, get_dirty_buffer(), get_dirty_buffer_size(),
-	     get_real_width(), get_real_height(), full_update);
-  processEvents();
-  gtk_sync();
-}
-
-void
-UI_Gtk1::flash(bool enable)
-{
-}
-
-void
-UI_Gtk1::memory_read(word_t addr)
-{
-}
-
-void
-UI_Gtk1::memory_write(word_t addr)
-{
-}
-
-int
-UI_Gtk1::get_mode(void)
-{
-  return generic_get_mode();
-}
-
-void
-UI_Gtk1::set_mode(int mode)
-{
-  generic_set_mode(mode);
-  gtk_resize();
-}
-
-void
-UI_Gtk1::reset(bool power_on)
-{
-  z80->addCallback(CB_OFFSET, this, 0);
 }

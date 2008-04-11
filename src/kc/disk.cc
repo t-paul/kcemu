@@ -23,7 +23,6 @@
 
 #include "kc/system.h"
 
-#include "kc/rc.h"
 #include "kc/kc.h"
 #include "kc/fdc.h"
 #include "kc/disk.h"

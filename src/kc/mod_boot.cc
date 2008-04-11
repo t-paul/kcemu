@@ -24,8 +24,8 @@
 #include <iostream>
 
 #include "kc/system.h"
+#include "kc/prefs/prefs.h"
 
-#include "kc/kc.h"
 #include "kc/memory1.h"
 #include "kc/memory7.h"
 #include "kc/mod_boot.h"
@@ -36,7 +36,7 @@ ModuleBOOT::ModuleBOOT(ModuleBOOT &tmpl) :
   ModuleROM1(tmpl)
 {
   _romdi_val = 0;
-  switch (get_kc_type())
+  switch (Preferences::instance()->get_kc_type())
     {
     case KC_TYPE_85_1:
       ((Memory1 *)memory)->register_memory_handler(this);
@@ -54,14 +54,14 @@ ModuleBOOT::ModuleBOOT(const char *filename,
 		       word_t addr,
 		       dword_t size,
 		       bool set_romdi) :
-  ModuleROM1(filename, name, addr, size, (get_kc_type() == KC_TYPE_87) ? set_romdi : false)
+  ModuleROM1(filename, name, addr, size, (Preferences::instance()->get_kc_type() == KC_TYPE_87) ? set_romdi : false)
 {
   _romdi_val = 0;
 }
 
 ModuleBOOT::~ModuleBOOT(void)
 {
-  switch (get_kc_type())
+  switch (Preferences::instance()->get_kc_type())
     {
     case KC_TYPE_85_1:
       ((Memory1 *)memory)->unregister_memory_handler(this);
@@ -102,7 +102,7 @@ ModuleBOOT::set_romdi(bool romdi_val)
 
   _romdi_val = romdi_val;
 
-  if (get_kc_type() != KC_TYPE_87)
+  if (Preferences::instance()->get_kc_type() != KC_TYPE_87)
     return;
 
   ModuleROM1::set_romdi(_romdi_val);

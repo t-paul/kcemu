@@ -1,6 +1,6 @@
 /*
  *  KCemu -- the KC 85/3 and KC 85/4 Emulator
- *  Copyright (C) 1997-2001 Torsten Paul
+ *  Copyright (C) 1997-2008 Torsten Paul
  *
  *  $Id$
  *
@@ -39,6 +39,7 @@ UI_9::UI_9(void)
   _col_cache = NULL;
 
   generic_set_mode(UI_GENERIC_MODE_LORES);
+  
   init();
 }
 
@@ -82,30 +83,6 @@ UI_9::dispose(void)
     delete[] _pix_cache;
   if (_col_cache)
     delete[] _col_cache;
-}
-
-int
-UI_9::get_real_width(void)
-{
-  return _width;
-}
-
-int
-UI_9::get_real_height(void)
-{
-  return _height;
-}
-
-byte_t *
-UI_9::get_dirty_buffer(void)
-{
-  return _dirty;
-}
-
-int
-UI_9::get_dirty_buffer_size(void)
-{
-  return _dirty_size;
 }
 
 void
@@ -316,7 +293,7 @@ UI_9::generic_update_graphic_5(bool clear_cache)
 }
 
 void
-UI_9::generic_update(bool clear_cache)
+UI_9::generic_update(Scanline *scanline, MemAccess *memaccess, bool clear_cache)
 {
   int mode;
   int border;
@@ -345,6 +322,9 @@ UI_9::generic_update(bool clear_cache)
 
   if (mode != old_mode)
     {
+      // call to ui->set_mode below will trigger new update, we need to
+      // make sure that we do not get into a loop.
+      old_mode = mode;
       clear_cache = true;
       switch (mode)
 	{
@@ -372,7 +352,6 @@ UI_9::generic_update(bool clear_cache)
       vis->reset_color_palette_changed();
     }
 
-  old_mode = mode;
   old_border = border;
   old_nr_of_lines = nr_of_lines;
 
@@ -423,12 +402,10 @@ UI_9::generic_set_mode(int mode)
   switch (_mode)
     {
     case UI_GENERIC_MODE_LORES:
-      _width = 384;
-      _height = 288;
+      set_real_screen_size(384, 288);
       break;
     case UI_GENERIC_MODE_HIRES:
-      _width = 704;
-      _height = 288;
+      set_real_screen_size(704, 288);
       break;
     }
 

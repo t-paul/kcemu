@@ -24,7 +24,6 @@
 
 #include "kc/system.h"
 
-#include "kc/rc.h"
 #include "kc/tape.h"
 #include "kc/ctc3.h"
 
@@ -101,13 +100,7 @@ CTC3::irq_1(void)
 bool
 CTC3::irq_2(void)
 {
-  static int b = RC::instance()->get_int("Full Flash Support", 1);
-
-  if (b || isCounter(2))
-    ui->flash(true);
-  else
-    ui->flash(false);
-
+  ui->flash(true);
   return true;
 }
 

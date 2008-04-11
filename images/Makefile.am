@@ -20,7 +20,20 @@ ICONS = \
 	kcemu-z1013.xpm \
 	kcemu-winicon_16x16.png \
 	kcemu-winicon_32x32.png \
-	kcemu-winicon_48x48.png
+	kcemu-winicon_48x48.png \
+	icon-root.png \
+	icon-default.png \
+	icon-deleted.png \
+	icon-bic.png \
+	icon-c80.png \
+	icon-kc85.png \
+	icon-kc87.png \
+	icon-kramermc.png \
+	icon-lc80.png \
+	icon-pcm.png \
+	icon-poly880.png \
+	icon-vcs80.png \
+	icon-z1013.png
 
 WINICONS = \
 	kcemu-bic.ico \
@@ -53,15 +66,37 @@ IMAGES = \
 	media-stop.png \
 	window-about.png \
 	window-audio.png \
+	window-color.png \
 	window-copying.png \
 	window-disk.png \
 	window-help.png \
 	window-info.png \
+	window-keyboard.png \
 	window-module.png \
+	window-options.png \
+	window-selector.png \
 	window-question.png \
 	window-tape.png \
 	window-thanks.png \
 	kcemu.png
+
+GLADE_XML = \
+        about.glade \
+        audio.glade \
+        color.glade \
+        legal.glade \
+        dialog.glade \
+	main.glade \
+        disk.glade \
+        help.glade \
+        keyboard.glade \
+        module.glade \
+        options.glade \
+        selector.glade \
+        savemem.glade \
+        tape.glade \
+        tapeedit.glade \
+        thanks.glade
 
 %.ico : %.xpm
 	xpmtoppm --alphaout /tmp/ico.alpha.1.$$$$ $< | ppmquant 256 > /tmp/ico.icon.$$$$ ; \
@@ -90,8 +125,8 @@ if TARGET_MINGW
 icon_DATA = $(ICONS) $(WINICONS)
 endif
 
-image_DATA = $(IMAGES)
+image_DATA = $(IMAGES) $(GLADE_XML)
 
 all : $(ICONS) $(WINICONS)
 
-EXTRA_DIST = $(ICONS) $(WINICONS) $(IMAGES)
+EXTRA_DIST = $(ICONS) $(WINICONS) $(IMAGES) $(GLADE_XML)

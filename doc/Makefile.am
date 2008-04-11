@@ -14,6 +14,20 @@ IMAGES = \
 	window-module-z1013.png \
 	window-module-z9001.png \
 	window-tape.png \
+	window-profile-1.png \
+	window-profile-2.png \
+	window-profile-3.png \
+	window-profile-4.png \
+	window-profile-5.png \
+	window-savemem.png \
+	window-select-profile.png \
+	window-profile-1_small.png \
+	window-profile-2_small.png \
+	window-profile-3_small.png \
+	window-profile-4_small.png \
+	window-profile-5_small.png \
+	window-savemem_small.png \
+	window-select-profile_small.png \
 	kcemu.png
 
 docdir = $(pkgdatadir)/doc

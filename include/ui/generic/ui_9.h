@@ -1,6 +1,6 @@
 /*
  *  KCemu -- the KC 85/3 and KC 85/4 Emulator
- *  Copyright (C) 1997-2001 Torsten Paul
+ *  Copyright (C) 1997-2008 Torsten Paul
  *
  *  $Id$
  *
@@ -24,7 +24,9 @@
 
 #include "kc/system.h"
 
-class UI_9
+#include "ui/generic/ui_base.h"
+
+class UI_9 : public UI_Base
 {
  public:
   enum {
@@ -37,9 +39,6 @@ class UI_9
   int     _height;
 
  protected:
-  byte_t *_bitmap;
-  byte_t *_dirty;
-  int     _dirty_size;
   byte_t *_pix_cache;
   byte_t *_col_cache;
   int     _max_ptr;
@@ -59,17 +58,12 @@ class UI_9
   UI_9(void);
   virtual ~UI_9(void);
 
-  virtual int get_real_width(void);
-  virtual int get_real_height(void);
-
-  virtual byte_t * get_dirty_buffer(void);
-  virtual int get_dirty_buffer_size(void);
-
-  virtual void generic_signal_v_retrace(bool value);
-  virtual void generic_update(bool clear_cache = false);
-
   virtual int  generic_get_mode(void);
   virtual void generic_set_mode(int mode);
+
+  virtual void generic_signal_v_retrace(bool value);
+
+  virtual void generic_update(Scanline *scanline, MemAccess *memaccess, bool clear_cache);
 };
 
 #endif /* __ui_generic_ui_9_h */

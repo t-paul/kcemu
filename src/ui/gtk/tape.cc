@@ -24,13 +24,11 @@
 
 #include "kc/system.h"
 
-#include "kc/rc.h"
 #include "kc/tape.h"
 #include "ui/error.h"
 
 #include "ui/status.h"
 #include "ui/gtk/tape.h"
-#include "ui/gtk/glade/interface.h"
 
 #include "ui/gtk/cmd.h"
 
@@ -188,6 +186,15 @@ public:
     }
 };
 
+TapeWindow::TapeWindow(const char *glade_xml_file) : UI_Gtk_Window(glade_xml_file)
+{
+   init(); 
+}
+
+TapeWindow::~TapeWindow(void)
+{
+}
+
 void
 TapeWindow::sf_tape_file_select(GtkTreeSelection *selection, gpointer data)
 {
@@ -301,7 +308,7 @@ TapeWindow::init(void)
   /*
    *  tape window
    */
-  _window = create_tape_window();
+  _window = get_widget("tape_window");
   gtk_signal_connect(GTK_OBJECT(_window), "delete_event",
                      GTK_SIGNAL_FUNC(cmd_exec_sft),
                      (char *)"ui-tape-window-toggle"); // FIXME:
@@ -487,7 +494,7 @@ void
 TapeWindow::allocate_colors(void)
 {
     int a;
-    char *color_names[] = {
+    const char *color_names[] = {
       "#000000",
       "#d00000",
       "#00d000",

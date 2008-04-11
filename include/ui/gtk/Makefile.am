@@ -1,9 +1,8 @@
 ## Process this file with automake to produce Makefile.in
 
-SUBDIRS = glade
-
 EXTRA_DIST = \
 	ui_gtk.h		\
+	ui_gtk_base.h		\
 	ui_gtk0.h		\
 	ui_gtk1.h		\
 	ui_gtk3.h		\
@@ -18,6 +17,7 @@ EXTRA_DIST = \
 	cmd.h			\
 	cmds.h			\
 	util.h			\
+	main.h			\
 	disk.h			\
 	help.h			\
 	tape.h			\
@@ -29,7 +29,10 @@ EXTRA_DIST = \
 	color.h			\
 	module.h		\
 	keyboard.h		\
+	options.h		\
+	selector.h		\
 	copying.h		\
+	savemem.h		\
 	window.h		\
 	fbrowse.h		\
 	dialog.h		\

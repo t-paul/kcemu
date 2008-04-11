@@ -26,9 +26,12 @@
 #include <string.h>
 
 #include "kc/system.h"
+#include "kc/prefs/types.h"
 
 #include "kc/kc.h"
 #include "kc/module.h"
+
+using namespace std;
 
 class ModuleListEntry
 {
@@ -67,9 +70,8 @@ private:
   ModuleListEntry *_init_floppy_basis_fc;
   ModuleListEntry *_init_color_expansion;
 
-  typedef std::list<ModuleListEntry *> mod_list_t;
-
 public:
+  typedef list<ModuleListEntry *> mod_list_t;
   typedef mod_list_t::iterator iterator;
     
 private:

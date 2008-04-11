@@ -1,5 +1,7 @@
 ## Process this file with automake to produce Makefile.in
 
+SUBDIRS = prefs
+
 TESTS = t_memstream #t_cb_list t_ctc
 
 check_PROGRAMS = $(TESTS)

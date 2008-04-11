@@ -1,6 +1,6 @@
 /*
  *  KCemu -- the KC 85/3 and KC 85/4 Emulator
- *  Copyright (C) 1997-2004 Torsten Paul
+ *  Copyright (C) 1997-2008 Torsten Paul
  *
  *  $Id$
  *
@@ -30,10 +30,12 @@ UI_MuglerPC::UI_MuglerPC(void)
 {
   int a;
 
+  set_real_screen_size(64 * 8 + 32, 32 * 8 + 32);
+
   _dirty_size = (get_real_width() * get_real_height()) / 64;
   _dirty = new byte_t[_dirty_size];
- 
-  _bitmap = new byte_t[get_real_width() * get_real_height()];
+
+  create_buffer(get_real_width() * get_real_height());
   _pix_cache = new byte_t[_dirty_size];
   
   for (a = 0;a < _dirty_size;a++)
@@ -47,30 +49,6 @@ UI_MuglerPC::~UI_MuglerPC(void)
 {
 }
 
-int
-UI_MuglerPC::get_real_width(void)
-{
-  return 64 * 8 + 32;
-}
- 
-int
-UI_MuglerPC::get_real_height(void)
-{
-  return 32 * 8 + 32;
-}
-
-byte_t *
-UI_MuglerPC::get_dirty_buffer(void)
-{
-  return _dirty;
-}
- 
-int
-UI_MuglerPC::get_dirty_buffer_size(void)
-{
-  return _dirty_size;
-}
-
 void
 UI_MuglerPC::generic_put_pixels(byte_t *ptr, byte_t val)
 {
@@ -79,7 +57,7 @@ UI_MuglerPC::generic_put_pixels(byte_t *ptr, byte_t val)
 }
 
 void
-UI_MuglerPC::generic_update(bool clear_cache)
+UI_MuglerPC::generic_update(Scanline *scanline, MemAccess *memaccess, bool clear_cache)
 {
   byte_t *irm = memory->get_irm();
   byte_t *chr = memory->get_char_rom();
@@ -121,15 +99,4 @@ UI_MuglerPC::generic_update(bool clear_cache)
       d += 4;
       ptr += 8 * width;
     }
-}
-
-int
-UI_MuglerPC::generic_get_mode(void)
-{
-  return 0;
-}
-
-void
-UI_MuglerPC::generic_set_mode(int mode)
-{
 }

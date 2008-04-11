@@ -25,6 +25,7 @@
 #include <iostream>
 
 #include "kc/system.h"
+#include "kc/prefs/prefs.h"
 
 #include "kc/z80.h"
 #include "kc/pio.h"
@@ -469,7 +470,7 @@ WavPlayer::do_play(void)
 	break;
     }
 
-  if (get_kc_type() & KC_TYPE_85_2_CLASS)
+  if (Preferences::instance()->get_kc_type() & KC_TYPE_85_2_CLASS)
     {
       v = (1750000.0 * byte_cnt) / _sample_freq;
     }

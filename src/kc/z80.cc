@@ -28,8 +28,8 @@
 #include <sys/time.h>
 
 #include "kc/system.h"
+#include "kc/prefs/prefs.h"
 
-#include "kc/kc.h"
 #include "kc/z80.h"
 #include "kc/daisy.h"
 #include "kc/timer.h"
@@ -213,7 +213,7 @@ Z80::Z80(void)
   _regs.IRequest = INT_NONE;
   ResetZ80(&_regs);
 
-  switch (get_kc_type())
+  switch (Preferences::instance()->get_kc_type())
     {
     case KC_TYPE_87:
     case KC_TYPE_85_1:

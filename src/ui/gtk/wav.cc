@@ -25,7 +25,6 @@
 
 #include "ui/gtk/cmd.h"
 #include "ui/gtk/wav.h"
-#include "ui/gtk/glade/interface.h"
 
 class CMD_ui_wav_window_toggle : public CMD
 {
@@ -88,7 +87,7 @@ WavWindow::sf_expose(GtkWidget *widget, GdkEvent *event, gpointer *data)
   self->expose();
 }
 
-WavWindow::WavWindow(void)
+WavWindow::WavWindow(const char *glade_xml_file) : UI_Gtk_Window(glade_xml_file)
 {
   _cmd_wav_info = new CMD_ui_wav_info(this);
   _cmd_wav_toggle = new CMD_ui_wav_window_toggle(this);
@@ -106,7 +105,7 @@ WavWindow::init(void)
   /*
    *  wav window
    */
-  _window = create_audio_window();
+  _window = get_widget("audio_window");
   gtk_signal_connect(GTK_OBJECT(_window), "delete_event",
 		     GTK_SIGNAL_FUNC(cmd_exec_sft),
 		     (char *)"ui-wav-window-toggle"); // FIXME:
@@ -114,11 +113,10 @@ WavWindow::init(void)
   _w.tooltips = gtk_tooltips_new();
 
   /*
-   *  canvas
+   *  canvas, needs GDK_EXPOSURE_MASK to be set!
    */
   _w.canvas = get_widget("main_drawingarea");
   gtk_drawing_area_size(GTK_DRAWING_AREA(_w.canvas), WINDOW_WIDTH, WINDOW_HEIGHT);
-  gtk_widget_set_events(_w.canvas, GDK_EXPOSURE_MASK);
   gtk_signal_connect(GTK_OBJECT(_w.canvas), "expose_event",
 		     GTK_SIGNAL_FUNC(sf_expose), this);
 

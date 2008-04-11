@@ -46,7 +46,7 @@ class HelpWindow : public UI_Gtk_Window
     GtkTextTag    *tag_italic;
     GtkTextTag    *tag_underline;
     GtkTextTag    *tag_center;
-    GtkTextTag    *tag_monospaced;
+    GtkTextTag    *tag_monospace;
     GtkTextTag    *tag_size[7];
     GtkTextBuffer *text_buffer;
   } _w;
@@ -60,7 +60,7 @@ class HelpWindow : public UI_Gtk_Window
     PARSE_FLAGS_ITALIC     = (1 << 1),
     PARSE_FLAGS_UNDERLINE  = (1 << 2),
     PARSE_FLAGS_CENTER     = (1 << 3),
-    PARSE_FLAGS_MONOSPACED = (1 << 4),
+    PARSE_FLAGS_MONOSPACE  = (1 << 4),
   };
 
   typedef enum {
@@ -130,7 +130,7 @@ class HelpWindow : public UI_Gtk_Window
   static const gchar * get_attribute(const gchar *name, const gchar **attribute_names, const gchar **attribute_values);
   
  public:
-  HelpWindow(void);
+  HelpWindow(const char *glade_xml_file);
   virtual ~HelpWindow(void);
 
   gboolean scroll_to(const char *topic, gboolean update_history);

@@ -22,8 +22,8 @@
 #include "kc/system.h"
 
 #include "kc/kc.h"
-#include "kc/rc.h"
 #include "kc/z80.h"
+#include "kc/prefs/prefs.h"
 
 #include "ui/generic/scanline.h"
 
@@ -132,7 +132,7 @@ Scanline::trigger(bool enable)
    *  config value that is added to offset each time this function
    *  is called
    */
-  static long long o = RC::instance()->get_int("Flash Offset", 50);
+  static long long o = Preferences::instance()->get_int_value("flash_offset", 50);
   /*
    *  difference between the current and the previous call to
    *  this function in clock ticks

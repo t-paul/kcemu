@@ -1,8 +1,8 @@
 /*
  *  KCemu -- the KC 85/3 and KC 85/4 Emulator
- *  Copyright (C) 1997-2001 Torsten Paul
+ *  Copyright (C) 1997-2008 Torsten Paul
  *
- *  $Id: ui_3.cc,v 1.2 2002/10/31 01:02:47 torsten_paul Exp $
+ *  $Id$
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -29,6 +29,8 @@
 UI_3::UI_3(void)
 {
   int a, b, n1, n2;
+
+  set_real_screen_size(320, 256);
 
   b = (get_real_width() * get_real_height()) / 8;
   _bitmap = new byte_t[get_real_width() * get_real_height()];
@@ -69,30 +71,6 @@ UI_3::~UI_3(void)
   delete[] _pix_cache;
   delete[] _col_cache;
   delete[] _scan_cache;
-}
-
-int
-UI_3::get_real_width(void)
-{
-  return 320;
-}
-
-int
-UI_3::get_real_height(void)
-{
-  return 256;
-}
-
-byte_t *
-UI_3::get_dirty_buffer(void)
-{
-  return _dirty;
-}
-
-int
-UI_3::get_dirty_buffer_size(void)
-{
-  return _dirty_size;
 }
 
 void
@@ -291,15 +269,4 @@ UI_3::generic_update(Scanline *scanline, MemAccess *memaccess, bool clear_cache)
           generic_put_pixels(8 * x + 256, ys, val, fg, bg);
         }
     }
-}
-
-int
-UI_3::generic_get_mode(void)
-{
-  return 0;
-}
-
-void
-UI_3::generic_set_mode(int mode)
-{
 }

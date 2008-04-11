@@ -62,7 +62,7 @@ class WavWindow : public UI_Gtk_Window
   void expose(void);
 
  public:
-  WavWindow(void);
+  WavWindow(const char *glade_xml_file);
   virtual ~WavWindow(void);
 
   void update(int gap);

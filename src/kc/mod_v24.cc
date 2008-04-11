@@ -33,9 +33,9 @@
 #include "kc/system.h"
 
 #include "kc/kc.h"
-#include "kc/rc.h"
 #include "kc/z80.h"
 #include "kc/mod_v24.h"
+#include "kc/prefs/prefs.h"
 
 #include "libdbg/dbg.h"
 
@@ -241,7 +241,7 @@ ModuleV24::in_reg(int c)
 void
 ModuleV24::out_reg(int c, byte_t val)
 {
-  static char *wr0_0[] = {
+  static const char *wr0_0[] = {
     "",
     " next write to register 1\n",
     " next write to register 2\n",
@@ -251,7 +251,7 @@ ModuleV24::out_reg(int c, byte_t val)
     " next write to register 6\n",
     " next write to register 7\n",
   };
-  static char *wr0_1[] = {
+  static const char *wr0_1[] = {
     "",
     " send break (SDLC)\n",
     " reset external and status interrupts\n",
@@ -261,7 +261,7 @@ ModuleV24::out_reg(int c, byte_t val)
     " reset error condition\n",
     " interrupt return (channel A)\n",
   };
-  static char *wr0_2[] = {
+  static const char *wr0_2[] = {
     "",
     " reset receiver CRC\n",
     " reset sender CRC\n",
@@ -447,7 +447,7 @@ ModuleV24::set_signal_handler(int fd, void (*sig_func)(int))
 bool
 ModuleV24::open_device_serial(int dev, const char *dev_name)
 {
-  int baudrate = RC::instance()->get_int("V24-Baudrate");
+  int baudrate = Preferences::instance()->get_int_value("v24_baudrate", 2400);
 
   _fd_in[dev] = open(dev_name, O_RDWR | O_NOCTTY | O_NONBLOCK);
   if (_fd_in[dev] == 0)
@@ -686,7 +686,7 @@ ModuleV24::open_device(void)
   char *s;
   const char *dev_name;
 
-  dev_name = RC::instance()->get_string("V24-Device", "/dev/ttyS1");
+  dev_name = Preferences::instance()->get_string_value("v24_device", "/dev/ttyS1");
 
   _io_type = IO_NONE;
   if (strcmp(dev_name, "SOCKET") == 0)

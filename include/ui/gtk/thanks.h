@@ -37,7 +37,7 @@ class ThanksWindow : public UI_Gtk_Window
   void init(void);
   
  public:
-  ThanksWindow(void);
+  ThanksWindow(const char *glade_xml_file);
   virtual ~ThanksWindow(void);
 };
 

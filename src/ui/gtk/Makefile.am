@@ -1,10 +1,8 @@
 ## Process this file with automake to produce Makefile.in
 
-SUBDIRS = glade
+noinst_LIBRARIES = libui_gtk.a
 
 keymapdir = $(pkgdatadir)/keymaps
-
-noinst_LIBRARIES = libui_gtk.a
 
 KEYMAPS = \
 	kc851.key \
@@ -21,7 +19,10 @@ KEYMAPS = \
 	lc80_keyboard_pressed.xpm \
 	vcs80.key \
 	vcs80_keyboard_pressed.xpm \
-	vcs80_keyboard.xpm
+	vcs80_keyboard.xpm \
+	a5105.key \
+	a5105_keyboard.png \
+	a5105_keyboard_pressed.png
 
 keymap_DATA = $(KEYMAPS)
 
@@ -30,11 +31,13 @@ EXTRA_DIST = $(KEYMAPS)
 INCLUDES = \
 	-I../../../include \
 	$(GTK_CFLAGS) \
-	$(SDL_CFLAGS)
+	$(SDL_CFLAGS) \
+	$(LIBGLADE_CFLAGS)
 
 libui_gtk_a_SOURCES = \
 	gtkledline.c		\
 	ui_gtk.cc		\
+	ui_gtk_base.cc		\
 	ui_gtk0.cc		\
 	ui_gtk1.cc		\
 	ui_gtk3.cc		\
@@ -48,6 +51,7 @@ libui_gtk_a_SOURCES = \
 	ui_gtk_c80.cc		\
 	cmd.cc			\
 	window.cc		\
+	main.cc			\
 	disk.cc			\
 	tape.cc			\
 	tapeadd.cc		\
@@ -58,8 +62,11 @@ libui_gtk_a_SOURCES = \
 	color.cc		\
 	module.cc		\
 	keyboard.cc		\
+	options.cc		\
+	selector.cc		\
 	debug.cc		\
 	copying.cc		\
+	savemem.cc		\
 	fbrowse.cc		\
 	dialog.cc		\
 	image.cc		\

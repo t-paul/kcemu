@@ -39,7 +39,7 @@ UI_6::~UI_6(void)
 }
 
 void
-UI_6::generic_update(bool clear_cache)
+UI_6::generic_update(Scanline *scanline, MemAccess *memaccess, bool clear_cache)
 {
 
   for (int a = 0;a < NR_OF_LEDS;a++)
@@ -54,15 +54,4 @@ UI_6::generic_update(bool clear_cache)
     }
 
   _idx = (_idx + 1) % HISTORY_LEN;
-}
-
-int
-UI_6::generic_get_mode(void)
-{
-  return 0;
-}
-
-void
-UI_6::generic_set_mode(int mode)
-{
 }

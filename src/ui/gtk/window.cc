@@ -19,21 +19,77 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
+#include <string>
+
+#include "kc/kc.h"
+
 #include "ui/gtk/window.h"
 
 #include "ui/gtk/cmd.h"
-#include "ui/gtk/glade/glade_util.h"
+
+using namespace std;
+
+bool UI_Gtk_Window::_static_init = false;
+string UI_Gtk_Window::_icon_path;
+string UI_Gtk_Window::_image_path;
 
 UI_Gtk_Window::UI_Gtk_Window(void)
 {
+  static_init();
+  
+  _window = 0;
+  _visible = false;
+  _glade_xml = NULL;
+  _help_args = new CMD_Args();
+}
+
+UI_Gtk_Window::UI_Gtk_Window(const char *glade_xml_file)
+{
+  static_init();
+  
   _window = 0;
   _visible = false;
   _help_args = new CMD_Args();
+  
+  string glade_xml_file_path = _image_path + glade_xml_file;
+  _glade_xml = glade_xml_new(glade_xml_file_path.c_str(), NULL, NULL);
 }
 
 UI_Gtk_Window::~UI_Gtk_Window(void)
 {
   delete _help_args;
+}
+
+void
+UI_Gtk_Window::static_init(void)
+{
+  if (_static_init)
+    return;
+  
+  _static_init = true;
+
+  string datadir(kcemu_datadir);
+  _icon_path = datadir + "/icons/";
+  _image_path = datadir + "/images/";
+
+  GtkSettings *settings = gtk_settings_get_default();
+  gtk_settings_set_long_property(settings, "gtk-can-change-accels", 1, "UI_Gtk_Window::static_init");
+  gtk_settings_set_string_property(settings, "gtk-menu-bar-accel", "", "UI_Gtk_Window::static_init");
+
+  GdkPixbuf *pixbuf16 = get_icon("kcemu-winicon_16x16.png");
+  GdkPixbuf *pixbuf32 = get_icon("kcemu-winicon_32x32.png");
+  GdkPixbuf *pixbuf48 = get_icon("kcemu-winicon_48x48.png");
+    
+  GList *icon_list = NULL;
+  if (pixbuf16 != NULL)
+    icon_list = g_list_append(icon_list, pixbuf16);
+  if (pixbuf32 != NULL)
+    icon_list = g_list_append(icon_list, pixbuf32);
+  if (pixbuf48 != NULL)
+    icon_list = g_list_append(icon_list, pixbuf48);
+    
+  if (icon_list != NULL)
+    gtk_window_set_default_icon_list(icon_list);
 }
 
 void
@@ -80,15 +136,98 @@ UI_Gtk_Window::get_window(void)
   return _window;
 }
 
+GdkPixbuf *
+UI_Gtk_Window::get_pixbuf(string path)
+{
+    GdkPixbuf *pixbuf = gdk_pixbuf_new_from_file(path.c_str(), NULL);
+    return pixbuf;
+}
+
+GdkPixbuf *
+UI_Gtk_Window::get_icon(const char *name)
+{
+    return get_pixbuf(_icon_path + name);
+}
+
+GdkPixbuf *
+UI_Gtk_Window::get_image(const char *name)
+{
+    return get_pixbuf(_image_path + name);
+}
+
+GladeXML *
+UI_Gtk_Window::get_glade_xml(void)
+{
+    return _glade_xml;
+}
+
+GtkWidget *
+UI_Gtk_Window::get_widget_or_null(const char *name)
+{
+  g_assert(_glade_xml != NULL);
+
+  GtkWidget *widget = glade_xml_get_widget(_glade_xml, name);
+
+  return widget;
+}
+
 GtkWidget *
 UI_Gtk_Window::get_widget(const char *name)
 {
-  g_assert(GTK_IS_WIDGET(_window));
+  GtkWidget *widget = get_widget_or_null(name);
 
-  GtkWidget *widget = lookup_widget(_window, name);
-  g_assert(GTK_IS_WIDGET(widget));
+  if (widget == NULL)
+      g_error("widget with name '%s' not found!", name);
 
   return widget;
+}
+
+GtkCellRenderer *
+UI_Gtk_Window::add_text_renderer(GtkTreeView *treeview, GtkTreeViewColumn *column, const char *title, ...) {
+    GtkCellRenderer *renderer = gtk_cell_renderer_text_new();
+    
+    gtk_tree_view_column_set_title(column, title);
+    gtk_tree_view_column_pack_end(column, renderer, TRUE);
+    gtk_tree_view_column_set_resizable(column, TRUE);
+    gtk_tree_view_column_set_expand(column, TRUE);
+
+    va_list ap;
+    va_start(ap, title);
+
+    while (242) {
+        const char *attr = va_arg(ap, const char *);
+        if (attr == NULL)
+            break;
+
+        int index = va_arg(ap, int);
+        gtk_tree_view_column_add_attribute(column, renderer, attr, index);
+    }
+
+    return renderer;
+}
+
+GtkCellRenderer *
+UI_Gtk_Window::add_icon_renderer(GtkTreeView *treeview, GtkTreeViewColumn *column, const char *title, ...) {
+    GtkCellRenderer *renderer = gtk_cell_renderer_pixbuf_new();
+    
+    gtk_tree_view_column_set_title(column, title);
+    gtk_tree_view_column_pack_start(column, renderer, FALSE);
+    gtk_tree_view_column_set_resizable(column, FALSE);
+    gtk_tree_view_column_set_expand(column, FALSE);
+
+    va_list ap;
+    va_start(ap, title);
+
+    while (242) {
+        const char *attr = va_arg(ap, const char *);
+        if (attr == NULL)
+            break;
+
+        int index = va_arg(ap, int);
+        gtk_tree_view_column_add_attribute(column, renderer, attr, index);
+    }
+    
+    return renderer;
 }
 
 void
@@ -155,7 +294,7 @@ UI_Gtk_Window::init_dialog(const char *close_button_func, const char *help_topic
   GtkWidget *header_label = get_widget("header_label");
   g_assert(GTK_IS_LABEL(header_label));
   
-  PangoFontDescription *font_desc = pango_font_description_from_string("Sans Bold 18");
+  PangoFontDescription *font_desc = pango_font_description_from_string("Sans 16");
   gtk_widget_modify_font(header_label, font_desc);
   pango_font_description_free(font_desc);
 }

@@ -30,6 +30,8 @@
 
 #include "libaudio/libaudio.h"
 
+using namespace std;
+
 class LibAudioTest : public CppUnit::TestCase { 
 private:
 

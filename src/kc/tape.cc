@@ -27,6 +27,8 @@
 #include <iomanip>
 
 #include "kc/system.h"
+#include "kc/prefs/prefs.h"
+
 #include "kc/memstream.h"
 
 #include "kc/z80.h"
@@ -82,7 +84,7 @@ public:
           if (!is)
             return;
 
-	  if (get_kc_type() == KC_TYPE_Z1013)
+	  if (Preferences::instance()->get_kc_type() == KC_TYPE_Z1013)
 	    ret = memory->loadRAM_Z1013(is, props.load_addr);
 	  else
 	    ret = memory->loadRAM(is, true);
@@ -101,7 +103,7 @@ public:
 	    {
 	    case KCT_TYPE_BAS:
 	    case KCT_TYPE_BAS_P:
-	      switch (get_kc_type())
+	      switch (Preferences::instance()->get_kc_type())
 		{
 		case KC_TYPE_85_1:
 		case KC_TYPE_87:
@@ -1125,7 +1127,7 @@ Tape::do_play(int edge)
       return;
     }
 
-  switch (get_kc_type())
+  switch (Preferences::instance()->get_kc_type())
     {
     case KC_TYPE_A5105:
       do_play_bic(edge);
@@ -1513,7 +1515,7 @@ Tape::tape_signal(void)
   diff = c_new - c_old;
   c_old = c_new;
 
-  switch (get_kc_type())
+  switch (Preferences::instance()->get_kc_type())
     {
     case KC_TYPE_A5105:
       tape_signal_bic(diff);

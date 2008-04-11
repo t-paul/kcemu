@@ -50,6 +50,8 @@ protected:
   virtual ~CMD_kc_image_load(void);
 
   virtual void execute(CMD_Args *args, CMD_Context context);
+            
+  int image_save(const char *filename, int start_addr, int end_addr);
 };
 
 const char * CMD_kc_image_load::_path = NULL;
@@ -58,6 +60,7 @@ CMD_kc_image_load::CMD_kc_image_load(void) : CMD("kc-image-load")
 {
   register_cmd("kc-image-run", 0);
   register_cmd("kc-image-load", 1);
+  register_cmd("kc-image-save", 5);
 }
 
 CMD_kc_image_load::~CMD_kc_image_load(void)
@@ -216,7 +219,42 @@ CMD_kc_image_load::execute(CMD_Args *args, CMD_Context context)
 	z80->jump(start);
 
       break;
+    case 5:
+      filename = args->get_string_arg("filename");
+      if (!filename)
+	return;
+      if (args->has_arg("start-address") && args->has_arg("end-address"))
+        image_save(filename, args->get_int_arg("start-address"), args->get_int_arg("end-address"));
+      break;
     }
+}
+
+int
+CMD_kc_image_load::image_save(const char *filename, int start_addr, int end_addr)
+{
+  if (start_addr < 0)
+    start_addr = 0;
+  if (end_addr > 0xffff)
+    end_addr = 0xffff;
+  if (start_addr > end_addr)
+    start_addr = end_addr;
+
+  FILE *f = fopen(filename, "wb");
+  if (f == NULL)
+    return 1;
+
+  int length = end_addr - start_addr + 1;
+
+  byte_t *buf = new byte_t[length];
+  for (int a = 0;a < length;a++)
+    buf[a] = memory->memRead8(start_addr + a);
+  
+  int ret = fwrite(buf, 1, length, f);
+  fclose(f);
+
+  delete buf;
+    
+  return ret != length;
 }
 
 __force_link(CMD_kc_image_load);

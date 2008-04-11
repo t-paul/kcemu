@@ -21,119 +21,19 @@
 
 #include "kc/system.h"
 
-#include "kc/kc.h"
-#include "kc/z80.h"
+#include "ui/generic/ui_8.h"
 
 #include "ui/gtk/ui_gtk8.h"
 
-#include "libdbg/dbg.h"
-
-UI_Gtk8::UI_Gtk8(void) : UI_Gtk()
+UI_Gtk8::UI_Gtk8(void) : UI_Gtk_Base(new UI_8())
 {
-  reset();
-  z80->register_ic(this);
+    _colors.push_back(UI_Color(false, 0x00, 0x00, 0x00)); /* black */
+    _colors.push_back(UI_Color(false, 0x00, 0x20, 0x00)); /* really dark green */
+    _colors.push_back(UI_Color(false, 0x00, 0xe0, 0x00)); /* green */
+    _colors.push_back(UI_Color(false, 0xff, 0x8c, 0x00)); /* dark orange */
+    _colors.push_back(UI_Color(false, 0x9a, 0xcd, 0x32)); /* led green */
 }
 
 UI_Gtk8::~UI_Gtk8(void)
 {
-  z80->unregister_ic(this); 
-}
-
-void
-UI_Gtk8::callback(void * /* data */)
-{
-  z80->addCallback(LC80_CB_OFFSET, this, 0);
-  update();
-}
-
-int
-UI_Gtk8::get_width(void)
-{
-  return kcemu_ui_scale * get_real_width();
-}
-
-int
-UI_Gtk8::get_height(void)
-{
-  return kcemu_ui_scale * get_real_height();
-}
-
-const char *
-UI_Gtk8::get_title(void)
-{
-  return _("LC80 Emulator");
-}
-
-void
-UI_Gtk8::allocate_colors(double saturation_fg,
-			 double saturation_bg,
-			 double brightness_fg,
-			 double brightness_bg,
-			 double black_level,
-			 double white_level)
-{
-    int a;
-    char *color_names[] = {
-      "#000000", /* black */
-      "#002000", /* really dark green */
-      "#00e000", /* green */
-      "#ff8c00", /* dark orange */
-      "#9acd32", /* led green */
-      0,
-    };
-
-    _colormap = gdk_colormap_get_system();
-    for (a = 0;color_names[a];a++) {
-	gdk_color_parse(color_names[a], &_col[a]);
-	gdk_color_alloc(_colormap, &_col[a]);
-    }
-}
-
-void
-UI_Gtk8::init(void)
-{
-}
-
-void
-UI_Gtk8::update(bool full_update, bool clear_cache)
-{
-  generic_update(clear_cache);
-  gtk_update(_bitmap, get_dirty_buffer(), get_dirty_buffer_size(),
-	     get_real_width(), get_real_height(), full_update);
-  processEvents();
-  gtk_sync();
-}
-
-void
-UI_Gtk8::flash(bool enable)
-{
-}
-
-void
-UI_Gtk8::memory_read(word_t addr)
-{
-}
-
-void
-UI_Gtk8::memory_write(word_t addr)
-{
-}
-
-int
-UI_Gtk8::get_mode(void)
-{
-  return generic_get_mode();
-}
-
-void
-UI_Gtk8::set_mode(int mode)
-{
-  generic_set_mode(mode);
-  gtk_resize();
-}
-
-void
-UI_Gtk8::reset(bool power_on)
-{
-  z80->addCallback(LC80_CB_OFFSET, this, 0);
 }

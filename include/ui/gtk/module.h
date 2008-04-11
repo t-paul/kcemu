@@ -62,7 +62,7 @@ protected:
   static void sf_color_expansion(GtkWidget *widget, gpointer data);
 
  public:
-  ModuleWindow(void);
+  ModuleWindow(const char *glade_xml_file);
   virtual ~ModuleWindow(void);
 
   /*

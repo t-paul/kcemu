@@ -22,28 +22,52 @@
 #ifndef __ui_gtk_window_h
 #define __ui_gtk_window_h
 
+#include <string>
+
 #include <gtk/gtk.h>
+#include <glade/glade.h>
 
 #include "cmd/cmd.h"
 
 #include "ui/window.h"
 
+using namespace std;
+
 class UI_Gtk_Window : public UI_Window
 {
  private:
-  bool _visible;
+  bool      _visible;
   CMD_Args *_help_args;
+  GladeXML *_glade_xml;
 
- protected:
+  static bool   _static_init;
+  static string _icon_path;
+  static string _image_path;
+
+  GtkSettingsValue _setting_gtk_can_change_accels;
+  
+private:
+  void static_init(void);
+
+protected:
   GtkWidget *_window;
 
   virtual void init(void) = 0;
+  virtual GladeXML * get_glade_xml(void);
 
+  GdkPixbuf * get_pixbuf(string path);
+  GdkPixbuf * get_icon(const char *name);
+  GdkPixbuf * get_image(const char *name);
+
+  GtkCellRenderer * add_text_renderer(GtkTreeView *treeview, GtkTreeViewColumn *, const char *title, ...);
+  GtkCellRenderer * add_icon_renderer(GtkTreeView *treeview, GtkTreeViewColumn *, const char *title, ...);
+  
   static void sf_help(GtkWidget *widget, gpointer data);
   static void sf_help_recursive(GtkWidget *widget, gpointer data);
   
  public:
   UI_Gtk_Window(void);
+  UI_Gtk_Window(const char *glade_xml_file);
   virtual ~UI_Gtk_Window(void);
 
   void show(void);
@@ -54,6 +78,7 @@ class UI_Gtk_Window : public UI_Window
 
   GtkWidget * get_window(void);
   GtkWidget * get_widget(const char *name);
+  GtkWidget * get_widget_or_null(const char *name);
 
   void init_dialog(const char *close_button_func, const char *help_topic);
 };

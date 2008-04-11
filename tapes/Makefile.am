@@ -4,7 +4,8 @@ tapedir = $(pkgdatadir)/tapes
 
 TAPES = \
 	files.kct \
-	z1013.kct
+	z1013.kct \
+	lc80.kct
 
 tape_DATA = $(TAPES)
 

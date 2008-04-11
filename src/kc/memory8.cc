@@ -23,8 +23,8 @@
 #include <fstream>
 
 #include "kc/system.h"
+#include "kc/prefs/prefs.h"
 
-#include "kc/kc.h"
 #include "kc/z80.h"
 #include "kc/memory8.h"
 
@@ -67,7 +67,7 @@ Memory8::Memory8(void) : Memory()
     {
       *(mptr->group) = NULL;
 
-      if ((mptr->model >= 0) && (mptr->model != get_kc_variant()))
+      if ((mptr->model >= 0) && (mptr->model != Preferences::instance()->get_kc_variant()))
 	continue;
 
       *(mptr->group) = new MemAreaGroup(mptr->name,

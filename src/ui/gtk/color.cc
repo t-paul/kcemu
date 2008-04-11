@@ -21,7 +21,7 @@
 
 #include "kc/system.h"
 
-#include "kc/rc.h"
+#include "kc/prefs/prefs.h"
 
 #include "ui/gtk/cmd.h"
 #include "ui/gtk/color.h"
@@ -53,14 +53,14 @@ ColorWindow::sf_adjustment_changed(GtkAdjustment *adj, double *data)
   CMD_EXEC("ui-update-colortable");
 }
 
-ColorWindow::ColorWindow(void)
+ColorWindow::ColorWindow(const char *glade_xml_file) : UI_Gtk_Window(glade_xml_file)
 {
-  _saturation_fg = RC::instance()->get_int("Foreground Saturation", 40) / 100.0;
-  _brightness_fg = RC::instance()->get_int("Foreground Brightness", 80) / 100.0;
-  _saturation_bg = RC::instance()->get_int("Background Saturation", 50) / 100.0;
-  _brightness_bg = RC::instance()->get_int("Background Brightness", 60) / 100.0;
-  _black_level   = RC::instance()->get_int("Black Value", 10) / 100.0;
-  _white_level   = RC::instance()->get_int("White Value", 90) / 100.0;
+  _saturation_fg = Preferences::instance()->get_int_value("color_fg_saturation", 80) / 100.0;
+  _brightness_fg = Preferences::instance()->get_int_value("color_fg_brightness", 95) / 100.0;
+  _saturation_bg = Preferences::instance()->get_int_value("color_bg_saturation", 65) / 100.0;
+  _brightness_bg = Preferences::instance()->get_int_value("color_bg_brightness", 50) / 100.0;
+  _black_level   = Preferences::instance()->get_int_value("color_black_level", 10) / 100.0;
+  _white_level   = Preferences::instance()->get_int_value("color_white_level", 90) / 100.0;
 
   _cmd = new CMD_color_window_toggle(this);
 }
@@ -70,183 +70,61 @@ ColorWindow::~ColorWindow(void)
   delete _cmd;
 }
 
+GtkAdjustment *
+ColorWindow::init_adjustment(GtkRange* range, double *val_ptr)
+{
+  GtkAdjustment *adj = gtk_range_get_adjustment(range);
+  gtk_range_set_value(range, *val_ptr);
+  gtk_object_set_data(GTK_OBJECT(adj), "self", this);
+  gtk_signal_connect(GTK_OBJECT(adj), "value_changed",
+		     GTK_SIGNAL_FUNC(sf_adjustment_changed), val_ptr);
+  return adj;
+}
+
 void
 ColorWindow::init(void)
 {
-  _window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
-  gtk_widget_set_name(_window, "ColorWindow");
-  gtk_window_set_title(GTK_WINDOW(_window), _("KCemu: Color Configuration"));
+  _window = get_widget("color_window");
   gtk_window_position(GTK_WINDOW(_window), GTK_WIN_POS_MOUSE);
   gtk_signal_connect(GTK_OBJECT(_window), "delete_event",
 		     GTK_SIGNAL_FUNC(cmd_exec_sft),
 		     (char *)"ui-color-window-toggle"); // FIXME:
 
   /*
-   *  vbox
-   */
-  _w.vbox = gtk_vbox_new(FALSE, 2);
-  gtk_container_border_width(GTK_CONTAINER(_w.vbox), 6);
-  gtk_container_add(GTK_CONTAINER(_window), _w.vbox);
-  gtk_widget_show(_w.vbox);
-
-  /*
-   *  hbox
-   */
-  _w.hbox = gtk_hbox_new(FALSE, 2);
-  gtk_widget_set_usize (_w.hbox, -2, 160);
-  gtk_widget_show(_w.hbox);
-  gtk_box_pack_start(GTK_BOX(_w.vbox), _w.hbox, TRUE, TRUE, 5);
-
-  /*
-   *  foreground
-   */
-  _w.fg_frame = gtk_frame_new(_("Foreground"));
-  gtk_box_pack_start(GTK_BOX(_w.hbox), _w.fg_frame, TRUE, TRUE, 0);
-  gtk_widget_show(_w.fg_frame);
-
-  _w.fg_hbox = gtk_hbox_new(FALSE, 2);
-  gtk_container_border_width(GTK_CONTAINER(_w.fg_hbox), 6);
-  gtk_container_add(GTK_CONTAINER(_w.fg_frame), _w.fg_hbox);
-  gtk_widget_show(_w.fg_hbox);
-
-  /*
-   *  background
-   */
-  _w.bg_frame = gtk_frame_new(_("Background"));
-  gtk_box_pack_start(GTK_BOX(_w.hbox), _w.bg_frame, TRUE, TRUE, 0);
-  gtk_widget_show(_w.bg_frame);
-
-  _w.bg_hbox = gtk_hbox_new(FALSE, 2);
-  gtk_container_border_width(GTK_CONTAINER(_w.bg_hbox), 6);
-  gtk_container_add(GTK_CONTAINER(_w.bg_frame), _w.bg_hbox);
-  gtk_widget_show(_w.bg_hbox);
-
-  /*
    *  foreground saturation
    */
-  _w.s_fg_frame = gtk_frame_new(_("Saturation"));
-  gtk_box_pack_start(GTK_BOX(_w.fg_hbox), _w.s_fg_frame, TRUE, TRUE, 0);
-  gtk_widget_show(_w.s_fg_frame);
-
-  _w.s_fg_adj = gtk_adjustment_new(_saturation_fg, 0, 1.1, 0.01, 0.1, 0.1);
-  gtk_object_set_data(GTK_OBJECT(_w.s_fg_adj), "self", this);
-  gtk_signal_connect(GTK_OBJECT(_w.s_fg_adj), "value_changed",
-		     GTK_SIGNAL_FUNC(sf_adjustment_changed),
-		     &_saturation_fg);
-
-  _w.s_fg_vscale = gtk_vscale_new(GTK_ADJUSTMENT(_w.s_fg_adj));
-  gtk_scale_set_digits(GTK_SCALE(_w.s_fg_vscale), 2);
-  gtk_container_add(GTK_CONTAINER(_w.s_fg_frame), _w.s_fg_vscale);
-  gtk_widget_show(_w.s_fg_vscale);
+  _w.s_fg_vscale = get_widget("foreground_saturation_vscale");
+  _w.s_fg_adj = init_adjustment(GTK_RANGE(_w.s_fg_vscale), &_saturation_fg);
 
   /*
    *  foreground brightness (= value of HSV)
    */
-  _w.v_fg_frame = gtk_frame_new(_("Brightness"));
-  gtk_box_pack_start(GTK_BOX(_w.fg_hbox), _w.v_fg_frame, TRUE, TRUE, 0);
-  gtk_widget_show(_w.v_fg_frame);
-
-  _w.v_fg_adj = gtk_adjustment_new(_brightness_fg, 0, 1.1, 0.01, 0.1, 0.1);
-  gtk_object_set_data(GTK_OBJECT(_w.v_fg_adj), "self", this);
-  gtk_signal_connect(GTK_OBJECT(_w.v_fg_adj), "value_changed",
-		     GTK_SIGNAL_FUNC(sf_adjustment_changed),
-		     &_brightness_fg);
-
-  _w.v_fg_vscale = gtk_vscale_new(GTK_ADJUSTMENT(_w.v_fg_adj));
-  gtk_scale_set_digits(GTK_SCALE(_w.v_fg_vscale), 2);
-  gtk_container_add(GTK_CONTAINER(_w.v_fg_frame), _w.v_fg_vscale);
-  gtk_widget_show (_w.v_fg_vscale);
+  _w.v_fg_vscale = get_widget("foreground_brightness_vscale");
+  _w.v_fg_adj = init_adjustment(GTK_RANGE(_w.v_fg_vscale), &_brightness_fg);
 
   /*
    *  background saturation
    */
-  _w.s_bg_frame = gtk_frame_new(_("Saturation"));
-  gtk_box_pack_start(GTK_BOX(_w.bg_hbox), _w.s_bg_frame, TRUE, TRUE, 0);
-  gtk_widget_show(_w.s_bg_frame);
-
-  _w.s_bg_adj = gtk_adjustment_new(_saturation_bg, 0, 1.1, 0.01, 0.1, 0.1);
-  gtk_object_set_data(GTK_OBJECT(_w.s_bg_adj), "self", this);
-  gtk_signal_connect(GTK_OBJECT(_w.s_bg_adj), "value_changed",
-		     GTK_SIGNAL_FUNC(sf_adjustment_changed),
-		     &_saturation_bg);
-
-  _w.s_bg_vscale = gtk_vscale_new(GTK_ADJUSTMENT(_w.s_bg_adj));
-  gtk_scale_set_digits(GTK_SCALE(_w.s_bg_vscale), 2);
-  gtk_container_add(GTK_CONTAINER(_w.s_bg_frame), _w.s_bg_vscale);
-  gtk_widget_show(_w.s_bg_vscale);
-
+  _w.s_bg_vscale = get_widget("background_saturation_vscale");
+  _w.s_bg_adj = init_adjustment(GTK_RANGE(_w.s_bg_vscale), &_saturation_bg);
+  
   /*
    *  background brightness (= value of HSV)
    */
-  _w.v_bg_frame = gtk_frame_new(_("Brightness"));
-  gtk_box_pack_start(GTK_BOX(_w.bg_hbox), _w.v_bg_frame, TRUE, TRUE, 0);
-  gtk_widget_show(_w.v_bg_frame);
-
-  _w.v_bg_adj = gtk_adjustment_new(_brightness_bg, 0, 1.1, 0.01, 0.1, 0.1);
-  gtk_object_set_data(GTK_OBJECT(_w.v_bg_adj), "self", this);
-  gtk_signal_connect(GTK_OBJECT(_w.v_bg_adj), "value_changed",
-		     GTK_SIGNAL_FUNC(sf_adjustment_changed),
-		     &_brightness_bg);
-
-  _w.v_bg_vscale = gtk_vscale_new(GTK_ADJUSTMENT(_w.v_bg_adj));
-  gtk_scale_set_digits(GTK_SCALE(_w.v_bg_vscale), 2);
-  gtk_container_add(GTK_CONTAINER(_w.v_bg_frame), _w.v_bg_vscale);
-  gtk_widget_show (_w.v_bg_vscale);
+  _w.v_bg_vscale = get_widget("background_brightness_vscale");
+  _w.v_bg_adj = init_adjustment(GTK_RANGE(_w.v_bg_vscale), &_brightness_bg);
 
   /*
    *  black level (= value of HSV for black pixels)
    */
-  _w.b_frame = gtk_frame_new(_("Black Level"));
-  gtk_box_pack_start(GTK_BOX(_w.hbox), _w.b_frame, TRUE, TRUE, 0);
-  gtk_widget_show(_w.b_frame);
-
-  _w.b_adj = gtk_adjustment_new(_black_level, 0, 1.1, 0.01, 0.1, 0.1);
-  gtk_object_set_data(GTK_OBJECT(_w.b_adj), "self", this);
-  gtk_signal_connect(GTK_OBJECT(_w.b_adj), "value_changed",
-		     GTK_SIGNAL_FUNC(sf_adjustment_changed),
-		     &_black_level);
-
-  _w.b_vscale = gtk_vscale_new(GTK_ADJUSTMENT(_w.b_adj));
-  gtk_scale_set_digits(GTK_SCALE(_w.b_vscale), 2);
-  gtk_container_add(GTK_CONTAINER(_w.b_frame), _w.b_vscale);
-  gtk_widget_show (_w.b_vscale);
+  _w.b_vscale = get_widget("black_level_vscale");
+  _w.b_adj = init_adjustment(GTK_RANGE(_w.b_vscale), &_black_level);
 
   /*
    *  white level (= value of HSV for white pixels)
    */
-  _w.w_frame = gtk_frame_new(_("White Level"));
-  gtk_box_pack_start(GTK_BOX(_w.hbox), _w.w_frame, TRUE, TRUE, 0);
-  gtk_widget_show(_w.w_frame);
+  _w.w_vscale = get_widget("white_level_vscale");
+  _w.w_adj = init_adjustment(GTK_RANGE(_w.w_vscale), &_white_level);
 
-  _w.w_adj = gtk_adjustment_new(_white_level, 0, 1.1, 0.01, 0.1, 0.1);
-  gtk_object_set_data(GTK_OBJECT(_w.w_adj), "self", this);
-  gtk_signal_connect(GTK_OBJECT(_w.w_adj), "value_changed",
-		     GTK_SIGNAL_FUNC(sf_adjustment_changed),
-		     &_white_level);
-
-  _w.w_vscale = gtk_vscale_new(GTK_ADJUSTMENT(_w.w_adj));
-  gtk_scale_set_digits(GTK_SCALE(_w.w_vscale), 2);
-  gtk_container_add(GTK_CONTAINER(_w.w_frame), _w.w_vscale);
-  gtk_widget_show (_w.w_vscale);
-
-  /*
-   *  separator
-   */
-  _w.separator = gtk_hseparator_new();
-  gtk_box_pack_start(GTK_BOX(_w.vbox), _w.separator,
-		     FALSE, FALSE, 5);
-  gtk_widget_show(_w.separator);
-
-  /*
-   *  close button
-   */
-  _w.close = gtk_button_new_with_label(_("Close"));
-  gtk_box_pack_start(GTK_BOX(_w.vbox), _w.close,
-		     FALSE, FALSE, 5);
-  gtk_signal_connect(GTK_OBJECT(_w.close), "clicked",
-		     GTK_SIGNAL_FUNC(cmd_exec_sf),
-		     (char *)"ui-color-window-toggle"); // FIXME:
-  GTK_WIDGET_SET_FLAGS(_w.close, GTK_CAN_DEFAULT);
-  gtk_widget_grab_default(_w.close);
-  gtk_widget_show(_w.close);
+  init_dialog("ui-color-window-toggle", NULL);
 }

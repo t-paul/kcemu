@@ -4,9 +4,8 @@
 #  This script is intended to help cross-compiling kcemu on
 #  linux host system. Target is Windows/MinGW.
 #
-#  As recommended at the Gtk+ for Windows web pages, compilation
-#  is done against the Gtk+-2.4 header files.
-#  (see http://www.gimp.org/~tml/gimp/win32/)
+#  Compilation now at least requires Gtk+-2.6. Gtk+-2.4 is not
+#  supported anymore.
 #
 #  Two packages are generated. One with the latest Gtk+-2.6 as
 #  this is the last release that will be runnable under Windows 95.
@@ -16,10 +15,11 @@
 
 #BUILD_DIR="/tmp/kcemu.build.$$"
 BUILD_DIR="/tmp/kcemu.build"
-GTK_DEV_PACKAGES_DIR="/a/download/win32-dev/gtk-win32/gtk-2.4.14"
-GTK_RUNTIME_PACKAGES_BASE="/a/download/win32-dev/gtk-win32"
-DEP_PACKAGES_DIR="/a/download/win32-dev/gtk-win32/dependencies"
-SDL_PACKAGES_DIR="/a/download/win32-dev/libsdl"
+GTK_DEV_PACKAGES_DIR="/data/download/win32-dev/gtk-win32/gtk+-2.6.10"
+GTK_RUNTIME_PACKAGES_BASE="/data/download/win32-dev/gtk-win32"
+DEP_PACKAGES_DIR="/data/download/win32-dev/gtk-win32/dependencies"
+SDL_PACKAGES_DIR="/data/download/win32-dev/libsdl"
+GLADE_PACKAGES_DIR="/data/download/win32-dev/gtk-win32/glade-2.6"
 KCEMU_DIR="/home/tp/projects/kcemu"
 
 ################################################################
@@ -28,7 +28,7 @@ source VERSION
 
 ################################################################
 
-DEV_DIR="$BUILD_DIR/dev-2.4"
+DEV_DIR="$BUILD_DIR/dev-2.6"
 INSTALL_DIR="$BUILD_DIR/kcemu"
 
 CROSS_PKG_CONFIG="$DEV_DIR/cross-pkg-config.sh"
@@ -66,41 +66,62 @@ unpack_dev_libs () {
 	else
 		mkdir -p "$DIR" && cd "$DIR" || exit 5
 
-		u "$GTK_DEV_PACKAGES_DIR"/glib-2.4.7.zip
-		u "$GTK_DEV_PACKAGES_DIR"/glib-dev-2.4.7.zip
-		u "$GTK_DEV_PACKAGES_DIR"/gtk+-2.4.14.zip
-		u "$GTK_DEV_PACKAGES_DIR"/gtk+-dev-2.4.14.zip
-		u "$GTK_DEV_PACKAGES_DIR"/pango-1.4.1.zip
-		u "$GTK_DEV_PACKAGES_DIR"/pango-dev-1.4.1.zip
-		u "$GTK_DEV_PACKAGES_DIR"/atk-1.8.0.zip
-		u "$GTK_DEV_PACKAGES_DIR"/atk-dev-1.8.0.zip
+		u "$GTK_DEV_PACKAGES_DIR"/glib-dev-2.6.6.zip
+		u "$GTK_DEV_PACKAGES_DIR"/gtk+-dev-2.6.10-20050823.zip
+		u "$GTK_DEV_PACKAGES_DIR"/pango-dev-1.8.2.zip
+		u "$GTK_DEV_PACKAGES_DIR"/atk-dev-1.9.0.zip
 
 		u "$DEP_PACKAGES_DIR"/pkg-config-0.20.zip
 		u "$DEP_PACKAGES_DIR"/libiconv-1.9.1.bin.woe32.zip
-		u "$DEP_PACKAGES_DIR"/gettext-0.14.5.zip
-		u "$DEP_PACKAGES_DIR"/gettext-dev-0.14.5.zip
-		u "$DEP_PACKAGES_DIR"/libpng-1.2.7-bin.zip
+		u "$DEP_PACKAGES_DIR"/gettext-runtime-dev-0.17-1.zip
 		u "$DEP_PACKAGES_DIR"/libpng-1.2.7-lib.zip
-		u "$DEP_PACKAGES_DIR"/jpeg-6b-4-bin.zip
 		u "$DEP_PACKAGES_DIR"/jpeg-6b-4-lib.zip
 
 		u "$DEP_PACKAGES_DIR"/zlib123-dll.zip
-		mv zlib1.dll bin
+		mv zlib1.dll bin/
+
+		u "$GLADE_PACKAGES_DIR"/libglade-dev-2.6.2.zip
+		u "$GLADE_PACKAGES_DIR"/libxml2-dev-2.6.27.zip
+
+		patch_libxml2_pkg_config_file
 
 		x "$SDL_PACKAGES_DIR"/SDL-devel-1.2.9-mingw32.tar.gz
-		mv SDL-1.2.9/bin/* bin
-		mv SDL-1.2.9/lib/* lib
+		mv SDL-1.2.9/bin/* bin/
+		mv SDL-1.2.9/lib/* lib/
 		mv SDL-1.2.9/include/* include
 		rm -rf SDL-1.2.9
 	fi
     )
 }
 
+patch_libxml2_pkg_config_file () {
+	echo "*"
+	echo "* patching libxml2 pkgconfig file to use -lzdll"
+	echo "*"
+	sleep 1
+	patch -p0 << EOF
+--- lib/pkgconfig/libxml-2.0.pc.orig	2006-12-13 08:31:44.000000000 +0100
++++ lib/pkgconfig/libxml-2.0.pc	2008-03-21 16:23:12.000000000 +0100
+@@ -7,5 +7,5 @@
+ Version: 2.6.27
+ Description: libXML library version 2.
+ Requires:
+-Libs: -L\${libdir} -lxml2 -lz
++Libs: -L\${libdir} -lxml2 -lzdll
+ Cflags: -I\${includedir}
+EOF
+	sleep 2
+	echo
+}
+
 unpack_cur_libs_common () {
 	u "$DEP_PACKAGES_DIR"/libiconv-1.9.1.bin.woe32.zip
-	u "$DEP_PACKAGES_DIR"/gettext-0.14.5.zip
+	u "$DEP_PACKAGES_DIR"/gettext-runtime-0.17-1.zip
 	u "$DEP_PACKAGES_DIR"/libpng-1.2.8-bin.zip
 	u "$DEP_PACKAGES_DIR"/jpeg-6b-4-bin.zip
+
+	u "$GLADE_PACKAGES_DIR"/libglade-2.6.2.zip
+	u "$GLADE_PACKAGES_DIR"/libxml2-2.6.27.zip
 
 	u "$DEP_PACKAGES_DIR"/zlib123-dll.zip
 	mv zlib1.dll bin
@@ -145,23 +166,27 @@ unpack_cur_libs_gtk () {
 }
 
 unpack_cur_libs_gtk_2_6_10 () {
-	unpack_cur_libs_gtk gtk-2.6.10 glib-2.6.6.zip gtk+-2.6.10-20050823.zip pango-1.8.2.zip atk-1.9.0.zip
+	unpack_cur_libs_gtk gtk+-2.6.10 glib-2.6.6.zip gtk+-2.6.10-20050823.zip pango-1.8.2.zip atk-1.9.0.zip
 }
 
 unpack_cur_libs_gtk_2_8_13 () {
-	unpack_cur_libs_gtk gtk-2.8.13 glib-2.8.6.zip gtk+-2.8.13.zip pango-1.10.2.zip atk-1.10.3.zip cairo-1.0.2.zip
+	unpack_cur_libs_gtk gtk+-2.8.13 glib-2.8.6.zip gtk+-2.8.13.zip pango-1.10.2.zip atk-1.10.3.zip cairo-1.0.2.zip
 }
 
 unpack_cur_libs_gtk_2_8_20 () {
-	unpack_cur_libs_gtk gtk-2.8.20 glib-2.12.1.zip gtk+-2.8.20.zip pango-1.12.3.zip atk-1.10.3.zip cairo-1.2.2.zip
+	unpack_cur_libs_gtk gtk+-2.8.20 glib-2.12.1.zip gtk+-2.8.20.zip pango-1.12.3.zip atk-1.10.3.zip cairo-1.2.2.zip
 }
 
 unpack_cur_libs_gtk_2_10_7 () {
-	unpack_cur_libs_gtk gtk-2.10.7 glib-2.12.7.zip gtk+-2.10.7.zip pango-1.14.9.zip atk-1.12.3.zip cairo-1.2.6.zip
+	unpack_cur_libs_gtk gtk+-2.10.7 glib-2.12.7.zip gtk+-2.10.7.zip pango-1.14.9.zip atk-1.12.3.zip cairo-1.2.6.zip
 }
 
 unpack_cur_libs_gtk_2_12_0 () {
 	unpack_cur_libs_gtk gtk+-2.12.0 glib-2.14.1.zip gtk+-2.12.0.zip pango-1.18.2.zip atk-1.20.0.zip cairo-1.4.10.zip
+}
+
+unpack_cur_libs_gtk_2_12_9 () {
+	unpack_cur_libs_gtk gtk+-2.12.9 glib-2.16.1.zip gtk+-2.12.9.zip pango-1.20.0.zip atk-1.22.0.zip cairo-1.4.14.zip
 }
 
 compile_kcemu () {
@@ -226,13 +251,13 @@ compile_kcemu || exit 3
 #
 #  create installer for Win95 version
 #
-unpack_cur_libs_gtk_2_6_10
-makensis - < "KCemu-${KCEMU_VERSION}/setup/KCemuSetup_gtk2.6.nsi" || exit 4
+#unpack_cur_libs_gtk_2_6_10
+#makensis - < "KCemu-${KCEMU_VERSION}/setup/KCemuSetup_gtk2.6.nsi" || exit 4
 
 #
 #  create installer for Win2000 version
 #
-unpack_cur_libs_gtk_2_12_0
+unpack_cur_libs_gtk_2_12_9
 makensis - < "KCemu-${KCEMU_VERSION}/setup/KCemuSetup.nsi" || exit 5
 
 exit 0

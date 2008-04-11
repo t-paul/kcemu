@@ -80,6 +80,19 @@ char * sys_basename(const char *path);
  */
 char * sys_getprogrampath(void);
 
+/*
+ *  return the user home directory
+ *
+ *  the returned string should be freed with free().
+ */
+char * sys_gethome(void);
+
+/*
+ *  create new directory, given permissions are ignored on
+ *  some platforms (e.g. MinGW)
+ */
+int sys_mkdir(const char *pathname, int mode);
+
 #ifdef __cplusplus
 }
 #endif

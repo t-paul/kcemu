@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <help>
 <!--
   **
@@ -11,7 +12,7 @@
  <img src="kcemu.png"/> 
 
 
-<b><size value="1">(c) 1997-2006 Torsten Paul</size></b>
+<b><size value="1">(c) 1997-2008 Torsten Paul</size></b>
 <i><size value="-1">&lt;Torsten.Paul@gmx.de&gt;</size></i>
 
 
@@ -52,10 +53,12 @@
 
 <size value="1">3. <i>Funktionen</i></size>
 <size value="-3"> </size>
-3.1. <link ref="window-tape">Kassettenverwaltung</link>
-3.2. <link ref="window-disk">Diskettenverwaltung</link>
-3.3. <link ref="window-module">Modulverwaltung</link>
-3.4. <link ref="window-audio">Abspielen von Sound-Dateien</link>
+3.1. <link ref="window-profile">Profile</link>
+3.2. <link ref="window-tape">Kassettenverwaltung</link>
+3.3. <link ref="window-disk">Diskettenverwaltung</link>
+3.4. <link ref="window-module">Modulverwaltung</link>
+3.5. <link ref="window-audio">Abspielen von Sound-Dateien</link>
+3.6. <link ref="window-save-memory">Speichern von Memory-Bereichen</link>
 
 
 </p>
@@ -92,7 +95,7 @@
 <p>
 <size value="2"><ref name="license"/>1.2. Lizenz</size>
 
-  <b>KCemu @VERSION@, Copyright (c) 1997-2006 Torsten Paul.</b>
+  <b>KCemu @VERSION@, Copyright (c) 1997-2008 Torsten Paul.</b>
 
   Dieses Programm ist freie Software. Sie können es unter
   den Bedingungen der GNU General Public License, wie von der
@@ -118,36 +121,37 @@
 
   Es stehen die folgenden Kommandozeilenparameter zur Verfügung:
 
-<m> -0              </m>Starten im <link ref="sys-z1013">Z1013</link> Modus
-<m> -1              </m>Starten im <link ref="sys-z9001">Z9001 / KC 85/1</link> Modus
-<m> -2              </m>Starten im <link ref="sys-kc85">KC 85/2</link> Modus
-<m> -3              </m>Starten im <link ref="sys-kc85">KC 85/3</link> Modus
-<m> -4              </m>Starten im <link ref="sys-kc85">KC 85/4</link> Modus (default)
-<m> -5              </m>Starten im <link ref="sys-kc855">KC 85/5</link> Modus
-<m> -6              </m>Starten im <link ref="sys-poly880">Poly-880</link> Modus
-<m> -7              </m>Starten im <link ref="sys-z9001">KC 87</link> Modus
-<m> -8              </m>Starten im <link ref="sys-lc80">LC 80</link> Modus
-<m> -9              </m>Starten im <link ref="sys-a5105">BIC/A5105</link> Modus
-<m> -a --autostart  </m>Automatischer Start des angegebenen Programms (KC 85/3 - /5)
-<m> -A --address    </m>Startadresse für das automatisch zu startende Programm
-<m> -c --config     </m>zusätzliche Einstellungen aus angegebenen File lesen
-<m> -e --emulate    </m>Emuliere das angegebene System (-v liefert Liste der Typen)
-<m> -s --scale      </m>Vergrößerung der Anzeige (erlaubt sind die Werte 1, 2 und 3)
-<m> -t --tape       </m>Aktivieren eines Tape-Archives beim Start
-<m> -f --floppy     </m>Aktivieren eines Disketten-Images beim Start
-<m> -h --help       </m>diese Hilfe anzeigen
-<m> -d --datadir    </m>Setzen des Daten-Verzeichnisses (für ROM-Images)
-<m> -l --localedir  </m>Setzen des Locale-Verzeichnisses für die Sprachanpassung
-<m> -M --modules    </m>Modul(e) für die ersten Steckplätze definieren
-<m> -MM022,M011,..  </m>Einstellungen der Konfigurationsdatei werden überschrieben
-<m> -M+M022,M011,.. </m>zusätzliche Module zu denen aus der Konfigurationsdatei 
-<m> -v --version    </m>Anzeige der KCemu Version und Konfiguration
-<m> -V --viewlist   </m>Ausführliche Liste der emulierten Typen
-<m> -H --home       </m>Überschreiben der Einstellung für das Homeverzeichnis
-<m> -F --fullscreen </m>Start im Vollbild-Modus (wenn durch GUI unterstützt)
-<m> -E --effects    </m>Anzeige mit Screen-Effekten bei vergrößerter Darstellung
-<m> -L --license    </m>Anzeige der Lizenz
-<m> -W --warranty   </m>Anzeige des Haftungsausschlusses
+<m> -0                   </m>Starten mit <link ref="sys-z1013">Z1013</link> Profil
+<m> -1                   </m>Starten mit <link ref="sys-z9001">Z9001 / KC 85/1</link> Profil
+<m> -2                   </m>Starten mit <link ref="sys-kc85">KC 85/2</link> Profil
+<m> -3                   </m>Starten mit <link ref="sys-kc85">KC 85/3</link> Profil
+<m> -4                   </m>Starten mit <link ref="sys-kc85">KC 85/4</link> Profil
+<m> -5                   </m>Starten mit <link ref="sys-kc855">KC 85/5</link> Profil
+<m> -6                   </m>Starten mit <link ref="sys-poly880">Poly-880</link> Profil
+<m> -7                   </m>Starten mit <link ref="sys-z9001">KC 87</link> Profil
+<m> -8                   </m>Starten mit <link ref="sys-lc80">LC 80</link> Profil
+<m> -9                   </m>Starten mit <link ref="sys-a5105">BIC/A5105</link> Profil
+<m> -a --autostart       </m>Automatischer Start des angegebenen Programms (KC 85/3 - /5)
+<m> -A --address         </m>Startadresse für das automatisch zu startende Programm
+<m> -d --datadir:        </m>Setzen des Daten-Verzeichnisses (für ROM-Images)
+<m> -E --effects         </m>Anzeige mit Screen-Effekten bei vergrößerter Darstellung
+<m> -f --floppy          </m>Aktivieren eines Disketten-Images beim Start
+<m> -F --fullscreen      </m>Start im Vollbild-Modus (wenn durch GUI unterstützt)
+<m> -h --help            </m>diese Hilfe anzeigen
+<m> -H --home            </m>Überschreiben der Einstellung für das Homeverzeichnis
+<m> -l --localedir       </m>Setzen des Locale-Verzeichnisses für die Sprachanpassung
+<m> -L --license         </m>Anzeige der Lizenz
+<m> -M --modules         </m>Modul(e) für die ersten Steckplätze definieren
+<m> -MM022,M011,..       </m>Einstellungen der Konfigurationsdatei werden überschrieben
+<m> -M+M022,M011,..      </m>zusätzliche Module zu denen aus der Konfigurationsdatei 
+<m> -o --debug-output:   </m>Debug-Ausgabe in Datei umleiten
+<m> -p --profile:        </m>Start mit dem angegebenen Profil
+<m> -P --select-profile: </m>Start mit Fenster zur Profil-Auswahl
+<m> -s --scale           </m>Vergrößerung der Anzeige (erlaubt sind die Werte 1, 2 und 3)
+<m> -t --tape            </m>Aktivieren eines Tape-Archives beim Start
+<m> -v --version         </m>Anzeige der KCemu Version und Konfiguration
+<m> -V --viewlist        </m>Ausführliche Liste der emulierten Typen
+<m> -W --warranty        </m>Anzeige des Haftungsausschlusses
 
 
 </p>
@@ -453,7 +457,106 @@ VEB Robotron-Meßelektronik "Otto Schön" Dresden
 
 </p>
 
-<p><size value="2"><ref name="window-tape"/>3.1. Kassettenverwaltung</size>
+<p><size value="2"><ref name="window-profile"/>3.1. Profile</size>
+
+  <img src="window-select-profile_small.png"/>
+
+  <u>System</u>
+
+  Im "System"-Tab wird angegeben wie das Profil heißt und welches System
+  emuliert werden soll. Zusätzlich kann ein Kommentar eingegeben werden,
+  der das System kurz beschreibt. Dieser Kommentar wird auch angezeigt, 
+  wenn der Emulator mit dem Profilauswahl-Fenster gestartet wird.
+
+  <img src="window-profile-1_small.png"/>
+
+  <u>Anzeige</u>
+
+  Der Tab mit den Eigenschaften für die Bildschirmdarstellung erlaubt es die folgenden
+  Einstellungen vorzunehmen:
+
+  <b>Skalierung</b>
+  Anzeigeskalierung des Hauptfensters. Bei einem Wert von 1 entspricht ein
+  Pixel auf dem Bildschirm des emulierten Systems auch genau einem Pixel
+  im emulierten System. Es ist möglich die Darstellung auf das doppelte
+  oder das dreifache zu vergrößern.
+
+  <b>Effekte</b>
+  Das Einschalten der Effekte hat nur bei einer Einstellung der Skalierung
+  von >1 Auswirkungen. Bei der Skalierung auf doppelte Größe wird dann
+  ein sogenannter Scanline-Effekt erzeugt, bei dem jede 2. Bildschirmzeile
+  etwas abgedunkelt wird. Wird die Skalierung auf dreifache Größe eingestellt,
+  erfolgt eine Filterung des Bildes die eine etwas unscharfe Darstellung
+  zur Folge hat.
+
+  <b>IRM Zugriff</b>
+  Wird diese Option eingeschaltet, werden bei der Emulation eines KC 85/2 bzw.
+  KC 85/3 die Darstellungsfehler durch den Zugriff auf den Bildwiederholspeicher
+  (IRM) simuliert.
+
+  <b>Debug</b>
+  Diese Option dient lediglich der Fehlersuche und hat bei einer 
+  Skalierungseinstellung von 1 zur Folge, dass der für die Anzeige benutzte
+  Caching-Algorithmus sichtbar gemacht wird. Das erfolgt dadurch, dass
+  veränderte Bildschirmbereiche für kurze Zeit heller dargestellt werden als
+  normal. Diese Option sollte deshalb im Normalfall ausgeschaltet bleiben.
+
+  <img src="window-profile-2_small.png"/>
+
+  <u>Module</u>
+
+  Im Tab "Module" können die Module angegeben werden, die beim Start des Emulators mit
+  dem jeweiligen Profil automatisch geladen werden sollen.
+
+  <img src="window-profile-3_small.png"/>
+
+  <u>Medien</u>
+
+  <img src="window-profile-4_small.png"/>
+
+  <u>KC85</u>
+
+  Dieser Tab enthält spezielle Einstellungen für die Emulation der KC85 Serie
+  aus Mühlhausen (KC85/2-5).
+
+  <b>D004</b>
+  Einschalten dieser Option aktiviert die Emulation des D004 Floppy Basis Devices.
+  Dieses ist notwendig für die Nutzung von Disketten oder Festplatten (über GIDE)
+  am KC85. Außerdem enthält das D004 die Hardware um CP/M Systeme auf dem KC laufen
+  lassen zu können.
+
+  <b>F8 ROM</b>
+  Der im D004 eingebaute System-ROM liegt normalerweise im Modul-Schacht FC. Eine
+  kleine Modifikation der D004 Hauptplatine ermöglicht den Einsatz eines erweiterten
+  ROMs. Dadurch können 2 unterschiedliche Versionen der D004 Software genutzt werden.
+  Wird diese Option eingeschaltet, wird der Zugriff auf den zweiten System-ROM
+  freigeschaltet.
+
+  <b>ROMs tauschen</b>
+  Im Emulator sind immer zwei D004-System-ROMs vorhanden. Die original mitgelieferte
+  Version 2.0 und die erweiterte Version 3.1. Diese Option vertauscht die Zuordnung
+  der beiden Versionen auf die Modul-Schächte FC und F8 (wobei der Zugriff auf den
+  Modul in Schacht F8 nur möglich ist wenn die Option "F8 ROM" eingeschaltet ist).
+
+  Die Zuordnung der Versionen zu den Modul-Schächten ist abhängig vom emulierten System:
+<m>
+             |    normal   ||  vertauscht |
+             |  FC  |  F8  ||  FC  |  F8  |
+    =========+======+======++======+======+
+    KC85/2   | 2.0  | 3.1  || 3.1  | 2.0  |
+    KC85/3   | 2.0  | 3.1  || 3.1  | 2.0  |
+    KC85/4   | 2.0  | 3.1  || 3.1  | 2.0  |
+    KC85/5   | 3.1  | 2.0  || 2.0  | 3.1  |
+</m>
+  <b>Bustreiber</b>
+  Diese Option gibt an, wie viele D002 Bustreiber emuliert werden sollen. Maximalwert
+  für den Emulator sind 4 Geräte.
+
+  <img src="window-profile-5_small.png"/>
+
+</p>
+
+<p><size value="2"><ref name="window-tape"/>3.2. Kassettenverwaltung</size>
 
   Zur Nachbildung eines Kassettenlaufwerkes werden spezielle
   Archiv-Dateien benutzt. Diese können ein oder mehrere Programme
@@ -526,7 +629,7 @@ VEB Robotron-Meßelektronik "Otto Schön" Dresden
 
 </p>
 
-<p><size value="2"><ref name="window-disk"/>3.2. Diskettenverwaltung</size>
+<p><size value="2"><ref name="window-disk"/>3.3. Diskettenverwaltung</size>
 
   Die Diskettenverwaltung bietet die Möglichkeit bis zu 4 Diskettenlaufwerke
   mit virtuellen Disketten zu bestücken.
@@ -586,7 +689,7 @@ VEB Robotron-Meßelektronik "Otto Schön" Dresden
 
 </p>
 
-<p><size value="2"><ref name="window-module"/>3.3. Modulverwaltung</size>
+<p><size value="2"><ref name="window-module"/>3.4. Modulverwaltung</size>
 
   Je nach emuliertem System steht eine Auswahl an Modulen bereit die das
   System um die verschiedensten Funktionen erweitern.
@@ -777,7 +880,7 @@ VEB Robotron-Meßelektronik "Otto Schön" Dresden
 
 </p>
 
-<p><size value="2"><ref name="window-audio"/>3.4. Abspielen von Sound-Dateien</size>
+<p><size value="2"><ref name="window-audio"/>3.5. Abspielen von Sound-Dateien</size>
 
   Diese Funktion ermöglicht es vorhandene Sound-Dateien abzuspielen
   die z.B. von Kassette aufgenommen wurden und nun im WAV (oder einem
@@ -834,6 +937,29 @@ VEB Robotron-Meßelektronik "Otto Schön" Dresden
   <b>RAW</b> - Dieser Modul behandelt alle übergebenen Dateien
   als wären sie unkomprimierte Sound-Dateien mit dem Format
   44100kHz, 8bit, Mono.
+
+
+</p>
+
+<p><size value="2"><ref name="window-save-memory"/>3.6. Speichern von Memory-Bereichen</size>
+
+  Zusammenhängende Bereiche des Hauptspeichers können auf einfache
+  Art und Weise als Datei gespeichert werden. Dabei ist zu beachten,
+  dass immer der aktuell von der CPU sichtbare Speicher angezeigt bzw.
+  in die Datei geschrieben wird.
+
+  <img src="window-savemem_small.png"/>
+
+  Der im Fenster angezeigte Speicherinhalt ist statisch auch wenn
+  die Emulation weiterläuft. Über den Button "Aktualisieren" kann
+  aber erneut der aktuelle Speicherinhalt geladen werden, ohne das
+  Fenster zu verlassen.
+
+  Die beiden Toggle-Buttons hinter den Adressangaben schalten das
+  automatische Scrolling der Speicheranzeige zu den jeweils angegebenen
+  Adressen ein bzw. aus.
+
+
 </p>
 
 </help>

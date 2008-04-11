@@ -4,7 +4,7 @@ if USE_INCLUDED_GETOPT
 GETOPTLIB = ../getopt/libgetopt.a
 endif
 
-TESTS = test test.sh
+TESTS = test
 
 bin_PROGRAMS = kctape
 
@@ -38,8 +38,8 @@ kctape_LDADD = \
 check:
 	rm -f test.kct testfile.1 testfile.2
 	./test
-	./kctape test.kct -c
-	./kctape test.kct --add testfile.1 "Test 1.1"
-	./kctape test.kct --add-raw testfile.1 "Test 1.2" "TEST" 0x0200
-	./kctape test.kct --add testfile.2 "Test 2.1"
-	./kctape test.kct --add-raw testfile.2 "Test 2.2" "TEST" 0x0200
+	./kctape -t test.kct -c
+	./kctape -t test.kct --add testfile.1 "Test 1.1"
+	./kctape -t test.kct --add-raw testfile.1 "Test 1.2" "TEST" 0x0200
+	./kctape -t test.kct --add testfile.2 "Test 2.1"
+	./kctape -t test.kct --add-raw testfile.2 "Test 2.2" "TEST" 0x0200

@@ -60,6 +60,8 @@ Keyboard8::keyReleased(int keysym, int keycode)
 
   if (keysym == 0x1b)
     CMD_EXEC("emu-reset");
+  if (keysym == 0x108)
+    CMD_EXEC("emu-nmi");
   if (keysym == 0x10a)
     CMD_EXEC("lc80-key-f10");
   if (keysym == 0x10b)
