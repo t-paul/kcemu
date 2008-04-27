@@ -1397,8 +1397,11 @@ main(int argc, char **argv)
 	  portg = ports->register_ports("CTC",  0xec, 4, ctc,  10);
 	  portg = ports->register_ports("PIO1", 0xf4, 4, pio,  10);
 	  portg = ports->register_ports("PIO2", 0xf8, 4, pio2, 10);
+          // lc80e
+	  portg = ports->register_ports("PIO1", 0x74, 4, pio,  10);
+	  portg = ports->register_ports("PIO2", 0x78, 4, pio2, 10);
 
-	  daisy->add_last(ctc);
+          daisy->add_last(ctc);
 	  daisy->add_last(pio);
 	  daisy->add_last(pio2);
 	  break;

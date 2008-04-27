@@ -30,17 +30,21 @@
 class Memory8 : public Memory
 {
 private:
-  byte_t _ram[0x0400];
+  byte_t _ram[0x1000]; /* 0x400 for 1k & 2k, 0x1000 for lc80e */
   byte_t _rom[0x0800];
   byte_t _rom1[0x0400];
   byte_t _rom2[0x0400];
+  byte_t _rome[0x3000];
 
   MemAreaGroup *_m_scr;     /* scratch memory */
   MemAreaGroup *_m_ram;     /* RAM   2000h - 23ffh */
   MemAreaGroup *_m_rom;     /* ROM   0000h - 07ffh (2k variant) */
   MemAreaGroup *_m_rom1;    /* ROM   0000h - 03ffh (1k variant) */
   MemAreaGroup *_m_rom2;    /* ROM   0800h - 0bffh (1k variant) */
-
+  MemAreaGroup *_m_rome1;   /* ROM   0000h - 0fffh (LC80e) */
+  MemAreaGroup *_m_rome2;   /* ROM   1000h - 1fffh (LC80e) */
+  MemAreaGroup *_m_rome5;   /* ROM   c000h - cfffh (LC80e) */
+            
 public:
   Memory8(void);
   virtual ~Memory8(void);

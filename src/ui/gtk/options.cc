@@ -1167,6 +1167,7 @@ OptionsWindow::init(void) {
     _w.liststore_variant_lc80 = get_variant_list_model(
             KC_VARIANT_LC80_1k,  "LC 80 (2 x U505)",
             KC_VARIANT_LC80_2k,  "LC 80 (1 x U2716)",
+            KC_VARIANT_LC80e,    "LC 80e",
             -1);
     _w.liststore_variant_a5105 = get_variant_list_model(
             KC_VARIANT_A5105_K1505, "K1505 (BIC Basis Device)",

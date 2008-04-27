@@ -303,6 +303,8 @@ SystemInformation::SystemInformation(void) {
             N_("    Single board computer LC 80 with 1k RAM and 2 x 1k ROM.\n"));
     add_system_type(902, "lc80.2k", -8, EmulationType::_emulation_type_lc80, KC_VARIANT_LC80_2k,
             N_("    Single board computer LC 80 with 1k RAM and 1 x 2k ROM.\n"));
+    add_system_type(903, "lc80e", -8, EmulationType::_emulation_type_lc80, KC_VARIANT_LC80e,
+            N_("    Export variant of the LC 80 with 12k ROM including chess program.\n"));
     add_system_type(1000, "bic", -9, EmulationType::_emulation_type_a5105, KC_VARIANT_A5105_K1505,
             N_("    BIC/A5105, only the base device is emulated, no floppy device.\n"));
     add_system_type(1002, "a5105", 9, EmulationType::_emulation_type_a5105, KC_VARIANT_A5105_A5105,

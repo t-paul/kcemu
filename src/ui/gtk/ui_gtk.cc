@@ -790,6 +790,7 @@ void
 UI_Gtk::create_ui(void) {
     _callback_value_retrace = 0;
     
+    kc_variant_t kc_variant = Preferences::instance()->get_kc_variant();
     switch (Preferences::instance()->get_kc_type()) {
         case KC_TYPE_85_1:
         case KC_TYPE_87:
@@ -808,7 +809,7 @@ UI_Gtk::create_ui(void) {
             break;
         case KC_TYPE_LC80:
             _ui = new UI_Gtk8();
-            _callback_value = 18000;
+            _callback_value = (kc_variant == KC_VARIANT_LC80e ? 66000 : 18000);
             break;
         case KC_TYPE_Z1013:
             _ui = new UI_Gtk0();
