@@ -70,6 +70,14 @@ void sys_gettimeofday(long *tv_sec, long *tv_usec);
 char * sys_basename(const char *path);
 
 /*
+ *  return true if the given path denotes an absolute path
+ *  name for the specific system (e.g. if it starts with
+ *  a '/' for linux or with a drive letter followed by a ':'
+ *  for mingw).
+ */
+int sys_isabsolutepath(const char *path);
+
+/*
  *  return the directory of the currently running program
  *
  *  returns where the executable is located, not the current

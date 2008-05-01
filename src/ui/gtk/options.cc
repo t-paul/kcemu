@@ -840,7 +840,7 @@ OptionsWindow::apply_filechooserbutton(GtkFileChooser *filechooser) {
     if (filename == NULL) {
         gtk_file_chooser_unselect_all(filechooser);
     } else {
-        if ((*filename != '/') && (dir != NULL)) {
+        if (!sys_isabsolutepath(filename) && (dir != NULL)) {
             string path = string(kcemu_datadir) + dir + filename;
             gtk_file_chooser_select_filename(filechooser, path.c_str());
         } else {

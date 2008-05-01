@@ -63,7 +63,6 @@ ProfileSelectorWindow::on_dialog_ok(GtkWidget *widget, gpointer user_data) {
 
 void
 ProfileSelectorWindow::on_dialog_quit(GtkWidget *widget, gpointer user_data) {
-    ProfileSelectorWindow *self = (ProfileSelectorWindow *)user_data;
     exit(0);
 }
 

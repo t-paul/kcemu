@@ -8,6 +8,7 @@ INCLUDES = \
 libsys_linux_a_SOURCES = \
 	sys_usleep.c \
 	sys_basename.c \
+	sys_isabsolutepath.c \
 	sys_localtime.c \
 	sys_gettimeofday.c \
 	sys_getprogrampath.c \
