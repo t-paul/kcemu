@@ -30,6 +30,8 @@
 
 #include "ui/ui.h"
 
+#include "libdbg/dbg.h"
+
 using namespace std;
 
 Memory7::Memory7(void) : Memory()
@@ -150,18 +152,30 @@ Memory7::get_char_rom(void)
 void
 Memory7::register_romdi_handler(ROMDIInterface *handler)
 {
+  DBG(1, form("KCemu/Memory7/romdi",
+              "Memory7::register_romdi_handler(): %p\n",
+              handler));
+
   _romdi_list.push_back(handler);
 }
 
 void
 Memory7::unregister_romdi_handler(ROMDIInterface *handler)
 {
+  DBG(1, form("KCemu/Memory7/romdi",
+              "Memory7::unregister_romdi_handler(): %p\n",
+              handler));
+
   _romdi_list.remove(handler);
 }
 
 void
 Memory7::set_romdi(bool val)
 {
+  DBG(1, form("KCemu/Memory7/romdi",
+              "Memory7::set_romdi(): %s\n",
+              val ? "on" : "off"));
+
   _romdi = val;
   for (romdi_list_t::iterator it = _romdi_list.begin();it != _romdi_list.end();it++)
     (*it)->romdi(val);
@@ -172,6 +186,10 @@ Memory7::set_romdi(bool val)
 void
 Memory7::romdi(bool val)
 {
+ DBG(1, form("KCemu/Memory7/romdi",
+              "Memory7::romdi(): BASIC ROM %s\n",
+              val ? "off" : "on"));
+
   _m_basic->set_active(!val);
 }
 
@@ -205,7 +223,7 @@ Memory7::reset(bool power_on)
    *  some trouble with the initialization.
    */
   memset(&_ram[0], 0, 0x400);
-                                                                                
+
   /*
    *  The CPM-Z9 boot module is enabled/disabled by writing to address
    *  ranges f800h-fbffh/fc00h-ffffh. The delete cursor routine at

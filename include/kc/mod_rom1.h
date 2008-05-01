@@ -47,6 +47,7 @@ class ModuleROM1 : public ModuleInterface, public ROMDIInterface
 	     bool set_romdi = false);
   virtual ~ModuleROM1(void);
 
+  virtual bool is_active(void);
   virtual void set_active(bool active);
 
   virtual void m_out(word_t addr, byte_t val);

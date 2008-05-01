@@ -51,7 +51,6 @@ ModuleROM1::ModuleROM1(ModuleROM1 &tmpl) :
        */
       if (_set_romdi)
 	{
-	  set_romdi(true);
 	  switch (Preferences::instance()->get_kc_type())
 	    {
 	    case KC_TYPE_85_1:
@@ -62,6 +61,8 @@ ModuleROM1::ModuleROM1(ModuleROM1 &tmpl) :
 	      break;
 	    default: break;
 	    }
+
+	  set_romdi(true);
 	}
     }
 }
@@ -108,6 +109,12 @@ ModuleROM1::~ModuleROM1(void)
     memory->unregister_memory(_group);
 
   delete[] _rom;
+}
+
+bool
+ModuleROM1::is_active(void)
+{
+  return _group->is_active();
 }
 
 void

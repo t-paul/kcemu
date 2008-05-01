@@ -30,6 +30,8 @@
 
 #include "ui/ui.h"
 
+#include "libdbg/dbg.h"
+
 using namespace std;
 
 Memory1::Memory1(void) : Memory()
@@ -133,18 +135,30 @@ Memory1::get_char_rom(void)
 void
 Memory1::register_romdi_handler(ROMDIInterface *handler)
 {
+  DBG(1, form("KCemu/Memory1/romdi",
+              "Memory1::register_romdi_handler(): %p\n",
+              handler));
+
   _romdi_list.push_back(handler);
 }
 
 void
 Memory1::unregister_romdi_handler(ROMDIInterface *handler)
 {
+  DBG(1, form("KCemu/Memory1/romdi",
+              "Memory1::unregister_romdi_handler(): %p\n",
+              handler));
+
   _romdi_list.remove(handler);
 }
 
 void
 Memory1::set_romdi(bool val)
 {
+  DBG(1, form("KCemu/Memory1/romdi",
+              "Memory1::set_romdi(): %s\n",
+              val ? "on" : "off"));
+
   _romdi = val;
   for (romdi_list_t::iterator it = _romdi_list.begin();it != _romdi_list.end();it++)
     (*it)->romdi(val);
@@ -155,6 +169,10 @@ Memory1::set_romdi(bool val)
 void
 Memory1::romdi(bool val)
 {
+  DBG(1, form("KCemu/Memory1/romdi",
+              "Memory1::romdi(): OS ROM %s\n",
+              val ? "off" : "on"));
+
   _m_os->set_active(!val);
 }
 
@@ -188,6 +206,30 @@ Memory1::reset(bool power_on)
    *  some trouble with the initialization.
    */
   memset(&_ram[0], 0, 0x400);
+
+  /*
+   *  The CPM-Z9 boot module is enabled/disabled by writing to address
+   *  ranges f800h-fbffh/fc00h-ffffh. The delete cursor routine at
+   *  fa33h uses the cursor address (2dh/2eh) which is initialized by
+   *  using cursor row/column from 2bh/2ch (although after using the
+   *  cursor address first).
+   *
+   *  If the cursor address holds random values we may get memory
+   *  writes at addresses that disable the boot module at power on.
+   *
+   *  To prevent the following initialization to be overwritten in the
+   *  startup routine we also need to initialize the EOR (end of ram)
+   *  pointer.
+   *
+   *  How is this supposed to work on the real machine?
+   */
+  _ram[0x2b] = 0x01; /* column */
+  _ram[0x2c] = 0x01; /* row */
+  _ram[0x2d] = 0x55; /* cursor address low */
+  _ram[0x2e] = 0x55; /* cursor address high */
+
+  _ram[0x36] = 0x00; /* logical ram end low */
+  _ram[0x37] = 0xc0; /* logical ram end high */
 }
 
 void

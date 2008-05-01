@@ -35,7 +35,7 @@ using namespace std;
 ModuleBOOT::ModuleBOOT(ModuleBOOT &tmpl) :
   ModuleROM1(tmpl)
 {
-  _romdi_val = 0;
+  _romdi_handling = tmpl._romdi_handling;
   switch (Preferences::instance()->get_kc_type())
     {
     case KC_TYPE_85_1:
@@ -47,6 +47,8 @@ ModuleBOOT::ModuleBOOT(ModuleBOOT &tmpl) :
     default:
       break;
     }
+
+  reset(true);
 }
 
 ModuleBOOT::ModuleBOOT(const char *filename,
@@ -54,9 +56,9 @@ ModuleBOOT::ModuleBOOT(const char *filename,
 		       word_t addr,
 		       dword_t size,
 		       bool set_romdi) :
-  ModuleROM1(filename, name, addr, size, (Preferences::instance()->get_kc_type() == KC_TYPE_87) ? set_romdi : false)
+  ModuleROM1(filename, name, addr, size, set_romdi)
 {
-  _romdi_val = 0;
+  _romdi_handling = set_romdi;
 }
 
 ModuleBOOT::~ModuleBOOT(void)
@@ -83,29 +85,7 @@ ModuleBOOT::clone(void)
 byte_t
 ModuleBOOT::memory_read_byte(word_t addr)
 {
-  return 0;
-}
-
-void
-ModuleBOOT::reset(bool power_on)
-{
-  set_romdi(1);
-}
-
-void
-ModuleBOOT::set_romdi(bool romdi_val)
-{
-  if (_romdi_val == romdi_val)
-    return;
-
-  set_active(romdi_val);
-
-  _romdi_val = romdi_val;
-
-  if (Preferences::instance()->get_kc_type() != KC_TYPE_87)
-    return;
-
-  ModuleROM1::set_romdi(_romdi_val);
+  return 0xff;
 }
 
 void
@@ -113,6 +93,26 @@ ModuleBOOT::memory_write_byte(word_t addr, byte_t val)
 {
   if (addr < 0xf800)
     return;
+
+  bool state = (addr & 0x0400) == 0;
   
-  set_romdi((addr & 0x0400) == 0);
+  set_active(state);
+}
+
+void
+ModuleBOOT::set_active(bool active)
+{
+  if (is_active() == active)
+    return;
+
+  if (_romdi_handling)
+    set_romdi(active);
+
+  ModuleROM1::set_active(active);
+}
+
+void
+ModuleBOOT::reset(bool power_on)
+{
+  set_active(true);
 }

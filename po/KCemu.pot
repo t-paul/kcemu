@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: Torsten.Paul@gmx.de\n"
-"POT-Creation-Date: 2008-04-11 21:52+0200\n"
+"POT-Creation-Date: 2008-05-01 19:04+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1306,135 +1306,135 @@ msgstr ""
 msgid "RAM Module (16k/8000h)"
 msgstr ""
 
-#: src/kc/mod_list.cc:304
+#: src/kc/mod_list.cc:306
 msgid "ZM30 (c000h-ccffh)"
 msgstr ""
 
-#: src/kc/mod_list.cc:311
+#: src/kc/mod_list.cc:313
 msgid "EDAS (c000h-e7ffh)"
 msgstr ""
 
-#: src/kc/mod_list.cc:318
+#: src/kc/mod_list.cc:320
 msgid "IDAS / ZM (c000h-e7ffh)"
 msgstr ""
 
-#: src/kc/mod_list.cc:325
+#: src/kc/mod_list.cc:327
 msgid "BITEX (c000h-d7ffh)"
 msgstr ""
 
-#: src/kc/mod_list.cc:350
+#: src/kc/mod_list.cc:352
 msgid "KC-CAOS 3.1 (8000h-8fffh)"
 msgstr ""
 
-#: src/kc/mod_list.cc:363
+#: src/kc/mod_list.cc:365
 msgid "192 KByte RAM/EPROM"
 msgstr ""
 
-#: src/kc/mod_list.cc:370
+#: src/kc/mod_list.cc:372
 msgid "KC-Pascal Module"
 msgstr ""
 
-#: src/kc/mod_list.cc:377
+#: src/kc/mod_list.cc:379
 msgid "Mega-ROM Module"
 msgstr ""
 
-#: src/kc/mod_list.cc:384
+#: src/kc/mod_list.cc:386
 msgid "128k ROM Bank"
 msgstr ""
 
-#: src/kc/mod_list.cc:393 src/ui/gtk/module.cc:265
+#: src/kc/mod_list.cc:395 src/ui/gtk/module.cc:265
 msgid "IRM Color Expansion"
 msgstr ""
 
-#: src/kc/mod_list.cc:409
+#: src/kc/mod_list.cc:411
 msgid "Plotter XY4131"
 msgstr ""
 
-#: src/kc/mod_list.cc:417
+#: src/kc/mod_list.cc:419
 msgid "CPM-Z9 BOOT (c000h-c7ffh)"
 msgstr ""
 
-#: src/kc/mod_list.cc:423
+#: src/kc/mod_list.cc:425
 msgid "CPM-Z9 Floppy"
 msgstr ""
 
-#: src/kc/mod_list.cc:429
+#: src/kc/mod_list.cc:431
 msgid "CPM-Z9 64k RAM"
 msgstr ""
 
-#: src/kc/mod_list.cc:435
+#: src/kc/mod_list.cc:437
 msgid "M001: Digital In / Out"
 msgstr ""
 
-#: src/kc/mod_list.cc:442
+#: src/kc/mod_list.cc:444
 msgid "M003: V24"
 msgstr ""
 
-#: src/kc/mod_list.cc:450
+#: src/kc/mod_list.cc:452
 msgid "M006: Basic"
 msgstr ""
 
-#: src/kc/mod_list.cc:457
+#: src/kc/mod_list.cc:459
 msgid "M008: Joystick"
 msgstr ""
 
-#: src/kc/mod_list.cc:464
+#: src/kc/mod_list.cc:466
 msgid "M011: 64k RAM"
 msgstr ""
 
-#: src/kc/mod_list.cc:471
+#: src/kc/mod_list.cc:473
 msgid "M012: Texor"
 msgstr ""
 
-#: src/kc/mod_list.cc:477
+#: src/kc/mod_list.cc:479
 msgid "M022: Expander RAM (16k)"
 msgstr ""
 
-#: src/kc/mod_list.cc:484
+#: src/kc/mod_list.cc:486
 msgid "M026: Forth"
 msgstr ""
 
-#: src/kc/mod_list.cc:491
+#: src/kc/mod_list.cc:493
 msgid "M027: Development"
 msgstr ""
 
-#: src/kc/mod_list.cc:497
+#: src/kc/mod_list.cc:499
 msgid "M032: 256k Segmented RAM"
 msgstr ""
 
-#: src/kc/mod_list.cc:503
+#: src/kc/mod_list.cc:505
 msgid "M034: 512k Segmented RAM"
 msgstr ""
 
-#: src/kc/mod_list.cc:509
+#: src/kc/mod_list.cc:511
 msgid "M035: 1M Segmented RAM"
 msgstr ""
 
-#: src/kc/mod_list.cc:515
+#: src/kc/mod_list.cc:517
 msgid "M035x4: 4M RAM"
 msgstr ""
 
-#: src/kc/mod_list.cc:521
+#: src/kc/mod_list.cc:523
 msgid "M036: 128k Segmented RAM"
 msgstr ""
 
-#: src/kc/mod_list.cc:528
+#: src/kc/mod_list.cc:530
 msgid "M900: WordPro '86 (KC85/3)"
 msgstr ""
 
-#: src/kc/mod_list.cc:535
+#: src/kc/mod_list.cc:537
 msgid "M901: WordPro '86 (KC85/4)"
 msgstr ""
 
-#: src/kc/mod_list.cc:542
+#: src/kc/mod_list.cc:544
 msgid "Floppy Disk Basis F8"
 msgstr ""
 
-#: src/kc/mod_list.cc:557
+#: src/kc/mod_list.cc:559
 msgid "Floppy Disk Basis FC"
 msgstr ""
 
-#: src/kc/mod_list.cc:773
+#: src/kc/mod_list.cc:775
 msgid "Autostart"
 msgstr ""
 
@@ -1644,37 +1644,41 @@ msgid "    Single board computer LC 80 with 1k RAM and 1 x 2k ROM.\n"
 msgstr ""
 
 #: src/kc/prefs/types.cc:307
-msgid "    BIC/A5105, only the base device is emulated, no floppy device.\n"
+msgid "    Export variant of the LC 80 with 12k ROM including chess program.\n"
 msgstr ""
 
 #: src/kc/prefs/types.cc:309
-msgid "    BIC/A5105, the full system including the floppy device.\n"
+msgid "    BIC/A5105, only the base device is emulated, no floppy device.\n"
 msgstr ""
 
 #: src/kc/prefs/types.cc:311
+msgid "    BIC/A5105, the full system including the floppy device.\n"
+msgstr ""
+
+#: src/kc/prefs/types.cc:313
 msgid ""
 "    Micro-Computer presented in the book \"Praktische Microcomputertechnik"
 "\"\n"
 "    by Manfred Kramer.\n"
 msgstr ""
 
-#: src/kc/prefs/types.cc:314
+#: src/kc/prefs/types.cc:316
 msgid ""
 "    CP/M based Micro-Computer presented in the magazine \"Funkamateur\"\n"
 "    by A. Mugler and H. Mathes.\n"
 msgstr ""
 
-#: src/kc/prefs/types.cc:317
+#: src/kc/prefs/types.cc:319
 msgid ""
 "    Minimal Z80 learning system presented in the magazine \"rfe\"\n"
 "    by Eckhard Schiller.\n"
 msgstr ""
 
-#: src/kc/prefs/types.cc:320
+#: src/kc/prefs/types.cc:322
 msgid "    Minimal Z80 learning system designed by Dipl.-Ing. Joachim Czepa.\n"
 msgstr ""
 
-#: src/kc/prefs/types.cc:416
+#: src/kc/prefs/types.cc:418
 msgid "available emulations:"
 msgstr ""
 

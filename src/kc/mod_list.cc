@@ -296,32 +296,34 @@ ModuleList::ModuleList(void)
   m = new ModuleRAM1("RAM8", 0x8000, 0x4000);
   _mod_list.push_back(new ModuleListEntry(_("RAM Module (16k/8000h)"), m, KC_TYPE_85_1_CLASS));
 
+  bool romdi_handling = (Preferences::instance()->get_kc_type() == KC_TYPE_87);
+
   /*
    *  ZM30 (kc85/1)
    */
   string z9001_zm30_rom = z9001_romdir + "/zm30__c0.851";
-  m = new ModuleROM1(z9001_zm30_rom.c_str(), "ZM30", 0xc000, 0x0d00, true);
+  m = new ModuleROM1(z9001_zm30_rom.c_str(), "ZM30", 0xc000, 0x0d00, romdi_handling);
   _mod_list.push_back(new ModuleListEntry(_("ZM30 (c000h-ccffh)"), m, KC_TYPE_85_1_CLASS));
 
   /*
    *  edas (kc85/1)
    */
   string z9001_edas_rom = z9001_romdir + "/edas__c0.851";
-  m = new ModuleROM1(z9001_edas_rom.c_str(), "EDAS", 0xc000, 0x2800, true);
+  m = new ModuleROM1(z9001_edas_rom.c_str(), "EDAS", 0xc000, 0x2800, romdi_handling);
   _mod_list.push_back(new ModuleListEntry(_("EDAS (c000h-e7ffh)"), m, KC_TYPE_85_1_CLASS));
 
   /*
    *  idas (kc85/1)
    */
   string z9001_idas_rom = z9001_romdir + "/idas__c0.851";
-  m = new ModuleROM1(z9001_idas_rom.c_str(), "IDAS", 0xc000, 0x2800, true);
+  m = new ModuleROM1(z9001_idas_rom.c_str(), "IDAS", 0xc000, 0x2800, romdi_handling);
   _mod_list.push_back(new ModuleListEntry(_("IDAS / ZM (c000h-e7ffh)"), m, KC_TYPE_85_1_CLASS));
 
   /*
    *  bitex (kc85/1)
    */
   string z9001_bitex_rom = z9001_romdir + "/bitex_c0.851";
-  m = new ModuleROM1(z9001_bitex_rom.c_str(), "BITEX", 0xc000, 0x1800, true);
+  m = new ModuleROM1(z9001_bitex_rom.c_str(), "BITEX", 0xc000, 0x1800, romdi_handling);
   _mod_list.push_back(new ModuleListEntry(_("BITEX (c000h-d7ffh)"), m, KC_TYPE_85_1_CLASS));
 
   /*
@@ -329,7 +331,7 @@ ModuleList::ModuleList(void)
    */
   /*
   string z9001_zsid_rom = z9001_romdir + "/zsid__c0.851";
-  m = new ModuleROM1(z9001_zsid_rom.c_str(), "ZSID", 0xc000, 0x2800, true);
+  m = new ModuleROM1(z9001_zsid_rom.c_str(), "ZSID", 0xc000, 0x2800, romdi_handling);
   _mod_list.push_back(new ModuleListEntry(_("ZSID (c000h-e7ffh)"), m, KC_TYPE_85_1_CLASS));
   */
 
@@ -338,7 +340,7 @@ ModuleList::ModuleList(void)
    */
   /*
   string z9001_r80_rom = z9001_romdir + "/r80___c0.851";
-  m = new ModuleROM1(z9001_r80_rom.c_str(), "R80", 0xc000, 0x1c00, true);
+  m = new ModuleROM1(z9001_r80_rom.c_str(), "R80", 0xc000, 0x1c00, romdi_handling);
   _mod_list.push_back(new ModuleListEntry(_("R80 (c000h-dbffh)"), m, KC_TYPE_85_1_CLASS));
   */
 
@@ -413,7 +415,7 @@ ModuleList::ModuleList(void)
    *  CPM-Z9 boot rom module (kc85/1)
    */
   string z9001_z9_boot_rom = z9001_romdir + "/cpmz9_c0.851";
-  m = new ModuleBOOT(z9001_z9_boot_rom.c_str(), "CPM-Z9-BOOT", 0xc000, 0x0800, true);
+  m = new ModuleBOOT(z9001_z9_boot_rom.c_str(), "CPM-Z9-BOOT", 0xc000, 0x0800, romdi_handling);
   _mod_list.push_back(new ModuleListEntry(_("CPM-Z9 BOOT (c000h-c7ffh)"), m, KC_TYPE_85_1_CLASS));
 
   /*

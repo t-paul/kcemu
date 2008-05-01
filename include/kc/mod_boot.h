@@ -28,10 +28,10 @@
 class ModuleBOOT : public ModuleROM1, public MemoryInterface
 {
  private:
-  bool _romdi_val;
+  bool _romdi_handling;
 
  protected:
-  void set_romdi(bool val);
+  virtual void set_active(bool active);
 
  public:
   ModuleBOOT(ModuleBOOT &tmpl);
