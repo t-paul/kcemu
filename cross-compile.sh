@@ -186,7 +186,7 @@ unpack_cur_libs_gtk_2_12_0 () {
 }
 
 unpack_cur_libs_gtk_2_12_9 () {
-	unpack_cur_libs_gtk gtk+-2.12.9 glib-2.16.1.zip gtk+-2.12.9.zip pango-1.20.0.zip atk-1.22.0.zip cairo-1.4.14.zip
+	unpack_cur_libs_gtk gtk+-2.12.9 glib-2.16.3.zip gtk+-2.12.9.zip pango-1.20.2.zip atk-1.22.0.zip cairo-1.6.4-1.zip
 }
 
 compile_kcemu () {
