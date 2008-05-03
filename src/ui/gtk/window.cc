@@ -203,6 +203,8 @@ UI_Gtk_Window::add_text_renderer(GtkTreeView *treeview, GtkTreeViewColumn *colum
         gtk_tree_view_column_add_attribute(column, renderer, attr, index);
     }
 
+    va_end(ap);
+
     return renderer;
 }
 
@@ -226,7 +228,9 @@ UI_Gtk_Window::add_icon_renderer(GtkTreeView *treeview, GtkTreeViewColumn *colum
         int index = va_arg(ap, int);
         gtk_tree_view_column_add_attribute(column, renderer, attr, index);
     }
-    
+
+    va_end(ap);
+
     return renderer;
 }
 
