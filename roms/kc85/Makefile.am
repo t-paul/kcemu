@@ -3,9 +3,15 @@
 kc85romdir = $(pkgdatadir)/roms/kc85
 
 ROMS = \
+	hc900.852 \
 	caos__e0.852 \
 	basic_c0.853 \
 	caos__e0.853 \
+	caos33.853 \
+	caos34.853 \
+	pi88_ge.853 \
+	pi88_sw.853 \
+	pi88_ws.853 \
 	basic_c0.854 \
 	caos__c0.854 \
 	caos__e0.854 \
