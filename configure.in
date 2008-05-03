@@ -245,7 +245,7 @@ PKG_PROG_PKG_CONFIG(0.20)
 dnl ---------------------------------
 dnl  check for glade runtime library
 dnl ---------------------------------
-PKG_CHECK_MODULES(LIBGLADE, libglade-2.0 >= 2.6.2)
+PKG_CHECK_MODULES(LIBGLADE, libglade-2.0 >= 2.6.0)
 AC_SUBST(LIBGLADE_CFLAGS)
 AC_SUBST(LIBGLADE_LIBS)
 

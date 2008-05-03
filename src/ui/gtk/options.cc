@@ -695,50 +695,25 @@ OptionsWindow::apply_system_type(void) {
 void
 OptionsWindow::apply_system_variant(kc_type_t kc_type, kc_variant_t kc_variant) {
     _current_kc_type = kc_type;
-    
-    GtkListStore *store;
-    switch (kc_type) {
-        case KC_TYPE_85_1:
-            store = _w.liststore_variant_kc85_1;
-            break;
-        case KC_TYPE_87:
-            store = _w.liststore_variant_kc87;
-            break;
-        case KC_TYPE_Z1013:
-            store = _w.liststore_variant_z1013;
-            break;
-        case KC_TYPE_LC80:
-            store = _w.liststore_variant_lc80;
-            break;
-        case KC_TYPE_A5105:
-            store = _w.liststore_variant_a5105;
-            break;
-        case KC_TYPE_POLY880:
-            store = _w.liststore_variant_poly880;
-            break;
-        case KC_TYPE_NONE:
-        case KC_TYPE_85_2:
-        case KC_TYPE_85_3:
-        case KC_TYPE_85_4:
-        case KC_TYPE_85_5:
-        case KC_TYPE_KRAMERMC:
-        case KC_TYPE_MUGLERPC:
-        case KC_TYPE_VCS80:
-        case KC_TYPE_C80:
-            store = _w.liststore_variant_none;
-            break;
-        case KC_TYPE_85_1_CLASS:
-        case KC_TYPE_85_2_CLASS:
-        case KC_TYPE_ALL:
-            abort();
-            break;
+
+    system_type_list_t list = SystemInformation::instance()->get_system_types();
+
+    GtkListStore *store = gtk_list_store_new(2, G_TYPE_STRING, G_TYPE_INT);
+    for (system_type_list_t::iterator it = list.begin();it != list.end();it++) {
+        SystemType *type = (*it);
+        if (type->get_kc_type() != kc_type)
+          continue;
+
+        GtkTreeIter iter;
+        gtk_list_store_append(store, &iter);
+        gtk_list_store_set(store, &iter, 0, type->get_display_name(), 1, type->get_kc_variant(), -1);
     }
-    
     
     g_signal_handler_block(_w.combobox_system_variant, _w.on_system_variant_changed_id);
     
     gtk_combo_box_set_model(_w.combobox_system_variant, GTK_TREE_MODEL(store));
-    
+    g_object_unref(store);
+
     if (kc_variant == KC_VARIANT_NONE) {
         gtk_combo_box_set_active(_w.combobox_system_variant, 0);
     } else {
@@ -1138,45 +1113,6 @@ OptionsWindow::init(void) {
     
     _w.check_button_system_variant = GTK_CHECK_BUTTON(get_widget("system_check_button_system_variant"));
     g_signal_connect(_w.check_button_system_variant, "toggled", G_CALLBACK(on_system_variant_check_button_toggled), this);
-    
-    _w.liststore_variant_none = get_variant_list_model(
-            KC_VARIANT_NONE, "none",
-            -1);
-    _w.liststore_variant_kc85_1 = get_variant_list_model(
-            KC_VARIANT_85_1_10, "KC 85/1.10",
-            KC_VARIANT_85_1_11, "KC 85/1.11",
-            -1);
-    _w.liststore_variant_kc87 = get_variant_list_model(
-            KC_VARIANT_87_10, "KC 87.10",
-            KC_VARIANT_87_11, "KC 87.11",
-            KC_VARIANT_87_20, "KC 87.20",
-            KC_VARIANT_87_21, "KC 87.21",
-            KC_VARIANT_87_30, "KC 87.30",
-            KC_VARIANT_87_31, "KC 87.31",
-            -1);
-    _w.liststore_variant_z1013 = get_variant_list_model(
-            KC_VARIANT_Z1013_01,   "Z1013.01",
-            KC_VARIANT_Z1013_12,   "Z1013.12",
-            KC_VARIANT_Z1013_16,   "Z1013.16",
-            KC_VARIANT_Z1013_64,   "Z1013.64",
-            KC_VARIANT_Z1013_A2,   "Z1013.A2",
-            KC_VARIANT_Z1013_RB,   "Z1013.rb",
-            KC_VARIANT_Z1013_SURL, "Z1013.surl",
-            KC_VARIANT_Z1013_BL4,  "Z1013.bl4",
-            -1);
-    _w.liststore_variant_lc80 = get_variant_list_model(
-            KC_VARIANT_LC80_1k,  "LC 80 (2 x U505)",
-            KC_VARIANT_LC80_2k,  "LC 80 (1 x U2716)",
-            KC_VARIANT_LC80e,    "LC 80e",
-            -1);
-    _w.liststore_variant_a5105 = get_variant_list_model(
-            KC_VARIANT_A5105_K1505, "K1505 (BIC Basis Device)",
-            KC_VARIANT_A5105_A5105, "A5105 (BIC Basis Device + Floppy Device)",
-            -1);
-    _w.liststore_variant_poly880 = get_variant_list_model(
-            KC_VARIANT_POLY880,     "Polycomputer 880",
-            KC_VARIANT_POLY880_SC1, "Polycomputer 880 mit SC1 ROM",
-            -1);
 
     collapse_tree();
     

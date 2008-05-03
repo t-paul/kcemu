@@ -178,6 +178,7 @@ class SystemType {
     int               _sort;
     int               _type;
     string            _name;
+    string            _display_name;
     bool              _is_default;
     kc_variant_t      _kc_variant;
     string            _description;
@@ -192,12 +193,18 @@ public:
     SystemType(int sort, string name, int type, EmulationType &emulation_type, kc_variant_t kc_variant, string description);
     virtual ~SystemType(void);
 
+    virtual const char * get_name(void) const;
+
+    virtual const char * get_display_name(void) const;
+    virtual SystemType & set_display_name(const char *display_name);
+
+    virtual const string get_rom_directory(void) const;
     virtual SystemType & set_rom_directory(const char *romdir);
+
+    virtual const SystemROM * get_rom(const char *key) const;
     virtual SystemType & add_rom(const char *name, int size, const char *filename, ...);
     virtual SystemType & add_optional_rom(const char *name, int size, const char *filename, ...);
 
-    virtual const char *get_name(void) const;
-    
     virtual int get_sort(void) const;
     virtual int get_type(void) const;
     virtual bool is_default(int type) const;
@@ -207,8 +214,6 @@ public:
     virtual const char * get_kc_variant_name(void) const;
     virtual const char * get_description(void) const;
     virtual const EmulationType & get_emulation_type(void) const;
-    virtual const string get_rom_directory(void) const;
-    virtual const SystemROM * get_rom(const char *key) const;
 };
 
 typedef list<SystemType *> system_type_list_t;

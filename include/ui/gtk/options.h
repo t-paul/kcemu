@@ -114,13 +114,6 @@ private:
         
         GtkTreeStore *treestore;
         GtkListStore *liststore_system;
-        GtkListStore *liststore_variant_none;
-        GtkListStore *liststore_variant_kc85_1;
-        GtkListStore *liststore_variant_kc87;
-        GtkListStore *liststore_variant_z1013;
-        GtkListStore *liststore_variant_lc80;
-        GtkListStore *liststore_variant_a5105;
-        GtkListStore *liststore_variant_poly880;
         GtkListStore *liststore_modules;
         
         GdkPixbuf    *pixbuf_root;

@@ -198,6 +198,7 @@ SystemType::SystemType(int sort, string name, int type, EmulationType &emulation
 : _sort(sort),
   _type(type),
   _name(name),
+  _display_name(emulation_type.get_name()),
   _kc_variant(kc_variant),
   _description(description),
   _emulation_type(emulation_type)
@@ -207,10 +208,23 @@ SystemType::SystemType(int sort, string name, int type, EmulationType &emulation
 SystemType::~SystemType(void) {
 }
 
+const char *
+SystemType::get_display_name(void) const
+{
+    return _display_name.c_str();
+}
+
+SystemType &
+SystemType::set_display_name(const char *display_name)
+{
+    _display_name = display_name;
+    return *this;
+}
+
 const string
 SystemType::get_rom_directory(void) const
 {
-    return _rom_dir.c_str();
+    return _rom_dir;
 }
 
 SystemType &
@@ -331,18 +345,21 @@ SystemInformation::SystemInformation(void) {
             N_("    Z1013 with 16k RAM and 2k ROM, running at 1MHz. This was the\n"
             "    first version with cheap circuits so the CPU was clocked at only 1MHz\n"
             "    The ROM containes the Z1013 monitor version 2.02.\n"))
+        .set_display_name("Z1013.01")
         .set_rom_directory("/roms/z1013")
         .add_rom(SystemROM::ROM_KEY_SYSTEM, 0x0800, "z1013_20.rom", NULL)
         .add_rom(SystemROM::ROM_KEY_CHARGEN, 0x1000, "z1013_zg.rom", NULL);
     add_system_type(102, "z1013.12", -1, EmulationType::_emulation_type_z1013, KC_VARIANT_Z1013_12,
             N_("    Z1013 with 1k sRAM and 2k ROM, running at 2MHz. Industry\n"
             "    version with only 1k static RAM. Monitor version 2.02.\n"))
+        .set_display_name("Z1013.12")
         .set_rom_directory("/roms/z1013")
         .add_rom(SystemROM::ROM_KEY_SYSTEM, 0x0800, "z1013_20.rom", NULL)
         .add_rom(SystemROM::ROM_KEY_CHARGEN, 0x1000, "z1013_zg.rom", NULL);
     add_system_type(103, "z1013.16", -1, EmulationType::_emulation_type_z1013, KC_VARIANT_Z1013_16,
             N_("    Z1013 with 16k RAM and 2k ROM, running at 2MHz. Successor of\n"
             "    the Z1013.01 but with industry grade circuits clocked at 2MHz.\n"))
+        .set_display_name("Z1013.16")
         .set_rom_directory("/roms/z1013")
         .add_rom(SystemROM::ROM_KEY_SYSTEM, 0x0800, "z1013_20.rom", NULL)
         .add_rom(SystemROM::ROM_KEY_CHARGEN, 0x1000, "z1013_zg.rom", NULL);
@@ -351,6 +368,7 @@ SystemInformation::SystemInformation(void) {
             "    contains two system images with 2k each. Loaded is the first\n"
             "    image with version 2.02 that is supposed to work with the foil keypad\n"
             "    shipped by the manufacturer.\n"))
+        .set_display_name("Z1013.64")
         .set_rom_directory("/roms/z1013")
         .add_rom(SystemROM::ROM_KEY_SYSTEM, 0x0800, "z1013_20.rom", NULL)
         .add_rom(SystemROM::ROM_KEY_CHARGEN, 0x1000, "z1013_zg.rom", NULL);
@@ -359,6 +377,7 @@ SystemInformation::SystemInformation(void) {
             "    contains two system images with 2k each. Loaded is the second\n"
             "    image with version A.2 that supports an extended keyboard with an\n"
             "    8x8 matrix.\n"))
+        .set_display_name("Z1013.A2")
         .set_rom_directory("/roms/z1013")
         .add_rom(SystemROM::ROM_KEY_SYSTEM, 0x0800, "z1013_a2.rom", NULL)
         .add_rom(SystemROM::ROM_KEY_CHARGEN, 0x1000, "z1013_zg.rom", NULL);
@@ -366,6 +385,7 @@ SystemInformation::SystemInformation(void) {
             N_("    Z1013 with 64k RAM and 4k ROM. The ROM is the extended\n"
             "    version tagged 2.028 RB that has a different keyboard driver for\n"
             "    the keyboard K7659.\n"))
+        .set_display_name("Z1013 (Brosig-ROM)")
         .set_rom_directory("/roms/z1013")
         .add_rom(SystemROM::ROM_KEY_SYSTEM, 0x1000, "z1013_rb.rom", NULL)
         .add_rom(SystemROM::ROM_KEY_CHARGEN, 0x1000, "z1013_zg.rom", NULL);
@@ -374,6 +394,7 @@ SystemInformation::SystemInformation(void) {
             "    Ur-Lader 5.0' that can read arbitrary tape files as system monitor.\n"
             "    The hardware modification port at address 4h is emulated which allows\n"
             "    programs to switch off the system ROM.\n"))
+        .set_display_name("Z1013 (Super Ur-Lader 5.0)")
         .set_rom_directory("/roms/z1013")
         .add_rom(SystemROM::ROM_KEY_SYSTEM, 0x0800, "z1013_ul.rom", NULL)
         .add_rom(SystemROM::ROM_KEY_CHARGEN, 0x1000, "z1013_zg.rom", NULL);
@@ -381,6 +402,7 @@ SystemInformation::SystemInformation(void) {
             N_("    Z1013 with 64k RAM and 4k ROM. The ROM contains the Bootloader\n"
             "    BL4 that can load monitor images from floppy disk or can start the\n"
             "    CP/M system.\n"))
+        .set_display_name("Z1013 (Bootloader BL4)")
         .set_rom_directory("/roms/z1013")
         .add_rom(SystemROM::ROM_KEY_SYSTEM, 2432, "z1013_bl.rom", NULL)
         .add_rom(SystemROM::ROM_KEY_CHARGEN, 0x1000, "z1013_zg.rom", NULL);
@@ -390,11 +412,13 @@ SystemInformation::SystemInformation(void) {
     add_system_type(201, "z9001.10", -1, EmulationType::_emulation_type_kc85_1, KC_VARIANT_85_1_10,
             N_("    Z9001 (later called KC 85/1) with monochrome display, no internal BASIC\n"
             "    ROM. This computer has 16k RAM and 4k ROM with the robotron z9001 system.\n"))
+        .set_display_name("KC 85/1.10")
         .set_rom_directory("/roms/z9001")
         .add_rom(SystemROM::ROM_KEY_SYSTEM, 0x1000, "os____f0.851", NULL)
         .add_rom(SystemROM::ROM_KEY_CHARGEN, 0x0800, "chargen.851", NULL);
     add_system_type(202, "z9001.11", -1, EmulationType::_emulation_type_kc85_1, KC_VARIANT_85_1_11,
             N_("    Like the z9001.10 but with color extension card.\n"))
+        .set_display_name("KC 85/1.11")
         .set_rom_directory("/roms/z9001")
         .add_rom(SystemROM::ROM_KEY_SYSTEM, 0x1000, "os____f0.851", NULL)
         .add_rom(SystemROM::ROM_KEY_CHARGEN, 0x0800, "chargen.851", NULL);
@@ -442,6 +466,7 @@ SystemInformation::SystemInformation(void) {
      */
     add_system_type(700, "poly880", 6, EmulationType::_emulation_type_poly880, KC_VARIANT_NONE,
             N_("    Polycomputer 880.\n"))
+        .set_display_name("Polycomputer 880")
         .set_rom_directory("/roms/poly880")
         .add_rom(SystemROM::ROM_KEY_SYSTEM1, 0x0400, "poly880a.rom", NULL)
         .add_rom(SystemROM::ROM_KEY_SYSTEM2, 0x0400, "poly880b.rom", NULL)
@@ -449,6 +474,7 @@ SystemInformation::SystemInformation(void) {
         .add_optional_rom(SystemROM::ROM_KEY_SYSTEM4, 0x0400, "poly880d.rom", NULL);
     add_system_type(701, "poly880.sc1", -6, EmulationType::_emulation_type_poly880, KC_VARIANT_POLY880_SC1,
             N_("    Polycomputer 880 with chess program rom from SC1.\n"))
+        .set_display_name("Polycomputer 880 + SC1 ROM")
         .set_rom_directory("/roms/poly880")
         .add_rom(SystemROM::ROM_KEY_SYSTEM1, 0x1000, "sc1.rom", NULL);
     /*
@@ -456,18 +482,21 @@ SystemInformation::SystemInformation(void) {
      */
     add_system_type(801, "kc87.10", -7, EmulationType::_emulation_type_kc87, KC_VARIANT_87_10,
             N_("    Like the KC 87.11 but without the color extension card.\n"))
+        .set_display_name("KC 87.10")
         .set_rom_directory("/roms/z9001")
         .add_rom(SystemROM::ROM_KEY_SYSTEM, 0x1000, "os____f0.851", NULL)
         .add_rom(SystemROM::ROM_KEY_BASIC, 0x2800, "basic_c0.87a", NULL)
         .add_rom(SystemROM::ROM_KEY_CHARGEN, 0x0800, "chargen.851", NULL);
     add_system_type(802, "kc87.11", 7, EmulationType::_emulation_type_kc87, KC_VARIANT_87_11,
             N_("    Successor of the Z9001 with internal 10k BASIC ROM.\n"))
+        .set_display_name("KC 87.11")
         .set_rom_directory("/roms/z9001")
         .add_rom(SystemROM::ROM_KEY_SYSTEM, 0x1000, "os____f0.851", NULL)
         .add_rom(SystemROM::ROM_KEY_BASIC, 0x2800, "basic_c0.87a", NULL)
         .add_rom(SystemROM::ROM_KEY_CHARGEN, 0x0800, "chargen.851", NULL);
     add_system_type(803, "kc87.20", -8, EmulationType::_emulation_type_kc87, KC_VARIANT_87_20,
             N_("    Like the KC 87.21 but without the color extension card.\n"))
+        .set_display_name("KC 87.20")
         .set_rom_directory("/roms/z9001")
         .add_rom(SystemROM::ROM_KEY_SYSTEM, 0x1000, "os____f0.87b", NULL)
         .add_rom(SystemROM::ROM_KEY_BASIC, 0x2800, "basic_c0.87b", NULL)
@@ -475,18 +504,21 @@ SystemInformation::SystemInformation(void) {
     add_system_type(804, "kc87.21", -8, EmulationType::_emulation_type_kc87, KC_VARIANT_87_21,
             N_("    New series with extended BASIC ROM (still 10k but with some routines for\n"
             "    plotter support were added).\n"))
+        .set_display_name("KC 87.21")
         .set_rom_directory("/roms/z9001")
         .add_rom(SystemROM::ROM_KEY_SYSTEM, 0x1000, "os____f0.87b", NULL)
         .add_rom(SystemROM::ROM_KEY_BASIC, 0x2800, "basic_c0.87b", NULL)
         .add_rom(SystemROM::ROM_KEY_CHARGEN, 0x0800, "chargen.851", NULL);
-    add_system_type(803, "kc87.30", -8, EmulationType::_emulation_type_kc87, KC_VARIANT_87_30,
+    add_system_type(805, "kc87.30", -8, EmulationType::_emulation_type_kc87, KC_VARIANT_87_30,
             N_("    New batch of KC 87.20 with no known hardware differences.\n"))
+        .set_display_name("KC 87.30")
         .set_rom_directory("/roms/z9001")
         .add_rom(SystemROM::ROM_KEY_SYSTEM, 0x1000, "os____f0.87b", NULL)
         .add_rom(SystemROM::ROM_KEY_BASIC, 0x2800, "basic_c0.87b", NULL)
         .add_rom(SystemROM::ROM_KEY_CHARGEN, 0x0800, "chargen.851", NULL);
-    add_system_type(804, "kc87.31", -8, EmulationType::_emulation_type_kc87, KC_VARIANT_87_31,
+    add_system_type(806, "kc87.31", -8, EmulationType::_emulation_type_kc87, KC_VARIANT_87_31,
             N_("    New batch of KC 87.21 with no known hardware differences.\n"))
+        .set_display_name("KC 87.31")
         .set_rom_directory("/roms/z9001")
         .add_rom(SystemROM::ROM_KEY_SYSTEM, 0x1000, "os____f0.87b", NULL)
         .add_rom(SystemROM::ROM_KEY_BASIC, 0x2800, "basic_c0.87b", NULL)
@@ -496,15 +528,18 @@ SystemInformation::SystemInformation(void) {
      */
     add_system_type(900, "lc80", 8, EmulationType::_emulation_type_lc80, KC_VARIANT_LC80_1k,
             N_("    Single board computer LC 80 with 1k RAM and 2 x 1k ROM.\n"))
+        .set_display_name("LC 80 (2 x U505)")
         .set_rom_directory("/roms/lc80")
         .add_rom(SystemROM::ROM_KEY_SYSTEM1, 0x0400, "lc80__00.rom", NULL)
         .add_rom(SystemROM::ROM_KEY_SYSTEM2, 0x0400, "lc80__08.rom", NULL);
     add_system_type(902, "lc80.2k", -8, EmulationType::_emulation_type_lc80, KC_VARIANT_LC80_2k,
             N_("    Single board computer LC 80 with 1k RAM and 1 x 2k ROM.\n"))
+        .set_display_name("LC 80 (1 x U2716)")
         .set_rom_directory("/roms/lc80")
         .add_rom(SystemROM::ROM_KEY_SYSTEM, 0x0800, "lc80__2k.rom", NULL);
     add_system_type(903, "lc80e", -8, EmulationType::_emulation_type_lc80, KC_VARIANT_LC80e,
             N_("    Export variant of the LC 80 with 12k ROM including chess program.\n"))
+        .set_display_name("LC 80e")
         .set_rom_directory("/roms/lc80")
         .add_rom(SystemROM::ROM_KEY_SYSTEM1, 0x1000, "lc80e_00.rom", NULL)
         .add_rom(SystemROM::ROM_KEY_SYSTEM2, 0x1000, "lc80e_10.rom", NULL)
@@ -514,6 +549,7 @@ SystemInformation::SystemInformation(void) {
      */
     add_system_type(1000, "bic", -9, EmulationType::_emulation_type_a5105, KC_VARIANT_A5105_K1505,
             N_("    BIC/A5105, only the base device is emulated, no floppy device.\n"))
+        .set_display_name("K1505 (BIC Basis Device)")
         .set_rom_directory("/roms/a5105")
         .add_rom(SystemROM::ROM_KEY_SYSTEM1, 0x8000, "k1505_00.rom", NULL)
         .add_rom(SystemROM::ROM_KEY_SYSTEM2, 0x2000, "k1505_80.rom", NULL)
@@ -521,6 +557,7 @@ SystemInformation::SystemInformation(void) {
         .add_rom(SystemROM::ROM_KEY_SYSTEM4, 0x2000, "k5651_60.rom", NULL);
     add_system_type(1002, "a5105", 9, EmulationType::_emulation_type_a5105, KC_VARIANT_A5105_A5105,
             N_("    BIC/A5105, the full system including the floppy device.\n"))
+        .set_display_name("A5105 (BIC Basis Device + Floppy Device)")
         .set_rom_directory("/roms/a5105")
         .add_rom(SystemROM::ROM_KEY_SYSTEM1, 0x8000, "k1505_00.rom", NULL)
         .add_rom(SystemROM::ROM_KEY_SYSTEM2, 0x2000, "k1505_80.rom", NULL)
@@ -566,20 +603,6 @@ SystemInformation::SystemInformation(void) {
         .add_rom(SystemROM::ROM_KEY_SYSTEM, 0x0400, "monitor.rom", NULL)
         .add_optional_rom(SystemROM::ROM_KEY_USER, 0x0400, "user.rom", NULL);
 
-    /*
-    add_alias_type( 100, "z1013",      0, "z1013.64");
-    add_alias_type( 200, "z9001",     -1, "z9001.10");
-    add_alias_type( 203, "kc85/1",     1, "z9001.10");
-    add_alias_type( 300, "hc900",     -2, "kc85/2");
-    add_alias_type( 301, "hc-900",    -2, "kc85/2");
-    add_alias_type( 800, "kc87",      -7, "kc87.11");
-    add_alias_type( 901, "lc80.1k",   -8, "lc80");
-    add_alias_type(1001, "k1505",     -9, "bic");
-    add_alias_type(1101, "kramer",  -100, "kramer-mc");
-    add_alias_type(1201, "mugler",  -100, "mugler-pc");
-    add_alias_type(1202, "pcm",     -100, "mugler-pc");
-    */
-    
     _system_type_list.sort(less_system_type());
 }
 
