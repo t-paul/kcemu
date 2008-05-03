@@ -23,6 +23,7 @@
 #include <fstream>
 
 #include "kc/system.h"
+#include "kc/prefs/types.h"
 
 #include "kc/kc.h"
 #include "kc/z80.h"
@@ -32,62 +33,29 @@ using namespace std;
 
 MemoryKramerMC::MemoryKramerMC(void) : Memory()
 {
-  struct {
-    MemAreaGroup **group;
-    const char    *name;
-    word_t         addr;
-    dword_t        size;
-    byte_t        *mem;
-    int            prio;
-    bool           ro;
-    bool           active;
-  } *mptr, m[] = {
-    { &_m_scr,             "-",               0x0000, 0x10000, 0,                   256, 0, 1 },
-    { &_m_rom_io_monitor,  "IO-Monitor",      0x0000,  0x0400, &_rom_io_monitor[0],   1, 1, 1 },
-    { &_m_rom_debugger,    "Debugger",        0x0400,  0x0400, &_rom_debugger[0],     1, 1, 1 },
-    { &_m_rom_reassembler, "Reassembler",     0x0800,  0x0400, &_rom_reassembler[0],  1, 1, 1 },
-    { &_m_ram_0c00h,       "RAM (system)",    0x0c00,  0x0400, &_ram_0c00h[0],        1, 0, 1 },
-    { &_m_ram_1000h,       "RAM (statisch)",  0x1000,  0x3000, &_ram_1000h[0],        1, 0, 1 },
-    { &_m_ram_4000h,       "RAM (dynamisch)", 0x4000,  0x4000, &_ram_4000h[0],        1, 0, 1 },
-    { &_m_rom_basic,       "BASIC",           0x8000,  0x3000, &_rom_basic[0],        1, 1, 1 },
-    { &_m_rom_editor,      "Editor",          0xc000,  0x0400, &_rom_editor[0],       1, 1, 1 },
-    { &_m_rom_assembler,   "Assembler",       0xc400,  0x1c00, &_rom_assembler[0],    1, 1, 1 },
-    { &_m_irm,             "IRM",             0xfc00,  0x0400, &_irm[0],              1, 0, 1 },
+  load_rom(SystemROM::ROM_KEY_SYSTEM, &_rom_io_monitor);
+  load_rom(SystemROM::ROM_KEY_DEBUGGER, &_rom_debugger);
+  load_rom(SystemROM::ROM_KEY_REASSEMBLER, &_rom_reassembler);
+  load_rom(SystemROM::ROM_KEY_BASIC, &_rom_basic);
+  load_rom(SystemROM::ROM_KEY_EDITOR, &_rom_editor);
+  load_rom(SystemROM::ROM_KEY_ASSEMBLER, &_rom_assembler);
+  load_rom(SystemROM::ROM_KEY_CHARGEN, &_rom_chargen);
+
+  memory_group_t mem[] = {
+    { &_m_scr,             "-",               0x0000, 0x10000, 0,                   256, 0, 1, -1 },
+    { &_m_rom_io_monitor,  "IO-Monitor",      0x0000,  0x0400, &_rom_io_monitor[0],   1, 1, 1, -1 },
+    { &_m_rom_debugger,    "Debugger",        0x0400,  0x0400, &_rom_debugger[0],     1, 1, 1, -1 },
+    { &_m_rom_reassembler, "Reassembler",     0x0800,  0x0400, &_rom_reassembler[0],  1, 1, 1, -1 },
+    { &_m_ram_0c00h,       "RAM (system)",    0x0c00,  0x0400, &_ram_0c00h[0],        1, 0, 1, -1 },
+    { &_m_ram_1000h,       "RAM (statisch)",  0x1000,  0x3000, &_ram_1000h[0],        1, 0, 1, -1 },
+    { &_m_ram_4000h,       "RAM (dynamisch)", 0x4000,  0x4000, &_ram_4000h[0],        1, 0, 1, -1 },
+    { &_m_rom_basic,       "BASIC",           0x8000,  0x3000, &_rom_basic[0],        1, 1, 1, -1 },
+    { &_m_rom_editor,      "Editor",          0xc000,  0x0400, &_rom_editor[0],       1, 1, 1, -1 },
+    { &_m_rom_assembler,   "Assembler",       0xc400,  0x1c00, &_rom_assembler[0],    1, 1, 1, -1 },
+    { &_m_irm,             "IRM",             0xfc00,  0x0400, &_irm[0],              1, 0, 1, -1 },
     { 0, },
   };
-
-  string datadir(kcemu_datadir);
-  string kramermc_romdir = datadir + "/roms/kramermc";
-  string kramermc_io_mon_rom   = kramermc_romdir + "/io-mon.kmc";
-  string kramermc_debugger_rom = kramermc_romdir + "/debugger.kmc";
-  string kramermc_reass_rom    = kramermc_romdir + "/reass.kmc";
-  string kramermc_basic_rom    = kramermc_romdir + "/basic.kmc";
-  string kramermc_editor_rom   = kramermc_romdir + "/editor.kmc";
-  string kramermc_ass_rom      = kramermc_romdir + "/ass.kmc";
-  string kramermc_chargen_rom  = kramermc_romdir + "/chargen.kmc";
-
-  load_rom(kramermc_io_mon_rom.c_str(),   &_rom_io_monitor, 0x0400, true);
-  load_rom(kramermc_debugger_rom.c_str(), &_rom_debugger, 0x0400, true);
-  load_rom(kramermc_reass_rom.c_str(),    &_rom_reassembler, 0x0400, true);
-  load_rom(kramermc_basic_rom.c_str(),    &_rom_basic, 0x3000, true);
-  load_rom(kramermc_editor_rom.c_str(),   &_rom_editor, 0x0400, true);
-  load_rom(kramermc_ass_rom.c_str(),      &_rom_assembler, 0x1c00, true);
-  load_rom(kramermc_chargen_rom.c_str(),  &_rom_chargen, 0x0800, true);
-
-  for (mptr = &m[0];mptr->name;mptr++)
-    {
-      *(mptr->group) = new MemAreaGroup(mptr->name,
-					mptr->addr,
-					mptr->size,
-					mptr->mem,
-					mptr->prio,
-					mptr->ro);
-      (*(mptr->group))->add(get_mem_ptr());
-      if (mptr->active)
-	(*(mptr->group))->set_active(true);
-    }
-
-  reload_mem_ptr();
+  init_memory_groups(mem);
 
   reset(true);
   z80->register_ic(this);

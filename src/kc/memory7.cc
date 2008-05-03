@@ -36,68 +36,26 @@ using namespace std;
 
 Memory7::Memory7(void) : Memory()
 {
-  struct {
-    MemAreaGroup **group;
-    const char    *name;
-    word_t         addr;
-    dword_t        size;
-    byte_t        *mem;
-    int            prio;
-    bool           ro;
-    bool           active;
-  } *mptr, m[] = {
-    { &_m_scr,   "-",     	0x0000, 0x10000, 0,              256, 0, 1 },
-    { &_m_ram,   "RAM",   	0x0000,  0x4000, &_ram[0],         0, 0, 1 },
-    { &_m_basic, "BASIC", 	0xc000,  0x2800, &_rom_basic[0],   0, 1, 1 },
-    { &_m_os,    "OS",    	0xf000,  0x1000, &_rom_os[0],      0, 1, 1 },
-    { &_m_irm_ec,"IRM (text)",  0xec00,  0x0400, &_irm[0x400],     1, 0, 1 },
+  load_rom(SystemROM::ROM_KEY_SYSTEM, &_rom_os);
+  load_rom(SystemROM::ROM_KEY_BASIC, &_rom_basic);
+  load_rom(SystemROM::ROM_KEY_CHARGEN, &_rom_chargen);
+
+  memset(&_irm[0], 0x70, 0x400);
+
+  memory_group_t mem[] = {
+    { &_m_scr,   "-",     	0x0000, 0x10000, 0,              256, 0, 1, -1 },
+    { &_m_ram,   "RAM",   	0x0000,  0x4000, &_ram[0],         0, 0, 1, -1 },
+    { &_m_basic, "BASIC", 	0xc000,  0x2800, &_rom_basic[0],   0, 1, 1, -1 },
+    { &_m_os,    "OS",    	0xf000,  0x1000, &_rom_os[0],      0, 1, 1, -1 },
+    { &_m_irm_ec,"IRM (text)",  0xec00,  0x0400, &_irm[0x400],     1, 0, 1, -1 },
     /*
      *  dummy entry needed for get_irm() if color
      *  expansion is not installed
      */
-    { &_m_irm_e8,"IRM (color)", 0xe800,  0x0400, &_irm[0],         1, 1, 1 },
+    { &_m_irm_e8,"IRM (color)", 0xe800,  0x0400, &_irm[0],         1, 1, 1, -1 },
     { 0, },
   };
-
-  string datadir(kcemu_datadir);
-  string z9001_romdir = datadir + "/roms/z9001";
-
-  string z9001_os_rom;
-  string z9001_basic_rom;
-  kc_variant_t v = Preferences::instance()->get_kc_variant();
-  if ((v == KC_VARIANT_87_20) || (v == KC_VARIANT_87_21))
-    {
-      z9001_os_rom = z9001_romdir + "/os____f0.87b";
-      z9001_basic_rom = z9001_romdir + "/basic_c0.87b";
-    }
-  else
-    {
-      z9001_os_rom = z9001_romdir + "/os____f0.851";
-      z9001_basic_rom = z9001_romdir + "/basic_c0.87a";
-    }
-
-  load_rom(z9001_os_rom.c_str(), &_rom_os, 0x1000, true);
-  load_rom(z9001_basic_rom.c_str(), &_rom_basic, 0x2800, true);
-
-  string z9001_chargen_rom = z9001_romdir + "/chargen.851";
-  load_rom(z9001_chargen_rom.c_str(), &_rom_chargen, 0x0800, true);
-
-  memset(&_irm[0], 0x70, 0x400);
-
-  for (mptr = &m[0];mptr->name;mptr++)
-    {
-      *(mptr->group) = new MemAreaGroup(mptr->name,
-					mptr->addr,
-					mptr->size,
-					mptr->mem,
-					mptr->prio,
-					mptr->ro);
-      (*(mptr->group))->add(get_mem_ptr());
-      if (mptr->active)
-	(*(mptr->group))->set_active(true);
-    }
-
-  reload_mem_ptr();
+  init_memory_groups(mem);
 
   reset(true);
   z80->register_ic(this);

@@ -33,58 +33,24 @@ using namespace std;
 
 Memory9::Memory9(void) : Memory()
 {
-  struct {
-    MemAreaGroup **group;
-    const char    *name;
-    word_t         addr;
-    dword_t        size;
-    byte_t        *mem;
-    int            prio;
-    bool           ro;
-    bool           active;
-    bool           basedevice;
-  } *mptr, m[] = {
-    { &_m_scr,             "-",       0x0000, 0x10000, 0,                   256, 0, 1, 1 },
-    { &_m_rom_slot0_page0, "ROM CGG", 0x0000, 0x04000, &_rom_slot0[0x0000],   0, 1, 1, 1 },
-    { &_m_rom_slot0_page1, "ROM CGG", 0x4000, 0x04000, &_rom_slot0[0x4000],   0, 1, 1, 1 },
-    { &_m_rom_slot0_page2, "ROM CGG", 0x8000, 0x02000, &_rom_slot0[0x8000],   0, 1, 1, 1 },
-    { &_m_rom_slot1_page1, "ROM DSE", 0x4000, 0x04000, &_rom_slot1[0x0000],   5, 1, 0, 0 },
-    { &_m_ram_slot2_page0, "RAM",     0x0000, 0x04000, &_ram_slot2[0x0000],  10, 0, 0, 1 },
-    { &_m_ram_slot2_page1, "RAM",     0x4000, 0x04000, &_ram_slot2[0x4000],  10, 0, 0, 1 },
-    { &_m_ram_slot2_page2, "RAM",     0x8000, 0x04000, &_ram_slot2[0x8000],  10, 0, 0, 1 },
-    { &_m_ram_slot2_page3, "RAM",     0xc000, 0x04000, &_ram_slot2[0xc000],  10, 0, 1, 1 },
+  load_rom(SystemROM::ROM_KEY_SYSTEM1, &_rom_slot0[0x0000]);
+  load_rom(SystemROM::ROM_KEY_SYSTEM2, &_rom_slot0[0x8000]);
+  load_rom(SystemROM::ROM_KEY_SYSTEM3, &_rom_slot1[0x0000]);
+  load_rom(SystemROM::ROM_KEY_SYSTEM4, &_rom_slot1[0x2000]);
+
+  memory_group_t mem[] = {
+    { &_m_scr,             "-",       0x0000, 0x10000, 0,                   256, 0, 1, -1 },
+    { &_m_rom_slot0_page0, "ROM CGG", 0x0000, 0x04000, &_rom_slot0[0x0000],   0, 1, 1, -1 },
+    { &_m_rom_slot0_page1, "ROM CGG", 0x4000, 0x04000, &_rom_slot0[0x4000],   0, 1, 1, -1 },
+    { &_m_rom_slot0_page2, "ROM CGG", 0x8000, 0x02000, &_rom_slot0[0x8000],   0, 1, 1, -1 },
+    { &_m_rom_slot1_page1, "ROM DSE", 0x4000, 0x04000, &_rom_slot1[0x0000],   5, 1, 0, KC_VARIANT_A5105_A5105 },
+    { &_m_ram_slot2_page0, "RAM",     0x0000, 0x04000, &_ram_slot2[0x0000],  10, 0, 0, -1 },
+    { &_m_ram_slot2_page1, "RAM",     0x4000, 0x04000, &_ram_slot2[0x4000],  10, 0, 0, -1 },
+    { &_m_ram_slot2_page2, "RAM",     0x8000, 0x04000, &_ram_slot2[0x8000],  10, 0, 0, -1 },
+    { &_m_ram_slot2_page3, "RAM",     0xc000, 0x04000, &_ram_slot2[0xc000],  10, 0, 1, -1 },
     { 0, },
   };
-
-  string datadir(kcemu_datadir);
-  string a5105_romdir = datadir + "/roms/a5105";
-  string a5105_cgg_00_rom = a5105_romdir + "/k1505_00.rom";
-  string a5105_cgg_80_rom = a5105_romdir + "/k1505_80.rom";
-  string a5105_dse_40_rom = a5105_romdir + "/k5651_40.rom";
-  string a5105_dse_60_rom = a5105_romdir + "/k5651_60.rom";
-
-  load_rom(a5105_cgg_00_rom.c_str(), &_rom_slot0[0x0000], 0x8000, true);
-  load_rom(a5105_cgg_80_rom.c_str(), &_rom_slot0[0x8000], 0x2000, true);
-  load_rom(a5105_dse_40_rom.c_str(), &_rom_slot1[0x0000], 0x2000, true);
-  load_rom(a5105_dse_60_rom.c_str(), &_rom_slot1[0x2000], 0x2000, true);
-
-  for (mptr = &m[0];mptr->name;mptr++)
-    {
-      if (mptr->basedevice || (Preferences::instance()->get_kc_variant() == KC_VARIANT_A5105_A5105))
-	{
-	  *(mptr->group) = new MemAreaGroup(mptr->name,
-					    mptr->addr,
-					    mptr->size,
-					    mptr->mem,
-					    mptr->prio,
-					    mptr->ro);
-	  (*(mptr->group))->add(get_mem_ptr());
-	  if (mptr->active)
-	    (*(mptr->group))->set_active(true);
-	}
-    }
-
-  reload_mem_ptr();
+  init_memory_groups(mem);
 
   reset(true);
   z80->register_ic(this);

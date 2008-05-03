@@ -23,6 +23,7 @@
 #include <fstream>
 
 #include "kc/system.h"
+#include "kc/prefs/types.h"
 
 #include "kc/kc.h"
 #include "kc/z80.h"
@@ -34,48 +35,20 @@ using namespace std;
 
 Memory3::Memory3(void) : Memory()
 {
-  struct {
-    MemAreaGroup **group;
-    const char    *name;
-    word_t         addr;
-    dword_t        size;
-    byte_t        *mem;
-    int            prio;
-    bool           ro;
-    bool           active;
-  } *mptr, m[] = {
-    { &_m_scr,   "-",     0x0000, 0x10000, 0,            256, 0, 1 },
-    { &_m_ram,   "RAM 0", 0x0000,  0x4000, &_ram[0],       0, 0, 1 },
-    { &_m_irm,   "IRM",   0x8000,  0x4000, &_irm[0],       1, 0, 1 },
-    { &_m_caos,  "CAOS",  0xe000,  0x2000, &_rom_caos[0],  2, 1, 1 },
-    { &_m_basic, "BASIC", 0xc000,  0x2000, &_rom_basic[0], 2, 1, 1 },
-    { 0, },
-  };
-
-  string datadir(kcemu_datadir);
-  string kc85_romdir = datadir + "/roms/kc85";
-  string kc85_caos_rom = kc85_romdir + "/caos__e0.853";
-  string kc85_basic_rom = kc85_romdir + "/basic_c0.853";
-
-  load_rom(kc85_caos_rom.c_str(), &_rom_caos, 0x2000, true);
-  load_rom(kc85_basic_rom.c_str(), &_rom_basic, 0x2000, true);
-
   _access_color = false;
 
-  for (mptr = &m[0];mptr->name;mptr++)
-    {
-      *(mptr->group) = new MemAreaGroup(mptr->name,
-					mptr->addr,
-					mptr->size,
-					mptr->mem,
-					mptr->prio,
-					mptr->ro);
-      (*(mptr->group))->add(get_mem_ptr());
-      if (mptr->active)
-	(*(mptr->group))->set_active(true);
-    }
+  load_rom(SystemROM::ROM_KEY_CAOSE, &_rom_caos);
+  load_rom(SystemROM::ROM_KEY_BASIC, &_rom_basic);
 
-  reload_mem_ptr();
+  memory_group_t mem[] = {
+    { &_m_scr,   "-",     0x0000, 0x10000, 0,            256, 0, 1, -1 },
+    { &_m_ram,   "RAM 0", 0x0000,  0x4000, &_ram[0],       0, 0, 1, -1 },
+    { &_m_irm,   "IRM",   0x8000,  0x4000, &_irm[0],       1, 0, 1, -1 },
+    { &_m_caos,  "CAOS",  0xe000,  0x2000, &_rom_caos[0],  2, 1, 1, -1 },
+    { &_m_basic, "BASIC", 0xc000,  0x2000, &_rom_basic[0], 2, 1, 1, -1 },
+    { 0, },
+  };
+  init_memory_groups(mem);
 
   reset(true);
   z80->register_ic(this);

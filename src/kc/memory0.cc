@@ -36,17 +36,10 @@ using namespace std;
 
 Memory0::Memory0(void) : Memory()
 {
-  struct {
-    MemAreaGroup **group;
-    const char    *name;
-    word_t         addr;
-    dword_t        size;
-    byte_t        *mem;
-    int            prio;
-    bool           ro;
-    bool           active;
-    int            model;
-  } *mptr, m[] = {
+  load_rom(SystemROM::ROM_KEY_SYSTEM, &_rom);
+  load_rom(SystemROM::ROM_KEY_CHARGEN, &_chr);
+
+  memory_group_t mem[] = {
     { &_m_scr,      "-",    0x0000, 0x10000, 0,             256, 0, 1, -1                    },
     { &_m_ram,    "RAM",    0x0000, 0x04000, &_ram[0x0000],  10, 0, 1, KC_VARIANT_Z1013_01   },
     { &_m_ram,    "RAM",    0x0000, 0x00400, &_ram[0x0000],  10, 0, 1, KC_VARIANT_Z1013_12   },
@@ -66,60 +59,20 @@ Memory0::Memory0(void) : Memory()
     { &_m_rom_f8, "ROM",    0xf800, 0x00800, &_rom[0x0800],   0, 1, 1, KC_VARIANT_Z1013_BL4  },
     { 0, },
   };
-
-  _portg = NULL;
-
-  int romsize = 0x0800;
-  string datadir(kcemu_datadir);
-  string z1013_romdir = datadir + "/roms/z1013";
-  string z1013_char_rom = z1013_romdir + "/z1013_zg.rom";
-  string z1013_system_rom;
+  init_memory_groups(mem);
 
   switch (Preferences::instance()->get_kc_variant())
     {
-    case KC_VARIANT_Z1013_A2:
-      z1013_system_rom = z1013_romdir + "/z1013_a2.rom";
-      break;
-    case KC_VARIANT_Z1013_RB:
-      romsize = 0x1000;
-      z1013_system_rom = z1013_romdir + "/z1013_rb.rom";
-      break;
     case KC_VARIANT_Z1013_SURL:
-      z1013_system_rom = z1013_romdir + "/z1013_ul.rom";
       _portg = ports->register_ports("MEMORY0", 4, 1, this, 0);
       break;
     case KC_VARIANT_Z1013_BL4:
-      romsize = 2432;
-      z1013_system_rom = z1013_romdir + "/z1013_bl.rom";
       _portg = ports->register_ports("MEMORY0", 4, 1, this, 0);
       break;
     default:
-      z1013_system_rom = z1013_romdir + "/z1013_20.rom";
+      _portg = NULL;
       break;
     }
-
-  load_rom(z1013_system_rom.c_str(), &_rom, romsize, true);
-  load_rom(z1013_char_rom.c_str(), &_chr, 0x1000, true);
-
-  for (mptr = &m[0];mptr->name;mptr++)
-    {
-      *(mptr->group) = NULL;
-
-      if ((mptr->model >= 0) && (mptr->model != Preferences::instance()->get_kc_variant()))
-	continue;
-
-      *(mptr->group) = new MemAreaGroup(mptr->name,
-					mptr->addr,
-					mptr->size,
-					mptr->mem,
-					mptr->prio,
-					mptr->ro);
-      (*(mptr->group))->add(get_mem_ptr());
-      if (mptr->active)
-	(*(mptr->group))->set_active(true);
-    }
-
-  reload_mem_ptr();
 
   reset(true);
   z80->register_ic(this);

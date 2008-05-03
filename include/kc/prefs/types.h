@@ -135,60 +135,80 @@ public:
     static emulation_type_list_t & get_emulation_types(void);
 };
 
+class SystemROM {
+private:
+    int          _size;
+    string       _name;
+    string       _filename;
+    bool         _mandatory;
+    list<string> _alternative_roms;
+
+public:
+    static const char * ROM_KEY_CAOSC;
+    static const char * ROM_KEY_CAOSE;
+    static const char * ROM_KEY_SYSTEM;
+    static const char * ROM_KEY_SYSTEM1;
+    static const char * ROM_KEY_SYSTEM2;
+    static const char * ROM_KEY_SYSTEM3;
+    static const char * ROM_KEY_SYSTEM4;
+    static const char * ROM_KEY_USER;
+    static const char * ROM_KEY_BASIC;
+    static const char * ROM_KEY_DEBUGGER;
+    static const char * ROM_KEY_REASSEMBLER;
+    static const char * ROM_KEY_EDITOR;
+    static const char * ROM_KEY_ASSEMBLER;
+    static const char * ROM_KEY_CHARGEN;
+
+public:
+    SystemROM(const char *name, bool mandatory, int size, const char *filename);
+    virtual ~SystemROM(void);
+
+    int get_size(void) const;
+    bool is_mandatory(void) const;
+    const string get_name(void) const;
+    const string get_filename(void) const;
+    const list<string> & get_alternative_roms(void) const;
+
+    void add_alternative_rom(const char *name);
+};
+
+typedef list<SystemROM *> system_rom_list_t;
+
 class SystemType {
-    int           _sort;
-    int           _type;
-    string        _name;
+    int               _sort;
+    int               _type;
+    string            _name;
+    bool              _is_default;
+    kc_variant_t      _kc_variant;
+    string            _description;
+    EmulationType&    _emulation_type;
     
+    string            _rom_dir;
+    system_rom_list_t _rom_list;
+
+    virtual void add_rom(const char *name, bool mandatory, int size, const char *filename, va_list ap);
+
 public:
-    SystemType(int sort, int type, string name);
+    SystemType(int sort, string name, int type, EmulationType &emulation_type, kc_variant_t kc_variant, string description);
     virtual ~SystemType(void);
-    
-    virtual const char *get_name(void);
-    
-    virtual int get_sort(void);
-    virtual int get_type(void);
-    virtual bool is_default(int type);
-    
-    virtual kc_type_t get_kc_type(void) = 0;
-    virtual kc_variant_t get_kc_variant(void) = 0;
-    virtual const char * get_kc_variant_name(void) = 0;
-    virtual const char * get_description(void) = 0;
-    virtual const EmulationType & get_emulation_type(void) = 0;
-};
 
-class RealSystemType : public SystemType {
-private:
-    bool           _is_default;
-    kc_variant_t   _kc_variant;
-    string         _description;
-    EmulationType& _emulation_type;
+    virtual SystemType & set_rom_directory(const char *romdir);
+    virtual SystemType & add_rom(const char *name, int size, const char *filename, ...);
+    virtual SystemType & add_optional_rom(const char *name, int size, const char *filename, ...);
 
-public:
-    RealSystemType(int sort, string name, int type, EmulationType& emulation_type, kc_variant_t kc_variant, string description);
-    virtual ~RealSystemType(void);
+    virtual const char *get_name(void) const;
     
-    virtual kc_type_t get_kc_type(void);
-    virtual kc_variant_t get_kc_variant(void);
-    virtual const char * get_kc_variant_name(void);
-    virtual const char * get_description(void);
-    virtual const EmulationType & get_emulation_type(void);
-};
-
-class AliasSystemType : public SystemType {
-private:
-    string _name;
-    SystemType *_base;
+    virtual int get_sort(void) const;
+    virtual int get_type(void) const;
+    virtual bool is_default(int type) const;
     
-public:
-    AliasSystemType(int sort, string name, int type, SystemType *base_system_type);
-    virtual ~AliasSystemType(void);
-    
-    virtual kc_type_t get_kc_type(void);
-    virtual kc_variant_t get_kc_variant(void);
-    virtual const char * get_kc_variant_name(void);
-    virtual const char * get_description(void);
-    virtual const EmulationType & get_emulation_type(void);
+    virtual kc_type_t get_kc_type(void) const;
+    virtual kc_variant_t get_kc_variant(void) const;
+    virtual const char * get_kc_variant_name(void) const;
+    virtual const char * get_description(void) const;
+    virtual const EmulationType & get_emulation_type(void) const;
+    virtual const string get_rom_directory(void) const;
+    virtual const SystemROM * get_rom(const char *key) const;
 };
 
 typedef list<SystemType *> system_type_list_t;
@@ -200,8 +220,7 @@ private:
     system_type_list_t _system_type_list;
     
 protected:
-    void add_alias_type(int sort, string name, int type, string base_system_type_name);
-    void add_system_type(int sort, string name, int type, EmulationType& emulation_type, kc_variant_t kc_variant, string description);
+    SystemType & add_system_type(int sort, string name, int type, EmulationType& emulation_type, kc_variant_t kc_variant, string description);
 
 public:
     SystemInformation();

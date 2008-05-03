@@ -23,6 +23,7 @@
 #include <fstream>
 
 #include "kc/system.h"
+#include "kc/prefs/types.h"
 
 #include "kc/kc.h"
 #include "kc/z80.h"
@@ -32,42 +33,15 @@ using namespace std;
 
 MemoryVCS80::MemoryVCS80(void) : Memory()
 {
-  struct {
-    MemAreaGroup **group;
-    const char    *name;
-    word_t         addr;
-    dword_t        size;
-    byte_t        *mem;
-    int            prio;
-    bool           ro;
-    bool           active;
-  } *mptr, m[] = {
-    { &_m_scr, "-",       0x0000, 0x10000, 0,        256, 0, 1 },
-    { &_m_rom, "Monitor", 0x0000,  0x0400, &_rom[0],   1, 1, 1 },
-    { &_m_ram, "RAM",     0x0400,  0x0400, &_ram[0],   1, 0, 1 },
+  load_rom(SystemROM::ROM_KEY_SYSTEM, &_rom);
+
+  memory_group_t mem[] = {
+    { &_m_scr, "-",       0x0000, 0x10000, 0,        256, 0, 1, -1 },
+    { &_m_rom, "Monitor", 0x0000,  0x0400, &_rom[0],   1, 1, 1, -1 },
+    { &_m_ram, "RAM",     0x0400,  0x0400, &_ram[0],   1, 0, 1, -1 },
     { 0, },
   };
-
-  string datadir(kcemu_datadir);
-  string vcs80_romdir = datadir + "/roms/vcs80";
-  string vcs80_monitor   = vcs80_romdir + "/monitor.rom";
-
-  load_rom(vcs80_monitor.c_str(), &_rom, 0x0200, true);
-
-  for (mptr = &m[0];mptr->name;mptr++)
-    {
-      *(mptr->group) = new MemAreaGroup(mptr->name,
-					mptr->addr,
-					mptr->size,
-					mptr->mem,
-					mptr->prio,
-					mptr->ro);
-      (*(mptr->group))->add(get_mem_ptr());
-      if (mptr->active)
-	(*(mptr->group))->set_active(true);
-    }
-
-  reload_mem_ptr();
+  init_memory_groups(mem);
 
   reset(true);
   z80->register_ic(this);

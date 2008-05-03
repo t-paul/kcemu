@@ -23,6 +23,7 @@
 #include <fstream>
 
 #include "kc/system.h"
+#include "kc/prefs/types.h"
 
 #include "kc/kc.h"
 #include "kc/z80.h"
@@ -32,16 +33,10 @@ using namespace std;
 
 MemoryMuglerPC::MemoryMuglerPC(void) : Memory()
 {
-  struct {
-    MemAreaGroup **group;
-    const char    *name;
-    word_t         addr;
-    dword_t        size;
-    byte_t        *mem;
-    int            prio;
-    bool           ro;
-    bool           active;
-  } *mptr, m[] = {
+  load_rom(SystemROM::ROM_KEY_SYSTEM, &_rom);
+  load_rom(SystemROM::ROM_KEY_CHARGEN, &_rom_chargen);
+
+  memory_group_t mem[] = {
     { &_m_scr,             "-",               0x0000, 0x10000, 0,                   256, 0, 1 },
     { &_m_rom,             "ROM",             0x0000,  0x2000, &_rom[0],             10, 1, 1 },
     { &_m_ram0_lo,         "RAM Bank 0 (lo)", 0x0000,  0xc000, &_ram_block0[0],      20, 0, 1 },
@@ -57,31 +52,9 @@ MemoryMuglerPC::MemoryMuglerPC(void) : Memory()
     { &_m_irm,             "IRM",             0xf800,  0x0800, &_irm[0],             10, 0, 0 },
     { 0, },
   };
-
-  string datadir(kcemu_datadir);
-  string muglerpc_romdir = datadir + "/roms/muglerpc";
-  string muglerpc_system_rom = muglerpc_romdir + "/muglerpc.pcm";
-  string muglerpc_chargen_rom = muglerpc_romdir + "/chargen.pcm";
-
-  load_rom(muglerpc_system_rom.c_str(), &_rom, 0x2000, true);
-  load_rom(muglerpc_chargen_rom.c_str(), &_rom_chargen, 0x0800, true);
-
-  for (mptr = &m[0];mptr->name;mptr++)
-    {
-      *(mptr->group) = new MemAreaGroup(mptr->name,
-					mptr->addr,
-					mptr->size,
-					mptr->mem,
-					mptr->prio,
-					mptr->ro);
-      (*(mptr->group))->add(get_mem_ptr());
-      if (mptr->active)
-	(*(mptr->group))->set_active(true);
-    }
+  init_memory_groups(mem);
 
   _m_irm->set_read_through(true);
-
-  reload_mem_ptr();
 
   reset(true);
   z80->register_ic(this);

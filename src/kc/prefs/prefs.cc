@@ -575,6 +575,11 @@ Preferences::get_string_value(string key, const char *default_value) {
     return _current_profile->get_string_value(key, default_value);
 }
 
+SystemType *
+Preferences::get_system_type(void) {
+    return _current_system_type;
+}
+
 kc_type_t
 Preferences::get_kc_type(void) {
     return _current_system_type->get_kc_type();

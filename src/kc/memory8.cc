@@ -30,21 +30,34 @@
 
 #include "ui/ui.h"
 
+#include "libdbg/dbg.h"
+
 using namespace std;
 
 Memory8::Memory8(void) : Memory()
 {
-  struct {
-    MemAreaGroup **group;
-    const char    *name;
-    word_t         addr;
-    dword_t        size;
-    byte_t        *mem;
-    int            prio;
-    bool           ro;
-    bool           active;
-    int            model;
-  } *mptr, m[] = {
+  switch (Preferences::instance()->get_kc_variant())
+    {
+    case KC_VARIANT_LC80_1k:
+      load_rom(SystemROM::ROM_KEY_SYSTEM1, &_rom1);
+      load_rom(SystemROM::ROM_KEY_SYSTEM2, &_rom2);
+      break;
+    case KC_VARIANT_LC80_2k:
+      load_rom(SystemROM::ROM_KEY_SYSTEM, &_rom);
+      break;
+    case KC_VARIANT_LC80e:
+      load_rom(SystemROM::ROM_KEY_SYSTEM1, &_rome[0x0000]);
+      load_rom(SystemROM::ROM_KEY_SYSTEM2, &_rome[0x1000]);
+      load_rom(SystemROM::ROM_KEY_SYSTEM3, &_rome[0x2000]);
+      break;
+    default:
+      DBG(0, form("KCemu/internal_error",
+                  "Memory8: invalid kc variant value: %d\n",
+                  Preferences::instance()->get_kc_variant()));
+      break;
+   }
+
+  memory_group_t mem[] = {
     { &_m_scr,   "-",     0x0000, 0x10000, 0,            256, 0, 1, -1                 },
     { &_m_rom1,  "ROM1",  0x0000,  0x0400, &_rom1[0],      0, 1, 1, KC_VARIANT_LC80_1k },
     { &_m_rom2,  "ROM2",  0x0800,  0x0400, &_rom2[0],      0, 1, 1, KC_VARIANT_LC80_1k },
@@ -57,42 +70,7 @@ Memory8::Memory8(void) : Memory()
     { &_m_ram,   "RAM",   0x2000,  0x1000, &_ram[0],       0, 0, 1, KC_VARIANT_LC80e   },
     { 0, },
   };
-
-  string datadir(kcemu_datadir);
-  string lc80_romdir = datadir + "/roms/lc80";
-  string lc80_system_00_rom = lc80_romdir + "/lc80__00.rom";
-  string lc80_system_08_rom = lc80_romdir + "/lc80__08.rom";
-  string lc80_system_2k_rom = lc80_romdir + "/lc80__2k.rom";
-  string lc80e_00_rom = lc80_romdir + "/lc80e_00.rom";
-  string lc80e_10_rom = lc80_romdir + "/lc80e_10.rom";
-  string lc80e_c0_rom = lc80_romdir + "/lc80e_c0.rom";
-
-  load_rom(lc80_system_00_rom.c_str(), &_rom1, 0x0400, true);
-  load_rom(lc80_system_08_rom.c_str(), &_rom2, 0x0400, true);
-  load_rom(lc80_system_2k_rom.c_str(), &_rom,  0x0800, true);
-  load_rom(lc80e_00_rom.c_str(), &_rome[0x0000],  0x1000, true);
-  load_rom(lc80e_10_rom.c_str(), &_rome[0x1000],  0x1000, true);
-  load_rom(lc80e_c0_rom.c_str(), &_rome[0x2000],  0x1000, true);
-
-  for (mptr = &m[0];mptr->name;mptr++)
-    {
-      *(mptr->group) = NULL;
-
-      if ((mptr->model >= 0) && (mptr->model != Preferences::instance()->get_kc_variant()))
-	continue;
-
-      *(mptr->group) = new MemAreaGroup(mptr->name,
-					mptr->addr,
-					mptr->size,
-					mptr->mem,
-					mptr->prio,
-					mptr->ro);
-      (*(mptr->group))->add(get_mem_ptr());
-      if (mptr->active)
-	(*(mptr->group))->set_active(true);
-    }
-
-  reload_mem_ptr();
+  init_memory_groups(mem);
 
   reset(true);
   z80->register_ic(this);

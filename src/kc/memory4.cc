@@ -52,61 +52,37 @@ Memory4::init_4(void)
   _rom_caose = new byte_t[0x2000];
   _rom_basic = new byte_t[0x2000];
 
-  struct {
-    MemAreaGroup **group;
-    const char    *name;
-    word_t         addr;
-    dword_t        size;
-    byte_t        *mem;
-    int            prio;
-    bool           ro;
-    bool           active;
-  } *mptr, m[] = {
-    { &_m_scr,       "-",             0x0000, 0x10000, 0,            256, 0, 1 },
-    { &_m_ram_0,     "RAM 0",         0x0000,  0x4000, &_ram[0x8000],  0, 0, 1 },
-    { &_m_ram_4,     "RAM 4",         0x4000,  0x4000, &_ram[0xc000],  4, 0, 1 },
-    { &_m_ram_8[ 0], "RAM 8 (0)",     0x8000,  0x4000, &_ram[0x0000],  3, 0, 1 },
-    { &_m_ram_8[ 1], "RAM 8 (1)",     0x8000,  0x4000, &_ram[0x4000],  3, 0, 0 },
+  load_rom(SystemROM::ROM_KEY_CAOSC, &_rom_caosc[0]);
+  load_rom(SystemROM::ROM_KEY_CAOSE, &_rom_caose[0]);
+  load_rom(SystemROM::ROM_KEY_BASIC, &_rom_basic[0]);
 
-    { &_m_irm_0p,    "IRM 0 Pixel",   0x8000,  0x2800, &_irm0[0],      1, 0, 1 },
-    { &_m_irm_0c,    "IRM 0 Color",   0x8000,  0x2800, &_irm0[0x4000], 1, 0, 0 },
-    { &_m_irm_1p,    "IRM 1 Pixel",   0x8000,  0x2800, &_irm1[0],      1, 0, 0 },
-    { &_m_irm_1c,    "IRM 1 Color",   0x8000,  0x2800, &_irm1[0x4000], 1, 0, 0 },
+  memory_group_t mem[] = {
+    { &_m_scr,       "-",             0x0000, 0x10000, 0,            256, 0, 1, -1 },
+    { &_m_ram_0,     "RAM 0",         0x0000,  0x4000, &_ram[0x8000],  0, 0, 1, -1 },
+    { &_m_ram_4,     "RAM 4",         0x4000,  0x4000, &_ram[0xc000],  4, 0, 1, -1 },
+    { &_m_ram_8[ 0], "RAM 8 (0)",     0x8000,  0x4000, &_ram[0x0000],  3, 0, 1, -1 },
+    { &_m_ram_8[ 1], "RAM 8 (1)",     0x8000,  0x4000, &_ram[0x4000],  3, 0, 0, -1 },
 
-    { &_m_irm_0px,   "IRM 0 Pixel *", 0xa800,  0x1800, &_irm0[0x2800], 1, 0, 1 },
-    { &_m_irm_0cx,   "IRM 0 Color *", 0xa800,  0x1800, &_irm0[0x6800], 1, 0, 0 },
-    { &_m_irm_1px,   "IRM 1 Pixel *", 0xa800,  0x1800, &_irm1[0x2800], 1, 0, 0 },
-    { &_m_irm_1cx,   "IRM 1 Color *", 0xa800,  0x1800, &_irm1[0x6800], 1, 0, 0 },
+    { &_m_irm_0p,    "IRM 0 Pixel",   0x8000,  0x2800, &_irm0[0],      1, 0, 1, -1 },
+    { &_m_irm_0c,    "IRM 0 Color",   0x8000,  0x2800, &_irm0[0x4000], 1, 0, 0, -1 },
+    { &_m_irm_1p,    "IRM 1 Pixel",   0x8000,  0x2800, &_irm1[0],      1, 0, 0, -1 },
+    { &_m_irm_1c,    "IRM 1 Color",   0x8000,  0x2800, &_irm1[0x4000], 1, 0, 0, -1 },
 
-    { &_m_caos_c,    "CAOS c000h",    0xc000,  0x1000, &_rom_caosc[0], 2, 1, 0 },
-    { &_m_caos_e,    "CAOS e000h",    0xe000,  0x2000, &_rom_caose[0], 2, 1, 1 },
-    { &_m_basic,     "BASIC",         0xc000,  0x2000, &_rom_basic[0], 2, 1, 0 },
+    { &_m_irm_0px,   "IRM 0 Pixel *", 0xa800,  0x1800, &_irm0[0x2800], 1, 0, 1, -1 },
+    { &_m_irm_0cx,   "IRM 0 Color *", 0xa800,  0x1800, &_irm0[0x6800], 1, 0, 0, -1 },
+    { &_m_irm_1px,   "IRM 1 Pixel *", 0xa800,  0x1800, &_irm1[0x2800], 1, 0, 0, -1 },
+    { &_m_irm_1cx,   "IRM 1 Color *", 0xa800,  0x1800, &_irm1[0x6800], 1, 0, 0, -1 },
+
+    { &_m_caos_c,    "CAOS c000h",    0xc000,  0x1000, &_rom_caosc[0], 2, 1, 0, -1 },
+    { &_m_caos_e,    "CAOS e000h",    0xe000,  0x2000, &_rom_caose[0], 2, 1, 1, -1 },
+    { &_m_basic,     "BASIC",         0xc000,  0x2000, &_rom_basic[0], 2, 1, 0, -1 },
     { 0, },
   };
+  init_memory_groups(mem);
 
   for (int a = 2;a < 16;a++)
     _m_ram_8[a] = NULL;
 
-  string datadir(kcemu_datadir);
-  string kc85_romdir = datadir + "/roms/kc85";
-  string kc85_caosc_rom = kc85_romdir + "/caos__c0.854";
-  string kc85_caose_rom = kc85_romdir + "/caos__e0.854";
-  string kc85_basic_rom = kc85_romdir + "/basic_c0.854";
-
-  load_rom(kc85_caosc_rom.c_str(), &_rom_caosc[0], 0x1000, true);
-  load_rom(kc85_caose_rom.c_str(), &_rom_caose[0], 0x2000, true);
-  load_rom(kc85_basic_rom.c_str(), &_rom_basic[0], 0x2000, true);
-
-  for (mptr = &m[0];mptr->name;mptr++)
-    {
-      *(mptr->group) = new MemAreaGroup(mptr->name,
-					mptr->addr,
-					mptr->size,
-					mptr->mem,
-					mptr->prio,
-					mptr->ro);
-      (*(mptr->group))->add(get_mem_ptr());
-    }
   _m_user[0] = _m_basic;
   _m_user[1] = _m_basic;
   _m_user[2] = _m_basic;
@@ -125,75 +101,51 @@ Memory4::init_5(void)
   _rom_caose = new byte_t[0x2000];
   _rom_basic = new byte_t[0x8000];
 
-  struct {
-    MemAreaGroup **group;
-    const char    *name;
-    word_t         addr;
-    dword_t        size;
-    byte_t        *mem;
-    int            prio;
-    bool           ro;
-    bool           active;
-  } *mptr, m[] = {
-    { &_m_scr,       "-",             0x0000, 0x10000, 0,                 256, 0, 1 },
-    { &_m_ram_0,     "RAM 0",         0x0000,  0x4000, &_ram[0x38000],	    0, 0, 1 },
-    { &_m_ram_4,     "RAM 4",         0x4000,  0x4000, &_ram[0x3c000],	    4, 0, 1 },
-    { &_m_ram_8[ 0], "RAM 8 (0)",     0x8000,  0x4000, &_ram[0x00000],	    3, 0, 1 },
-    { &_m_ram_8[ 1], "RAM 8 (1)",     0x8000,  0x4000, &_ram[0x04000],	    3, 0, 0 },
-    { &_m_ram_8[ 2], "RAM 8 (2)",     0x8000,  0x4000, &_ram[0x08000],	    3, 0, 0 },
-    { &_m_ram_8[ 3], "RAM 8 (3)",     0x8000,  0x4000, &_ram[0x0c000],	    3, 0, 0 },
-    { &_m_ram_8[ 4], "RAM 8 (4)",     0x8000,  0x4000, &_ram[0x10000],	    3, 0, 0 },
-    { &_m_ram_8[ 5], "RAM 8 (5)",     0x8000,  0x4000, &_ram[0x14000],	    3, 0, 0 },
-    { &_m_ram_8[ 6], "RAM 8 (6)",     0x8000,  0x4000, &_ram[0x18000],	    3, 0, 0 },
-    { &_m_ram_8[ 7], "RAM 8 (7)",     0x8000,  0x4000, &_ram[0x1c000],	    3, 0, 0 },
-    { &_m_ram_8[ 8], "RAM 8 (8)",     0x8000,  0x4000, &_ram[0x20000],	    3, 0, 0 },
-    { &_m_ram_8[ 9], "RAM 8 (9)",     0x8000,  0x4000, &_ram[0x24000],	    3, 0, 0 },
-    { &_m_ram_8[10], "RAM 8 (10)",    0x8000,  0x4000, &_ram[0x28000],	    3, 0, 0 },
-    { &_m_ram_8[11], "RAM 8 (11)",    0x8000,  0x4000, &_ram[0x2c000],	    3, 0, 0 },
-    { &_m_ram_8[12], "RAM 8 (12)",    0x8000,  0x4000, &_ram[0x30000],	    3, 0, 0 },
-    { &_m_ram_8[13], "RAM 8 (13)",    0x8000,  0x4000, &_ram[0x34000],	    3, 0, 0 },
-    { &_m_ram_8[14], "RAM 8 (14)",    0x8000,  0x4000, &_ram[0x38000],	    3, 0, 0 },
-    { &_m_ram_8[15], "RAM 8 (15)",    0x8000,  0x4000, &_ram[0x3c000],	    3, 0, 0 },
+  load_rom(SystemROM::ROM_KEY_CAOSC, &_rom_caosc[0]);
+  load_rom(SystemROM::ROM_KEY_CAOSE, &_rom_caose[0]);
+  load_rom(SystemROM::ROM_KEY_BASIC, &_rom_basic[0]);
 
-    { &_m_irm_0p,    "IRM 0 Pixel",   0x8000,  0x2800, &_irm0[0],           1, 0, 1 },
-    { &_m_irm_0c,    "IRM 0 Color",   0x8000,  0x2800, &_irm0[0x4000],	    1, 0, 0 },
-    { &_m_irm_1p,    "IRM 1 Pixel",   0x8000,  0x2800, &_irm1[0],           1, 0, 0 },
-    { &_m_irm_1c,    "IRM 1 Color",   0x8000,  0x2800, &_irm1[0x4000],	    1, 0, 0 },
+  memory_group_t mem[] = {
+    { &_m_scr,       "-",             0x0000, 0x10000, 0,                 256, 0, 1, -1 },
+    { &_m_ram_0,     "RAM 0",         0x0000,  0x4000, &_ram[0x38000],	    0, 0, 1, -1 },
+    { &_m_ram_4,     "RAM 4",         0x4000,  0x4000, &_ram[0x3c000],	    4, 0, 1, -1 },
+    { &_m_ram_8[ 0], "RAM 8 (0)",     0x8000,  0x4000, &_ram[0x00000],	    3, 0, 1, -1 },
+    { &_m_ram_8[ 1], "RAM 8 (1)",     0x8000,  0x4000, &_ram[0x04000],	    3, 0, 0, -1 },
+    { &_m_ram_8[ 2], "RAM 8 (2)",     0x8000,  0x4000, &_ram[0x08000],	    3, 0, 0, -1 },
+    { &_m_ram_8[ 3], "RAM 8 (3)",     0x8000,  0x4000, &_ram[0x0c000],	    3, 0, 0, -1 },
+    { &_m_ram_8[ 4], "RAM 8 (4)",     0x8000,  0x4000, &_ram[0x10000],	    3, 0, 0, -1 },
+    { &_m_ram_8[ 5], "RAM 8 (5)",     0x8000,  0x4000, &_ram[0x14000],	    3, 0, 0, -1 },
+    { &_m_ram_8[ 6], "RAM 8 (6)",     0x8000,  0x4000, &_ram[0x18000],	    3, 0, 0, -1 },
+    { &_m_ram_8[ 7], "RAM 8 (7)",     0x8000,  0x4000, &_ram[0x1c000],	    3, 0, 0, -1 },
+    { &_m_ram_8[ 8], "RAM 8 (8)",     0x8000,  0x4000, &_ram[0x20000],	    3, 0, 0, -1 },
+    { &_m_ram_8[ 9], "RAM 8 (9)",     0x8000,  0x4000, &_ram[0x24000],	    3, 0, 0, -1 },
+    { &_m_ram_8[10], "RAM 8 (10)",    0x8000,  0x4000, &_ram[0x28000],	    3, 0, 0, -1 },
+    { &_m_ram_8[11], "RAM 8 (11)",    0x8000,  0x4000, &_ram[0x2c000],	    3, 0, 0, -1 },
+    { &_m_ram_8[12], "RAM 8 (12)",    0x8000,  0x4000, &_ram[0x30000],	    3, 0, 0, -1 },
+    { &_m_ram_8[13], "RAM 8 (13)",    0x8000,  0x4000, &_ram[0x34000],	    3, 0, 0, -1 },
+    { &_m_ram_8[14], "RAM 8 (14)",    0x8000,  0x4000, &_ram[0x38000],	    3, 0, 0, -1 },
+    { &_m_ram_8[15], "RAM 8 (15)",    0x8000,  0x4000, &_ram[0x3c000],	    3, 0, 0, -1 },
 
-    { &_m_irm_0px,   "IRM 0 Pixel *", 0xa800,  0x1800, &_irm0[0x2800],	    1, 0, 1 },
-    { &_m_irm_0cx,   "IRM 0 Color *", 0xa800,  0x1800, &_irm0[0x6800],	    1, 0, 0 },
-    { &_m_irm_1px,   "IRM 1 Pixel *", 0xa800,  0x1800, &_irm1[0x2800],	    1, 0, 0 },
-    { &_m_irm_1cx,   "IRM 1 Color *", 0xa800,  0x1800, &_irm1[0x6800],	    1, 0, 0 },
+    { &_m_irm_0p,    "IRM 0 Pixel",   0x8000,  0x2800, &_irm0[0],           1, 0, 1, -1 },
+    { &_m_irm_0c,    "IRM 0 Color",   0x8000,  0x2800, &_irm0[0x4000],	    1, 0, 0, -1 },
+    { &_m_irm_1p,    "IRM 1 Pixel",   0x8000,  0x2800, &_irm1[0],           1, 0, 0, -1 },
+    { &_m_irm_1c,    "IRM 1 Color",   0x8000,  0x2800, &_irm1[0x4000],	    1, 0, 0, -1 },
 
-    { &_m_caos_c,    "CAOS c000h",    0xc000,  0x2000, &_rom_caosc[0],	    2, 1, 0 },
-    { &_m_caos_e,    "CAOS e000h",    0xe000,  0x2000, &_rom_caose[0],	    2, 1, 1 },
-    { &_m_user[3],   "BASIC",         0xc000,  0x2000, &_rom_basic[0x6000], 2, 1, 0 },
-    { &_m_user[2],   "USER 0",        0xc000,  0x2000, &_rom_basic[0x4000], 2, 1, 0 },
-    { &_m_user[1],   "USER 1",        0xc000,  0x2000, &_rom_basic[0x2000], 2, 1, 0 },
-    { &_m_user[0],   "USER 2",        0xc000,  0x2000, &_rom_basic[0x0000], 2, 1, 0 },
+    { &_m_irm_0px,   "IRM 0 Pixel *", 0xa800,  0x1800, &_irm0[0x2800],	    1, 0, 1, -1 },
+    { &_m_irm_0cx,   "IRM 0 Color *", 0xa800,  0x1800, &_irm0[0x6800],	    1, 0, 0, -1 },
+    { &_m_irm_1px,   "IRM 1 Pixel *", 0xa800,  0x1800, &_irm1[0x2800],	    1, 0, 0, -1 },
+    { &_m_irm_1cx,   "IRM 1 Color *", 0xa800,  0x1800, &_irm1[0x6800],	    1, 0, 0, -1 },
+
+    { &_m_caos_c,    "CAOS c000h",    0xc000,  0x2000, &_rom_caosc[0],	    2, 1, 0, -1 },
+    { &_m_caos_e,    "CAOS e000h",    0xe000,  0x2000, &_rom_caose[0],	    2, 1, 1, -1 },
+    { &_m_user[3],   "BASIC",         0xc000,  0x2000, &_rom_basic[0x6000], 2, 1, 0, -1 },
+    { &_m_user[2],   "USER 0",        0xc000,  0x2000, &_rom_basic[0x4000], 2, 1, 0, -1 },
+    { &_m_user[1],   "USER 1",        0xc000,  0x2000, &_rom_basic[0x2000], 2, 1, 0, -1 },
+    { &_m_user[0],   "USER 2",        0xc000,  0x2000, &_rom_basic[0x0000], 2, 1, 0, -1 },
     { 0, },
   };
+  init_memory_groups(mem);
 
-  string datadir(kcemu_datadir);
-  string kc85_romdir = datadir + "/roms/kc85";
-  string kc85_caosc_rom = kc85_romdir + "/caos__c0.855";
-  string kc85_caose_rom = kc85_romdir + "/caos__e0.855";
-  string kc85_basic_rom = kc85_romdir + "/basic_c0.855";
-
-  load_rom(kc85_caosc_rom.c_str(), &_rom_caosc[0], 0x2000, true);
-  load_rom(kc85_caose_rom.c_str(), &_rom_caose[0], 0x2000, true);
-  load_rom(kc85_basic_rom.c_str(), &_rom_basic[0], 0x8000, true);
-
-  for (mptr = &m[0];mptr->name;mptr++)
-    {
-      *(mptr->group) = new MemAreaGroup(mptr->name,
-					mptr->addr,
-					mptr->size,
-					mptr->mem,
-					mptr->prio,
-					mptr->ro);
-      (*(mptr->group))->add(get_mem_ptr());
-    }
   _m_basic = _m_user[3];
 
   reset(true);

@@ -98,6 +98,7 @@ public:
     virtual void set_current_profile(const char *name, int type);
     virtual SystemType * find_system_type(kc_type_t kc_type, kc_variant_t kc_variant);
 
+    virtual SystemType * get_system_type(void);
     virtual kc_type_t get_kc_type(void);
     virtual kc_variant_t get_kc_variant(void);
     virtual const char * get_kc_type_name(void);

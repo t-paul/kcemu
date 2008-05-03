@@ -133,6 +133,18 @@ public:
   byte_t * get_write_ptr(void);
 };
 
+typedef struct {
+    MemAreaGroup **group;
+    const char    *name;
+    word_t         addr;
+    dword_t        size;
+    byte_t        *mem;
+    int            prio;
+    bool           ro;
+    bool           active;
+    int            model;
+} memory_group_t;
+
 class Memory : public InterfaceCircuit
 {
 private:
@@ -146,13 +158,16 @@ public:
   byte_t *_memrptr[MemArea::PAGES];
   byte_t *_memwptr[MemArea::PAGES];
 
+  static bool load_rom(const char *key, void *buf);
   static bool load_rom(const char *filename, void *buf, long len, bool force);
 
 protected:
   static unsigned int mem_rand();
   static void mem_rand_seed(unsigned int seed1, unsigned int seed2, unsigned int seed3);
 
+  void init_memory_groups(memory_group_t mem[]);
   virtual void loadRAM(const char *filename, word_t addr);
+
   void * get_page_addr_r(word_t addr);
   void * get_page_addr_w(word_t addr);
 

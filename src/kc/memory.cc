@@ -32,6 +32,7 @@
 #include "kc/system.h"
 #include "kc/prefs/prefs.h"
 
+#include "kc/kc.h"
 #include "kc/memory.h"
 #include "ui/status.h"
 
@@ -293,11 +294,77 @@ Memory::~Memory(void)
     delete _mem_ptr[a];
 }
 
+void
+Memory::init_memory_groups(memory_group_t mem[]) {
+  for (memory_group_t *mptr = &mem[0];mptr->name;mptr++)
+    {
+      *(mptr->group) = NULL;
+
+      if ((mptr->model >= 0) && (mptr->model != Preferences::instance()->get_kc_variant()))
+        continue;
+
+      *(mptr->group) = new MemAreaGroup(mptr->name, mptr->addr, mptr->size, mptr->mem, mptr->prio, mptr->ro);
+      (*(mptr->group))->add(get_mem_ptr());
+      if (mptr->active)
+        (*(mptr->group))->set_active(true);
+    }
+
+  reload_mem_ptr();
+}
+
+bool
+Memory::load_rom(const char *key, void *buf)
+{
+  DBG(1, form("KCemu/Memory/load_rom",
+	      "Memory::load_rom(): loading rom for key '%s'\n",
+	      key));
+    
+  SystemType *system = Preferences::instance()->get_system_type();
+  const SystemROM *rom = system->get_rom(key);
+  if (rom == NULL)
+    {
+      cerr << "ROM with key '" << key << "' not defined for system of type '" << system->get_name() << "'\n";
+      exit(1);
+    }
+
+  const char *romfile = Preferences::instance()->get_string_value(key, NULL);
+  
+  if (romfile == NULL)
+    {
+      DBG(1, form("KCemu/Memory/load_rom",
+                  "Memory::load_rom(): profile has no entry for key '%s'\n",
+                  key));
+      romfile = rom->get_filename().c_str();
+      DBG(1, form("KCemu/Memory/load_rom",
+                  "Memory::load_rom(): using default filename '%s'\n",
+                  romfile));
+    }
+  else
+    {
+      DBG(1, form("KCemu/Memory/load_rom",
+                  "Memory::load_rom(): got filename from profile '%s'\n",
+                  romfile));
+    }
+
+  string rompath; // must be still in scope when calling load_rom() below...
+  if (!sys_isabsolutepath(romfile))
+    {
+      string datadir(kcemu_datadir);
+      string romdir = datadir + system->get_rom_directory() + "/";
+      rompath = romdir + romfile;
+      romfile = rompath.c_str();
+      DBG(1, form("KCemu/Memory/load_rom",
+                  "Memory::load_rom(): resolving relative path to '%s'\n",
+                  romfile));
+    }
+
+  return load_rom(romfile, buf, rom->get_size(), rom->is_mandatory());
+}
+
 bool
 Memory::load_rom(const char *filename, void *buf, long len, bool force)
 {
   ifstream is;
-
   DBG(1, form("KCemu/Memory/load_rom",
 	      "Memory::load_rom(): loading '%s' (size = %04xh, force = %s)\n",
 	      filename, len, force ? "yes" : "no"));
@@ -305,6 +372,9 @@ Memory::load_rom(const char *filename, void *buf, long len, bool force)
   is.open(filename, ios::in | ios::binary);
   if (!is)
     {
+      DBG(1, form("KCemu/Memory/load_rom",
+                  "Memory::load_rom(): can't open rom file '%s'\n",
+                  filename));
       if (!force)
 	return false;
       cerr << "can't open file '" << filename << "'\n";
@@ -314,6 +384,9 @@ Memory::load_rom(const char *filename, void *buf, long len, bool force)
   is.read((char *)buf, len);
   if (!is)
     {
+      DBG(1, form("KCemu/Memory/load_rom",
+                  "Memory::load_rom(): failed to load rom from '%s'\n",
+                  filename));
       if (force)
 	{
 	  cerr << "error while reading '" << filename << "'\n";

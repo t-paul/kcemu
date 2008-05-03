@@ -30,11 +30,10 @@
 class Memory6 : public Memory
 {
  private:
-  byte_t _rom0[0x0400];
+  byte_t _rom0[0x1000]; // holds the first poly880 rom or the sc1 chess rom
   byte_t _rom1[0x0400];
   byte_t _rom2[0x0400];
   byte_t _rom3[0x0400];
-  byte_t _rom_sc1[0x1000];
   byte_t _ram[0x0400];
 
   MemAreaGroup *_m_scr;     /* scratch memory */
