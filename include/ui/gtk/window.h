@@ -78,6 +78,7 @@ protected:
 
   GtkWidget * get_window(void);
   GtkWidget * get_widget(const char *name);
+  GtkWidget * get_widget(const char *name, int nr);
   GtkWidget * get_widget_or_null(const char *name);
 
   void init_dialog(const char *close_button_func, const char *help_topic);

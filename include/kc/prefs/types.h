@@ -135,13 +135,26 @@ public:
     static emulation_type_list_t & get_emulation_types(void);
 };
 
+class ROMEntry {
+private:
+    string _filename;
+    string _description;
+public:
+    ROMEntry(const char *filename, const char *description);
+    virtual ~ROMEntry(void);
+    
+    const string get_filename(void) const;
+    const string get_description(void) const;
+};
+
+typedef list<ROMEntry *> rom_entry_list_t;
+
 class SystemROM {
 private:
-    int          _size;
-    string       _name;
-    string       _filename;
-    bool         _mandatory;
-    list<string> _alternative_roms;
+    int              _size;
+    string           _name;
+    bool             _mandatory;
+    rom_entry_list_t _roms;
 
 public:
     static const char * ROM_KEY_CAOSC;
@@ -160,16 +173,15 @@ public:
     static const char * ROM_KEY_CHARGEN;
 
 public:
-    SystemROM(const char *name, bool mandatory, int size, const char *filename);
+    SystemROM(const char *name, bool mandatory, int size);
     virtual ~SystemROM(void);
 
     int get_size(void) const;
     bool is_mandatory(void) const;
     const string get_name(void) const;
-    const string get_filename(void) const;
-    const list<string> & get_alternative_roms(void) const;
+    const rom_entry_list_t & get_roms(void) const;
 
-    void add_alternative_rom(const char *name);
+    void add_rom(const char *name, const char *filename);
 };
 
 typedef list<SystemROM *> system_rom_list_t;
@@ -187,7 +199,7 @@ class SystemType {
     string            _rom_dir;
     system_rom_list_t _rom_list;
 
-    virtual void add_rom(const char *name, bool mandatory, int size, const char *filename, va_list ap);
+    virtual void add_rom(const char *name, bool mandatory, int size, const char *filename, const char *description, va_list ap);
 
 public:
     SystemType(int sort, string name, int type, EmulationType &emulation_type, kc_variant_t kc_variant, string description);
@@ -201,9 +213,10 @@ public:
     virtual const string get_rom_directory(void) const;
     virtual SystemType & set_rom_directory(const char *romdir);
 
+    virtual const system_rom_list_t & get_rom_list(void) const;
     virtual const SystemROM * get_rom(const char *key) const;
-    virtual SystemType & add_rom(const char *name, int size, const char *filename, ...);
-    virtual SystemType & add_optional_rom(const char *name, int size, const char *filename, ...);
+    virtual SystemType & add_rom(const char *name, int size, const char *filename, const char *description, ...);
+    virtual SystemType & add_optional_rom(const char *name, int size, const char *filename, const char *description, ...);
 
     virtual int get_sort(void) const;
     virtual int get_type(void) const;
@@ -237,6 +250,7 @@ public:
     virtual void show_types_with_description(void);
     
     virtual system_type_list_t & get_system_types(void);
+    virtual const SystemType * get_system_type(kc_type_t kc_type, kc_variant_t kc_variant) const;
 };
 
 #endif /* __kc_prefs_types_h */

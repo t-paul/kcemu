@@ -1,8 +1,20 @@
-Makefile.in
-Makefile
-nbproject
+# ignore objects and archives
+*.[oa]
+
+# anjuta files
+.anjuta
+.tm_project2.cache
+TODO.tasks
 KCemu.anjuta
 kcemu-Makefile.mk
+
+# netbeans files
+nbproject
+
+KCemu-*.tar.gz
+.deps
+Makefile.in
+Makefile
 intl/Makefile
 asm/autostart/Makefile.in
 asm/autostart/Makefile
@@ -189,6 +201,8 @@ include/kc/stamp-h1
 po/POTFILES
 po/de.mo
 po/de.gmo
+po/en.mo
+po/en.gmo
 po/remove-potcdate.sed
 po/stamp-po
 setup/KCemuSetup.nsi

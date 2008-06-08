@@ -334,7 +334,7 @@ Memory::load_rom(const char *key, void *buf)
       DBG(1, form("KCemu/Memory/load_rom",
                   "Memory::load_rom(): profile has no entry for key '%s'\n",
                   key));
-      romfile = rom->get_filename().c_str();
+      romfile = rom->get_roms().front()->get_filename().c_str();
       DBG(1, form("KCemu/Memory/load_rom",
                   "Memory::load_rom(): using default filename '%s'\n",
                   romfile));

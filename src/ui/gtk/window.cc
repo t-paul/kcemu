@@ -182,6 +182,14 @@ UI_Gtk_Window::get_widget(const char *name)
   return widget;
 }
 
+GtkWidget *
+UI_Gtk_Window::get_widget(const char *name, int nr)
+{
+  char widget_name[80];
+  snprintf(widget_name, sizeof(widget_name), "%s%d", name, nr);
+  return get_widget(widget_name);
+}
+
 GtkCellRenderer *
 UI_Gtk_Window::add_text_renderer(GtkTreeView *treeview, GtkTreeViewColumn *column, const char *title, ...) {
     GtkCellRenderer *renderer = gtk_cell_renderer_text_new();

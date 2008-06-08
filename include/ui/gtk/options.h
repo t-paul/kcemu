@@ -50,9 +50,18 @@ private:
         
         MODULES_N_COLUMNS
     };
+            
+    enum {
+        ROMS_DESCRIPTION_COLUMN,
+        ROMS_FILENAME_COLUMN,
+        ROMS_TYPE_COLUMN,
+        
+        ROMS_N_COLUMNS
+    };
     
     enum {
         NR_OF_MODULES = 8,
+        NR_OF_ROMS = 8,
     };
     
     static const char * FILE_CHOOSER_BUTTON_KEY;
@@ -62,6 +71,7 @@ private:
     static const char * DEFAULT_DIR_KEY;
     static const char * TARGET_WIDGET1_KEY;
     static const char * TARGET_WIDGET2_KEY;
+    static const char * TARGET_WIDGET3_KEY;
     
     // unfortunately the signature of gtk_tree_path_prev and
     // gtk_tree_path_next are different. but as we just need to
@@ -112,6 +122,11 @@ private:
         GtkComboBox    *combobox_module[NR_OF_MODULES];
         GtkCheckButton *check_button_modules;
         
+        GtkLabel         *roms_label[NR_OF_ROMS];
+        GtkComboBoxEntry *roms_comboboxentry[NR_OF_ROMS];
+        GtkButton        *roms_open_button[NR_OF_ROMS];
+        GtkCheckButton   *roms_check_button[NR_OF_ROMS];
+        
         GtkTreeStore *treestore;
         GtkListStore *liststore_system;
         GtkListStore *liststore_modules;
@@ -133,6 +148,7 @@ private:
         gint          on_kc85_swap_roms_changed_id;
         gint          on_kc85_busdrivers_changed_id;
         gint          on_module_changed_id[NR_OF_MODULES];
+        gint          on_rom_changed_id[NR_OF_ROMS];
     } _w;
     
     CMD *_cmd;
@@ -141,6 +157,7 @@ private:
     kc_type_t     _current_kc_type;
     Profile      *_current_profile;
     list<string>  _delete_path;
+    char         *_open_rom_last_path;
 
 protected:
     void init(void);
@@ -161,6 +178,7 @@ protected:
     void apply_kc85_settings(void);
     void apply_display_settings(void);
     void apply_modules_settings(kc_type_t kc_type);
+    void apply_roms_settings(kc_type_t kc_type, kc_variant_t kc_variant);
     void apply_system_variant(kc_type_t kc_type, kc_variant_t kc_variant);
     void apply_filechooserbutton(GtkFileChooser *filechooser);
     void apply_combobox_value(GtkCheckButton *check_button, GtkComboBox *combobox, gint handler_id);
@@ -171,10 +189,12 @@ protected:
     void add_system(GtkTreeStore *store, GtkTreeIter *iter, const char *name, const char *config_name, const char *icon_name);
     void move_row(GtkPathMoveFunc path_func, GtkIterMoveFunc move_func);
     void bind_list_model_column(GtkComboBox *combobox, int column);
+    void set_roms_liststore(int idx, const char *rom_key, SystemROM *rom);
     bool check_button_toggled(GtkToggleButton *togglebutton);
-    void wire_check_button(const char *preferences_key, GtkCheckButton *check_button, GtkWidget *target, GCallback callback);
+    void set_widget_sensitive_by_key(GObject *object, const gchar *key, bool sensitive);
+    void wire_check_button(const char *preferences_key, GtkCheckButton *check_button, GCallback callback, GtkWidget *target1, GtkWidget *target2 = NULL, GtkWidget *target3 = NULL);
     void wire_check_button(const char *preferences_key, const char *default_dir, const char *check_button_name, const char *filechooser_button_name, const char *button_clear_name);
-    
+
     static void on_button_new_clicked(GtkButton *button, gpointer user_data);
     static void on_button_copy_clicked(GtkButton *button, gpointer user_data);
     static void on_button_delete_clicked(GtkButton *button, gpointer user_data);
@@ -209,6 +229,10 @@ protected:
     static void on_kc85_f8_rom_changed(GtkComboBox *combobox, gpointer user_data);
     static void on_kc85_swap_roms_changed(GtkComboBox *combobox, gpointer user_data);
     static void on_kc85_busdrivers_changed(GtkSpinButton *spin_button, gpointer user_data);
+
+    static void on_rom_changed(GtkComboBoxEntry *comboboxentry, gpointer user_data);
+    static void on_rom_open_clicked(GtkButton *button, gpointer user_data);
+    static void on_roms_settings_check_button_toggled(GtkToggleButton *togglebutton, gpointer user_data);
 
     static gboolean tree_model_foreach_func_delete(GtkTreeModel *model, GtkTreePath *path, GtkTreeIter *iter, gpointer user_data);
     

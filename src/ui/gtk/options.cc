@@ -42,6 +42,7 @@
  * DEBUG UI_Gtk Frame Delay
  */
 
+#include <list>
 #include <string>
 
 #include "kc/system.h"
@@ -118,10 +119,12 @@ const char * OptionsWindow::PREFERENCES_KEY = "preferences_key";
 const char * OptionsWindow::DEFAULT_DIR_KEY = "default_dir_key";
 const char * OptionsWindow::TARGET_WIDGET1_KEY = "target_widget1_key";
 const char * OptionsWindow::TARGET_WIDGET2_KEY = "target_widget2_key";
+const char * OptionsWindow::TARGET_WIDGET3_KEY = "target_widget3_key";
 
 OptionsWindow::OptionsWindow(const char *glade_xml_file) : UI_Gtk_Window(glade_xml_file) {
     _current_profile = NULL;
     _current_kc_type = KC_TYPE_NONE;
+    _open_rom_last_path = NULL;
     _w.liststore_modules = NULL;
 
     _cmd = new CMD_options_window_toggle(this);
@@ -347,18 +350,31 @@ OptionsWindow::on_media_filechooser_file_set(GtkFileChooserButton *filechooserbu
     g_free(filename);
 }
 
+void
+OptionsWindow::set_widget_sensitive_by_key(GObject *object, const gchar *key, bool sensitive) {
+    gpointer widget = g_object_get_data(object, key);
+    if (widget == NULL)
+        return;
+    
+    gtk_widget_set_sensitive(GTK_WIDGET(widget), sensitive);
+}
+
 /**
  *  Returns true if the profile value was removed. In this case the display value
  *  need to be applied again to fetch the now valid parent value.
  */
 bool
 OptionsWindow::check_button_toggled(GtkToggleButton *togglebutton) {
-    GtkWidget *target = GTK_WIDGET(g_object_get_data(G_OBJECT(togglebutton), TARGET_WIDGET1_KEY));
-    gtk_widget_set_sensitive(target, togglebutton->active);
+    set_widget_sensitive_by_key(G_OBJECT(togglebutton), TARGET_WIDGET1_KEY, togglebutton->active);
+    set_widget_sensitive_by_key(G_OBJECT(togglebutton), TARGET_WIDGET2_KEY, togglebutton->active);
+    set_widget_sensitive_by_key(G_OBJECT(togglebutton), TARGET_WIDGET3_KEY, togglebutton->active);
     
     const char * key = (const char *)g_object_get_data(G_OBJECT(togglebutton), PREFERENCES_KEY);
     if (togglebutton->active) {
-        _current_profile->set_int_value(key, _current_profile->get_int_value(key, 0));
+        ProfileValue *value = _current_profile->get_value(key);
+        if (value != NULL)
+          _current_profile->set_value(key, new ProfileValue(value));
+        //_current_profile->set_int_value(key, _current_profile->get_int_value(key, 0));
     } else {
         _current_profile->remove_value(key);
     }
@@ -453,6 +469,7 @@ OptionsWindow::on_system_type_changed(GtkComboBox *combobox, gpointer user_data)
     self->_current_profile->set_int_value("system", kc_type);
     self->apply_system_variant((kc_type_t)kc_type, KC_VARIANT_NONE);
     self->apply_modules_settings((kc_type_t)kc_type);
+    self->apply_roms_settings((kc_type_t)kc_type, KC_VARIANT_NONE);
 }
 
 void
@@ -483,6 +500,7 @@ OptionsWindow::on_system_variant_changed(GtkComboBox *combobox, gpointer user_da
     gtk_tree_model_get(model, &iter, 1, &kc_variant, -1);
     
     self->_current_profile->set_int_value("variant", kc_variant);
+    self->apply_roms_settings(self->_current_kc_type, (kc_variant_t)kc_variant);
 }
 
 void
@@ -558,6 +576,63 @@ OptionsWindow::on_kc85_busdrivers_changed(GtkSpinButton *spin_button, gpointer u
     OptionsWindow *self = (OptionsWindow *)user_data;
     int busdrivers = gtk_spin_button_get_value_as_int(spin_button);
     self->_current_profile->set_int_value("busdrivers", busdrivers);
+}
+
+void
+OptionsWindow::on_roms_settings_check_button_toggled(GtkToggleButton *togglebutton, gpointer user_data) {
+    OptionsWindow *self = (OptionsWindow *)user_data;
+    if (self->check_button_toggled(togglebutton))
+        self->apply_system_type();
+}
+
+void
+OptionsWindow::on_rom_changed(GtkComboBoxEntry *comboboxentry, gpointer user_data) {
+    OptionsWindow *self = (OptionsWindow *)user_data;
+    
+    GtkTreeIter iter;
+    if (!gtk_combo_box_get_active_iter(GTK_COMBO_BOX(comboboxentry), &iter))
+        return;
+
+    gchar *rom;
+    GtkTreeModel *model = gtk_combo_box_get_model(GTK_COMBO_BOX(comboboxentry));
+    gtk_tree_model_get(model, &iter, 1, &rom, -1);
+    
+    const char *key = self->get_preferences_key(GTK_CHECK_BUTTON(g_object_get_data(G_OBJECT(comboboxentry), DATA_KEY_CHECK_BUTTON)));
+    self->_current_profile->set_string_value(key, rom);
+
+    self->apply_system_type(); // let apply_roms_settings change the tooltip text for the combobox!
+}
+
+void
+OptionsWindow::on_rom_open_clicked(GtkButton *button, gpointer user_data) {
+  OptionsWindow *self = (OptionsWindow *)user_data;
+
+  GtkWidget *filechooser = gtk_file_chooser_dialog_new(_("Open ROM Image..."),
+                                                       GTK_WINDOW(self->_window),
+                                                       GTK_FILE_CHOOSER_ACTION_OPEN,
+                                                       GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
+                                                       GTK_STOCK_OPEN, GTK_RESPONSE_ACCEPT,
+                                                       NULL);
+
+  if (self->_open_rom_last_path == NULL)
+      self->_open_rom_last_path = sys_gethome();
+
+  gtk_file_chooser_set_current_folder(GTK_FILE_CHOOSER(filechooser), self->_open_rom_last_path);
+  free(self->_open_rom_last_path);
+
+  const char *key = self->get_preferences_key(GTK_CHECK_BUTTON(g_object_get_data(G_OBJECT(button), DATA_KEY_CHECK_BUTTON)));
+  if (gtk_dialog_run(GTK_DIALOG(filechooser)) == GTK_RESPONSE_ACCEPT)
+    {
+      char *filename = gtk_file_chooser_get_filename(GTK_FILE_CHOOSER(filechooser));
+      self->_current_profile->set_string_value(key, filename);
+      g_free(filename);
+    }
+    
+  self->_open_rom_last_path = gtk_file_chooser_get_current_folder(GTK_FILE_CHOOSER(filechooser));
+
+  gtk_widget_destroy(filechooser);
+
+  self->apply_system_type(); // let apply_roms_settings add the filename from profile to combobox model!
 }
 
 GtkTreeModel *
@@ -678,6 +753,7 @@ OptionsWindow::apply_system_type(void) {
         if (system->get_int_value() == kc_type) {
             gtk_combo_box_set_active_iter(_w.combobox_system_type, &iter);
             apply_system_variant((kc_type_t)kc_type, variant == NULL ? KC_VARIANT_NONE : (kc_variant_t)variant->get_int_value());
+            apply_roms_settings((kc_type_t)kc_type, variant == NULL ? KC_VARIANT_NONE : (kc_variant_t)variant->get_int_value());
             apply_modules_settings((kc_type_t)kc_type);
             break;
         }
@@ -686,10 +762,109 @@ OptionsWindow::apply_system_type(void) {
     if (!valid) {
         gtk_combo_box_set_active(_w.combobox_system_type, -1);
         apply_system_variant(KC_TYPE_NONE, KC_VARIANT_NONE);
+        apply_roms_settings(KC_TYPE_NONE, KC_VARIANT_NONE);
         apply_modules_settings(KC_TYPE_NONE);
     }
 
     g_signal_handler_unblock(_w.combobox_system_type, _w.on_system_type_changed_id);
+}
+
+void
+OptionsWindow::set_roms_liststore(int idx, const char *rom_key, SystemROM *rom) {
+    ProfileValue *profile_value = get_current_profile_value(rom_key);
+    const char *profile_rom_filename = (profile_value == NULL) ? NULL : profile_value->get_string_value();
+
+    GtkListStore *store = GTK_LIST_STORE(gtk_combo_box_get_model(GTK_COMBO_BOX(_w.roms_comboboxentry[idx])));
+    gtk_list_store_clear(store);
+
+    int active = -1;
+    int list_entry = 0;
+    ROMEntry *active_entry = NULL;
+    const rom_entry_list_t roms = rom->get_roms();
+    for (rom_entry_list_t::const_iterator it2 = roms.begin();it2 != roms.end();it2++) {
+        ROMEntry *entry = (*it2);
+        GtkTreeIter iter;
+        gtk_list_store_append(store, &iter);
+        gtk_list_store_set(store, &iter,
+                           ROMS_DESCRIPTION_COLUMN, entry->get_description().c_str(),
+                           ROMS_FILENAME_COLUMN, entry->get_filename().c_str(),
+                           ROMS_TYPE_COLUMN, 1,
+                           -1);
+        
+        if ((profile_rom_filename != NULL) && (entry->get_filename().compare(profile_rom_filename) == 0)) {
+            active = list_entry;
+            active_entry = entry;
+        }
+        list_entry++;
+    }
+    
+    if ((active < 0) && (profile_rom_filename != NULL)) {
+        GtkTreeIter iter;
+        gtk_list_store_append(store, &iter);
+        gtk_list_store_set(store, &iter,
+                           ROMS_DESCRIPTION_COLUMN, sys_basename(profile_rom_filename),
+                           ROMS_FILENAME_COLUMN, profile_rom_filename,
+                           ROMS_TYPE_COLUMN, 2,
+                           -1);
+        active = list_entry;
+    }
+    
+    if (active < 0) {
+        active = 0;
+        active_entry = *roms.begin();
+    }
+    
+    char tooltip[128];
+    snprintf(tooltip, sizeof(tooltip), _("ROM image is '%s'. The ROM size needs to be %04xh (%d) bytes."),
+             active_entry != NULL ? active_entry->get_filename().c_str() : profile_rom_filename,
+             rom->get_size(),
+             rom->get_size());
+    gtk_widget_set_tooltip_text(GTK_WIDGET(_w.roms_comboboxentry[idx]), tooltip);
+
+    g_signal_handler_block(_w.roms_comboboxentry[idx], _w.on_rom_changed_id[idx]);
+    gtk_combo_box_set_model(GTK_COMBO_BOX(_w.roms_comboboxentry[idx]), GTK_TREE_MODEL(store));
+    gtk_combo_box_set_active(GTK_COMBO_BOX(_w.roms_comboboxentry[idx]), active);
+    g_signal_handler_unblock(_w.roms_comboboxentry[idx], _w.on_rom_changed_id[idx]);
+}
+
+void
+OptionsWindow::apply_roms_settings(kc_type_t kc_type, kc_variant_t kc_variant) {
+    const SystemType *type = SystemInformation::instance()->get_system_type(kc_type, kc_variant);
+    if (type == NULL)
+      return;
+
+    system_rom_list_t rom_list = type->get_rom_list();
+    int idx = 0;
+    for (system_rom_list_t::const_iterator it = rom_list.begin();(it != rom_list.end()) && (idx < NR_OF_ROMS);it++) {
+        SystemROM *rom = (*it);
+        const char *rom_key = rom->get_name().c_str();
+        
+        set_roms_liststore(idx, rom_key, rom);
+        
+        string text = string(gettext(rom_key)) + ":";
+        gtk_label_set_text(_w.roms_label[idx], text.c_str());
+
+        gpointer val = g_object_get_data(G_OBJECT(_w.roms_check_button[idx]), PREFERENCES_KEY);
+        g_object_set_data(G_OBJECT(_w.roms_check_button[idx]), PREFERENCES_KEY, strdup(rom_key));
+        free(val);
+
+        gtk_widget_show(GTK_WIDGET(_w.roms_label[idx]));
+        gtk_widget_show(GTK_WIDGET(_w.roms_comboboxentry[idx]));
+        gtk_widget_show(GTK_WIDGET(_w.roms_open_button[idx]));
+        gtk_widget_show(GTK_WIDGET(_w.roms_check_button[idx]));
+
+        gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(_w.roms_check_button[idx]), _current_profile->contains_key(rom_key));
+        gtk_widget_set_sensitive(GTK_WIDGET(_w.roms_check_button[idx]), _current_profile->get_level() != PROFILE_LEVEL_DEFAULT);
+
+        idx++;
+    }
+    
+    for (;idx < NR_OF_ROMS;idx++) {
+        gtk_widget_hide(GTK_WIDGET(_w.roms_label[idx]));
+        gtk_widget_hide(GTK_WIDGET(_w.roms_comboboxentry[idx]));
+        gtk_widget_hide(GTK_WIDGET(_w.roms_open_button[idx]));
+        gtk_widget_hide(GTK_WIDGET(_w.roms_check_button[idx]));
+    }
 }
 
 void
@@ -971,9 +1146,20 @@ OptionsWindow::wire_check_button(const char *preferences_key, const char *defaul
 }
 
 void
-OptionsWindow::wire_check_button(const char *preferences_key, GtkCheckButton *check_button, GtkWidget *target, GCallback callback) {
-    g_object_set_data(G_OBJECT(check_button), TARGET_WIDGET1_KEY, target);
+OptionsWindow::wire_check_button(const char *preferences_key, GtkCheckButton *check_button, GCallback callback, GtkWidget *target1, GtkWidget *target2, GtkWidget *target3) {
     g_object_set_data(G_OBJECT(check_button), PREFERENCES_KEY, strdup(preferences_key));
+    g_object_set_data(G_OBJECT(check_button), TARGET_WIDGET1_KEY, target1);
+    g_object_set_data(G_OBJECT(target1), DATA_KEY_CHECK_BUTTON, check_button);
+
+    if (target2 != NULL) {
+        g_object_set_data(G_OBJECT(check_button), TARGET_WIDGET2_KEY, target2);
+        g_object_set_data(G_OBJECT(target2), DATA_KEY_CHECK_BUTTON, check_button);
+    }
+    if (target3 != NULL) {
+        g_object_set_data(G_OBJECT(check_button), TARGET_WIDGET3_KEY, target3);
+        g_object_set_data(G_OBJECT(target3), DATA_KEY_CHECK_BUTTON, check_button);
+    }
+
     g_signal_connect(check_button, "toggled", callback, this);
 }
 
@@ -1057,10 +1243,10 @@ OptionsWindow::init(void) {
     _w.combobox_display_effects = GTK_COMBO_BOX(get_widget("display_combobox_effects"));
     _w.combobox_display_mem_access = GTK_COMBO_BOX(get_widget("display_combobox_mem_access"));
     _w.combobox_display_debug = GTK_COMBO_BOX(get_widget("display_combobox_debug"));
-    wire_check_button("display_scale",      _w.check_button_display_scale,      GTK_WIDGET(_w.spin_button_display_scale), G_CALLBACK(on_display_check_button_toggled));
-    wire_check_button("display_effects",    _w.check_button_display_effects,    GTK_WIDGET(_w.combobox_display_effects), G_CALLBACK(on_display_check_button_toggled));
-    wire_check_button("display_mem_access", _w.check_button_display_mem_access, GTK_WIDGET(_w.combobox_display_mem_access), G_CALLBACK(on_display_check_button_toggled));
-    wire_check_button("display_debug",      _w.check_button_display_debug,      GTK_WIDGET(_w.combobox_display_debug), G_CALLBACK(on_display_check_button_toggled));
+    wire_check_button("display_scale",      _w.check_button_display_scale, G_CALLBACK(on_display_check_button_toggled),      GTK_WIDGET(_w.spin_button_display_scale));
+    wire_check_button("display_effects",    _w.check_button_display_effects, G_CALLBACK(on_display_check_button_toggled),    GTK_WIDGET(_w.combobox_display_effects));
+    wire_check_button("display_mem_access", _w.check_button_display_mem_access, G_CALLBACK(on_display_check_button_toggled), GTK_WIDGET(_w.combobox_display_mem_access));
+    wire_check_button("display_debug",      _w.check_button_display_debug, G_CALLBACK(on_display_check_button_toggled),      GTK_WIDGET(_w.combobox_display_debug));
     _w.on_display_scale_value_changed_id = g_signal_connect(_w.spin_button_display_scale, "value-changed", G_CALLBACK(on_display_scale_value_changed), this);
     _w.on_display_effects_changed_id = g_signal_connect(_w.combobox_display_effects, "changed", G_CALLBACK(on_display_effects_changed), this);
     _w.on_display_mem_access_changed_id = g_signal_connect(_w.combobox_display_mem_access, "changed", G_CALLBACK(on_display_mem_access_changed), this);
@@ -1074,31 +1260,23 @@ OptionsWindow::init(void) {
     _w.combobox_f8_rom = GTK_COMBO_BOX(get_widget("kc85_combobox_f8_rom"));
     _w.combobox_swap_roms = GTK_COMBO_BOX(get_widget("kc85_combobox_swap_roms"));
     _w.spin_button_busdrivers = GTK_SPIN_BUTTON(get_widget("kc85_spinbutton_busdrivers"));
-    wire_check_button("d004", _w.check_button_d004, GTK_WIDGET(_w.combobox_d004), G_CALLBACK(on_kc85_settings_check_button_toggled));
-    wire_check_button("d004_f8", _w.check_button_f8_rom, GTK_WIDGET(_w.combobox_f8_rom), G_CALLBACK(on_kc85_settings_check_button_toggled));
-    wire_check_button("d004_swap_roms", _w.check_button_swap_roms, GTK_WIDGET(_w.combobox_swap_roms), G_CALLBACK(on_kc85_settings_check_button_toggled));
-    wire_check_button("busdrivers", _w.check_button_busdrivers, GTK_WIDGET(_w.spin_button_busdrivers), G_CALLBACK(on_kc85_settings_check_button_toggled));
+    wire_check_button("d004", _w.check_button_d004, G_CALLBACK(on_kc85_settings_check_button_toggled), GTK_WIDGET(_w.combobox_d004));
+    wire_check_button("d004_f8", _w.check_button_f8_rom, G_CALLBACK(on_kc85_settings_check_button_toggled), GTK_WIDGET(_w.combobox_f8_rom));
+    wire_check_button("d004_swap_roms", _w.check_button_swap_roms, G_CALLBACK(on_kc85_settings_check_button_toggled), GTK_WIDGET(_w.combobox_swap_roms));
+    wire_check_button("busdrivers", _w.check_button_busdrivers, G_CALLBACK(on_kc85_settings_check_button_toggled), GTK_WIDGET(_w.spin_button_busdrivers));
 
     _w.on_kc85_d004_changed_id = g_signal_connect(_w.combobox_d004, "changed", G_CALLBACK(on_kc85_d004_changed), this);
     _w.on_kc85_f8_rom_changed_id = g_signal_connect(_w.combobox_f8_rom, "changed", G_CALLBACK(on_kc85_f8_rom_changed), this);
     _w.on_kc85_swap_roms_changed_id = g_signal_connect(_w.combobox_swap_roms, "changed", G_CALLBACK(on_kc85_swap_roms_changed), this);
     _w.on_kc85_busdrivers_changed_id = g_signal_connect(_w.spin_button_busdrivers, "value-changed", G_CALLBACK(on_kc85_busdrivers_changed), this);
     
-    _w.combobox_module[0] = GTK_COMBO_BOX(get_widget("modules_combobox_module1"));
-    _w.combobox_module[1] = GTK_COMBO_BOX(get_widget("modules_combobox_module2"));
-    _w.combobox_module[2] = GTK_COMBO_BOX(get_widget("modules_combobox_module3"));
-    _w.combobox_module[3] = GTK_COMBO_BOX(get_widget("modules_combobox_module4"));
-    _w.combobox_module[4] = GTK_COMBO_BOX(get_widget("modules_combobox_module5"));
-    _w.combobox_module[5] = GTK_COMBO_BOX(get_widget("modules_combobox_module6"));
-    _w.combobox_module[6] = GTK_COMBO_BOX(get_widget("modules_combobox_module7"));
-    _w.combobox_module[7] = GTK_COMBO_BOX(get_widget("modules_combobox_module8"));
+    for (int a = 0;a < NR_OF_MODULES;a++) {
+        _w.combobox_module[a] = GTK_COMBO_BOX(get_widget("modules_combobox_module", a + 1));
+        _w.on_module_changed_id[a] = g_signal_connect(_w.combobox_module[a], "changed", G_CALLBACK(on_module_changed), this);
+        bind_list_model_column(_w.combobox_module[a], MODULES_NAME_COLUMN);
+    }
     _w.check_button_modules = GTK_CHECK_BUTTON(get_widget("modules_check_button"));
     g_signal_connect(_w.check_button_modules, "toggled", G_CALLBACK(on_modules_check_button_toggled), this);
-    
-    for (int a = 0;a < NR_OF_MODULES;a++) {
-        bind_list_model_column(_w.combobox_module[a], MODULES_NAME_COLUMN);
-        _w.on_module_changed_id[a] = g_signal_connect(_w.combobox_module[a], "changed", G_CALLBACK(on_module_changed), this);
-    }
     
     _w.liststore_system = get_system_list_model();
     _w.combobox_system_type = GTK_COMBO_BOX(get_widget("system_combobox_system_type"));
@@ -1114,6 +1292,26 @@ OptionsWindow::init(void) {
     _w.check_button_system_variant = GTK_CHECK_BUTTON(get_widget("system_check_button_system_variant"));
     g_signal_connect(_w.check_button_system_variant, "toggled", G_CALLBACK(on_system_variant_check_button_toggled), this);
 
+    for (int a = 0;a < NR_OF_ROMS;a++) {
+        _w.roms_label[a] = GTK_LABEL(get_widget("roms_label_rom", a + 1));
+        _w.roms_comboboxentry[a] = GTK_COMBO_BOX_ENTRY(get_widget("roms_comboboxentry_rom", a + 1));
+        _w.roms_open_button[a] = GTK_BUTTON(get_widget("roms_open_button_rom", a + 1));
+        _w.roms_check_button[a] = GTK_CHECK_BUTTON(get_widget("roms_check_button_rom", a + 1));
+        wire_check_button("rom_dummy",
+                      _w.roms_check_button[a],
+                      G_CALLBACK(on_roms_settings_check_button_toggled),
+                      GTK_WIDGET(_w.roms_comboboxentry[a]),
+                      GTK_WIDGET(_w.roms_open_button[a]));
+
+        g_signal_connect(_w.roms_open_button[a], "clicked", G_CALLBACK(on_rom_open_clicked), this);
+        _w.on_rom_changed_id[a] = g_signal_connect(_w.roms_comboboxentry[a], "changed", G_CALLBACK(on_rom_changed), this);
+
+        GtkListStore *store = gtk_list_store_new(ROMS_N_COLUMNS, G_TYPE_STRING, G_TYPE_STRING, G_TYPE_INT);
+        gtk_combo_box_set_model(GTK_COMBO_BOX(_w.roms_comboboxentry[a]), GTK_TREE_MODEL(store));
+        gtk_combo_box_entry_set_text_column(_w.roms_comboboxentry[a], 0);
+        g_object_unref(store);
+    }
+    
     collapse_tree();
     
     init_dialog(NULL, NULL);

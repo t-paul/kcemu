@@ -61,7 +61,7 @@ dnl -------------------
 dnl  configure gettext
 dnl -------------------
 
-ALL_LINGUAS="de"
+ALL_LINGUAS="en de"
 AM_PO_SUBDIRS
 AM_GNU_GETTEXT([no-libtool])
 if test "x$USE_INCLUDED_LIBINTL" = "xyes"; then

@@ -1,124 +1,126 @@
-# SOME DESCRIPTIVE TITLE.
-# Copyright (C) YEAR Torsten Paul
+# English translations for PACKAGE package.
+# Copyright (C) 2008 Torsten Paul
 # This file is distributed under the same license as the PACKAGE package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+# Torsten Paul <Torsten.Paul@gmx.de>, 2008.
 #
-#, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: PACKAGE VERSION\n"
+"Project-Id-Version: KCemu 0.4\n"
 "Report-Msgid-Bugs-To: Torsten.Paul@gmx.de\n"
 "POT-Creation-Date: 2008-05-12 01:29+0200\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: LANGUAGE <LL@li.org>\n"
+"PO-Revision-Date: 2008-05-12 00:33+0100\n"
+"Last-Translator: Torsten Paul <Torsten.Paul@gmx.de>\n"
+"Language-Team: English <Torsten.Paul@gmx.de>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Poedit-Language: English\n"
+"X-Poedit-Country: GERMANY\n"
 
 #: images/about.glade:6
 msgid "KCemu: About"
-msgstr ""
+msgstr "KCemu: About"
 
 #: images/about.glade:24
 msgid "About"
-msgstr ""
+msgstr "About"
 
 #: images/about.glade:63
 msgid "<big><b>[ Version ]</b></big>"
-msgstr ""
+msgstr "<big><b>[ Version ]</b></big>"
 
 #: images/about.glade:77
 msgid "(c) 1997-2008 Torsten Paul"
-msgstr ""
+msgstr "(c) 1997-2008 Torsten Paul"
 
 #: images/about.glade:90
 msgid "<Torsten.Paul@gmx.de>"
-msgstr ""
+msgstr "<Torsten.Paul@gmx.de>"
 
 #: images/about.glade:103
 msgid "<b>http://kcemu.sourceforge.net/</b>"
-msgstr ""
+msgstr "<b>http://kcemu.sourceforge.net/</b>"
 
 #: images/about.glade:119
 msgid "[ Build ]"
-msgstr ""
+msgstr "[ Build ]"
 
 #: images/audio.glade:6
 msgid "KCemu: Audio"
-msgstr ""
+msgstr "KCemu: Audio"
 
 #: images/audio.glade:23
 msgid "Audio"
-msgstr ""
+msgstr "Audio"
 
 #: images/dialog.glade:6
 msgid "KCemu"
-msgstr ""
+msgstr "KCemu"
 
 #: images/dialog.glade:26
 msgid "[ Title ]"
-msgstr ""
+msgstr "[ Title ]"
 
 #: images/dialog.glade:114 images/tapeedit.glade:123 images/selector.glade:170
 msgid "gtk-cancel"
-msgstr ""
+msgstr "gtk-cancel"
 
 #: images/disk.glade:6
 msgid "KCemu: Disk"
-msgstr ""
+msgstr "KCemu: Disk"
 
 #: images/disk.glade:24
 msgid "Disk"
-msgstr ""
+msgstr "Disk"
 
 #: images/disk.glade:316 images/options.glade:1721
 msgid "Disk 4:"
-msgstr ""
+msgstr "Disk 4:"
 
 #: images/disk.glade:330 images/options.glade:1707
 msgid "Disk 3:"
-msgstr ""
+msgstr "Disk 3:"
 
 #: images/disk.glade:344 images/options.glade:1693
 msgid "Disk 2:"
-msgstr ""
+msgstr "Disk 2:"
 
 #: images/disk.glade:358 images/options.glade:1679
 msgid "Disk 1:"
-msgstr ""
+msgstr "Disk 1:"
 
 #: images/help.glade:6
 msgid "KCemu: Help"
-msgstr ""
+msgstr "KCemu: Help"
 
 #: images/help.glade:25
 msgid "Help"
-msgstr ""
+msgstr "Help"
 
 #: images/module.glade:6
 msgid "KCemu: Module"
-msgstr ""
+msgstr "KCemu: Module"
 
 #: images/module.glade:22
 msgid "Module"
-msgstr ""
+msgstr "Module"
 
 #: images/tape.glade:6
 msgid "KCemu: Tape"
-msgstr ""
+msgstr "KCemu: Tape"
 
 #: images/tape.glade:23
 msgid "Tape"
-msgstr ""
+msgstr "Tape"
 
 #: images/thanks.glade:6
 msgid "KCemu: Thanks"
-msgstr ""
+msgstr "KCemu: Thanks"
 
 #: images/thanks.glade:24
 msgid "Thanks"
-msgstr ""
+msgstr "Thanks"
 
 #: images/thanks.glade:75
 msgid ""
@@ -126,6 +128,9 @@ msgid ""
 "where it is now. The following list just lists some of them in no particular "
 "order..."
 msgstr ""
+"I'd like to say thanks to many people who helped to bring KCemu to the point "
+"where it is now. The following list just lists some of them in no particular "
+"order..."
 
 #: images/thanks.glade:99
 msgid ""
@@ -156,116 +161,144 @@ msgid ""
 "        a huge pile of files for use with the emulator or with\n"
 "        information about the various systems"
 msgstr ""
+"Marat Fayzullin\n"
+"        for the Z80 emulation core used for the main processor\n"
+"        (I needed to tweak some bits of the emulation core; see\n"
+"        src/z80core/README for the list of changes)\n"
+"Marcel de Kogel\n"
+"        for the Z80 emulation core used for the KC floppy\n"
+"        processor\n"
+"Thomas Bretz\n"
+"        for the OS/2 port of KCemu (see http://www.d4m.de/)\n"
+"Thomas Ludwig\n"
+"        for the great KC website at http://www.kc85emu.de/ and\n"
+"        lots of bugreports and hints how to make KCemu better\n"
+"Holger Krull\n"
+"        for providing lots of information about the LC 80\n"
+"        computer (see http://www.lc80.de/)\n"
+"Kev Thacker\n"
+"        for interesting insights concerning the floppy emulation\n"
+"        (he's also the author of the KC driver for M.E.S.S. the\n"
+"        Multi-Emulator Super System, see http://mess.emuverse.com/)\n"
+"Volker Pohlers\n"
+"        for help with the windows port, technical information and\n"
+"        bugreports\n"
+"Alexander Schön\n"
+"        for starting the windows port, lots of tips and for providing\n"
+"        a huge pile of files for use with the emulator or with\n"
+"        information about the various systems"
 
 #: images/thanks.glade:137
 msgid "People"
-msgstr ""
+msgstr "People"
 
 #: images/thanks.glade:154
 msgid ""
 "Lots of tools and libraries made it easier to write KCemu. Many thanks to "
 "the people behind all those projects for their work..."
 msgstr ""
+"Lots of tools and libraries made it easier to write KCemu. Many thanks to "
+"the people behind all those projects for their work..."
 
 #: images/thanks.glade:184
 msgid "http://www.mega-nerd.com/libsndfile/\n"
-msgstr ""
+msgstr "http://www.mega-nerd.com/libsndfile/\n"
 
 #: images/thanks.glade:202
 msgid "libsndfile"
-msgstr ""
+msgstr "libsndfile"
 
 #: images/thanks.glade:230
 msgid "http://www.vorbis.com/\n"
-msgstr ""
+msgstr "http://www.vorbis.com/\n"
 
 #: images/thanks.glade:248
 msgid "Ogg & Vorbis libraries"
-msgstr ""
+msgstr "Ogg & Vorbis libraries"
 
 #: images/thanks.glade:289
 msgid "http://openclipart.org/\n"
-msgstr ""
+msgstr "http://openclipart.org/\n"
 
 #: images/thanks.glade:307
 msgid "Open Clip Art Library"
-msgstr ""
+msgstr "Open Clip Art Library"
 
 #: images/thanks.glade:337
 msgid "http://lame.sourceforge.net/\n"
-msgstr ""
+msgstr "http://lame.sourceforge.net/\n"
 
 #: images/thanks.glade:355
 msgid "LAME - LAME Ain't an MP3 Encoder"
-msgstr ""
+msgstr "LAME - LAME Ain't an MP3 Encoder"
 
 #: images/thanks.glade:372
 msgid "http://www.gtk.org/\n"
-msgstr ""
+msgstr "http://www.gtk.org/\n"
 
 #: images/thanks.glade:390
 msgid "http://flac.sourceforge.net/\n"
-msgstr ""
+msgstr "http://flac.sourceforge.net/\n"
 
 #: images/thanks.glade:408
 msgid "FLAC - Free Lossless Audio Codec"
-msgstr ""
+msgstr "FLAC - Free Lossless Audio Codec"
 
 #: images/thanks.glade:425
 msgid "http://www.libsdl.org/\n"
-msgstr ""
+msgstr "http://www.libsdl.org/\n"
 
 #: images/thanks.glade:443
 msgid "GTK+ - The GIMP Toolkit"
-msgstr ""
+msgstr "GTK+ - The GIMP Toolkit"
 
 #: images/thanks.glade:496
 msgid "libSDL - Simple DirectMedia Layer"
-msgstr ""
+msgstr "libSDL - Simple DirectMedia Layer"
 
 #: images/thanks.glade:525
 msgid "Projects & Libraries"
-msgstr ""
+msgstr "Projects & Libraries"
 
 #: images/color.glade:8
 msgid "KCemu: Color Configuration"
-msgstr ""
+msgstr "KCemu: Color Configuration"
 
 #: images/color.glade:28
 msgid "Colors"
-msgstr ""
+msgstr "Colors"
 
 #: images/color.glade:95 images/color.glade:196
 msgid "Saturation"
-msgstr ""
+msgstr "Saturation"
 
 #: images/color.glade:128 images/color.glade:229
 msgid "Brightness"
-msgstr ""
+msgstr "Brightness"
 
 #: images/color.glade:148
 msgid "Foreground"
-msgstr ""
+msgstr "Foreground"
 
 #: images/color.glade:249
 msgid "Background"
-msgstr ""
+msgstr "Background"
 
 #: images/color.glade:290
 msgid "Black Level"
-msgstr ""
+msgstr "Black Level"
 
 #: images/color.glade:323
 msgid "White Level"
-msgstr ""
+msgstr "White Level"
 
 #: images/tapeedit.glade:7 src/ui/gtk/tapeadd.cc:95
 msgid "KCemu: Rename File"
-msgstr ""
+msgstr "KCemu: Rename File"
 
 #: images/tapeedit.glade:26
 msgid "Edit Tape"
-msgstr ""
+msgstr "Edit Tape"
 
 #: images/tapeedit.glade:57
 msgid ""
@@ -273,67 +306,70 @@ msgid ""
 "\n"
 "[ more text ... ]"
 msgstr ""
+"[ Text ]\n"
+"\n"
+"[ more text ... ]"
 
 #: images/tapeedit.glade:74
 msgid "Tape name:"
-msgstr ""
+msgstr "Tape name:"
 
 #: images/tapeedit.glade:139 images/options.glade:2583
 #: images/selector.glade:184
 msgid "gtk-ok"
-msgstr ""
+msgstr "gtk-ok"
 
 #: images/keyboard.glade:26
 msgid "Keyboard"
-msgstr ""
+msgstr "Keyboard"
 
 #: images/keyboard.glade:78
 msgid "Sorry, keyboard display not configured."
-msgstr ""
+msgstr "Sorry, keyboard display not configured."
 
 #: images/options.glade:9
 msgid "KCemu: Profiles"
-msgstr ""
+msgstr "KCemu: Profiles"
 
 #: images/options.glade:31
 msgid "Profiles"
-msgstr ""
+msgstr "Profiles"
 
 #: images/options.glade:77
 msgid "Create new profile..."
-msgstr ""
+msgstr "Create new profile..."
 
 #: images/options.glade:100
 msgid "Copy selected profile..."
-msgstr ""
+msgstr "Copy selected profile..."
 
 #: images/options.glade:164
 msgid "Expand user profile level..."
-msgstr ""
+msgstr "Expand user profile level..."
 
 #: images/options.glade:185
 msgid "Collapse user profile level..."
-msgstr ""
+msgstr "Collapse user profile level..."
 
 #: images/options.glade:350
 msgid "Profile Name:"
-msgstr ""
+msgstr "Profile Name:"
 
 #: images/options.glade:362
 msgid "System:"
-msgstr ""
+msgstr "System:"
 
 #: images/options.glade:404
 msgid "Variant:"
-msgstr ""
+msgstr "Variant:"
 
 #: images/options.glade:420
 msgid "Comment:"
-msgstr ""
+msgstr "Comment:"
 
 #: images/options.glade:465
 msgid "System"
-msgstr ""
+msgstr "System"
 
 #: images/options.glade:499
 msgid ""
@@ -341,6 +377,9 @@ msgid ""
 "emulation of the display dissortion when the screen memory is accessed by "
 "the CPU."
 msgstr ""
+"This setting is only used when emulating a KC 85/3 where it enables the "
+"emulation of the display dissortion when the screen memory is accessed by "
+"the CPU."
 
 #: images/options.glade:500 images/options.glade:520 images/options.glade:660
 #: images/options.glade:2323 images/options.glade:2375
@@ -349,6 +388,8 @@ msgid ""
 "No\n"
 "Yes"
 msgstr ""
+"No\n"
+"Yes"
 
 #: images/options.glade:517
 msgid ""
@@ -357,26 +398,30 @@ msgid ""
 "When enabled a scan-line effect will be used for scale factor of 2 and a "
 "smoothing effect for scale factor 3."
 msgstr ""
+"Enable / Disable display effects for scale factors above 1.\n"
+"\n"
+"When enabled a scan-line effect will be used for scale factor of 2 and a "
+"smoothing effect for scale factor 3."
 
 #: images/options.glade:538
 msgid "Scaling factor for the emulation window. Allowed values are 1 to 3."
-msgstr ""
+msgstr "Scaling factor for the emulation window. Allowed values are 1 to 3."
 
 #: images/options.glade:603
 msgid "Display IRM Access:"
-msgstr ""
+msgstr "Display IRM Access:"
 
 #: images/options.glade:617
 msgid "Display Effects:"
-msgstr ""
+msgstr "Display Effects:"
 
 #: images/options.glade:631
 msgid "Display Scale:"
-msgstr ""
+msgstr "Display Scale:"
 
 #: images/options.glade:643
 msgid "Display Debug:"
-msgstr ""
+msgstr "Display Debug:"
 
 #: images/options.glade:657
 msgid ""
@@ -385,90 +430,94 @@ msgid ""
 "When enabled the display cache behaviour will be graphically visualized. "
 "This setting is effective only if the display scale is set to 1."
 msgstr ""
+"Enable / Disable display debug code.\n"
+"\n"
+"When enabled the display cache behaviour will be graphically visualized. "
+"This setting is effective only if the display scale is set to 1."
 
 #: images/options.glade:715
 msgid "Display"
-msgstr ""
+msgstr "Display"
 
 #: images/options.glade:1319
 msgid "ROMs"
-msgstr ""
+msgstr "ROMs"
 
 #: images/options.glade:1366
 msgid "Override modules in this profile"
-msgstr ""
+msgstr "Override modules in this profile"
 
 #: images/options.glade:1414
 msgid "Module 8:"
-msgstr ""
+msgstr "Module 8:"
 
 #: images/options.glade:1428
 msgid "Module 7:"
-msgstr ""
+msgstr "Module 7:"
 
 #: images/options.glade:1442
 msgid "Module 1:"
-msgstr ""
+msgstr "Module 1:"
 
 #: images/options.glade:1454
 msgid "Module 2:"
-msgstr ""
+msgstr "Module 2:"
 
 #: images/options.glade:1468
 msgid "Module 3:"
-msgstr ""
+msgstr "Module 3:"
 
 #: images/options.glade:1482
 msgid "Module 4:"
-msgstr ""
+msgstr "Module 4:"
 
 #: images/options.glade:1496
 msgid "Module 5:"
-msgstr ""
+msgstr "Module 5:"
 
 #: images/options.glade:1510
 msgid "Module 6:"
-msgstr ""
+msgstr "Module 6:"
 
 #: images/options.glade:1619
 msgid "Modules"
-msgstr ""
+msgstr "Modules"
 
 #: images/options.glade:1654
 msgid "Tape:"
-msgstr ""
+msgstr "Tape:"
 
 #: images/options.glade:1791
 msgid "Audio:"
-msgstr ""
+msgstr "Audio:"
 
 #: images/options.glade:1820
 msgid "Hard Disk 1:"
-msgstr ""
+msgstr "Hard Disk 1:"
 
 #: images/options.glade:1834
 msgid "Hard Disk 2:"
-msgstr ""
+msgstr "Hard Disk 2:"
 
 #: images/options.glade:2257
 msgid "Media"
-msgstr ""
+msgstr "Media"
 
 #: images/options.glade:2293
 msgid "<b>Special settings for KC 85/2..5</b>"
-msgstr ""
+msgstr "<b>Special settings for KC 85/2..5</b>"
 
 #: images/options.glade:2308
 msgid "D004:"
-msgstr ""
+msgstr "D004:"
 
 #: images/options.glade:2322
 msgid "Enable or disable the D004 Floppy Basis Device."
-msgstr ""
+msgstr "Enable or disable the D004 Floppy Basis Device."
 
 #: images/options.glade:2356
 msgid "Swap ROMs:"
-msgstr ""
+msgstr "Swap ROMs:"
 
 #: images/options.glade:2370
 msgid ""
@@ -480,218 +529,229 @@ msgid ""
 "KC85/2-4 default to the standard FC ROM version 2.0 whereas the KC85/5 "
 "system has the extended ROM version 3.1 in slot FC by default."
 msgstr ""
+"Swap the F8 and FC ROMs of the D004 device.\n"
+"\n"
+"The firmware version of the ROMs depends actually on the type of the "
+"emulated system.\n"
+"\n"
+"KC85/2-4 default to the standard FC ROM version 2.0 whereas the KC85/5 "
+"system has the extended ROM version 3.1 in slot FC by default."
 
 #: images/options.glade:2409
 msgid "F8 ROM:"
-msgstr ""
+msgstr "F8 ROM:"
 
 #: images/options.glade:2423
 msgid ""
 "Enable or disable the second D004 ROM at slot F8. The standard ROM is "
 "available at slot FC."
 msgstr ""
+"Enable or disable the second D004 ROM at slot F8. The standard ROM is "
+"available at slot FC."
 
 #: images/options.glade:2458
 msgid "Busdrivers:"
-msgstr ""
+msgstr "Busdrivers:"
 
 #: images/options.glade:2473
 msgid ""
 "Number of D002 busdriver devices to add to the system. The maximum number of "
 "emulated busdrivers is currently 4."
 msgstr ""
+"Number of D002 busdriver devices to add to the system. The maximum number of "
+"emulated busdrivers is currently 4."
 
 #: images/options.glade:2515
 msgid "KC85"
-msgstr ""
+msgstr "KC85"
 
 #: images/legal.glade:6
 msgid "KCemu: Licence & Warranty"
-msgstr ""
+msgstr "KCemu: Licence & Warranty"
 
 #: images/legal.glade:24
 msgid "License & Warranty"
-msgstr ""
+msgstr "License & Warranty"
 
 #: images/legal.glade:77
 msgid "[ Licence ]"
-msgstr ""
+msgstr "[ Licence ]"
 
 #: images/legal.glade:89
 msgid "[ Warranty ]"
-msgstr ""
+msgstr "[ Warranty ]"
 
 #: images/selector.glade:7
 msgid "KCemu: Select profile..."
-msgstr ""
+msgstr "KCemu: Select profile..."
 
 #: images/selector.glade:30
 msgid "Select Profile..."
-msgstr ""
+msgstr "Select Profile..."
 
 #: images/selector.glade:100
 msgid "<b>System profiles...</b>"
-msgstr ""
+msgstr "<b>System profiles...</b>"
 
 #: images/selector.glade:146
 msgid "<b>User profiles...</b>"
-msgstr ""
+msgstr "<b>User profiles...</b>"
 
 #: images/selector.glade:197
 msgid "gtk-quit"
-msgstr ""
+msgstr "gtk-quit"
 
 #: images/main.glade:20
 msgid "_Emulator"
-msgstr ""
+msgstr "_Emulator"
 
 #: images/main.glade:30 images/main.glade:399
 msgid "_Run..."
-msgstr ""
+msgstr "_Run..."
 
 #: images/main.glade:38 images/main.glade:407
 msgid "_Load..."
-msgstr ""
+msgstr "_Load..."
 
 #: images/main.glade:45 images/main.glade:414
 msgid "_Save..."
-msgstr ""
+msgstr "_Save..."
 
 #: images/main.glade:53 images/main.glade:422
 msgid "_Tape..."
-msgstr ""
+msgstr "_Tape..."
 
 #: images/main.glade:61 images/main.glade:430
 msgid "_Disk..."
-msgstr ""
+msgstr "_Disk..."
 
 #: images/main.glade:69 images/main.glade:438
 msgid "_Module..."
-msgstr ""
+msgstr "_Module..."
 
 #: images/main.glade:77
 msgid "A_udio..."
-msgstr ""
+msgstr "A_udio..."
 
 #: images/main.glade:91 images/main.glade:540
 msgid "R_eset"
-msgstr ""
+msgstr "R_eset"
 
 #: images/main.glade:99 images/main.glade:548
 msgid "_Power On"
-msgstr ""
+msgstr "_Power On"
 
 #: images/main.glade:113 images/main.glade:562
 msgid "_Quit Emulator"
-msgstr ""
+msgstr "_Quit Emulator"
 
 #: images/main.glade:125 images/main.glade:460
 msgid "_View"
-msgstr ""
+msgstr "_View"
 
 #: images/main.glade:135
 msgid "Zoom x_1"
-msgstr ""
+msgstr "Zoom x_1"
 
 #: images/main.glade:143
 msgid "Zoom x_2"
-msgstr ""
+msgstr "Zoom x_2"
 
 #: images/main.glade:151
 msgid "Zoom x_3"
-msgstr ""
+msgstr "Zoom x_3"
 
 #: images/main.glade:165 images/main.glade:500
 msgid "_Keyboard"
-msgstr ""
+msgstr "_Keyboard"
 
 #: images/main.glade:179 images/main.glade:514
 msgid "_Menubar"
-msgstr ""
+msgstr "_Menubar"
 
 #: images/main.glade:187 images/main.glade:522
 msgid "_Statusbar"
-msgstr ""
+msgstr "_Statusbar"
 
 #: images/main.glade:199
 msgid "_Options"
-msgstr ""
+msgstr "_Options"
 
 #: images/main.glade:209
 msgid "_Colors..."
-msgstr ""
+msgstr "_Colors..."
 
 #: images/main.glade:217
 msgid "_Display Effects"
-msgstr ""
+msgstr "_Display Effects"
 
 #: images/main.glade:225
 msgid "No _Speed Limit"
-msgstr ""
+msgstr "No _Speed Limit"
 
 #: images/main.glade:239
 msgid "_Profiles..."
-msgstr ""
+msgstr "_Profiles..."
 
 #: images/main.glade:251 images/main.glade:261
 msgid "_Help"
-msgstr ""
+msgstr "_Help"
 
 #: images/main.glade:269
 msgid "Help _Index"
-msgstr ""
+msgstr "Help _Index"
 
 #: images/main.glade:277
 msgid "_Context Help"
-msgstr ""
+msgstr "_Context Help"
 
 #: images/main.glade:291
 msgid "_About"
-msgstr ""
+msgstr "_About"
 
 #: images/main.glade:299
 msgid "_Thanks!"
-msgstr ""
+msgstr "_Thanks!"
 
 #: images/main.glade:313
 msgid "KCemu _Licence"
-msgstr ""
+msgstr "KCemu _Licence"
 
 #: images/main.glade:321
 msgid "No _Warranty!"
-msgstr ""
+msgstr "No _Warranty!"
 
 #: images/main.glade:446
 msgid "_Audio..."
-msgstr ""
+msgstr "_Audio..."
 
 #: images/main.glade:470
 msgid "Zoom x1"
-msgstr ""
+msgstr "Zoom x1"
 
 #: images/main.glade:478
 msgid "Zoom x2"
-msgstr ""
+msgstr "Zoom x2"
 
 #: images/main.glade:486
 msgid "Zoom x3"
-msgstr ""
+msgstr "Zoom x3"
 
 #: src/cmd/image.cc:105 src/kc/wav.cc:81
 msgid "KCemu: Select File..."
-msgstr ""
+msgstr "KCemu: Select File..."
 
 #: src/cmd/image.cc:129
 msgid "KCemu: Can't load file..."
-msgstr ""
+msgstr "KCemu: Can't load file..."
 
 #: src/cmd/image.cc:131
 msgid "The file you selected couldn't be loaded!"
-msgstr ""
+msgstr "The file you selected couldn't be loaded!"
 
 #: src/cmd/image.cc:144
 msgid "KCemu: Warning..."
-msgstr ""
+msgstr "KCemu: Warning..."
 
 #: src/cmd/image.cc:146
 msgid ""
@@ -700,69 +760,73 @@ msgid ""
 "If you want to access all the contained\n"
 "programs add this file to a tape-archive!"
 msgstr ""
+"The file you selected contains more than one\n"
+"program. Only the first program will be loaded.\n"
+"If you want to access all the contained\n"
+"programs add this file to a tape-archive!"
 
 #: src/getopt/getopt.c:678
 #, c-format
 msgid "%s: option `%s' is ambiguous\n"
-msgstr ""
+msgstr "%s: option `%s' is ambiguous\n"
 
 #: src/getopt/getopt.c:702
 #, c-format
 msgid "%s: option `--%s' doesn't allow an argument\n"
-msgstr ""
+msgstr "%s: option `--%s' doesn't allow an argument\n"
 
 #: src/getopt/getopt.c:707
 #, c-format
 msgid "%s: option `%c%s' doesn't allow an argument\n"
-msgstr ""
+msgstr "%s: option `%c%s' doesn't allow an argument\n"
 
 #: src/getopt/getopt.c:724 src/getopt/getopt.c:897
 #, c-format
 msgid "%s: option `%s' requires an argument\n"
-msgstr ""
+msgstr "%s: option `%s' requires an argument\n"
 
 #: src/getopt/getopt.c:753
 #, c-format
 msgid "%s: unrecognized option `--%s'\n"
-msgstr ""
+msgstr "%s: unrecognized option `--%s'\n"
 
 #: src/getopt/getopt.c:757
 #, c-format
 msgid "%s: unrecognized option `%c%s'\n"
-msgstr ""
+msgstr "%s: unrecognized option `%c%s'\n"
 
 #: src/getopt/getopt.c:783
 #, c-format
 msgid "%s: illegal option -- %c\n"
-msgstr ""
+msgstr "%s: illegal option -- %c\n"
 
 #: src/getopt/getopt.c:786
 #, c-format
 msgid "%s: invalid option -- %c\n"
-msgstr ""
+msgstr "%s: invalid option -- %c\n"
 
 #: src/getopt/getopt.c:816 src/getopt/getopt.c:946
 #, c-format
 msgid "%s: option requires an argument -- %c\n"
-msgstr ""
+msgstr "%s: option requires an argument -- %c\n"
 
 #: src/getopt/getopt.c:863
 #, c-format
 msgid "%s: option `-W %s' is ambiguous\n"
-msgstr ""
+msgstr "%s: option `-W %s' is ambiguous\n"
 
 #: src/getopt/getopt.c:881
 #, c-format
 msgid "%s: option `-W %s' doesn't allow an argument\n"
-msgstr ""
+msgstr "%s: option `-W %s' doesn't allow an argument\n"
 
 #: src/kc/disk.cc:84
 msgid "Select disk..."
-msgstr ""
+msgstr "Select disk..."
 
 #: src/kc/disk.cc:124 src/kc/tape.cc:216
 msgid "create file?"
-msgstr ""
+msgstr "create file?"
 
 #: src/kc/disk.cc:126 src/kc/tape.cc:218
 #, c-format
@@ -770,15 +834,17 @@ msgid ""
 "The file '%s' doesn't exist.\n"
 "Do you want to create it?"
 msgstr ""
+"The file '%s' doesn't exist.\n"
+"Do you want to create it?"
 
 #: src/kc/disk.cc:135
 #, c-format
 msgid "disk-file `%s' attached."
-msgstr ""
+msgstr "disk-file `%s' attached."
 
 #: src/kc/disk.cc:140
 msgid "Can't attach disk-file."
-msgstr ""
+msgstr "Can't attach disk-file."
 
 #: src/kc/kc.cc:252
 msgid ""
@@ -820,6 +886,43 @@ msgid ""
 "  -V --viewlist:       view verbose list of available emulations\n"
 "  -W --warranty:       show warranty\n"
 msgstr ""
+"\n"
+"KCemu comes with ABSOLUTELY NO WARRANTY; for details run `kcemu --"
+"warranty'.\n"
+"This is free software, and you are welcome to redistribute it\n"
+"under certain conditions; run `kcemu --license' for details.\n"
+"\n"
+"usage: kcemu [-0123456789aAcestfhdlvVHFMELW]\n"
+"\n"
+"  -0:                  select Z1013 profile\n"
+"  -1:                  select Z9001 / KC 85/1 profile\n"
+"  -2:                  select KC 85/2 profile\n"
+"  -3:                  select KC 85/3 profile\n"
+"  -4:                  select KC 85/4 profile\n"
+"  -5:                  select KC 85/5 profile\n"
+"  -6:                  select Poly-880 profile\n"
+"  -7:                  select KC 87 profile\n"
+"  -8:                  select LC 80 profile\n"
+"  -9:                  select BIC/A5105 profile\n"
+"  -a --autostart:      autostart program on startup (kc85/3 - kc85/5 only)\n"
+"  -A --address:        override start address of autostart program\n"
+"  -d --datadir:        set data directory (for ROM images)\n"
+"  -E --effects:        enable display effects for scaled screen output\n"
+"  -f --floppy:         attach disk on startup\n"
+"  -F --fullscreen:     start in fullscreen mode (if supported by gui)\n"
+"  -h --help:           display help\n"
+"  -H --home:           overwrite setting for home directory\n"
+"  -l --localedir:      set locale directory\n"
+"  -L --license:        show license\n"
+"  -M --modules:        insert modules on startup (e.g. -M M011,M027)\n"
+"  -o --debug-output:   write debug output to file\n"
+"  -p --profile:        start with given profile\n"
+"  -P --select-profile: show profile selector\n"
+"  -s --scale:          scale display (allowed values: 1, 2 and 3)\n"
+"  -t --tape:           attach tape on startup\n"
+"  -v --version:        show KCemu version and configuration\n"
+"  -V --viewlist:       view verbose list of available emulations\n"
+"  -W --warranty:       show warranty\n"
 
 #: src/kc/kc.cc:319
 msgid ""
@@ -1084,6 +1187,266 @@ msgid ""
 "of promoting the sharing and reuse of software generally.\n"
 "\n"
 msgstr ""
+"\n"
+"\t\t    GNU GENERAL PUBLIC LICENSE\n"
+"\t\t       Version 2, June 1991\n"
+"\n"
+" Copyright (C) 1989, 1991 Free Software Foundation, Inc.\n"
+"     59 Temple Place, Suite 330, Boston, MA  02111-1307  USA\n"
+" Everyone is permitted to copy and distribute verbatim copies\n"
+" of this license document, but changing it is not allowed.\n"
+"\n"
+"\t\t\t    Preamble\n"
+"\n"
+"  The licenses for most software are designed to take away your\n"
+"freedom to share and change it.  By contrast, the GNU General Public\n"
+"License is intended to guarantee your freedom to share and change free\n"
+"software--to make sure the software is free for all its users.  This\n"
+"General Public License applies to most of the Free Software\n"
+"Foundation's software and to any other program whose authors commit to\n"
+"using it.  (Some other Free Software Foundation software is covered by\n"
+"the GNU Library General Public License instead.)  You can apply it to\n"
+"your programs, too.\n"
+"\n"
+"  When we speak of free software, we are referring to freedom, not\n"
+"price.  Our General Public Licenses are designed to make sure that you\n"
+"have the freedom to distribute copies of free software (and charge for\n"
+"this service if you wish), that you receive source code or can get it\n"
+"if you want it, that you can change the software or use pieces of it\n"
+"in new free programs; and that you know you can do these things.\n"
+"\n"
+"  To protect your rights, we need to make restrictions that forbid\n"
+"anyone to deny you these rights or to ask you to surrender the rights.\n"
+"These restrictions translate to certain responsibilities for you if you\n"
+"distribute copies of the software, or if you modify it.\n"
+"\n"
+"  For example, if you distribute copies of such a program, whether\n"
+"gratis or for a fee, you must give the recipients all the rights that\n"
+"you have.  You must make sure that they, too, receive or can get the\n"
+"source code.  And you must show them these terms so they know their\n"
+"rights.\n"
+"\n"
+"  We protect your rights with two steps: (1) copyright the software, and\n"
+"(2) offer you this license which gives you legal permission to copy,\n"
+"distribute and/or modify the software.\n"
+"\n"
+"  Also, for each author's protection and ours, we want to make certain\n"
+"that everyone understands that there is no warranty for this free\n"
+"software.  If the software is modified by someone else and passed on, we\n"
+"want its recipients to know that what they have is not the original, so\n"
+"that any problems introduced by others will not reflect on the original\n"
+"authors' reputations.\n"
+"\n"
+"  Finally, any free program is threatened constantly by software\n"
+"patents.  We wish to avoid the danger that redistributors of a free\n"
+"program will individually obtain patent licenses, in effect making the\n"
+"program proprietary.  To prevent this, we have made it clear that any\n"
+"patent must be licensed for everyone's free use or not licensed at all.\n"
+"\n"
+"  The precise terms and conditions for copying, distribution and\n"
+"modification follow.\n"
+"\n"
+"\t\t    GNU GENERAL PUBLIC LICENSE\n"
+"   TERMS AND CONDITIONS FOR COPYING, DISTRIBUTION AND MODIFICATION\n"
+"\n"
+"  0. This License applies to any program or other work which contains\n"
+"a notice placed by the copyright holder saying it may be distributed\n"
+"under the terms of this General Public License.  The \"Program\", below,\n"
+"refers to any such program or work, and a \"work based on the Program\"\n"
+"means either the Program or any derivative work under copyright law:\n"
+"that is to say, a work containing the Program or a portion of it,\n"
+"either verbatim or with modifications and/or translated into another\n"
+"language.  (Hereinafter, translation is included without limitation in\n"
+"the term \"modification\".)  Each licensee is addressed as \"you\".\n"
+"\n"
+"Activities other than copying, distribution and modification are not\n"
+"covered by this License; they are outside its scope.  The act of\n"
+"running the Program is not restricted, and the output from the Program\n"
+"is covered only if its contents constitute a work based on the\n"
+"Program (independent of having been made by running the Program).\n"
+"Whether that is true depends on what the Program does.\n"
+"\n"
+"  1. You may copy and distribute verbatim copies of the Program's\n"
+"source code as you receive it, in any medium, provided that you\n"
+"conspicuously and appropriately publish on each copy an appropriate\n"
+"copyright notice and disclaimer of warranty; keep intact all the\n"
+"notices that refer to this License and to the absence of any warranty;\n"
+"and give any other recipients of the Program a copy of this License\n"
+"along with the Program.\n"
+"\n"
+"You may charge a fee for the physical act of transferring a copy, and\n"
+"you may at your option offer warranty protection in exchange for a fee.\n"
+"\n"
+"  2. You may modify your copy or copies of the Program or any portion\n"
+"of it, thus forming a work based on the Program, and copy and\n"
+"distribute such modifications or work under the terms of Section 1\n"
+"above, provided that you also meet all of these conditions:\n"
+"\n"
+"    a) You must cause the modified files to carry prominent notices\n"
+"    stating that you changed the files and the date of any change.\n"
+"\n"
+"    b) You must cause any work that you distribute or publish, that in\n"
+"    whole or in part contains or is derived from the Program or any\n"
+"    part thereof, to be licensed as a whole at no charge to all third\n"
+"    parties under the terms of this License.\n"
+"\n"
+"    c) If the modified program normally reads commands interactively\n"
+"    when run, you must cause it, when started running for such\n"
+"    interactive use in the most ordinary way, to print or display an\n"
+"    announcement including an appropriate copyright notice and a\n"
+"    notice that there is no warranty (or else, saying that you provide\n"
+"    a warranty) and that users may redistribute the program under\n"
+"    these conditions, and telling the user how to view a copy of this\n"
+"    License.  (Exception: if the Program itself is interactive but\n"
+"    does not normally print such an announcement, your work based on\n"
+"    the Program is not required to print an announcement.)\n"
+"\n"
+"These requirements apply to the modified work as a whole.  If\n"
+"identifiable sections of that work are not derived from the Program,\n"
+"and can be reasonably considered independent and separate works in\n"
+"themselves, then this License, and its terms, do not apply to those\n"
+"sections when you distribute them as separate works.  But when you\n"
+"distribute the same sections as part of a whole which is a work based\n"
+"on the Program, the distribution of the whole must be on the terms of\n"
+"this License, whose permissions for other licensees extend to the\n"
+"entire whole, and thus to each and every part regardless of who wrote it.\n"
+"\n"
+"Thus, it is not the intent of this section to claim rights or contest\n"
+"your rights to work written entirely by you; rather, the intent is to\n"
+"exercise the right to control the distribution of derivative or\n"
+"collective works based on the Program.\n"
+"\n"
+"In addition, mere aggregation of another work not based on the Program\n"
+"with the Program (or with a work based on the Program) on a volume of\n"
+"a storage or distribution medium does not bring the other work under\n"
+"the scope of this License.\n"
+"\n"
+"  3. You may copy and distribute the Program (or a work based on it,\n"
+"under Section 2) in object code or executable form under the terms of\n"
+"Sections 1 and 2 above provided that you also do one of the following:\n"
+"\n"
+"    a) Accompany it with the complete corresponding machine-readable\n"
+"    source code, which must be distributed under the terms of Sections\n"
+"    1 and 2 above on a medium customarily used for software interchange; "
+"or,\n"
+"\n"
+"    b) Accompany it with a written offer, valid for at least three\n"
+"    years, to give any third party, for a charge no more than your\n"
+"    cost of physically performing source distribution, a complete\n"
+"    machine-readable copy of the corresponding source code, to be\n"
+"    distributed under the terms of Sections 1 and 2 above on a medium\n"
+"    customarily used for software interchange; or,\n"
+"\n"
+"    c) Accompany it with the information you received as to the offer\n"
+"    to distribute corresponding source code.  (This alternative is\n"
+"    allowed only for noncommercial distribution and only if you\n"
+"    received the program in object code or executable form with such\n"
+"    an offer, in accord with Subsection b above.)\n"
+"\n"
+"The source code for a work means the preferred form of the work for\n"
+"making modifications to it.  For an executable work, complete source\n"
+"code means all the source code for all modules it contains, plus any\n"
+"associated interface definition files, plus the scripts used to\n"
+"control compilation and installation of the executable.  However, as a\n"
+"special exception, the source code distributed need not include\n"
+"anything that is normally distributed (in either source or binary\n"
+"form) with the major components (compiler, kernel, and so on) of the\n"
+"operating system on which the executable runs, unless that component\n"
+"itself accompanies the executable.\n"
+"\n"
+"If distribution of executable or object code is made by offering\n"
+"access to copy from a designated place, then offering equivalent\n"
+"access to copy the source code from the same place counts as\n"
+"distribution of the source code, even though third parties are not\n"
+"compelled to copy the source along with the object code.\n"
+"\n"
+"  4. You may not copy, modify, sublicense, or distribute the Program\n"
+"except as expressly provided under this License.  Any attempt\n"
+"otherwise to copy, modify, sublicense or distribute the Program is\n"
+"void, and will automatically terminate your rights under this License.\n"
+"However, parties who have received copies, or rights, from you under\n"
+"this License will not have their licenses terminated so long as such\n"
+"parties remain in full compliance.\n"
+"\n"
+"  5. You are not required to accept this License, since you have not\n"
+"signed it.  However, nothing else grants you permission to modify or\n"
+"distribute the Program or its derivative works.  These actions are\n"
+"prohibited by law if you do not accept this License.  Therefore, by\n"
+"modifying or distributing the Program (or any work based on the\n"
+"Program), you indicate your acceptance of this License to do so, and\n"
+"all its terms and conditions for copying, distributing or modifying\n"
+"the Program or works based on it.\n"
+"\n"
+"  6. Each time you redistribute the Program (or any work based on the\n"
+"Program), the recipient automatically receives a license from the\n"
+"original licensor to copy, distribute or modify the Program subject to\n"
+"these terms and conditions.  You may not impose any further\n"
+"restrictions on the recipients' exercise of the rights granted herein.\n"
+"You are not responsible for enforcing compliance by third parties to\n"
+"this License.\n"
+"\n"
+"  7. If, as a consequence of a court judgment or allegation of patent\n"
+"infringement or for any other reason (not limited to patent issues),\n"
+"conditions are imposed on you (whether by court order, agreement or\n"
+"otherwise) that contradict the conditions of this License, they do not\n"
+"excuse you from the conditions of this License.  If you cannot\n"
+"distribute so as to satisfy simultaneously your obligations under this\n"
+"License and any other pertinent obligations, then as a consequence you\n"
+"may not distribute the Program at all.  For example, if a patent\n"
+"license would not permit royalty-free redistribution of the Program by\n"
+"all those who receive copies directly or indirectly through you, then\n"
+"the only way you could satisfy both it and this License would be to\n"
+"refrain entirely from distribution of the Program.\n"
+"\n"
+"If any portion of this section is held invalid or unenforceable under\n"
+"any particular circumstance, the balance of the section is intended to\n"
+"apply and the section as a whole is intended to apply in other\n"
+"circumstances.\n"
+"\n"
+"It is not the purpose of this section to induce you to infringe any\n"
+"patents or other property right claims or to contest validity of any\n"
+"such claims; this section has the sole purpose of protecting the\n"
+"integrity of the free software distribution system, which is\n"
+"implemented by public license practices.  Many people have made\n"
+"generous contributions to the wide range of software distributed\n"
+"through that system in reliance on consistent application of that\n"
+"system; it is up to the author/donor to decide if he or she is willing\n"
+"to distribute software through any other system and a licensee cannot\n"
+"impose that choice.\n"
+"\n"
+"This section is intended to make thoroughly clear what is believed to\n"
+"be a consequence of the rest of this License.\n"
+"\n"
+"  8. If the distribution and/or use of the Program is restricted in\n"
+"certain countries either by patents or by copyrighted interfaces, the\n"
+"original copyright holder who places the Program under this License\n"
+"may add an explicit geographical distribution limitation excluding\n"
+"those countries, so that distribution is permitted only in or among\n"
+"countries not thus excluded.  In such case, this License incorporates\n"
+"the limitation as if written in the body of this License.\n"
+"\n"
+"  9. The Free Software Foundation may publish revised and/or new versions\n"
+"of the General Public License from time to time.  Such new versions will\n"
+"be similar in spirit to the present version, but may differ in detail to\n"
+"address new problems or concerns.\n"
+"\n"
+"Each version is given a distinguishing version number.  If the Program\n"
+"specifies a version number of this License which applies to it and \"any\n"
+"later version\", you have the option of following the terms and conditions\n"
+"either of that version or of any later version published by the Free\n"
+"Software Foundation.  If the Program does not specify a version number of\n"
+"this License, you may choose any version ever published by the Free "
+"Software\n"
+"Foundation.\n"
+"\n"
+"  10. If you wish to incorporate parts of the Program into other free\n"
+"programs whose distribution conditions are different, write to the author\n"
+"to ask for permission.  For software which is copyrighted by the Free\n"
+"Software Foundation, write to the Free Software Foundation; we sometimes\n"
+"make exceptions for this.  Our decision will be guided by the two goals\n"
+"of preserving the free status of all derivatives of our free software and\n"
+"of promoting the sharing and reuse of software generally.\n"
+"\n"
 
 #: src/kc/kc.cc:581
 msgid ""
@@ -1112,6 +1475,30 @@ msgid ""
 "POSSIBILITY OF SUCH DAMAGES.\n"
 "\n"
 msgstr ""
+"\n"
+"NO WARRANTY\n"
+"\n"
+"  11. BECAUSE THE PROGRAM IS LICENSED FREE OF CHARGE, THERE IS NO WARRANTY\n"
+"FOR THE PROGRAM, TO THE EXTENT PERMITTED BY APPLICABLE LAW.  EXCEPT WHEN\n"
+"OTHERWISE STATED IN WRITING THE COPYRIGHT HOLDERS AND/OR OTHER PARTIES\n"
+"PROVIDE THE PROGRAM \"AS IS\" WITHOUT WARRANTY OF ANY KIND, EITHER "
+"EXPRESSED\n"
+"OR IMPLIED, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF\n"
+"MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  THE ENTIRE RISK AS\n"
+"TO THE QUALITY AND PERFORMANCE OF THE PROGRAM IS WITH YOU.  SHOULD THE\n"
+"PROGRAM PROVE DEFECTIVE, YOU ASSUME THE COST OF ALL NECESSARY SERVICING,\n"
+"REPAIR OR CORRECTION.\n"
+"\n"
+"  12. IN NO EVENT UNLESS REQUIRED BY APPLICABLE LAW OR AGREED TO IN WRITING\n"
+"WILL ANY COPYRIGHT HOLDER, OR ANY OTHER PARTY WHO MAY MODIFY AND/OR\n"
+"REDISTRIBUTE THE PROGRAM AS PERMITTED ABOVE, BE LIABLE TO YOU FOR DAMAGES,\n"
+"INCLUDING ANY GENERAL, SPECIAL, INCIDENTAL OR CONSEQUENTIAL DAMAGES ARISING\n"
+"OUT OF THE USE OR INABILITY TO USE THE PROGRAM (INCLUDING BUT NOT LIMITED\n"
+"TO LOSS OF DATA OR DATA BEING RENDERED INACCURATE OR LOSSES SUSTAINED BY\n"
+"YOU OR THIRD PARTIES OR A FAILURE OF THE PROGRAM TO OPERATE WITH ANY OTHER\n"
+"PROGRAMS), EVEN IF SUCH HOLDER OR OTHER PARTY HAS BEEN ADVISED OF THE\n"
+"POSSIBILITY OF SUCH DAMAGES.\n"
+"\n"
 
 #: src/kc/kc.cc:608
 msgid ""
@@ -1180,11 +1567,75 @@ msgid ""
 "Public License instead of this License.\n"
 "\n"
 msgstr ""
+"\n"
+"                     END OF TERMS AND CONDITIONS\n"
+"\n"
+"\n"
+"\t    How to Apply These Terms to Your New Programs\n"
+"\n"
+"  If you develop a new program, and you want it to be of the greatest\n"
+"possible use to the public, the best way to achieve this is to make it\n"
+"free software which everyone can redistribute and change under these terms.\n"
+"\n"
+"  To do so, attach the following notices to the program.  It is safest\n"
+"to attach them to the start of each source file to most effectively\n"
+"convey the exclusion of warranty; and each file should have at least\n"
+"the \"copyright\" line and a pointer to where the full notice is found.\n"
+"\n"
+"    <one line to give the program's name and a brief idea of what it does.>\n"
+"    Copyright (C) 19yy  <name of author>\n"
+"\n"
+"    This program is free software; you can redistribute it and/or modify\n"
+"    it under the terms of the GNU General Public License as published by\n"
+"    the Free Software Foundation; either version 2 of the License, or\n"
+"    (at your option) any later version.\n"
+"\n"
+"    This program is distributed in the hope that it will be useful,\n"
+"    but WITHOUT ANY WARRANTY; without even the implied warranty of\n"
+"    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the\n"
+"    GNU General Public License for more details.\n"
+"\n"
+"    You should have received a copy of the GNU General Public License\n"
+"    along with this program; if not, write to the Free Software\n"
+"    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.\n"
+"\n"
+"Also add information on how to contact you by electronic and paper mail.\n"
+"\n"
+"If the program is interactive, make it output a short notice like this\n"
+"when it starts in an interactive mode:\n"
+"\n"
+"    Gnomovision version 69, Copyright (C) 19yy name of author\n"
+"    Gnomovision comes with ABSOLUTELY NO WARRANTY; for details type `show "
+"w'.\n"
+"    This is free software, and you are welcome to redistribute it\n"
+"    under certain conditions; type `show c' for details.\n"
+"\n"
+"The hypothetical commands `show w' and `show c' should show the appropriate\n"
+"parts of the General Public License.  Of course, the commands you use may\n"
+"be called something other than `show w' and `show c'; they could even be\n"
+"mouse-clicks or menu items--whatever suits your program.\n"
+"\n"
+"You should also get your employer (if you work as a programmer) or your\n"
+"school, if any, to sign a \"copyright disclaimer\" for the program, if\n"
+"necessary.  Here is a sample; alter the names:\n"
+"\n"
+"  Yoyodyne, Inc., hereby disclaims all copyright interest in the program\n"
+"  `Gnomovision' (which makes passes at compilers) written by James Hacker.\n"
+"\n"
+"  <signature of Ty Coon>, 1 April 1989\n"
+"  Ty Coon, President of Vice\n"
+"\n"
+"This General Public License does not permit incorporating your program into\n"
+"proprietary programs.  If your program is a subroutine library, you may\n"
+"consider it more useful to permit linking proprietary applications with the\n"
+"library.  If this is what you want to do, use the GNU Library General\n"
+"Public License instead of this License.\n"
+"\n"
 
 #: src/kc/mod_320k.cc:151
 #, c-format
 msgid "2,5 MB Modul Bank (%d / %02xh)"
-msgstr ""
+msgstr "2,5 MB Modul Bank (%d / %02xh)"
 
 #: src/kc/mod_fdc.cc:58
 #, c-format
@@ -1197,6 +1648,13 @@ msgid ""
 "Schneider variant of the floppy module active at\n"
 "the same time.)"
 msgstr ""
+"It's not possible to have more than one\n"
+"module of type %s!\n"
+"\n"
+"(And due to some technical points of the emulator\n"
+"it's also not possible to have both the Kramer and\n"
+"Schneider variant of the floppy module active at\n"
+"the same time.)"
 
 #: src/kc/mod_gdc.cc:55 src/kc/mod_rtc.cc:49
 #, c-format
@@ -1204,15 +1662,17 @@ msgid ""
 "It's not possible to have more than one\n"
 "module of type %s!"
 msgstr ""
+"It's not possible to have more than one\n"
+"module of type %s!"
 
 #: src/kc/mod_js.cc:154
 msgid "Joystick removed!"
-msgstr ""
+msgstr "Joystick removed!"
 
 #: src/kc/mod_js.cc:165
 #, c-format
 msgid "Joystick (%d.%d.%d): %s on %s"
-msgstr ""
+msgstr "Joystick (%d.%d.%d): %s on %s"
 
 #: src/kc/mod_js.cc:401
 #, c-format
@@ -1224,6 +1684,12 @@ msgid ""
 "in the 'Joystick Device' section of the configuration\n"
 "file."
 msgstr ""
+"Couldn't find any readable joystick device!\n"
+"\n"
+"If your joystick is connected properly and the correct\n"
+"driver is loaded give the device name of your joystick\n"
+"in the 'Joystick Device' section of the configuration\n"
+"file."
 
 #: src/kc/mod_js.cc:410
 #, c-format
@@ -1237,210 +1703,218 @@ msgid ""
 "configuration file if the device name shown above\n"
 "looks bogus.\n"
 msgstr ""
+"Couldn't open joystick device (%s)!\n"
+"\n"
+"Make sure you have the joystick properly connected\n"
+"and loaded the correct driver for it.\n"
+"\n"
+"Also check the 'Joystick Device' section in the\n"
+"configuration file if the device name shown above\n"
+"looks bogus.\n"
 
 #: src/kc/mod_list.cc:195
 msgid "<no module>"
-msgstr ""
+msgstr "<no module>"
 
 #: src/kc/mod_list.cc:205
 msgid "RAM Module (1k/2400h)"
-msgstr ""
+msgstr "RAM Module (1k/2400h)"
 
 #: src/kc/mod_list.cc:207
 msgid "RAM Module (2k/2800h)"
-msgstr ""
+msgstr "RAM Module (2k/2800h)"
 
 #: src/kc/mod_list.cc:209
 msgid "RAM Module (4k/3000h)"
-msgstr ""
+msgstr "RAM Module (4k/3000h)"
 
 #: src/kc/mod_list.cc:219
 msgid "RAM Module (2k/0800h)"
-msgstr ""
+msgstr "RAM Module (2k/0800h)"
 
 #: src/kc/mod_list.cc:221
 msgid "RAM Module (4k/1000h)"
-msgstr ""
+msgstr "RAM Module (4k/1000h)"
 
 #: src/kc/mod_list.cc:223
 msgid "RAM Module (8k/2000h)"
-msgstr ""
+msgstr "RAM Module (8k/2000h)"
 
 #: src/kc/mod_list.cc:232 src/kc/mod_list.cc:295
 msgid "RAM Module (16k/4000h)"
-msgstr ""
+msgstr "RAM Module (16k/4000h)"
 
 #: src/kc/mod_list.cc:234
 msgid "RAM Module (32k/8000h)"
-msgstr ""
+msgstr "RAM Module (32k/8000h)"
 
 #: src/kc/mod_list.cc:240
 msgid "256k RAM Floppy"
-msgstr ""
+msgstr "256k RAM Floppy"
 
 #: src/kc/mod_list.cc:246
 msgid "FDC (Schneider)"
-msgstr ""
+msgstr "FDC (Schneider)"
 
 #: src/kc/mod_list.cc:252
 msgid "FDC (Kramer)"
-msgstr ""
+msgstr "FDC (Kramer)"
 
 #: src/kc/mod_list.cc:258
 msgid "GDC 82720"
-msgstr ""
+msgstr "GDC 82720"
 
 #: src/kc/mod_list.cc:264
 msgid "RTC (port 20h-2fh)"
-msgstr ""
+msgstr "RTC (port 20h-2fh)"
 
 #: src/kc/mod_list.cc:270
 msgid "RTC (port 70h-7fh)"
-msgstr ""
+msgstr "RTC (port 70h-7fh)"
 
 #: src/kc/mod_list.cc:277
 msgid "Basic Module (c000h-e7ffh)"
-msgstr ""
+msgstr "Basic Module (c000h-e7ffh)"
 
 #: src/kc/mod_list.cc:289
 msgid "Plotter Module (c000h-e7ffh)"
-msgstr ""
+msgstr "Plotter Module (c000h-e7ffh)"
 
 #: src/kc/mod_list.cc:297
 msgid "RAM Module (16k/8000h)"
-msgstr ""
+msgstr "RAM Module (16k/8000h)"
 
 #: src/kc/mod_list.cc:306
 msgid "ZM30 (c000h-ccffh)"
-msgstr ""
+msgstr "ZM30 (c000h-ccffh)"
 
 #: src/kc/mod_list.cc:313
 msgid "EDAS (c000h-e7ffh)"
-msgstr ""
+msgstr "EDAS (c000h-e7ffh)"
 
 #: src/kc/mod_list.cc:320
 msgid "IDAS / ZM (c000h-e7ffh)"
-msgstr ""
+msgstr "IDAS / ZM (c000h-e7ffh)"
 
 #: src/kc/mod_list.cc:327
 msgid "BITEX (c000h-d7ffh)"
-msgstr ""
+msgstr "BITEX (c000h-d7ffh)"
 
 #: src/kc/mod_list.cc:352
 msgid "KC-CAOS 3.1 (8000h-8fffh)"
-msgstr ""
+msgstr "KC-CAOS 3.1 (8000h-8fffh)"
 
 #: src/kc/mod_list.cc:365
 msgid "192 KByte RAM/EPROM"
-msgstr ""
+msgstr "192 KByte RAM/EPROM"
 
 #: src/kc/mod_list.cc:372
 msgid "KC-Pascal Module"
-msgstr ""
+msgstr "KC-Pascal Module"
 
 #: src/kc/mod_list.cc:379
 msgid "Mega-ROM Module"
-msgstr ""
+msgstr "Mega-ROM Module"
 
 #: src/kc/mod_list.cc:386
 msgid "128k ROM Bank"
-msgstr ""
+msgstr "128k ROM Bank"
 
 #: src/kc/mod_list.cc:395 src/ui/gtk/module.cc:265
 msgid "IRM Color Expansion"
-msgstr ""
+msgstr "IRM Color Expansion"
 
 #: src/kc/mod_list.cc:411
 msgid "Plotter XY4131"
-msgstr ""
+msgstr "Plotter XY4131"
 
 #: src/kc/mod_list.cc:419
 msgid "CPM-Z9 BOOT (c000h-c7ffh)"
-msgstr ""
+msgstr "CPM-Z9 BOOT (c000h-c7ffh)"
 
 #: src/kc/mod_list.cc:425
 msgid "CPM-Z9 Floppy"
-msgstr ""
+msgstr "CPM-Z9 Floppy"
 
 #: src/kc/mod_list.cc:431
 msgid "CPM-Z9 64k RAM"
-msgstr ""
+msgstr "CPM-Z9 64k RAM"
 
 #: src/kc/mod_list.cc:437
 msgid "M001: Digital In / Out"
-msgstr ""
+msgstr "M001: Digital In / Out"
 
 #: src/kc/mod_list.cc:444
 msgid "M003: V24"
-msgstr ""
+msgstr "M003: V24"
 
 #: src/kc/mod_list.cc:452
 msgid "M006: Basic"
-msgstr ""
+msgstr "M006: Basic"
 
 #: src/kc/mod_list.cc:459
 msgid "M008: Joystick"
-msgstr ""
+msgstr "M008: Joystick"
 
 #: src/kc/mod_list.cc:466
 msgid "M011: 64k RAM"
-msgstr ""
+msgstr "M011: 64k RAM"
 
 #: src/kc/mod_list.cc:473
 msgid "M012: Texor"
-msgstr ""
+msgstr "M012: Texor"
 
 #: src/kc/mod_list.cc:479
 msgid "M022: Expander RAM (16k)"
-msgstr ""
+msgstr "M022: Expander RAM (16k)"
 
 #: src/kc/mod_list.cc:486
 msgid "M026: Forth"
-msgstr ""
+msgstr "M026: Forth"
 
 #: src/kc/mod_list.cc:493
 msgid "M027: Development"
-msgstr ""
+msgstr "M027: Development"
 
 #: src/kc/mod_list.cc:499
 msgid "M032: 256k Segmented RAM"
-msgstr ""
+msgstr "M032: 256k Segmented RAM"
 
 #: src/kc/mod_list.cc:505
 msgid "M034: 512k Segmented RAM"
-msgstr ""
+msgstr "M034: 512k Segmented RAM"
 
 #: src/kc/mod_list.cc:511
 msgid "M035: 1M Segmented RAM"
-msgstr ""
+msgstr "M035: 1M Segmented RAM"
 
 #: src/kc/mod_list.cc:517
 msgid "M035x4: 4M RAM"
-msgstr ""
+msgstr "M035x4: 4M RAM"
 
 #: src/kc/mod_list.cc:523
 msgid "M036: 128k Segmented RAM"
-msgstr ""
+msgstr "M036: 128k Segmented RAM"
 
 #: src/kc/mod_list.cc:530
 msgid "M900: WordPro '86 (KC85/3)"
-msgstr ""
+msgstr "M900: WordPro '86 (KC85/3)"
 
 #: src/kc/mod_list.cc:537
 msgid "M901: WordPro '86 (KC85/4)"
-msgstr ""
+msgstr "M901: WordPro '86 (KC85/4)"
 
 #: src/kc/mod_list.cc:544
 msgid "Floppy Disk Basis F8"
-msgstr ""
+msgstr "Floppy Disk Basis F8"
 
 #: src/kc/mod_list.cc:559
 msgid "Floppy Disk Basis FC"
-msgstr ""
+msgstr "Floppy Disk Basis FC"
 
 #: src/kc/mod_list.cc:775
 msgid "Autostart"
-msgstr ""
+msgstr "Autostart"
 
 #: src/kc/mod_ramf.cc:52
 #, c-format
@@ -1449,50 +1923,53 @@ msgid ""
 "modules. The first one is running on port 98h and\n"
 "the second one on port 58h."
 msgstr ""
+"It's not possible to have more than two RAM-Floppy\n"
+"modules. The first one is running on port 98h and\n"
+"the second one on port 58h."
 
 #: src/kc/tape.cc:96
 #, c-format
 msgid "File `%s' loaded."
-msgstr ""
+msgstr "File `%s' loaded."
 
 #: src/kc/tape.cc:174
 msgid "Select tape-archive..."
-msgstr ""
+msgstr "Select tape-archive..."
 
 #: src/kc/tape.cc:228
 #, c-format
 msgid "tape-archive `%s' attached."
-msgstr ""
+msgstr "tape-archive `%s' attached."
 
 #: src/kc/tape.cc:235
 msgid "Can't attach tape-archive."
-msgstr ""
+msgstr "Can't attach tape-archive."
 
 #: src/kc/tape.cc:276 src/kc/tape.cc:310
 msgid "Export As..."
-msgstr ""
+msgstr "Export As..."
 
 #: src/kc/tape.cc:294 src/kc/tape.cc:328
 #, c-format
 msgid "File `%s' saved."
-msgstr ""
+msgstr "File `%s' saved."
 
 #: src/kc/tape.cc:299 src/kc/tape.cc:333
 msgid "Can't export file."
-msgstr ""
+msgstr "Can't export file."
 
 #: src/kc/tape.cc:375
 msgid "Select file..."
-msgstr ""
+msgstr "Select file..."
 
 #: src/kc/tape.cc:1761
 msgid "The format of the selected file is not recognized."
-msgstr ""
+msgstr "The format of the selected file is not recognized."
 
 #: src/kc/tape.cc:1796
 #, c-format
 msgid "File `%s' [%s] added."
-msgstr ""
+msgstr "File `%s' [%s] added."
 
 #: src/kc/tape.cc:1805
 msgid ""
@@ -1503,67 +1980,73 @@ msgid ""
 "to the tape archive or use the cancel button to\n"
 "skip this file."
 msgstr ""
+"The file you selected has a name that is already\n"
+"present in the current tape archive.\n"
+"\n"
+"Please select a different name to add this file\n"
+"to the tape archive or use the cancel button to\n"
+"skip this file."
 
 #: src/kc/wav.cc:280
 #, c-format
 msgid "Reading %s `%s' (%d/%d/%d)."
-msgstr ""
+msgstr "Reading %s `%s' (%d/%d/%d)."
 
 #: src/kc/prefs/types.cc:154
 msgid "rom_caos_c"
-msgstr ""
+msgstr "CAOS C"
 
 #: src/kc/prefs/types.cc:155
 msgid "rom_caos_e"
-msgstr ""
+msgstr "CAOS E"
 
 #: src/kc/prefs/types.cc:156
 msgid "rom_system"
-msgstr ""
+msgstr "System"
 
 #: src/kc/prefs/types.cc:157
 msgid "rom_system_1"
-msgstr ""
+msgstr "System (1)"
 
 #: src/kc/prefs/types.cc:158
 msgid "rom_system_2"
-msgstr ""
+msgstr "System (2)"
 
 #: src/kc/prefs/types.cc:159
 msgid "rom_system_3"
-msgstr ""
+msgstr "System (3)"
 
 #: src/kc/prefs/types.cc:160
 msgid "rom_system_4"
-msgstr ""
+msgstr "System (4)"
 
 #: src/kc/prefs/types.cc:161
 msgid "rom_user"
-msgstr ""
+msgstr "User-ROM"
 
 #: src/kc/prefs/types.cc:162
 msgid "rom_basic"
-msgstr ""
+msgstr "BASIC"
 
 #: src/kc/prefs/types.cc:163
 msgid "rom_debugger"
-msgstr ""
+msgstr "Debugger"
 
 #: src/kc/prefs/types.cc:164
 msgid "rom_reassembler"
-msgstr ""
+msgstr "Reassembler"
 
 #: src/kc/prefs/types.cc:165
 msgid "rom_editor"
-msgstr ""
+msgstr "Editor"
 
 #: src/kc/prefs/types.cc:166
 msgid "rom_assembler"
-msgstr ""
+msgstr "Assembler"
 
 #: src/kc/prefs/types.cc:167
 msgid "rom_charset"
-msgstr ""
+msgstr "Charset"
 
 #: src/kc/prefs/types.cc:369
 msgid ""
@@ -1571,30 +2054,37 @@ msgid ""
 "    first version with cheap circuits so the CPU was clocked at only 1MHz\n"
 "    The ROM containes the Z1013 monitor version 2.02.\n"
 msgstr ""
+"    Z1013 with 16k RAM and 2k ROM, running at 1MHz. This was the\n"
+"    first version with cheap circuits so the CPU was clocked at only 1MHz\n"
+"    The ROM containes the Z1013 monitor version 2.02.\n"
 
 #: src/kc/prefs/types.cc:374 src/kc/prefs/types.cc:381
 #: src/kc/prefs/types.cc:388 src/kc/prefs/types.cc:397
 msgid "System-ROM V2.0"
-msgstr ""
+msgstr "System-ROM V2.0"
 
 #: src/kc/prefs/types.cc:375 src/kc/prefs/types.cc:382
 #: src/kc/prefs/types.cc:389 src/kc/prefs/types.cc:398
 #: src/kc/prefs/types.cc:407 src/kc/prefs/types.cc:415
 #: src/kc/prefs/types.cc:424 src/kc/prefs/types.cc:432
 msgid "Z1013 Charset-ROM"
-msgstr ""
+msgstr "Z1013 Charset-ROM"
 
 #: src/kc/prefs/types.cc:377
 msgid ""
 "    Z1013 with 1k sRAM and 2k ROM, running at 2MHz. Industry\n"
 "    version with only 1k static RAM. Monitor version 2.02.\n"
 msgstr ""
+"    Z1013 with 1k sRAM and 2k ROM, running at 2MHz. Industry\n"
+"    version with only 1k static RAM. Monitor version 2.02.\n"
 
 #: src/kc/prefs/types.cc:384
 msgid ""
 "    Z1013 with 16k RAM and 2k ROM, running at 2MHz. Successor of\n"
 "    the Z1013.01 but with industry grade circuits clocked at 2MHz.\n"
 msgstr ""
+"    Z1013 with 16k RAM and 2k ROM, running at 2MHz. Successor of\n"
+"    the Z1013.01 but with industry grade circuits clocked at 2MHz.\n"
 
 #: src/kc/prefs/types.cc:391
 msgid ""
@@ -1603,6 +2093,10 @@ msgid ""
 "    image with version 2.02 that is supposed to work with the foil keypad\n"
 "    shipped by the manufacturer.\n"
 msgstr ""
+"    Z1013 with 64k RAM and 2x2k ROM, running at 2MHz. The ROM\n"
+"    contains two system images with 2k each. Loaded is the first\n"
+"    image with version 2.02 that is supposed to work with the foil keypad\n"
+"    shipped by the manufacturer.\n"
 
 #: src/kc/prefs/types.cc:400
 msgid ""
@@ -1611,10 +2105,14 @@ msgid ""
 "    image with version A.2 that supports an extended keyboard with an\n"
 "    8x8 matrix.\n"
 msgstr ""
+"    Z1013 with 64k RAM and 2k ROM, running at 2MHz. The ROM\n"
+"    contains two system images with 2k each. Loaded is the second\n"
+"    image with version A.2 that supports an extended keyboard with an\n"
+"    8x8 matrix.\n"
 
 #: src/kc/prefs/types.cc:406
 msgid "System-ROM A2"
-msgstr ""
+msgstr "System-ROM A2"
 
 #: src/kc/prefs/types.cc:409
 msgid ""
@@ -1622,10 +2120,13 @@ msgid ""
 "    version tagged 2.028 RB that has a different keyboard driver for\n"
 "    the keyboard K7659.\n"
 msgstr ""
+"    Z1013 with 64k RAM and 4k ROM. The ROM is the extended\n"
+"    version tagged 2.028 RB that has a different keyboard driver for\n"
+"    the keyboard K7659.\n"
 
 #: src/kc/prefs/types.cc:414
 msgid "Brosig-ROM K7659/2.028"
-msgstr ""
+msgstr "Brosig-ROM K7659/2.028"
 
 #: src/kc/prefs/types.cc:417
 msgid ""
@@ -1634,10 +2135,14 @@ msgid ""
 "    The hardware modification port at address 4h is emulated which allows\n"
 "    programs to switch off the system ROM.\n"
 msgstr ""
+"    Z1013 with 64k RAM and 4k ROM. The ROM contains the 'Super\n"
+"    Ur-Lader 5.0' that can read arbitrary tape files as system monitor.\n"
+"    The hardware modification port at address 4h is emulated which allows\n"
+"    programs to switch off the system ROM.\n"
 
 #: src/kc/prefs/types.cc:423
 msgid "Super Ur-Lader 5.0"
-msgstr ""
+msgstr "Super Ur-Lader 5.0"
 
 #: src/kc/prefs/types.cc:426
 msgid ""
@@ -1645,10 +2150,13 @@ msgid ""
 "    BL4 that can load monitor images from floppy disk or can start the\n"
 "    CP/M system.\n"
 msgstr ""
+"    Z1013 with 64k RAM and 4k ROM. The ROM contains the Bootloader\n"
+"    BL4 that can load monitor images from floppy disk or can start the\n"
+"    CP/M system.\n"
 
 #: src/kc/prefs/types.cc:431
 msgid "Bootlader BL4"
-msgstr ""
+msgstr "Bootlader BL4"
 
 #: src/kc/prefs/types.cc:437
 msgid ""
@@ -1656,6 +2164,9 @@ msgid ""
 "    ROM. This computer has 16k RAM and 4k ROM with the robotron z9001 "
 "system.\n"
 msgstr ""
+"    Z9001 (later called KC 85/1) with monochrome display, no internal BASIC\n"
+"    ROM. This computer has 16k RAM and 4k ROM with the robotron z9001 "
+"system.\n"
 
 #: src/kc/prefs/types.cc:442 src/kc/prefs/types.cc:457
 #: src/kc/prefs/types.cc:552 src/kc/prefs/types.cc:568
@@ -1664,42 +2175,44 @@ msgstr ""
 #: src/kc/prefs/types.cc:657 src/kc/prefs/types.cc:705
 #: src/kc/prefs/types.cc:714 src/kc/prefs/types.cc:721
 msgid "System-ROM"
-msgstr ""
+msgstr "System-ROM"
 
 #: src/kc/prefs/types.cc:443 src/kc/prefs/types.cc:458
 #: src/kc/prefs/types.cc:553 src/kc/prefs/types.cc:569
 #: src/kc/prefs/types.cc:585 src/kc/prefs/types.cc:602
 #: src/kc/prefs/types.cc:618 src/kc/prefs/types.cc:634
 msgid "ROM-Bank System without menu"
-msgstr ""
+msgstr "ROM-Bank System without menu"
 
 #: src/kc/prefs/types.cc:444 src/kc/prefs/types.cc:459
 #: src/kc/prefs/types.cc:554 src/kc/prefs/types.cc:570
 #: src/kc/prefs/types.cc:586 src/kc/prefs/types.cc:603
 #: src/kc/prefs/types.cc:619 src/kc/prefs/types.cc:635
 msgid "ROM-Bank System with menu"
-msgstr ""
+msgstr "ROM-Bank System with menu"
 
 #: src/kc/prefs/types.cc:447 src/kc/prefs/types.cc:462
 #: src/kc/prefs/types.cc:558 src/kc/prefs/types.cc:574
 #: src/kc/prefs/types.cc:590 src/kc/prefs/types.cc:607
 #: src/kc/prefs/types.cc:623 src/kc/prefs/types.cc:639
 msgid "Z9001 Charset-ROM"
-msgstr ""
+msgstr "Z9001 Charset-ROM"
 
 #: src/kc/prefs/types.cc:448 src/kc/prefs/types.cc:463
 #: src/kc/prefs/types.cc:559 src/kc/prefs/types.cc:575
 #: src/kc/prefs/types.cc:591 src/kc/prefs/types.cc:608
 #: src/kc/prefs/types.cc:624 src/kc/prefs/types.cc:640
+#, fuzzy
 msgid "Z9001 Charset-ROM (german)"
-msgstr ""
+msgstr "Z9001 Charset-ROM"
 
 #: src/kc/prefs/types.cc:449 src/kc/prefs/types.cc:464
 #: src/kc/prefs/types.cc:560 src/kc/prefs/types.cc:576
 #: src/kc/prefs/types.cc:592 src/kc/prefs/types.cc:609
 #: src/kc/prefs/types.cc:625 src/kc/prefs/types.cc:641
+#, fuzzy
 msgid "CGA Charset-ROM"
-msgstr ""
+msgstr "Charset-ROM"
 
 #: src/kc/prefs/types.cc:450 src/kc/prefs/types.cc:465
 #: src/kc/prefs/types.cc:561 src/kc/prefs/types.cc:577
@@ -1710,7 +2223,7 @@ msgstr ""
 
 #: src/kc/prefs/types.cc:453
 msgid "    Like the z9001.10 but with color extension card.\n"
-msgstr ""
+msgstr "    Like the z9001.10 but with color extension card.\n"
 
 #: src/kc/prefs/types.cc:471
 msgid ""
@@ -1718,43 +2231,47 @@ msgid ""
 "    HC-CAOS 2.2 (home computer - cassette aided operating system). BASIC\n"
 "    is only available as external module.\n"
 msgstr ""
+"    HC900 (later called KC 85/2) with 16k RAM and 8k ROM. System is called\n"
+"    HC-CAOS 2.2 (home computer - cassette aided operating system). BASIC\n"
+"    is only available as external module.\n"
 
 #: src/kc/prefs/types.cc:476
 msgid "HC-900 CAOS"
-msgstr ""
+msgstr "HC-900 CAOS"
 
 #: src/kc/prefs/types.cc:477
 msgid "CAOS 2.2"
-msgstr ""
+msgstr "CAOS 2.2"
 
 #: src/kc/prefs/types.cc:483
 msgid ""
 "    KC 85/3 with 16k RAM, 8k system ROM with HC-CAOS 3.1 and 8k BASIC ROM.\n"
 msgstr ""
+"    KC 85/3 with 16k RAM, 8k system ROM with HC-CAOS 3.1 and 8k BASIC ROM.\n"
 
 #: src/kc/prefs/types.cc:486
 msgid "CAOS 3.1"
-msgstr ""
+msgstr "CAOS 3.1"
 
 #: src/kc/prefs/types.cc:487
 msgid "CAOS 3.3"
-msgstr ""
+msgstr "CAOS 3.3"
 
 #: src/kc/prefs/types.cc:488
 msgid "CAOS 3.4"
-msgstr ""
+msgstr "CAOS 3.4"
 
 #: src/kc/prefs/types.cc:489
 msgid "OS PI/88 (yellow/blue)"
-msgstr ""
+msgstr "OS PI/88 (yellow/blue)"
 
 #: src/kc/prefs/types.cc:490
 msgid "OS PI/88 (black/white)"
-msgstr ""
+msgstr "OS PI/88 (black/white)"
 
 #: src/kc/prefs/types.cc:491
 msgid "OS PI/88 (white/blue)"
-msgstr ""
+msgstr "OS PI/88 (white/blue)"
 
 #: src/kc/prefs/types.cc:493 src/kc/prefs/types.cc:509
 #: src/kc/prefs/types.cc:527 src/kc/prefs/types.cc:556
@@ -1762,7 +2279,7 @@ msgstr ""
 #: src/kc/prefs/types.cc:605 src/kc/prefs/types.cc:621
 #: src/kc/prefs/types.cc:637
 msgid "KC-BASIC"
-msgstr ""
+msgstr "KC-BASIC"
 
 #: src/kc/prefs/types.cc:498
 msgid ""
@@ -1770,22 +2287,25 @@ msgid ""
 "4.2\n"
 "    and 8k BASIC ROM.\n"
 msgstr ""
+"    KC 85/4 with 64k RAM, 64k screen memory, 12k system ROM with HC-CAOS "
+"4.2\n"
+"    and 8k BASIC ROM.\n"
 
 #: src/kc/prefs/types.cc:502
 msgid "CAOS 4.2 (C)"
-msgstr ""
+msgstr "CAOS 4.2 (C)"
 
 #: src/kc/prefs/types.cc:503
 msgid "CAOS 4.1 (C)"
-msgstr ""
+msgstr "CAOS 4.1 (C)"
 
 #: src/kc/prefs/types.cc:506
 msgid "CAOS 4.2 (E)"
-msgstr ""
+msgstr "CAOS 4.2 (E)"
 
 #: src/kc/prefs/types.cc:507
 msgid "CAOS 4.1 (E)"
-msgstr ""
+msgstr "CAOS 4.1 (E)"
 
 #: src/kc/prefs/types.cc:514
 msgid ""
@@ -1794,62 +2314,66 @@ msgid ""
 "    intended to be used with a modified D004 floppy device with additional\n"
 "    hard-disk support.\n"
 msgstr ""
+"    Inofficial successor of the KC 85/4 with 256k RAM, 64k screen memory,\n"
+"    16k system ROM with HC-CAOS 4.4, 8k BASIC ROM and 24k User ROM. It is\n"
+"    intended to be used with a modified D004 floppy device with additional\n"
+"    hard-disk support.\n"
 
 #: src/kc/prefs/types.cc:520
 msgid "CAOS 4.4 (C)"
-msgstr ""
+msgstr "CAOS 4.4 (C)"
 
 #: src/kc/prefs/types.cc:521
 msgid "CAOS 4.3 (C)"
-msgstr ""
+msgstr "CAOS 4.3 (C)"
 
 #: src/kc/prefs/types.cc:524
 msgid "CAOS 4.4 (E)"
-msgstr ""
+msgstr "CAOS 4.4 (E)"
 
 #: src/kc/prefs/types.cc:525
 msgid "CAOS 4.3 (E)"
-msgstr ""
+msgstr "CAOS 4.3 (E)"
 
 #: src/kc/prefs/types.cc:532
 msgid "    Polycomputer 880.\n"
-msgstr ""
+msgstr "    Polycomputer 880.\n"
 
 #: src/kc/prefs/types.cc:535 src/kc/prefs/types.cc:651
 #: src/kc/prefs/types.cc:662 src/kc/prefs/types.cc:672
 #: src/kc/prefs/types.cc:680
 msgid "System-ROM 1"
-msgstr ""
+msgstr "System-ROM 1"
 
 #: src/kc/prefs/types.cc:536 src/kc/prefs/types.cc:652
 #: src/kc/prefs/types.cc:663 src/kc/prefs/types.cc:673
 #: src/kc/prefs/types.cc:681
 msgid "System-ROM 2"
-msgstr ""
+msgstr "System-ROM 2"
 
 #: src/kc/prefs/types.cc:537 src/kc/prefs/types.cc:538
 msgid "Optional-ROM 1"
-msgstr ""
+msgstr "Optional-ROM 1"
 
 #: src/kc/prefs/types.cc:540
 msgid "    Polycomputer 880 with chess program rom from SC1.\n"
-msgstr ""
+msgstr "    Polycomputer 880 with chess program rom from SC1.\n"
 
 #: src/kc/prefs/types.cc:543
 msgid "SC1-ROM"
-msgstr ""
+msgstr "SC1-ROM"
 
 #: src/kc/prefs/types.cc:548
 msgid "    Like the KC 87.11 but without the color extension card.\n"
-msgstr ""
+msgstr "    Like the KC 87.11 but without the color extension card.\n"
 
 #: src/kc/prefs/types.cc:564
 msgid "    Successor of the Z9001 with internal 10k BASIC ROM.\n"
-msgstr ""
+msgstr "    Successor of the Z9001 with internal 10k BASIC ROM.\n"
 
 #: src/kc/prefs/types.cc:580
 msgid "    Like the KC 87.21 but without the color extension card.\n"
-msgstr ""
+msgstr "    Like the KC 87.21 but without the color extension card.\n"
 
 #: src/kc/prefs/types.cc:596
 msgid ""
@@ -1857,46 +2381,50 @@ msgid ""
 "for\n"
 "    plotter support were added).\n"
 msgstr ""
+"    New series with extended BASIC ROM (still 10k but with some routines "
+"for\n"
+"    plotter support were added).\n"
 
 #: src/kc/prefs/types.cc:613
 msgid "    New batch of KC 87.20 with no known hardware differences.\n"
-msgstr ""
+msgstr "    New batch of KC 87.20 with no known hardware differences.\n"
 
 #: src/kc/prefs/types.cc:629
 msgid "    New batch of KC 87.21 with no known hardware differences.\n"
-msgstr ""
+msgstr "    New batch of KC 87.21 with no known hardware differences.\n"
 
 #: src/kc/prefs/types.cc:648
 msgid "    Single board computer LC 80 with 1k RAM and 2 x 1k ROM.\n"
-msgstr ""
+msgstr "    Single board computer LC 80 with 1k RAM and 2 x 1k ROM.\n"
 
 #: src/kc/prefs/types.cc:654
 msgid "    Single board computer LC 80 with 1k RAM and 1 x 2k ROM.\n"
-msgstr ""
+msgstr "    Single board computer LC 80 with 1k RAM and 1 x 2k ROM.\n"
 
 #: src/kc/prefs/types.cc:659
 msgid "    Export variant of the LC 80 with 12k ROM including chess program.\n"
 msgstr ""
+"    Export variant of the LC 80 with 12k ROM including chess program.\n"
 
 #: src/kc/prefs/types.cc:664
 msgid "System-ROM 3"
-msgstr ""
+msgstr "System-ROM 3"
 
 #: src/kc/prefs/types.cc:669
 msgid "    BIC/A5105, only the base device is emulated, no floppy device.\n"
-msgstr ""
+msgstr "    BIC/A5105, only the base device is emulated, no floppy device.\n"
 
 #: src/kc/prefs/types.cc:674 src/kc/prefs/types.cc:682
 msgid "DSE-ROM 1"
-msgstr ""
+msgstr "DSE-ROM 1"
 
 #: src/kc/prefs/types.cc:675 src/kc/prefs/types.cc:683
 msgid "DSE-ROM 2"
-msgstr ""
+msgstr "DSE-ROM 2"
 
 #: src/kc/prefs/types.cc:677
 msgid "    BIC/A5105, the full system including the floppy device.\n"
-msgstr ""
+msgstr "    BIC/A5105, the full system including the floppy device.\n"
 
 #: src/kc/prefs/types.cc:688
 msgid ""
@@ -1904,58 +2432,66 @@ msgid ""
 "\"\n"
 "    by Manfred Kramer.\n"
 msgstr ""
+"    Micro-Computer presented in the book \"Praktische Microcomputertechnik"
+"\"\n"
+"    by Manfred Kramer.\n"
 
 #: src/kc/prefs/types.cc:691
 msgid "IO-Monitor"
-msgstr ""
+msgstr "IO-Monitor"
 
 #: src/kc/prefs/types.cc:692
 msgid "BASIC"
-msgstr ""
+msgstr "BASIC"
 
 #: src/kc/prefs/types.cc:693 src/kc/prefs/types.cc:706
 msgid "Charset-ROM"
-msgstr ""
+msgstr "Charset-ROM"
 
 #: src/kc/prefs/types.cc:694
 msgid "Debugger"
-msgstr ""
+msgstr "Debugger"
 
 #: src/kc/prefs/types.cc:695
 msgid "Reassembler"
-msgstr ""
+msgstr "Reassembler"
 
 #: src/kc/prefs/types.cc:696
 msgid "Editor"
-msgstr ""
+msgstr "Editor"
 
 #: src/kc/prefs/types.cc:697
 msgid "Assembler"
-msgstr ""
+msgstr "Assembler"
 
 #: src/kc/prefs/types.cc:702
 msgid ""
 "    CP/M based Micro-Computer presented in the magazine \"Funkamateur\"\n"
 "    by A. Mugler and H. Mathes.\n"
 msgstr ""
+"    CP/M based Micro-Computer presented in the magazine \"Funkamateur\"\n"
+"    by A. Mugler and H. Mathes.\n"
 
 #: src/kc/prefs/types.cc:711
 msgid ""
 "    Minimal Z80 learning system presented in the magazine \"rfe\"\n"
 "    by Eckhard Schiller.\n"
 msgstr ""
+"    Minimal Z80 learning system presented in the magazine \"rfe\"\n"
+"    by Eckhard Schiller.\n"
 
 #: src/kc/prefs/types.cc:719
 msgid "    Minimal Z80 learning system designed by Dipl.-Ing. Joachim Czepa.\n"
 msgstr ""
+"    Minimal Z80 learning system designed by Dipl.-Ing. Joachim Czepa.\n"
 
 #: src/kc/prefs/types.cc:722
 msgid "User-ROM"
-msgstr ""
+msgstr "User-ROM"
 
 #: src/kc/prefs/types.cc:815
 msgid "available emulations:"
-msgstr ""
+msgstr "available emulations:"
 
 #: src/libtape/kctape.cc:81
 msgid ""
@@ -1985,6 +2521,31 @@ msgid ""
 "  -b|--print-bam         show internal block allocation map\n"
 "  -B|--print-block-list  show internal block list\n"
 msgstr ""
+"\n"
+"KCtape is part of KCemu the KC 85/4 Emulator and comes with\n"
+"ABSOLUTELY NO WARRANTY; for details run `kcemu --warranty'.\n"
+"This is free software, and you are welcome to redistribute it\n"
+"under certain conditions; run `kcemu --license' for details.\n"
+"\n"
+"usage: kctape -t tapefile [command [command_args]]\n"
+"\n"
+" commands:\n"
+" ---------\n"
+"\n"
+"  -h|--help              show this help text\n"
+"  -v|--verbose           be verbose about what's going on\n"
+"  -t|--tape              tape archive to process\n"
+"  -l|--list              list content of tape archive\n"
+"  -c|--create            create tape archive if it doesn't exist\n"
+"  -a|--add               add files (KC85/3 mode)\n"
+"  -1|--add1              add files (KC85/1 mode)\n"
+"  -A|--add-raw           add binary files\n"
+"  -r|--remove            remove file from tape archive\n"
+"  -x|--extract           extract file from tape archive\n"
+"  -d|--dump              hexdump file\n"
+"  -o|--output            output file for extract\n"
+"  -b|--print-bam         show internal block allocation map\n"
+"  -B|--print-block-list  show internal block list\n"
 
 #: src/libtape/kctape.cc:585
 #, c-format
@@ -1993,38 +2554,41 @@ msgid ""
 "       the tape archive you want to process\n"
 "\n"
 msgstr ""
+"ERROR: no tape specified, use the -t option to select\n"
+"       the tape archive you want to process\n"
+"\n"
 
 #: src/ui/gtk/debug.cc:239
 msgid "KCemu: Debugger"
-msgstr ""
+msgstr "KCemu: Debugger"
 
 #: src/ui/gtk/debug.cc:338
 msgid "Trace"
-msgstr ""
+msgstr "Trace"
 
 #: src/ui/gtk/debug.cc:345
 msgid "Single Step"
-msgstr ""
+msgstr "Single Step"
 
 #: src/ui/gtk/debug.cc:352
 msgid "Execute Step"
-msgstr ""
+msgstr "Execute Step"
 
 #: src/ui/gtk/dialog.cc:54
 msgid "???"
-msgstr ""
+msgstr "???"
 
 #: src/ui/gtk/fbrowse.cc:41
 msgid "Select File..."
-msgstr ""
+msgstr "Select File..."
 
 #: src/ui/gtk/hedit.cc:96
 msgid "no tape-filename given!"
-msgstr ""
+msgstr "no tape-filename given!"
 
 #: src/ui/gtk/hedit.cc:101
 msgid "no KC-filename given!"
-msgstr ""
+msgstr "no KC-filename given!"
 
 #: src/ui/gtk/hedit.cc:106 src/ui/gtk/image.cc:89
 msgid ""
@@ -2034,38 +2598,43 @@ msgid ""
 "hexadecimal values need to be prefixed with 0x (e.g. 0x1234),\n"
 "octal values require a leading 0 (e.g. 0444)"
 msgstr ""
+"error in given load address!\n"
+"\n"
+"valid addresses have to be in the range from 0 to 65535\n"
+"hexadecimal values need to be prefixed with 0x (e.g. 0x1234),\n"
+"octal values require a leading 0 (e.g. 0444)"
 
 #: src/ui/gtk/hedit.cc:119 src/ui/gtk/image.cc:105
 msgid "error in given start address!"
-msgstr ""
+msgstr "error in given start address!"
 
 #: src/ui/gtk/hedit.cc:174
 msgid "File Properties"
-msgstr ""
+msgstr "File Properties"
 
 #: src/ui/gtk/hedit.cc:199
 msgid "Name in tape-directory:"
-msgstr ""
+msgstr "Name in tape-directory:"
 
 #: src/ui/gtk/hedit.cc:212
 msgid "Name in KC file-header:"
-msgstr ""
+msgstr "Name in KC file-header:"
 
 #: src/ui/gtk/hedit.cc:225 src/ui/gtk/image.cc:156
 msgid "Load address:"
-msgstr ""
+msgstr "Load address:"
 
 #: src/ui/gtk/hedit.cc:238 src/ui/gtk/image.cc:169
 msgid "Start address:"
-msgstr ""
+msgstr "Start address:"
 
 #: src/ui/gtk/hedit.cc:251
 msgid "autostart"
-msgstr ""
+msgstr "autostart"
 
 #: src/ui/gtk/image.cc:126
 msgid "Input Image Properties"
-msgstr ""
+msgstr "Input Image Properties"
 
 #: src/ui/gtk/image.cc:133
 msgid ""
@@ -2076,243 +2645,249 @@ msgid ""
 "To load the file nevertheless you need to type in the\n"
 "needed values yourself."
 msgstr ""
+"It was not possible to automatically determine the\n"
+"type of the selected file. Thus I don't know at which\n"
+"address the file should be loaded\n"
+"\n"
+"To load the file nevertheless you need to type in the\n"
+"needed values yourself."
 
 #: src/ui/gtk/image.cc:185
 msgid "Start Program after Loading"
-msgstr ""
+msgstr "Start Program after Loading"
 
 #: src/ui/gtk/image.cc:197
 msgid "OK"
-msgstr ""
+msgstr "OK"
 
 #: src/ui/gtk/image.cc:209
 msgid "Cancel"
-msgstr ""
+msgstr "Cancel"
 
 #: src/ui/gtk/info.cc:134
 msgid "byte output"
-msgstr ""
+msgstr "byte output"
 
 #: src/ui/gtk/info.cc:135
 msgid "byte input"
-msgstr ""
+msgstr "byte input"
 
 #: src/ui/gtk/info.cc:136
 msgid "byte input/output"
-msgstr ""
+msgstr "byte input/output"
 
 #: src/ui/gtk/info.cc:137
 msgid "bit input/output"
-msgstr ""
+msgstr "bit input/output"
 
 #: src/ui/gtk/info.cc:328
 msgid "Mode:"
-msgstr ""
+msgstr "Mode:"
 
 #: src/ui/gtk/info.cc:347 src/ui/gtk/info.cc:421
 msgid "IRQ:"
-msgstr ""
+msgstr "IRQ:"
 
 #: src/ui/gtk/info.cc:366 src/ui/gtk/info.cc:440
 msgid "IRQ Vector:"
-msgstr ""
+msgstr "IRQ Vector:"
 
 #: src/ui/gtk/info.cc:393
 msgid "Channel A"
-msgstr ""
+msgstr "Channel A"
 
 #: src/ui/gtk/info.cc:397
 msgid "Channel B"
-msgstr ""
+msgstr "Channel B"
 
 #: src/ui/gtk/info.cc:466
 msgid "Channel 0"
-msgstr ""
+msgstr "Channel 0"
 
 #: src/ui/gtk/info.cc:470
 msgid "Channel 1"
-msgstr ""
+msgstr "Channel 1"
 
 #: src/ui/gtk/info.cc:474
 msgid "Channel 2"
-msgstr ""
+msgstr "Channel 2"
 
 #: src/ui/gtk/info.cc:478
 msgid "Channel 3"
-msgstr ""
+msgstr "Channel 3"
 
 #: src/ui/gtk/info.cc:493
 msgid "KCemu: Info"
-msgstr ""
+msgstr "KCemu: Info"
 
 #: src/ui/gtk/info.cc:518
 msgid "CPU"
-msgstr ""
+msgstr "CPU"
 
 #: src/ui/gtk/info.cc:521
 msgid "PIO"
-msgstr ""
+msgstr "PIO"
 
 #: src/ui/gtk/info.cc:524
 msgid "CTC"
-msgstr ""
+msgstr "CTC"
 
 #: src/ui/gtk/info.cc:547
 msgid "Update"
-msgstr ""
+msgstr "Update"
 
 #: src/ui/gtk/info.cc:557 src/ui/gtk/wav.cc:146
 msgid "Close"
-msgstr ""
+msgstr "Close"
 
 #: src/ui/gtk/keyboard.cc:601
 msgid "KCemu: Keyboard"
-msgstr ""
+msgstr "KCemu: Keyboard"
 
 #: src/ui/gtk/module.cc:210
 msgid "No module slots available for this computer."
-msgstr ""
+msgstr "No module slots available for this computer."
 
 #: src/ui/gtk/module.cc:222
 #, c-format
 msgid "Slot %d"
-msgstr ""
+msgstr "Slot %d"
 
 #: src/ui/gtk/module.cc:317
 msgid "Floppy Disk Basis [F0]"
-msgstr ""
+msgstr "Floppy Disk Basis [F0]"
 
 #: src/ui/gtk/module.cc:322
 #, c-format
 msgid "D002: Busdriver [%02X]"
-msgstr ""
+msgstr "D002: Busdriver [%02X]"
 
 #: src/ui/gtk/module.cc:333 src/ui/gtk/module.cc:340 src/ui/gtk/module.cc:344
 #: src/ui/gtk/module.cc:348 src/ui/gtk/module.cc:352 src/ui/gtk/module.cc:356
 #: src/ui/gtk/module.cc:360 src/ui/gtk/module.cc:364 src/ui/gtk/module.cc:368
 #: src/ui/gtk/module.cc:371
 msgid "Basis Device"
-msgstr ""
+msgstr "Basis Device"
 
 #: src/ui/gtk/tape.cc:78
 msgid "Please enter the new name for the file."
-msgstr ""
+msgstr "Please enter the new name for the file."
 
 #: src/ui/gtk/tape.cc:264
 msgid "/_Run File"
-msgstr ""
+msgstr "/_Run File"
 
 #: src/ui/gtk/tape.cc:265
 msgid "/_Load File"
-msgstr ""
+msgstr "/_Load File"
 
 #: src/ui/gtk/tape.cc:266
 msgid "/_Export File"
-msgstr ""
+msgstr "/_Export File"
 
 #: src/ui/gtk/tape.cc:267
 msgid "/Export _Wav"
-msgstr ""
+msgstr "/Export _Wav"
 
 #: src/ui/gtk/tape.cc:268
 msgid "/sep1"
-msgstr ""
+msgstr "/sep1"
 
 #: src/ui/gtk/tape.cc:269
 msgid "/Edit _Header"
-msgstr ""
+msgstr "/Edit _Header"
 
 #: src/ui/gtk/tape.cc:270
 msgid "/Re_name File"
-msgstr ""
+msgstr "/Re_name File"
 
 #: src/ui/gtk/tape.cc:271
 msgid "/_Delete File"
-msgstr ""
+msgstr "/_Delete File"
 
 #: src/ui/gtk/tape.cc:272
 msgid "/sep2"
-msgstr ""
+msgstr "/sep2"
 
 #: src/ui/gtk/tape.cc:273
 msgid "/_Add File"
-msgstr ""
+msgstr "/_Add File"
 
 #: src/ui/gtk/tape.cc:278
 msgid "Name"
-msgstr ""
+msgstr "Name"
 
 #: src/ui/gtk/tape.cc:279
 msgid "Type"
-msgstr ""
+msgstr "Type"
 
 #: src/ui/gtk/tape.cc:280
 msgid "Load"
-msgstr ""
+msgstr "Load"
 
 #: src/ui/gtk/tape.cc:281
 msgid "Start"
-msgstr ""
+msgstr "Start"
 
 #: src/ui/gtk/tape.cc:282
 msgid "Size"
-msgstr ""
+msgstr "Size"
 
 #: src/ui/gtk/tape.cc:294 src/ui/gtk/tape.cc:300
 msgid "<TapeP>"
-msgstr ""
+msgstr "<TapeP>"
 
 #: src/ui/gtk/tape.cc:301
 msgid "/Run File"
-msgstr ""
+msgstr "/Run File"
 
 #: src/ui/gtk/tape.cc:302
 msgid "/Load File"
-msgstr ""
+msgstr "/Load File"
 
 #: src/ui/gtk/tape.cc:303
 msgid "/Edit Header"
-msgstr ""
+msgstr "/Edit Header"
 
 #: src/ui/gtk/tape.cc:304
 msgid "/Delete File"
-msgstr ""
+msgstr "/Delete File"
 
 #: src/ui/gtk/tape.cc:305
 msgid "/Rename File"
-msgstr ""
+msgstr "/Rename File"
 
 #: src/ui/gtk/tape.cc:306
 msgid "/Export File"
-msgstr ""
+msgstr "/Export File"
 
 #: src/ui/gtk/tape.cc:307
 msgid "/Export Wav"
-msgstr ""
+msgstr "/Export Wav"
 
 #: src/ui/gtk/ui_gtk.cc:780
 msgid "Info"
-msgstr ""
+msgstr "Info"
 
 #: src/ui/gtk/wav.cc:136
 msgid "Open"
-msgstr ""
+msgstr "Open"
 
 #: src/ui/gtk/wav.cc:156
 msgid "Play"
-msgstr ""
+msgstr "Play"
 
 #: src/ui/gtk/wav.cc:166
 msgid "Stop"
-msgstr ""
+msgstr "Stop"
 
 #: src/ui/gtk/wav.cc:176
 msgid "Record"
-msgstr ""
+msgstr "Record"
 
 #: src/ui/gtk/options.cc:92
 msgid "Save profiles?"
-msgstr ""
+msgstr "Save profiles?"
 
 #: src/ui/gtk/options.cc:94
 msgid ""
@@ -2321,12 +2896,28 @@ msgid ""
 "'Yes' will save changes to disk, 'No' will reject all changes.\n"
 "'Cancel': will allow to continue editing."
 msgstr ""
+"Some profiles were changed!\n"
+"\n"
+"'Yes' will save changes to disk, 'No' will reject all changes.\n"
+"'Cancel': will allow to continue editing."
 
 #: src/ui/gtk/options.cc:610
 msgid "Open ROM Image..."
-msgstr ""
+msgstr "Open ROM Image..."
 
 #: src/ui/gtk/options.cc:818
 #, c-format
 msgid "ROM image is '%s'. The ROM size needs to be %04xh (%d) bytes."
-msgstr ""
+msgstr "ROM image is '%s'. The ROM size needs to be %04xh (%d) bytes."
+
+#~ msgid "4"
+#~ msgstr "4"
+
+#~ msgid "3"
+#~ msgstr "3"
+
+#~ msgid "2"
+#~ msgstr "2"
+
+#~ msgid "1"
+#~ msgstr "1"
