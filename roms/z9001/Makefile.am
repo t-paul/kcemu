@@ -24,7 +24,10 @@ ROMS = \
 	chargen.851 \
 	os_rb20.rom \
 	os_rb21.rom \
-	kc_caos.rom
+	kc_caos.rom \
+	zg_cga.rom \
+	zg_cgai.rom \
+	zg_de.rom
 
 z9001rom_DATA = $(ROMS)
 

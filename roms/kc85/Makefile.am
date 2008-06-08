@@ -15,9 +15,13 @@ ROMS = \
 	basic_c0.854 \
 	caos__c0.854 \
 	caos__e0.854 \
+	caos41c.854 \
+	caos41e.854 \
 	basic_c0.855 \
 	caos__c0.855 \
 	caos__e0.855 \
+	caos43c.855 \
+	caos43e.855 \
 	floppy20.rom \
 	floppy31.rom \
 	m006.rom \
