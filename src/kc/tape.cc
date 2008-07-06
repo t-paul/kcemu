@@ -1451,15 +1451,17 @@ Tape::tape_signal_z1013(long diff)
 
       bit = (diff > 580) ? 128 : 0;
       if (bit == 0)
-	if (first)
-	  {
-	    first = false;
-	  }
-	else
-	  {
-	    first = true;
-	    break;
-	  }
+        {
+	  if (first)
+	    {
+	      first = false;
+	    }
+	  else
+	    {
+	      first = true;
+	      break;
+	    }
+        }
 
       bidx++;
       byte >>= 1;
