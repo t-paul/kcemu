@@ -21,6 +21,10 @@
 
 #include <iostream>
 
+#include <string.h>
+#include <stdarg.h>
+#include <stdlib.h>
+
 #include "kc/system.h"
 #include "kc/prefs/types.h"
 #include "kc/prefs/prefs.h"

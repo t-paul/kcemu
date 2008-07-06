@@ -20,11 +20,13 @@
  */
 
 #include <fstream>
+#include <algorithm>
 
 #include <errno.h>
 #include <fcntl.h>
 #include <unistd.h>
 #include <assert.h>
+#include <stdlib.h>
 #include <sys/stat.h>
 
 #include "kc/system.h"

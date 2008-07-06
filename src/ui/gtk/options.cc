@@ -42,6 +42,8 @@
  * DEBUG UI_Gtk Frame Delay
  */
 
+#include <stdlib.h>
+
 #include <list>
 #include <string>
 

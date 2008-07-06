@@ -25,6 +25,7 @@
 
 #include <zlib.h>
 #include <unistd.h>
+#include <stdlib.h>
 
 #include "kc/memstream.h"
 
