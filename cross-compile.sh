@@ -7,15 +7,13 @@
 #  Compilation now at least requires Gtk+-2.6. Gtk+-2.4 is not
 #  supported anymore.
 #
-#  Two packages are generated. One with the latest Gtk+-2.6 as
-#  this is the last release that will be runnable under Windows 95.
-#  The second package requires at least Windows 2000 and uses
-#  the latest Gtk+ version available for Windows.
+#  Support for Windows 95 is not available anymore. Due to the
+#  usage of the cairo library, at least Windows 2000 is required.
 #
 
 #BUILD_DIR="/tmp/kcemu.build.$$"
 BUILD_DIR="/tmp/kcemu.build"
-GTK_DEV_PACKAGES_DIR="/data/download/win32-dev/gtk-win32/gtk+-2.6.10"
+GTK_DEV_PACKAGES_DIR="/data/download/win32-dev/gtk-win32/gtk+-2.14.5"
 GTK_RUNTIME_PACKAGES_BASE="/data/download/win32-dev/gtk-win32"
 DEP_PACKAGES_DIR="/data/download/win32-dev/gtk-win32/dependencies"
 SDL_PACKAGES_DIR="/data/download/win32-dev/libsdl"
@@ -66,15 +64,16 @@ unpack_dev_libs () {
 	else
 		mkdir -p "$DIR" && cd "$DIR" || exit 5
 
-		u "$GTK_DEV_PACKAGES_DIR"/glib-dev-2.6.6.zip
-		u "$GTK_DEV_PACKAGES_DIR"/gtk+-dev-2.6.10-20050823.zip
-		u "$GTK_DEV_PACKAGES_DIR"/pango-dev-1.8.2.zip
-		u "$GTK_DEV_PACKAGES_DIR"/atk-dev-1.9.0.zip
+		u "$GTK_DEV_PACKAGES_DIR"/glib-dev_2.18.3-1_win32.zip
+		u "$GTK_DEV_PACKAGES_DIR"/gtk+-dev_2.14.5-1_win32.zip
+		u "$GTK_DEV_PACKAGES_DIR"/pango-dev_1.22.2-1_win32.zip
+		u "$GTK_DEV_PACKAGES_DIR"/atk-dev_1.24.0-1_win32.zip
+		u "$GTK_DEV_PACKAGES_DIR"/cairo-dev_1.8.0-1_win32.zip
 
-		u "$DEP_PACKAGES_DIR"/pkg-config-0.20.zip
+		u "$DEP_PACKAGES_DIR"/pkg-config-0.23-2.zip
 		u "$DEP_PACKAGES_DIR"/libiconv-1.9.1.bin.woe32.zip
 		u "$DEP_PACKAGES_DIR"/gettext-runtime-dev-0.17-1.zip
-		u "$DEP_PACKAGES_DIR"/libpng-1.2.7-lib.zip
+		u "$DEP_PACKAGES_DIR"/libpng-dev_1.2.32-1_win32.zip
 		u "$DEP_PACKAGES_DIR"/jpeg-6b-4-lib.zip
 
 		u "$DEP_PACKAGES_DIR"/zlib123-dll.zip
@@ -117,7 +116,7 @@ EOF
 unpack_cur_libs_common () {
 	u "$DEP_PACKAGES_DIR"/libiconv-1.9.1.bin.woe32.zip
 	u "$DEP_PACKAGES_DIR"/gettext-runtime-0.17-1.zip
-	u "$DEP_PACKAGES_DIR"/libpng-1.2.8-bin.zip
+	u "$DEP_PACKAGES_DIR"/libpng_1.2.32-1_win32.zip
 	u "$DEP_PACKAGES_DIR"/jpeg-6b-4-bin.zip
 
 	u "$GLADE_PACKAGES_DIR"/libglade-2.6.2.zip
@@ -189,6 +188,10 @@ unpack_cur_libs_gtk_2_12_9 () {
 	unpack_cur_libs_gtk gtk+-2.12.9 glib-2.16.3.zip gtk+-2.12.9.zip pango-1.20.2.zip atk-1.22.0.zip cairo-1.6.4-1.zip
 }
 
+unpack_cur_libs_gtk_2_14_5 () {
+	unpack_cur_libs_gtk gtk+-2.14.5 glib_2.18.3-1_win32.zip gtk+_2.14.5-1_win32.zip pango_1.22.2-1_win32.zip atk_1.24.0-1_win32.zip cairo_1.8.0-1_win32.zip
+}
+
 compile_kcemu () {
 	export BUILD=`cd "KCemu-${KCEMU_VERSION}" && ./config/config.guess`
 	echo "*"
@@ -257,7 +260,7 @@ compile_kcemu || exit 3
 #
 #  create installer for Win2000 version
 #
-unpack_cur_libs_gtk_2_12_9
+unpack_cur_libs_gtk_2_14_5
 makensis - < "KCemu-${KCEMU_VERSION}/setup/KCemuSetup.nsi" || exit 5
 
 exit 0
