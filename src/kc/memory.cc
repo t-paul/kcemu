@@ -334,15 +334,27 @@ Memory::load_rom(const char *key, void *buf)
       DBG(1, form("KCemu/Memory/load_rom",
                   "Memory::load_rom(): profile has no entry for key '%s'\n",
                   key));
-      romfile = rom->get_roms().front()->get_filename().c_str();
-      DBG(1, form("KCemu/Memory/load_rom",
-                  "Memory::load_rom(): using default filename '%s'\n",
-                  romfile));
     }
   else
     {
       DBG(1, form("KCemu/Memory/load_rom",
                   "Memory::load_rom(): got filename from profile '%s'\n",
+                  romfile));
+
+      if (sys_isabsolutepath(romfile) && (access(romfile, R_OK) != 0))
+        {
+          DBG(1, form("KCemu/Memory/load_rom",
+                      "Memory::load_rom(): rom from profile ('%s') is not readable, using default\n",
+                      romfile));
+          romfile = NULL;
+        }
+    }
+
+  if (romfile == NULL)
+    {
+      romfile = rom->get_roms().front()->get_filename().c_str();
+      DBG(1, form("KCemu/Memory/load_rom",
+                  "Memory::load_rom(): using default filename '%s'\n",
                   romfile));
     }
 
