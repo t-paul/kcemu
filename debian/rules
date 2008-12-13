@@ -55,8 +55,6 @@ install: build
 	dh_clean -k 
 	dh_installdirs
 
-	# Add here commands to install the package into debian/blah.
-	$(MAKE) DESTDIR=$(CURDIR)/debian/blah install
 	$(MAKE) install prefix=$(CURDIR)/debian/kcemu/usr \
 		exec_prefix=$(CURDIR)/debian/kcemu/usr \
 		mandir=$(CURDIR)/debian/kcemu/usr/share/man

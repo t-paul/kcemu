@@ -28,4 +28,8 @@ install-data-local:
 	$(mkinstalldirs) $(DESTDIR)$(docdir)
 	cp ChangeLog $(DESTDIR)$(docdir)/changelog
 
+deb:
+	unset CFLAGS CXXFLAGS FFLAGS CPPFLAGS LDFLAGS; \
+	dpkg-buildpackage -rfakeroot -b -us -uc
+
 CONFIG_STATUS_DEPENDENCIES = VERSION
