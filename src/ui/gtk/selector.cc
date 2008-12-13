@@ -279,9 +279,7 @@ ProfileSelectorWindow::init(void) {
 
     gtk_icon_view_set_pixbuf_column(GTK_ICON_VIEW(_w.iconview), ICONVIEW_PIXBUF_COLUMN);
     gtk_icon_view_set_text_column(GTK_ICON_VIEW(_w.iconview), ICONVIEW_TEXT_COLUMN);
-#if GTK_CHECK_VERSION(2,12,0)
     gtk_icon_view_set_tooltip_column(GTK_ICON_VIEW(_w.iconview), ICONVIEW_TOOLTIP_COLUMN);
-#endif
     gtk_icon_view_set_model(GTK_ICON_VIEW(_w.iconview), GTK_TREE_MODEL(_w.liststore_iconview));
     g_signal_connect(_w.iconview, "selection-changed", G_CALLBACK(on_iconview_selection_changed), this);
     g_signal_connect(_w.iconview, "item-activated", G_CALLBACK(on_iconview_item_activated), this);

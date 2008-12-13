@@ -235,7 +235,7 @@ SaveMemoryWindow::on_save(GtkButton *button, gpointer user_data)
                                                        GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
                                                        GTK_STOCK_SAVE, GTK_RESPONSE_ACCEPT,
                                                        NULL);
-  //gtk_file_chooser_set_do_overwrite_confirmation(GTK_FILE_CHOOSER(filechooser), TRUE);
+  gtk_file_chooser_set_do_overwrite_confirmation(GTK_FILE_CHOOSER(filechooser), TRUE);
 
   char buf[1024];
   int start_addr = (int)gtk_adjustment_get_value(self->_w.adjustment_start);
