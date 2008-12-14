@@ -67,6 +67,7 @@ EmulationType EmulationType::_emulation_type_muglerpc(KC_TYPE_MUGLERPC, -1, "Mug
 EmulationType EmulationType::_emulation_type_kramermc(KC_TYPE_KRAMERMC, -1, "Kramer Microcomputer", "Kramer-MC", "kramermc", "icon-kramermc.png", "kcemu-kramermc.xpm", "",            "sys-kramermc", "",                      0, 0x0000, 0x0000);
 EmulationType EmulationType::_emulation_type_vcs80(   KC_TYPE_VCS80,    -1, "VCS 80",               "VCS 80",    "vcs80",    "icon-vcs80.png",    "kcemu-vcs80.xpm",    "vcs80.key",   "sys-vcs80",    "",                      6, 0x0000, 0x0000);
 EmulationType EmulationType::_emulation_type_c80(     KC_TYPE_C80,      -1, "C-80",                 "C-80",      "c80",      "icon-c80.png",      "kcemu-c80.xpm",      "",            "sys-c80",      "",                      0, 0x0000, 0x0000);
+EmulationType EmulationType::_emulation_type_hueblermc(KC_TYPE_HUEBLERMC, -1, "Hübler/Evert System",  "Hübler-MC", "hueblermc", "icon-hueblermc.png", "kcemu-hueblermc.xpm", "",       "sys-hueblermc", "",                     0, 0xf000, 0xf000);
 
 EmulationType::EmulationType(kc_type_t kc_type, int type, string name, string short_name, string config_name, string icon_name, string image_name, string keyboard_filename, string help_topic, string help_topic_module, int module_slots, word_t power_on_addr, word_t reset_addr) {
     _type = type;
@@ -177,6 +178,7 @@ EmulationType::get_emulation_types(void) {
         _emulation_type_list.push_back(&_emulation_type_muglerpc);
         _emulation_type_list.push_back(&_emulation_type_vcs80);
         _emulation_type_list.push_back(&_emulation_type_c80);
+        _emulation_type_list.push_back(&_emulation_type_hueblermc);
     }
     return _emulation_type_list;
 }
@@ -918,6 +920,16 @@ SystemInformation::SystemInformation(void) {
         .set_rom_directory("/roms/c80")
         .add_rom(SystemROM::ROM_KEY_SYSTEM, 0x0400, "monitor.rom", _("System-ROM"), NULL)
         .add_optional_rom(SystemROM::ROM_KEY_USER, 0x0400, "user.rom", _("User-ROM"), NULL);
+    /*
+     *  Hübler/Evert System
+     */
+    add_system_type(1500, "hueblermc", -100, EmulationType::_emulation_type_hueblermc, KC_VARIANT_NONE,
+            N_("    Extensible microcomputer system with U880 by Bernd Hübler and.\n"
+            "    Klaus-Peter Evert.\n"))
+        .set_ui_callback_value(50000)
+        .set_rom_directory("/roms/hueblermc")
+        .add_rom(SystemROM::ROM_KEY_SYSTEM, 0x0c00, "monitor.rom", _("System-ROM"), NULL)
+        .add_rom(SystemROM::ROM_KEY_CHARGEN, 0x0400, "chargen.rom", _("Charset-ROM"), NULL);
 
     _system_type_list.sort(less_system_type());
 }

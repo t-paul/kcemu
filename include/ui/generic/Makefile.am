@@ -14,6 +14,7 @@ EXTRA_DIST = \
 	ui_muglerpc.h	\
 	ui_vcs80.h	\
 	ui_c80.h	\
+	ui_hueblermc.h	\
 	tape.h		\
 	module.h	\
 	scanline.h	\

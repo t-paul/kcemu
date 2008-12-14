@@ -18,6 +18,7 @@ ICONS = \
 	kcemu-kramermc.xpm \
 	kcemu-poly880.xpm \
 	kcemu-z1013.xpm \
+	kcemu-hueblermc.xpm \
 	kcemu-winicon_16x16.png \
 	kcemu-winicon_32x32.png \
 	kcemu-winicon_48x48.png \
@@ -33,7 +34,8 @@ ICONS = \
 	icon-pcm.png \
 	icon-poly880.png \
 	icon-vcs80.png \
-	icon-z1013.png
+	icon-z1013.png \
+	icon-hueblermc.png
 
 WINICONS = \
 	kcemu-bic.ico \

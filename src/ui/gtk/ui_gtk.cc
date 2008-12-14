@@ -75,6 +75,7 @@
 #include "ui/gtk/ui_gtk_muglerpc.h"
 #include "ui/gtk/ui_gtk_vcs80.h"
 #include "ui/gtk/ui_gtk_c80.h"
+#include "ui/gtk/ui_gtk_hueblermc.h"
 
 #include "ui/generic/ui_0.h"
 
@@ -269,6 +270,9 @@ void
 UI_Gtk::key_press_release(GdkEventKey *event, bool press) {
     int c = 0;
     int key_code;
+
+    if (!keyboard)
+      return;
     
     key_code = event->hardware_keycode;
     
@@ -402,8 +406,9 @@ void
 UI_Gtk::sf_focus_in(GtkWidget * /* widget */, GdkEventFocus *event) {
     DBG(2, form("KCemu/UI/focus_in",
             "got focus\n"));
-    
-    keyboard->keyReleased(-1, -1);
+
+    if (keyboard)
+      keyboard->keyReleased(-1, -1);
 }
 
 void
@@ -411,12 +416,14 @@ UI_Gtk::sf_focus_out(GtkWidget *widget, GdkEventFocus *event) {
     DBG(2, form("KCemu/UI/focus_out",
             "lost focus\n"));
     
-    keyboard->keyReleased(-1, -1);
+    if (keyboard)
+      keyboard->keyReleased(-1, -1);
 }
 
 void
 UI_Gtk::sf_leave_notify(GtkWidget *widget, GdkEventCrossing *event) {
-    keyboard->keyReleased(-1, -1);
+    if (keyboard)
+      keyboard->keyReleased(-1, -1);
 }
 
 void
@@ -822,6 +829,9 @@ UI_Gtk::create_ui(void) {
             break;
         case KC_TYPE_C80:
             _ui = new UI_Gtk_C80();
+            break;
+      case KC_TYPE_HUEBLERMC:
+            _ui = new UI_Gtk_HueblerMC();
             break;
         case KC_TYPE_ALL:
         case KC_TYPE_NONE:

@@ -152,6 +152,9 @@
 #include "kc/c80/display.h"
 #include "kc/c80/keyboard.h"
 
+#include "kc/hueblermc/memory.h"
+#include "kc/hueblermc/keyboard.h"
+
 #ifdef USE_UI_GTK
 # include "ui/gtk/ui_gtk.h"
 #endif /* USE_UI_GTK */
@@ -182,6 +185,7 @@
 #endif /* HOST_OS_BEOS */
 
 #include "libdbg/dbg.h"
+#include "hueblermc/keyboard.h"
 
 using namespace std;
 
@@ -689,6 +693,9 @@ warranty(char *argv0)
 void
 attach_tape(void)
 {
+  if (!tape)
+    return;
+  
   if (kcemu_tape != 0)
     {
       tape->attach(kcemu_tape);
@@ -1170,6 +1177,7 @@ main(int argc, char **argv)
       KeyboardMuglerPC *k_mugler;
       KeyboardVCS80 *k_vcs80;
       KeyboardC80 *k_c80;
+      KeyboardHueblerMC *k_hueblermc;
 
       timer = NULL;
       memory = NULL;
@@ -1334,7 +1342,15 @@ main(int argc, char **argv)
 	  pio->register_callback_A_out(display_c80);
 	  pio->register_callback_B_out(display_c80);
 	  break;
-	default:
+        case KC_TYPE_HUEBLERMC:
+          memory = new MemoryHueblerMC;
+          k_hueblermc = new KeyboardHueblerMC;
+          keyboard = k_hueblermc;
+          break;
+        case KC_TYPE_ALL:
+        case KC_TYPE_NONE:
+        case KC_TYPE_85_1_CLASS:
+        case KC_TYPE_85_2_CLASS:
 	  DBG(0, form("KCemu/internal_error",
 		      "KCemu: setup with undefined system type\n"));
 	  break;
@@ -1454,7 +1470,13 @@ main(int argc, char **argv)
 	  daisy->add_last(pio);
 	  daisy->add_last(pio2);
 	  break;
-	default:
+        case KC_TYPE_HUEBLERMC:
+	  portg = ports->register_ports("Keyboard", 0x08, 2, k_hueblermc, 10);
+          break;
+        case KC_TYPE_ALL:
+        case KC_TYPE_NONE:
+        case KC_TYPE_85_1_CLASS:
+        case KC_TYPE_85_2_CLASS:
 	  DBG(0, form("KCemu/internal_error",
 		      "KCemu: setup with undefined system type\n"));
 	  break;
