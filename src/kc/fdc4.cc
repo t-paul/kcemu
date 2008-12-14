@@ -147,6 +147,7 @@ FDC4::out(word_t addr, byte_t val)
       DBG(2, form("KCemu/FDC/out_F6",
                   "FDC::out(): %04xh addr = %04x, val = %02x [%c]\n",
                   r.PC.D, addr, val, isprint(val) ? val : '.'));
+      drive_select(val & 0x0f);
       break;
     case 0xf8: // D004 (KC85/4)
       DBG(2, form("KCemu/FDC/out_F8",

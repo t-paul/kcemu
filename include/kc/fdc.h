@@ -150,6 +150,13 @@ class FDC : public InterfaceCircuit, public PortInterface, public Callback
     ST_3_UNIT_SELECT_MASK        = 0x03,
     ST_3_UNIT_SELECT_1             = 0x02,
     ST_3_UNIT_SELECT_0             = 0x01,
+
+    /*
+     *  Callback selector
+     */
+    CB_MASK                      = 0xff0000,
+    CB_TYPE_SEEK                   = 0x010000,
+    CB_TYPE_INDEX                  = 0x020000,
   };
 
  private:
@@ -160,6 +167,7 @@ class FDC : public InterfaceCircuit, public PortInterface, public Callback
   FloppyState *_fstate[NR_OF_FLOPPIES];
   FloppyState *_cur_floppy;
   int _selected_unit;
+  int _selected_device; // select line of the floppy drive, not in the FDC
   
   byte_t _MSR; /* Main Status Register */
   byte_t _INPUT_GATE;
@@ -179,6 +187,10 @@ class FDC : public InterfaceCircuit, public PortInterface, public Callback
   virtual ~FDC(void);
 
   void callback(void *data);
+  void callback_seek(void *data);
+  void callback_index(void *data);
+
+  void drive_select(byte_t val);
 
   virtual byte_t in_data(word_t addr);
   virtual void out_data(word_t addr, byte_t val);
