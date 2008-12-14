@@ -46,8 +46,17 @@ ModuleROM::ModuleROM(ModuleROM &tmpl) :
     }
 }
 
-ModuleROM::ModuleROM(const char *filename, const char *name,
-		     dword_t size, byte_t id) :
+ModuleROM::ModuleROM(const char *rom_key, const char *name, byte_t id) :
+  ModuleInterface(name, id, KC_MODULE_KC_85_3)
+{
+  _size = 0x2000;
+  _rom = new byte_t[_size]; // FIXME: need to get size from type info
+  _group = NULL;
+
+  set_valid(Memory::load_rom(rom_key, _rom));
+}
+
+ModuleROM::ModuleROM(const char *filename, const char *name, dword_t size, byte_t id) :
   ModuleInterface(name, id, KC_MODULE_KC_85_3)
 {
   _rom = new byte_t[size];

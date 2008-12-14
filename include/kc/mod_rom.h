@@ -37,6 +37,7 @@ protected:
 public:
   ModuleROM(ModuleROM &tmpl);
   ModuleROM(byte_t *rom, const char *name, dword_t size, byte_t id);
+  ModuleROM(const char *rom_key, const char *name, byte_t id);
   ModuleROM(const char *filename, const char *name, dword_t size, byte_t id);
   virtual ~ModuleROM(void);
 

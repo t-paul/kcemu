@@ -567,13 +567,6 @@ OptionsWindow::on_kc85_f8_rom_changed(GtkComboBox *combobox, gpointer user_data)
 }
 
 void
-OptionsWindow::on_kc85_swap_roms_changed(GtkComboBox *combobox, gpointer user_data) {
-    OptionsWindow *self = (OptionsWindow *)user_data;
-    int d004_swap_roms = gtk_combo_box_get_active(combobox);
-    self->_current_profile->set_int_value("d004_swap_roms", d004_swap_roms);
-}
-
-void
 OptionsWindow::on_kc85_busdrivers_changed(GtkSpinButton *spin_button, gpointer user_data) {
     OptionsWindow *self = (OptionsWindow *)user_data;
     int busdrivers = gtk_spin_button_get_value_as_int(spin_button);
@@ -814,6 +807,17 @@ OptionsWindow::set_roms_liststore(int idx, const char *rom_key, SystemROM *rom) 
     if (active < 0) {
         active = 0;
         active_entry = *roms.begin();
+
+        int idx = 0;
+        for (rom_entry_list_t::const_iterator it = roms.begin();it != roms.end();it++) {
+            ROMEntry *entry = (*it);
+            if (entry->is_default()) {
+                active = idx;
+                active_entry = entry;
+                break;
+            }
+            idx++;
+        }
     }
     
     char tooltip[128];
@@ -930,7 +934,6 @@ OptionsWindow::apply_kc85_settings(void) {
 
     apply_combobox_value(_w.check_button_d004, _w.combobox_d004, _w.on_kc85_d004_changed_id);
     apply_combobox_value(_w.check_button_f8_rom, _w.combobox_f8_rom, _w.on_kc85_f8_rom_changed_id);
-    apply_combobox_value(_w.check_button_swap_roms, _w.combobox_swap_roms, _w.on_kc85_swap_roms_changed_id);
 }
 
 void
@@ -1256,20 +1259,16 @@ OptionsWindow::init(void) {
     
     _w.check_button_d004 = GTK_CHECK_BUTTON(get_widget("kc85_checkbutton_d004"));
     _w.check_button_f8_rom = GTK_CHECK_BUTTON(get_widget("kc85_checkbutton_f8_rom"));
-    _w.check_button_swap_roms = GTK_CHECK_BUTTON(get_widget("kc85_checkbutton_swap_roms"));
     _w.check_button_busdrivers = GTK_CHECK_BUTTON(get_widget("kc85_checkbutton_busdrivers"));
     _w.combobox_d004 = GTK_COMBO_BOX(get_widget("kc85_combobox_d004"));
     _w.combobox_f8_rom = GTK_COMBO_BOX(get_widget("kc85_combobox_f8_rom"));
-    _w.combobox_swap_roms = GTK_COMBO_BOX(get_widget("kc85_combobox_swap_roms"));
     _w.spin_button_busdrivers = GTK_SPIN_BUTTON(get_widget("kc85_spinbutton_busdrivers"));
     wire_check_button("d004", _w.check_button_d004, G_CALLBACK(on_kc85_settings_check_button_toggled), GTK_WIDGET(_w.combobox_d004));
     wire_check_button("d004_f8", _w.check_button_f8_rom, G_CALLBACK(on_kc85_settings_check_button_toggled), GTK_WIDGET(_w.combobox_f8_rom));
-    wire_check_button("d004_swap_roms", _w.check_button_swap_roms, G_CALLBACK(on_kc85_settings_check_button_toggled), GTK_WIDGET(_w.combobox_swap_roms));
     wire_check_button("busdrivers", _w.check_button_busdrivers, G_CALLBACK(on_kc85_settings_check_button_toggled), GTK_WIDGET(_w.spin_button_busdrivers));
 
     _w.on_kc85_d004_changed_id = g_signal_connect(_w.combobox_d004, "changed", G_CALLBACK(on_kc85_d004_changed), this);
     _w.on_kc85_f8_rom_changed_id = g_signal_connect(_w.combobox_f8_rom, "changed", G_CALLBACK(on_kc85_f8_rom_changed), this);
-    _w.on_kc85_swap_roms_changed_id = g_signal_connect(_w.combobox_swap_roms, "changed", G_CALLBACK(on_kc85_swap_roms_changed), this);
     _w.on_kc85_busdrivers_changed_id = g_signal_connect(_w.spin_button_busdrivers, "value-changed", G_CALLBACK(on_kc85_busdrivers_changed), this);
     
     for (int a = 0;a < NR_OF_MODULES;a++) {

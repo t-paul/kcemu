@@ -135,7 +135,7 @@ EmulationType::get_emulation_types(void) {
     return _emulation_type_list;
 }
 
-ROMEntry::ROMEntry(const char *filename, const char *description) : _filename(filename), _description(description)
+ROMEntry::ROMEntry(const char *filename, const char *description, bool is_default) : _filename(filename), _description(description), _is_default(is_default)
 {
 }
 
@@ -155,6 +155,12 @@ ROMEntry::get_description(void) const
     return _description;
 }
 
+const bool
+ROMEntry::is_default(void) const
+{
+    return _is_default;
+}
+
 const char * SystemROM::ROM_KEY_CAOSC       = N_("rom_caos_c");
 const char * SystemROM::ROM_KEY_CAOSE       = N_("rom_caos_e");
 const char * SystemROM::ROM_KEY_SYSTEM      = N_("rom_system");
@@ -169,6 +175,8 @@ const char * SystemROM::ROM_KEY_REASSEMBLER = N_("rom_reassembler");
 const char * SystemROM::ROM_KEY_EDITOR      = N_("rom_editor");
 const char * SystemROM::ROM_KEY_ASSEMBLER   = N_("rom_assembler");
 const char * SystemROM::ROM_KEY_CHARGEN     = N_("rom_charset");
+const char * SystemROM::ROM_KEY_D004_FC     = N_("rom_d004_fc");
+const char * SystemROM::ROM_KEY_D004_F8     = N_("rom_d004_f8");
 
 SystemROM::SystemROM(const char *name, bool mandatory, int size)
 : _size(size),
@@ -205,10 +213,20 @@ SystemROM::get_roms(void) const
     return _roms;
 }
 
-void
-SystemROM::add_rom(const char *filename, const char *description)
+const ROMEntry *
+SystemROM::get_default_rom(void) const
 {
-    _roms.push_back(new ROMEntry(filename, description));
+  for (rom_entry_list_t::const_iterator it = _roms.begin(); it != _roms.end(); it++)
+    if ((*it)->is_default())
+      return (*it);
+
+  return NULL;
+}
+
+void
+SystemROM::add_rom(const char *filename, const char *description, bool is_default)
+{
+    _roms.push_back(new ROMEntry(filename, description, is_default));
 }
 
 SystemType::SystemType(int sort, string name, int type, EmulationType &emulation_type, kc_variant_t kc_variant, string description)
@@ -269,12 +287,14 @@ SystemType::get_rom(const char *key) const
 }
 
 void
-SystemType::add_rom(const char *name, bool mandatory, int size, const char *filename, const char *description, va_list ap)
+SystemType::add_rom(const char *name, bool mandatory, int size, int default_idx, const char *filename, const char *description, va_list ap)
 {
     SystemROM *rom = new SystemROM(name, mandatory, size);
-    rom->add_rom(filename, description);
+    rom->add_rom(filename, description, 0 == default_idx);
 
+    int idx = 0;
     while (242) {
+        idx++;
         const char *arg1 = va_arg(ap, const char *);
         if (arg1 == NULL)
             break;
@@ -283,7 +303,7 @@ SystemType::add_rom(const char *name, bool mandatory, int size, const char *file
         if (arg2 == NULL)
             break;
         
-        rom->add_rom(arg1, arg2);
+        rom->add_rom(arg1, arg2, idx == default_idx);
     }
     
     _rom_list.push_back(rom);
@@ -294,7 +314,17 @@ SystemType::add_rom(const char *name, int size, const char *filename, const char
 {
     va_list ap;
     va_start(ap, description);
-    add_rom(name, true, size, filename, description, ap);
+    add_rom(name, true, size, 0, filename, description, ap);
+    va_end(ap);
+    return *this;
+}
+
+SystemType &
+SystemType::add_rom(const char *name, int size, int default_idx, const char *filename, const char *description, ...)
+{
+    va_list ap;
+    va_start(ap, description);
+    add_rom(name, true, size, default_idx, filename, description, ap);
     va_end(ap);
     return *this;
 }
@@ -304,7 +334,7 @@ SystemType::add_optional_rom(const char *name, int size, const char *filename, c
 {
     va_list ap;
     va_start(ap, description);
-    add_rom(name, false, size, filename, description, ap);
+    add_rom(name, false, size, 0, filename, description, ap);
     va_end(ap);
     return *this;
 }
@@ -479,6 +509,18 @@ SystemInformation::SystemInformation(void) {
         .add_rom(SystemROM::ROM_KEY_CAOSE, 0x2000,
                  "hc900.852", _("HC-900 CAOS"),
                  "caos__e0.852", _("CAOS 2.2"),
+                 NULL)
+        .add_rom(SystemROM::ROM_KEY_D004_FC, 0x2000,
+                 "floppy20.rom", _("D004 Version 2.0 (02.01.1989)"),
+                 "floppy30.rom", _("D004 Version 3.0 (07.12.1997)"),
+                 "floppy31.rom", _("D004 Version 3.1 (22.01.2003)"),
+                 "floppy32.rom", _("D004 Version 3.2 (28.10.2008)"),
+                 NULL)
+        .add_rom(SystemROM::ROM_KEY_D004_F8, 0x2000, 2,
+                 "floppy20.rom", _("D004 Version 2.0 (02.01.1989)"),
+                 "floppy30.rom", _("D004 Version 3.0 (07.12.1997)"),
+                 "floppy31.rom", _("D004 Version 3.1 (22.01.2003)"),
+                 "floppy32.rom", _("D004 Version 3.2 (28.10.2008)"),
                  NULL);
     /*
      *  KC 85/3
@@ -494,7 +536,19 @@ SystemInformation::SystemInformation(void) {
                  "pi88_sw.853", _("OS PI/88 (black/white)"),
                  "pi88_ws.853", _("OS PI/88 (white/blue)"),
                  NULL)
-        .add_rom(SystemROM::ROM_KEY_BASIC, 0x2000, "basic_c0.853", _("KC-BASIC"), NULL);
+        .add_rom(SystemROM::ROM_KEY_BASIC, 0x2000, "basic_c0.853", _("KC-BASIC"), NULL)
+        .add_rom(SystemROM::ROM_KEY_D004_FC, 0x2000,
+                 "floppy20.rom", _("D004 Version 2.0 (02.01.1989)"),
+                 "floppy30.rom", _("D004 Version 3.0 (07.12.1997)"),
+                 "floppy31.rom", _("D004 Version 3.1 (22.01.2003)"),
+                 "floppy32.rom", _("D004 Version 3.2 (28.10.2008)"),
+                 NULL)
+        .add_rom(SystemROM::ROM_KEY_D004_F8, 0x2000, 2,
+                 "floppy20.rom", _("D004 Version 2.0 (02.01.1989)"),
+                 "floppy30.rom", _("D004 Version 3.0 (07.12.1997)"),
+                 "floppy31.rom", _("D004 Version 3.1 (22.01.2003)"),
+                 "floppy32.rom", _("D004 Version 3.2 (28.10.2008)"),
+                 NULL);
     /*
      *  KC 85/4
      */
@@ -502,15 +556,27 @@ SystemInformation::SystemInformation(void) {
             N_("    KC 85/4 with 64k RAM, 64k screen memory, 12k system ROM with HC-CAOS 4.2\n"
             "    and 8k BASIC ROM.\n"))
         .set_rom_directory("/roms/kc85")
-        .add_rom(SystemROM::ROM_KEY_CAOSC, 0x1000,
-                 "caos__c0.854", _("CAOS 4.2 (C)"),
+        .add_rom(SystemROM::ROM_KEY_CAOSC, 0x1000, 1,
                  "caos41c.854", _("CAOS 4.1 (C)"),
+                 "caos__c0.854", _("CAOS 4.2 (C)"),
                  NULL)
-        .add_rom(SystemROM::ROM_KEY_CAOSE, 0x2000,
-                 "caos__e0.854", _("CAOS 4.2 (E)"),
+        .add_rom(SystemROM::ROM_KEY_CAOSE, 0x2000, 1,
                  "caos41e.854", _("CAOS 4.1 (E)"),
+                 "caos__e0.854", _("CAOS 4.2 (E)"),
                  NULL)
-        .add_rom(SystemROM::ROM_KEY_BASIC, 0x2000, "basic_c0.854", _("KC-BASIC"), NULL);
+        .add_rom(SystemROM::ROM_KEY_BASIC, 0x2000, "basic_c0.854", _("KC-BASIC"), NULL)
+        .add_rom(SystemROM::ROM_KEY_D004_FC, 0x2000,
+                 "floppy20.rom", _("D004 Version 2.0 (02.01.1989)"),
+                 "floppy30.rom", _("D004 Version 3.0 (07.12.1997)"),
+                 "floppy31.rom", _("D004 Version 3.1 (22.01.2003)"),
+                 "floppy32.rom", _("D004 Version 3.2 (28.10.2008)"),
+                 NULL)
+        .add_rom(SystemROM::ROM_KEY_D004_F8, 0x2000, 2,
+                 "floppy20.rom", _("D004 Version 2.0 (02.01.1989)"),
+                 "floppy30.rom", _("D004 Version 3.0 (07.12.1997)"),
+                 "floppy31.rom", _("D004 Version 3.1 (22.01.2003)"),
+                 "floppy32.rom", _("D004 Version 3.2 (28.10.2008)"),
+                 NULL);
     /*
      *  KC 85/5
      */
@@ -520,15 +586,27 @@ SystemInformation::SystemInformation(void) {
             "    intended to be used with a modified D004 floppy device with additional\n"
             "    hard-disk support.\n"))
         .set_rom_directory("/roms/kc85")
-        .add_rom(SystemROM::ROM_KEY_CAOSC, 0x2000,
-                 "caos__c0.855", _("CAOS 4.4 (C)"),
+        .add_rom(SystemROM::ROM_KEY_CAOSC, 0x2000, 1,
                  "caos43c.855", _("CAOS 4.3 (C)"),
+                 "caos__c0.855", _("CAOS 4.4 (C)"),
                  NULL)
-        .add_rom(SystemROM::ROM_KEY_CAOSE, 0x2000,
-                 "caos__e0.855", _("CAOS 4.4 (E)"),
+        .add_rom(SystemROM::ROM_KEY_CAOSE, 0x2000, 1,
                  "caos43e.855", _("CAOS 4.3 (E)"),
+                 "caos__e0.855", _("CAOS 4.4 (E)"),
                  NULL)
-        .add_rom(SystemROM::ROM_KEY_BASIC, 0x8000, "basic_c0.855", _("KC-BASIC"), NULL);
+        .add_rom(SystemROM::ROM_KEY_BASIC, 0x8000, "basic_c0.855", _("KC-BASIC"), NULL)
+        .add_rom(SystemROM::ROM_KEY_D004_FC, 0x2000, 2,
+                 "floppy20.rom", _("D004 Version 2.0 (02.01.1989)"),
+                 "floppy30.rom", _("D004 Version 3.0 (07.12.1997)"),
+                 "floppy31.rom", _("D004 Version 3.1 (22.01.2003)"),
+                 "floppy32.rom", _("D004 Version 3.2 (28.10.2008)"),
+                 NULL)
+        .add_rom(SystemROM::ROM_KEY_D004_F8, 0x2000, 0,
+                 "floppy20.rom", _("D004 Version 2.0 (02.01.1989)"),
+                 "floppy30.rom", _("D004 Version 3.0 (07.12.1997)"),
+                 "floppy31.rom", _("D004 Version 3.1 (22.01.2003)"),
+                 "floppy32.rom", _("D004 Version 3.2 (28.10.2008)"),
+                 NULL);
     /*
      *  Polycomputer 880
      */

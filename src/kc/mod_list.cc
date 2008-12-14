@@ -23,17 +23,17 @@
  *  Quelle: http://www.kc85emu.de/scans/fa0192/Bild5.jpg
  *  Original: Zeitschrift Funkamateur
  * 
- *  ---: D001 Grundgerät KC85/2
- *  ---: D001 Grundgerät KC85/3
- *  ---: D001 Grundgerät KC85/4
+ *  ---: D001 GrundgerÃ¤t KC85/2
+ *  ---: D001 GrundgerÃ¤t KC85/3
+ *  ---: D001 GrundgerÃ¤t KC85/4
  *  ---: D002 Busdriver
  *  ---: D004 Floppy Disk Drive
- *  a7h: D004 Floppy Disk Basis (ROM) -- always at slot fch!
+ *  a7h: D004 Floppy Disk Basis (ROM)
  *  efh: M001 Digital IN/OUT
- *  eeh: M003 V24 (2 Kanäle)
+ *  eeh: M003 V24 (2 KanÃ¤le)
  *  ---: M005 User (Leermodul)
- *  ---: M006 BASIC (für KC 85/2)
- *  ---: M007 Adapter (Herausführung der Anschlüsse an die Frontseite)
+ *  ---: M006 BASIC (fÃ¼r KC 85/2)
+ *  ---: M007 Adapter (HerausfÃ¼hrung der AnschlÃ¼sse an die Frontseite)
  *  ---: M008 Joystick
  *  e7h: M010 ADU1
  *  f6h: M011 64 KByte RAM
@@ -56,7 +56,7 @@
  */
 
 /*
- *  Modulübersicht für KC85
+ *  ModulÃ¼bersicht fÃ¼r KC85
  *  
  *  von Mario Leubner
  *  
@@ -64,46 +64,46 @@
  *  
  *  Modul  Kenn.  Steuerb.  Bezeichnung
  *  
- *  D001     -       -      Grundgerät KC85/2 (PIO 88-8B, CTC 8C-8F)
- *  D001     -       -      Grundgerät KC85/3 (PIO 88-8B, CTC 8C-8F)
- *  D001     -       -      Grundgerät KC85/4 (OUT 84-87, PIO 88-8B, CTC 8C-8F)
- *  D002     -       -      Busdriver für 4 Module (OUT 80 zur Modulsteuerung)
- *  D003*    -       -      Programmer (ähnl. D002, ROM-Module brennen?)
+ *  D001     -       -      GrundgerÃ¤t KC85/2 (PIO 88-8B, CTC 8C-8F)
+ *  D001     -       -      GrundgerÃ¤t KC85/3 (PIO 88-8B, CTC 8C-8F)
+ *  D001     -       -      GrundgerÃ¤t KC85/4 (OUT 84-87, PIO 88-8B, CTC 8C-8F)
+ *  D002     -       -      Busdriver fÃ¼r 4 Module (OUT 80 zur Modulsteuerung)
+ *  D003*    -       -      Programmer (Ã¤hnl. D002, ROM-Module brennen?)
  *  D004    A7    xxAxxKxM  Floppy Disk Basis (Koppel-RAM F0-F3, OUT F4-F7)
  *  D004     -       -      Floppy Disk Drive (Laufwerk K5601, 5 1/4")
- *  D005                    Komfort-Tastatur fÜr KC85/4 (mit EMR UB8830)
+ *  D005                    Komfort-Tastatur fÃ¼r KC85/4 (mit EMR UB8830)
  *  
  *  M000*   01              Spezial f. KC85/3: autom. Start in Schacht 8 ab 4000H
  *  M001    EF    xxxxxxxM  Digital IN/OUT (CTC 00-03, PIO 04-07)
  *  M002*   DA    xxxxxxxM  PIO 3 (PIO 10-13, PIO 14-17)
- *  M003    EE    xxxxxxxM  V.24 (2 Kanäle, SIO 08-0B, CTC 0C-0F)
+ *  M003    EE    xxxxxxxM  V.24 (2 KanÃ¤le, SIO 08-0B, CTC 0C-0F)
  *  M005     -       -      USER-Leermodul (freie Ports: C0-CF, Kennbytes C0-D7)
- *  M006    FC    AAxxxxxM  BASIC und CAOS 3.1 für KC85/2 (1 Block zu 16K ROM)
- *  M007     -       -      Adapter (Busverlängerung für Modulschacht)
+ *  M006    FC    AAxxxxxM  BASIC und CAOS 3.1 fÃ¼r KC85/2 (1 Block zu 16K ROM)
+ *  M007     -       -      Adapter (BusverlÃ¤ngerung fÃ¼r Modulschacht)
  *  M008     -       -      Joystick (PIO 90-93)
  *  M009*   ED    xxxxxxxM  TLCM (Spracheingabe- und Datenkompressionsmodul)
- *  M010    E7    xxxxxxxM  ADU1: 4 Analogeingänge mit Multiplexer (PIO 40-43)
+ *  M010    E7    xxxxxxxM  ADU1: 4 AnalogeingÃ¤nge mit Multiplexer (PIO 40-43)
  *  M011    F6    AAxxxxWM  64K RAM (1 Block zu 64K, rotierbar)
  *  M012    FB    AAAxxxxM  Software: TEXOR + V.24-Treiber (1 Block ROM 8K)
  *  M021*    -       -      Joystick + Centronics (PIO 90-93)
  *  M022    F4    AAxxxxWM  Expander-RAM 16K (1 Block zu 16K)
  *  M024*   F5    AAxxxxWM  32K RAM (1 Block zu 32K)
- *  M025    F7    AAAxxxxM  USER PROM 8K (1 Block zu 8K, 4 Sockel für 2716)
+ *  M025    F7    AAAxxxxM  USER PROM 8K (1 Block zu 8K, 4 Sockel fÃ¼r 2716)
  *  M026    FB    AAAxxxxM  Software: FORTH (1 Block ROM 8K)
  *  M027    FB    AAAxxxxM  Software: DEVELOPMENT+V.24-Treiber (1 Block ROM 8K)
- *  M029    E3    xxxxxxxM  DAU1: 2 Analogausgänge + 1 Relais (OUT 44..47)
+ *  M029    E3    xxxxxxxM  DAU1: 2 AnalogausgÃ¤nge + 1 Relais (OUT 44..47)
  *  M030    D9              EPROMER ?
- *  M030    DB    AAAxxxxM  EPROMER für 2-64K (8K EPROM, PIO D0-D3, PIO D4-D7)
- *  M032    79    AxSSSSWM  256K segmented RAM (16 Blöcke je 16K, 4000 od. 8000)
- *  M033    01    AA0SxxxM  Software: TYPESTAR+RAMDOS (2 Blöcke ROM zu je 8K)
- *  M034    7A    ASSSSSWM  512K segmented RAM (32 Blöcke je 16K, 4000 od. 8000)
- *  M035    7B    SSSSSSWM  1M segmented RAM (64 Blöcke je 16K, Adr. 8000)
- *  M036    78    AxxSSSWM  128K segmented RAM (8 Blöcke je 16K, 4000 od. 8000)
+ *  M030    DB    AAAxxxxM  EPROMER fÃ¼r 2-64K (8K EPROM, PIO D0-D3, PIO D4-D7)
+ *  M032    79    AxSSSSWM  256K segmented RAM (16 BlÃ¶cke je 16K, 4000 od. 8000)
+ *  M033    01    AA0SxxxM  Software: TYPESTAR+RAMDOS (2 BlÃ¶cke ROM zu je 8K)
+ *  M034    7A    ASSSSSWM  512K segmented RAM (32 BlÃ¶cke je 16K, 4000 od. 8000)
+ *  M035    7B    SSSSSSWM  1M segmented RAM (64 BlÃ¶cke je 16K, Adr. 8000)
+ *  M036    78    AxxSSSWM  128K segmented RAM (8 BlÃ¶cke je 16K, 4000 od. 8000)
  *  M040    F8    AAxxxxxM  USER PROM 16K (1 Block zu 16KByte)
- *  M045    70    AASSxxxM  32K segmented ROM (4 Blöcke je 8K)
- *  M046    71    AASSxSxM  64K segmented ROM (8 Blöcke je 8K)
- *  M047    72    AASSSSxM  128K segmented ROM (16 Blöcke je 8K)
- *  M048*   73    AASSSSxM  256K segmented ROM (16 Blöcke je 16K)
+ *  M045    70    AASSxxxM  32K segmented ROM (4 BlÃ¶cke je 8K)
+ *  M046    71    AASSxSxM  64K segmented ROM (8 BlÃ¶cke je 8K)
+ *  M047    72    AASSSSxM  128K segmented ROM (16 BlÃ¶cke je 8K)
+ *  M048*   73    AASSSSxM  256K segmented ROM (16 BlÃ¶cke je 16K)
  *  M053    EE    xxxxxxxM  RS232: wie M003, jedoch 2. Kanal mit TTL-Pegel
  *  M120*   F0    AAAxxxWM  8K CMOS-RAM (1 Block zu 8K)
  *  M122*   F1    AAxxxxWM  16K CMOS-RAM (1 Block zu 16K)
@@ -404,7 +404,7 @@ ModuleList::ModuleList(void)
       _init_color_expansion = _color_expansion;
 
   /*
-   *  Plotter-Anschluß
+   *  Plotter-Anschluss
    */
 #ifdef HOST_OS_LINUX
   m = new ModuleXY4131("XY4131");
@@ -536,49 +536,31 @@ ModuleList::ModuleList(void)
   m = new ModuleROM(kc85_m901_rom.c_str(), "M901", 0x2000, 0xfb);
   _mod_list.push_back(new ModuleListEntry(_("M901: WordPro '86 (KC85/4)"), m, KC_TYPE_85_4));
 
-  /*
-   *  Floppy Disk Basis Extension ROM (Version 3.1 at slot F8)
-   */
-  string kc85_floppy_f8_rom = kc85_romdir + "/floppy31.rom";
-  m = new ModuleDisk(kc85_floppy_f8_rom.c_str(), "Floppy Disk Basis F8", 0x2000, 0xa7);
-  ModuleListEntry *mod_floppy_f8 = new ModuleListEntry(_("Floppy Disk Basis F8"), m, KC_TYPE_NONE);
-  _mod_list.push_back(mod_floppy_f8);
-
   int d004_enabled = Preferences::instance()->get_int_value("d004", 0);
-  
+
   _init_floppy_basis_f8 = 0;
-  if (kc_type & KC_TYPE_85_2_CLASS)
-    if (d004_enabled)
-      _init_floppy_basis_f8 = mod_floppy_f8;
-
-  /*
-   *  Floppy Disk Basis ROM (Version 2.0 at slot FC)
-   */
-  string kc85_floppy_fc_rom = kc85_romdir + "/floppy20.rom";
-  m = new ModuleDisk(kc85_floppy_fc_rom.c_str(), "Floppy Disk Basis FC", 0x2000, 0xa7);
-  ModuleListEntry *mod_floppy_fc = new ModuleListEntry(_("Floppy Disk Basis FC"), m, KC_TYPE_NONE);
-  _mod_list.push_back(mod_floppy_fc);
-
   _init_floppy_basis_fc = 0;
-  if (kc_type & KC_TYPE_85_2_CLASS)
-    if (d004_enabled)
-      _init_floppy_basis_fc = mod_floppy_fc;
-  
-  bool swap_floppy_roms = (kc_type == KC_TYPE_85_5) ? true : false;
-  if (Preferences::instance()->get_int_value("d004_swap_roms", 0))
-    swap_floppy_roms = !swap_floppy_roms;
+  if ((kc_type & KC_TYPE_85_2_CLASS) && d004_enabled)
+    {
+     if (Preferences::instance()->get_int_value("d004_f8", 0))
+       {
+          /*
+           *  Floppy Disk Basis Extension ROM at slot F8, rom is defined by profile setting
+           */
+          m = new ModuleDisk(SystemROM::ROM_KEY_D004_F8, "Floppy Disk Basis F8", 0xa7, 0xf8);
+          ModuleListEntry *mod_floppy_f8 = new ModuleListEntry(_("Floppy Disk Basis F8"), m, KC_TYPE_NONE);
+          _mod_list.push_back(mod_floppy_f8);
+          _init_floppy_basis_f8 = mod_floppy_f8;
+       }
 
-  if (kc_type & KC_TYPE_85_2_CLASS)
-    if (d004_enabled)
-      if (swap_floppy_roms)
-	{
-	  _init_floppy_basis_fc = _init_floppy_basis_f8;
-	  _init_floppy_basis_f8 = mod_floppy_fc;
-	}
-    
-  if (kc_type & KC_TYPE_85_2_CLASS)
-    if (!Preferences::instance()->get_int_value("d004_f8", 0))
-      _init_floppy_basis_f8 = 0;
+     /*
+       *  Floppy Disk Basis ROM at slot FC, rom is defined by profile setting
+       */
+      m = new ModuleDisk(SystemROM::ROM_KEY_D004_FC, "Floppy Disk Basis FC", 0xa7, 0xfc);
+      ModuleListEntry *mod_floppy_fc = new ModuleListEntry(_("Floppy Disk Basis FC"), m, KC_TYPE_NONE);
+      _mod_list.push_back(mod_floppy_fc);
+      _init_floppy_basis_fc = mod_floppy_fc;
+    }
 
   _nr_of_bd = Preferences::instance()->get_int_value("busdrivers", 0);
   if (_nr_of_bd < 0)

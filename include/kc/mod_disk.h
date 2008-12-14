@@ -27,10 +27,12 @@
 
 class ModuleDisk : public ModuleROM
 {
+ private:
+  int _slot;
+  
  public:
   ModuleDisk(ModuleDisk &tmpl);
-  ModuleDisk(const char *filename, const char *name,
-             dword_t size, byte_t id);
+  ModuleDisk(const char *rom_key, const char *name, byte_t id, int slot);
   virtual ~ModuleDisk(void);
 
   virtual word_t get_addr(byte_t val);

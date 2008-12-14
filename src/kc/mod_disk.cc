@@ -33,13 +33,14 @@
 ModuleDisk::ModuleDisk(ModuleDisk &tmpl) : ModuleROM(tmpl)
 {
   _val = 0;
+  _slot = tmpl._slot;
 }
 
-ModuleDisk::ModuleDisk(const char *filename, const char *name,
-		       dword_t size, byte_t id) :
-  ModuleROM(filename, name, size, id)
+ModuleDisk::ModuleDisk(const char *rom_key, const char *name, byte_t id, int slot) :
+  ModuleROM(rom_key, name, id)
 {
   _val = 0;
+  _slot = slot;
 }
 
 ModuleDisk::~ModuleDisk(void)
@@ -76,31 +77,46 @@ ModuleDisk::m_out(word_t addr, byte_t val)
   word_t map_addr = get_addr(val);
 
   DBG(2, form("KCemu/ModuleDisk/out",
-	      "ModuleDisk::out(): addr = %04x, val = %02x, old val = %02x\n",
-              addr, val, _val));
+	      "ModuleDisk::out(): %s: addr = %04x, val = %02x, old val = %02x\n",
+              get_name(), addr, val, _val));
 
+  // The module interface allows us to snoop on slots F8 and FC at
+  // the same time. So we can disable the memory of the not accessed
+  // slot.
   reg = unreg = false;
-  if ((_val & 0x20) ^ (val & 0x20))
+  if (((addr >> 8) & 0xfc) != _slot)
     {
       DBG(2, form("KCemu/ModuleDisk/out",
-                  "ModuleDisk::out(): new map address is %04x\n",
-                  map_addr));
-      reg = unreg = true;
+                  "ModuleDisk::out(): %s: I/O to module on other port detected!\n",
+                  get_name()));
+      reg = false;
+      unreg = true;
     }
-
-  if ((_val & 0x04) ^ (val & 0x04))
+  else
     {
-      DBG(2, form("KCemu/ModuleDisk/out",
-                  "ModuleDisk::out(): shared memory is now %s\n",
-                  (val & 0x04) ? "on" : "off"));
-    }
+      if ((_val & 0x20) ^ (val & 0x20))
+        {
+          DBG(2, form("KCemu/ModuleDisk/out",
+                      "ModuleDisk::out(): %s: new map address is %04x\n",
+                      get_name(), map_addr));
+          reg = unreg = true;
+        }
 
-  if ((_val & 0x01) ^ (val & 0x01))
-    {
-      if (val & 1)
-        reg = true;
-      else
-        reg = false;
+      if ((_val & 0x04) ^ (val & 0x04))
+        {
+          DBG(2, form("KCemu/ModuleDisk/out",
+                      "ModuleDisk::out(): %s: shared memory is now %s\n",
+                      get_name(), (val & 0x04) ? "on" : "off"));
+        }
+
+      if ((_val & 0x01) ^ (val & 0x01))
+        {
+          if (val & 1)
+            reg = true;
+          else
+            reg = false;
+        }
+
     }
 
   if (unreg)

@@ -139,12 +139,14 @@ class ROMEntry {
 private:
     string _filename;
     string _description;
+    bool   _is_default;
 public:
-    ROMEntry(const char *filename, const char *description);
+    ROMEntry(const char *filename, const char *description, bool is_default = false);
     virtual ~ROMEntry(void);
     
     const string get_filename(void) const;
     const string get_description(void) const;
+    const bool is_default(void) const;
 };
 
 typedef list<ROMEntry *> rom_entry_list_t;
@@ -171,6 +173,8 @@ public:
     static const char * ROM_KEY_EDITOR;
     static const char * ROM_KEY_ASSEMBLER;
     static const char * ROM_KEY_CHARGEN;
+    static const char * ROM_KEY_D004_FC;
+    static const char * ROM_KEY_D004_F8;
 
 public:
     SystemROM(const char *name, bool mandatory, int size);
@@ -180,8 +184,9 @@ public:
     bool is_mandatory(void) const;
     const string get_name(void) const;
     const rom_entry_list_t & get_roms(void) const;
+    const ROMEntry * get_default_rom(void) const;
 
-    void add_rom(const char *name, const char *filename);
+    void add_rom(const char *name, const char *filename, bool is_default);
 };
 
 typedef list<SystemROM *> system_rom_list_t;
@@ -199,7 +204,7 @@ class SystemType {
     string            _rom_dir;
     system_rom_list_t _rom_list;
 
-    virtual void add_rom(const char *name, bool mandatory, int size, const char *filename, const char *description, va_list ap);
+    virtual void add_rom(const char *name, bool mandatory, int size, int default_idx, const char *filename, const char *description, va_list ap);
 
 public:
     SystemType(int sort, string name, int type, EmulationType &emulation_type, kc_variant_t kc_variant, string description);
@@ -216,6 +221,7 @@ public:
     virtual const system_rom_list_t & get_rom_list(void) const;
     virtual const SystemROM * get_rom(const char *key) const;
     virtual SystemType & add_rom(const char *name, int size, const char *filename, const char *description, ...);
+    virtual SystemType & add_rom(const char *name, int size, int default_idx, const char *filename, const char *description, ...);
     virtual SystemType & add_optional_rom(const char *name, int size, const char *filename, const char *description, ...);
 
     virtual int get_sort(void) const;

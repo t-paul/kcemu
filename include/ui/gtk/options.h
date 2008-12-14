@@ -108,11 +108,9 @@ private:
 
         GtkCheckButton *check_button_d004;
         GtkCheckButton *check_button_f8_rom;
-        GtkCheckButton *check_button_swap_roms;
         GtkCheckButton *check_button_busdrivers;
         GtkComboBox    *combobox_d004;
         GtkComboBox    *combobox_f8_rom;
-        GtkComboBox    *combobox_swap_roms;
         GtkSpinButton  *spin_button_busdrivers;
 
         GtkSpinButton  *spin_button_display_scale;
@@ -145,7 +143,6 @@ private:
         gint          on_display_debug_changed_id;
         gint          on_kc85_d004_changed_id;
         gint          on_kc85_f8_rom_changed_id;
-        gint          on_kc85_swap_roms_changed_id;
         gint          on_kc85_busdrivers_changed_id;
         gint          on_module_changed_id[NR_OF_MODULES];
         gint          on_rom_changed_id[NR_OF_ROMS];
@@ -227,7 +224,6 @@ protected:
     static void on_kc85_settings_check_button_toggled(GtkToggleButton *togglebutton, gpointer user_data);
     static void on_kc85_d004_changed(GtkComboBox *combobox, gpointer user_data);
     static void on_kc85_f8_rom_changed(GtkComboBox *combobox, gpointer user_data);
-    static void on_kc85_swap_roms_changed(GtkComboBox *combobox, gpointer user_data);
     static void on_kc85_busdrivers_changed(GtkSpinButton *spin_button, gpointer user_data);
 
     static void on_rom_changed(GtkComboBoxEntry *comboboxentry, gpointer user_data);

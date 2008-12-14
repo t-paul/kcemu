@@ -23,7 +23,9 @@ ROMS = \
 	caos43c.855 \
 	caos43e.855 \
 	floppy20.rom \
+	floppy30.rom \
 	floppy31.rom \
+	floppy32.rom \
 	m006.rom \
 	m012.rom \
 	m026.rom \

@@ -24,6 +24,7 @@
 #include <iostream>
 
 #include "kc/system.h"
+#include "kc/prefs/prefs.h"
 
 #include "kc/kc.h"
 #include "kc/module.h"
@@ -126,9 +127,9 @@ Module::in(word_t addr)
   if (a < 8)
     return 0xff;
 
-  a = (a - 8) / 4;
-  if (_module[a])
-    id = _module[a]->m_in(addr);
+  int slot = get_slot_by_addr(addr);
+  if (_module[slot])
+    id = _module[slot]->m_in(addr);
   else
     id = 0xff;
 
@@ -142,22 +143,42 @@ Module::in(word_t addr)
 void
 Module::out(word_t addr, byte_t val)
 {
-  int a;
-  int slot;
-
-  a = (addr >> 8);
+  int a = (addr >> 8);
   if (a < 8)
     return;
 
-  slot = (a - 8) / 4;
-  if (_module[slot])
+  // Special case for handling of the F8/FC slots for the D004
+  // module. As the hardware is not decoding this completely we
+  // allow both modules to snoop the output of the other address.
+  if ((a >= 0xf8) && (Preferences::instance()->get_kc_type() & KC_TYPE_85_2_CLASS))
+    {
+      ModuleInterface *m = get_module_by_addr(addr ^ 0x0400);
+      if (m)
+          m->m_out(addr, val);
+    }
+
+  ModuleInterface *module = get_module_by_addr(addr);
+  if (module)
     {
       DBG(2, form("KCemu/Module/out",
                   "Module::out():  %04x -> %02x\n",
                   addr, val));
-      _module[slot]->m_out(addr, val);
-      ui->getModuleInterface()->activate(slot, val);
+      module->m_out(addr, val);
+      ui->getModuleInterface()->activate(get_slot_by_addr(addr), val);
     }
+}
+
+int
+Module::get_slot_by_addr(word_t addr)
+{
+  int slot = ((addr >> 8) - 8) / 4;
+  return slot;
+}
+
+ModuleInterface *
+Module::get_module_by_addr(word_t addr)
+{
+  return _module[get_slot_by_addr(addr)];
 }
 
 bool

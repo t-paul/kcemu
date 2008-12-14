@@ -71,7 +71,11 @@ public:
     NR_MODULES = 64,
   };
   ModuleInterface *_module[NR_MODULES];
- 
+
+private:
+  int get_slot_by_addr(word_t addr);
+  ModuleInterface * get_module_by_addr(word_t addr);
+
 public:
   Module();
   virtual ~Module(void);
