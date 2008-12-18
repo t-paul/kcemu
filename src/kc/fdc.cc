@@ -455,9 +455,11 @@ FDC::drive_select(byte_t val)
 	      "FDC::drive_select(): output to drive select port, value = %02x\n",
 	      val));
 
-  _selected_device = (val & 0x0f);
-  if (_selected_device)
-    add_callback(40000, this, (void *)(CB_TYPE_INDEX));
+  val &= 0x0f;
+  if ((_selected_device == 0) && (val != 0))
+    add_callback(20000, this, (void *)(CB_TYPE_INDEX));
+
+  _selected_device = val;
 }
 
 byte_t
