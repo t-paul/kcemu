@@ -34,10 +34,12 @@ extern "C" {
 
 FDC4::FDC4(void)
 {
+  fdc_z80->register_ic(this);
 }
 
 FDC4::~FDC4(void)
 {
+  fdc_z80->unregister_ic(this);
 }
 
 long long

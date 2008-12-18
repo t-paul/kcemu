@@ -212,6 +212,18 @@ Z80_FDC::add_callback(unsigned long long offset, Callback *cb, void *data)
 }
 
 void
+Z80_FDC::register_ic(InterfaceCircuit *h)
+{
+  _ic_list.push_back(h);
+}
+
+void
+Z80_FDC::unregister_ic(InterfaceCircuit *h)
+{
+  _ic_list.remove(h);
+}
+
+void
 Z80_FDC::reset(bool power_on)
 {
   Z80_Regs r;
@@ -230,6 +242,9 @@ Z80_FDC::reset(bool power_on)
   Z80_Trace = DBG_check("KCemu/Z80core2/trace") ? 1 : 0;
 
   _cb_list.clear();
+
+  for (ic_list_t::iterator it = _ic_list.begin();it != _ic_list.end();it++)
+    (*it)->reset(power_on);
 }
 
 void

@@ -34,6 +34,11 @@ extern "C" {
 
 class Z80_FDC
 {
+ private:
+  typedef std::list<InterfaceCircuit *> ic_list_t;
+
+  ic_list_t _ic_list;
+
  public:
   unsigned long long _counter;
 
@@ -53,6 +58,8 @@ class Z80_FDC
   long long get_counter();
   byte_t trigger_irq(byte_t irq_vector);
   void add_callback(unsigned long long offset, Callback *cb, void *data);
+  void register_ic(InterfaceCircuit *h);
+  void unregister_ic(InterfaceCircuit *h);
 
   void reset(bool power_on = false);
   void power_on();

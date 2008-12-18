@@ -86,18 +86,6 @@ FDC::FDC(void) : InterfaceCircuit("FDC")
   _cmds[0x1e] = new FDC_CMD_INVALID(this);
   _cmds[0x1f] = new FDC_CMD_INVALID(this);
 
-  _cur_cmd = 0;
-  _cur_floppy = 0;
-  _read_bytes = 0;
-  _MSR = 0;
-  _ST0 = 0;
-  _ST1 = 0;
-  _ST2 = 0;
-  _ST3 = 0;
-  _INPUT_GATE = 0x60;
-  _selected_unit = 0;
-  _terminal_count = false;
-
   _floppy[0] = new Floppy("attach-1");
   _floppy[1] = new Floppy("attach-2");
   _floppy[2] = new Floppy("attach-3");
@@ -108,7 +96,7 @@ FDC::FDC(void) : InterfaceCircuit("FDC")
   _fstate[2] = new FloppyState(0, 0, 1, _floppy[2]);
   _fstate[3] = new FloppyState(0, 0, 1, _floppy[3]);
 
-  set_state(FDC_STATE_IDLE);
+  init();
 }
 
 FDC::~FDC(void)
@@ -121,6 +109,25 @@ FDC::~FDC(void)
       delete _fstate[a];
       delete _floppy[a];
     }
+}
+
+void
+FDC::init(void)
+{
+  _cur_cmd = 0;
+  _cur_floppy = 0;
+  _read_bytes = 0;
+  _MSR = 0;
+  _ST0 = 0;
+  _ST1 = 0;
+  _ST2 = 0;
+  _ST3 = 0;
+  _INPUT_GATE = 0x60;
+  _selected_unit = 0;
+  _selected_device = 0;
+  _terminal_count = false;
+
+  set_state(FDC_STATE_IDLE);
 }
 
 byte_t
@@ -588,6 +595,7 @@ FDC::set_ST3(byte_t mask, byte_t val)
 void
 FDC::reset(bool power_on)
 {
+  init();
 }
 
 void

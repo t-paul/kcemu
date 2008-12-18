@@ -181,6 +181,8 @@ class FDC : public InterfaceCircuit, public PortInterface, public Callback
 
   int _read_bytes;
   bool _terminal_count;
+
+  void init(void);
   
  public:
   FDC(void);
