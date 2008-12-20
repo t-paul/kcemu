@@ -24,8 +24,9 @@
 #include <stdlib.h>
 #include <string.h>
 #include <malloc.h>
-#include <fstream>
+#include <unistd.h>
 
+#include <fstream>
 #include <iostream>
 #include <iomanip>
 

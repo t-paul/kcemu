@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: KCemu 0.4\n"
 "Report-Msgid-Bugs-To: Torsten.Paul@gmx.de\n"
-"POT-Creation-Date: 2008-12-13 23:02+0100\n"
+"POT-Creation-Date: 2008-12-20 21:43+0100\n"
 "PO-Revision-Date: 2008-12-13 23:06+0100\n"
 "Last-Translator: Torsten Paul <Torsten.Paul@gmx.de>\n"
 "Language-Team: English <Torsten.Paul@gmx.de>\n"
@@ -74,19 +74,19 @@ msgstr "KCemu: Disk"
 msgid "Disk"
 msgstr "Disk"
 
-#: images/disk.glade:316 images/options.glade:1721
+#: images/disk.glade:316 images/options.glade:2168
 msgid "Disk 4:"
 msgstr "Disk 4:"
 
-#: images/disk.glade:330 images/options.glade:1707
+#: images/disk.glade:330 images/options.glade:2182
 msgid "Disk 3:"
 msgstr "Disk 3:"
 
-#: images/disk.glade:344 images/options.glade:1693
+#: images/disk.glade:344 images/options.glade:2196
 msgid "Disk 2:"
 msgstr "Disk 2:"
 
-#: images/disk.glade:358 images/options.glade:1679
+#: images/disk.glade:358 images/options.glade:2210
 msgid "Disk 1:"
 msgstr "Disk 1:"
 
@@ -314,7 +314,7 @@ msgstr ""
 msgid "Tape name:"
 msgstr "Tape name:"
 
-#: images/tapeedit.glade:139 images/options.glade:2583
+#: images/tapeedit.glade:139 images/options.glade:2530
 #: images/selector.glade:184
 msgid "gtk-ok"
 msgstr "gtk-ok"
@@ -351,39 +351,40 @@ msgstr "Expand user profile level..."
 msgid "Collapse user profile level..."
 msgstr "Collapse user profile level..."
 
-#: images/options.glade:350
-msgid "Profile Name:"
-msgstr "Profile Name:"
+#: images/options.glade:348
+msgid "Comment:"
+msgstr "Comment:"
 
 #: images/options.glade:362
-msgid "System:"
-msgstr "System:"
-
-#: images/options.glade:404
 msgid "Variant:"
 msgstr "Variant:"
 
-#: images/options.glade:420
-msgid "Comment:"
-msgstr "Comment:"
+#: images/options.glade:404
+msgid "System:"
+msgstr "System:"
+
+#: images/options.glade:418
+msgid "Profile Name:"
+msgstr "Profile Name:"
 
 #: images/options.glade:465
 msgid "System"
 msgstr "System"
 
-#: images/options.glade:499
+#: images/options.glade:529
 msgid ""
-"This setting is only used when emulating a KC 85/3 where it enables the "
-"emulation of the display dissortion when the screen memory is accessed by "
-"the CPU."
+"Enable / Disable display debug code.\n"
+"\n"
+"When enabled the display cache behaviour will be graphically visualized. "
+"This setting is effective only if the display scale is set to 1."
 msgstr ""
-"This setting is only used when emulating a KC 85/3 where it enables the "
-"emulation of the display dissortion when the screen memory is accessed by "
-"the CPU."
+"Enable / Disable display debug code.\n"
+"\n"
+"When enabled the display cache behaviour will be graphically visualized. "
+"This setting is effective only if the display scale is set to 1."
 
-#: images/options.glade:500 images/options.glade:520 images/options.glade:660
-#: images/options.glade:2323 images/options.glade:2375
-#: images/options.glade:2424
+#: images/options.glade:532 images/options.glade:672 images/options.glade:690
+#: images/options.glade:2360 images/options.glade:2409
 msgid ""
 "No\n"
 "Yes"
@@ -391,49 +392,47 @@ msgstr ""
 "No\n"
 "Yes"
 
-#: images/options.glade:517
-msgid ""
-"Enable / Disable display effects for scale factors above 1.\n"
-"\n"
-"When enabled a scan-line effect will be used for scale factor of 2 and a "
-"smoothing effect for scale factor 3."
-msgstr ""
-"Enable / Disable display effects for scale factors above 1.\n"
-"\n"
-"When enabled a scan-line effect will be used for scale factor of 2 and a "
-"smoothing effect for scale factor 3."
-
-#: images/options.glade:538
-msgid "Scaling factor for the emulation window. Allowed values are 1 to 3."
-msgstr "Scaling factor for the emulation window. Allowed values are 1 to 3."
-
-#: images/options.glade:603
-msgid "Display IRM Access:"
-msgstr "Display IRM Access:"
-
-#: images/options.glade:617
-msgid "Display Effects:"
-msgstr "Display Effects:"
-
-#: images/options.glade:631
-msgid "Display Scale:"
-msgstr "Display Scale:"
-
-#: images/options.glade:643
+#: images/options.glade:549
 msgid "Display Debug:"
 msgstr "Display Debug:"
 
-#: images/options.glade:657
+#: images/options.glade:563
+msgid "Display Scale:"
+msgstr "Display Scale:"
+
+#: images/options.glade:575
+msgid "Display Effects:"
+msgstr "Display Effects:"
+
+#: images/options.glade:589
+msgid "Display IRM Access:"
+msgstr "Display IRM Access:"
+
+#: images/options.glade:653
+msgid "Scaling factor for the emulation window. Allowed values are 1 to 3."
+msgstr "Scaling factor for the emulation window. Allowed values are 1 to 3."
+
+#: images/options.glade:669
 msgid ""
-"Enable / Disable display debug code.\n"
+"Enable / Disable display effects for scale factors above 1.\n"
 "\n"
-"When enabled the display cache behaviour will be graphically visualized. "
-"This setting is effective only if the display scale is set to 1."
+"When enabled a scan-line effect will be used for scale factor of 2 and a "
+"smoothing effect for scale factor 3."
 msgstr ""
-"Enable / Disable display debug code.\n"
+"Enable / Disable display effects for scale factors above 1.\n"
 "\n"
-"When enabled the display cache behaviour will be graphically visualized. "
-"This setting is effective only if the display scale is set to 1."
+"When enabled a scan-line effect will be used for scale factor of 2 and a "
+"smoothing effect for scale factor 3."
+
+#: images/options.glade:689
+msgid ""
+"This setting is only used when emulating a KC 85/3 where it enables the "
+"emulation of the display dissortion when the screen memory is accessed by "
+"the CPU."
+msgstr ""
+"This setting is only used when emulating a KC 85/3 where it enables the "
+"emulation of the display dissortion when the screen memory is accessed by "
+"the CPU."
 
 #: images/options.glade:715
 msgid "Display"
@@ -443,125 +442,103 @@ msgstr "Display"
 msgid "ROMs"
 msgstr "ROMs"
 
-#: images/options.glade:1366
-msgid "Override modules in this profile"
-msgstr "Override modules in this profile"
+#: images/options.glade:1441
+msgid "Module 6:"
+msgstr "Module 6:"
 
-#: images/options.glade:1414
-msgid "Module 8:"
-msgstr "Module 8:"
-
-#: images/options.glade:1428
-msgid "Module 7:"
-msgstr "Module 7:"
-
-#: images/options.glade:1442
-msgid "Module 1:"
-msgstr "Module 1:"
-
-#: images/options.glade:1454
-msgid "Module 2:"
-msgstr "Module 2:"
-
-#: images/options.glade:1468
-msgid "Module 3:"
-msgstr "Module 3:"
-
-#: images/options.glade:1482
-msgid "Module 4:"
-msgstr "Module 4:"
-
-#: images/options.glade:1496
+#: images/options.glade:1455
 msgid "Module 5:"
 msgstr "Module 5:"
 
-#: images/options.glade:1510
-msgid "Module 6:"
-msgstr "Module 6:"
+#: images/options.glade:1469
+msgid "Module 4:"
+msgstr "Module 4:"
+
+#: images/options.glade:1483
+msgid "Module 3:"
+msgstr "Module 3:"
+
+#: images/options.glade:1497
+msgid "Module 2:"
+msgstr "Module 2:"
+
+#: images/options.glade:1511
+msgid "Module 1:"
+msgstr "Module 1:"
+
+#: images/options.glade:1523
+msgid "Module 7:"
+msgstr "Module 7:"
+
+#: images/options.glade:1537
+msgid "Module 8:"
+msgstr "Module 8:"
+
+#: images/options.glade:1581
+msgid "Override modules in this profile"
+msgstr "Override modules in this profile"
 
 #: images/options.glade:1619
 msgid "Modules"
 msgstr "Modules"
 
-#: images/options.glade:1654
-msgid "Tape:"
-msgstr "Tape:"
+#: images/options.glade:2055
+msgid "Hard Disk 2:"
+msgstr "Hard Disk 2:"
 
-#: images/options.glade:1791
-msgid "Audio:"
-msgstr "Audio:"
-
-#: images/options.glade:1820
+#: images/options.glade:2069
 msgid "Hard Disk 1:"
 msgstr "Hard Disk 1:"
 
-#: images/options.glade:1834
-msgid "Hard Disk 2:"
-msgstr "Hard Disk 2:"
+#: images/options.glade:2098
+msgid "Audio:"
+msgstr "Audio:"
+
+#: images/options.glade:2236
+msgid "Tape:"
+msgstr "Tape:"
 
 #: images/options.glade:2257
 msgid "Media"
 msgstr "Media"
 
-#: images/options.glade:2293
-msgid "<b>Special settings for KC 85/2..5</b>"
-msgstr "<b>Special settings for KC 85/2..5</b>"
-
-#: images/options.glade:2308
-msgid "D004:"
-msgstr "D004:"
-
-#: images/options.glade:2322
-msgid "Enable or disable the D004 Floppy Basis Device."
-msgstr "Enable or disable the D004 Floppy Basis Device."
-
-#: images/options.glade:2356
-msgid "Swap ROMs:"
-msgstr "Swap ROMs:"
-
-#: images/options.glade:2370
+#: images/options.glade:2310
 msgid ""
-"Swap the F8 and FC ROMs of the D004 device.\n"
-"\n"
-"The firmware version of the ROMs depends actually on the type of the "
-"emulated system.\n"
-"\n"
-"KC85/2-4 default to the standard FC ROM version 2.0 whereas the KC85/5 "
-"system has the extended ROM version 3.1 in slot FC by default."
+"Number of D002 busdriver devices to add to the system. The maximum number of "
+"emulated busdrivers is currently 4."
 msgstr ""
-"Swap the F8 and FC ROMs of the D004 device.\n"
-"\n"
-"The firmware version of the ROMs depends actually on the type of the "
-"emulated system.\n"
-"\n"
-"KC85/2-4 default to the standard FC ROM version 2.0 whereas the KC85/5 "
-"system has the extended ROM version 3.1 in slot FC by default."
+"Number of D002 busdriver devices to add to the system. The maximum number of "
+"emulated busdrivers is currently 4."
 
-#: images/options.glade:2409
-msgid "F8 ROM:"
-msgstr "F8 ROM:"
-
-#: images/options.glade:2423
-msgid ""
-"Enable or disable the second D004 ROM at slot F8. The standard ROM is "
-"available at slot FC."
-msgstr ""
-"Enable or disable the second D004 ROM at slot F8. The standard ROM is "
-"available at slot FC."
-
-#: images/options.glade:2458
+#: images/options.glade:2328
 msgid "Busdrivers:"
 msgstr "Busdrivers:"
 
-#: images/options.glade:2473
+#: images/options.glade:2359
 msgid ""
-"Number of D002 busdriver devices to add to the system. The maximum number of "
-"emulated busdrivers is currently 4."
+"Enable or disable the second D004 ROM at slot F8. The standard ROM is "
+"available at slot FC."
 msgstr ""
-"Number of D002 busdriver devices to add to the system. The maximum number of "
-"emulated busdrivers is currently 4."
+"Enable or disable the second D004 ROM at slot F8. The standard ROM is "
+"available at slot FC."
 
-#: images/options.glade:2515
+#: images/options.glade:2377
+msgid "F8 ROM:"
+msgstr "F8 ROM:"
+
+#: images/options.glade:2408
+msgid "Enable or disable the D004 Floppy Basis Device."
+msgstr "Enable or disable the D004 Floppy Basis Device."
+
+#: images/options.glade:2425
+msgid "D004:"
+msgstr "D004:"
+
+#: images/options.glade:2440
+msgid "<b>Special settings for KC 85/2..5</b>"
+msgstr "<b>Special settings for KC 85/2..5</b>"
+
+#: images/options.glade:2462
 msgid "KC85"
 msgstr "KC85"
 
@@ -1904,15 +1881,15 @@ msgstr "M900: WordPro '86 (KC85/3)"
 msgid "M901: WordPro '86 (KC85/4)"
 msgstr "M901: WordPro '86 (KC85/4)"
 
-#: src/kc/mod_list.cc:543
+#: src/kc/mod_list.cc:551
 msgid "Floppy Disk Basis F8"
 msgstr "Floppy Disk Basis F8"
 
-#: src/kc/mod_list.cc:557
+#: src/kc/mod_list.cc:560
 msgid "Floppy Disk Basis FC"
 msgstr "Floppy Disk Basis FC"
 
-#: src/kc/mod_list.cc:773
+#: src/kc/mod_list.cc:757
 msgid "Autostart"
 msgstr "Autostart"
 
@@ -1992,71 +1969,71 @@ msgstr ""
 msgid "Reading %s `%s' (%d/%d/%d)."
 msgstr "Reading %s `%s' (%d/%d/%d)."
 
-#: src/kc/prefs/types.cc:164
+#: src/kc/prefs/types.cc:210
 msgid "rom_caos_c"
 msgstr "CAOS C"
 
-#: src/kc/prefs/types.cc:165
+#: src/kc/prefs/types.cc:211
 msgid "rom_caos_e"
 msgstr "CAOS E"
 
-#: src/kc/prefs/types.cc:166
+#: src/kc/prefs/types.cc:212
 msgid "rom_system"
 msgstr "System"
 
-#: src/kc/prefs/types.cc:167
+#: src/kc/prefs/types.cc:213
 msgid "rom_system_1"
 msgstr "System (1)"
 
-#: src/kc/prefs/types.cc:168
+#: src/kc/prefs/types.cc:214
 msgid "rom_system_2"
 msgstr "System (2)"
 
-#: src/kc/prefs/types.cc:169
+#: src/kc/prefs/types.cc:215
 msgid "rom_system_3"
 msgstr "System (3)"
 
-#: src/kc/prefs/types.cc:170
+#: src/kc/prefs/types.cc:216
 msgid "rom_system_4"
 msgstr "System (4)"
 
-#: src/kc/prefs/types.cc:171
+#: src/kc/prefs/types.cc:217
 msgid "rom_user"
 msgstr "User-ROM"
 
-#: src/kc/prefs/types.cc:172
+#: src/kc/prefs/types.cc:218
 msgid "rom_basic"
 msgstr "BASIC"
 
-#: src/kc/prefs/types.cc:173
+#: src/kc/prefs/types.cc:219
 msgid "rom_debugger"
 msgstr "Debugger"
 
-#: src/kc/prefs/types.cc:174
+#: src/kc/prefs/types.cc:220
 msgid "rom_reassembler"
 msgstr "Reassembler"
 
-#: src/kc/prefs/types.cc:175
+#: src/kc/prefs/types.cc:221
 msgid "rom_editor"
 msgstr "Editor"
 
-#: src/kc/prefs/types.cc:176
+#: src/kc/prefs/types.cc:222
 msgid "rom_assembler"
 msgstr "Assembler"
 
-#: src/kc/prefs/types.cc:177
+#: src/kc/prefs/types.cc:223
 msgid "rom_charset"
 msgstr "Charset"
 
-#: src/kc/prefs/types.cc:178
+#: src/kc/prefs/types.cc:224
 msgid "rom_d004_fc"
 msgstr "D004 (Slot FC)"
 
-#: src/kc/prefs/types.cc:179
+#: src/kc/prefs/types.cc:225
 msgid "rom_d004_f8"
 msgstr "D004 (Slot F8)"
 
-#: src/kc/prefs/types.cc:393
+#: src/kc/prefs/types.cc:477
 msgid ""
 "    Z1013 with 16k RAM and 2k ROM, running at 1MHz. This was the\n"
 "    first version with cheap circuits so the CPU was clocked at only 1MHz\n"
@@ -2066,19 +2043,19 @@ msgstr ""
 "    first version with cheap circuits so the CPU was clocked at only 1MHz\n"
 "    The ROM containes the Z1013 monitor version 2.02.\n"
 
-#: src/kc/prefs/types.cc:398 src/kc/prefs/types.cc:405
-#: src/kc/prefs/types.cc:412 src/kc/prefs/types.cc:421
+#: src/kc/prefs/types.cc:484 src/kc/prefs/types.cc:493
+#: src/kc/prefs/types.cc:502 src/kc/prefs/types.cc:513
 msgid "System-ROM V2.0"
 msgstr "System-ROM V2.0"
 
-#: src/kc/prefs/types.cc:399 src/kc/prefs/types.cc:406
-#: src/kc/prefs/types.cc:413 src/kc/prefs/types.cc:422
-#: src/kc/prefs/types.cc:431 src/kc/prefs/types.cc:439
-#: src/kc/prefs/types.cc:448 src/kc/prefs/types.cc:456
+#: src/kc/prefs/types.cc:485 src/kc/prefs/types.cc:494
+#: src/kc/prefs/types.cc:503 src/kc/prefs/types.cc:514
+#: src/kc/prefs/types.cc:525 src/kc/prefs/types.cc:535
+#: src/kc/prefs/types.cc:546 src/kc/prefs/types.cc:556
 msgid "Z1013 Charset-ROM"
 msgstr "Z1013 Charset-ROM"
 
-#: src/kc/prefs/types.cc:401
+#: src/kc/prefs/types.cc:487
 msgid ""
 "    Z1013 with 1k sRAM and 2k ROM, running at 2MHz. Industry\n"
 "    version with only 1k static RAM. Monitor version 2.02.\n"
@@ -2086,7 +2063,7 @@ msgstr ""
 "    Z1013 with 1k sRAM and 2k ROM, running at 2MHz. Industry\n"
 "    version with only 1k static RAM. Monitor version 2.02.\n"
 
-#: src/kc/prefs/types.cc:408
+#: src/kc/prefs/types.cc:496
 msgid ""
 "    Z1013 with 16k RAM and 2k ROM, running at 2MHz. Successor of\n"
 "    the Z1013.01 but with industry grade circuits clocked at 2MHz.\n"
@@ -2094,7 +2071,7 @@ msgstr ""
 "    Z1013 with 16k RAM and 2k ROM, running at 2MHz. Successor of\n"
 "    the Z1013.01 but with industry grade circuits clocked at 2MHz.\n"
 
-#: src/kc/prefs/types.cc:415
+#: src/kc/prefs/types.cc:505
 msgid ""
 "    Z1013 with 64k RAM and 2x2k ROM, running at 2MHz. The ROM\n"
 "    contains two system images with 2k each. Loaded is the first\n"
@@ -2106,7 +2083,7 @@ msgstr ""
 "    image with version 2.02 that is supposed to work with the foil keypad\n"
 "    shipped by the manufacturer.\n"
 
-#: src/kc/prefs/types.cc:424
+#: src/kc/prefs/types.cc:516
 msgid ""
 "    Z1013 with 64k RAM and 2k ROM, running at 2MHz. The ROM\n"
 "    contains two system images with 2k each. Loaded is the second\n"
@@ -2118,11 +2095,11 @@ msgstr ""
 "    image with version A.2 that supports an extended keyboard with an\n"
 "    8x8 matrix.\n"
 
-#: src/kc/prefs/types.cc:430
+#: src/kc/prefs/types.cc:524
 msgid "System-ROM A2"
 msgstr "System-ROM A2"
 
-#: src/kc/prefs/types.cc:433
+#: src/kc/prefs/types.cc:527
 msgid ""
 "    Z1013 with 64k RAM and 4k ROM. The ROM is the extended\n"
 "    version tagged 2.028 RB that has a different keyboard driver for\n"
@@ -2132,11 +2109,11 @@ msgstr ""
 "    version tagged 2.028 RB that has a different keyboard driver for\n"
 "    the keyboard K7659.\n"
 
-#: src/kc/prefs/types.cc:438
+#: src/kc/prefs/types.cc:534
 msgid "Brosig-ROM K7659/2.028"
 msgstr "Brosig-ROM K7659/2.028"
 
-#: src/kc/prefs/types.cc:441
+#: src/kc/prefs/types.cc:537
 msgid ""
 "    Z1013 with 64k RAM and 4k ROM. The ROM contains the 'Super\n"
 "    Ur-Lader 5.0' that can read arbitrary tape files as system monitor.\n"
@@ -2148,11 +2125,11 @@ msgstr ""
 "    The hardware modification port at address 4h is emulated which allows\n"
 "    programs to switch off the system ROM.\n"
 
-#: src/kc/prefs/types.cc:447
+#: src/kc/prefs/types.cc:545
 msgid "Super Ur-Lader 5.0"
 msgstr "Super Ur-Lader 5.0"
 
-#: src/kc/prefs/types.cc:450
+#: src/kc/prefs/types.cc:548
 msgid ""
 "    Z1013 with 64k RAM and 4k ROM. The ROM contains the Bootloader\n"
 "    BL4 that can load monitor images from floppy disk or can start the\n"
@@ -2162,11 +2139,11 @@ msgstr ""
 "    BL4 that can load monitor images from floppy disk or can start the\n"
 "    CP/M system.\n"
 
-#: src/kc/prefs/types.cc:455
+#: src/kc/prefs/types.cc:555
 msgid "Bootlader BL4"
 msgstr "Bootlader BL4"
 
-#: src/kc/prefs/types.cc:461
+#: src/kc/prefs/types.cc:561
 msgid ""
 "    Z9001 (later called KC 85/1) with monochrome display, no internal BASIC\n"
 "    ROM. This computer has 16k RAM and 4k ROM with the robotron z9001 "
@@ -2176,62 +2153,62 @@ msgstr ""
 "    ROM. This computer has 16k RAM and 4k ROM with the robotron z9001 "
 "system.\n"
 
-#: src/kc/prefs/types.cc:466 src/kc/prefs/types.cc:481
-#: src/kc/prefs/types.cc:624 src/kc/prefs/types.cc:640
-#: src/kc/prefs/types.cc:656 src/kc/prefs/types.cc:673
-#: src/kc/prefs/types.cc:689 src/kc/prefs/types.cc:705
-#: src/kc/prefs/types.cc:729 src/kc/prefs/types.cc:777
-#: src/kc/prefs/types.cc:786 src/kc/prefs/types.cc:793
+#: src/kc/prefs/types.cc:567 src/kc/prefs/types.cc:583
+#: src/kc/prefs/types.cc:733 src/kc/prefs/types.cc:750
+#: src/kc/prefs/types.cc:767 src/kc/prefs/types.cc:785
+#: src/kc/prefs/types.cc:802 src/kc/prefs/types.cc:819
+#: src/kc/prefs/types.cc:845 src/kc/prefs/types.cc:900
+#: src/kc/prefs/types.cc:911 src/kc/prefs/types.cc:919
 msgid "System-ROM"
 msgstr "System-ROM"
 
-#: src/kc/prefs/types.cc:467 src/kc/prefs/types.cc:482
-#: src/kc/prefs/types.cc:625 src/kc/prefs/types.cc:641
-#: src/kc/prefs/types.cc:657 src/kc/prefs/types.cc:674
-#: src/kc/prefs/types.cc:690 src/kc/prefs/types.cc:706
+#: src/kc/prefs/types.cc:568 src/kc/prefs/types.cc:584
+#: src/kc/prefs/types.cc:734 src/kc/prefs/types.cc:751
+#: src/kc/prefs/types.cc:768 src/kc/prefs/types.cc:786
+#: src/kc/prefs/types.cc:803 src/kc/prefs/types.cc:820
 msgid "ROM-Bank System without menu"
 msgstr "ROM-Bank System without menu"
 
-#: src/kc/prefs/types.cc:468 src/kc/prefs/types.cc:483
-#: src/kc/prefs/types.cc:626 src/kc/prefs/types.cc:642
-#: src/kc/prefs/types.cc:658 src/kc/prefs/types.cc:675
-#: src/kc/prefs/types.cc:691 src/kc/prefs/types.cc:707
+#: src/kc/prefs/types.cc:569 src/kc/prefs/types.cc:585
+#: src/kc/prefs/types.cc:735 src/kc/prefs/types.cc:752
+#: src/kc/prefs/types.cc:769 src/kc/prefs/types.cc:787
+#: src/kc/prefs/types.cc:804 src/kc/prefs/types.cc:821
 msgid "ROM-Bank System with menu"
 msgstr "ROM-Bank System with menu"
 
-#: src/kc/prefs/types.cc:471 src/kc/prefs/types.cc:486
-#: src/kc/prefs/types.cc:630 src/kc/prefs/types.cc:646
-#: src/kc/prefs/types.cc:662 src/kc/prefs/types.cc:679
-#: src/kc/prefs/types.cc:695 src/kc/prefs/types.cc:711
+#: src/kc/prefs/types.cc:572 src/kc/prefs/types.cc:588
+#: src/kc/prefs/types.cc:739 src/kc/prefs/types.cc:756
+#: src/kc/prefs/types.cc:773 src/kc/prefs/types.cc:791
+#: src/kc/prefs/types.cc:808 src/kc/prefs/types.cc:825
 msgid "Z9001 Charset-ROM"
 msgstr "Z9001 Charset-ROM"
 
-#: src/kc/prefs/types.cc:472 src/kc/prefs/types.cc:487
-#: src/kc/prefs/types.cc:631 src/kc/prefs/types.cc:647
-#: src/kc/prefs/types.cc:663 src/kc/prefs/types.cc:680
-#: src/kc/prefs/types.cc:696 src/kc/prefs/types.cc:712
+#: src/kc/prefs/types.cc:573 src/kc/prefs/types.cc:589
+#: src/kc/prefs/types.cc:740 src/kc/prefs/types.cc:757
+#: src/kc/prefs/types.cc:774 src/kc/prefs/types.cc:792
+#: src/kc/prefs/types.cc:809 src/kc/prefs/types.cc:826
 msgid "Z9001 Charset-ROM (german)"
 msgstr "Z9001 Charset-ROM (german)"
 
-#: src/kc/prefs/types.cc:473 src/kc/prefs/types.cc:488
-#: src/kc/prefs/types.cc:632 src/kc/prefs/types.cc:648
-#: src/kc/prefs/types.cc:664 src/kc/prefs/types.cc:681
-#: src/kc/prefs/types.cc:697 src/kc/prefs/types.cc:713
+#: src/kc/prefs/types.cc:574 src/kc/prefs/types.cc:590
+#: src/kc/prefs/types.cc:741 src/kc/prefs/types.cc:758
+#: src/kc/prefs/types.cc:775 src/kc/prefs/types.cc:793
+#: src/kc/prefs/types.cc:810 src/kc/prefs/types.cc:827
 msgid "CGA Charset-ROM"
 msgstr "CGA Charset-ROM"
 
-#: src/kc/prefs/types.cc:474 src/kc/prefs/types.cc:489
-#: src/kc/prefs/types.cc:633 src/kc/prefs/types.cc:649
-#: src/kc/prefs/types.cc:665 src/kc/prefs/types.cc:682
-#: src/kc/prefs/types.cc:698 src/kc/prefs/types.cc:714
+#: src/kc/prefs/types.cc:575 src/kc/prefs/types.cc:591
+#: src/kc/prefs/types.cc:742 src/kc/prefs/types.cc:759
+#: src/kc/prefs/types.cc:776 src/kc/prefs/types.cc:794
+#: src/kc/prefs/types.cc:811 src/kc/prefs/types.cc:828
 msgid "CGA Charset-ROM (extended)"
 msgstr "CGA Charset-ROM (extended)"
 
-#: src/kc/prefs/types.cc:477
+#: src/kc/prefs/types.cc:578
 msgid "    Like the z9001.10 but with color extension card.\n"
 msgstr "    Like the z9001.10 but with color extension card.\n"
 
-#: src/kc/prefs/types.cc:495
+#: src/kc/prefs/types.cc:597
 msgid ""
 "    HC900 (later called KC 85/2) with 16k RAM and 8k ROM. System is called\n"
 "    HC-CAOS 2.2 (home computer - cassette aided operating system). BASIC\n"
@@ -2241,81 +2218,81 @@ msgstr ""
 "    HC-CAOS 2.2 (home computer - cassette aided operating system). BASIC\n"
 "    is only available as external module.\n"
 
-#: src/kc/prefs/types.cc:500
+#: src/kc/prefs/types.cc:603
 msgid "HC-900 CAOS"
 msgstr "HC-900 CAOS"
 
-#: src/kc/prefs/types.cc:501
+#: src/kc/prefs/types.cc:604
 msgid "CAOS 2.2"
 msgstr "CAOS 2.2"
 
-#: src/kc/prefs/types.cc:504 src/kc/prefs/types.cc:510
-#: src/kc/prefs/types.cc:531 src/kc/prefs/types.cc:537
-#: src/kc/prefs/types.cc:559 src/kc/prefs/types.cc:565
-#: src/kc/prefs/types.cc:589 src/kc/prefs/types.cc:595
+#: src/kc/prefs/types.cc:607 src/kc/prefs/types.cc:613
+#: src/kc/prefs/types.cc:635 src/kc/prefs/types.cc:641
+#: src/kc/prefs/types.cc:664 src/kc/prefs/types.cc:670
+#: src/kc/prefs/types.cc:695 src/kc/prefs/types.cc:701
 msgid "D004 Version 2.0 (02.01.1989)"
 msgstr "D004 Version 2.0 (02.01.1989)"
 
-#: src/kc/prefs/types.cc:505 src/kc/prefs/types.cc:511
-#: src/kc/prefs/types.cc:532 src/kc/prefs/types.cc:538
-#: src/kc/prefs/types.cc:560 src/kc/prefs/types.cc:566
-#: src/kc/prefs/types.cc:590 src/kc/prefs/types.cc:596
+#: src/kc/prefs/types.cc:608 src/kc/prefs/types.cc:614
+#: src/kc/prefs/types.cc:636 src/kc/prefs/types.cc:642
+#: src/kc/prefs/types.cc:665 src/kc/prefs/types.cc:671
+#: src/kc/prefs/types.cc:696 src/kc/prefs/types.cc:702
 msgid "D004 Version 3.0 (07.12.1997)"
 msgstr "D004 Version 3.0 (07.12.1997)"
 
-#: src/kc/prefs/types.cc:506 src/kc/prefs/types.cc:512
-#: src/kc/prefs/types.cc:533 src/kc/prefs/types.cc:539
-#: src/kc/prefs/types.cc:561 src/kc/prefs/types.cc:567
-#: src/kc/prefs/types.cc:591 src/kc/prefs/types.cc:597
+#: src/kc/prefs/types.cc:609 src/kc/prefs/types.cc:615
+#: src/kc/prefs/types.cc:637 src/kc/prefs/types.cc:643
+#: src/kc/prefs/types.cc:666 src/kc/prefs/types.cc:672
+#: src/kc/prefs/types.cc:697 src/kc/prefs/types.cc:703
 msgid "D004 Version 3.1 (22.01.2003)"
 msgstr "D004 Version 3.1 (22.01.2003)"
 
-#: src/kc/prefs/types.cc:507 src/kc/prefs/types.cc:513
-#: src/kc/prefs/types.cc:534 src/kc/prefs/types.cc:540
-#: src/kc/prefs/types.cc:562 src/kc/prefs/types.cc:568
-#: src/kc/prefs/types.cc:592 src/kc/prefs/types.cc:598
+#: src/kc/prefs/types.cc:610 src/kc/prefs/types.cc:616
+#: src/kc/prefs/types.cc:638 src/kc/prefs/types.cc:644
+#: src/kc/prefs/types.cc:667 src/kc/prefs/types.cc:673
+#: src/kc/prefs/types.cc:698 src/kc/prefs/types.cc:704
 msgid "D004 Version 3.2 (28.10.2008)"
 msgstr "D004 Version 3.2 (28.10.2008)"
 
-#: src/kc/prefs/types.cc:519
+#: src/kc/prefs/types.cc:622
 msgid ""
 "    KC 85/3 with 16k RAM, 8k system ROM with HC-CAOS 3.1 and 8k BASIC ROM.\n"
 msgstr ""
 "    KC 85/3 with 16k RAM, 8k system ROM with HC-CAOS 3.1 and 8k BASIC ROM.\n"
 
-#: src/kc/prefs/types.cc:522
+#: src/kc/prefs/types.cc:626
 msgid "CAOS 3.1"
 msgstr "CAOS 3.1"
 
-#: src/kc/prefs/types.cc:523
+#: src/kc/prefs/types.cc:627
 msgid "CAOS 3.3"
 msgstr "CAOS 3.3"
 
-#: src/kc/prefs/types.cc:524
+#: src/kc/prefs/types.cc:628
 msgid "CAOS 3.4"
 msgstr "CAOS 3.4"
 
-#: src/kc/prefs/types.cc:525
+#: src/kc/prefs/types.cc:629
 msgid "OS PI/88 (yellow/blue)"
 msgstr "OS PI/88 (yellow/blue)"
 
-#: src/kc/prefs/types.cc:526
+#: src/kc/prefs/types.cc:630
 msgid "OS PI/88 (black/white)"
 msgstr "OS PI/88 (black/white)"
 
-#: src/kc/prefs/types.cc:527
+#: src/kc/prefs/types.cc:631
 msgid "OS PI/88 (white/blue)"
 msgstr "OS PI/88 (white/blue)"
 
-#: src/kc/prefs/types.cc:529 src/kc/prefs/types.cc:557
-#: src/kc/prefs/types.cc:587 src/kc/prefs/types.cc:628
-#: src/kc/prefs/types.cc:644 src/kc/prefs/types.cc:660
-#: src/kc/prefs/types.cc:677 src/kc/prefs/types.cc:693
-#: src/kc/prefs/types.cc:709
+#: src/kc/prefs/types.cc:633 src/kc/prefs/types.cc:662
+#: src/kc/prefs/types.cc:693 src/kc/prefs/types.cc:737
+#: src/kc/prefs/types.cc:754 src/kc/prefs/types.cc:771
+#: src/kc/prefs/types.cc:789 src/kc/prefs/types.cc:806
+#: src/kc/prefs/types.cc:823
 msgid "KC-BASIC"
 msgstr "KC-BASIC"
 
-#: src/kc/prefs/types.cc:546
+#: src/kc/prefs/types.cc:650
 msgid ""
 "    KC 85/4 with 64k RAM, 64k screen memory, 12k system ROM with HC-CAOS "
 "4.2\n"
@@ -2325,23 +2302,23 @@ msgstr ""
 "4.2\n"
 "    and 8k BASIC ROM.\n"
 
-#: src/kc/prefs/types.cc:550
-msgid "CAOS 4.2 (C)"
-msgstr "CAOS 4.2 (C)"
-
-#: src/kc/prefs/types.cc:551
+#: src/kc/prefs/types.cc:655
 msgid "CAOS 4.1 (C)"
 msgstr "CAOS 4.1 (C)"
 
-#: src/kc/prefs/types.cc:554
-msgid "CAOS 4.2 (E)"
-msgstr "CAOS 4.2 (E)"
+#: src/kc/prefs/types.cc:656
+msgid "CAOS 4.2 (C)"
+msgstr "CAOS 4.2 (C)"
 
-#: src/kc/prefs/types.cc:555
+#: src/kc/prefs/types.cc:659
 msgid "CAOS 4.1 (E)"
 msgstr "CAOS 4.1 (E)"
 
-#: src/kc/prefs/types.cc:574
+#: src/kc/prefs/types.cc:660
+msgid "CAOS 4.2 (E)"
+msgstr "CAOS 4.2 (E)"
+
+#: src/kc/prefs/types.cc:679
 msgid ""
 "    Inofficial successor of the KC 85/4 with 256k RAM, 64k screen memory,\n"
 "    16k system ROM with HC-CAOS 4.4, 8k BASIC ROM and 24k User ROM. It is\n"
@@ -2353,63 +2330,63 @@ msgstr ""
 "    intended to be used with a modified D004 floppy device with additional\n"
 "    hard-disk support.\n"
 
-#: src/kc/prefs/types.cc:580
-msgid "CAOS 4.4 (C)"
-msgstr "CAOS 4.4 (C)"
-
-#: src/kc/prefs/types.cc:581
+#: src/kc/prefs/types.cc:686
 msgid "CAOS 4.3 (C)"
 msgstr "CAOS 4.3 (C)"
 
-#: src/kc/prefs/types.cc:584
-msgid "CAOS 4.4 (E)"
-msgstr "CAOS 4.4 (E)"
+#: src/kc/prefs/types.cc:687
+msgid "CAOS 4.4 (C)"
+msgstr "CAOS 4.4 (C)"
 
-#: src/kc/prefs/types.cc:585
+#: src/kc/prefs/types.cc:690
 msgid "CAOS 4.3 (E)"
 msgstr "CAOS 4.3 (E)"
 
-#: src/kc/prefs/types.cc:604
+#: src/kc/prefs/types.cc:691
+msgid "CAOS 4.4 (E)"
+msgstr "CAOS 4.4 (E)"
+
+#: src/kc/prefs/types.cc:710
 msgid "    Polycomputer 880.\n"
 msgstr "    Polycomputer 880.\n"
 
-#: src/kc/prefs/types.cc:607 src/kc/prefs/types.cc:723
-#: src/kc/prefs/types.cc:734 src/kc/prefs/types.cc:744
-#: src/kc/prefs/types.cc:752
+#: src/kc/prefs/types.cc:714 src/kc/prefs/types.cc:838
+#: src/kc/prefs/types.cc:851 src/kc/prefs/types.cc:863
+#: src/kc/prefs/types.cc:873
 msgid "System-ROM 1"
 msgstr "System-ROM 1"
 
-#: src/kc/prefs/types.cc:608 src/kc/prefs/types.cc:724
-#: src/kc/prefs/types.cc:735 src/kc/prefs/types.cc:745
-#: src/kc/prefs/types.cc:753
+#: src/kc/prefs/types.cc:715 src/kc/prefs/types.cc:839
+#: src/kc/prefs/types.cc:852 src/kc/prefs/types.cc:864
+#: src/kc/prefs/types.cc:874
 msgid "System-ROM 2"
 msgstr "System-ROM 2"
 
-#: src/kc/prefs/types.cc:609 src/kc/prefs/types.cc:610
+#: src/kc/prefs/types.cc:716 src/kc/prefs/types.cc:717
 msgid "Optional-ROM 1"
 msgstr "Optional-ROM 1"
 
-#: src/kc/prefs/types.cc:612
+#: src/kc/prefs/types.cc:719
 msgid "    Polycomputer 880 with chess program rom from SC1.\n"
 msgstr "    Polycomputer 880 with chess program rom from SC1.\n"
 
-#: src/kc/prefs/types.cc:615
+#: src/kc/prefs/types.cc:723
 msgid "SC1-ROM"
 msgstr "SC1-ROM"
 
-#: src/kc/prefs/types.cc:620
+#: src/kc/prefs/types.cc:728
 msgid "    Like the KC 87.11 but without the color extension card.\n"
 msgstr "    Like the KC 87.11 but without the color extension card.\n"
 
-#: src/kc/prefs/types.cc:636
+#: src/kc/prefs/types.cc:745
 msgid "    Successor of the Z9001 with internal 10k BASIC ROM.\n"
 msgstr "    Successor of the Z9001 with internal 10k BASIC ROM.\n"
 
-#: src/kc/prefs/types.cc:652
+#: src/kc/prefs/types.cc:762
 msgid "    Like the KC 87.21 but without the color extension card.\n"
 msgstr "    Like the KC 87.21 but without the color extension card.\n"
 
-#: src/kc/prefs/types.cc:668
+#: src/kc/prefs/types.cc:779
 msgid ""
 "    New series with extended BASIC ROM (still 10k but with some routines "
 "for\n"
@@ -2419,48 +2396,48 @@ msgstr ""
 "for\n"
 "    plotter support were added).\n"
 
-#: src/kc/prefs/types.cc:685
+#: src/kc/prefs/types.cc:797
 msgid "    New batch of KC 87.20 with no known hardware differences.\n"
 msgstr "    New batch of KC 87.20 with no known hardware differences.\n"
 
-#: src/kc/prefs/types.cc:701
+#: src/kc/prefs/types.cc:814
 msgid "    New batch of KC 87.21 with no known hardware differences.\n"
 msgstr "    New batch of KC 87.21 with no known hardware differences.\n"
 
-#: src/kc/prefs/types.cc:720
+#: src/kc/prefs/types.cc:834
 msgid "    Single board computer LC 80 with 1k RAM and 2 x 1k ROM.\n"
 msgstr "    Single board computer LC 80 with 1k RAM and 2 x 1k ROM.\n"
 
-#: src/kc/prefs/types.cc:726
+#: src/kc/prefs/types.cc:841
 msgid "    Single board computer LC 80 with 1k RAM and 1 x 2k ROM.\n"
 msgstr "    Single board computer LC 80 with 1k RAM and 1 x 2k ROM.\n"
 
-#: src/kc/prefs/types.cc:731
+#: src/kc/prefs/types.cc:847
 msgid "    Export variant of the LC 80 with 12k ROM including chess program.\n"
 msgstr ""
 "    Export variant of the LC 80 with 12k ROM including chess program.\n"
 
-#: src/kc/prefs/types.cc:736
+#: src/kc/prefs/types.cc:853
 msgid "System-ROM 3"
 msgstr "System-ROM 3"
 
-#: src/kc/prefs/types.cc:741
+#: src/kc/prefs/types.cc:858
 msgid "    BIC/A5105, only the base device is emulated, no floppy device.\n"
 msgstr "    BIC/A5105, only the base device is emulated, no floppy device.\n"
 
-#: src/kc/prefs/types.cc:746 src/kc/prefs/types.cc:754
+#: src/kc/prefs/types.cc:865 src/kc/prefs/types.cc:875
 msgid "DSE-ROM 1"
 msgstr "DSE-ROM 1"
 
-#: src/kc/prefs/types.cc:747 src/kc/prefs/types.cc:755
+#: src/kc/prefs/types.cc:866 src/kc/prefs/types.cc:876
 msgid "DSE-ROM 2"
 msgstr "DSE-ROM 2"
 
-#: src/kc/prefs/types.cc:749
+#: src/kc/prefs/types.cc:868
 msgid "    BIC/A5105, the full system including the floppy device.\n"
 msgstr "    BIC/A5105, the full system including the floppy device.\n"
 
-#: src/kc/prefs/types.cc:760
+#: src/kc/prefs/types.cc:881
 msgid ""
 "    Micro-Computer presented in the book \"Praktische Microcomputertechnik"
 "\"\n"
@@ -2470,35 +2447,35 @@ msgstr ""
 "\"\n"
 "    by Manfred Kramer.\n"
 
-#: src/kc/prefs/types.cc:763
+#: src/kc/prefs/types.cc:885
 msgid "IO-Monitor"
 msgstr "IO-Monitor"
 
-#: src/kc/prefs/types.cc:764
+#: src/kc/prefs/types.cc:886
 msgid "BASIC"
 msgstr "BASIC"
 
-#: src/kc/prefs/types.cc:765 src/kc/prefs/types.cc:778
+#: src/kc/prefs/types.cc:887 src/kc/prefs/types.cc:901
 msgid "Charset-ROM"
 msgstr "Charset-ROM"
 
-#: src/kc/prefs/types.cc:766
+#: src/kc/prefs/types.cc:888
 msgid "Debugger"
 msgstr "Debugger"
 
-#: src/kc/prefs/types.cc:767
+#: src/kc/prefs/types.cc:889
 msgid "Reassembler"
 msgstr "Reassembler"
 
-#: src/kc/prefs/types.cc:768
+#: src/kc/prefs/types.cc:890
 msgid "Editor"
 msgstr "Editor"
 
-#: src/kc/prefs/types.cc:769
+#: src/kc/prefs/types.cc:891
 msgid "Assembler"
 msgstr "Assembler"
 
-#: src/kc/prefs/types.cc:774
+#: src/kc/prefs/types.cc:896
 msgid ""
 "    CP/M based Micro-Computer presented in the magazine \"Funkamateur\"\n"
 "    by A. Mugler and H. Mathes.\n"
@@ -2506,7 +2483,7 @@ msgstr ""
 "    CP/M based Micro-Computer presented in the magazine \"Funkamateur\"\n"
 "    by A. Mugler and H. Mathes.\n"
 
-#: src/kc/prefs/types.cc:783
+#: src/kc/prefs/types.cc:906
 msgid ""
 "    Minimal Z80 learning system presented in the magazine \"rfe\"\n"
 "    by Eckhard Schiller.\n"
@@ -2514,16 +2491,16 @@ msgstr ""
 "    Minimal Z80 learning system presented in the magazine \"rfe\"\n"
 "    by Eckhard Schiller.\n"
 
-#: src/kc/prefs/types.cc:791
+#: src/kc/prefs/types.cc:916
 msgid "    Minimal Z80 learning system designed by Dipl.-Ing. Joachim Czepa.\n"
 msgstr ""
 "    Minimal Z80 learning system designed by Dipl.-Ing. Joachim Czepa.\n"
 
-#: src/kc/prefs/types.cc:794
+#: src/kc/prefs/types.cc:920
 msgid "User-ROM"
 msgstr "User-ROM"
 
-#: src/kc/prefs/types.cc:887
+#: src/kc/prefs/types.cc:1013
 msgid "available emulations:"
 msgstr "available emulations:"
 
@@ -2774,7 +2751,7 @@ msgstr "Update"
 msgid "Close"
 msgstr "Close"
 
-#: src/ui/gtk/keyboard.cc:601
+#: src/ui/gtk/keyboard.cc:560
 msgid "KCemu: Keyboard"
 msgstr "KCemu: Keyboard"
 
@@ -2796,10 +2773,7 @@ msgstr "Floppy Disk Basis [F0]"
 msgid "D002: Busdriver [%02X]"
 msgstr "D002: Busdriver [%02X]"
 
-#: src/ui/gtk/module.cc:335 src/ui/gtk/module.cc:342 src/ui/gtk/module.cc:346
-#: src/ui/gtk/module.cc:350 src/ui/gtk/module.cc:354 src/ui/gtk/module.cc:358
-#: src/ui/gtk/module.cc:362 src/ui/gtk/module.cc:366 src/ui/gtk/module.cc:370
-#: src/ui/gtk/module.cc:373
+#: src/ui/gtk/module.cc:332 src/ui/gtk/module.cc:334
 msgid "Basis Device"
 msgstr "Basis Device"
 
@@ -2899,7 +2873,7 @@ msgstr "/Export File"
 msgid "/Export Wav"
 msgstr "/Export Wav"
 
-#: src/ui/gtk/ui_gtk.cc:780
+#: src/ui/gtk/ui_gtk.cc:773
 msgid "Info"
 msgstr "Info"
 
@@ -2935,14 +2909,34 @@ msgstr ""
 "'Yes' will save changes to disk, 'No' will reject all changes.\n"
 "'Cancel': will allow to continue editing."
 
-#: src/ui/gtk/options.cc:612
+#: src/ui/gtk/options.cc:605
 msgid "Open ROM Image..."
 msgstr "Open ROM Image..."
 
-#: src/ui/gtk/options.cc:831
+#: src/ui/gtk/options.cc:824
 #, c-format
 msgid "ROM image is '%s'. The ROM size needs to be %04xh (%d) bytes."
 msgstr "ROM image is '%s'. The ROM size needs to be %04xh (%d) bytes."
+
+#~ msgid "Swap ROMs:"
+#~ msgstr "Swap ROMs:"
+
+#~ msgid ""
+#~ "Swap the F8 and FC ROMs of the D004 device.\n"
+#~ "\n"
+#~ "The firmware version of the ROMs depends actually on the type of the "
+#~ "emulated system.\n"
+#~ "\n"
+#~ "KC85/2-4 default to the standard FC ROM version 2.0 whereas the KC85/5 "
+#~ "system has the extended ROM version 3.1 in slot FC by default."
+#~ msgstr ""
+#~ "Swap the F8 and FC ROMs of the D004 device.\n"
+#~ "\n"
+#~ "The firmware version of the ROMs depends actually on the type of the "
+#~ "emulated system.\n"
+#~ "\n"
+#~ "KC85/2-4 default to the standard FC ROM version 2.0 whereas the KC85/5 "
+#~ "system has the extended ROM version 3.1 in slot FC by default."
 
 #~ msgid "4"
 #~ msgstr "4"
