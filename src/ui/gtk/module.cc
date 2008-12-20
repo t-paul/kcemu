@@ -325,60 +325,17 @@ ModuleWindow::init2(void)
 	init_device(buf, 16 * a, 15);
       }
 
-  /*
-   *  help context
-   */
-  switch (type)
-    {
-    case KC_TYPE_85_1:
-    case KC_TYPE_87:
-      init_device_1(_("Basis Device"), 4);
-      g_object_set_data(G_OBJECT(_w.vbox), "help-topic", (gpointer)"window-module-z9001");
-      break;
-    case KC_TYPE_85_2:
-    case KC_TYPE_85_3:
-    case KC_TYPE_85_4:
-    case KC_TYPE_85_5:
-    init_device(_("Basis Device"), 0, 12);
-      g_object_set_data(G_OBJECT(_w.vbox), "help-topic", (gpointer)"window-module-kc85");
-      break;
-    case KC_TYPE_LC80:
-      init_device_1(_("Basis Device"), 6);
-      //g_object_set_data(G_OBJECT(_w.vbox), "help-topic", (gpointer)"window-module-lc80");
-      break;
-    case KC_TYPE_Z1013:
-      init_device_1(_("Basis Device"), 8);
-      g_object_set_data(G_OBJECT(_w.vbox), "help-topic", (gpointer)"window-module-z1013");
-      break;
-    case KC_TYPE_A5105:
-      init_device_1(_("Basis Device"), 0);
-      //g_object_set_data(G_OBJECT(_w.vbox), "help-topic", (gpointer)"window-module-a5105");
-      break;
-    case KC_TYPE_POLY880:
-      init_device_1(_("Basis Device"), 0);
-      //g_object_set_data(G_OBJECT(_w.vbox), "help-topic", (gpointer)"window-module-poly880");
-      break;
-    case KC_TYPE_KRAMERMC:
-      init_device_1(_("Basis Device"), 0);
-      //g_object_set_data(G_OBJECT(_w.vbox), "help-topic", (gpointer)"window-module-kramermc");
-      break;
-    case KC_TYPE_MUGLERPC:
-      init_device_1(_("Basis Device"), 0);
-      //g_object_set_data(G_OBJECT(_w.vbox), "help-topic", (gpointer)"window-module-muglerpc");
-      break;
-    case KC_TYPE_VCS80:
-      init_device_1(_("Basis Device"), 6);
-      //g_object_set_data(G_OBJECT(_w.vbox), "help-topic", (gpointer)"window-module-vcs80");
-    case KC_TYPE_C80:
-      init_device_1(_("Basis Device"), 0);
-      //g_object_set_data(G_OBJECT(_w.vbox), "help-topic", (gpointer)"window-module-c80");
-      break;
-    case KC_TYPE_ALL:
-    case KC_TYPE_NONE:
-    case KC_TYPE_85_1_CLASS:
-    case KC_TYPE_85_2_CLASS:
-      break;
-    }
+  const EmulationType &emulation_type = Preferences::instance()->get_system_type()->get_emulation_type();
+
+  int module_slots = emulation_type.get_module_slots();
+  if (module_slots >= 0)
+    init_device_1(_("Basis Device"), module_slots);
+  else
+    init_device(_("Basis Device"), 0, -module_slots);
+
+  const char *help_topic_module = emulation_type.get_help_topic_module();
+  if (help_topic_module != NULL)
+   g_object_set_data(G_OBJECT(_w.vbox), "help-topic", (gpointer)help_topic_module);
 
   init_dialog("ui-module-window-toggle", "window-module");
 }

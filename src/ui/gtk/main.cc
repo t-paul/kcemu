@@ -288,68 +288,12 @@ MainWindow::init(void) {
 
 void
 MainWindow::init_icon(void) {
-    GdkPixbuf *icon = NULL;
-    
-    switch (Preferences::instance()->get_kc_type()) {
-        case KC_TYPE_85_1:
-        case KC_TYPE_87:
-            icon = get_icon("kcemu-kc87.xpm");
-            g_object_set_data(G_OBJECT(_window), "help-topic", (gpointer)"sys-z9001");
-            break;
-        case KC_TYPE_85_2:
-        case KC_TYPE_85_3:
-        case KC_TYPE_85_4:
-            icon = get_icon("kcemu-kc85.xpm");
-            g_object_set_data(G_OBJECT(_window), "help-topic", (gpointer)"sys-kc85");
-            break;
-        case KC_TYPE_85_5:
-            icon = get_icon("kcemu-kc85.xpm");
-            g_object_set_data(G_OBJECT(_window), "help-topic", (gpointer)"sys-kc855");
-            break;
-        case KC_TYPE_LC80:
-            icon = get_icon("kcemu-lc80.xpm");
-            g_object_set_data(G_OBJECT(_window), "help-topic", (gpointer)"sys-lc80");
-            break;
-        case KC_TYPE_Z1013:
-            icon = get_icon("kcemu-z1013.xpm");
-            g_object_set_data(G_OBJECT(_window), "help-topic", (gpointer)"sys-z1013");
-            break;
-        case KC_TYPE_A5105:
-            icon = get_icon("kcemu-bic.xpm");
-            g_object_set_data(G_OBJECT(_window), "help-topic", (gpointer)"sys-a5105");
-            break;
-        case KC_TYPE_POLY880:
-            icon = get_icon("kcemu-poly880.xpm");
-            g_object_set_data(G_OBJECT(_window), "help-topic", (gpointer)"sys-poly880");
-            break;
-        case KC_TYPE_KRAMERMC:
-            icon = get_icon("kcemu-kramermc.xpm");
-            g_object_set_data(G_OBJECT(_window), "help-topic", (gpointer)"sys-kramermc");
-            break;
-        case KC_TYPE_MUGLERPC:
-            icon = get_icon("kcemu-pcm.xpm");
-            g_object_set_data(G_OBJECT(_window), "help-topic", (gpointer)"sys-muglerpc");
-            break;
-        case KC_TYPE_VCS80:
-            icon = get_icon("kcemu-vcs80.xpm");
-            g_object_set_data(G_OBJECT(_window), "help-topic", (gpointer)"sys-vcs80");
-            break;
-        case KC_TYPE_C80:
-            icon = get_icon("kcemu-c80.xpm");
-            g_object_set_data(G_OBJECT(_window), "help-topic", (gpointer)"sys-c80");
-            break;
-        case KC_TYPE_ALL:
-        case KC_TYPE_NONE:
-        case KC_TYPE_85_1_CLASS:
-        case KC_TYPE_85_2_CLASS:
-            DBG(0, form("KCemu/internal_error",
-                    "KCemu: got unhandled value from get_kc_type(): %d\n",
-                    Preferences::instance()->get_kc_type()));
-            break;
-    }
-    
+    const EmulationType &emulation_type = Preferences::instance()->get_system_type()->get_emulation_type();
+    GdkPixbuf *icon = get_icon(emulation_type.get_icon_name());
     if (icon != NULL)
         gtk_window_set_icon(GTK_WINDOW(_window), icon);
+
+    g_object_set_data(G_OBJECT(_window), "help-topic", (gpointer)emulation_type.get_help_topic());
 }
 
 void

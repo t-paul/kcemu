@@ -20,8 +20,6 @@
  */
 
 #include "kc/system.h"
-#include "kc/prefs/types.h"
-#include "kc/prefs/prefs.h"
 
 #include "kc/z80.h"
 #include "ui/status.h"
@@ -44,42 +42,11 @@ public:
         {
         case 0:
           Status::instance()->setMessage("*** RESET ***");
-	  switch (Preferences::instance()->get_kc_type())
-	    {
-	    case KC_TYPE_85_1:
-	    case KC_TYPE_87:
-	    case KC_TYPE_Z1013:
-	      z80->reset(0xf000);
-	      break;
-	      
-	    case KC_TYPE_85_2:
-	    case KC_TYPE_85_3:
-	    case KC_TYPE_85_4:
-	    case KC_TYPE_85_5:
-	      z80->reset(0xe000);
-	      break;
-	    default:
-	      z80->reset(0x0000);
-	      break;
-	    }
+          z80->reset();
           break;
         case 1:
           Status::instance()->setMessage("*** POWER ON ***");
-	  switch (Preferences::instance()->get_kc_type())
-	    {
-	    case KC_TYPE_87:
-	    case KC_TYPE_85_1:
-	    case KC_TYPE_85_2:
-	    case KC_TYPE_85_3:
-	    case KC_TYPE_85_4:
-	    case KC_TYPE_85_5:
-	    case KC_TYPE_Z1013:
-	      z80->power_on(0xf000);
-	      break;
-	    default:
-	      z80->power_on(0x0000);
-	      break;
-	    }
+          z80->power_on();
 	  break;
 	case 2:
           Status::instance()->setMessage("*** NMI ***");

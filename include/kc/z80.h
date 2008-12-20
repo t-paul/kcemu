@@ -75,6 +75,9 @@ class Z80
 
         CallbackList _cb_list;
 
+  private:
+        void reset(word_t pc, bool power_on);
+
   public:
 	Z80(void);
 	~Z80(void) {}
@@ -89,8 +92,8 @@ class Z80
 	bool singlestep();
 	void singlestep(bool value);
 
-	void reset(word_t pc, bool power_on = false);
-	void power_on(word_t pc);
+	void reset(void);
+	void power_on(void);
 	void jump(word_t pc);
 	void reti(void);
 	void register_ic(InterfaceCircuit *h);

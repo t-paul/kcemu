@@ -25,6 +25,8 @@
 #include <list>
 #include <string>
 
+#include "kc/system.h"
+
 #include "kc/prefs/profile.h"
 
 using namespace std;
@@ -97,6 +99,14 @@ private:
     string _config_name;
     string _icon_name;
     string _image_name;
+    string _keyboard_filename;
+    string _help_topic;
+    string _help_topic_module;
+    
+    int    _module_slots;
+
+    word_t _power_on_addr;
+    word_t _reset_addr;
     
     /** emulation type as given on the commandline, or -1 if no commandline parameter exists */
     int _type;
@@ -121,7 +131,7 @@ public:
     static EmulationType _emulation_type_vcs80;
     static EmulationType _emulation_type_c80;
     
-    EmulationType(kc_type_t kc_type, int type, string name, string short_name, string config_name, string icon_name, string image_name);
+    EmulationType(kc_type_t kc_type, int type, string name, string short_name, string config_name, string icon_name, string image_name, string keyboard_filename, string help_topic, string help_topic_module, int module_slots, word_t power_on_addr, word_t reset_addr);
     virtual ~EmulationType(void);
     
     virtual const char * get_name(void) const;
@@ -129,6 +139,12 @@ public:
     virtual const char * get_config_name(void) const;
     virtual const char * get_icon_name(void) const;
     virtual const char * get_image_name(void) const;
+    virtual const char * get_keyboard_filename(void) const;
+    virtual const char * get_help_topic(void) const;
+    virtual const char * get_help_topic_module(void) const;
+    virtual const int    get_module_slots(void) const;
+    virtual const word_t get_power_on_addr(void) const;
+    virtual const word_t get_reset_addr(void) const;
     virtual int get_type(void) const;
     virtual kc_type_t get_kc_type(void) const;
     
@@ -200,7 +216,9 @@ class SystemType {
     kc_variant_t      _kc_variant;
     string            _description;
     EmulationType&    _emulation_type;
-    
+    unsigned long long _ui_callback_value;
+    unsigned long long _ui_callback_retrace_value;
+
     string            _rom_dir;
     system_rom_list_t _rom_list;
 
@@ -217,6 +235,12 @@ public:
 
     virtual const string get_rom_directory(void) const;
     virtual SystemType & set_rom_directory(const char *romdir);
+
+    virtual const unsigned long long get_ui_callback_value(void) const;
+    virtual SystemType & set_ui_callback_value(unsigned long long value);
+
+    virtual const unsigned long long get_ui_callback_retrace_value(void) const;
+    virtual SystemType & set_ui_callback_retrace_value(unsigned long long value);
 
     virtual const system_rom_list_t & get_rom_list(void) const;
     virtual const SystemROM * get_rom(const char *key) const;

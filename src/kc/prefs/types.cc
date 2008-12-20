@@ -19,6 +19,9 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
+#include "prefs/types.h"
+
+
 #include <iostream>
 
 #include <string.h>
@@ -49,23 +52,23 @@ struct find_by_name : public unary_function<SystemType *, void> {
 
 emulation_type_list_t EmulationType::_emulation_type_list;
 
-EmulationType EmulationType::_emulation_type_kc85_1(  KC_TYPE_85_1,      1, "KC 85/1",              "KC 85/1",   "kc85-1",   "icon-kc87.png",     "kcemu-kc87.xpm");
-EmulationType EmulationType::_emulation_type_kc85_2(  KC_TYPE_85_2,      2, "KC 85/2",              "KC 85/2",   "kc85-2",   "icon-kc85.png",     "kcemu-kc85.xpm");
-EmulationType EmulationType::_emulation_type_kc85_3(  KC_TYPE_85_3,      3, "KC 85/3",              "KC 85/3",   "kc85-3",   "icon-kc85.png",     "kcemu-kc85.xpm");
-EmulationType EmulationType::_emulation_type_kc85_4(  KC_TYPE_85_4,      4, "KC 85/4",              "KC 85/4",   "kc85-4",   "icon-kc85.png",     "kcemu-kc85.xpm");
-EmulationType EmulationType::_emulation_type_kc85_5(  KC_TYPE_85_5,      5, "KC 85/5",              "KC 85/5",   "kc85-5",   "icon-kc85.png",     "kcemu-kc85.xpm");
-EmulationType EmulationType::_emulation_type_kc87(    KC_TYPE_87,        7, "KC 87",                "KC 87",     "kc87",     "icon-kc87.png",     "kcemu-kc87.xpm");
-EmulationType EmulationType::_emulation_type_a5105(   KC_TYPE_A5105,     9, "A5105",                "A5105",     "a5105",    "icon-bic.png",      "kcemu-bic.xpm");
+EmulationType EmulationType::_emulation_type_kc85_1(  KC_TYPE_85_1,      1, "KC 85/1",              "KC 85/1",   "kc85-1",   "icon-kc87.png",     "kcemu-kc87.xpm",     "kc851.key",   "sys-z9001",    "window-module-z9001",   4, 0xf000, 0xf000);
+EmulationType EmulationType::_emulation_type_kc85_2(  KC_TYPE_85_2,      2, "KC 85/2",              "KC 85/2",   "kc85-2",   "icon-kc85.png",     "kcemu-kc85.xpm",     "kc854.key",   "sys-kc85",     "window-module-kc85",  -12, 0xf000, 0xe000);
+EmulationType EmulationType::_emulation_type_kc85_3(  KC_TYPE_85_3,      3, "KC 85/3",              "KC 85/3",   "kc85-3",   "icon-kc85.png",     "kcemu-kc85.xpm",     "kc854.key",   "sys-kc85",     "window-module-kc85",  -12, 0xf000, 0xe000);
+EmulationType EmulationType::_emulation_type_kc85_4(  KC_TYPE_85_4,      4, "KC 85/4",              "KC 85/4",   "kc85-4",   "icon-kc85.png",     "kcemu-kc85.xpm",     "kc854.key",   "sys-kc85",     "window-module-kc85",  -12, 0xf000, 0xe000);
+EmulationType EmulationType::_emulation_type_kc85_5(  KC_TYPE_85_5,      5, "KC 85/5",              "KC 85/5",   "kc85-5",   "icon-kc85.png",     "kcemu-kc85.xpm",     "kc854.key",   "sys-kc855",    "window-module-kc85",  -12, 0xf000, 0xe000);
+EmulationType EmulationType::_emulation_type_kc87(    KC_TYPE_87,        7, "KC 87",                "KC 87",     "kc87",     "icon-kc87.png",     "kcemu-kc87.xpm",     "kc851.key",   "sys-z9001",    "window-module-z9001",   4, 0xf000, 0xf000);
+EmulationType EmulationType::_emulation_type_a5105(   KC_TYPE_A5105,     9, "A5105",                "A5105",     "a5105",    "icon-bic.png",      "kcemu-bic.xpm",      "a5105.key",   "sys-a5105",    "",                      0, 0x0000, 0x0000);
 
-EmulationType EmulationType::_emulation_type_z1013(   KC_TYPE_Z1013,     0, "Z1013",                "Z1013",     "z1013",    "icon-z1013.png",    "kcemu-z1013.xpm");
-EmulationType EmulationType::_emulation_type_lc80(    KC_TYPE_LC80,      8, "LC 80",                "LC 80",     "lc80",     "icon-lc80.png",     "kcemu-lc80.xpm");
-EmulationType EmulationType::_emulation_type_poly880( KC_TYPE_POLY880,   6, "Polycomputer 880",     "Poly880",   "poly880",  "icon-poly880.png",  "kcemu-poly880.xpm");
-EmulationType EmulationType::_emulation_type_muglerpc(KC_TYPE_MUGLERPC, -1, "Mugler PC (PC/M)",     "PC/M",      "pcm",      "icon-pcm.png",      "kcemu-pcm.xpm");
-EmulationType EmulationType::_emulation_type_kramermc(KC_TYPE_KRAMERMC, -1, "Kramer Microcomputer", "Kramer-MC", "kramermc", "icon-kramermc.png", "kcemu-kramermc.xpm");
-EmulationType EmulationType::_emulation_type_vcs80(   KC_TYPE_VCS80,    -1, "VCS 80",               "VCS 80",    "vcs80",    "icon-vcs80.png",    "kcemu-vcs80.xpm");
-EmulationType EmulationType::_emulation_type_c80(     KC_TYPE_C80,      -1, "C-80",                 "C-80",      "c80",      "icon-c80.png",      "kcemu-c80.xpm");
+EmulationType EmulationType::_emulation_type_z1013(   KC_TYPE_Z1013,     0, "Z1013",                "Z1013",     "z1013",    "icon-z1013.png",    "kcemu-z1013.xpm",    "",            "sys-z1013",    "window-module-z1013",   8, 0xf000, 0xf000);
+EmulationType EmulationType::_emulation_type_lc80(    KC_TYPE_LC80,      8, "LC 80",                "LC 80",     "lc80",     "icon-lc80.png",     "kcemu-lc80.xpm",     "lc80.key",    "sys-lc80",     "",                      6, 0x0000, 0x0000);
+EmulationType EmulationType::_emulation_type_poly880( KC_TYPE_POLY880,   6, "Polycomputer 880",     "Poly880",   "poly880",  "icon-poly880.png",  "kcemu-poly880.xpm",  "poly880.key", "sys-poly880",  "",                      0, 0x0000, 0x0000);
+EmulationType EmulationType::_emulation_type_muglerpc(KC_TYPE_MUGLERPC, -1, "Mugler PC (PC/M)",     "PC/M",      "pcm",      "icon-pcm.png",      "kcemu-pcm.xpm",      "",            "sys-muglerpc", "",                      0, 0x0000, 0x0000);
+EmulationType EmulationType::_emulation_type_kramermc(KC_TYPE_KRAMERMC, -1, "Kramer Microcomputer", "Kramer-MC", "kramermc", "icon-kramermc.png", "kcemu-kramermc.xpm", "",            "sys-kramermc", "",                      0, 0x0000, 0x0000);
+EmulationType EmulationType::_emulation_type_vcs80(   KC_TYPE_VCS80,    -1, "VCS 80",               "VCS 80",    "vcs80",    "icon-vcs80.png",    "kcemu-vcs80.xpm",    "vcs80.key",   "sys-vcs80",    "",                      6, 0x0000, 0x0000);
+EmulationType EmulationType::_emulation_type_c80(     KC_TYPE_C80,      -1, "C-80",                 "C-80",      "c80",      "icon-c80.png",      "kcemu-c80.xpm",      "",            "sys-c80",      "",                      0, 0x0000, 0x0000);
 
-EmulationType::EmulationType(kc_type_t kc_type, int type, string name, string short_name, string config_name, string icon_name, string image_name) {
+EmulationType::EmulationType(kc_type_t kc_type, int type, string name, string short_name, string config_name, string icon_name, string image_name, string keyboard_filename, string help_topic, string help_topic_module, int module_slots, word_t power_on_addr, word_t reset_addr) {
     _type = type;
     _kc_type = kc_type;
     
@@ -74,6 +77,13 @@ EmulationType::EmulationType(kc_type_t kc_type, int type, string name, string sh
     _config_name = config_name;
     _icon_name = icon_name;
     _image_name = image_name;
+    _keyboard_filename = keyboard_filename;
+    _help_topic = help_topic;
+    _help_topic_module = help_topic_module;
+    _module_slots = module_slots;
+    _power_on_addr = power_on_addr;
+    _reset_addr = reset_addr;
+
 }
 
 EmulationType::~EmulationType(void) {
@@ -102,6 +112,42 @@ EmulationType::get_icon_name(void) const {
 const char *
 EmulationType::get_image_name(void) const {
     return _image_name.c_str();
+}
+
+const char *
+EmulationType::get_keyboard_filename(void) const {
+  if (_keyboard_filename.empty())
+    return NULL;
+  
+  return _keyboard_filename.c_str();
+}
+
+const char *
+EmulationType::get_help_topic(void) const {
+  return _help_topic.c_str();
+}
+
+const char *
+EmulationType::get_help_topic_module(void) const {
+  if (_help_topic_module.empty())
+    return NULL;
+
+  return _help_topic_module.c_str();
+}
+
+const int
+EmulationType::get_module_slots(void) const {
+  return _module_slots;
+}
+
+const word_t
+EmulationType::get_power_on_addr(void) const {
+  return _power_on_addr;
+}
+
+const word_t
+EmulationType::get_reset_addr(void) const {
+  return _reset_addr;
 }
 
 int
@@ -238,6 +284,8 @@ SystemType::SystemType(int sort, string name, int type, EmulationType &emulation
   _description(description),
   _emulation_type(emulation_type)
 {
+  _ui_callback_value = 50000;
+  _ui_callback_retrace_value = 0;
 }
 
 SystemType::~SystemType(void) {
@@ -266,6 +314,32 @@ SystemType &
 SystemType::set_rom_directory(const char *romdir)
 {
     _rom_dir = romdir;
+    return *this;
+}
+
+const unsigned long long
+SystemType::get_ui_callback_value(void) const
+{
+    return _ui_callback_value;
+}
+
+SystemType &
+SystemType::set_ui_callback_value(unsigned long long value)
+{
+    _ui_callback_value = value;
+    return *this;
+}
+
+const unsigned long long
+SystemType::get_ui_callback_retrace_value(void) const
+{
+    return _ui_callback_retrace_value;
+}
+
+SystemType &
+SystemType::set_ui_callback_retrace_value(unsigned long long value)
+{
+    _ui_callback_retrace_value = value;
     return *this;
 }
 
@@ -404,6 +478,8 @@ SystemInformation::SystemInformation(void) {
             "    first version with cheap circuits so the CPU was clocked at only 1MHz\n"
             "    The ROM containes the Z1013 monitor version 2.02.\n"))
         .set_display_name("Z1013.01")
+        .set_ui_callback_value(20000)
+        .set_ui_callback_retrace_value(1000)
         .set_rom_directory("/roms/z1013")
         .add_rom(SystemROM::ROM_KEY_SYSTEM, 0x0800, "z1013_20.rom", _("System-ROM V2.0"), NULL)
         .add_rom(SystemROM::ROM_KEY_CHARGEN, 0x1000, "z1013_zg.rom", _("Z1013 Charset-ROM"), NULL);
@@ -411,6 +487,8 @@ SystemInformation::SystemInformation(void) {
             N_("    Z1013 with 1k sRAM and 2k ROM, running at 2MHz. Industry\n"
             "    version with only 1k static RAM. Monitor version 2.02.\n"))
         .set_display_name("Z1013.12")
+        .set_ui_callback_value(40000)
+        .set_ui_callback_retrace_value(1000)
         .set_rom_directory("/roms/z1013")
         .add_rom(SystemROM::ROM_KEY_SYSTEM, 0x0800, "z1013_20.rom", _("System-ROM V2.0"), NULL)
         .add_rom(SystemROM::ROM_KEY_CHARGEN, 0x1000, "z1013_zg.rom", _("Z1013 Charset-ROM"), NULL);
@@ -418,6 +496,8 @@ SystemInformation::SystemInformation(void) {
             N_("    Z1013 with 16k RAM and 2k ROM, running at 2MHz. Successor of\n"
             "    the Z1013.01 but with industry grade circuits clocked at 2MHz.\n"))
         .set_display_name("Z1013.16")
+        .set_ui_callback_value(40000)
+        .set_ui_callback_retrace_value(1000)
         .set_rom_directory("/roms/z1013")
         .add_rom(SystemROM::ROM_KEY_SYSTEM, 0x0800, "z1013_20.rom", _("System-ROM V2.0"), NULL)
         .add_rom(SystemROM::ROM_KEY_CHARGEN, 0x1000, "z1013_zg.rom", _("Z1013 Charset-ROM"), NULL);
@@ -427,6 +507,8 @@ SystemInformation::SystemInformation(void) {
             "    image with version 2.02 that is supposed to work with the foil keypad\n"
             "    shipped by the manufacturer.\n"))
         .set_display_name("Z1013.64")
+        .set_ui_callback_value(40000)
+        .set_ui_callback_retrace_value(1000)
         .set_rom_directory("/roms/z1013")
         .add_rom(SystemROM::ROM_KEY_SYSTEM, 0x0800, "z1013_20.rom", _("System-ROM V2.0"), NULL)
         .add_rom(SystemROM::ROM_KEY_CHARGEN, 0x1000, "z1013_zg.rom", _("Z1013 Charset-ROM"), NULL);
@@ -436,6 +518,8 @@ SystemInformation::SystemInformation(void) {
             "    image with version A.2 that supports an extended keyboard with an\n"
             "    8x8 matrix.\n"))
         .set_display_name("Z1013.A2")
+        .set_ui_callback_value(40000)
+        .set_ui_callback_retrace_value(1000)
         .set_rom_directory("/roms/z1013")
         .add_rom(SystemROM::ROM_KEY_SYSTEM, 0x0800, "z1013_a2.rom", _("System-ROM A2"), NULL)
         .add_rom(SystemROM::ROM_KEY_CHARGEN, 0x1000, "z1013_zg.rom", _("Z1013 Charset-ROM"), NULL);
@@ -444,6 +528,8 @@ SystemInformation::SystemInformation(void) {
             "    version tagged 2.028 RB that has a different keyboard driver for\n"
             "    the keyboard K7659.\n"))
         .set_display_name("Z1013 (Brosig-ROM)")
+        .set_ui_callback_value(40000)
+        .set_ui_callback_retrace_value(1000)
         .set_rom_directory("/roms/z1013")
         .add_rom(SystemROM::ROM_KEY_SYSTEM, 0x1000, "z1013_rb.rom", _("Brosig-ROM K7659/2.028"), NULL)
         .add_rom(SystemROM::ROM_KEY_CHARGEN, 0x1000, "z1013_zg.rom", _("Z1013 Charset-ROM"), NULL);
@@ -453,6 +539,8 @@ SystemInformation::SystemInformation(void) {
             "    The hardware modification port at address 4h is emulated which allows\n"
             "    programs to switch off the system ROM.\n"))
         .set_display_name("Z1013 (Super Ur-Lader 5.0)")
+        .set_ui_callback_value(40000)
+        .set_ui_callback_retrace_value(1000)
         .set_rom_directory("/roms/z1013")
         .add_rom(SystemROM::ROM_KEY_SYSTEM, 0x0800, "z1013_ul.rom", _("Super Ur-Lader 5.0"), NULL)
         .add_rom(SystemROM::ROM_KEY_CHARGEN, 0x1000, "z1013_zg.rom", _("Z1013 Charset-ROM"), NULL);
@@ -461,6 +549,8 @@ SystemInformation::SystemInformation(void) {
             "    BL4 that can load monitor images from floppy disk or can start the\n"
             "    CP/M system.\n"))
         .set_display_name("Z1013 (Bootloader BL4)")
+        .set_ui_callback_value(40000)
+        .set_ui_callback_retrace_value(1000)
         .set_rom_directory("/roms/z1013")
         .add_rom(SystemROM::ROM_KEY_SYSTEM, 2432, "z1013_bl.rom", _("Bootlader BL4"), NULL)
         .add_rom(SystemROM::ROM_KEY_CHARGEN, 0x1000, "z1013_zg.rom", _("Z1013 Charset-ROM"), NULL);
@@ -471,6 +561,7 @@ SystemInformation::SystemInformation(void) {
             N_("    Z9001 (later called KC 85/1) with monochrome display, no internal BASIC\n"
             "    ROM. This computer has 16k RAM and 4k ROM with the robotron z9001 system.\n"))
         .set_display_name("KC 85/1.10")
+        .set_ui_callback_value(50000)
         .set_rom_directory("/roms/z9001")
         .add_rom(SystemROM::ROM_KEY_SYSTEM, 0x1000,
                  "os____f0.851", _("System-ROM"),
@@ -486,6 +577,7 @@ SystemInformation::SystemInformation(void) {
     add_system_type(202, "z9001.11", -1, EmulationType::_emulation_type_kc85_1, KC_VARIANT_85_1_11,
             N_("    Like the z9001.10 but with color extension card.\n"))
         .set_display_name("KC 85/1.11")
+        .set_ui_callback_value(50000)
         .set_rom_directory("/roms/z9001")
         .add_rom(SystemROM::ROM_KEY_SYSTEM, 0x1000,
                  "os____f0.851", _("System-ROM"),
@@ -505,6 +597,7 @@ SystemInformation::SystemInformation(void) {
             N_("    HC900 (later called KC 85/2) with 16k RAM and 8k ROM. System is called\n"
             "    HC-CAOS 2.2 (home computer - cassette aided operating system). BASIC\n"
             "    is only available as external module.\n"))
+        .set_ui_callback_value(35000)
         .set_rom_directory("/roms/kc85")
         .add_rom(SystemROM::ROM_KEY_CAOSE, 0x2000,
                  "hc900.852", _("HC-900 CAOS"),
@@ -527,6 +620,7 @@ SystemInformation::SystemInformation(void) {
      */
     add_system_type(400, "kc85/3", 3, EmulationType::_emulation_type_kc85_3, KC_VARIANT_NONE,
             N_("    KC 85/3 with 16k RAM, 8k system ROM with HC-CAOS 3.1 and 8k BASIC ROM.\n"))
+        .set_ui_callback_value(35000)
         .set_rom_directory("/roms/kc85")
         .add_rom(SystemROM::ROM_KEY_CAOSE, 0x2000,
                  "caos__e0.853", _("CAOS 3.1"),
@@ -555,6 +649,7 @@ SystemInformation::SystemInformation(void) {
     add_system_type(500, "kc85/4", 4, EmulationType::_emulation_type_kc85_4, KC_VARIANT_NONE,
             N_("    KC 85/4 with 64k RAM, 64k screen memory, 12k system ROM with HC-CAOS 4.2\n"
             "    and 8k BASIC ROM.\n"))
+        .set_ui_callback_value(35000)
         .set_rom_directory("/roms/kc85")
         .add_rom(SystemROM::ROM_KEY_CAOSC, 0x1000, 1,
                  "caos41c.854", _("CAOS 4.1 (C)"),
@@ -585,6 +680,7 @@ SystemInformation::SystemInformation(void) {
             "    16k system ROM with HC-CAOS 4.4, 8k BASIC ROM and 24k User ROM. It is\n"
             "    intended to be used with a modified D004 floppy device with additional\n"
             "    hard-disk support.\n"))
+        .set_ui_callback_value(35000)
         .set_rom_directory("/roms/kc85")
         .add_rom(SystemROM::ROM_KEY_CAOSC, 0x2000, 1,
                  "caos43c.855", _("CAOS 4.3 (C)"),
@@ -613,6 +709,7 @@ SystemInformation::SystemInformation(void) {
     add_system_type(700, "poly880", 6, EmulationType::_emulation_type_poly880, KC_VARIANT_NONE,
             N_("    Polycomputer 880.\n"))
         .set_display_name("Polycomputer 880")
+        .set_ui_callback_value(18000)
         .set_rom_directory("/roms/poly880")
         .add_rom(SystemROM::ROM_KEY_SYSTEM1, 0x0400, "poly880a.rom", _("System-ROM 1"), NULL)
         .add_rom(SystemROM::ROM_KEY_SYSTEM2, 0x0400, "poly880b.rom", _("System-ROM 2"), NULL)
@@ -621,6 +718,7 @@ SystemInformation::SystemInformation(void) {
     add_system_type(701, "poly880.sc1", -6, EmulationType::_emulation_type_poly880, KC_VARIANT_POLY880_SC1,
             N_("    Polycomputer 880 with chess program rom from SC1.\n"))
         .set_display_name("Polycomputer 880 + SC1 ROM")
+        .set_ui_callback_value(18000)
         .set_rom_directory("/roms/poly880")
         .add_rom(SystemROM::ROM_KEY_SYSTEM1, 0x1000, "sc1.rom", _("SC1-ROM"), NULL);
     /*
@@ -629,6 +727,7 @@ SystemInformation::SystemInformation(void) {
     add_system_type(801, "kc87.10", -7, EmulationType::_emulation_type_kc87, KC_VARIANT_87_10,
             N_("    Like the KC 87.11 but without the color extension card.\n"))
         .set_display_name("KC 87.10")
+        .set_ui_callback_value(50000)
         .set_rom_directory("/roms/z9001")
         .add_rom(SystemROM::ROM_KEY_SYSTEM, 0x1000,
                  "os____f0.851", _("System-ROM"),
@@ -645,6 +744,7 @@ SystemInformation::SystemInformation(void) {
     add_system_type(802, "kc87.11", 7, EmulationType::_emulation_type_kc87, KC_VARIANT_87_11,
             N_("    Successor of the Z9001 with internal 10k BASIC ROM.\n"))
         .set_display_name("KC 87.11")
+        .set_ui_callback_value(50000)
         .set_rom_directory("/roms/z9001")
         .add_rom(SystemROM::ROM_KEY_SYSTEM, 0x1000,
                  "os____f0.851", _("System-ROM"),
@@ -661,6 +761,7 @@ SystemInformation::SystemInformation(void) {
     add_system_type(803, "kc87.20", -8, EmulationType::_emulation_type_kc87, KC_VARIANT_87_20,
             N_("    Like the KC 87.21 but without the color extension card.\n"))
         .set_display_name("KC 87.20")
+        .set_ui_callback_value(50000)
         .set_rom_directory("/roms/z9001")
         .add_rom(SystemROM::ROM_KEY_SYSTEM, 0x1000,
                  "os____f0.87b", _("System-ROM"),
@@ -678,6 +779,7 @@ SystemInformation::SystemInformation(void) {
             N_("    New series with extended BASIC ROM (still 10k but with some routines for\n"
             "    plotter support were added).\n"))
         .set_display_name("KC 87.21")
+        .set_ui_callback_value(50000)
         .set_rom_directory("/roms/z9001")
         .add_rom(SystemROM::ROM_KEY_SYSTEM, 0x1000,
                  "os____f0.87b", _("System-ROM"),
@@ -694,6 +796,7 @@ SystemInformation::SystemInformation(void) {
     add_system_type(805, "kc87.30", -8, EmulationType::_emulation_type_kc87, KC_VARIANT_87_30,
             N_("    New batch of KC 87.20 with no known hardware differences.\n"))
         .set_display_name("KC 87.30")
+        .set_ui_callback_value(50000)
         .set_rom_directory("/roms/z9001")
         .add_rom(SystemROM::ROM_KEY_SYSTEM, 0x1000,
                  "os____f0.87b", _("System-ROM"),
@@ -710,6 +813,7 @@ SystemInformation::SystemInformation(void) {
     add_system_type(806, "kc87.31", -8, EmulationType::_emulation_type_kc87, KC_VARIANT_87_31,
             N_("    New batch of KC 87.21 with no known hardware differences.\n"))
         .set_display_name("KC 87.31")
+        .set_ui_callback_value(50000)
         .set_rom_directory("/roms/z9001")
         .add_rom(SystemROM::ROM_KEY_SYSTEM, 0x1000,
                  "os____f0.87b", _("System-ROM"),
@@ -729,17 +833,20 @@ SystemInformation::SystemInformation(void) {
     add_system_type(900, "lc80", 8, EmulationType::_emulation_type_lc80, KC_VARIANT_LC80_1k,
             N_("    Single board computer LC 80 with 1k RAM and 2 x 1k ROM.\n"))
         .set_display_name("LC 80 (2 x U505)")
+        .set_ui_callback_value(18000)
         .set_rom_directory("/roms/lc80")
         .add_rom(SystemROM::ROM_KEY_SYSTEM1, 0x0400, "lc80__00.rom", _("System-ROM 1"), NULL)
         .add_rom(SystemROM::ROM_KEY_SYSTEM2, 0x0400, "lc80__08.rom", _("System-ROM 2"), NULL);
     add_system_type(902, "lc80.2k", -8, EmulationType::_emulation_type_lc80, KC_VARIANT_LC80_2k,
             N_("    Single board computer LC 80 with 1k RAM and 1 x 2k ROM.\n"))
         .set_display_name("LC 80 (1 x U2716)")
+        .set_ui_callback_value(18000)
         .set_rom_directory("/roms/lc80")
         .add_rom(SystemROM::ROM_KEY_SYSTEM, 0x0800, "lc80__2k.rom", _("System-ROM"), NULL);
     add_system_type(903, "lc80e", -8, EmulationType::_emulation_type_lc80, KC_VARIANT_LC80e,
             N_("    Export variant of the LC 80 with 12k ROM including chess program.\n"))
         .set_display_name("LC 80e")
+        .set_ui_callback_value(66000)
         .set_rom_directory("/roms/lc80")
         .add_rom(SystemROM::ROM_KEY_SYSTEM1, 0x1000, "lc80e_00.rom", _("System-ROM 1"), NULL)
         .add_rom(SystemROM::ROM_KEY_SYSTEM2, 0x1000, "lc80e_10.rom", _("System-ROM 2"), NULL)
@@ -750,6 +857,8 @@ SystemInformation::SystemInformation(void) {
     add_system_type(1000, "bic", -9, EmulationType::_emulation_type_a5105, KC_VARIANT_A5105_K1505,
             N_("    BIC/A5105, only the base device is emulated, no floppy device.\n"))
         .set_display_name("K1505 (BIC Basis Device)")
+        .set_ui_callback_value(60000)
+        .set_ui_callback_retrace_value(1000)
         .set_rom_directory("/roms/a5105")
         .add_rom(SystemROM::ROM_KEY_SYSTEM1, 0x8000, "k1505_00.rom", _("System-ROM 1"), NULL)
         .add_rom(SystemROM::ROM_KEY_SYSTEM2, 0x2000, "k1505_80.rom", _("System-ROM 2"), NULL)
@@ -758,6 +867,8 @@ SystemInformation::SystemInformation(void) {
     add_system_type(1002, "a5105", 9, EmulationType::_emulation_type_a5105, KC_VARIANT_A5105_A5105,
             N_("    BIC/A5105, the full system including the floppy device.\n"))
         .set_display_name("A5105 (BIC Basis Device + Floppy Device)")
+        .set_ui_callback_value(60000)
+        .set_ui_callback_retrace_value(1000)
         .set_rom_directory("/roms/a5105")
         .add_rom(SystemROM::ROM_KEY_SYSTEM1, 0x8000, "k1505_00.rom", _("System-ROM 1"), NULL)
         .add_rom(SystemROM::ROM_KEY_SYSTEM2, 0x2000, "k1505_80.rom", _("System-ROM 2"), NULL)
@@ -769,6 +880,7 @@ SystemInformation::SystemInformation(void) {
     add_system_type(1100, "kramer-mc", -100, EmulationType::_emulation_type_kramermc, KC_VARIANT_NONE,
             N_("    Micro-Computer presented in the book \"Praktische Microcomputertechnik\"\n"
             "    by Manfred Kramer.\n"))
+        .set_ui_callback_value(30000)
         .set_rom_directory("/roms/kramermc")
         .add_rom(SystemROM::ROM_KEY_SYSTEM, 0x0400, "io-mon.kmc", _("IO-Monitor"), NULL)
         .add_rom(SystemROM::ROM_KEY_BASIC, 0x3000, "basic.kmc", _("BASIC"), NULL)
@@ -783,6 +895,7 @@ SystemInformation::SystemInformation(void) {
     add_system_type(1200, "mugler-pc", -100, EmulationType::_emulation_type_muglerpc, KC_VARIANT_NONE,
             N_("    CP/M based Micro-Computer presented in the magazine \"Funkamateur\"\n"
             "    by A. Mugler and H. Mathes.\n"))
+        .set_ui_callback_value(50000)
         .set_rom_directory("/roms/muglerpc")
         .add_rom(SystemROM::ROM_KEY_SYSTEM, 0x2000, "muglerpc.pcm", _("System-ROM"), NULL)
         .add_rom(SystemROM::ROM_KEY_CHARGEN, 0x0800, "chargen.pcm", _("Charset-ROM"), NULL);
@@ -792,6 +905,8 @@ SystemInformation::SystemInformation(void) {
     add_system_type(1300, "vcs80", -100, EmulationType::_emulation_type_vcs80, KC_VARIANT_NONE,
             N_("    Minimal Z80 learning system presented in the magazine \"rfe\"\n"
             "    by Eckhard Schiller.\n"))
+        .set_ui_callback_value(25000)
+        .set_ui_callback_retrace_value(4000)
         .set_rom_directory("/roms/vcs80")
         .add_rom(SystemROM::ROM_KEY_SYSTEM, 0x0200, "monitor.rom", _("System-ROM"), NULL);
     /*
@@ -799,6 +914,7 @@ SystemInformation::SystemInformation(void) {
      */
     add_system_type(1400, "c80", -100, EmulationType::_emulation_type_c80, KC_VARIANT_NONE,
             N_("    Minimal Z80 learning system designed by Dipl.-Ing. Joachim Czepa.\n"))
+        .set_ui_callback_value(50000)
         .set_rom_directory("/roms/c80")
         .add_rom(SystemROM::ROM_KEY_SYSTEM, 0x0400, "monitor.rom", _("System-ROM"), NULL)
         .add_optional_rom(SystemROM::ROM_KEY_USER, 0x0400, "user.rom", _("User-ROM"), NULL);

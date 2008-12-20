@@ -213,21 +213,8 @@ Z80::Z80(void)
   _regs.IRequest = INT_NONE;
   ResetZ80(&_regs);
 
-  switch (Preferences::instance()->get_kc_type())
-    {
-    case KC_TYPE_87:
-    case KC_TYPE_85_1:
-    case KC_TYPE_85_2:
-    case KC_TYPE_85_3:
-    case KC_TYPE_85_4:
-    case KC_TYPE_85_5:
-    case KC_TYPE_Z1013:
-      _regs.PC.W = 0xf000;
-      break;
-    default:
-      _regs.PC.W = 0x0000;
-      break;
-    }
+  const EmulationType &emulation_type = Preferences::instance()->get_system_type()->get_emulation_type();
+  _regs.PC.W = emulation_type.get_power_on_addr();
 
   /*
    *  FIXME: at least z1013 emulation breaks with the stackpointer
@@ -508,9 +495,17 @@ Z80::reset(word_t pc, bool power_on)
 }
 
 void
-Z80::power_on(word_t pc)
+Z80::reset(void)
 {
-  reset(pc, true);
+  const EmulationType &emulation_type = Preferences::instance()->get_system_type()->get_emulation_type();
+  reset(emulation_type.get_reset_addr(), false);
+}
+
+void
+Z80::power_on(void)
+{
+  const EmulationType &emulation_type = Preferences::instance()->get_system_type()->get_emulation_type();
+  reset(emulation_type.get_power_on_addr(), true);
 }
 
 void

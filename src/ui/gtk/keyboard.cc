@@ -400,50 +400,9 @@ KeyboardWindow::init_key_regions(void)
   int state;
   char buf[1024];
   GdkRectangle r;
-  const char *filename = NULL;
 
-  switch (Preferences::instance()->get_kc_type())
-    {
-    case KC_TYPE_85_2:
-    case KC_TYPE_85_3:
-    case KC_TYPE_85_4:
-    case KC_TYPE_85_5:
-      filename = "kc854.key";
-      break;
-    case KC_TYPE_85_1:
-    case KC_TYPE_87:
-      filename = "kc851.key";
-      break;
-    case KC_TYPE_LC80:
-      filename = "lc80.key";
-      break;
-    case KC_TYPE_POLY880:
-      filename = "poly880.key";
-      break;
-    case KC_TYPE_VCS80:
-      filename = "vcs80.key";
-      break;
-    case KC_TYPE_A5105:
-      filename = "a5105.key";
-      break;
-    case KC_TYPE_Z1013:
-    case KC_TYPE_KRAMERMC:
-    case KC_TYPE_MUGLERPC:
-    case KC_TYPE_C80:
-      break;
-
-      /*
-       *  We don't use a default so we get a warning if the enum
-       *  is extended; the following values can't be returned by
-       *  get_kc_type() though.
-       */
-    case KC_TYPE_NONE:
-    case KC_TYPE_85_1_CLASS:
-    case KC_TYPE_85_2_CLASS:
-    case KC_TYPE_ALL:
-      break;
-    }
-
+  const EmulationType &emulation_type = Preferences::instance()->get_system_type()->get_emulation_type();
+  const char *filename = emulation_type.get_keyboard_filename();
   if (filename == NULL)
     return;
 

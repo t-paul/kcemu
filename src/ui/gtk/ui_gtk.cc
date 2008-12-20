@@ -734,13 +734,6 @@ UI_Gtk::display_effects_toggle(void) {
     update(true, true);
 }
 
-/** deprecated ! */
-void
-UI_Gtk::gtk_update(byte_t *bitmap, byte_t *dirty, int dirty_size, int width, int height, bool full_update) {
-    UI_Base *ui = _ui->get_generic_ui();
-    _main_window->update(ui, get_width(), get_height(), full_update);
-}
-
 void
 UI_Gtk::update(bool full_update, bool clear_cache) {
     Scanline *scanline = _ui->get_scanline();
@@ -788,59 +781,47 @@ UI_Gtk::select_profile(void) {
 
 void
 UI_Gtk::create_ui(void) {
-    _callback_value_retrace = 0;
-    
-    kc_variant_t kc_variant = Preferences::instance()->get_kc_variant();
+    const SystemType *system_type = Preferences::instance()->get_system_type();
+
+    _callback_value = system_type->get_ui_callback_value();
+    _callback_value_retrace = system_type->get_ui_callback_retrace_value();
+
     switch (Preferences::instance()->get_kc_type()) {
         case KC_TYPE_85_1:
         case KC_TYPE_87:
             _ui = new UI_Gtk1();
-            _callback_value = 35000;
             break;
         case KC_TYPE_85_2:
         case KC_TYPE_85_3:
             _ui = new UI_Gtk3();
-            _callback_value = 35000;
             break;
         case KC_TYPE_85_4:
         case KC_TYPE_85_5:
             _ui = new UI_Gtk4();
-            _callback_value = 35000;
             break;
         case KC_TYPE_LC80:
             _ui = new UI_Gtk8();
-            _callback_value = (kc_variant == KC_VARIANT_LC80e ? 66000 : 18000);
             break;
         case KC_TYPE_Z1013:
             _ui = new UI_Gtk0();
-            _callback_value = 40000;
-            _callback_value_retrace = 1000;
             break;
         case KC_TYPE_A5105:
             _ui = new UI_Gtk9();
-            _callback_value = 60000;
-            _callback_value_retrace = 1000;
             break;
         case KC_TYPE_POLY880:
             _ui = new UI_Gtk6();
-            _callback_value = 18000;
             break;
         case KC_TYPE_KRAMERMC:
             _ui = new UI_Gtk_KramerMC();
-            _callback_value = 30000;
             break;
         case KC_TYPE_MUGLERPC:
             _ui = new UI_Gtk_MuglerPC();
-            _callback_value = 50000;
             break;
         case KC_TYPE_VCS80:
             _ui = new UI_Gtk_VCS80();
-            _callback_value = 25000;
-            _callback_value_retrace = 4000;
             break;
         case KC_TYPE_C80:
             _ui = new UI_Gtk_C80();
-            _callback_value = 50000;
             break;
         case KC_TYPE_ALL:
         case KC_TYPE_NONE:

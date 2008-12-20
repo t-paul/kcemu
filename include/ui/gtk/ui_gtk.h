@@ -171,7 +171,6 @@ public:
     void gtk_sync(void);
     void gtk_resize(void);
     void gtk_zoom(int zoom);
-    void gtk_update(byte_t *bitmap, byte_t *dirty, int dirty_size, int width, int height, bool full_update);
 
     /*
      *  ErrorListener
