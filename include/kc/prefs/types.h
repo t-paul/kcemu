@@ -49,6 +49,7 @@ typedef enum
   KC_TYPE_VCS80 = (1 << 12),
   KC_TYPE_C80 = (1 << 13),
   KC_TYPE_HUEBLERMC = (1 << 14),
+  KC_TYPE_BASICKC = (1 << 15),
   KC_TYPE_85_1_CLASS = KC_TYPE_85_1 | KC_TYPE_87,
   KC_TYPE_85_2_CLASS = KC_TYPE_85_2 | KC_TYPE_85_3 | KC_TYPE_85_4 | KC_TYPE_85_5,
   KC_TYPE_ALL = (KC_TYPE_85_1_CLASS |
@@ -61,6 +62,7 @@ typedef enum
                  KC_TYPE_MUGLERPC |
                  KC_TYPE_VCS80 |
                  KC_TYPE_C80 |
+                 KC_TYPE_BASICKC |
                  KC_TYPE_HUEBLERMC)
 } kc_type_t;
 
@@ -89,6 +91,8 @@ typedef enum {
     KC_VARIANT_A5105_A5105 = 1,
     KC_VARIANT_POLY880     = 0,
     KC_VARIANT_POLY880_SC1 = 1,
+    KC_VARIANT_BASICKC_B   = 0,
+    KC_VARIANT_BASICKC_F   = 1,
 } kc_variant_t;
 
 class EmulationType;
@@ -134,6 +138,7 @@ public:
     static EmulationType _emulation_type_vcs80;
     static EmulationType _emulation_type_c80;
     static EmulationType _emulation_type_hueblermc;
+    static EmulationType _emulation_type_basickc;
     
     EmulationType(kc_type_t kc_type, int type, string name, string short_name, string config_name, string icon_name, string image_name, string keyboard_filename, string help_topic, string help_topic_module, int module_slots, word_t power_on_addr, word_t reset_addr);
     virtual ~EmulationType(void);

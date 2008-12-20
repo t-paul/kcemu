@@ -155,6 +155,10 @@
 #include "kc/hueblermc/memory.h"
 #include "kc/hueblermc/keyboard.h"
 
+#include "kc/basickc/keyboard.h"
+#include "kc/basickc/memory.h"
+#include "kc/basickc/ports.h"
+
 #ifdef USE_UI_GTK
 # include "ui/gtk/ui_gtk.h"
 #endif /* USE_UI_GTK */
@@ -1176,6 +1180,7 @@ main(int argc, char **argv)
       KeyboardKramerMC *k_kramer;
       KeyboardMuglerPC *k_mugler;
       KeyboardVCS80 *k_vcs80;
+      KeyboardBasicKC *k_basickc;
       KeyboardC80 *k_c80;
       KeyboardHueblerMC *k_hueblermc;
 
@@ -1330,6 +1335,12 @@ main(int argc, char **argv)
 	  keyboard = k_vcs80;
 	  pio->register_callback_A_in(k_vcs80);
 	  break;
+        case KC_TYPE_BASICKC:
+          memory = new MemoryBasicKC;
+	  porti = new PortsBasicKC;
+          k_basickc = new KeyboardBasicKC;
+          keyboard = k_basickc;
+          break;
 	case KC_TYPE_C80:
 	  pio      = new PIOC80_1;
 	  pio2     = new PIOC80_2;
@@ -1464,6 +1475,12 @@ main(int argc, char **argv)
 	  portg = ports->register_ports("PIO", 0x04, 4, pio, 10);
 	  daisy->add_last(pio);
 	  break;
+        case KC_TYPE_BASICKC:
+          portg = ports->register_ports("Keyboard", 0x08, 4, k_basickc, 10);
+	  portg = ports->register_ports("ROM off",  0x00, 4, porti, 10);
+	  portg = ports->register_ports("ROM on",  0x04, 4, porti, 10);
+	  portg = ports->register_ports("Video",  0x10, 4, porti, 10);
+          break;
 	case KC_TYPE_C80:
 	  portg = ports->register_ports("PIO (system)", 0xbc, 4, pio, 10);
 	  portg = ports->register_ports("PIO (user)", 0x7c, 4, pio2, 10);

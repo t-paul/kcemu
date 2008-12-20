@@ -48,6 +48,7 @@ libui_gtk_a_SOURCES = \
 	ui_gtk_kramermc.cc	\
 	ui_gtk_muglerpc.cc	\
 	ui_gtk_vcs80.cc		\
+	ui_gtk_basickc.cc	\
 	ui_gtk_c80.cc		\
 	ui_gtk_hueblermc.cc	\
 	cmd.cc			\

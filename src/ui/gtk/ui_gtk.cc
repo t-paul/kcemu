@@ -74,6 +74,7 @@
 #include "ui/gtk/ui_gtk_kramermc.h"
 #include "ui/gtk/ui_gtk_muglerpc.h"
 #include "ui/gtk/ui_gtk_vcs80.h"
+#include "ui/gtk/ui_gtk_basickc.h"
 #include "ui/gtk/ui_gtk_c80.h"
 #include "ui/gtk/ui_gtk_hueblermc.h"
 
@@ -830,8 +831,11 @@ UI_Gtk::create_ui(void) {
         case KC_TYPE_C80:
             _ui = new UI_Gtk_C80();
             break;
-      case KC_TYPE_HUEBLERMC:
+        case KC_TYPE_HUEBLERMC:
             _ui = new UI_Gtk_HueblerMC();
+            break;
+        case KC_TYPE_BASICKC:
+            _ui = new UI_Gtk_BasicKC();
             break;
         case KC_TYPE_ALL:
         case KC_TYPE_NONE:

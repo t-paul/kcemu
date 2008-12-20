@@ -51,6 +51,7 @@
 2.10. <link ref="sys-vcs80">VCS 80</link>
 2.11. <link ref="sys-c80">C-80</link>
 2.12. <link ref="sys-hueblermc">Hübler/Evert System</link>
+2.13. <link ref="sys-basickc">BASIC-Kleincomputer mit Grafik</link>
 
 <size value="1">3. <i>Funktionen</i></size>
 <size value="-3"> </size>
@@ -90,6 +91,7 @@
   - <link ref="sys-vcs80">VCS 80</link>
   - <link ref="sys-c80">C-80</link>
   - <link ref="sys-hueblermc">Hübler/Evert System</link>
+  - <link ref="sys-basickc">BASIC-Kleincomputer mit Grafik</link>
 
 
 </p>
@@ -464,6 +466,15 @@ VEB Robotron-Meßelektronik "Otto Schön" Dresden
   Ausbaufähiger Microcomputer mit dem U880, entwickelt von Bernd Hübler
   und Klaus-Peter Evert. Beschrieben wir das System in den electronica-Heften
   Nummer 227 und 228, erschienen 1985 beim Militärverlag der DDR.
+
+</p>
+
+<p><size value="2"><ref name="sys-basickc"/>2.13. BASIC-Kleincomputer mit Grafik</size>
+
+  Grafikfähiger Kleincomputer auf Basis des U880. In der im Buch "Mikroelektronik
+  in der Amateurpraxis" vorgestellten Version unterstützt das System eine Grafik-
+  ausgabe mit 256x256 Bildpunkten. Ein speziell für dieses System angepasster
+  BASIC-Interpreter vereinfacht den Zugriff auf die Möglichkeiten des Systems.
 
 </p>
 

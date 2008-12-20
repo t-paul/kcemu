@@ -13,6 +13,7 @@ ICONS = \
 	kcemu-kc87.xpm \
 	kcemu-lc80.xpm \
 	kcemu-vcs80.xpm \
+	kcemu-basickc.xpm \
 	kcemu-c80.xpm \
 	kcemu-pcm.xpm \
 	kcemu-kramermc.xpm \
@@ -34,6 +35,7 @@ ICONS = \
 	icon-pcm.png \
 	icon-poly880.png \
 	icon-vcs80.png \
+	icon-basickc.png \
 	icon-z1013.png \
 	icon-hueblermc.png
 

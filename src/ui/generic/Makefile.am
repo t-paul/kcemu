@@ -18,6 +18,7 @@ libui_generic_a_SOURCES = \
 	ui_kramermc.cc	\
 	ui_muglerpc.cc	\
 	ui_vcs80.cc	\
+	ui_basickc.cc	\
 	ui_c80.cc	\
 	ui_hueblermc.cc	\
 	scanline.cc	\

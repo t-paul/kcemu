@@ -68,6 +68,7 @@ EmulationType EmulationType::_emulation_type_kramermc(KC_TYPE_KRAMERMC, -1, "Kra
 EmulationType EmulationType::_emulation_type_vcs80(   KC_TYPE_VCS80,    -1, "VCS 80",               "VCS 80",    "vcs80",    "icon-vcs80.png",    "kcemu-vcs80.xpm",    "vcs80.key",   "sys-vcs80",    "",                      6, 0x0000, 0x0000);
 EmulationType EmulationType::_emulation_type_c80(     KC_TYPE_C80,      -1, "C-80",                 "C-80",      "c80",      "icon-c80.png",      "kcemu-c80.xpm",      "",            "sys-c80",      "",                      0, 0x0000, 0x0000);
 EmulationType EmulationType::_emulation_type_hueblermc(KC_TYPE_HUEBLERMC, -1, "Hübler/Evert System",  "Hübler-MC", "hueblermc", "icon-hueblermc.png", "kcemu-hueblermc.xpm", "",       "sys-hueblermc", "",                     0, 0xf000, 0xf000);
+EmulationType EmulationType::_emulation_type_basickc( KC_TYPE_BASICKC,  -1, "BASIC-Kleincomputer",  "BASIC-KC",  "basickc",  "icon-basickc.png",   "kcemu-basickc.xpm", "",            "sys-basickc",  "",                      0, 0x0000, 0x0000);
 
 EmulationType::EmulationType(kc_type_t kc_type, int type, string name, string short_name, string config_name, string icon_name, string image_name, string keyboard_filename, string help_topic, string help_topic_module, int module_slots, word_t power_on_addr, word_t reset_addr) {
     _type = type;
@@ -179,6 +180,7 @@ EmulationType::get_emulation_types(void) {
         _emulation_type_list.push_back(&_emulation_type_vcs80);
         _emulation_type_list.push_back(&_emulation_type_c80);
         _emulation_type_list.push_back(&_emulation_type_hueblermc);
+        _emulation_type_list.push_back(&_emulation_type_basickc);
     }
     return _emulation_type_list;
 }
@@ -930,6 +932,25 @@ SystemInformation::SystemInformation(void) {
         .set_rom_directory("/roms/hueblermc")
         .add_rom(SystemROM::ROM_KEY_SYSTEM, 0x0c00, "monitor.rom", _("System-ROM"), NULL)
         .add_rom(SystemROM::ROM_KEY_CHARGEN, 0x0400, "chargen.rom", _("Charset-ROM"), NULL);
+    /*
+     *  BASIC-Kleincomputer
+     */
+    add_system_type(1600, "basickc.base", -100, EmulationType::_emulation_type_basickc, KC_VARIANT_BASICKC_B,
+            N_("    BASIC micro computer with graphic, by Bernd Hübler.\n"))
+        .set_display_name(N_("BASIC micro computer (Base System)"))
+        .set_ui_callback_value(30000)
+        .set_rom_directory("/roms/basickc")
+        .add_rom(SystemROM::ROM_KEY_SYSTEM, 0x1000, "monitor.rom", _("System-ROM"), NULL);
+    add_system_type(1610, "basickc.full", -100, EmulationType::_emulation_type_basickc, KC_VARIANT_BASICKC_F,
+            N_("    BASIC micro computer with graphic, by Bernd Hübler.\n"))
+        .set_display_name(N_("BASIC micro computer"))
+        .set_ui_callback_value(30000)
+        .set_rom_directory("/roms/basickc")
+        .add_rom(SystemROM::ROM_KEY_SYSTEM, 0x1000, 1,
+                 "monitor.rom", _("System-ROM"),
+                 "monitorb.rom", _("System-ROM with BASIC Loader"),
+                 NULL)
+        .add_rom(SystemROM::ROM_KEY_BASIC, 0x4000, "basic.rom", _("BASIC"), NULL);
 
     _system_type_list.sort(less_system_type());
 }
