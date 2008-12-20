@@ -109,13 +109,35 @@ static libdisk_loader_t loader = {
   loader_22dsk_write_sector
 };
 
+static FILE *
+try_open_gzip(const char *path)
+{
+  FILE *f;
+  char *filename;
+
+  f = gzopen(path, "rb");
+  if (f == NULL)
+    {
+      filename = (char *) malloc(strlen(path) + 4);
+      if (filename == NULL)
+        return NULL;
+
+      strcpy(filename, path);
+      strcat(filename, ".gz");
+      f = gzopen(filename, "rb");
+      free(filename);
+    }
+
+  return f;
+}
+
 static dsk_data_t *
 do_open(const char *path)
 {
   int ro;
   FILE *f;
+  int b1, b2;
   gzFile *gzf;
-  char *filename;
   dsk_data_t *data;
 
   f = NULL;
@@ -128,19 +150,21 @@ do_open(const char *path)
       ro = 1;
       f = fopen(path, "rb");
       if (f == NULL)
-	{
-	  filename = (char *)malloc(strlen(path) + 4);
-	  if (filename == NULL)
-	    return NULL;
+        return NULL;
+    }
 
-	  strcpy(filename, path);
-	  strcat(filename, ".gz");
-	  gzf = gzopen(filename, "rb");
-	  free(filename);
-
-	  if (gzf == NULL)
-	    return NULL;
-	}
+  /* check for gzip file header */
+  b1 = fgetc(f);
+  b2 = fgetc(f);
+  fseek(f, 0, SEEK_SET);
+  if ((b1 == 0x1f) && (b2 == 0x8b))
+    {
+      fclose(f);
+      f = NULL;
+      ro = 1;
+      gzf = try_open_gzip(path);
+      if (gzf == NULL)
+        return NULL;
     }
 
   data = (dsk_data_t *)malloc(sizeof(dsk_data_t));
@@ -275,7 +299,11 @@ loader_22dsk_close(libdisk_prop_t *prop)
 
   data = (dsk_data_t *)prop->data;
 
-  fclose(data->f);
+  if (data->f != NULL)
+   fclose(data->f);
+  if (data->gzf != NULL)
+    gzclose(data->gzf);
+
   free(data);
 
   prop->data = NULL;
