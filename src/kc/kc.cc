@@ -152,6 +152,11 @@
 #include "kc/c80/display.h"
 #include "kc/c80/keyboard.h"
 
+#include "kc/ac1/ctc.h"
+#include "kc/ac1/pio.h"
+#include "kc/ac1/memory.h"
+#include "kc/ac1/keyboard.h"
+
 #ifdef USE_UI_GTK
 # include "ui/gtk/ui_gtk.h"
 #endif /* USE_UI_GTK */
@@ -689,6 +694,9 @@ warranty(char *argv0)
 void
 attach_tape(void)
 {
+  if (tape == NULL)
+    return;
+  
   if (kcemu_tape != 0)
     {
       tape->attach(kcemu_tape);
@@ -1170,6 +1178,7 @@ main(int argc, char **argv)
       KeyboardMuglerPC *k_mugler;
       KeyboardVCS80 *k_vcs80;
       KeyboardC80 *k_c80;
+      KeyboardAC1 *k_ac1;
 
       timer = NULL;
       memory = NULL;
@@ -1334,6 +1343,14 @@ main(int argc, char **argv)
 	  pio->register_callback_A_out(display_c80);
 	  pio->register_callback_B_out(display_c80);
 	  break;
+        case KC_TYPE_AC1:
+	  pio = new PIOAC1;
+          ctc = new CTCAC1;
+          memory = new MemoryAC1;
+	  k_ac1 = new KeyboardAC1;
+          keyboard = k_ac1;
+	  pio->register_callback_A_in(k_ac1);
+          break;
 	default:
 	  DBG(0, form("KCemu/internal_error",
 		      "KCemu: setup with undefined system type\n"));
@@ -1454,6 +1471,10 @@ main(int argc, char **argv)
 	  daisy->add_last(pio);
 	  daisy->add_last(pio2);
 	  break;
+        case KC_TYPE_AC1:
+	  portg = ports->register_ports("CTC", 0x00, 4, ctc, 10);
+	  portg = ports->register_ports("PIO", 0x04, 4, pio, 10);
+          break;
 	default:
 	  DBG(0, form("KCemu/internal_error",
 		      "KCemu: setup with undefined system type\n"));

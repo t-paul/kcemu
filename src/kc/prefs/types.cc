@@ -67,6 +67,7 @@ EmulationType EmulationType::_emulation_type_muglerpc(KC_TYPE_MUGLERPC, -1, "Mug
 EmulationType EmulationType::_emulation_type_kramermc(KC_TYPE_KRAMERMC, -1, "Kramer Microcomputer", "Kramer-MC", "kramermc", "icon-kramermc.png", "kcemu-kramermc.xpm", "",            "sys-kramermc", "",                      0, 0x0000, 0x0000);
 EmulationType EmulationType::_emulation_type_vcs80(   KC_TYPE_VCS80,    -1, "VCS 80",               "VCS 80",    "vcs80",    "icon-vcs80.png",    "kcemu-vcs80.xpm",    "vcs80.key",   "sys-vcs80",    "",                      6, 0x0000, 0x0000);
 EmulationType EmulationType::_emulation_type_c80(     KC_TYPE_C80,      -1, "C-80",                 "C-80",      "c80",      "icon-c80.png",      "kcemu-c80.xpm",      "",            "sys-c80",      "",                      0, 0x0000, 0x0000);
+EmulationType EmulationType::_emulation_type_ac1(     KC_TYPE_AC1,      -1, "AC1",                  "AC1",       "ac1",      "icon-ac1.png",      "kcemu-ac1.xpm",      "",            "sys-ac1",      "",                      0, 0x0000, 0x0000);
 
 EmulationType::EmulationType(kc_type_t kc_type, int type, string name, string short_name, string config_name, string icon_name, string image_name, string keyboard_filename, string help_topic, string help_topic_module, int module_slots, word_t power_on_addr, word_t reset_addr) {
     _type = type;
@@ -176,6 +177,7 @@ EmulationType::get_emulation_types(void) {
         _emulation_type_list.push_back(&_emulation_type_kramermc);
         _emulation_type_list.push_back(&_emulation_type_muglerpc);
         _emulation_type_list.push_back(&_emulation_type_vcs80);
+        _emulation_type_list.push_back(&_emulation_type_ac1);
         _emulation_type_list.push_back(&_emulation_type_c80);
     }
     return _emulation_type_list;
@@ -918,6 +920,36 @@ SystemInformation::SystemInformation(void) {
         .set_rom_directory("/roms/c80")
         .add_rom(SystemROM::ROM_KEY_SYSTEM, 0x0400, "monitor.rom", _("System-ROM"), NULL)
         .add_optional_rom(SystemROM::ROM_KEY_USER, 0x0400, "user.rom", _("User-ROM"), NULL);
+    /*
+     *  AC1
+     */
+    add_system_type(1700, "ac1", -100, EmulationType::_emulation_type_ac1, KC_VARIANT_AC1_16,
+            N_("    AC1 with screen of 16x64 chars.\n"))
+        .set_display_name("AC1 (with 16x64 char display)")
+        .set_ui_callback_value(40000)
+        .set_rom_directory("/roms/ac1")
+        .add_rom(SystemROM::ROM_KEY_SYSTEM, 0x0800, "mon_v31_16.bin", _("System-ROM V3.1"), NULL)
+        .add_rom(SystemROM::ROM_KEY_BASIC, 0x0800, "minibasic.bin", _("BASIC"), NULL)
+        .add_rom(SystemROM::ROM_KEY_CHARGEN, 0x0400, "zg_128.bin", _("Charset-ROM"), NULL);
+    add_system_type(1710, "ac1", -100, EmulationType::_emulation_type_ac1, KC_VARIANT_AC1_32,
+            N_("    AC1 with screen of 32x64 chars.\n"))
+        .set_display_name("AC1 (with 32x64 char display)")
+        .set_ui_callback_value(40000)
+        .set_rom_directory("/roms/ac1")
+        .add_rom(SystemROM::ROM_KEY_SYSTEM, 0x0800, "mon_v31_32.bin", _("System-ROM V3.1"), NULL)
+        .add_rom(SystemROM::ROM_KEY_BASIC, 0x0800, "minibasic.bin", _("BASIC"), NULL)
+        .add_rom(SystemROM::ROM_KEY_CHARGEN, 0x0400, "zg_128.bin", _("Charset-ROM"), NULL);
+    add_system_type(1720, "ac1", -100, EmulationType::_emulation_type_ac1, KC_VARIANT_AC1_SCCH,
+            N_("    AC1 SCCH.\n"))
+        .set_display_name("AC1 (SCCH)")
+        .set_ui_callback_value(40000)
+        .set_rom_directory("/roms/ac1")
+        .add_rom(SystemROM::ROM_KEY_SYSTEM, 0x1000,
+                 "mon_1088.bin", _("System-ROM 10/88"),
+                 "mon_v6.0.bin", _("System-ROM V6.0 * SCCH"),
+                 "mon_v8.0.bin", _("System-ROM V8.0 * (C)SCCH"),
+                 NULL)
+        .add_rom(SystemROM::ROM_KEY_CHARGEN, 0x0800, "zg_256.bin", _("Charset-ROM"), NULL);
 
     _system_type_list.sort(less_system_type());
 }
