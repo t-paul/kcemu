@@ -31,18 +31,17 @@ UI_HueblerMC::UI_HueblerMC(void)
   int a;
 
   set_real_screen_size(64 * 6 + 32, 24 * 10 + 32);
+  create_buffer(get_real_width() * get_real_height());
 
   _dirty_size = (get_real_width() * get_real_height()) / 64;
   _dirty = new byte_t[_dirty_size];
-
-  create_buffer(get_real_width() * get_real_height());
-  _pix_cache = new byte_t[_dirty_size];
-  
   for (a = 0;a < _dirty_size;a++)
-    {
-      _dirty[a] = 1;
-      _pix_cache[a] = 0xff;
-    }
+    _dirty[a] = 1;
+
+  int chars = 64 * 24;
+  _pix_cache = new byte_t[chars];
+  for (a = 0;a < chars;a++)
+    _pix_cache[a] = 0xff;
 }
 
 UI_HueblerMC::~UI_HueblerMC(void)
@@ -61,26 +60,43 @@ UI_HueblerMC::generic_update(Scanline *scanline, MemAccess *memaccess, bool clea
 {
   byte_t *irm = memory->get_irm();
   byte_t *chr = memory->get_char_rom();
-  byte_t *ptr = _bitmap;
 
   int width = get_real_width();
 
-  ptr += width * 16 + 16; // border offset
+  byte_t *ptr = _bitmap + 2 * 8 * width + 16;
+  int ptr_add = 10 * width;
 
-  memset(_dirty, 1, _dirty_size);
-  for (int y = 0;y < 240;y += 10)
+  if (clear_cache)
+    memset(_dirty, 1, _dirty_size);
+
+  int z = -1;
+  for (int y = 0;y < 24;y++)
     {
-      for (int x = 0;x < 384;x += 6)
+      byte_t *dirty_ptr = _dirty + 106 + (y * 10 / 8) * 52;
+
+      int d = 0;
+      for (int x = 0;x < 64;x++)
 	{
-          int z = (y / 10) * 64 + (x / 6);
+          z++;
           byte_t pix = irm[z];
+
+          if (_pix_cache[z] != pix)
+            {
+              dirty_ptr[d / 8]++;
+              dirty_ptr[(d + 6) / 8]++;
+              dirty_ptr[(d + 416) / 8]++;
+              dirty_ptr[(d + 422) / 8]++;
+              _pix_cache[z] = pix;
+            }
+          d += 6;
 
 	  byte_t *chr_ptr = chr + 8 * (pix & 0x7f);
 	  for (int a = 0;a < 8;a++)
             {
               byte_t val = pix & 0x80 ? chr_ptr[a] ^ 0xff : chr_ptr[a];
-	      generic_put_pixels(ptr + width * (y + a) + x, val);
+	      generic_put_pixels(ptr + width * a + x * 6, val);
             }
 	}
+      ptr += ptr_add;
     }
 }
