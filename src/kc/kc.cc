@@ -219,6 +219,8 @@ FDC             *fdc_fdc;
 CTC             *fdc_ctc;
 GIDE            *fdc_gide;
 
+byte_t *z9001_graphic;
+
 int   kcemu_ui_scale;
 int   kcemu_ui_debug;
 int   kcemu_ui_fullscreen;
@@ -1497,14 +1499,8 @@ main(int argc, char **argv)
       ui->show();
       do_quit = z80->run();
 
-      if (porti != NULL)
-	delete porti;
-
-      if (timer != NULL)
-	delete timer;
-
-      delete module_list;
-      delete module;
+      delete module; // destroy cloned modules first
+      delete module_list; // destroy master modules
       delete keyboard;
       delete tape;
       delete disk;
@@ -1514,6 +1510,12 @@ main(int argc, char **argv)
       delete ports;
       delete ui;
       delete z80;
+
+      if (timer != NULL)
+	delete timer;
+
+      if (porti != NULL)
+	delete porti;
     }
   while (0); // (!do_quit);
 

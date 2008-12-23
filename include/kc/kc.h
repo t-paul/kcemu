@@ -78,6 +78,7 @@ extern Ports           *fdc_ports;
 extern FDC             *fdc_fdc;
 extern Sound           *sound;
 extern byte_t           fdc_mem[];
+extern byte_t          *z9001_graphic;
 
 extern int   kcemu_ui_scale;
 extern int   kcemu_ui_debug;

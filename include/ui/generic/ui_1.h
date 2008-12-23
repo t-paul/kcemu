@@ -32,8 +32,13 @@ class UI_1 : public UI_Base
   byte_t *_pix_cache;
   byte_t *_col_cache;
 
+  int _mode;
+  
  protected:
   inline void generic_put_pixels(byte_t *ptr, byte_t val, word_t color);
+
+  void generic_update_text(bool clear_cache);
+  void generic_update_graphic(bool clear_cache);
 
   void generic_update_20(int width, int height, int fchg, byte_t flash, bool clear_cache);
   void generic_update_24(int width, int height, int fchg, byte_t flash, bool clear_cache);
@@ -44,6 +49,9 @@ class UI_1 : public UI_Base
  public:
   UI_1(void);
   virtual ~UI_1(void);
+
+  virtual int  generic_get_mode(void);
+  virtual void generic_set_mode(int mode);
 
   virtual void generic_update(Scanline *scanline, MemAccess *memaccess, bool clear_cache);
 };

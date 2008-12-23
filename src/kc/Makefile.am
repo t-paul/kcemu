@@ -123,6 +123,7 @@ kcemu_SOURCES = \
 	mod_ramf.cc	\
 	mod_fdc.cc	\
 	mod_gdc.cc	\
+	mod_z9gr.cc	\
 	mod_rtc.cc	\
 	mod_disk.cc	\
 	mod_list.cc	\

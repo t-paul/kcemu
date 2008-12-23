@@ -162,6 +162,7 @@
 #include "kc/mod_disk.h"
 #include "kc/mod_list.h"
 #include "kc/mod_4131.h"
+#include "kc/mod_z9gr.h"
 
 #ifdef HOST_OS_LINUX
 #include "kc/mod_v24.h"
@@ -378,6 +379,12 @@ ModuleList::ModuleList(void)
   m = new Module320k(z9001_mega_rom.c_str(), "Mega-ROM");
   _mod_list.push_back(new ModuleListEntry(_("Mega-ROM Module"), m, KC_TYPE_85_1_CLASS));
 
+  /*
+   *  Graphic expansion module (kc85/1)
+   */
+  m = new ModuleZ9001Graphic("Z9001-Graphic");
+  _mod_list.push_back(new ModuleListEntry(_("Z9001-Graphic"), m, KC_TYPE_85_1_CLASS));
+  
   /*
    *  128 KByte ROM bank module (kc85/1)
    */

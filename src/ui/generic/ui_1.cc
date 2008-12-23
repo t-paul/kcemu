@@ -1,8 +1,8 @@
 /*
  *  KCemu -- the KC 85/3 and KC 85/4 Emulator
- *  Copyright (C) 1997-2001 Torsten Paul
+ *  Copyright (C) 1997-2008 Torsten Paul
  *
- *  $Id: ui_1.cc,v 1.2 2002/10/31 01:02:47 torsten_paul Exp $
+ *  $Id$
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -35,6 +35,8 @@ UI_1::UI_1(void)
   int a;
 
   set_real_screen_size(320 + 64, 192 + 64);
+
+  generic_set_mode(0);
 
   _dirty_size = (get_real_width() * get_real_height()) / 64;
   _dirty = new byte_t[_dirty_size];
@@ -203,7 +205,7 @@ UI_1::generic_update_20(int width, int height, int fchg, byte_t flash, bool clea
 }
 
 void
-UI_1::generic_update(Scanline *scanline, MemAccess *memaccess, bool clear_cache)
+UI_1::generic_update_text(bool clear_cache)
 {
   static byte_t old_flash = 0xff;
   static byte_t old_lmode = 0xff;
@@ -254,4 +256,43 @@ UI_1::generic_update(Scanline *scanline, MemAccess *memaccess, bool clear_cache)
     generic_update_20(width, height, fchg, flash, clear_cache);
   else
     generic_update_24(width, height, fchg, flash, clear_cache);
+}
+
+void
+UI_1::generic_update_graphic(bool clear_cache)
+{
+  memset(_dirty, 1, _dirty_size);
+
+  byte_t *ptr = _bitmap + 32 + 32 * (320+64);
+  int col = (_mode & 7) | ((_mode & 0x70) << 4);
+
+  for (int y = 0;y < 192;y++)
+    {
+      for (int x = 0;x < 32;x++)
+        {
+          byte_t val = z9001_graphic[y * 32 + x];
+          generic_put_pixels(ptr + y * (320 + 64) + x * 8, val, col);
+        }
+    }
+}
+
+void
+UI_1::generic_update(Scanline *scanline, MemAccess *memaccess, bool clear_cache)
+{
+  if (_mode & 8)
+    generic_update_graphic(clear_cache);
+  else
+    generic_update_text(clear_cache);
+}
+
+int
+UI_1::generic_get_mode(void)
+{
+  return _mode;
+}
+
+void
+UI_1::generic_set_mode(int mode)
+{
+  _mode = mode;
 }

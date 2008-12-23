@@ -524,6 +524,8 @@ UI_Gtk::gtk_sync(void) {
 
 UI_Gtk::UI_Gtk(void) {
     _ui = 0;
+    _width = 0;
+    _height = 0;
     _init = false;
 }
 
@@ -665,8 +667,16 @@ UI_Gtk::init2(void) {
 }
 
 void
-UI_Gtk::gtk_resize(void) {
-    _main_window->resize(get_width(), get_height());
+UI_Gtk::gtk_resize(void)
+{
+  int w = get_width();
+  int h = get_height();
+  if ((_width != w) || (_height != h))
+    {
+      _main_window->resize(get_width(), get_height());
+      _width = w;
+      _height = h;
+    }
 }
 
 void
@@ -745,7 +755,7 @@ UI_Gtk::update(bool full_update, bool clear_cache) {
     if (memaccess != NULL) {
         memaccess->update();
     }
-    
+
     UI_Base *ui = _ui->get_generic_ui();
     ui->generic_update(scanline, memaccess, clear_cache);
     _main_window->update(ui, get_width(), get_height(), full_update);

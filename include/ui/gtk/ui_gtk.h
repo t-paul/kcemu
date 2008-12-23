@@ -81,6 +81,9 @@ protected:
     FileBrowser      *_file_browser;
     DialogWindow     *_dialog_window;
     EditHeaderWindow *_edit_header_window;
+
+    int            _width;
+    int            _height;
     
     bool           _init;
     bool           _shift_lock;

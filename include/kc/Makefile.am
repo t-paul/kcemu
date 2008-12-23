@@ -92,6 +92,7 @@ EXTRA_DIST = \
 	mod_ramf.h	\
 	mod_fdc.h	\
 	mod_gdc.h	\
+	mod_z9gr.h	\
 	mod_rtc.h	\
 	mod_disk.h	\
 	mod_v24.h	\
