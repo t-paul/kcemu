@@ -30,21 +30,18 @@
 
 UI_BasicKC::UI_BasicKC(void)
 {
-  int a;
-
   set_real_screen_size(256 + 32, 256 + 32);
+  create_buffer(get_real_width() * get_real_height());
 
   _dirty_size = (get_real_width() * get_real_height()) / 64;
   _dirty = new byte_t[_dirty_size];
- 
-  _bitmap = new byte_t[get_real_width() * get_real_height()];
-  _pix_cache = new byte_t[_dirty_size];
-  
-  for (a = 0;a < _dirty_size;a++)
-    {
-      _dirty[a] = 1;
-      _pix_cache[a] = 0xff;
-    }
+  for (int a = 0;a < _dirty_size;a++)
+    _dirty[a] = 1;
+
+  int mem = 8192;
+  _pix_cache = new byte_t[mem];
+  for (int a = 0;a < mem;a++)
+    _pix_cache[a] = 0xff;
 }
 
 UI_BasicKC::~UI_BasicKC(void)
@@ -70,14 +67,22 @@ UI_BasicKC::generic_update(Scanline *scanline, MemAccess *memaccess, bool clear_
 
   ptr += width * 16 + 16; // border offset
 
-  memset(_dirty, 1, _dirty_size);
+  if (clear_cache)
+    memset(_dirty, 1, _dirty_size);
+
   for (int y = 0;y < 256;y++)
     {
       for (int x = 0;x < 256;x += 8)
         {
+          int d = (y / 8) * 36 + (x / 8) + 74;
           int z = y * 32 + (x / 8);
           byte_t pix = irm[z];
-          generic_put_pixels(ptr + width * y + x, pix);
+          if (_pix_cache[z] != pix)
+            {
+              _dirty[d]++;
+              _pix_cache[z] = pix;
+              generic_put_pixels(ptr + width * y + x, pix);
+            }
         }
     }
 }
