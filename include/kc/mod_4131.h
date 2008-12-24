@@ -22,13 +22,20 @@
 #ifndef __kc_mod_4131_h
 #define __kc_mod_4131_h
 
+#include <cairo/cairo.h>
+
 #include "kc/pio.h"
 #include "kc/module.h"
 
 class ModuleXY4131 : public ModuleInterface, public PIOCallbackInterface
 {
  private:
-  bool ready;
+  bool _ready;
+  double _width_cm;
+  double _height_cm;
+  double _line_width;
+
+  cairo_t *_cr;
 
  public:
   ModuleXY4131(ModuleXY4131 &tmpl);

@@ -23,6 +23,9 @@
 #include <unistd.h>
 #include <pthread.h>
 
+#include <cairo/cairo.h>
+#include <cairo/cairo-pdf.h>
+
 #include "kc/system.h"
 
 #include "kc/kc.h"
@@ -46,7 +49,7 @@ typedef struct data
 //static data_t *data = NULL;
 //static data_t *data_last = NULL;
 //static pthread_mutex_t data_mutex = PTHREAD_MUTEX_INITIALIZER;
-static FILE *f = NULL;
+//static FILE *f = NULL;
 
 #define rdtscll(val) \
      __asm__ __volatile__("rdtsc" : "=A" (val))
@@ -106,58 +109,55 @@ thread_main(void *arg)
 ModuleXY4131::ModuleXY4131(ModuleXY4131 &tmpl) :
   ModuleInterface(tmpl.get_name(), tmpl.get_id(), tmpl.get_type())
 {
-  ready = false;
+  _ready = false;
 
   //if (iopl(3) != 0)
   //return;
 
-  ready = true;
+  _ready = true;
   pio->register_callback_B_in(this);
   pio->register_callback_B_out(this);
 
   pio->set_B_EXT(0xff, 0x00);
 
-  f = fopen("/tmp/plotter.log", "wb+");
-  fprintf(f, "%%!PS-Adobe-3.0\n"
-	  "%%%%Creator: KCemu\n"
-	  "%%%%CreationDate: D:20030114204616\n"
-	  "%%%%LanguageLevel: 2\n"
-	  "%%%%Pages: 1\n"
-	  "%%%%BoundingBox: 0 0 596 842\n"
-	  "%%%%PageOrder: Ascend\n"
-	  "%%%%Title: Plotter Output\n"
-	  "%%%%EndComments\n"
-	  "%%%%Page: New document 1 1\n"
-	  "/m { moveto } def\n"
-	  "/l { lineto } def\n"
-	  "/p { currentpoint currentlinewidth 2 div sub lineto\n"
-          "     currentpoint currentlinewidth add lineto } def\n"
-	  "0.1 setlinewidth\n"
-	  "0 0 0 setrgbcolor\n");
+  _width_cm = 210.0;
+  _height_cm = 297.0;
+  _line_width = 0.2;
+  double mm_to_inch = 72.0 / 25.4;
 
-  // pthread_create(&thread, NULL, thread_main, NULL);
+  cairo_surface_t *surface = cairo_pdf_surface_create("/tmp/xy4131.pdf", _width_cm * mm_to_inch, _height_cm * mm_to_inch);
+  cairo_status_t status = cairo_surface_status(surface);
+  if (status == CAIRO_STATUS_SUCCESS)
+    {
+      set_valid(true);
+      _cr = cairo_create(surface);
+      cairo_surface_destroy(surface);
 
-  set_valid(true);
+      cairo_scale(_cr, mm_to_inch, mm_to_inch);
+      cairo_set_line_width(_cr, _line_width);
+      cairo_set_line_cap(_cr, CAIRO_LINE_CAP_ROUND);
+      cairo_set_line_join(_cr, CAIRO_LINE_JOIN_ROUND);
+      cairo_set_source_rgb(_cr, 0, 0, 0);
+    }
 }
 
 ModuleXY4131::ModuleXY4131(const char *name) :
   ModuleInterface(name, 0, KC_MODULE_KC_85_1)
 {
-  ready = false;
+  _cr = NULL;
+  _ready = false;
   set_valid(true);
 }
 
 ModuleXY4131::~ModuleXY4131(void)
 {
-  if (f)
+  if (_cr)
     {
-      fprintf(f, "stroke\n"
-	      "showpage\n"
-	      "%%%%Trailer\n"
-	      "%%%%EOF\n");
-      fclose(f);
-      f = NULL;
+      cairo_show_page(_cr);
+      cairo_destroy(_cr);
     }
+
+  _cr = NULL;
 }
 
 void
@@ -186,13 +186,13 @@ ModuleXY4131::callback_B_in(void)
 void
 ModuleXY4131::callback_B_out(byte_t val)
 {
-  int step;
+  double step;
   float usec;
   static byte_t old_val = 0x00;
   static long long counter = 0;
 
-  static int x = 0;
-  static int y = 0;
+  static double x = 20;
+  static double y = 20;
 
   /*
   data_t *ptr;
@@ -231,36 +231,45 @@ ModuleXY4131::callback_B_out(byte_t val)
    */
 
   if (((old_val & 0x80) == 0) && ((val & 0x80) == 0x80))
-    fprintf(f, "p\n");
+    {
+      cairo_move_to(_cr, x - (_line_width / 2.0), y);
+      cairo_rel_line_to(_cr, _line_width, 0);
+      cairo_stroke(_cr);
+    }
 
   if (((old_val & 4) == 0) && ((val & 4) == 4))
     {
-      step = -1;
+      step = -0.1;
       if (val & 0x01)
-	step = 1;
-      
+        step = 0.1;
+
       if (val & 0x02)
-	y += step;
+        y += step;
       else
-	x += step;
-      
+        x += step;
+
       if (x < 0)
-	x = 0;
+        x = 0;
       if (y < 0)
-	y = 0;
-      if (x > (596 * 3))
-	x = 596 * 3;
-      if (y > (842 * 3))
-	y = 842 * 3;
-      
+        y = 0;
+      if (x > _width_cm)
+        x = _width_cm;
+      if (y > _height_cm)
+        y = _height_cm;
+
       if ((old_val & 4) != (val & 4))
-	fprintf(f, "%.2f %.2f %s\n",
-		(x / 3.0),
-		842 - (y / 3.0),
-		val & 0x80 ? "l" : "m");
+        {
+          if (val & 0x80)
+            {
+              cairo_line_to(_cr, x, y);
+              cairo_stroke(_cr);
+            }
+
+          cairo_move_to(_cr, x, y);
+        }
     }
 
-  //printf(" [%.2fµs]\n", usec);
+  //printf(" [%.2fï¿½s]\n", usec);
 
   old_val = val;
   counter = z80->getCounter();
