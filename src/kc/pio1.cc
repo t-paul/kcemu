@@ -34,6 +34,8 @@
 
 PIO1_1::PIO1_1(void)
 {
+  _color_mode = false;
+  _charset_mode = false;
 }
 
 PIO1_1::~PIO1_1(void)
@@ -42,6 +44,15 @@ PIO1_1::~PIO1_1(void)
 
 byte_t
 PIO1_1::in(word_t addr)
+{
+  if ((addr & 0xf8) == 0x88)
+    return pio_in(addr);
+
+  return 0xff;
+}
+
+byte_t
+PIO1_1::pio_in(word_t addr)
 {
   byte_t val = 0xff;
 
@@ -70,6 +81,23 @@ PIO1_1::in(word_t addr)
 
 void
 PIO1_1::out(word_t addr, byte_t val)
+{
+  if ((addr & 0xf8) == 0x88)
+    pio_out(addr, val);
+  else if (addr == 0x70)
+    {
+      _charset_mode = !_charset_mode;
+      printf("charset_mode = %d\n", _charset_mode);
+    }
+  else if (addr == 0x74)
+    {
+      _color_mode = !_color_mode;
+      printf("color_mode = %d\n", _color_mode);
+    }
+}
+
+void
+PIO1_1::pio_out(word_t addr, byte_t val)
 {
   DBG(2, form("KCemu/PIO/1a/out",
               "PIO1_1::out(): addr = %04x, val = %02x\n",
@@ -103,9 +131,21 @@ PIO1_1::change_B(byte_t changed, byte_t val)
 }
 
 byte_t
+PIO1_1::get_color_mode(void)
+{
+  return _color_mode;
+}
+
+byte_t
 PIO1_1::get_border_color(void)
 {
   return (_value[A] >> 3) & 0x07;
+}
+
+byte_t
+PIO1_1::get_border_color_16(void)
+{
+  return ((_value[A] >> 3) & 0x07) | ((_value[A] & 2 ) << 2);
 }
 
 byte_t

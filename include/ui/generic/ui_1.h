@@ -35,8 +35,8 @@ class UI_1 : public UI_Base
  protected:
   inline void generic_put_pixels(byte_t *ptr, byte_t val, word_t color);
 
-  void generic_update_20(int width, int height, int fchg, byte_t flash, bool clear_cache);
-  void generic_update_24(int width, int height, int fchg, byte_t flash, bool clear_cache);
+  void generic_update_20(int width, int height, int fchg, int flash, int color_mask, bool clear_cache);
+  void generic_update_24(int width, int height, int fchg, int flash, int color_mask, bool clear_cache);
 
   void generic_set_border_20(int width, int height, byte_t border);
   void generic_set_border_24(int width, int height, byte_t border);

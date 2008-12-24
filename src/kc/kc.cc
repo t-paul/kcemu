@@ -1354,6 +1354,7 @@ main(int argc, char **argv)
 	  portg = ports->register_ports("CTC",  0x80, 4, ctc,  10);
 	  portg = ports->register_ports("PIO1", 0x88, 4, pio,  10);
 	  portg = ports->register_ports("PIO2", 0x90, 4, pio2, 10);
+          portg = ports->register_ports("16 Colors", 0x70, 8, pio, 10);
 
 	  daisy->add_last(ctc);
 	  daisy->add_last(pio);

@@ -103,7 +103,7 @@ UI_1::generic_set_border_20(int width, int height, byte_t border)
 }
 
 void
-UI_1::generic_update_24(int width, int height, int fchg, byte_t flash, bool clear_cache)
+UI_1::generic_update_24(int width, int height, int fchg, int flash, int color_mask, bool clear_cache)
 {
   word_t color;
   byte_t pix, col;
@@ -140,7 +140,7 @@ UI_1::generic_update_24(int width, int height, int fchg, byte_t flash, bool clea
 	  _col_cache[z] = col;
 	  _pix_cache[z] = pix;
 
-	  color = (0x0011 * col) & 0x0707;
+	  color = (0x0011 * col) & color_mask;
 	  if (flash && (col & 0x80))
 	    color = ((color << 8) & 0x0700) | ((color >> 8) & (0x0007));
 
@@ -154,7 +154,7 @@ UI_1::generic_update_24(int width, int height, int fchg, byte_t flash, bool clea
 }
 
 void
-UI_1::generic_update_20(int width, int height, int fchg, byte_t flash, bool clear_cache)
+UI_1::generic_update_20(int width, int height, int fchg, int flash, int color_mask, bool clear_cache)
 {
   word_t color;
   byte_t pix, col;
@@ -191,7 +191,7 @@ UI_1::generic_update_20(int width, int height, int fchg, byte_t flash, bool clea
 	  _col_cache[z] = col;
 	  _pix_cache[z] = pix;
 
-	  color = (0x0011 * col) & 0x0707;
+	  color = (0x0011 * col) & color_mask;
 
           for (a = 0;a < 8;a++)
             generic_put_pixels(ptr + (a + 32) * width + x + 32, font[8 * pix + a], color);
@@ -209,16 +209,34 @@ UI_1::generic_update(Scanline *scanline, MemAccess *memaccess, bool clear_cache)
   static byte_t old_lmode = 0xff;
   static byte_t old_border = 0xff;
   static byte_t old_color_expansion = 0xff;
+  static byte_t old_color_mode = 0xff;
 
   int fchg = 0;
+  int flash = 0;
+  int color_mask;
   int width = get_real_width();
   int height = get_real_height();
 
-  int flash = ((Timer1 *)timer)->get_flash();
-  if (old_flash != flash)
+  byte_t color_mode = ((PIO1_1 *)pio)->get_color_mode();
+  if (old_color_mode != color_mode)
     {
-      fchg = 1;
-      old_flash = flash;
+      old_color_mode = color_mode;
+      clear_cache = true;
+    }
+
+  if (color_mode)
+    {
+      color_mask = 0x0f0f;
+    }
+  else
+    {
+      color_mask = 0x0707;
+      flash = ((Timer1 *) timer)->get_flash();
+      if (old_flash != flash)
+        {
+          fchg = 1;
+          old_flash = flash;
+        }
     }
 
   byte_t lmode = ((PIO1_1 *)pio)->get_line_mode();
@@ -240,7 +258,10 @@ UI_1::generic_update(Scanline *scanline, MemAccess *memaccess, bool clear_cache)
 
   if (color_expansion_installed || clear_cache)
     {
-      byte_t border = color_expansion_installed ? ((PIO1_1 *)pio)->get_border_color() : 0;
+      byte_t border = 0;
+      if (color_expansion_installed)
+        border = color_mode ? ((PIO1_1 *)pio)->get_border_color_16() : ((PIO1_1 *)pio)->get_border_color();
+
       if (old_border != border)
 	{
 	  old_border = border;
@@ -251,7 +272,7 @@ UI_1::generic_update(Scanline *scanline, MemAccess *memaccess, bool clear_cache)
     }
 
   if (lmode)
-    generic_update_20(width, height, fchg, flash, clear_cache);
+    generic_update_20(width, height, fchg, flash, color_mask, clear_cache);
   else
-    generic_update_24(width, height, fchg, flash, clear_cache);
+    generic_update_24(width, height, fchg, flash, color_mask, clear_cache);
 }

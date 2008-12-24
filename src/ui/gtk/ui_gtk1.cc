@@ -35,6 +35,15 @@ UI_Gtk1::UI_Gtk1(void) : UI_Gtk_Base(new UI_1())
     _colors.push_back(UI_Color(false, 0xd0, 0x00, 0xd0));
     _colors.push_back(UI_Color(false, 0x00, 0xd0, 0xd0));
     _colors.push_back(UI_Color(false, 0xd0, 0xd0, 0xd0));
+
+    _colors.push_back(UI_Color(false, 0xaa, 0xaa, 0x88));
+    _colors.push_back(UI_Color(false, 0xff, 0x00, 0x88));
+    _colors.push_back(UI_Color(false, 0xaa, 0xff, 0x44));
+    _colors.push_back(UI_Color(false, 0xff, 0xaa, 0x44));
+    _colors.push_back(UI_Color(false, 0xaa, 0xcc, 0xff));
+    _colors.push_back(UI_Color(false, 0xaa, 0x44, 0xff));
+    _colors.push_back(UI_Color(false, 0xaa, 0xff, 0xff));
+    _colors.push_back(UI_Color(false, 0xcc, 0xcc, 0xcc));
 }
 
 UI_Gtk1::~UI_Gtk1(void)

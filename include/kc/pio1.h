@@ -28,15 +28,23 @@
 
 class PIO1_1 : public PIO, public TapeCallback
 {
+ private:
+  bool _color_mode;
+  bool _charset_mode;
+ 
  public:
   PIO1_1(void);
   virtual ~PIO1_1(void);
   byte_t in(word_t addr);
   void out(word_t addr, byte_t val);
+  byte_t pio_in(word_t addr);
+  void pio_out(word_t addr, byte_t val);
   void change_A(byte_t changed, byte_t val);
   void change_B(byte_t changed, byte_t val);
 
+  byte_t get_color_mode(void);
   byte_t get_border_color(void);
+  byte_t get_border_color_16(void);
   byte_t get_line_mode(void); // returns true if in 20 line mode
 
   /*
