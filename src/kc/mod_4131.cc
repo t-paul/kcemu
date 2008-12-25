@@ -106,6 +106,8 @@ thread_main(void *arg)
 }
 */
 
+cairo_surface_t *ModuleXY4131::_surface = NULL;
+
 ModuleXY4131::ModuleXY4131(ModuleXY4131 &tmpl) :
   ModuleInterface(tmpl.get_name(), tmpl.get_id(), tmpl.get_type())
 {
@@ -125,13 +127,13 @@ ModuleXY4131::ModuleXY4131(ModuleXY4131 &tmpl) :
   _line_width = 0.2;
   double mm_to_inch = 72.0 / 25.4;
 
-  cairo_surface_t *surface = cairo_pdf_surface_create("/tmp/xy4131.pdf", _width_cm * mm_to_inch, _height_cm * mm_to_inch);
-  cairo_status_t status = cairo_surface_status(surface);
+  _surface = cairo_pdf_surface_create("/tmp/xy4131.pdf", _width_cm * mm_to_inch, _height_cm * mm_to_inch);
+  cairo_status_t status = cairo_surface_status(_surface);
   if (status == CAIRO_STATUS_SUCCESS)
     {
       set_valid(true);
-      _cr = cairo_create(surface);
-      cairo_surface_destroy(surface);
+      _cr = cairo_create(_surface);
+      cairo_surface_destroy(_surface);
 
       cairo_scale(_cr, mm_to_inch, mm_to_inch);
       cairo_set_line_width(_cr, _line_width);
@@ -158,6 +160,7 @@ ModuleXY4131::~ModuleXY4131(void)
     }
 
   _cr = NULL;
+  _surface = NULL;
 }
 
 void

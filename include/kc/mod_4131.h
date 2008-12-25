@@ -34,8 +34,10 @@ class ModuleXY4131 : public ModuleInterface, public PIOCallbackInterface
   double _width_cm;
   double _height_cm;
   double _line_width;
-
   cairo_t *_cr;
+
+public:
+  static cairo_surface_t *_surface;
 
  public:
   ModuleXY4131(ModuleXY4131 &tmpl);

@@ -261,6 +261,7 @@ MainWindow::init(void) {
     wire_menu_item("menuitem_disk",            "<alt>D", "ui-disk-window-toggle");
     wire_menu_item("menuitem_module",          "<alt>M", "ui-module-window-toggle");
     wire_menu_item("menuitem_audio",           "<alt>U", "ui-wav-window-toggle");
+    wire_menu_item("menuitem_plotter",         "<alt>O", "ui-plotter-window-toggle");
     wire_menu_item("menuitem_reset",           "<alt>R", "emu-reset");
     wire_menu_item("menuitem_power",           "<alt>P", "emu-power-on");
     wire_menu_item("menuitem_quit",            "<alt>Q", "emu-quit");

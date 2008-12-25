@@ -83,6 +83,7 @@ IMAGES = \
 GLADE_XML = \
         about.glade \
         audio.glade \
+        plotter.glade \
         color.glade \
         legal.glade \
         dialog.glade \

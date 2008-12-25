@@ -39,4 +39,5 @@ EXTRA_DIST = \
 	image.h			\
 	hedit.h			\
 	wav.h			\
+	plotter.h		\
 	gtkledline.h

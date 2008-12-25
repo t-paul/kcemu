@@ -74,6 +74,7 @@ protected:
     UI_Gtk_Window *_keyboard_window;
     UI_Gtk_Window *_info_window;
     UI_Gtk_Window *_wav_window;
+    UI_Gtk_Window *_plotter_window;
     UI_Gtk_Window *_save_memory_window;
     
     GladeXML *_glade_xml;
