@@ -78,6 +78,7 @@ IMAGES = \
 	window-question.png \
 	window-tape.png \
 	window-thanks.png \
+	window-plotter.png \
 	kcemu.png
 
 GLADE_XML = \

@@ -24,48 +24,46 @@
 
 #include <gtk/gtk.h>
 
+#include <cairo/cairo.h>
+
 #include "kc/system.h"
 
 #include "ui/gtk/window.h"
 
 class PlotterWindow : public UI_Gtk_Window
 {
- private:
-  enum {
-    WINDOW_WIDTH = 420,
-    WINDOW_HEIGHT = 594,
-  };
+private:
 
-  struct {
-    GtkWidget   *canvas;
-    GtkWidget   *comboboxentry;
-    GtkWidget   *open;
-    GtkWidget   *close;
-    GtkWidget   *play;
-    GtkWidget   *stop;
-    GtkWidget   *record;
-    GdkGC       *gc;
+  struct
+  {
+    GtkWidget *canvas;
+    GtkWidget *comboboxentry;
+    GtkWidget *open;
+    GtkWidget *close;
+    GtkWidget *next_page;
+    GtkWidget *save_as_png;
     GtkTooltips *tooltips;
   } _w;
-
-  GdkImage *_image;
-  int       _image_y;
 
   CMD *_cmd_plotter_toggle;
   CMD *_cmd_plotter_info;
 
- protected:
+protected:
+  static void sf_next_page(GtkWidget *widget, gpointer *data);
+  static void sf_save_as_png(GtkWidget *widget, gpointer *data);
   static void sf_expose(GtkWidget *widget, GdkEventExpose *event, gpointer *data);
   static void sf_configure(GtkWidget *widget, GdkEventConfigure *event, gpointer *data);
+  static gboolean timeout_handler(PlotterWindow *self);
 
   void init(void);
   void expose(GdkEventExpose *event);
   void configure(GdkEventConfigure *event);
 
- public:
+public:
   PlotterWindow(const char *glade_xml_file);
   virtual ~PlotterWindow(void);
 
+  void toggle(void);
   void selected(const char *filename);
 };
 

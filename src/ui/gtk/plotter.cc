@@ -19,14 +19,18 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
+#include <math.h>
+#include <cairo/cairo.h>
+
+#include "kc/kc.h"
 #include "kc/system.h"
+
+#include "kc/plotter.h"
 
 #include "cmd/cmd.h"
 
 #include "ui/gtk/cmd.h"
 #include "ui/gtk/plotter.h"
-
-#include "kc/mod_4131.h"
 
 class CMD_ui_plotter_window_toggle : public CMD
 {
@@ -89,6 +93,43 @@ PlotterWindow::sf_configure(GtkWidget *widget, GdkEventConfigure *event, gpointe
   self->configure(event);
 }
 
+void
+PlotterWindow::sf_next_page(GtkWidget *widget, gpointer *data)
+{
+  PlotterWindow *self = (PlotterWindow *)data;
+
+  plotter->show_page();
+  gtk_widget_queue_draw(self->_w.canvas);
+}
+
+void
+PlotterWindow::sf_save_as_png(GtkWidget *widget, gpointer *data)
+{
+  PlotterWindow *self = (PlotterWindow *)data;
+  
+  GtkWidget *filechooser = gtk_file_chooser_dialog_new(_("Save As PNG..."),
+                                                       GTK_WINDOW(self->_window),
+                                                       GTK_FILE_CHOOSER_ACTION_SAVE,
+                                                       GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
+                                                       GTK_STOCK_SAVE, GTK_RESPONSE_ACCEPT,
+                                                       NULL);
+  gtk_file_chooser_set_do_overwrite_confirmation(GTK_FILE_CHOOSER(filechooser), TRUE);
+
+  char *filename = NULL;
+  if (gtk_dialog_run(GTK_DIALOG(filechooser)) == GTK_RESPONSE_ACCEPT)
+    {
+      filename = gtk_file_chooser_get_filename(GTK_FILE_CHOOSER(filechooser));
+    }
+
+  gtk_widget_destroy (filechooser);
+
+  if (filename == NULL)
+    return;
+
+  plotter->save_as_png(filename, 2970);
+  g_free(filename);
+}
+
 PlotterWindow::PlotterWindow(const char *glade_xml_file) : UI_Gtk_Window(glade_xml_file)
 {
   _cmd_plotter_info = new CMD_ui_plotter_info(this);
@@ -99,6 +140,29 @@ PlotterWindow::~PlotterWindow(void)
 {
   delete _cmd_plotter_info;
   delete _cmd_plotter_toggle;
+}
+
+gboolean
+PlotterWindow::timeout_handler(PlotterWindow *self)
+{
+  if (self->_window->window == NULL)
+    return FALSE;
+
+  if (!self->is_visible())
+    return FALSE;
+
+  gtk_widget_queue_draw(self->_w.canvas);
+  return TRUE;
+}
+
+void
+PlotterWindow::toggle(void)
+{
+  UI_Gtk_Window::toggle();
+  if (is_visible())
+    {
+      g_timeout_add(1000, (GSourceFunc)timeout_handler, this);
+    }
 }
 
 void
@@ -116,7 +180,6 @@ PlotterWindow::init(void)
    *  canvas, needs GDK_EXPOSURE_MASK to be set!
    */
   _w.canvas = get_widget("main_drawingarea");
-  gtk_widget_set_size_request(_w.canvas, WINDOW_WIDTH, WINDOW_HEIGHT);
   g_signal_connect(_w.canvas, "expose_event", G_CALLBACK(sf_expose), this);
   g_signal_connect(_w.canvas, "configure_event", G_CALLBACK(sf_configure), this);
 
@@ -145,14 +208,16 @@ PlotterWindow::init(void)
 
   gtk_tooltips_set_tip(_w.tooltips, _w.close, _("Close"), NULL);
 
-  init_dialog("ui-plotter-window-toggle", "window-plotter");
+  /*
+   *  next page button
+   */
+  _w.next_page = get_widget("button_next_page");
+  g_signal_connect(_w.next_page, "clicked", G_CALLBACK(sf_next_page), this);
 
-  _w.gc = NULL;
-  _image_y = 0;
-  _image  = gdk_image_new(GDK_IMAGE_FASTEST,
-			  gdk_visual_get_system(),
-			  WINDOW_WIDTH,
-			  2 * WINDOW_HEIGHT);
+  _w.save_as_png = get_widget("button_save_as_png");
+  g_signal_connect(_w.save_as_png, "clicked", G_CALLBACK(sf_save_as_png), this);
+  
+  init_dialog("ui-plotter-window-toggle", "window-plotter");
 }
 
 void
@@ -167,10 +232,6 @@ PlotterWindow::selected(const char *filename)
     }
 
   gtk_widget_set_sensitive(_w.close, sensitive);
-  gtk_widget_set_sensitive(_w.play, sensitive);
-  gtk_widget_set_sensitive(_w.stop, sensitive);
-
-  gtk_widget_set_sensitive(_w.record, FALSE);
 
   GtkEntry *entry = GTK_ENTRY(GTK_BIN(_w.comboboxentry)->child);
   gtk_entry_set_text(GTK_ENTRY(entry), filename);
@@ -188,23 +249,17 @@ PlotterWindow::expose(GdkEventExpose *event)
 
   int width = _w.canvas->allocation.width;
   int height = _w.canvas->allocation.height;
+  cairo_surface_t *surface = plotter->get_image_surface(width, height);
+  if (surface != NULL)
+    {
+      cairo_set_source_surface(cr, surface, 0, 0);
+      cairo_paint(cr);
+    }
 
-  if (ModuleXY4131::_surface != NULL)
-   cairo_set_source_surface(cr, ModuleXY4131::_surface, 0, 0);
-  
-  cairo_move_to(cr, 0, 0);
-  cairo_line_to(cr, width, height);
-  cairo_stroke(cr);
-  cairo_paint(cr);
-  
   cairo_destroy(cr);
-
-  printf("expose: %d, %d\n", width, height);
 }
 
 void
 PlotterWindow::configure(GdkEventConfigure *event)
 {
-  printf("configure: %d, %d\n", event->width, event->height);
-  //gtk_widget_set_size_request(_w.canvas, event->width, event->height);
 }

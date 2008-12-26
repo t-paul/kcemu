@@ -72,6 +72,7 @@ kcemu_SOURCES = \
 	memory7.cc	\
 	memory8.cc	\
 	memory9.cc	\
+	plotter.cc	\
 	sh_mem.cc	\
 	disk_io.cc	\
 	gdc.cc		\

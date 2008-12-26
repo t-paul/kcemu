@@ -76,6 +76,7 @@
 #include "kc/ctc_fdc.h"
 #include "kc/z80_fdc.h"
 #include "kc/gide.h"
+#include "kc/plotter.h"
 #include "kc/poly880.h"
 #include "kc/prefs/prefs.h"
 
@@ -210,6 +211,7 @@ VIS           *vis;
 SVG           *svg;
 Poly880       *poly880;
 DisplayC80    *display_c80;
+Plotter       *plotter;
 
 Z80_FDC         *fdc_z80;
 FloppyIO        *fdc_io;
@@ -1154,6 +1156,7 @@ main(int argc, char **argv)
       disk  = new Disk;
       ports = new Ports;
       daisy = new DaisyChain;
+      plotter = new Plotter;
       portg = ports->register_ports("-", 0, 0x100, new NullPort("NullPort"), 256);
 
       PIO0 *p0;
