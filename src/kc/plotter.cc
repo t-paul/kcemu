@@ -23,6 +23,7 @@
 
 #include <cairo/cairo.h>
 #include <cairo/cairo-pdf.h>
+#include <cairo/cairo-svg.h>
 
 #include "kc/system.h"
 
@@ -37,7 +38,6 @@ Plotter::~Plotter(void)
 {
 }
 
-
 void
 Plotter::init(void)
 {
@@ -47,13 +47,47 @@ Plotter::init(void)
   _pdf_surface = 0;
   _origin_x = 20.0;
   _origin_y = 20.0;
-  _image_surface = 0;
   _image_width = 0;
   _image_height = 0;
   _pen_down_factor = 1.2;
+
+  init_image_surface(&_buffer_surface, &_buffer_cr, WIDTH_MM * 10, HEIGHT_MM * 10);
+  init_image_surface(&_onscreen_surface, &_onscreen_cr, WIDTH_MM * 3, HEIGHT_MM * 3);
+
   pen_up();
   set_line_width(0.2);
   set_pen_color(0, 0, 0);
+}
+
+void
+Plotter::init_image_surface(cairo_surface_t **surface, cairo_t **cr, double width, double height)
+{
+  *surface = cairo_image_surface_create(CAIRO_FORMAT_ARGB32, width, height);
+  *cr = cairo_create(*surface);
+  cairo_surface_destroy(*surface);
+
+  clear_image_surface(*surface);
+
+  cairo_scale(*cr, width / WIDTH_MM, height / HEIGHT_MM);
+  cairo_translate(*cr, _origin_x, _origin_y);
+
+  cairo_set_line_cap(*cr, CAIRO_LINE_CAP_ROUND);
+  cairo_set_line_join(*cr, CAIRO_LINE_JOIN_ROUND);
+
+  cairo_set_line_width(*cr, _line_width);
+  cairo_set_source_rgb(*cr, _red, _green, _blue);
+}
+
+void
+Plotter::clear_image_surface(cairo_surface_t *surface)
+{
+  cairo_t *cr = cairo_create(surface);
+  int w = cairo_image_surface_get_width(surface);
+  int h = cairo_image_surface_get_height(surface);
+  cairo_set_source_rgb(cr, 1, 1, 1);
+  cairo_rectangle(cr, 0, 0, w, h);
+  cairo_fill(cr);
+  cairo_destroy(cr);
 }
 
 void
@@ -97,14 +131,17 @@ Plotter::get_pdf_surface(void)
 void
 Plotter::show_page(void)
 {
-  cairo_surface_t *surface = get_pdf_surface();
-  cairo_surface_show_page(surface);
-  create_image_surface();
+  if (_pdf_surface)
+    cairo_surface_show_page(_pdf_surface);
+
+  clear_image_surface(_buffer_surface);
+  clear_image_surface(_onscreen_surface);
 }
 
 cairo_status_t
 Plotter::save_as_png(const char *filename, double height)
 {
+  /*
   double h = height;
   double w = height * 0.7070;
   double scalex = w / (WIDTH_MM * MM_TO_INCH);
@@ -121,61 +158,15 @@ Plotter::save_as_png(const char *filename, double height)
   cairo_paint(cr);
   cairo_status_t status = cairo_surface_write_to_png(surface, filename);
   cairo_destroy(cr);
+   **/
+  cairo_status_t status = cairo_surface_write_to_png(_buffer_surface, filename);
   return status;
 }
 
-void
-Plotter::create_image_surface(void)
-{
-  if (_image_surface)
-    cairo_surface_destroy(_image_surface);
-
-  double scalex = _image_width / (WIDTH_MM * MM_TO_INCH);
-  double scaley = _image_height / (HEIGHT_MM * MM_TO_INCH);
-  _image_surface = cairo_image_surface_create(CAIRO_FORMAT_RGB24, _image_width, _image_height);
-  cairo_t *cr = cairo_create(_image_surface);
-
-  cairo_set_source_rgb(cr, 1, 1, 1);
-  cairo_rectangle(cr, 0, 0, _image_width, _image_height);
-  cairo_fill(cr);
-
-  cairo_set_source_rgb(cr, 0, 0, 0);
-
-  cairo_scale(cr, scalex, scaley);
-  cairo_set_source_surface(cr, _pdf_surface, 0, 0);
-  cairo_paint(cr);
-  cairo_destroy(cr);
-}
-
 cairo_surface_t *
-Plotter::get_image_surface(int width, int height)
+Plotter::get_onscreen_surface(int width, int height)
 {
-  if ((_image_width != width) || (_image_height != height))
-    {
-      _image_width = width;
-      _image_height = height;
-
-      create_image_surface();
-    }
-
-  return _image_surface;
-}
-
-cairo_t *
-Plotter::get_image_cr(double x, double y)
-{
-  double scalex = _image_width / WIDTH_MM;
-  double scaley = _image_height / HEIGHT_MM;
-
-  cairo_t *cr = cairo_create(_image_surface);
-  cairo_set_line_width(cr, _line_width);
-  cairo_set_line_cap(cr, CAIRO_LINE_CAP_ROUND);
-  cairo_set_line_join(cr, CAIRO_LINE_JOIN_ROUND);
-  cairo_set_source_rgb(cr, _red, _green, _blue);
-  cairo_scale(cr, scalex, scaley);
-  cairo_translate(cr, _origin_x, _origin_y);
-  cairo_move_to(cr, x, y);
-  return cr;
+  return _onscreen_surface;
 }
 
 void
@@ -189,14 +180,11 @@ Plotter::pen_down(void)
 {
   _pen_down = true;
 
-  set_point(_pdf_cr, get_x(), get_y());
+  set_point(_buffer_cr, get_x(), get_y());
+  set_point(_onscreen_cr, get_x(), get_y());
 
-  if (_image_surface)
-    {
-      cairo_t *cr = get_image_cr(get_x(), get_y());
-      set_point(cr, get_x(), get_y());
-      cairo_destroy(cr);
-    }
+  if (_pdf_cr)
+    set_point(_pdf_cr, get_x(), get_y());
 }
 
 void
@@ -215,13 +203,11 @@ Plotter::step(int delta_x, int delta_y)
   if (y > HEIGHT_MM)
     y = HEIGHT_MM;
 
-  draw_to(_pdf_cr, x, y);
-  if (_image_surface)
-    {
-      cairo_t *cr = get_image_cr(get_x(), get_y());
-      draw_to(cr, x, y);
-      cairo_destroy(cr);
-    }
+  draw_to(_buffer_cr, x, y);
+  draw_to(_onscreen_cr, x, y);
+  
+  if (_pdf_cr)
+    draw_to(_pdf_cr, x, y);
 
   _x = x;
   _y = y;
@@ -255,6 +241,9 @@ void
 Plotter::set_line_width(double line_width)
 {
   _line_width = line_width;
+
+  cairo_set_line_width(_buffer_cr, _line_width);
+  cairo_set_line_width(_onscreen_cr, _line_width);
 
   if (_pdf_cr)
     cairo_set_line_width(_pdf_cr, _line_width);
@@ -324,8 +313,11 @@ void
 Plotter::set_pen_color(double red, double green, double blue)
 {
   _red = red;
-  _green = _green;
+  _green = green;
   _blue = blue;
+
+  cairo_set_source_rgb(_buffer_cr, _red, _green, _blue);
+  cairo_set_source_rgb(_onscreen_cr, _red, _green, _blue);
 
   if (_pdf_cr)
     cairo_set_source_rgb(_pdf_cr, _red, _green, _blue);

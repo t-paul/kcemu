@@ -44,7 +44,6 @@ ModuleXY4131::ModuleXY4131(ModuleXY4131 &tmpl) :
   pio->set_B_EXT(0xff, 0x00);
 
   _val = 0;
-  plotter->open_pdf("/tmp/xy4131.pdf");
   set_valid(true);
 }
 

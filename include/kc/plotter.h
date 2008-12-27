@@ -53,18 +53,40 @@ private:
   double _origin_y;
   bool   _pen_down;
 
-  cairo_t *_pdf_cr;
-  cairo_surface_t *_pdf_surface;
-
-  cairo_surface_t *_image_surface;
   int _image_width;
   int _image_height;
 
+  /**
+   * Cairo surface and context for the double buffer image, the
+   * size of the image will 2100 x 2970 pixel which matches the
+   * resolution of the plotter XY4131 (A4 paper size with step
+   * width of 0.1mm).
+   */
+  cairo_t *_buffer_cr;
+  cairo_surface_t *_buffer_surface;
+
+  /**
+   * PDF surface and context that is only present if a pdf file
+   * was opened by the user.
+   */
+  cairo_t *_pdf_cr;
+  cairo_surface_t *_pdf_surface;
+
+  /**
+   * Image surface that is used for direct onscreen rendering. The
+   * size is tracking the actual canvas size of the GUI window.
+   * After changing the window size the content is restored from
+   * the buffer surface.
+   */
+  cairo_t *_onscreen_cr;
+  cairo_surface_t *_onscreen_surface;
+
 private:
-  virtual cairo_t * get_image_cr(double x, double y);
   virtual void set_point(cairo_t *cr, double x, double y);
   virtual void draw_to(cairo_t *cr, double x, double y);
-  virtual void create_image_surface(void);
+
+  virtual void clear_image_surface(cairo_surface_t *surface);
+  virtual void init_image_surface(cairo_surface_t **surface, cairo_t **cr, double width, double height);
   
 public:
   Plotter(void);
@@ -82,7 +104,7 @@ public:
   virtual void open_pdf(const char *filename);
 
   virtual cairo_surface_t * get_pdf_surface(void);
-  virtual cairo_surface_t * get_image_surface(int width, int height);
+  virtual cairo_surface_t * get_onscreen_surface(int width, int height);
 
   virtual double get_line_width(void);
   virtual void set_line_width(double line_width);

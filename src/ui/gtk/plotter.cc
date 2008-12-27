@@ -278,7 +278,7 @@ PlotterWindow::expose(GdkEventExpose *event)
 
   int width = _w.canvas->allocation.width;
   int height = _w.canvas->allocation.height;
-  cairo_surface_t *surface = plotter->get_image_surface(width, height);
+  cairo_surface_t *surface = plotter->get_onscreen_surface(width, height);
   if (surface != NULL)
     {
       cairo_set_source_surface(cr, surface, 0, 0);
