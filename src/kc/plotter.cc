@@ -50,8 +50,10 @@ Plotter::init(void)
   _image_surface = 0;
   _image_width = 0;
   _image_height = 0;
-  set_line_width(0.2);
+  _pen_down_factor = 1.2;
   pen_up();
+  set_line_width(0.2);
+  set_pen_color(0, 0, 0);
 }
 
 void
@@ -80,7 +82,7 @@ Plotter::open_pdf(const char *filename)
       cairo_set_line_width(_pdf_cr, _line_width);
       cairo_set_line_cap(_pdf_cr, CAIRO_LINE_CAP_ROUND);
       cairo_set_line_join(_pdf_cr, CAIRO_LINE_JOIN_ROUND);
-      cairo_set_source_rgb(_pdf_cr, 0, 0, 0);
+      cairo_set_source_rgb(_pdf_cr, _red, _green, _blue);
       _pdf_surface = surface;
     }
   cairo_surface_destroy(surface);
@@ -169,7 +171,7 @@ Plotter::get_image_cr(double x, double y)
   cairo_set_line_width(cr, _line_width);
   cairo_set_line_cap(cr, CAIRO_LINE_CAP_ROUND);
   cairo_set_line_join(cr, CAIRO_LINE_JOIN_ROUND);
-  cairo_set_source_rgb(cr, 0, 0, 0);
+  cairo_set_source_rgb(cr, _red, _green, _blue);
   cairo_scale(cr, scalex, scaley);
   cairo_translate(cr, _origin_x, _origin_y);
   cairo_move_to(cr, x, y);
@@ -187,12 +189,12 @@ Plotter::pen_down(void)
 {
   _pen_down = true;
 
-  set_point(_pdf_cr, get_x(), get_y(), _line_width);
+  set_point(_pdf_cr, get_x(), get_y());
 
   if (_image_surface)
     {
       cairo_t *cr = get_image_cr(get_x(), get_y());
-      set_point(cr, get_x(), get_y(), _line_width);
+      set_point(cr, get_x(), get_y());
       cairo_destroy(cr);
     }
 }
@@ -253,6 +255,9 @@ void
 Plotter::set_line_width(double line_width)
 {
   _line_width = line_width;
+
+  if (_pdf_cr)
+    cairo_set_line_width(_pdf_cr, _line_width);
 }
 
 double
@@ -279,12 +284,62 @@ Plotter::set_origin_y(double origin_y)
   _origin_y = origin_y;
 }
 
-void
-Plotter::set_point(cairo_t *cr, double x, double y, double line_width)
+double
+Plotter::get_pen_red(void)
 {
-  cairo_move_to(cr, x - (line_width / 2.0), y);
-  cairo_rel_line_to(cr, line_width, 0);
+  return _red;
+}
+
+void
+Plotter::set_pen_red(double red)
+{
+  set_pen_color(red, _green, _blue);
+}
+
+double
+Plotter::get_pen_green(void)
+{
+  return _green;
+}
+
+void
+Plotter::set_pen_green(double green)
+{
+  set_pen_color(_red, green, _blue);
+}
+
+double
+Plotter::get_pen_blue(void)
+{
+  return _blue;
+}
+
+void
+Plotter::set_pen_blue(double blue)
+{
+  set_pen_color(_red, _green, blue);
+}
+
+void
+Plotter::set_pen_color(double red, double green, double blue)
+{
+  _red = red;
+  _green = _green;
+  _blue = blue;
+
+  if (_pdf_cr)
+    cairo_set_source_rgb(_pdf_cr, _red, _green, _blue);
+}
+
+void
+Plotter::set_point(cairo_t *cr, double x, double y)
+{
+  cairo_move_to(cr, x, y);
+  cairo_save(cr);
+  cairo_set_line_width(cr, cairo_get_line_width(cr) * _pen_down_factor);
+  cairo_rel_line_to(cr, 0, 0);
   cairo_stroke(cr);
+  cairo_restore(cr);
 }
 
 void

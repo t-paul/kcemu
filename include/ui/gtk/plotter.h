@@ -42,6 +42,8 @@ private:
     GtkWidget *close;
     GtkWidget *next_page;
     GtkWidget *save_as_png;
+    GtkWidget *line_width;
+    GtkWidget *pen_color;
     GtkTooltips *tooltips;
   } _w;
 
@@ -49,10 +51,12 @@ private:
   CMD *_cmd_plotter_info;
 
 protected:
-  static void sf_next_page(GtkWidget *widget, gpointer *data);
-  static void sf_save_as_png(GtkWidget *widget, gpointer *data);
-  static void sf_expose(GtkWidget *widget, GdkEventExpose *event, gpointer *data);
-  static void sf_configure(GtkWidget *widget, GdkEventConfigure *event, gpointer *data);
+  static void sf_next_page(GtkWidget *widget, gpointer data);
+  static void sf_save_as_png(GtkWidget *widget, gpointer data);
+  static void sf_pen_color(GtkColorButton *widget, gpointer data);
+  static void sf_line_width(GtkSpinButton *widget, gpointer data);
+  static void sf_expose(GtkWidget *widget, GdkEventExpose *event, gpointer data);
+  static void sf_configure(GtkWidget *widget, GdkEventConfigure *event, gpointer data);
   static gboolean timeout_handler(PlotterWindow *self);
 
   void init(void);

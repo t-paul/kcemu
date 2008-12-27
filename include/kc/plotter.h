@@ -44,7 +44,11 @@ private:
 private:
   double _x;
   double _y;
+  double _red;
+  double _green;
+  double _blue;
   double _line_width;
+  double _pen_down_factor;
   double _origin_x;
   double _origin_y;
   bool   _pen_down;
@@ -58,7 +62,7 @@ private:
 
 private:
   virtual cairo_t * get_image_cr(double x, double y);
-  virtual void set_point(cairo_t *cr, double x, double y, double line_width);
+  virtual void set_point(cairo_t *cr, double x, double y);
   virtual void draw_to(cairo_t *cr, double x, double y);
   virtual void create_image_surface(void);
   
@@ -88,6 +92,17 @@ public:
 
   virtual double get_origin_y(void);
   virtual void set_origin_y(double origin_y);
+
+  virtual double get_pen_red(void);
+  virtual void set_pen_red(double red);
+
+  virtual double get_pen_green(void);
+  virtual void set_pen_green(double green);
+
+  virtual double get_pen_blue(void);
+  virtual void set_pen_blue(double blue);
+
+  virtual void set_pen_color(double red, double green, double blue);
 
   virtual double get_x(void);
   virtual double get_y(void);

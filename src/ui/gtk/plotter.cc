@@ -21,6 +21,8 @@
 
 #include <math.h>
 #include <cairo/cairo.h>
+#include <gtk-2.0/gtk/gtkcolorbutton.h>
+#include <gtk-2.0/gtk/gtkspinbutton.h>
 
 #include "kc/kc.h"
 #include "kc/system.h"
@@ -80,21 +82,21 @@ public:
 };
 
 void
-PlotterWindow::sf_expose(GtkWidget *widget, GdkEventExpose *event, gpointer *data)
+PlotterWindow::sf_expose(GtkWidget *widget, GdkEventExpose *event, gpointer data)
 {
   PlotterWindow *self = (PlotterWindow *)data;
   self->expose(event);
 }
 
 void
-PlotterWindow::sf_configure(GtkWidget *widget, GdkEventConfigure *event, gpointer *data)
+PlotterWindow::sf_configure(GtkWidget *widget, GdkEventConfigure *event, gpointer data)
 {
   PlotterWindow *self = (PlotterWindow *)data;
   self->configure(event);
 }
 
 void
-PlotterWindow::sf_next_page(GtkWidget *widget, gpointer *data)
+PlotterWindow::sf_next_page(GtkWidget *widget, gpointer data)
 {
   PlotterWindow *self = (PlotterWindow *)data;
 
@@ -103,7 +105,7 @@ PlotterWindow::sf_next_page(GtkWidget *widget, gpointer *data)
 }
 
 void
-PlotterWindow::sf_save_as_png(GtkWidget *widget, gpointer *data)
+PlotterWindow::sf_save_as_png(GtkWidget *widget, gpointer data)
 {
   PlotterWindow *self = (PlotterWindow *)data;
   
@@ -128,6 +130,23 @@ PlotterWindow::sf_save_as_png(GtkWidget *widget, gpointer *data)
 
   plotter->save_as_png(filename, 2970);
   g_free(filename);
+}
+
+void
+PlotterWindow::sf_pen_color(GtkColorButton *widget, gpointer data)
+{
+  const double f = 65536.0;
+
+  GdkColor color;
+  gtk_color_button_get_color(widget, &color);
+  plotter->set_pen_color((double)color.red / f, (double)color.green / f, (double)color.blue / f);
+}
+
+void
+PlotterWindow::sf_line_width(GtkSpinButton *widget, gpointer data)
+{
+  gdouble line_width = gtk_spin_button_get_value(widget);
+  plotter->set_line_width(line_width);
 }
 
 PlotterWindow::PlotterWindow(const char *glade_xml_file) : UI_Gtk_Window(glade_xml_file)
@@ -208,15 +227,25 @@ PlotterWindow::init(void)
 
   gtk_tooltips_set_tip(_w.tooltips, _w.close, _("Close"), NULL);
 
-  /*
-   *  next page button
-   */
+
   _w.next_page = get_widget("button_next_page");
   g_signal_connect(_w.next_page, "clicked", G_CALLBACK(sf_next_page), this);
 
   _w.save_as_png = get_widget("button_save_as_png");
   g_signal_connect(_w.save_as_png, "clicked", G_CALLBACK(sf_save_as_png), this);
-  
+
+  _w.line_width = get_widget("spinbutton_line_width");
+  gtk_spin_button_set_value(GTK_SPIN_BUTTON(_w.line_width), plotter->get_line_width());
+  g_signal_connect(_w.line_width, "value-changed", G_CALLBACK(sf_line_width), this);
+
+  GdkColor color;
+  _w.pen_color = get_widget("colorbutton_pen_color");
+  color.red = plotter->get_pen_red() * 65536;
+  color.green = plotter->get_pen_green() * 65536;
+  color.blue = plotter->get_pen_blue() * 65536;
+  gtk_color_button_set_color(GTK_COLOR_BUTTON(_w.pen_color), &color);
+  g_signal_connect(_w.pen_color, "color-set", G_CALLBACK(sf_pen_color), this);
+
   init_dialog("ui-plotter-window-toggle", "window-plotter");
 }
 
