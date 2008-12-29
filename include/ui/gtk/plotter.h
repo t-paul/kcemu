@@ -43,25 +43,40 @@ private:
     GtkWidget *next_page;
     GtkWidget *save_as_png;
     GtkWidget *line_width;
+    GtkWidget *origin_x;
+    GtkWidget *origin_y;
+    GtkWidget *bg_color;
     GtkWidget *pen_color;
-    GtkTooltips *tooltips;
+    GtkWidget *show_pen;
+    GtkWidget *show_plot_area;
+    GtkWidget *display_refresh;
+
+    guint timeout_id;
   } _w;
 
+  guint _display_refresh;
+  
   CMD *_cmd_plotter_toggle;
-  CMD *_cmd_plotter_info;
 
 protected:
   static void sf_next_page(GtkWidget *widget, gpointer data);
+  static void sf_open_pdf(GtkWidget *widget, gpointer data);
+  static void sf_close_pdf(GtkWidget *widget, gpointer data);
   static void sf_save_as_png(GtkWidget *widget, gpointer data);
+  static void sf_bg_color(GtkColorButton *widget, gpointer data);
   static void sf_pen_color(GtkColorButton *widget, gpointer data);
   static void sf_line_width(GtkSpinButton *widget, gpointer data);
+  static void sf_origin_x(GtkSpinButton *widget, gpointer data);
+  static void sf_origin_y(GtkSpinButton *widget, gpointer data);
+  static void sf_display_refresh(GtkSpinButton *widget, gpointer data);
+  static void sf_show_pen(GtkToggleButton *widget, gpointer data);
+  static void sf_show_plot_area(GtkToggleButton *widget, gpointer data);
   static void sf_expose(GtkWidget *widget, GdkEventExpose *event, gpointer data);
-  static void sf_configure(GtkWidget *widget, GdkEventConfigure *event, gpointer data);
   static gboolean timeout_handler(PlotterWindow *self);
 
   void init(void);
+  void init_timeout(void);
   void expose(GdkEventExpose *event);
-  void configure(GdkEventConfigure *event);
 
 public:
   PlotterWindow(const char *glade_xml_file);

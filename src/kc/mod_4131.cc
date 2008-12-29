@@ -57,7 +57,7 @@ ModuleXY4131::ModuleXY4131(const char *name) :
 ModuleXY4131::~ModuleXY4131(void)
 {
   if (!_master)
-    plotter->close();
+    plotter->close_pdf();
 }
 
 void
