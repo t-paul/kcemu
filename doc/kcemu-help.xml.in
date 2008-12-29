@@ -59,6 +59,7 @@
 3.4. <link ref="window-module">Modulverwaltung</link>
 3.5. <link ref="window-audio">Abspielen von Sound-Dateien</link>
 3.6. <link ref="window-save-memory">Speichern von Memory-Bereichen</link>
+3.7. <link ref="window-plotter">Plotter</link>
 
 
 </p>
@@ -958,6 +959,91 @@ VEB Robotron-Meßelektronik "Otto Schön" Dresden
   Die beiden Toggle-Buttons hinter den Adressangaben schalten das
   automatische Scrolling der Speicheranzeige zu den jeweils angegebenen
   Adressen ein bzw. aus.
+
+
+</p>
+
+<p><size value="2"><ref name="window-plotter"/>3.7. Plotter</size>
+
+  Das Plotter-Fenster zeigt die Ausgabe eines emulierten Klein-Plotters
+  XY4131. Dazu muss in der KC85/1 bzw. KC87 Emulation der Plotter-Modul
+  ausgewählt und die entsprechende Treiber-Software (Plotter-BASIC und
+  GRPLOT.COM) geladen sein. GRPLOT.COM befindet sich auf der zum
+  Plotter mitgelieferten Programmkassette R0114.
+  Außerdem werden 2 RAM-Module benötigt, da der Treiber GRPLOT.COM im
+  Speicherbereich des 2. RAM-Modules (8000h-BFFFh) läuft.
+
+  <img src="window-plotter-1_small.png"/>
+  <size value="-2"><c>Das Plotter-Fenster mit den Ausgaben...</c></size>
+
+  <img src="window-plotter-2_small.png"/>
+  <size value="-2"><c>...dieses kleinen BASIC Programmes</c></size>
+
+  Über die Einstellungen auf der rechten Seite des Fensters können die
+  Eigenschaften beim Plotten eingestellt werden.
+
+  <b>Stiftfarbe</b>
+  Bestimmt die Farbe mit der gezeichnet wird. Änderungen an dieser Einstellung
+  wirken sich sofort aus.
+
+  <b>Papierfarbe</b>
+  Bestimmt die Hintergrundfarbe, also sozusagen die Farbe des Papiers auf
+  dem gezeichnet. Diese Einstellung wird nur beim Löschen des Zeichenbereiches
+  übernommen.
+
+  <b>Nullpunkt X</b> und <b>Nullpunkt Y</b>
+  Bestimmen die Position der Koordinate 0,0 des Zeichenbereiches in Bezug
+  auf die obere linke Ecke des Papiers (in Millimeter). Damit kann der
+  Zeichenbereich verschoben werden. Auch diese Einstellung wird erst beim
+  Löschen des Zeichenbereiches übernommen.
+
+  <b>Linienbreite</b>
+  Dicke des Stiftes (in Millimeter) mit dem gezeichnet wird. Änderungen an
+  dieser Einstellung wirken sich sofort aus.
+
+  <b>Zeichenbereich</b>
+  Anzeige des Zeichenbereiches. Es wird ein dünner grüner Rahmen um den
+  möglichen Zeichenbereich (180 x 255 Millimeter) des Plotters angezeigt.
+  (Achtung: Das Einschalten dieser Option verlangsamt die Bilddarstellung
+  erheblich!)
+
+  <b>Stift anzeigen</b>
+  Anzeige der Stiftposition mit einem kleinen Fadenkreuz.
+  (Achtung: Das Einschalten dieser Option verlangsamt die Bilddarstellung
+  erheblich!)
+
+  <b>Refresh</b>
+  Definiert alle wieviel Millisekunden die Darstellung des Zeichenbereiches
+  erfolgen soll. Umso höher dieser Wert, desto seltener wird der Zeichenbereich
+  angezeigt was aber die benötigte Rechenleistung verringert.
+
+  <b>In PDF-Datei plotten</b>
+  Hier kann eine Datei angelegt werden, in die die folgenden Ausgaben auf dem
+  Plotter geschrieben werden. Für die Ausgabe in eine PDF-Datei hat die
+  Funktion "Zeichenbereich" löschen den zusätzlichen Effekt, dass eine neue
+  Seite erzeugt wird.
+  Dadurch können mehrere Zeichungen in eine PDF-Datei ausgegeben werden.
+
+  <b>Speichern</b>
+  Über den Button "Speichern" kann die aktuell angezeigte Zeichnung als PNG
+  Datei gespeichert werden. Die PNG Datei hat dabei eine Auflösung von
+  2100 x 2970 Bildpunkten, was einer A4-Seite mit 10 Pixeln pro Millimeter
+  entspricht.
+
+
+  <u>Der Kleinplotter XY 4131</u>
+
+  <img src="sys-xy4131.jpg"/>
+
+  Einige technische Daten des Plotters:
+
+  <m>Papierformat             </m>A4
+  <m>Effektive Zeichenfläche  </m>255mm x 180mm
+  <m>Raster                   </m>2550 x 1800 Schritte
+  <m>Minimale Schrittweite    </m>0,1 mm
+  <m>Zeichengeschwindigkeit   </m>100 mm/s
+  <m>Abmessungen              </m>396 mm x 177 mm x 82 mm
+  <m>Masse                    </m>3 kg
 
 
 </p>
