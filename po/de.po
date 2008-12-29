@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: KCemu v0.4\n"
 "Report-Msgid-Bugs-To: Torsten.Paul@gmx.de\n"
-"POT-Creation-Date: 2008-12-20 21:43+0100\n"
-"PO-Revision-Date: 2008-12-13 23:05+0100\n"
+"POT-Creation-Date: 2008-12-29 20:07+0100\n"
+"PO-Revision-Date: 2008-12-29 20:44+0100\n"
 "Last-Translator: Torsten Paul <Torsten.Paul@gmx.de>\n"
 "Language-Team: German <Torsten.Paul@gmx.de>\n"
 "MIME-Version: 1.0\n"
@@ -577,27 +577,27 @@ msgstr "gtk-quit"
 msgid "_Emulator"
 msgstr "_Emulator"
 
-#: images/main.glade:30 images/main.glade:399
+#: images/main.glade:30 images/main.glade:406
 msgid "_Run..."
 msgstr "_Ausführen..."
 
-#: images/main.glade:38 images/main.glade:407
+#: images/main.glade:38 images/main.glade:414
 msgid "_Load..."
 msgstr "_Laden..."
 
-#: images/main.glade:45 images/main.glade:414
+#: images/main.glade:45 images/main.glade:421
 msgid "_Save..."
 msgstr "_Speichern..."
 
-#: images/main.glade:53 images/main.glade:422
+#: images/main.glade:53 images/main.glade:429
 msgid "_Tape..."
 msgstr "_Kassette..."
 
-#: images/main.glade:61 images/main.glade:430
+#: images/main.glade:61 images/main.glade:437
 msgid "_Disk..."
 msgstr "_Diskette..."
 
-#: images/main.glade:69 images/main.glade:438
+#: images/main.glade:69 images/main.glade:445
 msgid "_Module..."
 msgstr "_Module..."
 
@@ -605,109 +605,203 @@ msgstr "_Module..."
 msgid "A_udio..."
 msgstr "_Audio..."
 
-#: images/main.glade:91 images/main.glade:540
+#: images/main.glade:84 images/main.glade:460
+msgid "Pl_otter..."
+msgstr "Pl_otter..."
+
+#: images/main.glade:98 images/main.glade:554
 msgid "R_eset"
 msgstr "R_eset"
 
-#: images/main.glade:99 images/main.glade:548
+#: images/main.glade:106 images/main.glade:562
 msgid "_Power On"
 msgstr "_Einschalten"
 
-#: images/main.glade:113 images/main.glade:562
+#: images/main.glade:120 images/main.glade:576
 msgid "_Quit Emulator"
 msgstr "Emulator _beenden"
 
-#: images/main.glade:125 images/main.glade:460
+#: images/main.glade:132 images/main.glade:474
 msgid "_View"
 msgstr "_Ansicht"
 
-#: images/main.glade:135
+#: images/main.glade:142
 msgid "Zoom x_1"
 msgstr "Zoom x_1"
 
-#: images/main.glade:143
+#: images/main.glade:150
 msgid "Zoom x_2"
 msgstr "Zoom x_2"
 
-#: images/main.glade:151
+#: images/main.glade:158
 msgid "Zoom x_3"
 msgstr "Zoom x_3"
 
-#: images/main.glade:165 images/main.glade:500
+#: images/main.glade:172 images/main.glade:514
 msgid "_Keyboard"
 msgstr "_Tastatur"
 
-#: images/main.glade:179 images/main.glade:514
+#: images/main.glade:186 images/main.glade:528
 msgid "_Menubar"
 msgstr "_Menüleiste"
 
-#: images/main.glade:187 images/main.glade:522
+#: images/main.glade:194 images/main.glade:536
 msgid "_Statusbar"
 msgstr "_Statusleiste"
 
-#: images/main.glade:199
+#: images/main.glade:206
 msgid "_Options"
 msgstr "_Optionen"
 
-#: images/main.glade:209
+#: images/main.glade:216
 msgid "_Colors..."
 msgstr "_Farben..."
 
-#: images/main.glade:217
+#: images/main.glade:224
 msgid "_Display Effects"
 msgstr "_Effekte"
 
-#: images/main.glade:225
+#: images/main.glade:232
 msgid "No _Speed Limit"
 msgstr "Maximale _Geschwindigkeit"
 
-#: images/main.glade:239
+#: images/main.glade:246
 msgid "_Profiles..."
 msgstr "_Profile..."
 
-#: images/main.glade:251 images/main.glade:261
+#: images/main.glade:258 images/main.glade:268
 msgid "_Help"
 msgstr "_Hilfe"
 
-#: images/main.glade:269
+#: images/main.glade:276
 msgid "Help _Index"
 msgstr "Hilfe _Inhalt"
 
-#: images/main.glade:277
+#: images/main.glade:284
 msgid "_Context Help"
 msgstr "_Kontext Hilfe"
 
-#: images/main.glade:291
+#: images/main.glade:298
 msgid "_About"
 msgstr "Über KCemu"
 
-#: images/main.glade:299
+#: images/main.glade:306
 msgid "_Thanks!"
 msgstr "Danksagung"
 
-#: images/main.glade:313
+#: images/main.glade:320
 msgid "KCemu _Licence"
 msgstr "KCemu _Lizenz"
 
-#: images/main.glade:321
+#: images/main.glade:328
 msgid "No _Warranty!"
 msgstr "Keine _Gewährleistung!"
 
-#: images/main.glade:446
+#: images/main.glade:453
 msgid "_Audio..."
 msgstr "_Audio..."
 
-#: images/main.glade:470
+#: images/main.glade:484
 msgid "Zoom x1"
 msgstr "Zoom x_1"
 
-#: images/main.glade:478
+#: images/main.glade:492
 msgid "Zoom x2"
 msgstr "Zoom x_2"
 
-#: images/main.glade:486
+#: images/main.glade:500
 msgid "Zoom x3"
 msgstr "Zoom x_3"
+
+#: images/plotter.glade:6
+msgid "KCemu: Plotter"
+msgstr "KCemu: Plotter"
+
+#: images/plotter.glade:25
+msgid "Plotter"
+msgstr "Plotter"
+
+#: images/plotter.glade:276
+msgid "Show pen"
+msgstr "Stift anzeigen"
+
+#: images/plotter.glade:305
+msgid "Show plot area"
+msgstr "Zeichenbereich"
+
+#: images/plotter.glade:318
+msgid ""
+"Define the initial y position of the pen after clearing the plotting area. "
+"Measured in millimeters from the top left corner."
+msgstr "Nullposition der Y-Achse des Zeichenbereiches festlegen."
+
+#: images/plotter.glade:336
+msgid "Y origin"
+msgstr "Nullpunkt Y"
+
+#: images/plotter.glade:366
+msgid "Paper color"
+msgstr "Papierfarbe"
+
+#: images/plotter.glade:379
+msgid "X origin"
+msgstr "Nullpunkt X"
+
+#: images/plotter.glade:392
+msgid ""
+"Define the initial x position of the pen after clearing the plotting area. "
+"Measured in millimeters from the top left corner."
+msgstr "Nullposition der X-Achse des Zeichenbereiches festlegen."
+
+#: images/plotter.glade:410
+msgid "Define the line width for plotting. Measured in millimeters."
+msgstr "Stiftdicke festlegen (in Millimetern)."
+
+#: images/plotter.glade:428
+msgid "Line width"
+msgstr "Linienbreite"
+
+#: images/plotter.glade:441
+msgid "Plot to PDF:"
+msgstr "In PDF-Datei plotten:"
+
+#: images/plotter.glade:455
+msgid "Delay between screen refreshes of the drawing area in milliseconds."
+msgstr ""
+"Pause zwischen dem Neuzeichnen des Zeichenbereiches auf dem Bildschirm (in "
+"Millisekunden)"
+
+#: images/plotter.glade:473
+msgid "Display refresh"
+msgstr "Refresh"
+
+#: images/plotter.glade:487
+msgid "Define the color to use for plotting."
+msgstr "Farbe des Stiftes festlegen."
+
+#: images/plotter.glade:501
+msgid "Pen color"
+msgstr "Stiftfarbe"
+
+#: images/plotter.glade:554
+msgid ""
+"Clear plotting area. When rendering to a PDF file a new page is created and "
+"plotting continues in the same file."
+msgstr ""
+"Zeichenbereich löschen. Beim Zeichnen in eine PDF-Datei wird eine neue Seite "
+"erzeugt und in der gleichen Datei weiter gezeichnet."
+
+#: images/plotter.glade:555
+msgid "gtk-clear"
+msgstr "gtk-clear"
+
+#: images/plotter.glade:568
+msgid "Save the plotted picture as PNG image file."
+msgstr "Die Zeichnung als PNG Bild-Datei speichern."
+
+#: images/plotter.glade:569
+msgid "gtk-save"
+msgstr "gtk-save"
 
 #: src/cmd/image.cc:105 src/kc/wav.cc:81
 msgid "KCemu: Select File..."
@@ -819,7 +913,7 @@ msgstr "Disketten-Datei `%s' aktiviert."
 msgid "Can't attach disk-file."
 msgstr "Kann Disketten-Datei nicht aktivieren."
 
-#: src/kc/kc.cc:252
+#: src/kc/kc.cc:254
 msgid ""
 "\n"
 "KCemu comes with ABSOLUTELY NO WARRANTY; for details run `kcemu --"
@@ -902,7 +996,7 @@ msgstr ""
 "  -V --viewlist:       Ausführliche Liste der emulierten Typen\n"
 "  -W --warranty:       Anzeige des Haftungsausschlusses\n"
 
-#: src/kc/kc.cc:319
+#: src/kc/kc.cc:321
 msgid ""
 "\n"
 "\t\t    GNU GENERAL PUBLIC LICENSE\n"
@@ -1534,7 +1628,7 @@ msgstr ""
 "   Wiederverwenden von Software im allgemeinen zu fördern.\n"
 "   \n"
 
-#: src/kc/kc.cc:581
+#: src/kc/kc.cc:583
 msgid ""
 "\n"
 "NO WARRANTY\n"
@@ -1601,7 +1695,7 @@ msgstr ""
 "über die Möglichkeit solcher Schäden unterrichtet worden war.\n"
 "\n"
 
-#: src/kc/kc.cc:608
+#: src/kc/kc.cc:610
 msgid ""
 "\n"
 "                     END OF TERMS AND CONDITIONS\n"
@@ -1962,95 +2056,95 @@ msgstr "128k ROM Bank"
 msgid "IRM Color Expansion"
 msgstr "IRM Color Expansion"
 
-#: src/kc/mod_list.cc:411
+#: src/kc/mod_list.cc:410
 msgid "Plotter XY4131"
 msgstr "Plotter XY4131"
 
-#: src/kc/mod_list.cc:419
+#: src/kc/mod_list.cc:417
 msgid "CPM-Z9 BOOT (c000h-c7ffh)"
 msgstr "CPM-Z9 BOOT (c000h-c7ffh)"
 
-#: src/kc/mod_list.cc:425
+#: src/kc/mod_list.cc:423
 msgid "CPM-Z9 Floppy"
 msgstr "CPM-Z9 Floppy"
 
-#: src/kc/mod_list.cc:431
+#: src/kc/mod_list.cc:429
 msgid "CPM-Z9 64k RAM"
 msgstr "CPM-Z9 64k RAM"
 
-#: src/kc/mod_list.cc:437
+#: src/kc/mod_list.cc:435
 msgid "M001: Digital In / Out"
 msgstr "M001: Digital In / Out"
 
-#: src/kc/mod_list.cc:444
+#: src/kc/mod_list.cc:442
 msgid "M003: V24"
 msgstr "M003: V24"
 
-#: src/kc/mod_list.cc:452
+#: src/kc/mod_list.cc:450
 msgid "M006: Basic"
 msgstr "M006: Basic"
 
-#: src/kc/mod_list.cc:459
+#: src/kc/mod_list.cc:457
 msgid "M008: Joystick"
 msgstr "M008: Joystick"
 
-#: src/kc/mod_list.cc:466
+#: src/kc/mod_list.cc:464
 msgid "M011: 64k RAM"
 msgstr "M011: 64k RAM"
 
-#: src/kc/mod_list.cc:473
+#: src/kc/mod_list.cc:471
 msgid "M012: Texor"
 msgstr "M012: Texor"
 
-#: src/kc/mod_list.cc:479
+#: src/kc/mod_list.cc:477
 msgid "M022: Expander RAM (16k)"
 msgstr "M022: Expander RAM (16k)"
 
-#: src/kc/mod_list.cc:486
+#: src/kc/mod_list.cc:484
 msgid "M026: Forth"
 msgstr "M026: Forth"
 
-#: src/kc/mod_list.cc:493
+#: src/kc/mod_list.cc:491
 msgid "M027: Development"
 msgstr "M027: Development"
 
-#: src/kc/mod_list.cc:499
+#: src/kc/mod_list.cc:497
 msgid "M032: 256k Segmented RAM"
 msgstr "M032: 256k Segmented RAM"
 
-#: src/kc/mod_list.cc:505
+#: src/kc/mod_list.cc:503
 msgid "M034: 512k Segmented RAM"
 msgstr "M034: 512k Segmented RAM"
 
-#: src/kc/mod_list.cc:511
+#: src/kc/mod_list.cc:509
 msgid "M035: 1M Segmented RAM"
 msgstr "M035: 1M Segmented RAM"
 
-#: src/kc/mod_list.cc:517
+#: src/kc/mod_list.cc:515
 msgid "M035x4: 4M RAM"
 msgstr "M035x4: 4M RAM"
 
-#: src/kc/mod_list.cc:523
+#: src/kc/mod_list.cc:521
 msgid "M036: 128k Segmented RAM"
 msgstr "M036: 128k Segmented RAM"
 
-#: src/kc/mod_list.cc:530
+#: src/kc/mod_list.cc:528
 msgid "M900: WordPro '86 (KC85/3)"
 msgstr "M900: WordPro '86 (KC85/3)"
 
-#: src/kc/mod_list.cc:537
+#: src/kc/mod_list.cc:535
 msgid "M901: WordPro '86 (KC85/4)"
 msgstr "M901: WordPro '86 (KC85/4)"
 
-#: src/kc/mod_list.cc:551
+#: src/kc/mod_list.cc:549
 msgid "Floppy Disk Basis F8"
 msgstr "Floppy Disk Basis F8"
 
-#: src/kc/mod_list.cc:560
+#: src/kc/mod_list.cc:558
 msgid "Floppy Disk Basis FC"
 msgstr "Floppy Disk Basis FC"
 
-#: src/kc/mod_list.cc:757
+#: src/kc/mod_list.cc:755
 msgid "Autostart"
 msgstr "Autostart"
 
@@ -3011,7 +3105,7 @@ msgstr "/Datei Exportieren"
 msgid "/Export Wav"
 msgstr "/WAV Exportieren"
 
-#: src/ui/gtk/ui_gtk.cc:773
+#: src/ui/gtk/ui_gtk.cc:776
 msgid "Info"
 msgstr "Info"
 
@@ -3075,9 +3169,6 @@ msgstr "ROM-Image Datei: '%s'. Die ROM-Größe muss %04xh (%d) Byte betragen."
 #~ "\n"
 #~ "KC85/2-4 haben den Standard-ROM mit der Version 2.0 im Slot FC, der "
 #~ "KC85/5 dagegen den erweiterten ROM mit der Versionsnummer 3.1."
-
-#~ msgid "gtk-save"
-#~ msgstr "gtk-save"
 
 #~ msgid "Z1013 Emulator"
 #~ msgstr "Z1013 Emulator"
