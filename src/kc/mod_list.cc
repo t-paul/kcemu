@@ -406,10 +406,8 @@ ModuleList::ModuleList(void)
   /*
    *  Plotter-Anschluss
    */
-#ifdef HOST_OS_LINUX
   m = new ModuleXY4131("XY4131");
   _mod_list.push_back(new ModuleListEntry(_("Plotter XY4131"), m, KC_TYPE_85_1_CLASS));
-#endif /* HOST_OS_LINUX */
 
   /*
    *  CPM-Z9 boot rom module (kc85/1)

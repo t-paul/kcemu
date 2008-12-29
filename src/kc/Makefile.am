@@ -26,7 +26,7 @@ AM_CPPFLAGS = \
 	$(SDL_CFLAGS) \
 	$(LIBGLADE_CFLAGS)
 
-LINUX_EXTRA_kcemu_SOURCES = mod_v24.cc mod_js.cc mod_4131.cc
+LINUX_EXTRA_kcemu_SOURCES = mod_v24.cc mod_js.cc
 MINGW_EXTRA_kcemu_SOURCES = kcemu.rc
 ALL_EXTRA_kcemu_SOURCES = $(LINUX_EXTRA_kcemu_SOURCES) $(MINGW_EXTRA_kcemu_SOURCES)
 
@@ -126,6 +126,7 @@ kcemu_SOURCES = \
 	mod_gdc.cc	\
 	mod_rtc.cc	\
 	mod_disk.cc	\
+	mod_4131.cc	\
 	mod_list.cc	\
 	tape.cc		\
 	disk.cc		\
