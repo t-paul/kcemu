@@ -52,6 +52,7 @@ kcemu_SOURCES = \
 	ctc9.cc		\
 	ctc_fdc.cc	\
 	pio_dio.cc	\
+	pio_vdip.cc	\
 	ctc_dio.cc	\
 	ctc_base.cc	\
 	cb_list.cc	\
@@ -77,6 +78,7 @@ kcemu_SOURCES = \
 	gdc.cc		\
 	vis.cc		\
 	svg.cc		\
+	vdip.cc		\
 	gide.cc		\
 	fdc.cc		\
 	fdc0s.cc	\
@@ -100,6 +102,7 @@ kcemu_SOURCES = \
 	ports6.cc	\
 	module.cc	\
 	mod_dio.cc	\
+	mod_vdip.cc	\
 	mod_ram.cc	\
 	mod_ram1.cc	\
 	mod_r64.cc	\
