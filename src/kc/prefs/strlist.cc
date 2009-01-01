@@ -38,3 +38,19 @@ StringList::StringList(string str, const char split_char)
 StringList::~StringList(void)
 {
 }
+
+string
+StringList::join(const char join_char)
+{
+  string ret;
+
+  for (StringList::iterator it = begin();it != end();it++)
+    {
+      if (ret.length() > 0)
+        ret += join_char;
+
+      ret += *it;
+    }
+
+  return ret;
+}

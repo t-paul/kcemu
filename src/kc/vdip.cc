@@ -21,6 +21,7 @@
 
 #include <sys/types.h>
 #include <sys/stat.h>
+#include <dirent.h>
 #include <unistd.h>
 
 #include "kc/system.h"
@@ -40,6 +41,7 @@ VDIP::VDIP(void) : Callback("Vinculum USB")
   _pio_ext = 0;
   _short_command_set = false;
   _file = NULL;
+  _cwd = new StringList("/data/t/kc-club/KC-Club/Homepage/DOWNLOAD/DISK151", '/');
 }
 
 VDIP::~VDIP(void)
@@ -206,17 +208,74 @@ VDIP::write_end(void)
           _short_command_set = false;
           send_prompt();
         }
+      else if ((strncmp(_input_buffer.c_str(), "CD ", 3) == 0) || ((_input_buffer.at(0) == CMD_CD) && (_input_buffer.at(1) == ' ')))
+        {
+          string dir = _input_buffer.substr(_input_buffer.find(' ') + 1);
+          printf("CD %s\n", dir.c_str());
+          if (strcmp(dir.c_str(), ".") == 0)
+            {
+              send_prompt();
+            }
+          else if ((strcmp(dir.c_str(), "..") == 0) && (_cwd->size() > 0))
+            {
+              _cwd->pop_back();
+              send_prompt();
+            }
+          else
+            {
+              struct stat buf;
+              string path = string("/") + _cwd->join('/') + "/" + dir;
+              if (stat(path.c_str(), &buf) == 0)
+                {
+                  _cwd->push_back(dir);
+                  send_prompt();
+                }
+              else
+                {
+                  send_error(ERR_COMMAND_FAILED);
+                }
+            }
+        }
       else if ((strcmp(_input_buffer.c_str(), "DIR") == 0) || ((_input_buffer.at(0) == CMD_DIR) && (_input_buffer.at(1) == 0x0d)))
         {
-          printf("DIR\n");
-          send_string("\r. DIR\r.. DIR\rAUTO.KCC\rBENNION.KCC\rDELIRO.KCC\rJUNGLE.KCC\r");
-          send_prompt();
+          string path = string("/") + _cwd->join('/');
+          printf("DIR (cwd = '%s')\n", path.c_str());
+          DIR *dir = opendir(path.c_str());
+          send_string("\r");
+          if (dir != NULL)
+            {
+              send_string(". DIR\r.. DIR\r");
+              while (242)
+                {
+                  struct dirent *dirent = readdir(dir);
+                  if (dirent == NULL)
+                    break;
+
+                  switch (dirent->d_type)
+                    {
+                    case DT_REG:
+                      send_string(dirent->d_name);
+                      send_string("\r");
+                      break;
+                    case DT_DIR:
+                      if ((strcmp(dirent->d_name, ".") != 0) && (strcmp(dirent->d_name, "..") != 0))
+                        {
+                          send_string(dirent->d_name);
+                          send_string(" DIR\r");
+                        }
+                      break;
+                    default:
+                      break;
+                    }
+                }
+              send_prompt();
+            }
         }
       else if ((_input_buffer.at(0) == CMD_DIR) && (_input_buffer.at(1) == ' '))
         {
           struct stat buf;
           printf("DIR FOR FILE: %s\n", _input_buffer.substr(2).c_str());
-          string filename = string("/data/t/kc-club/KC-Club/Homepage/DOWNLOAD/DISK151/") + _input_buffer.substr(2);
+          string filename = string("/") + _cwd->join('/') + "/" + _input_buffer.substr(2);
           if (stat(filename.c_str(), &buf) == 0)
             {
               send_string("\r");
@@ -248,7 +307,7 @@ VDIP::write_end(void)
       else if ((_input_buffer.at(0) == CMD_OPR) && (_input_buffer.at(1) == ' '))
         {
           printf("OPEN FOR READ: %s\n", _input_buffer.substr(2).c_str());
-          string filename = string("/data/t/kc-club/KC-Club/Homepage/DOWNLOAD/DISK151/") + _input_buffer.substr(2);
+          string filename = string("/") + _cwd->join('/') + "/" + _input_buffer.substr(2);
           _file = fopen(filename.c_str(), "rb");
           if (_file == NULL)
             send_error(ERR_COMMAND_FAILED);

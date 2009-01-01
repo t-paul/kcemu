@@ -32,6 +32,8 @@ class StringList : public list<string>
 public:
     StringList(string str, const char split_char = ',');
     virtual ~StringList(void);
+    
+    virtual string join(const char join_char);
 };
 
 #endif /* __kc_prefs_strlist_h */

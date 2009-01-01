@@ -28,6 +28,8 @@
 #include "kc/cb.h"
 #include "kc/pio.h"
 
+#include "kc/prefs/strlist.h"
+
 using namespace std;
 
 class VDIP : public Callback, public PIOCallbackInterface
@@ -35,6 +37,7 @@ class VDIP : public Callback, public PIOCallbackInterface
 private:
   enum {
     CMD_DIR = 0x01,
+    CMD_CD  = 0x02,
     CMD_CLF = 0x0a,
     CMD_RDF = 0x0b,
     CMD_OPR = 0x0e,
@@ -59,6 +62,7 @@ private:
   byte_t _pio_ext;
   bool _short_command_set;
   FILE *_file;
+  StringList *_cwd;
 
 private:
   void set_pio_ext_b(byte_t val);
