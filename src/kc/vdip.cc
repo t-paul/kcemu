@@ -19,6 +19,7 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
+#include <time.h>
 #include <dirent.h>
 #include <unistd.h>
 #include <sys/stat.h>
@@ -103,6 +104,13 @@ VDIP_CMD::add_hex(int digits, dword_t val)
   char buf[128];
   snprintf(buf, sizeof(buf), "%0*lx", digits, val);
   add_string(buf);
+}
+
+void
+VDIP_CMD::add_word(word_t val)
+{
+  add_char(val & 0xff);
+  add_char((val >> 8) & 0xff);
 }
 
 void
@@ -212,7 +220,9 @@ public:
       }
     else
       {
-        add_error(ERR_COMMAND_FAILED);
+        // ml-dos expects FI error in UGET
+        add_error(ERR_INVALID);
+        //add_error(ERR_COMMAND_FAILED);
       }
   }
 
@@ -363,7 +373,9 @@ public:
     FILE *f = fopen(filename.c_str(), "rb");
     if (f == NULL)
       {
-        add_error(ERR_COMMAND_FAILED);
+        // ml-dos expects FI error in UPUT
+        add_error(ERR_INVALID);
+        //add_error(ERR_COMMAND_FAILED);
       }
     else
       {
@@ -512,6 +524,137 @@ public:
   }
 };
 
+class VDIP_CMD_SEK : public VDIP_CMD
+{
+public:
+  VDIP_CMD_SEK(VDIP *vdip) : VDIP_CMD(vdip) { }
+  virtual ~VDIP_CMD_SEK(void) { }
+
+  void execute(void)
+  {
+    FILE *f = get_vdip()->get_file();
+    if (f == NULL)
+      {
+        add_error(ERR_INVALID);
+      }
+    else if (feof(f))
+      {
+        add_error(ERR_COMMAND_FAILED);
+      }
+    else
+      {
+        dword_t offset = get_dword_arg(0);
+        printf("SEEK IN FILE (to offset %lu)\n", offset);
+        if ((fseek(f, offset, SEEK_SET) != 0) || ((unsigned int)ftell(f) != offset))
+          add_error(ERR_COMMAND_FAILED);
+        else
+          add_prompt();
+      }
+  }
+};
+
+class VDIP_CMD_EMPTY : public VDIP_CMD
+{
+public:
+  VDIP_CMD_EMPTY(VDIP *vdip) : VDIP_CMD(vdip) { }
+  virtual ~VDIP_CMD_EMPTY(void) { }
+
+  void execute(void)
+  {
+    add_prompt();
+  }
+};
+
+class VDIP_CMD_SYNC : public VDIP_CMD
+{
+private:
+  byte_t _val;
+public:
+  VDIP_CMD_SYNC(VDIP *vdip, byte_t val) : VDIP_CMD(vdip), _val(val) { }
+  virtual ~VDIP_CMD_SYNC(void) { }
+
+  void execute(void)
+  {
+    add_char(_val);
+    add_char('\r');
+  }
+};
+
+class VDIP_CMD_IPH : public VDIP_CMD
+{
+private:
+  byte_t _val;
+public:
+  VDIP_CMD_IPH(VDIP *vdip) : VDIP_CMD(vdip) { }
+  virtual ~VDIP_CMD_IPH(void) { }
+
+  void execute(void)
+  {
+    get_vdip()->set_binary_mode(true);
+    add_prompt();
+  }
+};
+
+class VDIP_CMD_IPA : public VDIP_CMD
+{
+private:
+  byte_t _val;
+public:
+  VDIP_CMD_IPA(VDIP *vdip) : VDIP_CMD(vdip) { }
+  virtual ~VDIP_CMD_IPA(void) { }
+
+  void execute(void)
+  {
+    get_vdip()->set_binary_mode(false);
+    add_prompt();
+  }
+};
+
+class VDIP_CMD_DIRT : public VDIP_CMD
+{
+private:
+  byte_t _val;
+public:
+  VDIP_CMD_DIRT(VDIP *vdip) : VDIP_CMD(vdip) { }
+  virtual ~VDIP_CMD_DIRT(void) { }
+
+  dword_t get_datetime(timespec datetime)
+  {
+    struct tm buf;
+    localtime_r((time_t *)&datetime, &buf);
+    //printf("%04d-%02d-%02d %02d:%02d:%02d\n", buf.tm_year + 1900, buf.tm_mon + 1, buf.tm_mday, buf.tm_hour, buf.tm_min, buf.tm_sec);
+    return ((buf.tm_year - 80) << 25) | ((buf.tm_mon + 1) << 21) | (buf.tm_mday << 16) | (buf.tm_hour << 11) | (buf.tm_min << 5) | (buf.tm_sec / 2);
+  }
+  
+  void execute(void)
+  {
+    struct stat buf;
+    const char *arg = get_arg(0).c_str();
+    printf("DIR TIMES FOR FILE: '%s'\n", arg);
+    string filename = get_vdip()->get_path(arg);
+    if (stat(filename.c_str(), &buf) == 0)
+      {
+        // as we have no creation time, we use the modification time
+        dword_t ctime = get_datetime(buf.st_mtim);
+        word_t atime = get_datetime(buf.st_atim) >> 16;
+        dword_t mtime = get_datetime(buf.st_mtim);
+
+        add_string("\r");
+        add_string(arg);
+        add_char(' ');
+        add_dword(ctime);
+        add_word(atime);
+        add_dword(mtime);
+        add_char('\r');
+        add_prompt();
+      }
+    else
+      {
+        add_error(ERR_COMMAND_FAILED);
+      }
+  }
+};
+
 /*
 class VDIP_CMD_CD : public VDIP_CMD
 {
@@ -529,9 +672,10 @@ VDIP::VDIP(void) : Callback("Vinculum USB")
 {
   _pio = NULL;
   _input = true;
-  _reset = true;
+  _reset = false;
   _output = -1;
   _pio_ext = 0;
+  _binary_mode = true;
   _short_command_set = false;
   _file = NULL;
   _cwd = new StringList("/home/tp/VDIP", '/');
@@ -553,6 +697,18 @@ VDIP::set_short_command_set(bool val)
   _short_command_set = val;
 }
 
+bool
+VDIP::is_binary_mode(void) const
+{
+  return _binary_mode;
+}
+
+void
+VDIP::set_binary_mode(bool val)
+{
+  _binary_mode = val;
+}
+
 FILE *
 VDIP::get_file(void)
 {
@@ -569,6 +725,7 @@ void
 VDIP::register_pio(PIO *pio)
 {
   _pio = pio;
+  reset();
 }
 
 string
@@ -694,6 +851,14 @@ VDIP::map_extended_command(string cmd)
     return CMD_OPW;
   else if (strcmp(cmd.c_str(), "WRF") == 0)
     return CMD_WRF;
+  else if (strcmp(cmd.c_str(), "SEK") == 0)
+    return CMD_SEK;
+  else if (strcmp(cmd.c_str(), "IPH") == 0)
+    return CMD_IPH;
+  else if (strcmp(cmd.c_str(), "IPA") == 0)
+    return CMD_IPA;
+  else if (strcmp(cmd.c_str(), "DIRT") == 0)
+    return CMD_DIRT;
 
   return CMD_UNKNOWN;
 }
@@ -701,13 +866,18 @@ VDIP::map_extended_command(string cmd)
 VDIP_CMD *
 VDIP::decode_command(string buf)
 {
+  if (buf.length() == 0)
+    return new VDIP_CMD_EMPTY(this);
+
   StringList *list = new StringList(buf, ' ');
+  if (list->size() == 0)
+    return new VDIP_CMD_UNKNOWN(this);
 
   vdip_command_t code = CMD_UNKNOWN;
 
   string cmd = list->front();
   if (cmd.length() == 1)
-    code = (vdip_command_t)cmd.at(0);
+    code = (vdip_command_t)(cmd.at(0) & 0xff);
   else
     code = map_extended_command(list->front());
 
@@ -743,6 +913,24 @@ VDIP::decode_command(string buf)
       break;
     case CMD_IDD:
       vdip_cmd = new VDIP_CMD_IDD(this);
+      break;
+    case CMD_SEK:
+      vdip_cmd = new VDIP_CMD_SEK(this);
+      break;
+    case CMD_IPH:
+      vdip_cmd = new VDIP_CMD_IPH(this);
+      break;
+    case CMD_IPA:
+      vdip_cmd = new VDIP_CMD_IPA(this);
+      break;
+    case CMD_E:
+      vdip_cmd = new VDIP_CMD_SYNC(this, 'E');
+      break;
+    case CMD_e:
+      vdip_cmd = new VDIP_CMD_SYNC(this, 'e');
+      break;
+    case CMD_DIRT:
+      vdip_cmd = new VDIP_CMD_DIRT(this);
       break;
     default:
       vdip_cmd = new VDIP_CMD_UNKNOWN(this);

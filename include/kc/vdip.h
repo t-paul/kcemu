@@ -38,20 +38,26 @@ typedef enum
 {
   CMD_UNKNOWN = 0x00,
   
-  CMD_DIR = 0x01,
-  CMD_CD = 0x02,
-  CMD_WRF = 0x08,
-  CMD_OPW = 0x09,
-  CMD_CLF = 0x0a,
-  CMD_RDF = 0x0b,
-  CMD_OPR = 0x0e,
-  CMD_IDD = 0x0f,
-  CMD_SCS = 0x10,
-  CMD_ECS = 0x11,
-  CMD_FS = 0x12,
-  CMD_DSN = 0x2d,
-  CMD_DVL = 0x2e,
-  CMD_FSE = 0x93,
+  CMD_DIR  = 0x01,
+  CMD_CD   = 0x02,
+  CMD_WRF  = 0x08,
+  CMD_OPW  = 0x09,
+  CMD_CLF  = 0x0a,
+  CMD_RDF  = 0x0b,
+  CMD_OPR  = 0x0e,
+  CMD_IDD  = 0x0f,
+  CMD_SCS  = 0x10,
+  CMD_ECS  = 0x11,
+  CMD_FS   = 0x12,
+  CMD_SEK  = 0x28,
+  CMD_DSN  = 0x2d,
+  CMD_DVL  = 0x2e,
+  CMD_DIRT = 0x2f,
+  CMD_E    = 0x45,
+  CMD_e    = 0x65,
+  CMD_IPA  = 0x90,
+  CMD_IPH  = 0x91,
+  CMD_FSE  = 0x93,
   CMD_IDDE = 0x94,
 } vdip_command_t;
 
@@ -84,6 +90,7 @@ public:
   virtual void add_error(vdip_error_t error);
   virtual void add_char(int c);
   virtual void add_hex(int digits, dword_t val);
+  virtual void add_word(word_t val);
   virtual void add_dword(dword_t val);
   virtual void add_string(const char *text);
 
@@ -111,6 +118,7 @@ private:
   string _output_buffer;
   byte_t _pio_ext;
   bool _short_command_set;
+  bool _binary_mode;
   FILE *_file;
   StringList *_cwd;
 
@@ -123,6 +131,9 @@ private:
 public:
   VDIP(void);
   virtual ~VDIP(void);
+
+  virtual bool is_binary_mode(void) const;
+  virtual void set_binary_mode(bool val);
 
   virtual bool is_short_command_set(void) const;
   virtual void set_short_command_set(bool val);

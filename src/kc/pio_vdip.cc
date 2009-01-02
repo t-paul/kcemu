@@ -121,8 +121,8 @@ PIO_VDIP::change_B(byte_t changed, byte_t val)
       else
         vdip->write_end(); // WR# H->L
     }
-  if ((changed & 0x40) && (val & 0x40)) // RESET H->L
-    {
-      vdip->reset();
-    }
+//  if ((changed & 0x40) && (val & 0x40)) // RESET H->L
+//    {
+//      vdip->reset();
+//    }
 }
