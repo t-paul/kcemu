@@ -88,6 +88,7 @@ GLADE_XML = \
         dialog.glade \
 	main.glade \
         disk.glade \
+        vdip.glade \
         help.glade \
         keyboard.glade \
         module.glade \

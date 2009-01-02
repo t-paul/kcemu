@@ -1,6 +1,6 @@
 /*
  *  KCemu -- the KC 85/3 and KC 85/4 Emulator
- *  Copyright (C) 1997-2008 Torsten Paul
+ *  Copyright (C) 1997-2009 Torsten Paul
  *
  *  $Id$
  *
@@ -19,22 +19,44 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-#ifndef __kc_prefs_strlist_h
-#define __kc_prefs_strlist_h
+#ifndef __ui_gtk_vdip_h
+#define __ui_gtk_vdip_h
 
-#include <list>
-#include <string>
+#include <gtk/gtk.h>
 
-using namespace std;
+#include "kc/system.h"
 
-class StringList : public list<string>
+#include "ui/gtk/window.h"
+
+class VDIPWindow : public UI_Gtk_Window
 {
-public:
-    StringList();
-    StringList(string str, const char split_char = ',');
-    virtual ~StringList(void);
-    
-    virtual string join(const char join_char);
+ private:
+  struct {
+    GtkWidget *vbox;
+    GtkWidget *table;
+    GtkWidget *label[2];
+    GtkWidget *combo[2];
+    GtkWidget *browse[2];
+    GtkWidget *eject[2];
+    GtkWidget *separator;
+    GtkWidget *close;
+    guint combo_signal_id[2];
+  } _w;
+
+  CMD *_cmd_attach;
+  CMD *_cmd_update;
+  CMD *_cmd_window_toggle;
+
+ protected:
+  void init(void);
+
+  static void sf_vdip_attach(GtkWidget *widget, gpointer data);
+
+ public:
+  VDIPWindow(const char *glade_xml_file);
+  virtual ~VDIPWindow(void);
+
+  virtual void set_name(int idx, const char *name);
 };
 
-#endif /* __kc_prefs_strlist_h */
+#endif /* __ui_gtk_vdip_h */

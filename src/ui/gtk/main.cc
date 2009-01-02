@@ -259,6 +259,7 @@ MainWindow::init(void) {
     wire_menu_item("menuitem_save",            "<alt>S", "ui-save-memory-window-toggle");
     wire_menu_item("menuitem_tape",            "<alt>T", "ui-tape-window-toggle");
     wire_menu_item("menuitem_disk",            "<alt>D", "ui-disk-window-toggle");
+    wire_menu_item("menuitem_vdip",            "<alt>V", "ui-vdip-window-toggle");
     wire_menu_item("menuitem_module",          "<alt>M", "ui-module-window-toggle");
     wire_menu_item("menuitem_audio",           "<alt>U", "ui-wav-window-toggle");
     wire_menu_item("menuitem_reset",           "<alt>R", "emu-reset");

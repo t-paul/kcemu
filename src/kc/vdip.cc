@@ -33,10 +33,86 @@
 #include "kc/z80.h"
 #include "kc/vdip.h"
 
-VDIP_CMD::VDIP_CMD(VDIP *vdip)
+#include "cmd/cmd.h"
+
+class CMD_vdip_attach : public CMD
+{
+private:
+  VDIP *_vdip;
+  static const char * _path;
+
+protected:
+  int get_slot_no(CMD_Args *args)
+  {
+    int n = 0;
+
+    if (args && args->has_arg("slot"))
+      n = args->get_int_arg("slot");
+
+    return n;
+  }
+
+public:
+  CMD_vdip_attach(VDIP *vdip) : CMD("vdip-attach")
+  {
+    _vdip = vdip;
+    register_cmd("vdip-attach", 0);
+    register_cmd("vdip-detach", 2);
+  }
+
+  void execute(CMD_Args *args, CMD_Context context)
+    {
+      const char *filename;
+
+      filename = NULL;
+      switch (context)
+        {
+          /*
+           *  vdip-attach
+           */
+        case 0:
+          if (!args)
+            args = new CMD_Args();
+          filename = args->get_string_arg("filename");
+          if (!filename)
+            {
+              args->set_string_arg("ui-file-select-title",
+                                   _("Select root directory..."));
+	      if (_path)
+		args->set_string_arg("ui-file-select-path", _path);
+              args->add_callback("ui-file-select-CB-ok", this, 1);
+              CMD_EXEC_ARGS("ui-file-select", args);
+              return;
+            }
+          break;
+          /*
+           *  ui-file-select-CB-ok
+           */
+        case 1:
+          if (args)
+            filename = args->get_string_arg("filename");
+          break;
+          /*
+           *  vdip-detach
+           */
+        case 2:
+          if (get_slot_no(args) == 0)
+            _vdip->set_root("");
+          return;
+        }
+
+      if (filename)
+        _vdip->set_root(filename);
+    }
+};
+
+const char * CMD_vdip_attach::_path = NULL;
+
+VDIP_CMD::VDIP_CMD(VDIP *vdip, bool check_disk)
 {
   _vdip = vdip;
   _args = NULL;
+  _check_disk = check_disk;
 }
 
 VDIP_CMD::~VDIP_CMD(void)
@@ -88,6 +164,9 @@ VDIP_CMD::add_error(vdip_error_t error)
       break;
     case ERR_NO_UPGRADE:
       add_string(get_vdip()->is_short_command_set() ? "NU\r" : "No Upgrade\r");
+      break;
+    case ERR_NO_DISK:
+      add_string(get_vdip()->is_short_command_set() ? "ND\r" : "No Disk\r");
       break;
     }
 }
@@ -176,6 +255,15 @@ VDIP_CMD::get_response(string input)
 }
 
 void
+VDIP_CMD::exec(void)
+{
+  if (!get_vdip()->has_disk())
+    add_error(ERR_NO_DISK);
+  else
+    execute();
+}
+
+void
 VDIP_CMD::handle_input(byte_t data)
 {
 }
@@ -192,7 +280,7 @@ public:
 class VDIP_CMD_DIR : public VDIP_CMD
 {
 public:
-  VDIP_CMD_DIR(VDIP *vdip) : VDIP_CMD(vdip) { }
+  VDIP_CMD_DIR(VDIP *vdip) : VDIP_CMD(vdip, true) { }
   virtual ~VDIP_CMD_DIR(void) { }
 
   void execute(void)
@@ -234,7 +322,9 @@ public:
     add_string("\r");
     if (dir != NULL)
       {
-        add_string(". DIR\r.. DIR\r");
+        if (!get_vdip()->is_root())
+          add_string(". DIR\r.. DIR\r");
+        
         while (242)
           {
             struct dirent *dirent = readdir(dir);
@@ -266,7 +356,7 @@ public:
 class VDIP_CMD_CD : public VDIP_CMD
 {
 public:
-  VDIP_CMD_CD(VDIP *vdip) : VDIP_CMD(vdip) { }
+  VDIP_CMD_CD(VDIP *vdip) : VDIP_CMD(vdip, true) { }
   virtual ~VDIP_CMD_CD(void) { }
 
   void execute(void)
@@ -337,29 +427,29 @@ public:
 class VDIP_CMD_CLF : public VDIP_CMD
 {
 public:
-  VDIP_CMD_CLF(VDIP *vdip) : VDIP_CMD(vdip) { }
+  VDIP_CMD_CLF(VDIP *vdip) : VDIP_CMD(vdip, true) { }
   virtual ~VDIP_CMD_CLF(void) { }
 
   void execute(void)
   {
     printf("CLOSE FILE: '%s'\n", get_arg(0).c_str());
     if (vdip->get_file() == NULL)
-    {
-      add_error(ERR_COMMAND_FAILED);
-    }
+      {
+        add_error(ERR_COMMAND_FAILED);
+      }
     else
-    {
-      fclose(get_vdip()->get_file());
-      add_prompt();
-      get_vdip()->set_file(NULL);
+      {
+        fclose(get_vdip()->get_file());
+        add_prompt();
+        get_vdip()->set_file(NULL);
+      }
     }
-  }
 };
 
 class VDIP_CMD_OPR : public VDIP_CMD
 {
 public:
-  VDIP_CMD_OPR(VDIP *vdip) : VDIP_CMD(vdip) { }
+  VDIP_CMD_OPR(VDIP *vdip) : VDIP_CMD(vdip, true) { }
   virtual ~VDIP_CMD_OPR(void) { }
 
   void execute(void)
@@ -388,7 +478,7 @@ public:
 class VDIP_CMD_RDF : public VDIP_CMD
 {
 public:
-  VDIP_CMD_RDF(VDIP *vdip) : VDIP_CMD(vdip) { }
+  VDIP_CMD_RDF(VDIP *vdip) : VDIP_CMD(vdip, true) { }
   virtual ~VDIP_CMD_RDF(void) { }
 
   void execute(void)
@@ -442,7 +532,7 @@ public:
 class VDIP_CMD_OPW : public VDIP_CMD
 {
 public:
-  VDIP_CMD_OPW(VDIP *vdip) : VDIP_CMD(vdip) { }
+  VDIP_CMD_OPW(VDIP *vdip) : VDIP_CMD(vdip, true) { }
   virtual ~VDIP_CMD_OPW(void) { }
 
   void execute(void)
@@ -483,7 +573,7 @@ public:
               }
           }
       }
-    }
+  }
 };
 
 class VDIP_CMD_WRF : public VDIP_CMD
@@ -492,7 +582,7 @@ private:
   dword_t _wrf_len;
 
 public:
-  VDIP_CMD_WRF(VDIP *vdip) : VDIP_CMD(vdip) { }
+  VDIP_CMD_WRF(VDIP *vdip) : VDIP_CMD(vdip, true) { }
   virtual ~VDIP_CMD_WRF(void) { }
 
   void execute(void)
@@ -527,7 +617,7 @@ public:
 class VDIP_CMD_SEK : public VDIP_CMD
 {
 public:
-  VDIP_CMD_SEK(VDIP *vdip) : VDIP_CMD(vdip) { }
+  VDIP_CMD_SEK(VDIP *vdip) : VDIP_CMD(vdip, true) { }
   virtual ~VDIP_CMD_SEK(void) { }
 
   void execute(void)
@@ -556,7 +646,7 @@ public:
 class VDIP_CMD_EMPTY : public VDIP_CMD
 {
 public:
-  VDIP_CMD_EMPTY(VDIP *vdip) : VDIP_CMD(vdip) { }
+  VDIP_CMD_EMPTY(VDIP *vdip) : VDIP_CMD(vdip, true) { }
   virtual ~VDIP_CMD_EMPTY(void) { }
 
   void execute(void)
@@ -615,7 +705,7 @@ class VDIP_CMD_DIRT : public VDIP_CMD
 private:
   byte_t _val;
 public:
-  VDIP_CMD_DIRT(VDIP *vdip) : VDIP_CMD(vdip) { }
+  VDIP_CMD_DIRT(VDIP *vdip) : VDIP_CMD(vdip, true) { }
   virtual ~VDIP_CMD_DIRT(void) { }
 
   dword_t get_datetime(timespec datetime)
@@ -671,14 +761,11 @@ public:
 VDIP::VDIP(void) : Callback("Vinculum USB")
 {
   _pio = NULL;
-  _input = true;
-  _reset = false;
-  _output = -1;
-  _pio_ext = 0;
-  _binary_mode = true;
-  _short_command_set = false;
   _file = NULL;
-  _cwd = new StringList("/home/tp/VDIP", '/');
+  _root = "";
+  _cwd = new StringList();
+  _attach_cmd = new CMD_vdip_attach(this);
+  reset();
 }
 
 VDIP::~VDIP(void)
@@ -710,7 +797,7 @@ VDIP::set_binary_mode(bool val)
 }
 
 FILE *
-VDIP::get_file(void)
+VDIP::get_file(void) const
 {
   return _file;
 }
@@ -729,16 +816,57 @@ VDIP::register_pio(PIO *pio)
 }
 
 string
+VDIP::get_root(void) const
+{
+  return _root;
+}
+
+void
+VDIP::set_root(string root)
+{
+  _root = root;
+
+  if (_pio)
+    {
+      if (has_disk())
+        _output_buffer = is_short_command_set() ? "DD1\r" : "Device Detected P1\r";
+      else
+        _output_buffer = is_short_command_set() ? "DR1\r" : "Device Removed P1\r";
+
+      set_pio_ext_b(0x02);
+      z80->addCallback(20000, this, NULL);
+    }
+
+  CMD_Args *args = new CMD_Args();
+  args->set_int_arg("slot", 0);
+  args->set_string_arg("filename", _root.c_str());
+  CMD_EXEC_ARGS("ui-vdip-update-MSG", args);
+  delete args;
+}
+
+bool
+VDIP::has_disk(void)
+{
+  return !_root.empty();
+}
+
+bool
+VDIP::is_root(void)
+{
+  return _cwd->size() == 0;
+}
+
+string
 VDIP::get_cwd(void) const
 {
-  string cwd = string("/") + _cwd->join('/');
+  string cwd = get_root() + "/" + _cwd->join('/');
   return cwd;
 }
 
 string
 VDIP::get_path(string dir) const
 {
-  string path = string("/") + _cwd->join('/') + "/" + dir;
+  string path = get_cwd() + "/" + dir;
   return path;
 }
 
@@ -772,10 +900,30 @@ void
 VDIP::reset(void)
 {
   _reset = false;
-  _output_buffer = "\rVer 03.60VDAPF On-Line:\r";
+  _binary_mode = true;
+  _short_command_set = false;
+
+  _input_buffer = "";
+
   _input = false;
-  set_pio_ext_b(0x02);
-  z80->addCallback(20000, this, NULL);
+  _output = -1;
+  _output_buffer = "\rVer 03.60VDAPF On-Line:\r";
+
+  _pio_ext = 0;
+
+  _cwd->clear();
+
+  if (_file)
+    {
+      fclose(_file);
+      _file = NULL;
+    }
+
+  if (_pio)
+    {
+      set_pio_ext_b(0x02);
+      z80->addCallback(20000, this, NULL);
+    }
 }
 
 byte_t
@@ -971,7 +1119,7 @@ VDIP::write_end(void)
       printf("\n");
 
       _cmd = decode_command(_input_buffer);
-      _cmd->execute();
+      _cmd->exec();
     }
 
   if (_cmd != NULL)

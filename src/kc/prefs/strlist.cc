@@ -21,6 +21,10 @@
 
 #include "kc/prefs/strlist.h"
 
+StringList::StringList()
+{
+}
+
 StringList::StringList(string str, const char split_char)
 {
     string::size_type lastPos = str.find_first_not_of(split_char, 0);

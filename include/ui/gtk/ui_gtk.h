@@ -70,6 +70,7 @@ protected:
     UI_Gtk_Window *_tape_window;
     UI_Gtk_Window *_tape_add_window;
     UI_Gtk_Window *_disk_window;
+    UI_Gtk_Window *_vdip_window;
     UI_Gtk_Window *_module_window;
     UI_Gtk_Window *_keyboard_window;
     UI_Gtk_Window *_info_window;

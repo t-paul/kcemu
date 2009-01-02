@@ -72,6 +72,7 @@ typedef enum
   ERR_DIR_NOT_EMPTY,
   ERR_FILENAME_INVALID,
   ERR_NO_UPGRADE,
+  ERR_NO_DISK,
 } vdip_error_t;
 
 class VDIP_CMD {
@@ -79,9 +80,13 @@ private:
   VDIP *_vdip;
   string _response;
   StringList *_args;
+  bool _check_disk;
+
+protected:
+  virtual void execute(void) = 0;
 
 public:
-  VDIP_CMD(VDIP *vdip);
+  VDIP_CMD(VDIP *vdip, bool check_disk = false);
   virtual ~VDIP_CMD(void);
 
   virtual VDIP *get_vdip(void);
@@ -100,7 +105,7 @@ public:
   virtual void set_args(StringList *args);
   virtual string get_response(string input);
 
-  virtual void execute(void) = 0;
+  virtual void exec(void);
   virtual void handle_input(byte_t input);
 };
 
@@ -120,7 +125,9 @@ private:
   bool _short_command_set;
   bool _binary_mode;
   FILE *_file;
+  string _root;
   StringList *_cwd;
+  CMD *_attach_cmd;
 
 private:
   void set_pio_ext_b(byte_t val);
@@ -138,9 +145,15 @@ public:
   virtual bool is_short_command_set(void) const;
   virtual void set_short_command_set(bool val);
 
-  virtual FILE * get_file(void);
+  virtual FILE * get_file(void) const;
   virtual void set_file(FILE *file);
-  
+
+  virtual string get_root(void) const;
+  virtual void set_root(string root);
+
+  virtual bool is_root(void);
+  virtual bool has_disk(void);
+
   virtual string get_cwd(void) const;
   virtual string get_path(string dir) const;
   virtual void chdir_up(void);
