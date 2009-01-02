@@ -153,11 +153,10 @@ FDC4::out(word_t addr, byte_t val)
       break;
     case 0xf8: // D004 (KC85/4)
       DBG(2, form("KCemu/FDC/out_F8",
-                  "FDC::out(): %04xh TC %02x\n",
+                  "FDC::out(): %04xh Terminal Count %02x\n",
                   r.PC.D, val));
-      if (val == 0xc0) // kc85/4
-	set_state(FDC_STATE_RESULT);
 
+      set_state(FDC_STATE_RESULT);
       set_input_gate(0x40, 0x00);
       break;
     default:
