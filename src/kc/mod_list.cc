@@ -503,6 +503,14 @@ ModuleList::ModuleList(void)
   m = new ModuleROM(kc85_vdip_rom.c_str(), "VDIPDRV", 0x0800, 0xfb);
   _mod_list.push_back(new ModuleListEntry(_("VDIP: Vinculum USB ROM"), m, KC_TYPE_85_2_CLASS));
 
+  string kc85_vdip2_42_rom = kc85_romdir + "/vdip2_42.rom";
+  m = new ModuleROM(kc85_vdip2_42_rom.c_str(), "VDIPDRV2_42", 0x1000, 0xfb);
+  _mod_list.push_back(new ModuleListEntry(_("VDIP2: Vinculum USB ROM (CAOS 4.2)"), m, KC_TYPE_85_2_CLASS));
+
+  string kc85_vdip2_44_rom = kc85_romdir + "/vdip2_44.rom";
+  m = new ModuleROM(kc85_vdip2_44_rom.c_str(), "VDIPDRV2_44", 0x1000, 0xfb);
+  _mod_list.push_back(new ModuleListEntry(_("VDIP2: Vinculum USB ROM (CAOS 4.4)"), m, KC_TYPE_85_2_CLASS));
+
   /*
    *  RAM module 256k (kc85/2-4)
    */
