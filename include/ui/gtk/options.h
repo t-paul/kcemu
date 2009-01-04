@@ -119,6 +119,11 @@ private:
         GtkComboBox    *combobox_display_debug;
         GtkComboBox    *combobox_module[NR_OF_MODULES];
         GtkCheckButton *check_button_modules;
+
+        GtkComboBoxEntry *media_comboboxentry_vdip1;
+        GtkButton        *media_button_vdip1_open;
+        GtkButton        *media_button_vdip1_close;
+        GtkCheckButton   *media_check_button_vdip1;
         
         GtkLabel         *roms_label[NR_OF_ROMS];
         GtkComboBoxEntry *roms_comboboxentry[NR_OF_ROMS];

@@ -940,7 +940,6 @@ void
 OptionsWindow::apply_modules_settings(kc_type_t kc_type) {
     const char *key = "modules";
     ProfileValue *modules = get_current_profile_value(key);
-    string modules_list = modules == NULL ? "" : modules->get_string_value();
     
     StringList list(modules == NULL ? "" : modules->get_string_value());
     
@@ -1239,6 +1238,7 @@ OptionsWindow::init(void) {
     wire_check_button("disk_4",      "/disks/", "media_check_button_disk4", "media_filechooserbutton_disk4", "media_button_disk4_clear");
     wire_check_button("hard_disk_1",      NULL, "media_check_button_hd1",   "media_filechooserbutton_hd1",   "media_button_hd1_clear");
     wire_check_button("hard_disk_2",      NULL, "media_check_button_hd2",   "media_filechooserbutton_hd2",   "media_button_hd2_clear");
+    wire_check_button("vdip_root_1",      NULL, "media_check_button_vdip1", "media_filechooserbutton_vdip1", "media_button_vdip1_clear");
     
     _w.check_button_display_scale = GTK_CHECK_BUTTON(get_widget("display_check_button_scale"));
     _w.check_button_display_effects = GTK_CHECK_BUTTON(get_widget("display_check_button_effects"));
