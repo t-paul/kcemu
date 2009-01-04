@@ -79,6 +79,7 @@ kcemu_SOURCES = \
 	vis.cc		\
 	svg.cc		\
 	vdip.cc		\
+	vdip_cmd.cc	\
 	gide.cc		\
 	fdc.cc		\
 	fdc0s.cc	\

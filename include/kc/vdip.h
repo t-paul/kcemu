@@ -36,8 +36,6 @@ class VDIP;
 
 typedef enum
 {
-  CMD_UNKNOWN = 0x00,
-  
   CMD_DIR  = 0x01,
   CMD_CD   = 0x02,
   CMD_WRF  = 0x08,
@@ -59,6 +57,9 @@ typedef enum
   CMD_IPH  = 0x91,
   CMD_FSE  = 0x93,
   CMD_IDDE = 0x94,
+
+  CMD_EMPTY   = 0xfffe,
+  CMD_UNKNOWN = 0xffff,
 } vdip_command_t;
 
 typedef enum
@@ -107,6 +108,8 @@ public:
 
   virtual void exec(void);
   virtual void handle_input(byte_t input);
+
+  static VDIP_CMD * create_command(VDIP *vdip, vdip_command_t code);
 };
 
 class VDIP : public Callback, public PIOCallbackInterface
