@@ -1,6 +1,6 @@
 ## Process this file with automake to produce Makefile.in
 
-SUBDIRS = prefs kramermc muglerpc vcs80 c80
+SUBDIRS = prefs kramermc muglerpc vcs80 c80 bcs3
 
 bin_PROGRAMS = kcemu
 
@@ -169,6 +169,7 @@ kcemu_LDADD = \
 	muglerpc/libmuglerpc.a		\
 	vcs80/libvcs80.a		\
 	c80/libc80.a			\
+	bcs3/libbcs3.a			\
 	../z80core/libz80.a		\
 	../z80core2/libz80.a		\
 	../fileio/libfileio.a		\

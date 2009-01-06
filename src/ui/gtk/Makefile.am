@@ -49,6 +49,7 @@ libui_gtk_a_SOURCES = \
 	ui_gtk_muglerpc.cc	\
 	ui_gtk_vcs80.cc		\
 	ui_gtk_c80.cc		\
+	ui_gtk_bcs3.cc		\
 	cmd.cc			\
 	window.cc		\
 	main.cc			\

@@ -75,6 +75,7 @@
 #include "ui/gtk/ui_gtk_muglerpc.h"
 #include "ui/gtk/ui_gtk_vcs80.h"
 #include "ui/gtk/ui_gtk_c80.h"
+#include "ui/gtk/ui_gtk_bcs3.h"
 
 #include "ui/generic/ui_0.h"
 
@@ -822,6 +823,9 @@ UI_Gtk::create_ui(void) {
             break;
         case KC_TYPE_C80:
             _ui = new UI_Gtk_C80();
+            break;
+        case KC_TYPE_BCS3:
+            _ui = new UI_Gtk_BCS3();
             break;
         case KC_TYPE_ALL:
         case KC_TYPE_NONE:

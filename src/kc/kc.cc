@@ -152,6 +152,10 @@
 #include "kc/c80/display.h"
 #include "kc/c80/keyboard.h"
 
+#include "kc/bcs3/ctc.h"
+#include "kc/bcs3/memory.h"
+#include "kc/bcs3/keyboard.h"
+
 #ifdef USE_UI_GTK
 # include "ui/gtk/ui_gtk.h"
 #endif /* USE_UI_GTK */
@@ -689,6 +693,9 @@ warranty(char *argv0)
 void
 attach_tape(void)
 {
+  if (tape == NULL)
+    return;
+  
   if (kcemu_tape != 0)
     {
       tape->attach(kcemu_tape);
@@ -1334,6 +1341,11 @@ main(int argc, char **argv)
 	  pio->register_callback_A_out(display_c80);
 	  pio->register_callback_B_out(display_c80);
 	  break;
+        case KC_TYPE_BCS3:
+          ctc = new CTCBCS3;
+          memory = new MemoryBCS3;
+          keyboard = new KeyboardBCS3;
+          break;
 	default:
 	  DBG(0, form("KCemu/internal_error",
 		      "KCemu: setup with undefined system type\n"));
@@ -1454,6 +1466,9 @@ main(int argc, char **argv)
 	  daisy->add_last(pio);
 	  daisy->add_last(pio2);
 	  break;
+        case KC_TYPE_BCS3:
+	  portg = ports->register_ports("CTC", 0xf8, 4, ctc, 10);
+          break;
 	default:
 	  DBG(0, form("KCemu/internal_error",
 		      "KCemu: setup with undefined system type\n"));
