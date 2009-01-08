@@ -27,6 +27,7 @@
 #include "kc/z80.h"
 
 #include "kc/bcs3/ctc.h"
+#include "kc/bcs3/graphic.h"
 
 #include "libdbg/dbg.h"
 
@@ -41,23 +42,32 @@ CTCBCS3::~CTCBCS3(void)
 byte_t
 CTCBCS3::in(word_t addr)
 {
-  DBG(2, form("KCemu/CTC/bcs3/in",
-              "CTCBCS3::in(): addr = %04x\n",
-              addr));
+  byte_t val = 0xff;
 
   switch (addr & 3)
     {
     case 0:
-      return c_in(0);
+      val = c_in(0);
+      break;
     case 1:
-      return c_in(1);
+      val = c_in(1);
+      break;
     case 2:
-      return c_in(2);
+      val = c_in(2);
+      DBG(2, form("KCemu/CTC/bcs3/read_line_counter",
+                  "CTCBCS3::in(): %04xh [%8lld]: addr = %04x, val = %02x\n",
+                  z80->getPC(), z80->getCounter(), addr, val));
+      break;
     case 3:
-      return c_in(3);
+      val = c_in(3);
+      break;
     }
 
-  return 0; // shouldn't be reached
+  DBG(2, form("KCemu/CTC/bcs3/in",
+              "CTCBCS3::in(): addr = %04x, val = %02x\n",
+              addr, val));
+
+  return val;
 }
 
 void
@@ -87,21 +97,23 @@ CTCBCS3::out(word_t addr, byte_t val)
 bool
 CTCBCS3::irq_0(void)
 {
-  //printf("CTCBCS3::irq_0()\n");
+  graphic_bcs3->increment_line_counter();
+  trigger(1);
   return true;
 }
 
 bool
 CTCBCS3::irq_1(void)
 {
-  //printf("CTCBCS3::irq_1()\n");
+  graphic_bcs3->reset_line_counter();
+  trigger(2);
   return true;
 }
 
 bool
 CTCBCS3::irq_2(void)
 {
-  //printf("CTCBCS3::irq_2()\n");
+  graphic_bcs3->retrace();
   return true;
 }
 

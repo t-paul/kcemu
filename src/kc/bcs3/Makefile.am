@@ -6,5 +6,6 @@ INCLUDES = -I../../../include
 
 libbcs3_a_SOURCES = \
 	keyboard.cc \
+	graphic.cc \
 	memory.cc \
 	ctc.cc

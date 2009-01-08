@@ -154,6 +154,7 @@
 
 #include "kc/bcs3/ctc.h"
 #include "kc/bcs3/memory.h"
+#include "kc/bcs3/graphic.h"
 #include "kc/bcs3/keyboard.h"
 
 #ifdef USE_UI_GTK
@@ -214,6 +215,7 @@ VIS           *vis;
 SVG           *svg;
 Poly880       *poly880;
 DisplayC80    *display_c80;
+GraphicBCS3   *graphic_bcs3;
 
 Z80_FDC         *fdc_z80;
 FloppyIO        *fdc_io;
@@ -1185,6 +1187,7 @@ main(int argc, char **argv)
       vis = NULL;
       svg = NULL;
       poly880 = NULL;
+      graphic_bcs3 = NULL;
       pio = pio2 = NULL;
       ctc = ctc2 = NULL;
 
@@ -1345,6 +1348,7 @@ main(int argc, char **argv)
           ctc = new CTCBCS3;
           memory = new MemoryBCS3;
           keyboard = new KeyboardBCS3;
+          graphic_bcs3 = new GraphicBCS3;
           break;
 	default:
 	  DBG(0, form("KCemu/internal_error",
@@ -1468,6 +1472,7 @@ main(int argc, char **argv)
 	  break;
         case KC_TYPE_BCS3:
 	  portg = ports->register_ports("CTC", 0xf8, 4, ctc, 10);
+	  daisy->add_last(ctc);
           break;
 	default:
 	  DBG(0, form("KCemu/internal_error",

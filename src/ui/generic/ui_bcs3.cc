@@ -30,7 +30,7 @@ UI_BCS3::UI_BCS3(void)
 {
   int a;
 
-  set_real_screen_size(40 * 8 + 32, 24 * 8 + 32);
+  set_real_screen_size(40 * 8 + 32, 30 * 8 + 32);
 
   _dirty_size = (get_real_width() * get_real_height()) / 64;
   _dirty = new byte_t[_dirty_size];
@@ -66,12 +66,16 @@ UI_BCS3::generic_update(Scanline *scanline, MemAccess *memaccess, bool clear_cac
 
   memset(_dirty, 1, _dirty_size);
 
-  for (int y = 0;y < 24;y++)
+  bool se31 = memory->memRead8(0x01b0) == '3';
+  int rows = se31 ? 29 : 12;
+  int cols = se31 ? 29 : 27;
+  int base = se31 ? 0x3c80 : 0x3c50;
+  for (int y = 0;y < rows;y++)
     {
-      for (int x = 0;x < 30;x++)
+      for (int x = 0;x < cols;x++)
         {
-          int c = memory->memRead8(0x3c80 + 30 * y + x);
-	  byte_t *chr_ptr = chr + 8 * c;
+          int c = memory->memRead8(base + (cols + 1) * y + x);
+	  byte_t *chr_ptr = chr + 8 * (c & 0x7f);
 	  for (int a = 0;a < 8;a++)
 	      generic_put_pixels(ptr + width * a + (8 * x), chr_ptr[a]);
         }

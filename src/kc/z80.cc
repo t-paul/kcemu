@@ -310,8 +310,8 @@ Z80::run(void)
       //if (_regs.PC.W <= 0x8000)
       //z80->printPC(); cout << endl;
 
-      //if (_regs.PC.W == 0x0170)
-      //z80->debug(true);
+//      if (_regs.PC.W == 0x04e)
+//        z80->debug(true);
 
       if (_singlestep)
 	{
@@ -342,70 +342,77 @@ Z80::run(void)
 	    debug(false);
 	}
 
-      _regs.ICount = 0;
-      ExecZ80(&_regs);
-
       if (_enable_floppy_cpu && fdc_z80)
 	fdc_z80->execute();
 
-      iff = _regs.IFF & 1;
-      if (iff_old != iff)
-	{
-	  iff_old = iff;
-	  //cout << hex << getPC() << "h irqs are now: " << (iff ? "on" : "off") << endl;
-	}
-
-      if ((_regs.IRequest != INT_NONE) || (_irq_line != 0))
-	{
-	  if(_regs.IFF & 0x20)
-	    {
-	      /*
-               *  after EI state (delay pending irq by one instruction)
-	       *
-	       * IntZ80(&_regs, _regs.IRequest);
-	       * _regs.IRequest = INT_NONE;
-	       */
-	      _regs.IFF &= 0xdf;
-	    }
-	  else
-	    {
-	      /*
-	       *  trigger pending irq if IFF is set (= irqs enabled)
-	       *  (NMI is triggered even if IFF is not set!)
-	       */
-	      if (((_regs.IFF & 1) != 0) || (_regs.IRequest == 0x66))
-		{
-		  if (_irq_line)
-		    {
-		      word_t val = irq_ack();
-		      if (val != IRQ_NOT_ACK)
-			{
-			  IntZ80(&_regs, val);
-			}
-		    }
-		  else
-		    {
-		      IntZ80(&_regs, _regs.IRequest);
-		      _regs.IRequest = INT_NONE;
-		    }
-		}
-	    }
-	}
-
-      if (_regs.IFF & 0x80)
+      if (_wait)
         {
-          /*
-           *  the processor is executing HALT with ICount = 0!
-           *  but we need to decrement period to keep the
-           *  emulation running...
-           */
           _regs.ICount = -4;
-	  _halt = true;
         }
       else
-	{
-	  _halt = false;
-	}
+        {
+          _regs.ICount = 0;
+          ExecZ80(&_regs);
+
+          iff = _regs.IFF & 1;
+          if (iff_old != iff)
+            {
+              iff_old = iff;
+              //cout << hex << getPC() << "h irqs are now: " << (iff ? "on" : "off") << endl;
+            }
+
+          if ((_regs.IRequest != INT_NONE) || (_irq_line != 0))
+            {
+              if (_regs.IFF & 0x20)
+                {
+                  /*
+                   *  after EI state (delay pending irq by one instruction)
+                   *
+                   * IntZ80(&_regs, _regs.IRequest);
+                   * _regs.IRequest = INT_NONE;
+                   */
+                  _regs.IFF &= 0xdf;
+                }
+              else
+                {
+                  /*
+                   *  trigger pending irq if IFF is set (= irqs enabled)
+                   *  (NMI is triggered even if IFF is not set!)
+                   */
+                  if (((_regs.IFF & 1) != 0) || (_regs.IRequest == 0x66))
+                    {
+                      if (_irq_line)
+                        {
+                          word_t val = irq_ack();
+                          if (val != IRQ_NOT_ACK)
+                            {
+                              IntZ80(&_regs, val);
+                            }
+                        }
+                      else
+                        {
+                          IntZ80(&_regs, _regs.IRequest);
+                          _regs.IRequest = INT_NONE;
+                        }
+                    }
+                }
+            }
+
+          if (_regs.IFF & 0x80)
+            {
+              /*
+               *  the processor is executing HALT with ICount = 0!
+               *  but we need to decrement period to keep the
+               *  emulation running...
+               */
+              _regs.ICount = -4;
+              _halt = true;
+            }
+          else
+            {
+              _halt = false;
+            }
+        }
 
       _counter -= _regs.ICount; // ICount is negative!
 
@@ -478,6 +485,8 @@ Z80::reset(word_t pc, bool power_on)
 
   module->reset(power_on);
 
+  _halt = false;
+  _wait = false;
   ResetZ80(&_regs);
   _regs.PC.W = pc;
 
@@ -533,6 +542,23 @@ bool
 Z80::irq_enabled(void)
 {
   return (_regs.IFF & 1) != 0;
+}
+
+bool
+Z80::is_wait(void)
+{
+  return _wait;
+}
+
+void
+Z80::set_wait(bool val)
+{
+  if (_wait != val)
+    {
+      DBG(0, form("KCemu/Z80/wait",
+                  "Z80::set_wait(): %c -> %c\n", _wait ? 'H' : 'L', val ? 'H' : 'L'));
+    }
+  _wait = val;
 }
 
 dword_t

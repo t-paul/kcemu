@@ -48,6 +48,7 @@ class GDC;
 class VIS;
 class Poly880;
 class DisplayC80;
+class GraphicBCS3;
 
 extern Z80             *z80;
 extern DaisyChain      *daisy;
@@ -70,6 +71,7 @@ extern GDC             *gdc;
 extern VIS             *vis;
 extern Poly880         *poly880;
 extern DisplayC80      *display_c80;
+extern GraphicBCS3     *graphic_bcs3;
 
 extern Z80_FDC         *fdc_z80;     
 extern FloppyIO        *fdc_io;

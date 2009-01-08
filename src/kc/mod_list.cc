@@ -226,12 +226,15 @@ ModuleList::ModuleList(void)
    *  RAM modules at 4000h-7fffh / 16k
    *                 8000h-ffffh / 32k
    *
-   *  (lc80 + vcs80)
+   *  (lc80 + vcs80 + bcs3)
    */
   m = new ModuleRAM8("RAM4000", 0x4000, 0x4000);
-  _mod_list.push_back(new ModuleListEntry(_("RAM Module (16k/4000h)"), m, (kc_type_t)(KC_TYPE_LC80 | KC_TYPE_VCS80)));
+  _mod_list.push_back(new ModuleListEntry(_("RAM Module (16k/4000h)"), m, (kc_type_t)(KC_TYPE_LC80 | KC_TYPE_VCS80 | KC_TYPE_BCS3)));
   m = new ModuleRAM8("RAM8000", 0x8000, 0x8000);
-  _mod_list.push_back(new ModuleListEntry(_("RAM Module (32k/8000h)"), m, (kc_type_t)(KC_TYPE_LC80 | KC_TYPE_VCS80)));
+  _mod_list.push_back(new ModuleListEntry(_("RAM Module (32k/8000h)"), m, (kc_type_t)(KC_TYPE_LC80 | KC_TYPE_VCS80 | KC_TYPE_BCS3)));
+
+  m = new ModuleRAM8("RAM8k", 0x4000, 0x2000);
+  _mod_list.push_back(new ModuleListEntry(_("RAM Module (8k/4000h)"), m, KC_TYPE_BCS3));
 
   /*
    *  256k RAM floppy (Z1013)
@@ -580,6 +583,8 @@ ModuleList::ModuleList(void)
       cnt = 4;
       break;
     case KC_TYPE_LC80:
+    case KC_TYPE_VCS80:
+    case KC_TYPE_BCS3:
       cnt = 6;
       break;
     case KC_TYPE_Z1013:

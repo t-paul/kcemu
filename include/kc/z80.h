@@ -55,6 +55,7 @@ class Z80
 	_Z80 _regs;
 
 	bool _halt;
+        bool _wait;
 	bool _debug;
 	bool _trace;
 	bool _singlestep;
@@ -105,6 +106,9 @@ class Z80
 	void addCallback(unsigned long long offset, Callback *cb, void *data);
 	void remove_callback_listener(Callback *cb);
 	inline unsigned long long getCounter(void) { return _counter; }
+
+        bool is_wait(void);
+        void set_wait(bool val);
 
 	dword_t get_irq_mask(void);
 	void set_irq_line(dword_t mask);

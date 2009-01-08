@@ -3,6 +3,7 @@
 bcs3romdir = $(pkgdatadir)/roms/bcs3
 
 ROMS = \
+	se24.rom \
 	se31.rom \
 	u402.rom
 

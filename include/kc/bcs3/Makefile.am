@@ -3,5 +3,6 @@
 EXTRA_DIST = \
 	keydef.h \
 	keyboard.h \
+	graphic.h \
 	memory.h \
 	ctc.h

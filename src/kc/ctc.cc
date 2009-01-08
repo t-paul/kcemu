@@ -30,6 +30,7 @@
 #include "kc/tape.h"
 
 #include "libdbg/dbg.h"
+#include "z80.h"
 
 using namespace std;
 
@@ -135,8 +136,38 @@ CTC::trigger(byte_t channel)
     return;
 
   _value[c]--;
+
+  DBG(2, form("KCemu/CTC/trigger",
+              "CTC::trigger(%d): %04xh [%10lld] - %5d, %5d, %5d, %5d\n",
+              c, z80->getPC(), z80->getCounter(),
+              _value[0], _value[1], _value[2], _value[3]));
+
   if (_value[c] > 0)
     return;
+
+  switch (c)
+    {
+    case 0:
+      DBG(2, form("KCemu/CTC/irq/0",
+		  "CTC::callback() : irq channel 0\n"));
+      irq_0();
+      break;
+    case 1:
+      DBG(2, form("KCemu/CTC/irq/1",
+		  "CTC::callback() : irq channel 1\n"));
+      irq_1();
+      break;
+    case 2:
+      DBG(2, form("KCemu/CTC/irq/2",
+		  "CTC::callback() : irq channel 2\n"));
+      irq_2();
+      break;
+    case 3:
+      DBG(2, form("KCemu/CTC/irq/3",
+		  "CTC::callback() : irq channel 3\n"));
+      irq_3();
+      break;
+    }
 
   _value[c] = _timer_value[c];
   try_trigger_irq(c);
@@ -255,12 +286,15 @@ CTC::c_in(byte_t c)
       return 0;
     }
 
+  int scale = 1;
   if ((_control[c] & MODE) == MODE_COUNTER)
     {
       diff = 0;
     }
   else
     {
+      scale = ((_control[c] & PRESCALER) == PRESCALER_16) ? 16 : 256;
+
       if ((_control[c] & RESET) == RESET_ACTIVE)
         {
           diff = 0;
@@ -271,16 +305,8 @@ CTC::c_in(byte_t c)
         }
     }
   
-  if ((_control[c] & PRESCALER) == PRESCALER_16)
-    {
-      diff /= 16;
-      val = ((_value[c] / 16) - diff) & 0xff;
-    }
-  else
-    {
-      diff /= 256;
-      val = ((_value[c] / 256) - diff) & 0xff;
-    }
+  diff /= scale;
+  val = ((_value[c] / scale) - diff) & 0xff;
 
   _counter[c] = get_counter();
   

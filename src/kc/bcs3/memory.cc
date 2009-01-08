@@ -28,6 +28,7 @@
 #include "kc/kc.h"
 #include "kc/z80.h"
 #include "kc/bcs3/memory.h"
+#include "kc/bcs3/graphic.h"
 #include "kc/bcs3/keyboard.h"
 
 using namespace std;
@@ -61,15 +62,39 @@ MemoryBCS3::~MemoryBCS3(void)
 byte_t
 MemoryBCS3::memRead8(word_t addr)
 {
-  if ((addr & 0xf800) == 0x1000)
-    return ((KeyboardBCS3 *)keyboard)->memory_read(addr);
-  
+  int d4 = addr & 0xdc00;
+
+  if (d4 == 0x1000)
+    {
+      return ((KeyboardBCS3 *)keyboard)->memory_read(addr);
+    }
+  else if (d4 == 0x1400)
+    {
+      z80->set_wait(true);
+    }
+  else if (d4 == 0x1800)
+    {
+      // create nops in screen memory area 3800h - 3bffh
+      // except if bit 8 of the memory value is set
+      byte_t val = _ram[addr & 0x3ff];
+      graphic_bcs3->memory_read(addr, val);
+      return val & 0x80 ? val : 0;
+    }
+
   return _memrptr[addr >> MemArea::PAGE_SHIFT][addr & MemArea::PAGE_MASK];
 }
 
 void
 MemoryBCS3::memWrite8(word_t addr, byte_t val)
 {
+  int d4 = addr & 0xdc00;
+
+  if (d4 == 0x1400)
+    {
+      z80->set_wait(true);
+    }
+
+  //printf("MemoryBCS3::memWrite8(): %04xh: %04x <- %02x\n", z80->getPC(), addr, val);
   _memwptr[addr >> MemArea::PAGE_SHIFT][addr & MemArea::PAGE_MASK] = val;
 }
 
