@@ -29,8 +29,8 @@
 GraphicBCS3::GraphicBCS3(void)
 {
   _cnt = 0;
-  _row = 0;
   _line = 0;
+  memset(_buf, ' ', MEM_BYTES);
   memset(_mem, ' ', MEM_BYTES);
 }
 
@@ -38,43 +38,46 @@ GraphicBCS3::~GraphicBCS3(void)
 {
 }
 
+byte_t *
+GraphicBCS3::get_memory(void)
+{
+  return _mem;
+}
+
 void
 GraphicBCS3::memory_read(word_t addr, byte_t ram_val)
 {
+  if (_col >= MAX_COLS)
+    return;
+  if (_cnt >= MAX_ROWS)
+    return;
+  
   if (_diff[_cnt] == 0)
     {
       _diff[_cnt] = z80->getCounter() - _z80_tick;
     }
-  //printf("GraphicBCS3::memory_read(): addr = %04x, ram = %02x, line = %d, [%3dx%3d]\n", addr, ram_val, _line, _row, _col);
-  _mem[MAX_COLS * _cnt + _col] = ram_val;
+
+  if (ram_val == 'B')
+    printf("GraphicBCS3::memory_read(): addr = %04x, ram = %02x, line = %d, [%3dx%3d]\n", addr, ram_val, _line, _cnt, _col);
+//printf("GraphicBCS3::memory_read(): addr = %04x, ram = %02x, line = %d, [%3dx%3d]\n", addr, ram_val, _line, _cnt, _col);
+
+  _buf[MAX_COLS * _cnt + _col] = ram_val;
   _col++;
+
+  _test++;
 }
 
 void
-GraphicBCS3::retrace(void)
+GraphicBCS3::dump(void)
 {
   static long long old_counter = 0;
 
-  _row = 0;
-
-
   printf("\033[H%lld        \n", z80->getCounter() - old_counter);
   printf("%d        \n\n", _cnt);
-  _cnt = 0;
   old_counter = z80->getCounter();
   for (int y = 0;y < MAX_ROWS;y++)
     {
-      bool show = false;
-      for (int x = 0;x < MAX_COLS;x++)
-        {
-          int c = _mem[MAX_COLS * y + x];
-          if (c & 0x80)
-            continue;
-          if ((c != ' ') && (c != '.'))
-            show = true;
-        }
-
-      if (!show)
+      if (_diff[y] == 0)
         continue;
 
       printf("%3d %4d |", y, _diff[y]);
@@ -83,36 +86,41 @@ GraphicBCS3::retrace(void)
           int c = _mem[MAX_COLS * y + x];
           printf("%c", isprint(c) ? c : '.');
         }
-      printf("|\n");
+      printf("|        \n");
     }
-  memset(_mem, ' ', MEM_BYTES);
+  printf("-----------------------------------------------------------------------\n");
+}
+
+void
+GraphicBCS3::retrace(void)
+{
+  _test = 0;
+  //dump();
+
+  _cnt = 0;
+
+  memcpy(_mem, _buf, MEM_BYTES);
+  memset(_buf, ' ', MEM_BYTES);
   memset(_diff, 0, sizeof(_diff));
 }
 
 void
 GraphicBCS3::reset_line_counter(void)
 {
-  z80->set_wait(false);
   //printf("GraphicBCS3::reset_line_counter()\n");
-  next_row();
+  _col = 0;
   _line = 7;
 }
 
 void
 GraphicBCS3::increment_line_counter(void)
 {
-  _cnt++;
-  _z80_tick = z80->getCounter();
-  _col = 0;
   //printf("GraphicBCS3::increment_line_counter(): %d -> %d\n", _line, (_line + 1) & 7);
-  _line = (_line + 1) & 7;
-}
 
-void
-GraphicBCS3::next_row(void)
-{
-  if (++_row >= MAX_ROWS)
-    _row = MAX_ROWS - 1;
-
+  _cnt++;
   _col = 0;
+  _line = (_line + 1) & 7;
+
+  z80->set_wait(false);
+  _z80_tick = z80->getCounter();
 }

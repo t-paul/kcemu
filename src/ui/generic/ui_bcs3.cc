@@ -23,6 +23,7 @@
 
 #include "kc/kc.h"
 #include "kc/memory.h"
+#include "kc/bcs3/graphic.h"
 
 #include "ui/generic/ui_bcs3.h"
 
@@ -58,6 +59,36 @@ UI_BCS3::generic_put_pixels(byte_t *ptr, byte_t val)
 
 void
 UI_BCS3::generic_update(Scanline *scanline, MemAccess *memaccess, bool clear_cache)
+{
+  generic_update_ctc(clear_cache);
+}
+void
+UI_BCS3::generic_update_ctc(bool clear_cache)
+{
+  byte_t *chr = memory->get_char_rom();
+  byte_t *irm = graphic_bcs3->get_memory();
+  byte_t *ptr = _bitmap;
+
+  int width = get_real_width();
+
+  memset(_dirty, 1, _dirty_size);
+  for (int y = 0;y < 320;y++)
+    {
+      for (int x = 0;x < 40;x++)
+        {
+          int c = irm[y * 40 + x];
+          if (c & 0x80)
+            break;
+
+	  byte_t *chr_ptr = chr + 8 * (c & 0x7f);
+          generic_put_pixels(ptr + (8 * x), chr_ptr[y & 7]);
+        }
+      ptr += width;
+    }
+}
+
+void
+UI_BCS3::generic_update_mem(bool clear_cache)
 {
   byte_t *chr = memory->get_char_rom();
   byte_t *ptr = _bitmap;

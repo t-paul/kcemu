@@ -120,7 +120,6 @@ CTCBCS3::irq_2(void)
 bool
 CTCBCS3::irq_3(void)
 {
-  //printf("CTCBCS3::irq_3()\n");
   return true;
 }
 

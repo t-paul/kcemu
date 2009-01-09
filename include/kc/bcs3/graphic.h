@@ -34,20 +34,23 @@ private:
     MAX_COLS = 40,
     MEM_BYTES = MAX_ROWS * MAX_COLS,
   };
-  int _row;
   int _col;
   int _line;
   int _cnt;
   byte_t _mem[MEM_BYTES];
+  byte_t _buf[MEM_BYTES];
   int _diff[MAX_ROWS];
   unsigned long long _z80_tick;
+  int _test;
 
 protected:
-  virtual void next_row(void);
+  virtual void dump(void);
 
 public:
   GraphicBCS3(void);
   virtual ~GraphicBCS3(void);
+
+  virtual byte_t * get_memory(void);
 
   virtual void memory_read(word_t addr, byte_t ram_val);
   virtual void retrace(void);

@@ -35,6 +35,8 @@ class UI_BCS3 : public UI_Base
 
 protected:
   inline void generic_put_pixels(byte_t *ptr, byte_t val);
+  void generic_update_mem(bool clear_cache);
+  void generic_update_ctc(bool clear_cache);
 
  public:
   UI_BCS3(void);
