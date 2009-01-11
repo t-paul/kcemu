@@ -69,10 +69,9 @@ CMD::execute(CMD_Args *args, CMD_Context context)
 {
   DBG(0, form("KCemu/CMD/warning",
               "*** Warning: CMD without execute() function called!\n"
-              "***          command is: '%s' [0x%08x]\n"
+              "***          command is: '%s' [%p]\n"
               "***          context is: %d [0x%08x]\n",
-              get_name(), (unsigned int)this,
-              context, context));
+              get_name(), this, context, context));
 }
 
 /*

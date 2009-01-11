@@ -123,9 +123,9 @@ CMD_List::dump(void)
   
   for (it = _cmd_list->begin(); it != _cmd_list->end();it++)
     DBG(0, form("KCemu/CMD_Repository",
-                "  - %-40s [0x%08x] {%d 0x%x}\n",
+                "  - %-40s [%016p] {%d 0x%x}\n",
                 (*it)->get_cmd()->get_name(),
-                (unsigned int)(*it)->get_cmd(),
+                (*it)->get_cmd(),
                 (*it)->get_context()));
 }
 
