@@ -169,7 +169,7 @@ CMD_Arg::set_long_arg(long value)
       _val.v_long = value;
       break;
     case CMD_ARG_STRING:
-      sprintf(buf, "%d", value);
+      sprintf(buf, "%ld", value);
       _val.v_string = strdup(buf);
       break;
     }
@@ -462,7 +462,7 @@ CMD_Args::dump(const char *text)
       switch ((*it)->get_type())
         {
         case CMD_ARG_LONG:
-          printf("CMD_Args: %-30s I %d\n", (*it)->get_name(), (*it)->get_long_arg());
+          printf("CMD_Args: %-30s I %ld\n", (*it)->get_name(), (*it)->get_long_arg());
           break;
         case CMD_ARG_STRING:
           printf("CMD_Args: %-30s S '%s'\n", (*it)->get_name(), (*it)->get_string_arg());
