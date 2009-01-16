@@ -75,7 +75,7 @@ ModuleWindow::sf_color_expansion(GtkWidget *widget, gpointer data)
 void
 ModuleWindow::sf_activate(GtkWidget *widget, gpointer data)
 {
-  int slot = (int)data;
+  long slot = (long)data;
 
   if (GTK_CHECK_MENU_ITEM(widget)->active)
     {

@@ -327,7 +327,7 @@ WavPlayer::close()
 void
 WavPlayer::callback(void *data)
 {
-  int d = (int)data;
+  long d = (long)data;
 
   if (_stopped)
     return;

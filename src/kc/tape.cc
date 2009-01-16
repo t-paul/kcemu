@@ -780,7 +780,7 @@ Tape::get_delay(int seconds)
 void
 Tape::callback(void *data)
 {
-  int edge = (int)data;
+  long edge = (long)data;
   
   if (_play)
     do_play(edge);

@@ -114,7 +114,7 @@ KeyboardKramerMC::replayString(const char *text)
 void
 KeyboardKramerMC::callback(void *data)
 {
-  int val = (int)data;
+  long val = (long)data;
 
   if (val == 0)
     {

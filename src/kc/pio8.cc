@@ -94,7 +94,7 @@ TapeTest::callback(void *data)
 {
   static int cnt;
 
-  int i = (int)data;
+  long i = (long)data;
   if (i == 0)
     {
       pio->set_B_EXT(1, 1);
