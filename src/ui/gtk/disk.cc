@@ -66,7 +66,7 @@ public:
     DBG(2, form("KCemu/Disk/update",
 		"got disk-update message\n"));
 
-    disk_no = args->get_int_arg("disk");
+    disk_no = args->get_long_arg("disk");
     if ((disk_no < 0) || (disk_no > 3))
       return;
 
@@ -106,14 +106,14 @@ public:
       case 1:
       case 2:
       case 3:
-	args->set_int_arg("disk", context);
+	args->set_long_arg("disk", context);
 	CMD_EXEC_ARGS("disk-attach", args);
 	break;
       case 4:
       case 5:
       case 6:
       case 7:
-	args->set_int_arg("disk", context & 3);
+	args->set_long_arg("disk", context & 3);
 	CMD_EXEC_ARGS("disk-detach", args);
 	break;
       }
@@ -152,7 +152,7 @@ DiskWindow::set_name(int idx, const char *name)
 void
 DiskWindow::sf_disk_attach(GtkWidget *widget, gpointer data)
 {
-  int nr = (int)data;
+  long nr = (long)data;
   GtkEntry *entry = GTK_ENTRY(GTK_BIN(widget)->child);
   const gchar *text = gtk_entry_get_text(GTK_ENTRY(entry));
 
@@ -162,7 +162,7 @@ DiskWindow::sf_disk_attach(GtkWidget *widget, gpointer data)
     return;
 
   CMD_Args *args = new CMD_Args();
-  args->set_int_arg("disk", nr);
+  args->set_long_arg("disk", nr);
   args->set_string_arg("filename", text);
   CMD_EXEC_ARGS("disk-attach", args);
 }

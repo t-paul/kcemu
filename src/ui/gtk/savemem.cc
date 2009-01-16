@@ -264,8 +264,8 @@ SaveMemoryWindow::save(const char *filename, int start_addr, int end_addr)
 {
   CMD_Args *args = new CMD_Args();
   args->set_string_arg("filename", filename);
-  args->set_int_arg("start-address", start_addr);
-  args->set_int_arg("end-address", end_addr);
+  args->set_long_arg("start-address", start_addr);
+  args->set_long_arg("end-address", end_addr);
   CMD_EXEC_ARGS("kc-image-save", args);
   delete args;
 }

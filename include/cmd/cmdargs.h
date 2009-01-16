@@ -36,7 +36,7 @@ class CMD_Change_Listener
 typedef unsigned int CMD_Context;
 
 typedef enum {
-  CMD_ARG_INT, CMD_ARG_STRING,
+  CMD_ARG_LONG, CMD_ARG_STRING,
 } CMD_Arg_Type;
 
 class CMD;
@@ -88,7 +88,7 @@ class CMD_Arg
   char *_name;
   CMD_Arg_Type _type;
   union {
-    int   v_int;
+    long  v_long;
     char *v_string;
   } _val;
   bool _value_set;
@@ -99,10 +99,10 @@ class CMD_Arg
 
   CMD_Arg_Type get_type(void);
   const char * get_name(void);
-  virtual void set_int_arg(int value);
+  virtual void set_long_arg(long value);
   virtual void set_string_arg(const char *value);
   virtual void set_pointer_arg(void *ptr);
-  virtual int get_int_arg(void);
+  virtual long get_long_arg(void);
   virtual const char * get_string_arg(void);
   virtual void * get_pointer_arg(void);
 };
@@ -133,11 +133,11 @@ class CMD_Args {
 
  public:
   CMD_Arg * lookup(const char *name);
-  virtual CMD_Args * set_int_arg(const char *name, int value);
+  virtual CMD_Args * set_long_arg(const char *name, long value);
   virtual CMD_Args * set_string_arg(const char *name, const char *value);
   virtual CMD_Args * set_pointer_arg(const char *name, void *value);
   virtual CMD_Args * add_change_listener(CMD_Change_Listener *listener);
-  virtual int get_int_arg(const char *name);
+  virtual long get_long_arg(const char *name);
   virtual const char * get_string_arg(const char *name);
   virtual void * get_pointer_arg(const char *name);
   virtual bool has_arg(const char *name);

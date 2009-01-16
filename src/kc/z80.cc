@@ -121,7 +121,7 @@ public:
 	case 7:
 	  if (args)
 	    {
-	      long delay = 1000 * args->get_int_arg("delay");
+	      long delay = 1000 * args->get_long_arg("delay");
 	      z80->tracedelay(delay);
 	    }
 	  break;

@@ -592,7 +592,7 @@ TapeWindow::tapeNext(void)
       // sets _selected via callback! (sf_tape_file_select)
       gtk_tree_selection_select_iter(selection, &iter);
       CMD_Args *a = new CMD_Args();
-      a->set_int_arg("tape-play-delay", 10);
+      a->set_long_arg("tape-play-delay", 10);
       CMD_EXEC_ARGS("ui-tape-play-selected", a);
     }
 }

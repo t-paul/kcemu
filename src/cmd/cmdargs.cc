@@ -159,14 +159,14 @@ CMD_Arg::get_type(void)
 }
 
 void
-CMD_Arg::set_int_arg(int value)
+CMD_Arg::set_long_arg(long value)
 {
   char buf[50];
 
   switch (_type)
     {
-    case CMD_ARG_INT:
-      _val.v_int = value;
+    case CMD_ARG_LONG:
+      _val.v_long = value;
       break;
     case CMD_ARG_STRING:
       sprintf(buf, "%d", value);
@@ -181,8 +181,8 @@ CMD_Arg::set_string_arg(const char *value)
 {
   switch (_type)
     {
-    case CMD_ARG_INT:
-      _val.v_int = strtol(value, NULL, 0);
+    case CMD_ARG_LONG:
+      _val.v_long = strtol(value, NULL, 0);
       break;
     case CMD_ARG_STRING:
       _val.v_string = strdup(value);
@@ -196,8 +196,8 @@ CMD_Arg::set_pointer_arg(void *value)
 {
   switch (_type)
     {
-    case CMD_ARG_INT:
-      _val.v_int = (int)value;
+    case CMD_ARG_LONG:
+      _val.v_long = (long)value;
       break;
     case CMD_ARG_STRING:
       _val.v_string = (char *)value;
@@ -206,13 +206,13 @@ CMD_Arg::set_pointer_arg(void *value)
   _value_set = true;
 }
 
-int
-CMD_Arg::get_int_arg(void)
+long
+CMD_Arg::get_long_arg(void)
 {
   switch (_type)
     {
-    case CMD_ARG_INT:
-      return _val.v_int;
+    case CMD_ARG_LONG:
+      return _val.v_long;
     case CMD_ARG_STRING:
       return strtol(_val.v_string, NULL, 0);
     }
@@ -224,8 +224,8 @@ CMD_Arg::get_string_arg(void)
 {
   switch (_type)
     {
-    case CMD_ARG_INT:
-      cerr << "CMD_Arg: accessing INT arg as STRING" << endl;
+    case CMD_ARG_LONG:
+      cerr << "CMD_Arg: accessing LONG arg as STRING" << endl;
       break;
     case CMD_ARG_STRING:
       return _val.v_string;
@@ -238,8 +238,8 @@ CMD_Arg::get_pointer_arg(void)
 {
   switch (_type)
     {
-    case CMD_ARG_INT:
-      return (void *)_val.v_int;
+    case CMD_ARG_LONG:
+      return (void *)_val.v_long;
       break;
     case CMD_ARG_STRING:
       return _val.v_string;
@@ -282,17 +282,17 @@ CMD_Args::lookup(const char *name)
 }
 
 CMD_Args *
-CMD_Args::set_int_arg(const char *name, int value)
+CMD_Args::set_long_arg(const char *name, long value)
 {
   CMD_Arg *arg;
 
   arg = lookup(name);
   if (arg == 0)
     {
-      arg = new CMD_Arg(name, CMD_ARG_INT);
+      arg = new CMD_Arg(name, CMD_ARG_LONG);
       _arg_list.push_back(arg);
     }
-  arg->set_int_arg(value);
+  arg->set_long_arg(value);
   notify_change_listeners();
   return this;
 }
@@ -336,15 +336,15 @@ CMD_Args::add_change_listener(CMD_Change_Listener *listener)
   return this;
 }
 
-int
-CMD_Args::get_int_arg(const char *name)
+long
+CMD_Args::get_long_arg(const char *name)
 {
   CMD_Arg *arg;
 
   arg = lookup(name);
   if (arg == 0)
     return 0;
-  return arg->get_int_arg();
+  return arg->get_long_arg();
 }
 
 const char *
@@ -461,8 +461,8 @@ CMD_Args::dump(const char *text)
     {
       switch ((*it)->get_type())
         {
-        case CMD_ARG_INT:
-          printf("CMD_Args: %-30s I %d\n", (*it)->get_name(), (*it)->get_int_arg());
+        case CMD_ARG_LONG:
+          printf("CMD_Args: %-30s I %d\n", (*it)->get_name(), (*it)->get_long_arg());
           break;
         case CMD_ARG_STRING:
           printf("CMD_Args: %-30s S '%s'\n", (*it)->get_name(), (*it)->get_string_arg());

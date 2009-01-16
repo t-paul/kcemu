@@ -97,7 +97,7 @@ CMD_ui_image_props::check_values(CMD_Args *args)
                                 "(e.g. 0444)"));
       return false;
     }
-  _args->set_int_arg("load-address", load_address);
+  _args->set_long_arg("load-address", load_address);
 
   if (!_autostart)
     return true;
@@ -107,7 +107,7 @@ CMD_ui_image_props::check_values(CMD_Args *args)
       Error::instance()->info(_("error in given start address!"));
       return false;
     }
-  _args->set_int_arg("start-address", start_address);
+  _args->set_long_arg("start-address", start_address);
 
   return true;
 }
@@ -182,7 +182,7 @@ CMD_ui_image_props::execute(CMD_Args *args, CMD_Context context)
    *  autostart
    */
   _autostart = false;
-  if (args && args->get_int_arg("auto-start"))
+  if (args && args->get_long_arg("auto-start"))
     _autostart = true;
   button = gtk_check_button_new_with_label(_("Start Program after Loading"));
   gtk_table_attach_defaults(GTK_TABLE(table), button,
