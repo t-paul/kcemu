@@ -30,6 +30,7 @@ debian/kcemu.postinst.debhelper
 debian/kcemu.postrm.debhelper
 debian/kcemu.substvars
 debian/kcemu/
+rpm/KCemu.spec
 disks/Makefile.in
 disks/Makefile
 doc/Makefile.in

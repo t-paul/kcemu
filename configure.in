@@ -589,6 +589,8 @@ AC_OUTPUT([
 	man/Makefile
 	man/man1/Makefile
 	debian/Makefile
+	rpm/Makefile
+	rpm/KCemu.spec
 	po/Makefile.in
 	glade/Makefile
 	glade/about/Makefile

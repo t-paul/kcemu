@@ -1,0 +1,64 @@
+Summary: Emulator for lots of Z80 based home computer
+Name: KCemu
+Version: @VERSION@
+Release: 1
+Source: KCemu-@VERSION@.tar.gz
+License: GPL
+Group: Applications/Emulator
+Distribution: OpenSuSE 11.1
+Vendor: Torsten Paul <Torsten.Paul@gmx.de>
+Packager: Torsten Paul <Torsten.Paul@gmx.de>
+
+%description
+KCemu is an emulator for the Z80 based KC 85 home computer
+series which was quite popular in the former East-Germany.
+It runs most original programs (e.g. Digger, Boulder Dash,
+Bennion RBS, ...) and supports the emulation of the CP/M-like
+operating system called MicroDOS.
+ 
+For original programs and general information about the
+emulated computer types have a look at http://www.kc85emu.de/.
+
+%prep
+%setup
+
+%build
+./configure \
+	--prefix=/usr \
+	--mandir=\${prefix}/share/man \
+	--infodir=\${prefix}/share/info \
+	--enable-libsndfile=no \
+	--enable-libaudiofile=no \
+	--enable-libmp3lame=no \
+	--enable-libvorbis=no \
+	--enable-libflac=no
+
+make
+
+%install
+make install \
+	prefix=%{buildroot}/usr \
+	exec_prefix=%{buildroot}/usr \
+	mandir=%{buildroot}/usr/share/man
+
+%files
+/usr/bin/kcemu
+/usr/bin/kc2img
+/usr/bin/kc2tap
+/usr/bin/kctape
+/usr/bin/tdtodump
+/usr/bin/kcemu-remote
+/usr/bin/kc2wav
+/usr/bin/kc2raw
+/usr/share/KCemu
+/usr/share/doc/kcemu
+/usr/share/man/man1/kcemu.1x.gz
+/usr/share/man/man1/kc2raw.1.gz
+/usr/share/man/man1/kc2tap.1.gz
+/usr/share/man/man1/kc2img.1.gz
+/usr/share/man/man1/kctape.1.gz
+/usr/share/man/man1/kc2wav.1.gz
+/usr/share/man/man1/tdtodump.1.gz
+/usr/share/man/man1/kcemu-remote.1.gz
+%lang(en) /usr/share/locale/en/LC_MESSAGES/KCemu.mo
+%lang(de) /usr/share/locale/de/LC_MESSAGES/KCemu.mo

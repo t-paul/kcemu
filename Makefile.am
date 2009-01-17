@@ -17,6 +17,7 @@ SUBDIRS = \
 	doc \
 	man \
 	debian \
+	rpm \
 	conf \
 	setup \
 	glade \
