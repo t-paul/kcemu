@@ -105,22 +105,22 @@ typedef struct
 {
   char           id[18];
   unsigned short version;
-  unsigned long  unused;
-  unsigned long  offset[KCT_DIR_BLOCKS];
-  unsigned long  chain_offset;
+  unsigned int   unused;
+  unsigned int   offset[KCT_DIR_BLOCKS];
+  unsigned int   chain_offset;
 } kct_header_t;
 
 typedef unsigned char kct_bam_t[256];
 
 typedef struct
 {
-  unsigned long  magic;
-  unsigned long  file_crc;
+  unsigned int   magic;
+  unsigned int   file_crc;
   unsigned short load_addr;
   unsigned short start_addr;
-  unsigned long  uncompressed_size;
-  unsigned long  compressed_size;
-  unsigned long  offset;
+  unsigned int   uncompressed_size;
+  unsigned int   compressed_size;
+  unsigned int   offset;
   unsigned short machine;
   unsigned char  type;
   unsigned char  unused[4];
@@ -132,7 +132,7 @@ typedef struct
   bool               auto_start;
   unsigned short     load_addr;
   unsigned short     start_addr;
-  unsigned long      size;
+  unsigned int       size;
   kct_file_type_t    type;
   kct_machine_type_t machine;
 } kct_file_props_t;
@@ -141,7 +141,7 @@ typedef kct_dirent_t kct_dirblock_t[4];
 
 typedef struct
 {
-  unsigned long link;
+  unsigned int  link;
   unsigned char data[252];
 } kct_data_t;
 
