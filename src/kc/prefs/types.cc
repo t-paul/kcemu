@@ -930,6 +930,7 @@ SystemInformation::SystemInformation(void) {
         .add_rom(SystemROM::ROM_KEY_SYSTEM, 0x1000,
                  "se24.rom", _("System-ROM V2.4"),
                  "se31.rom", _("System-ROM V3.1"),
+                 "se32.rom", _("System-ROM V3.2"),
                  NULL)
         .add_rom(SystemROM::ROM_KEY_CHARGEN, 0x0400, "u402.rom", _("Charset-ROM"), NULL);
 
