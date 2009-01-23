@@ -348,20 +348,24 @@ FDC::callback_index(void *data)
 {
   int index_value = ((int)data) & 1;
 
-  int offset;
-  if (index_value == 0)
+  byte_t input_gate = 0;
+  if (_selected_device != 0)
     {
-      offset = 1000;
-      set_input_gate(0x10, 0x10);
-    }
-  else
-    {
-      offset = 350000;
-      set_input_gate(0x10, 0x00);
+      int offset;
+      if (index_value == 0)
+        {
+          offset = 1000;
+          input_gate = 0x10;
+        }
+      else
+        {
+          offset = 350000;
+        }
+
+      add_callback(offset, this, (void *)(CB_TYPE_INDEX | (1 - index_value)));
     }
 
-  if (_selected_device != 0)
-    add_callback(offset, this, (void *)(CB_TYPE_INDEX | (1 - index_value)));
+  set_input_gate(0x10, input_gate);
 }
 
 void
@@ -463,10 +467,35 @@ FDC::drive_select(byte_t val)
 	      val));
 
   val &= 0x0f;
-  if ((_selected_device == 0) && (val != 0))
-    add_callback(20000, this, (void *)(CB_TYPE_INDEX));
 
-  _selected_device = val;
+  bool has_disc = false;
+  for (int a = 0;a < 4;a++)
+    {
+      Floppy *floppy = get_floppy(a);
+      if ((val & (1 << a)) && (floppy != NULL) && (floppy->get_sector_size() > 0))
+        has_disc = true;
+    }
+  
+  if (has_disc)
+    {
+      DBG(2, form("KCemu/FDC/drive_select",
+                  "FDC::drive_select(): enable index-hole pulse generation%s\n",
+                  _selected_device == 0 ? "" : " (already running)"));
+
+      if (_selected_device == 0)
+        add_callback(20000, this, (void *)(CB_TYPE_INDEX));
+
+      _selected_device = val;
+    }
+  else
+    {
+      DBG(2, form("KCemu/FDC/drive_select",
+                  "FDC::drive_select(): stop index-hole pulse generation\n"));
+
+      _selected_device = 0;
+    }
+
+  set_input_gate(0x10, 0x00);
 }
 
 byte_t
