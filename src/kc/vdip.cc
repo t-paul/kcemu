@@ -36,6 +36,8 @@
 
 #include "cmd/cmd.h"
 
+#include "libdbg/dbg.h"
+
 class CMD_vdip_attach : public CMD
 {
 private:
@@ -265,6 +267,7 @@ VDIP::reset(void)
   _binary_mode = true;
   _short_command_set = false;
 
+  _input_data = -1;
   _input_buffer = "";
 
   _input = false;
@@ -296,7 +299,11 @@ VDIP::read_byte(void)
 
   int a = _output;
   _output = -1;
-  printf("%Ld: read_byte -> %02x ('%c')\n", z80->getCounter(), a & 0xff, isprint(a) ? a : '.');
+  DBG(2, form("KCemu/VDIP/read_byte",
+              "VDIP: %04xh [%10Ld]: read_byte  -> %02x ('%c')\n",
+              z80->getPC(), z80->getCounter(),
+              a & 0xff, isprint(a) ? a : '.'));
+
   return a;
 }
 
@@ -311,7 +318,11 @@ VDIP::latch_byte(void)
       _output = _output_buffer.at(0);
       _output_buffer = _output_buffer.substr(1);
     }
-  //printf("%Ld: latch_byte -> %02x ('%c')\n", z80->getCounter(), _output, isprint(_output) ? _output : '.');
+
+  DBG(2, form("KCemu/VDIP/latch_byte",
+              "VDIP: %04xh [%10Ld]: latch_byte -> %02x ('%c')\n",
+              z80->getPC(), z80->getCounter(),
+              _output & 0xff, isprint(_output) ? _output : '.'));
 }
 
 void
@@ -320,22 +331,15 @@ VDIP::read_end(void)
   if (_reset)
     return;
 
-  //printf("%Ld: read_end, buffer size = %d\n", z80->getCounter(), _output_buffer.length());
+  DBG(2, form("KCemu/VDIP/read_end",
+              "VDIP: %04xh [%10Ld]: read_end, output buffer size = %d\n",
+              z80->getPC(), z80->getCounter(),
+              _output_buffer.length()));
 
   if (_output_buffer.empty())
     set_pio_ext_b(0x01);
   else
     z80->addCallback(50, this, NULL);
-}
-
-void
-VDIP::write_byte(byte_t val)
-{
-  if (_reset)
-    return;
-
-  _input_data = val;
-  //printf("VDIP: write: %02xh / '%c'\n", val, isprint(val) ? val : '.');
 }
 
 vdip_command_t
@@ -405,30 +409,61 @@ VDIP::decode_command(string buf)
 }
 
 void
+VDIP::write_byte(byte_t val)
+{
+  if (_reset)
+    return;
+
+  _input_data = val;
+  DBG(2, form("KCemu/VDIP/write_byte",
+              "VDIP: %04xh [%10Ld]: write_byte <- %02xh ('%c'), input buffer size = %d\n",
+              z80->getPC(), z80->getCounter(),
+              val, isprint(val) ? val : '.', _input_buffer.length()));
+}
+
+void
 VDIP::write_end(void)
 {
   if (_reset)
     return;
 
-  //printf("%Ld: write_end\n", z80->getCounter());
+  DBG(2, form("KCemu/VDIP/write_end",
+              "VDIP: %04xh [%10Ld]: write_end <- %02x ('%c'), input buffer size = %d, CMD = %s\n",
+              z80->getPC(), z80->getCounter(),
+              _input_data, isprint(_input_data) ? _input_data: '.',
+              _input_buffer.length(),
+              _cmd == NULL ? "<none>" : "active"));
 
   if (_cmd != NULL)
     {
       _cmd->handle_input(_input_data);
     }
+  else if (_input_data < 0)
+    {
+      // ignore bogus signals on startup
+    }
   else if (_input_data != 0x0d)
     {
       _input_buffer += _input_data;
+      _input_data = -1;
     }
   else
     {
-      printf("input_string: ");
-      for (unsigned int a = 0;a < _input_buffer.length();a++)
-        printf("%c", isprint(_input_buffer.at(a)) ? _input_buffer.at(a) : '.');
-      printf("\ninput_string: ");
-      for (unsigned int a = 0;a < _input_buffer.length();a++)
-        printf("%02x ", _input_buffer.at(a) & 0xff);
-      printf("\n");
+      string text;
+      for (unsigned int a = 0; a < _input_buffer.length(); a++)
+        text += isprint(_input_buffer.at(a)) ? _input_buffer.at(a) : '.';
+      text += " [";
+      for (unsigned int a = 0; a < _input_buffer.length(); a++)
+        {
+          char buf[10];
+          snprintf(buf, sizeof (buf), "%02x ", _input_buffer.at(a) & 0xff);
+          text += buf;
+        }
+      text += "]";
+      DBG(2, form("KCemu/VDIP/execute",
+                  "VDIP: %04xh [%10Ld]: execute command: %s\n",
+                  z80->getPC(), z80->getCounter(),
+                  text.c_str()));
 
       _cmd = decode_command(_input_buffer);
       _cmd->exec();
