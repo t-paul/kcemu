@@ -79,6 +79,7 @@ public:
           filename = args->get_string_arg("filename");
           if (!filename)
             {
+              args->set_int_arg("ui-file-select-dir-only", 1);
               args->set_string_arg("ui-file-select-title",
                                    _("Select root directory..."));
 	      if (_path)
