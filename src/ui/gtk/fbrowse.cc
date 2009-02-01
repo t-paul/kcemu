@@ -48,41 +48,44 @@ FileBrowser::execute(CMD_Args *args, CMD_Context context)
   if (_args)
     path = _args->get_string_arg("ui-file-select-path");
 
-  init(title, path);
+  bool dironly = _args && _args->get_int_arg("ui-file-select-dir-only");
+
+  init(title, path, dironly);
 }
 
 void
-FileBrowser::ok(GtkWidget */*widget*/, GtkFileSelection *fs)
+FileBrowser::sf_response(GtkDialog *dialog, gint response_id, gpointer user_data)
 {
-  FileBrowser *self = (FileBrowser *)gtk_object_get_user_data(GTK_OBJECT(fs));
-  self->_args->set_string_arg("filename", gtk_file_selection_get_filename(fs));
-  gtk_widget_destroy(GTK_WIDGET(fs));
-  self->_args->call_callbacks("ui-file-select-CB-ok");
+  FileBrowser *self = (FileBrowser *)user_data;
+
+  if (response_id == GTK_RESPONSE_ACCEPT)
+    {
+      char *filename = gtk_file_chooser_get_filename(GTK_FILE_CHOOSER(dialog));
+      self->_args->set_string_arg("filename", filename);
+      g_free(filename);
+      self->_args->call_callbacks("ui-file-select-CB-ok");
+    }
+  else
+    {
+      self->_args->call_callbacks("ui-file-select-CB-cancel");
+    }
+  gtk_widget_destroy(GTK_WIDGET(dialog));
 }
 
 void
-FileBrowser::cancel(GtkWidget */*widget*/, GtkFileSelection *fs)
+FileBrowser::init(const char *title, const char *path, bool dironly)
 {
-  FileBrowser *self = (FileBrowser *)gtk_object_get_user_data(GTK_OBJECT(fs));
-  gtk_widget_destroy(GTK_WIDGET(fs));
-  self->_args->call_callbacks("ui-file-select-CB-cancel");
-}
+  GtkFileChooserAction action = dironly ? GTK_FILE_CHOOSER_ACTION_SELECT_FOLDER : GTK_FILE_CHOOSER_ACTION_OPEN;
+  GtkWidget *filechooser = gtk_file_chooser_dialog_new(title, NULL, action,
+                                                       GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
+                                                       GTK_STOCK_OPEN, GTK_RESPONSE_ACCEPT,
+                                                       NULL);
 
-void
-FileBrowser::init(const char *title, const char *path)
-{
-  _w = gtk_file_selection_new(title);
+  gtk_file_chooser_set_do_overwrite_confirmation(GTK_FILE_CHOOSER(filechooser), TRUE);
+
   if (path)
-    gtk_file_selection_set_filename(GTK_FILE_SELECTION(_w), path);
-  gtk_object_set_user_data(GTK_OBJECT(_w), this);
-  gtk_signal_connect(GTK_OBJECT(GTK_FILE_SELECTION(_w)->ok_button),
-                     "clicked",
-                     GTK_SIGNAL_FUNC(ok),
-                     _w);
-  gtk_signal_connect(GTK_OBJECT(GTK_FILE_SELECTION(_w)->cancel_button),
-                     "clicked",
-                     GTK_SIGNAL_FUNC(cancel),
-                     _w);
-  gtk_grab_add(_w);
-  gtk_widget_show(_w);
+    gtk_file_chooser_set_filename(GTK_FILE_CHOOSER(filechooser), path);
+
+  g_signal_connect(filechooser, "response", G_CALLBACK(sf_response), this);
+  gtk_widget_show(filechooser);
 }

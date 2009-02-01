@@ -31,19 +31,17 @@
 class FileBrowser : public CMD
 {
  private:
-  GtkWidget *_w;
   CMD_Args *_args;
 
  public:
   FileBrowser(void);
   virtual ~FileBrowser(void);
-  
- protected:
-  void init(const char *title, const char *path);
-  static void ok(GtkWidget */*widget*/, GtkFileSelection *fs);
-  static void cancel(GtkWidget */*widget*/, GtkFileSelection *fs);
 
- public:
+ protected:
+  void init(const char *title, const char *path, bool dironly);
+  static void sf_response(GtkDialog *dialog, gint response_id, gpointer user_data);
+
+public:
   void execute(CMD_Args *args, CMD_Context context);
 };
 
