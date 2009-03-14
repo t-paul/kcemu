@@ -72,6 +72,7 @@ libui_gtk_a_SOURCES = \
 	dialog.cc		\
 	image.cc		\
 	wav.cc			\
+	plotter.cc		\
 	hedit.cc
 
 if TARGET_LINUX

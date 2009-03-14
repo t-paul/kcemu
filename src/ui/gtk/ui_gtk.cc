@@ -64,6 +64,7 @@
 #include "ui/gtk/options.h"
 #include "ui/gtk/selector.h"
 #include "ui/gtk/savemem.h"
+#include "ui/gtk/plotter.h"
 
 #include "ui/gtk/ui_gtk0.h"
 #include "ui/gtk/ui_gtk1.h"
@@ -546,6 +547,7 @@ UI_Gtk::~UI_Gtk(void) {
     delete _debug_window;
     delete _info_window;
     delete _wav_window;
+    delete _plotter_window;
     delete _edit_header_window;
     delete _dialog_window;
     delete _file_browser;
@@ -623,6 +625,7 @@ UI_Gtk::init2(void) {
     _copying_window     = new CopyingWindow("legal.glade");
     _options_window     = new OptionsWindow("options.glade");
     _wav_window         = new WavWindow("audio.glade");
+    _plotter_window     = new PlotterWindow("plotter.glade");
     _save_memory_window = new SaveMemoryWindow("savemem.glade");
     
     _edit_header_window = new EditHeaderWindow();

@@ -8,6 +8,7 @@ IMAGES = \
 	sys-poly880.jpg \
 	sys-z1013.jpg \
 	sys-z9001.jpg \
+	sys-xy4131.jpg \
 	window-audio.png \
 	window-disk.png \
 	window-module-kc85.png \
@@ -28,6 +29,10 @@ IMAGES = \
 	window-profile-5_small.png \
 	window-savemem_small.png \
 	window-select-profile_small.png \
+	window-plotter-1.png \
+	window-plotter-1_small.png \
+	window-plotter-2.png \
+	window-plotter-2_small.png \
 	kcemu.png
 
 docdir = $(pkgdatadir)/doc

@@ -57,6 +57,7 @@ EXTRA_DIST = \
 	ports0.h	\
 	ports4.h	\
 	ports6.h	\
+	plotter.h	\
 	sh_mem.h	\
 	disk_io.h	\
 	gdc.h		\

@@ -27,10 +27,11 @@
 
 class ModuleXY4131 : public ModuleInterface, public PIOCallbackInterface
 {
- private:
-  bool ready;
+private:
+  bool _master;
+  byte_t _val;
 
- public:
+public:
   ModuleXY4131(ModuleXY4131 &tmpl);
   ModuleXY4131(const char *name);
   virtual ~ModuleXY4131(void);

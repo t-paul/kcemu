@@ -45,12 +45,12 @@ private:
   static const char * _path;
 
 protected:
-  int get_slot_no(CMD_Args *args)
+  long get_slot_no(CMD_Args *args)
   {
-    int n = 0;
+    long n = 0;
 
     if (args && args->has_arg("slot"))
-      n = args->get_int_arg("slot");
+      n = args->get_long_arg("slot");
 
     return n;
   }
@@ -79,7 +79,7 @@ public:
           filename = args->get_string_arg("filename");
           if (!filename)
             {
-              args->set_int_arg("ui-file-select-dir-only", 1);
+              args->set_long_arg("ui-file-select-dir-only", 1);
               args->set_string_arg("ui-file-select-title",
                                    _("Select root directory..."));
 	      if (_path)
@@ -203,7 +203,7 @@ VDIP::set_root(string root)
     }
 
   CMD_Args *args = new CMD_Args();
-  args->set_int_arg("slot", 0);
+  args->set_long_arg("slot", 0);
   args->set_string_arg("filename", _root.c_str());
   CMD_EXEC_ARGS("ui-vdip-update-MSG", args);
   delete args;

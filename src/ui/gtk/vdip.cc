@@ -64,7 +64,7 @@ public:
     DBG(2, form("KCemu/VDIP/update",
 		"got vdip-update message\n"));
 
-    int slot_no = args->get_int_arg("slot");
+    long slot_no = args->get_long_arg("slot");
     if ((slot_no < 0) || (slot_no > 1))
       return;
 
@@ -100,14 +100,14 @@ public:
       case 1:
       case 2:
       case 3:
-	args->set_int_arg("slot", context);
+	args->set_long_arg("slot", context);
 	CMD_EXEC_ARGS("vdip-attach", args);
 	break;
       case 4:
       case 5:
       case 6:
       case 7:
-	args->set_int_arg("slot", context & 3);
+	args->set_long_arg("slot", context & 3);
 	CMD_EXEC_ARGS("vdip-detach", args);
 	break;
       }
@@ -156,7 +156,7 @@ VDIPWindow::sf_vdip_attach(GtkWidget *widget, gpointer data)
     return;
 
   CMD_Args *args = new CMD_Args();
-  args->set_int_arg("slot", nr);
+  args->set_long_arg("slot", nr);
   args->set_string_arg("filename", text);
   CMD_EXEC_ARGS("vdip-attach", args);
 }

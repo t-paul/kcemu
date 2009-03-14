@@ -49,6 +49,7 @@ class VIS;
 class VDIP;
 class Poly880;
 class DisplayC80;
+class Plotter;
 
 extern Z80             *z80;
 extern DaisyChain      *daisy;
@@ -71,6 +72,7 @@ extern GDC             *gdc;
 extern VIS             *vis;
 extern Poly880         *poly880;
 extern DisplayC80      *display_c80;
+extern Plotter         *plotter;
 
 extern Z80_FDC         *fdc_z80;     
 extern FloppyIO        *fdc_io;

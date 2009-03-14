@@ -48,7 +48,7 @@ FileBrowser::execute(CMD_Args *args, CMD_Context context)
   if (_args)
     path = _args->get_string_arg("ui-file-select-path");
 
-  bool dironly = _args && _args->get_int_arg("ui-file-select-dir-only");
+  bool dironly = _args && _args->get_long_arg("ui-file-select-dir-only");
 
   init(title, path, dironly);
 }

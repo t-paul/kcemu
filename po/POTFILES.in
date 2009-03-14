@@ -15,6 +15,7 @@ images/options.glade
 images/legal.glade
 images/selector.glade
 images/main.glade
+images/plotter.glade
 src/cmd/cmd.cc
 src/cmd/cmdargs.cc
 src/cmd/dbg.cc
