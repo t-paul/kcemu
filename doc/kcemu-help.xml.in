@@ -12,7 +12,7 @@
  <img src="kcemu.png"/> 
 
 
-<b><size value="1">(c) 1997-2008 Torsten Paul</size></b>
+<b><size value="1">(c) 1997-2009 Torsten Paul</size></b>
 <i><size value="-1">&lt;Torsten.Paul@gmx.de&gt;</size></i>
 
 
@@ -96,7 +96,7 @@
 <p>
 <size value="2"><ref name="license"/>1.2. Lizenz</size>
 
-  <b>KCemu @VERSION@, Copyright (c) 1997-2008 Torsten Paul.</b>
+  <b>KCemu @VERSION@, Copyright (c) 1997-2009 Torsten Paul.</b>
 
   Dieses Programm ist freie Software. Sie können es unter
   den Bedingungen der GNU General Public License, wie von der

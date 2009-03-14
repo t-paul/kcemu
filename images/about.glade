@@ -74,7 +74,7 @@
               <widget class="GtkLabel" id="main_label_copyright">
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
-                <property name="label" translatable="yes">(c) 1997-2008 Torsten Paul</property>
+                <property name="label" translatable="yes">(c) 1997-2009 Torsten Paul</property>
                 <property name="selectable">True</property>
               </widget>
               <packing>

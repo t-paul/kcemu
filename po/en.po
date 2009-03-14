@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: KCemu 0.4\n"
 "Report-Msgid-Bugs-To: Torsten.Paul@gmx.de\n"
-"POT-Creation-Date: 2008-12-29 20:07+0100\n"
-"PO-Revision-Date: 2008-12-29 20:40+0100\n"
+"POT-Creation-Date: 2009-03-14 20:14+0100\n"
+"PO-Revision-Date: 2009-03-14 20:15+0100\n"
 "Last-Translator: Torsten Paul <Torsten.Paul@gmx.de>\n"
 "Language-Team: English <Torsten.Paul@gmx.de>\n"
 "MIME-Version: 1.0\n"
@@ -31,8 +31,8 @@ msgid "<big><b>[ Version ]</b></big>"
 msgstr "<big><b>[ Version ]</b></big>"
 
 #: images/about.glade:77
-msgid "(c) 1997-2008 Torsten Paul"
-msgstr "(c) 1997-2008 Torsten Paul"
+msgid "(c) 1997-2009 Torsten Paul"
+msgstr "(c) 1997-2009 Torsten Paul"
 
 #: images/about.glade:90
 msgid "<Torsten.Paul@gmx.de>"
@@ -582,27 +582,27 @@ msgstr "gtk-quit"
 msgid "_Emulator"
 msgstr "_Emulator"
 
-#: images/main.glade:30 images/main.glade:406
+#: images/main.glade:30 images/main.glade:413
 msgid "_Run..."
 msgstr "_Run..."
 
-#: images/main.glade:38 images/main.glade:414
+#: images/main.glade:38 images/main.glade:421
 msgid "_Load..."
 msgstr "_Load..."
 
-#: images/main.glade:45 images/main.glade:421
+#: images/main.glade:45 images/main.glade:428
 msgid "_Save..."
 msgstr "_Save..."
 
-#: images/main.glade:53 images/main.glade:429
+#: images/main.glade:53 images/main.glade:436
 msgid "_Tape..."
 msgstr "_Tape..."
 
-#: images/main.glade:61 images/main.glade:437
+#: images/main.glade:61 images/main.glade:444
 msgid "_Disk..."
 msgstr "_Disk..."
 
-#: images/main.glade:69 images/main.glade:445
+#: images/main.glade:69 images/main.glade:452
 msgid "_Module..."
 msgstr "_Module..."
 
@@ -610,111 +610,115 @@ msgstr "_Module..."
 msgid "A_udio..."
 msgstr "A_udio..."
 
-#: images/main.glade:84 images/main.glade:460
+#: images/main.glade:84 images/main.glade:467
 msgid "Pl_otter..."
 msgstr "Pl_otter..."
 
-#: images/main.glade:98 images/main.glade:554
+#: images/main.glade:91 images/main.glade:474
+msgid "_Vinculum USB..."
+msgstr "_Vinculum USB..."
+
+#: images/main.glade:105 images/main.glade:568
 msgid "R_eset"
 msgstr "R_eset"
 
-#: images/main.glade:106 images/main.glade:562
+#: images/main.glade:113 images/main.glade:576
 msgid "_Power On"
 msgstr "_Power On"
 
-#: images/main.glade:120 images/main.glade:576
+#: images/main.glade:127 images/main.glade:590
 msgid "_Quit Emulator"
 msgstr "_Quit Emulator"
 
-#: images/main.glade:132 images/main.glade:474
+#: images/main.glade:139 images/main.glade:488
 msgid "_View"
 msgstr "_View"
 
-#: images/main.glade:142
+#: images/main.glade:149
 msgid "Zoom x_1"
 msgstr "Zoom x_1"
 
-#: images/main.glade:150
+#: images/main.glade:157
 msgid "Zoom x_2"
 msgstr "Zoom x_2"
 
-#: images/main.glade:158
+#: images/main.glade:165
 msgid "Zoom x_3"
 msgstr "Zoom x_3"
 
-#: images/main.glade:172 images/main.glade:514
+#: images/main.glade:179 images/main.glade:528
 msgid "_Keyboard"
 msgstr "_Keyboard"
 
-#: images/main.glade:186 images/main.glade:528
+#: images/main.glade:193 images/main.glade:542
 msgid "_Menubar"
 msgstr "_Menubar"
 
-#: images/main.glade:194 images/main.glade:536
+#: images/main.glade:201 images/main.glade:550
 msgid "_Statusbar"
 msgstr "_Statusbar"
 
-#: images/main.glade:206
+#: images/main.glade:213
 msgid "_Options"
 msgstr "_Options"
 
-#: images/main.glade:216
+#: images/main.glade:223
 msgid "_Colors..."
 msgstr "_Colors..."
 
-#: images/main.glade:224
+#: images/main.glade:231
 msgid "_Display Effects"
 msgstr "_Display Effects"
 
-#: images/main.glade:232
+#: images/main.glade:239
 msgid "No _Speed Limit"
 msgstr "No _Speed Limit"
 
-#: images/main.glade:246
+#: images/main.glade:253
 msgid "_Profiles..."
 msgstr "_Profiles..."
 
-#: images/main.glade:258 images/main.glade:268
+#: images/main.glade:265 images/main.glade:275
 msgid "_Help"
 msgstr "_Help"
 
-#: images/main.glade:276
+#: images/main.glade:283
 msgid "Help _Index"
 msgstr "Help _Index"
 
-#: images/main.glade:284
+#: images/main.glade:291
 msgid "_Context Help"
 msgstr "_Context Help"
 
-#: images/main.glade:298
+#: images/main.glade:305
 msgid "_About"
 msgstr "_About"
 
-#: images/main.glade:306
+#: images/main.glade:313
 msgid "_Thanks!"
 msgstr "_Thanks!"
 
-#: images/main.glade:320
+#: images/main.glade:327
 msgid "KCemu _Licence"
 msgstr "KCemu _Licence"
 
-#: images/main.glade:328
+#: images/main.glade:335
 msgid "No _Warranty!"
 msgstr "No _Warranty!"
 
-#: images/main.glade:453
+#: images/main.glade:460
 msgid "_Audio..."
 msgstr "_Audio..."
 
-#: images/main.glade:484
+#: images/main.glade:498
 msgid "Zoom x1"
 msgstr "Zoom x1"
 
-#: images/main.glade:492
+#: images/main.glade:506
 msgid "Zoom x2"
 msgstr "Zoom x2"
 
-#: images/main.glade:500
+#: images/main.glade:514
 msgid "Zoom x3"
 msgstr "Zoom x3"
 
@@ -919,7 +923,7 @@ msgstr "disk-file `%s' attached."
 msgid "Can't attach disk-file."
 msgstr "Can't attach disk-file."
 
-#: src/kc/kc.cc:254
+#: src/kc/kc.cc:256
 msgid ""
 "\n"
 "KCemu comes with ABSOLUTELY NO WARRANTY; for details run `kcemu --"
@@ -997,7 +1001,7 @@ msgstr ""
 "  -V --viewlist:       view verbose list of available emulations\n"
 "  -W --warranty:       show warranty\n"
 
-#: src/kc/kc.cc:321
+#: src/kc/kc.cc:323
 msgid ""
 "\n"
 "\t\t    GNU GENERAL PUBLIC LICENSE\n"
@@ -1521,7 +1525,7 @@ msgstr ""
 "of promoting the sharing and reuse of software generally.\n"
 "\n"
 
-#: src/kc/kc.cc:583
+#: src/kc/kc.cc:585
 msgid ""
 "\n"
 "NO WARRANTY\n"
@@ -1573,7 +1577,7 @@ msgstr ""
 "POSSIBILITY OF SUCH DAMAGES.\n"
 "\n"
 
-#: src/kc/kc.cc:610
+#: src/kc/kc.cc:612
 msgid ""
 "\n"
 "                     END OF TERMS AND CONDITIONS\n"
@@ -1785,207 +1789,223 @@ msgstr ""
 "configuration file if the device name shown above\n"
 "looks bogus.\n"
 
-#: src/kc/mod_list.cc:195
+#: src/kc/mod_list.cc:196
 msgid "<no module>"
 msgstr "<no module>"
 
-#: src/kc/mod_list.cc:205
+#: src/kc/mod_list.cc:206
 msgid "RAM Module (1k/2400h)"
 msgstr "RAM Module (1k/2400h)"
 
-#: src/kc/mod_list.cc:207
+#: src/kc/mod_list.cc:208
 msgid "RAM Module (2k/2800h)"
 msgstr "RAM Module (2k/2800h)"
 
-#: src/kc/mod_list.cc:209
+#: src/kc/mod_list.cc:210
 msgid "RAM Module (4k/3000h)"
 msgstr "RAM Module (4k/3000h)"
 
-#: src/kc/mod_list.cc:219
+#: src/kc/mod_list.cc:220
 msgid "RAM Module (2k/0800h)"
 msgstr "RAM Module (2k/0800h)"
 
-#: src/kc/mod_list.cc:221
+#: src/kc/mod_list.cc:222
 msgid "RAM Module (4k/1000h)"
 msgstr "RAM Module (4k/1000h)"
 
-#: src/kc/mod_list.cc:223
+#: src/kc/mod_list.cc:224
 msgid "RAM Module (8k/2000h)"
 msgstr "RAM Module (8k/2000h)"
 
-#: src/kc/mod_list.cc:232 src/kc/mod_list.cc:295
+#: src/kc/mod_list.cc:233 src/kc/mod_list.cc:296
 msgid "RAM Module (16k/4000h)"
 msgstr "RAM Module (16k/4000h)"
 
-#: src/kc/mod_list.cc:234
+#: src/kc/mod_list.cc:235
 msgid "RAM Module (32k/8000h)"
 msgstr "RAM Module (32k/8000h)"
 
-#: src/kc/mod_list.cc:240
+#: src/kc/mod_list.cc:241
 msgid "256k RAM Floppy"
 msgstr "256k RAM Floppy"
 
-#: src/kc/mod_list.cc:246
+#: src/kc/mod_list.cc:247
 msgid "FDC (Schneider)"
 msgstr "FDC (Schneider)"
 
-#: src/kc/mod_list.cc:252
+#: src/kc/mod_list.cc:253
 msgid "FDC (Kramer)"
 msgstr "FDC (Kramer)"
 
-#: src/kc/mod_list.cc:258
+#: src/kc/mod_list.cc:259
 msgid "GDC 82720"
 msgstr "GDC 82720"
 
-#: src/kc/mod_list.cc:264
+#: src/kc/mod_list.cc:265
 msgid "RTC (port 20h-2fh)"
 msgstr "RTC (port 20h-2fh)"
 
-#: src/kc/mod_list.cc:270
+#: src/kc/mod_list.cc:271
 msgid "RTC (port 70h-7fh)"
 msgstr "RTC (port 70h-7fh)"
 
-#: src/kc/mod_list.cc:277
+#: src/kc/mod_list.cc:278
 msgid "Basic Module (c000h-e7ffh)"
 msgstr "Basic Module (c000h-e7ffh)"
 
-#: src/kc/mod_list.cc:289
+#: src/kc/mod_list.cc:290
 msgid "Plotter Module (c000h-e7ffh)"
 msgstr "Plotter Module (c000h-e7ffh)"
 
-#: src/kc/mod_list.cc:297
+#: src/kc/mod_list.cc:298
 msgid "RAM Module (16k/8000h)"
 msgstr "RAM Module (16k/8000h)"
 
-#: src/kc/mod_list.cc:306
+#: src/kc/mod_list.cc:307
 msgid "ZM30 (c000h-ccffh)"
 msgstr "ZM30 (c000h-ccffh)"
 
-#: src/kc/mod_list.cc:313
+#: src/kc/mod_list.cc:314
 msgid "EDAS (c000h-e7ffh)"
 msgstr "EDAS (c000h-e7ffh)"
 
-#: src/kc/mod_list.cc:320
+#: src/kc/mod_list.cc:321
 msgid "IDAS / ZM (c000h-e7ffh)"
 msgstr "IDAS / ZM (c000h-e7ffh)"
 
-#: src/kc/mod_list.cc:327
+#: src/kc/mod_list.cc:328
 msgid "BITEX (c000h-d7ffh)"
 msgstr "BITEX (c000h-d7ffh)"
 
-#: src/kc/mod_list.cc:352
+#: src/kc/mod_list.cc:353
 msgid "KC-CAOS 3.1 (8000h-8fffh)"
 msgstr "KC-CAOS 3.1 (8000h-8fffh)"
 
-#: src/kc/mod_list.cc:365
+#: src/kc/mod_list.cc:366
 msgid "192 KByte RAM/EPROM"
 msgstr "192 KByte RAM/EPROM"
 
-#: src/kc/mod_list.cc:372
+#: src/kc/mod_list.cc:373
 msgid "KC-Pascal Module"
 msgstr "KC-Pascal Module"
 
-#: src/kc/mod_list.cc:379
+#: src/kc/mod_list.cc:380
 msgid "Mega-ROM Module"
 msgstr "Mega-ROM Module"
 
-#: src/kc/mod_list.cc:386
+#: src/kc/mod_list.cc:387
 msgid "128k ROM Bank"
 msgstr "128k ROM Bank"
 
-#: src/kc/mod_list.cc:395 src/ui/gtk/module.cc:267
+#: src/kc/mod_list.cc:396 src/ui/gtk/module.cc:267
 msgid "IRM Color Expansion"
 msgstr "IRM Color Expansion"
 
-#: src/kc/mod_list.cc:410
+#: src/kc/mod_list.cc:411
 msgid "Plotter XY4131"
 msgstr "Plotter XY4131"
 
-#: src/kc/mod_list.cc:417
+#: src/kc/mod_list.cc:418
 msgid "CPM-Z9 BOOT (c000h-c7ffh)"
 msgstr "CPM-Z9 BOOT (c000h-c7ffh)"
 
-#: src/kc/mod_list.cc:423
+#: src/kc/mod_list.cc:424
 msgid "CPM-Z9 Floppy"
 msgstr "CPM-Z9 Floppy"
 
-#: src/kc/mod_list.cc:429
+#: src/kc/mod_list.cc:430
 msgid "CPM-Z9 64k RAM"
 msgstr "CPM-Z9 64k RAM"
 
-#: src/kc/mod_list.cc:435
+#: src/kc/mod_list.cc:436
 msgid "M001: Digital In / Out"
 msgstr "M001: Digital In / Out"
 
-#: src/kc/mod_list.cc:442
+#: src/kc/mod_list.cc:443
 msgid "M003: V24"
 msgstr "M003: V24"
 
-#: src/kc/mod_list.cc:450
+#: src/kc/mod_list.cc:451
 msgid "M006: Basic"
 msgstr "M006: Basic"
 
-#: src/kc/mod_list.cc:457
+#: src/kc/mod_list.cc:458
 msgid "M008: Joystick"
 msgstr "M008: Joystick"
 
-#: src/kc/mod_list.cc:464
+#: src/kc/mod_list.cc:465
 msgid "M011: 64k RAM"
 msgstr "M011: 64k RAM"
 
-#: src/kc/mod_list.cc:471
+#: src/kc/mod_list.cc:472
 msgid "M012: Texor"
 msgstr "M012: Texor"
 
-#: src/kc/mod_list.cc:477
+#: src/kc/mod_list.cc:478
 msgid "M022: Expander RAM (16k)"
 msgstr "M022: Expander RAM (16k)"
 
-#: src/kc/mod_list.cc:484
+#: src/kc/mod_list.cc:485
 msgid "M026: Forth"
 msgstr "M026: Forth"
 
-#: src/kc/mod_list.cc:491
+#: src/kc/mod_list.cc:492
 msgid "M027: Development"
 msgstr "M027: Development"
 
-#: src/kc/mod_list.cc:497
+#: src/kc/mod_list.cc:498
+msgid "VDIP: Vinculum USB"
+msgstr "VDIP: Vinculum USB"
+
+#: src/kc/mod_list.cc:502
+msgid "VDIP: Vinculum USB ROM"
+msgstr "VDIP: Vinculum USB ROM"
+
+#: src/kc/mod_list.cc:506
+msgid "VDIP2: Vinculum USB ROM (CAOS 4.2)"
+msgstr "VDIP2: Vinculum USB ROM (CAOS 4.2)"
+
+#: src/kc/mod_list.cc:510
+msgid "VDIP2: Vinculum USB ROM (CAOS 4.4)"
+msgstr "VDIP2: Vinculum USB ROM (CAOS 4.4)"
+
+#: src/kc/mod_list.cc:516
 msgid "M032: 256k Segmented RAM"
 msgstr "M032: 256k Segmented RAM"
 
-#: src/kc/mod_list.cc:503
+#: src/kc/mod_list.cc:522
 msgid "M034: 512k Segmented RAM"
 msgstr "M034: 512k Segmented RAM"
 
-#: src/kc/mod_list.cc:509
+#: src/kc/mod_list.cc:528
 msgid "M035: 1M Segmented RAM"
 msgstr "M035: 1M Segmented RAM"
 
-#: src/kc/mod_list.cc:515
+#: src/kc/mod_list.cc:534
 msgid "M035x4: 4M RAM"
 msgstr "M035x4: 4M RAM"
 
-#: src/kc/mod_list.cc:521
+#: src/kc/mod_list.cc:540
 msgid "M036: 128k Segmented RAM"
 msgstr "M036: 128k Segmented RAM"
 
-#: src/kc/mod_list.cc:528
+#: src/kc/mod_list.cc:547
 msgid "M900: WordPro '86 (KC85/3)"
 msgstr "M900: WordPro '86 (KC85/3)"
 
-#: src/kc/mod_list.cc:535
+#: src/kc/mod_list.cc:554
 msgid "M901: WordPro '86 (KC85/4)"
 msgstr "M901: WordPro '86 (KC85/4)"
 
-#: src/kc/mod_list.cc:549
+#: src/kc/mod_list.cc:568
 msgid "Floppy Disk Basis F8"
 msgstr "Floppy Disk Basis F8"
 
-#: src/kc/mod_list.cc:558
+#: src/kc/mod_list.cc:577
 msgid "Floppy Disk Basis FC"
 msgstr "Floppy Disk Basis FC"
 
-#: src/kc/mod_list.cc:755
+#: src/kc/mod_list.cc:774
 msgid "Autostart"
 msgstr "Autostart"
 
@@ -2877,99 +2897,99 @@ msgstr "Basis Device"
 msgid "Please enter the new name for the file."
 msgstr "Please enter the new name for the file."
 
-#: src/ui/gtk/tape.cc:264
+#: src/ui/gtk/tape.cc:274
 msgid "/_Run File"
 msgstr "/_Run File"
 
-#: src/ui/gtk/tape.cc:265
+#: src/ui/gtk/tape.cc:275
 msgid "/_Load File"
 msgstr "/_Load File"
 
-#: src/ui/gtk/tape.cc:266
+#: src/ui/gtk/tape.cc:276
 msgid "/_Export File"
 msgstr "/_Export File"
 
-#: src/ui/gtk/tape.cc:267
+#: src/ui/gtk/tape.cc:277
 msgid "/Export _Wav"
 msgstr "/Export _Wav"
 
-#: src/ui/gtk/tape.cc:268
+#: src/ui/gtk/tape.cc:278
 msgid "/sep1"
 msgstr "/sep1"
 
-#: src/ui/gtk/tape.cc:269
+#: src/ui/gtk/tape.cc:279
 msgid "/Edit _Header"
 msgstr "/Edit _Header"
 
-#: src/ui/gtk/tape.cc:270
+#: src/ui/gtk/tape.cc:280
 msgid "/Re_name File"
 msgstr "/Re_name File"
 
-#: src/ui/gtk/tape.cc:271
+#: src/ui/gtk/tape.cc:281
 msgid "/_Delete File"
 msgstr "/_Delete File"
 
-#: src/ui/gtk/tape.cc:272
+#: src/ui/gtk/tape.cc:282
 msgid "/sep2"
 msgstr "/sep2"
 
-#: src/ui/gtk/tape.cc:273
+#: src/ui/gtk/tape.cc:283
 msgid "/_Add File"
 msgstr "/_Add File"
 
-#: src/ui/gtk/tape.cc:278
+#: src/ui/gtk/tape.cc:288
 msgid "Name"
 msgstr "Name"
 
-#: src/ui/gtk/tape.cc:279
+#: src/ui/gtk/tape.cc:289
 msgid "Type"
 msgstr "Type"
 
-#: src/ui/gtk/tape.cc:280
+#: src/ui/gtk/tape.cc:290
 msgid "Load"
 msgstr "Load"
 
-#: src/ui/gtk/tape.cc:281
+#: src/ui/gtk/tape.cc:291
 msgid "Start"
 msgstr "Start"
 
-#: src/ui/gtk/tape.cc:282
+#: src/ui/gtk/tape.cc:292
 msgid "Size"
 msgstr "Size"
 
-#: src/ui/gtk/tape.cc:294 src/ui/gtk/tape.cc:300
+#: src/ui/gtk/tape.cc:304 src/ui/gtk/tape.cc:310
 msgid "<TapeP>"
 msgstr "<TapeP>"
 
-#: src/ui/gtk/tape.cc:301
+#: src/ui/gtk/tape.cc:311
 msgid "/Run File"
 msgstr "/Run File"
 
-#: src/ui/gtk/tape.cc:302
+#: src/ui/gtk/tape.cc:312
 msgid "/Load File"
 msgstr "/Load File"
 
-#: src/ui/gtk/tape.cc:303
+#: src/ui/gtk/tape.cc:313
 msgid "/Edit Header"
 msgstr "/Edit Header"
 
-#: src/ui/gtk/tape.cc:304
+#: src/ui/gtk/tape.cc:314
 msgid "/Delete File"
 msgstr "/Delete File"
 
-#: src/ui/gtk/tape.cc:305
+#: src/ui/gtk/tape.cc:315
 msgid "/Rename File"
 msgstr "/Rename File"
 
-#: src/ui/gtk/tape.cc:306
+#: src/ui/gtk/tape.cc:316
 msgid "/Export File"
 msgstr "/Export File"
 
-#: src/ui/gtk/tape.cc:307
+#: src/ui/gtk/tape.cc:317
 msgid "/Export Wav"
 msgstr "/Export Wav"
 
-#: src/ui/gtk/ui_gtk.cc:776
+#: src/ui/gtk/ui_gtk.cc:779
 msgid "Info"
 msgstr "Info"
 
