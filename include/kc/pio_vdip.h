@@ -19,22 +19,25 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-#ifndef __kc_prefs_strlist_h
-#define __kc_prefs_strlist_h
+#ifndef __kc_pio_vdip_h
+#define __kc_pio_vdip_h
 
-#include <list>
-#include <string>
+#include "kc/pio.h"
+#include "kc/tape.h"
 
-using namespace std;
-
-class StringList : public list<string>
+class PIO_VDIP : public PIO
 {
+  byte_t _data_out;
+  
+protected:
+  virtual void change_A(byte_t changed, byte_t val);
+  virtual void change_B(byte_t changed, byte_t val);
+
 public:
-    StringList();
-    StringList(string str, const char split_char = ',');
-    virtual ~StringList(void);
-    
-    virtual string join(const char join_char);
+  PIO_VDIP(void);
+  virtual ~PIO_VDIP(void);
+  virtual byte_t in(word_t addr);
+  virtual void out(word_t addr, byte_t val);
 };
 
-#endif /* __kc_prefs_strlist_h */
+#endif /* __kc_pio_vdip_h */

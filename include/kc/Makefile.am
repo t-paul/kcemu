@@ -14,6 +14,7 @@ EXTRA_DIST = \
 	ctc9.h		\
 	ctc_fdc.h	\
 	pio_dio.h	\
+	pio_vdip.h	\
 	ctc_dio.h	\
 	ctc_base.h	\
 	cb_list.h	\
@@ -62,6 +63,7 @@ EXTRA_DIST = \
 	vis.h		\
 	svg.h		\
 	gide.h		\
+	vdip.h		\
 	fdc.h		\
 	fdc0s.h		\
 	fdc4.h		\
@@ -71,6 +73,7 @@ EXTRA_DIST = \
 	floppy.h	\
 	module.h	\
 	mod_dio.h	\
+	mod_vdip.h	\
 	mod_ram.h	\
 	mod_ram1.h	\
 	mod_r64.h	\

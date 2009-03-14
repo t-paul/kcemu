@@ -184,9 +184,9 @@ InterfaceCircuit::reti_4D(void)
       DBG(2, form("KCemu/IC/reti",
 		  "IC::reti_4D(): %s\n",
 		  get_ic_name()));
-      reti();
       _irqreq = 0;
       _irqactive = 0;
+      reti();
       if (_next)
 	_next->iei(ieo());
     }

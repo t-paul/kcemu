@@ -51,6 +51,7 @@
 #include "ui/gtk/help.h"
 #include "ui/gtk/tape.h"
 #include "ui/gtk/disk.h"
+#include "ui/gtk/vdip.h"
 #include "ui/gtk/info.h"
 #include "ui/gtk/about.h"
 #include "ui/gtk/debug.h"
@@ -535,6 +536,7 @@ UI_Gtk::~UI_Gtk(void) {
     delete _tape_window;
     delete _tape_add_window;
     delete _disk_window;
+    delete _vdip_window;
     delete _save_memory_window;
     delete _module_window;
     delete _keyboard_window;
@@ -615,6 +617,7 @@ UI_Gtk::init2(void) {
     _tape_window        = new TapeWindow("tape.glade");
     _tape_add_window    = new TapeAddWindow("tapeedit.glade");
     _disk_window        = new DiskWindow("disk.glade");
+    _vdip_window        = new VDIPWindow("vdip.glade");
     _module_window      = new ModuleWindow("module.glade");
     _keyboard_window    = new KeyboardWindow("keyboard.glade");
     _copying_window     = new CopyingWindow("legal.glade");

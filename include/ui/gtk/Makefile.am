@@ -19,6 +19,7 @@ EXTRA_DIST = \
 	util.h			\
 	main.h			\
 	disk.h			\
+	vdip.h			\
 	help.h			\
 	tape.h			\
 	tapeadd.h		\

@@ -46,6 +46,7 @@ class Sound;
 class PortInterface;
 class GDC;
 class VIS;
+class VDIP;
 class Poly880;
 class DisplayC80;
 
@@ -77,6 +78,7 @@ extern FloppySharedMem *fdc_shmem;
 extern Ports           *fdc_ports;
 extern FDC             *fdc_fdc;
 extern Sound           *sound;
+extern VDIP            *vdip;
 extern byte_t           fdc_mem[];
 
 extern int   kcemu_ui_scale;

@@ -21,6 +21,10 @@
 
 #include "kc/prefs/strlist.h"
 
+StringList::StringList()
+{
+}
+
 StringList::StringList(string str, const char split_char)
 {
     string::size_type lastPos = str.find_first_not_of(split_char, 0);
@@ -37,4 +41,20 @@ StringList::StringList(string str, const char split_char)
 
 StringList::~StringList(void)
 {
+}
+
+string
+StringList::join(const char join_char)
+{
+  string ret;
+
+  for (StringList::iterator it = begin();it != end();it++)
+    {
+      if (ret.length() > 0)
+        ret += join_char;
+
+      ret += *it;
+    }
+
+  return ret;
 }

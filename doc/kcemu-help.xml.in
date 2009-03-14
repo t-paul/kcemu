@@ -59,7 +59,7 @@
 3.4. <link ref="window-module">Modulverwaltung</link>
 3.5. <link ref="window-audio">Abspielen von Sound-Dateien</link>
 3.6. <link ref="window-save-memory">Speichern von Memory-Bereichen</link>
-
+3.7. <link ref="window-vdip">Vinculum USB</link>
 
 </p>
 
@@ -960,6 +960,45 @@ VEB Robotron-Meßelektronik "Otto Schön" Dresden
   Adressen ein bzw. aus.
 
 
+</p>
+
+<p><size value="2"><ref name="window-vdip"/>3.7. Vinculum USB</size>
+
+  Emuliert wird die Schnittstelle zum VDIP1 Modul der Firma FTDI.
+  Dieser bietet die Möglichkeit auf einfache Art und Weise USB
+  Massenspeicher-Geräte (vorrangig USB-Sticks) am KC anzuschließen.
+
+  Die auf dem Modul enthaltene Firmware übernimmt dabei die komplette
+  Verwaltung des angeschlossenen USB-Sticks und bietet dem KC den Zugriff
+  auf die gespeicherten Dateien bzw. erlaubt es Dateien auf dem USB-Stick
+  abzulegen.
+
+  Notwendig für die Nutzung der emulierten USB-Schnittstelle ist das
+  aktivieren des "Vinculum USB" Moduls, der eine spezielle Form des
+  Digital-I/O Moduls M001 nachbildet, basierend auf der Schaltung, die
+  Mario Leubner auf den Web-Seiten des "KC85 Labors" vorgestellt hat.
+  Dort finden sich auch weitere Hinweise und Programme für die Nutzung
+  des Moduls (http://www.kc85.susowa.homeftp.net/).
+
+  Der zusätzlich vorhandene ROM-Modul mit der CAOS Terminal-Software
+  erlaubt einen einfachen Zugriff auf die Funktionen des Moduls.
+  Verfügbar sind 3 Versionen der Terminal-Software:
+
+  - Version 1.2
+  - Version 2.0 für CAOS 4.2
+  - Version 2.0 für CAOS 4.4
+
+  Version 1.2 unterstützt noch nicht die Funktionen zur Nutzung der
+  Zeitstempel für Dateien. Version 2.0 existiert in 2 Varianten. Die
+  speziell für CAOS 4.4 erweiterte Variante, erlaubt es bei einigen
+  Kommandos den Dateinamen direkt anzugeben (also z.B. <m>DIR B*.*</m>,
+  statt <m>DIR &lt;ENTER&gt;</m> mit nachfolgender Abfrage der Maske).
+
+  Welche Dateien sichtbar sein sollen, kann über den Menüpunkt
+  "Emulator / Vinculum USB" festgelegt werden. Die Auswahl eines
+  Verzeichnisses wirkt wie das Stecken eines USB-Sticks mit den
+  Daten unterhalb dieses Verzeichnisses.
+  
 </p>
 
 </help>

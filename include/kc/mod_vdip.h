@@ -19,22 +19,26 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-#ifndef __kc_prefs_strlist_h
-#define __kc_prefs_strlist_h
+#ifndef __kc_mod_vdip_h
+#define __kc_mod_vdip_h
 
-#include <list>
-#include <string>
+#include "kc/module.h"
 
-using namespace std;
-
-class StringList : public list<string>
+class ModuleVDIP : public ModuleInterface
 {
-public:
-    StringList();
-    StringList(string str, const char split_char = ',');
-    virtual ~StringList(void);
-    
-    virtual string join(const char join_char);
+ private:
+  PIO *_pio;
+  PortGroup *_portg_pio;
+
+ public:
+  ModuleVDIP(ModuleVDIP &tmpl);
+  ModuleVDIP(const char *name, byte_t id);
+  virtual ~ModuleVDIP(void);
+
+  //virtual byte_t m_in(word_t addr);
+  virtual void m_out(word_t addr, byte_t val);
+  virtual ModuleInterface * clone(void);
+  virtual void reset(bool power_on = false);
 };
 
-#endif /* __kc_prefs_strlist_h */
+#endif /* __kc_mod_vdip_h */

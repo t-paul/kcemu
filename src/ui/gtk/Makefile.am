@@ -53,6 +53,7 @@ libui_gtk_a_SOURCES = \
 	window.cc		\
 	main.cc			\
 	disk.cc			\
+	vdip.cc			\
 	tape.cc			\
 	tapeadd.cc		\
 	info.cc			\
