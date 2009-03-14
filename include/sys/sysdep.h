@@ -41,6 +41,14 @@ void sys_usleep(long microseconds);
 void sys_localtime(int *year, int *month, int *day, int *hour, int *minute, int *second);
 
 /*
+ *  return local time converted from given time value
+ *
+ *  same as sys_localtime, but does not return the current
+ *  time but the time converted from the given value.
+ */
+void sys_converttime(long time, int *year, int *month, int *day, int *hour, int *minute, int *second);
+
+/*
  *  return system time
  *
  *  works like gettimeofday() but instead of returning the
@@ -100,6 +108,19 @@ char * sys_gethome(void);
  *  some platforms (e.g. MinGW)
  */
 int sys_mkdir(const char *pathname, int mode);
+
+/*
+ *  return disk information for the given path
+ *
+ *  the information is stored in the caller provided buffer. the
+ *  data is only valid if the return value of the call is 0, which
+ *  means there was no error while retrieving the data from the
+ *  operating system.
+ *
+ *  as the return value is currently 32 bit, the values are clamped
+ *  at 4GB.
+ */
+int sys_getdiskinfo(const char *path, unsigned long *total, unsigned long *available, unsigned short *block_size);
 
 #ifdef __cplusplus
 }

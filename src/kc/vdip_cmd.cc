@@ -19,12 +19,13 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
+#include <sys/types.h>
+#include <sys/stat.h>
 #include <time.h>
+#include <stdio.h>
+#include <stdlib.h>
 #include <dirent.h>
 #include <unistd.h>
-#include <sys/stat.h>
-#include <sys/types.h>
-#include <sys/statvfs.h>
 
 #include "kc/system.h"
 
@@ -58,7 +59,6 @@ public:
   {
     struct stat buf;
     const char *arg = get_arg(0).c_str();
-    printf("DIR FOR FILE: '%s'\n", arg);
     string filename = get_vdip()->get_path(arg);
     if (stat(filename.c_str(), &buf) == 0)
       {
@@ -80,35 +80,38 @@ public:
   void execute_without_arg()
   {
     string path = get_vdip()->get_cwd();
-    printf("DIR (cwd = '%s')\n", path.c_str());
     DIR *dir = opendir(path.c_str());
     add_string("\r");
     if (dir != NULL)
       {
         if (!get_vdip()->is_root())
           add_string(". DIR\r.. DIR\r");
-        
+
+        // hmm, can't use dirent->d_type as MinGW does not provide
+        // this information :-(. falling back to stat every entry.
         while (242)
           {
+            struct stat buf;
             struct dirent *dirent = readdir(dir);
             if (dirent == NULL)
               break;
 
-            switch (dirent->d_type)
+            string file = path + "/" + dirent->d_name;
+            if (stat(file.c_str(), &buf) != 0)
+              continue;
+
+            if (S_ISREG(buf.st_mode))
               {
-              case DT_REG:
                 add_string(dirent->d_name);
                 add_string("\r");
-                break;
-              case DT_DIR:
+              }
+            else if (S_ISDIR(buf.st_mode))
+              {
                 if ((strcmp(dirent->d_name, ".") != 0) && (strcmp(dirent->d_name, "..") != 0))
                   {
                     add_string(dirent->d_name);
                     add_string(" DIR\r");
                   }
-                break;
-              default:
-                break;
               }
           }
         add_prompt();
@@ -125,7 +128,6 @@ public:
   void execute(void)
   {
     string dir = get_arg(0);
-    printf("CD %s\n", dir.c_str());
     if (strcmp(dir.c_str(), ".") == 0)
       {
         add_prompt();
@@ -160,19 +162,16 @@ public:
 
   void execute(void)
   {
-    struct statvfs buf;
+    word_t block_size;
+    dword_t free_bytes, total_bytes;
 
-    word_t block_size = 0;
-    dword_t free_bytes = 0;
-    dword_t total_bytes = 0;
-    if (statvfs(get_vdip()->get_cwd().c_str(), &buf) == 0)
+    if (sys_getdiskinfo(get_vdip()->get_cwd().c_str(), &total_bytes, &free_bytes, &block_size) != 0)
       {
-        unsigned long long free = (unsigned long long) buf.f_bavail * buf.f_bsize;
-        unsigned long long total = (unsigned long long) buf.f_blocks * buf.f_frsize;
-        free_bytes = free > 0xffffffffUL ? 0xffffffffUL : free;
-        total_bytes = total > 0xffffffffUL ? 0xffffffffUL : total;
-        block_size = buf.f_bsize;
+        block_size = 0;
+        free_bytes = 0;
+        total_bytes = 0;
       }
+
     add_string("\rUSB VID = $0000\rUSB PID = $0000\rVendor Id = KCemu   \rProduct Id = Virtual Disk    \rRevision Level = 0000\r");
     add_string("I/F = SCSI\rFAT32\rBytes/Sector = $");
     add_hex(4, 0x0200);
@@ -184,7 +183,7 @@ public:
     add_hex(8, free_bytes);
     add_string(" Bytes\r\r");
     add_prompt();
-    }
+  }
 };
 
 class VDIP_CMD_CLF : public VDIP_CMD
@@ -195,7 +194,6 @@ public:
 
   void execute(void)
   {
-    printf("CLOSE FILE: '%s'\n", get_arg(0).c_str());
     if (vdip->get_file() == NULL)
       {
         add_error(ERR_COMMAND_FAILED);
@@ -218,7 +216,6 @@ public:
   void execute(void)
   {
     string filename = get_vdip()->get_path(get_arg(0));
-    printf("OPEN FOR READ: %s\n", filename.c_str());
 
     if (get_vdip()->get_file() != NULL)
       fclose(get_vdip()->get_file());
@@ -258,7 +255,6 @@ public:
     else
       {
         dword_t len = get_dword_arg(0);
-        printf("READ FROM FILE (%ld bytes)\n", len);
         for (dword_t a = 0; a < len; a++)
           add_char(fgetc(f)); // use EOF as padding
         add_prompt();
@@ -301,7 +297,6 @@ public:
   void execute(void)
   {
     string filename = get_vdip()->get_path(get_arg(0));
-    printf("OPEN FOR WRITE: '%s'\n", filename.c_str());
 
     if (get_vdip()->get_file() != NULL)
       fclose(get_vdip()->get_file());
@@ -358,7 +353,6 @@ public:
     else
       {
         dword_t len = get_dword_arg(0);
-        printf("WRITE TO FILE (%ld bytes)\n", len);
         _wrf_len = len;
         // no prompt here! waiting for data
       }
@@ -397,7 +391,6 @@ public:
     else
       {
         dword_t offset = get_dword_arg(0);
-        printf("SEEK IN FILE (to offset %lu)\n", offset);
         if ((fseek(f, offset, SEEK_SET) != 0) || ((unsigned int)ftell(f) != offset))
           add_error(ERR_COMMAND_FAILED);
         else
@@ -471,26 +464,24 @@ public:
   VDIP_CMD_DIRT(VDIP *vdip) : VDIP_CMD(vdip, true) { }
   virtual ~VDIP_CMD_DIRT(void) { }
 
-  dword_t get_datetime(timespec datetime)
+  dword_t get_datetime(long datetime)
   {
-    struct tm buf;
-    localtime_r((time_t *)&datetime, &buf);
-    //printf("%04d-%02d-%02d %02d:%02d:%02d\n", buf.tm_year + 1900, buf.tm_mon + 1, buf.tm_mday, buf.tm_hour, buf.tm_min, buf.tm_sec);
-    return ((buf.tm_year - 80) << 25) | ((buf.tm_mon + 1) << 21) | (buf.tm_mday << 16) | (buf.tm_hour << 11) | (buf.tm_min << 5) | (buf.tm_sec / 2);
+    int year, month, day, hour, minute, second;
+    sys_converttime((long)datetime, &year, &month, &day, &hour, &minute, &second);
+    return ((year - 80) << 25) | ((month) << 21) | (day << 16) | (hour << 11) | (minute << 5) | (second / 2);
   }
   
   void execute(void)
   {
     struct stat buf;
     const char *arg = get_arg(0).c_str();
-    printf("DIR TIMES FOR FILE: '%s'\n", arg);
     string filename = get_vdip()->get_path(arg);
     if (stat(filename.c_str(), &buf) == 0)
       {
         // as we have no creation time, we use the modification time
-        dword_t ctime = get_datetime(buf.st_mtim);
-        word_t atime = get_datetime(buf.st_atim) >> 16;
-        dword_t mtime = get_datetime(buf.st_mtim);
+        dword_t ctime = get_datetime(buf.st_mtime);
+        word_t atime = get_datetime(buf.st_atime) >> 16;
+        dword_t mtime = get_datetime(buf.st_mtime);
 
         add_string("\r");
         add_string(arg);

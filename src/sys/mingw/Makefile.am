@@ -9,8 +9,10 @@ libsys_mingw_a_SOURCES = \
 	sys_usleep.c \
 	sys_basename.c \
 	sys_isabsolutepath.c \
+	sys_converttime.c \
 	sys_localtime.c \
 	sys_gettimeofday.c \
 	sys_getprogrampath.c \
 	sys_gethome.c \
-	sys_mkdir.c
+	sys_mkdir.c \
+	sys_getdiskinfo.c
