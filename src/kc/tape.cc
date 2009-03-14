@@ -396,7 +396,7 @@ public:
 	   */
 	  prop = (fileio_prop_t *)args->get_pointer_arg("prop");
 	  tapename = args->get_string_arg("tape-filename");
-	  type = (kct_file_type_t)args->get_int_arg("type");
+	  type = (kct_file_type_t)args->get_long_arg("type");
 
 	  _t->add_file(tapename, prop, type, KCT_MACHINE_ALL);
 	  break;
@@ -446,7 +446,7 @@ public:
           
 	  delay = 0;
 	  if (args->has_arg("tape-play-delay"))
-	    delay = args->get_int_arg("tape-play-delay");
+	    delay = args->get_long_arg("tape-play-delay");
 
           _t->play(name, delay);
           break;
@@ -780,7 +780,7 @@ Tape::get_delay(int seconds)
 void
 Tape::callback(void *data)
 {
-  int edge = (int)data;
+  long edge = (long)data;
   
   if (_play)
     do_play(edge);
@@ -1812,7 +1812,7 @@ Tape::add_file(const char *name,
 			 "skip this file."));
   args->set_string_arg("tape-filename", name);
   args->set_pointer_arg("prop", prop);
-  args->set_int_arg("type", type);
+  args->set_long_arg("type", type);
   args->add_callback("ui-tape-name-edit-CB-ok", _cmd_tape_add_file, 2);
   CMD_EXEC_ARGS("ui-tape-name-edit", args);
 

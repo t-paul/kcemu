@@ -59,6 +59,18 @@ struct tape_buf
   struct tape_buf *next;
 };
 
+static int
+write_silence(FILE *out, int samples)
+{
+  int a;
+
+  for (a = 0;a < samples;a++)
+    if (fputc(0x80, out) == EOF)
+      return -1;
+
+  return a;
+}
+
 static void
 write_bit(FILE *out)
 {
@@ -191,17 +203,14 @@ write_file(FILE *out, const unsigned char *data, int size)
       sync_bits = 200;
     }
   
-  //printf("\n");
-  
   return flen;
 }
 
-int
-fileio_save_wav(const char *filename, const unsigned char *data, int size)
+static int
+_fileio_save_wav(FILE *out, const unsigned char *data, int size)
 {
-  long flen;
-  FILE *out;
   wav_header_t header;
+  long flen, start_silence, end_silence;
 
   switch (fileio_get_kctype())
     {
@@ -215,6 +224,8 @@ fileio_save_wav(const char *filename, const unsigned char *data, int size)
       return -1;
     }
 
+  start_silence = RATE / 2;
+  end_silence = RATE * 2;
   header.MainChunkID    = 'R' | 'I' << 8 | 'F' << 16 | 'F' << 24;
   header.ChunkTypeID    = 'W' | 'A' << 8 | 'V' << 16 | 'E' << 24;
   header.SubChunkID     = 'f' | 'm' << 8 | 't' << 16 | ' ' << 24;
@@ -228,23 +239,43 @@ fileio_save_wav(const char *filename, const unsigned char *data, int size)
   header.DataChunkID    = 'd' | 'a' << 8 | 't' << 16 | 'a' << 24;
   header.DataLength = 0;
   header.Length     = header.DataLength + 44 - 8;
-	
-  out = fopen(filename, "wb");
-  if (out == NULL)
+
+  if (fwrite(&header, 1, sizeof(header), out) != sizeof(header))
+    return -1;
+
+  if (write_silence(out, start_silence) != start_silence)
+    return -1;
+
+  flen = write_file(out, data, size);
+
+  if (write_silence(out, end_silence) != end_silence)
+    return -1;
+
+  header.DataLength = flen + start_silence + end_silence;
+  header.Length     = header.DataLength + 44 - 8;
+
+  if (fseek(out, 0, SEEK_SET) != 0)
     return -1;
 
   if (fwrite(&header, 1, sizeof(header), out) != sizeof(header))
     return -1;
-	
-  flen = write_file(out, data, size);
-
-  header.DataLength = flen; 
-  header.Length     = header.DataLength + 44 - 8;
-  fseek(out, 0, SEEK_SET);
-  fwrite(&header, 1, sizeof(header), out);
-  fclose(out);
 
   return 0;
+}
+
+int
+fileio_save_wav(const char *filename, const unsigned char *data, int size)
+{
+  int ret;
+  FILE *out;
+
+  out = fopen(filename, "wb");
+  if (out == NULL)
+    return -1;
+
+  ret = _fileio_save_wav(out, data, size);
+  fclose(out);
+  return ret;
 }
 
 int

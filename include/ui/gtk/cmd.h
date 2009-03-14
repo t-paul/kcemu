@@ -50,4 +50,10 @@ void cmd_exec_sftb(GtkWidget *widget, gpointer data);
  */
 void cmd_exec_mc(gpointer data, guint action, GtkWidget *widget);
 
+/*
+ *  cmd_exec as GTK+ menu callback, with data being an array of
+ *  callback names and action the index to this array.
+ */
+void cmd_exec_mci(gpointer data, guint action, GtkWidget *widget);
+
 #endif /* __ui_gtk_cmd_h */

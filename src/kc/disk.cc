@@ -46,7 +46,7 @@ protected:
     int n = 0;
     
     if (args && args->has_arg("disk"))
-      n = args->get_int_arg("disk");
+      n = args->get_long_arg("disk");
 
     return n;
   }
@@ -261,7 +261,7 @@ Disk::attach(int disk_no, const char *filename, bool create)
     }
 
   CMD_Args *args = new CMD_Args();
-  args->set_int_arg("disk", disk_no);
+  args->set_long_arg("disk", disk_no);
   args->set_string_arg("filename", filename);
   CMD_EXEC_ARGS("ui-disk-update-MSG", args);
   delete args;
@@ -284,7 +284,7 @@ Disk::detach(int disk_no)
     floppy->attach(NULL);
 
   CMD_Args *args = new CMD_Args();
-  args->set_int_arg("disk", disk_no);
+  args->set_long_arg("disk", disk_no);
   args->set_string_arg("filename", "");
   CMD_EXEC_ARGS("ui-disk-update-MSG", args);
   delete args;

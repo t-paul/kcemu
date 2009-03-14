@@ -44,23 +44,29 @@ PIO3::~PIO3(void)
 byte_t
 PIO3::in(word_t addr)
 {
-  DBG(2, form("KCemu/PIO/3/in",
-              "PIO3::in(): addr = %04x\n",
-              addr));
+  byte_t ret = 0xff;
 
   switch (addr & 3)
     {
     case 0:
-      return in_A_DATA();
+      ret = in_A_DATA();
+      break;
     case 1:
-      return in_B_DATA();
+      ret = in_B_DATA();
+      break;
     case 2:
-      return in_A_CTRL();
+      ret = in_A_CTRL();
+      break;
     case 3:
-      return in_B_CTRL();
+      ret = in_B_CTRL();
+      break;
     }
 
-  return 0; // shouldn't be reached
+  DBG(2, form("KCemu/PIO/3/in",
+              "PIO3::in():  addr = %04x, val = %02x\n",
+              addr, ret));
+
+  return ret;
 }
 
 void
@@ -104,7 +110,7 @@ PIO3::change_A(byte_t changed, byte_t val)
   if (changed & 0x01)
     {
       DBG(2, form("KCemu/PIO/3/change/A",
-                  "PIO A: LED ROM [%d]\n",
+                  "PIO A: CAOS ROM [%d]\n",
                   (val & 1)));
 
       memory->enableCAOS_E(val & 1);
@@ -112,25 +118,28 @@ PIO3::change_A(byte_t changed, byte_t val)
   if (changed & 0x02)
     {
       DBG(2, form("KCemu/PIO/3/change/A",
-                  "PIO A: LED RAM [%d]\n",
+                  "PIO A: RAM [%d]\n",
                   ((val >> 1) & 1)));
+      memory->enableRAM((val >> 1) & 1);
     }
   if (changed & 0x04)
     {
       DBG(2, form("KCemu/PIO/3/change/A",
-                  "PIO A: LED IRM [%d]\n",
+                  "PIO A: IRM [%d]\n",
                   ((val >> 2) & 1)));
+      memory->enableIRM((val >> 2) & 1);
     }
   if (changed & 0x08)
     {
       DBG(2, form("KCemu/PIO/3/change/A",
-                  "PIO A: ??? [%d]\n",
+                  "PIO A: RAM PROTECT [%d]\n",
                   ((val >> 3) & 1)));
+      memory->protectRAM((val >> 3) & 1);
     }
   if (changed & 0x10)
     {
       DBG(2, form("KCemu/PIO/3/change/A",
-                  "PIO A: NMI/CAOS SWITCH [%d]\n",
+                  "PIO A: - [%d]\n",
                   ((val >> 4) & 1)));
     }
   if (changed & 0x20)
@@ -149,7 +158,7 @@ PIO3::change_A(byte_t changed, byte_t val)
   if (changed & 0x80)
     {
       DBG(2, form("KCemu/PIO/3/change/A",
-                  "PIO A: ROM C (BASIC) [%d]\n",
+                  "PIO A: BASIC ROM [%d]\n",
                   ((val >> 7) & 1)));
       memory->enableBASIC_C(val & 0x80);
     }

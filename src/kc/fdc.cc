@@ -321,7 +321,7 @@ FDC::set_state(fdc_state_t state)
 void
 FDC::callback(void *data)
 {
-  unsigned int val = (int)data;
+  long val = (long)data;
   switch (val & CB_MASK)
     {
     case CB_TYPE_SEEK:
@@ -346,7 +346,7 @@ FDC::callback(void *data)
 void
 FDC::callback_index(void *data)
 {
-  int index_value = ((int)data) & 1;
+  long index_value = ((long)data) & 1;
 
   byte_t input_gate = 0;
   if (_selected_device != 0)
@@ -371,7 +371,7 @@ FDC::callback_index(void *data)
 void
 FDC::callback_seek(void *data)
 {
-  int unit = (int)data;
+  long unit = (long)data;
   byte_t unit_bit = 1 << (unit & 0xff);
   bool ok = (unit & 0x0100) == 0;
 

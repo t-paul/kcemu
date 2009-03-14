@@ -50,3 +50,11 @@ cmd_exec_mc(gpointer data, guint action, GtkWidget *widget)
   const char *name = (const char *)action;
   CMD_EXEC(name);
 }
+
+void
+cmd_exec_mci(gpointer data, guint action, GtkWidget *widget)
+{
+  const char **callbacks = (const char **)data;
+  const char *name = callbacks[action];
+  CMD_EXEC(name);
+}

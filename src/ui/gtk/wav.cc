@@ -66,7 +66,7 @@ public:
 	  if (args == NULL)
 	    return;
 	  if (_w->is_visible())
-	    _w->update(args->get_int_arg("gap"));
+	    _w->update(args->get_long_arg("gap"));
 	  break;
 	case 1:
 	  if (args == NULL)

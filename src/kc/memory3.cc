@@ -31,6 +31,8 @@
 
 #include "ui/ui.h"
 
+#include "libdbg/dbg.h"
+
 using namespace std;
 
 Memory3::Memory3(void) : Memory()
@@ -92,29 +94,32 @@ Memory3::get_char_rom(void)
 void
 Memory3::dumpCore(void)
 {
-#if 0
   ofstream os;
-    
+
   os.open("core.z80");
 
-  cout.form("Memory: dumping core...\n");
+  DBG(0, form("KCemu/Memory/3/core",
+              "Memory: dumping core...\n"));
   if (!os)
     {
       cerr << "can't write 'core.z80'\n";
-      exit(0);
+      return;
     }
-  
-  os.write(&_ram[0], 0x4000);
-  os.write(&_irm[0],   0x4000);
 
+  os.write((char *)_ram, 0x4000);
+  os.write((char *)_irm, 0x4000);
+  os.write((char *)_rom_caos, 0x2000);
+  os.write((char *)_rom_basic, 0x2000);
   os.close();
-  cout.form("Memory: done.\n");
-#endif
 }
 
 void
 Memory3::enableCAOS_E(int v)
 {
+  DBG(1, form("KCemu/Memory/3/switch",
+              "Memory: CAOS %s\n",
+	      v ? "enabled" : "disabled"));
+
   _m_caos->set_active(v);
   reload_mem_ptr();
 }
@@ -122,13 +127,43 @@ Memory3::enableCAOS_E(int v)
 void
 Memory3::enableBASIC_C(int v)
 {
+  DBG(1, form("KCemu/Memory/3/switch",
+              "Memory: BASIC %s\n",
+	      v ? "enabled" : "disabled"));
+
   _m_basic->set_active(v);
+  reload_mem_ptr();
+}
+
+void
+Memory3::enableRAM(int v)
+{
+  DBG(1, form("KCemu/Memory/3/switch",
+              "Memory: RAM %s\n",
+	      v ? "enabled" : "disabled"));
+
+  _m_ram->set_active(v);
+  reload_mem_ptr();
+}
+
+void
+Memory3::protectRAM(int v)
+{
+  DBG(1, form("KCemu/Memory/3/switch",
+              "Memory: RAM %s\n",
+	      v ? "read/write" : "readonly"));
+
+  _m_ram->set_readonly(!v);
   reload_mem_ptr();
 }
 
 void
 Memory3::enableIRM(int v)
 {
+  DBG(1, form("KCemu/Memory/3/switch",
+              "Memory: IRM %s\n",
+	      v ? "enabled" : "disabled"));
+
   _m_irm->set_active(v);
   reload_mem_ptr();
 }
@@ -137,6 +172,7 @@ void
 Memory3::reset(bool power_on)
 {
   _m_ram->set_active(true);
+  _m_ram->set_readonly(false);
   _m_irm->set_active(true);
   _m_caos->set_active(true);
   _m_basic->set_active(true);

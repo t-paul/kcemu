@@ -327,7 +327,7 @@ WavPlayer::close()
 void
 WavPlayer::callback(void *data)
 {
-  int d = (int)data;
+  long d = (long)data;
 
   if (_stopped)
     return;
@@ -483,7 +483,7 @@ WavPlayer::do_play(void)
   if (v > 2000)
     v = 2000;
 
-  _info_args.set_int_arg("gap", (int)v);
+  _info_args.set_long_arg("gap", (int)v);
   CMD_EXEC_ARGS("ui-wav-info", &_info_args);
 
 #if 1

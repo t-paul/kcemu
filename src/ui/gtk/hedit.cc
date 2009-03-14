@@ -133,8 +133,8 @@ EditHeaderWindow::ok(GtkWidget * /* widget */, gpointer data)
     return;
   self->_args->set_string_arg("tape-filename", self->_tape_filename);
   self->_args->set_string_arg("kc-filename", self->_kc_filename);
-  self->_args->set_int_arg("load-address", self->_load_address);
-  self->_args->set_int_arg("start-address", self->_start_address);
+  self->_args->set_long_arg("load-address", self->_load_address);
+  self->_args->set_long_arg("start-address", self->_start_address);
   gtk_widget_destroy(self->_w.window);
   self->_args->call_callbacks("ui-edit-header-CB");
 }

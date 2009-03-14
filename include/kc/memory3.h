@@ -58,6 +58,8 @@ public:
 
   void enableCAOS_E(int v);
   void enableBASIC_C(int v);
+  void enableRAM(int v);
+  void protectRAM(int v);
   void enableIRM(int v);
 
   virtual void reset(bool power_on = false);

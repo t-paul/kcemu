@@ -260,17 +260,27 @@ TapeWindow::init(void)
 {
   GtkItemFactory *ifactP;
   GtkAccelGroup *agroupP;
+  static const char *callbacks[] = {
+    "ui-tape-run-selected",
+    "ui-tape-load-selected",
+    "ui-tape-export-selected",
+    "ui-tape-export-wav-selected",
+    "ui-edit-header-selected",
+    "ui-tape-rename-selected",
+    "ui-tape-delete-selected",
+    "tape-add-file",
+  };
   GtkItemFactoryEntry entriesP[] = {
-    { _("/_Run File"),      "R",  CF(cmd_exec_mc), CD("ui-tape-run-selected"),        NULL },
-    { _("/_Load File"),     "L",  CF(cmd_exec_mc), CD("ui-tape-load-selected"),       NULL },
-    { _("/_Export File"),   "E",  CF(cmd_exec_mc), CD("ui-tape-export-selected"),     NULL },
-    { _("/Export _Wav"),    "W",  CF(cmd_exec_mc), CD("ui-tape-export-wav-selected"), NULL },
-    { _("/sep1"),           NULL, NULL,         0,                                    "<Separator>" },
-    { _("/Edit _Header"),   "H",  CF(cmd_exec_mc), CD("ui-edit-header-selected"),     NULL },
-    { _("/Re_name File"),   "N",  CF(cmd_exec_mc), CD("ui-tape-rename-selected"),     NULL },
-    { _("/_Delete File"),   "D",  CF(cmd_exec_mc), CD("ui-tape-delete-selected"),     NULL },
-    { _("/sep2"),           NULL, NULL,         0,                                    "<Separator>" },
-    { _("/_Add File"),      "A",  CF(cmd_exec_mc), CD("tape-add-file"),               NULL },
+    { _("/_Run File"),      "R",  CF(cmd_exec_mci), 0, NULL },
+    { _("/_Load File"),     "L",  CF(cmd_exec_mci), 1, NULL },
+    { _("/_Export File"),   "E",  CF(cmd_exec_mci), 2, NULL },
+    { _("/Export _Wav"),    "W",  CF(cmd_exec_mci), 3, NULL },
+    { _("/sep1"),           NULL, NULL,         0,    "<Separator>" },
+    { _("/Edit _Header"),   "H",  CF(cmd_exec_mci), 4, NULL },
+    { _("/Re_name File"),   "N",  CF(cmd_exec_mci), 5, NULL },
+    { _("/_Delete File"),   "D",  CF(cmd_exec_mci), 6, NULL },
+    { _("/sep2"),           NULL, NULL,         0,    "<Separator>" },
+    { _("/_Add File"),      "A",  CF(cmd_exec_mci), 7, NULL },
   };
   int nentriesP = sizeof(entriesP) / sizeof(entriesP[0]);
   static char *titles[] =
@@ -292,7 +302,7 @@ TapeWindow::init(void)
    */
   agroupP = gtk_accel_group_new();
   ifactP = gtk_item_factory_new(GTK_TYPE_MENU, _("<TapeP>"), agroupP);
-  gtk_item_factory_create_items(ifactP, nentriesP, entriesP, NULL);
+  gtk_item_factory_create_items(ifactP, nentriesP, entriesP, callbacks);
 
   /*
    *  popup menu
@@ -592,7 +602,7 @@ TapeWindow::tapeNext(void)
       // sets _selected via callback! (sf_tape_file_select)
       gtk_tree_selection_select_iter(selection, &iter);
       CMD_Args *a = new CMD_Args();
-      a->set_int_arg("tape-play-delay", 10);
+      a->set_long_arg("tape-play-delay", 10);
       CMD_EXEC_ARGS("ui-tape-play-selected", a);
     }
 }

@@ -89,7 +89,7 @@ CMD_kc_image_load::execute(CMD_Args *args, CMD_Context context)
       /*
        *  entry kc-image-run
        */
-      args->set_int_arg("auto-start", 1);
+      args->set_long_arg("auto-start", 1);
       /* fall through */
 
     case 1:
@@ -97,7 +97,7 @@ CMD_kc_image_load::execute(CMD_Args *args, CMD_Context context)
        *  entry kc-image-load
        */
       if (!args->has_arg("auto-start"))
-	args->set_int_arg("auto-start", 0);
+	args->set_long_arg("auto-start", 0);
 
       if (!filename)
         {
@@ -167,7 +167,7 @@ CMD_kc_image_load::execute(CMD_Args *args, CMD_Context context)
 	{
 	case FILEIO_TYPE_BAS:
 	case FILEIO_TYPE_PROT_BAS:
-	  args->set_int_arg("load-address", 1025);
+	  args->set_long_arg("load-address", 1025);
 	  break;
 	default:
 	  if ((prop->valid & FILEIO_V_LOAD_ADDR) != FILEIO_V_LOAD_ADDR)
@@ -184,17 +184,17 @@ CMD_kc_image_load::execute(CMD_Args *args, CMD_Context context)
       if ((prop->valid & FILEIO_V_LOAD_ADDR) == FILEIO_V_LOAD_ADDR)
 	load = prop->load_addr;
       if (args->has_arg("load-address"))
-	load = args->get_int_arg("load-address");
+	load = args->get_long_arg("load-address");
 
       start = 0xe000;
       if ((prop->valid & FILEIO_V_START_ADDR) == FILEIO_V_START_ADDR)
 	start = prop->start_addr;
       if (args->has_arg("start-address"))
-	start = args->get_int_arg("start-address");
+	start = args->get_long_arg("start-address");
 
       autostart = 0;
       if (args->has_arg("auto-start"))
-	autostart = args->get_int_arg("auto-start");
+	autostart = args->get_long_arg("auto-start");
       if ((prop->valid & FILEIO_V_AUTOSTART) == FILEIO_V_AUTOSTART)
 	if (prop->autostart == 0)
 	  autostart = 0;
@@ -224,7 +224,7 @@ CMD_kc_image_load::execute(CMD_Args *args, CMD_Context context)
       if (!filename)
 	return;
       if (args->has_arg("start-address") && args->has_arg("end-address"))
-        image_save(filename, args->get_int_arg("start-address"), args->get_int_arg("end-address"));
+        image_save(filename, args->get_long_arg("start-address"), args->get_long_arg("end-address"));
       break;
     }
 }

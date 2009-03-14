@@ -100,7 +100,7 @@ GLADE_XML = \
 
 %.ico : %.xpm
 	xpmtoppm --alphaout /tmp/ico.alpha.1.$$$$ $< | ppmquant 256 > /tmp/ico.icon.$$$$ ; \
-	ppmtowinicon -andppms /tmp/ico.icon.$$$$ /tmp/ico.alpha.1.$$$$ > $@ ; \
+	ppmtowinicon -andpgms /tmp/ico.icon.$$$$ /tmp/ico.alpha.1.$$$$ > $@ ; \
 	rm -f /tmp/ico.icon.$$$$ /tmp/ico.alpha.1.$$$$
 
 %.ppm : %.png
@@ -111,7 +111,7 @@ GLADE_XML = \
 	pngtopnm $< | ppmquant $$COLORS > $@;
 
 kcemu-winicon.ico : kcemu-winicon_16x16.ppm kcemu-winicon_32x32.ppm kcemu-winicon_48x48.ppm
-	ppmtowinicon -andppms \
+	ppmtowinicon -andpgms \
 		kcemu-winicon_16x16.ppm kcemu-winicon_16x16.alpha.pgm \
 		kcemu-winicon_32x32.ppm kcemu-winicon_32x32.alpha.pgm \
 		kcemu-winicon_48x48.ppm kcemu-winicon_48x48.alpha.pgm \

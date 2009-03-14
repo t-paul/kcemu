@@ -52,7 +52,7 @@ DisplayC80::get_led_value(int idx)
 void
 DisplayC80::callback(void *data)
 {
-  int idx = (int)data;
+  long idx = (long)data;
 
   DBG(2, form("KCemu/DisplayC80/callback",
               "DisplayC80::callback(): idx = %d\n",
