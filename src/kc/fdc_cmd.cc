@@ -481,7 +481,7 @@ FDC_CMD_READ_DATA::execute(void)
               f->get_sectors_per_cylinder()));
 
   if (_buf != 0)
-    delete _buf;
+    delete[] _buf;
   _buf = new byte_t[size];
 
   len = f->read_sector(_buf, size);
