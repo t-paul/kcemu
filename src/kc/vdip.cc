@@ -123,6 +123,7 @@ VDIP::VDIP(void) : Callback("Vinculum USB")
   else
     _root = "";
 
+  _cmd = NULL;
   _cwd = new StringList();
   _attach_cmd = new CMD_vdip_attach(this);
   reset();
