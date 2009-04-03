@@ -137,6 +137,11 @@ public:
         vdip->chdir_up();
         add_prompt();
       }
+    else if (strncmp(dir.c_str(), "/", 1) == 0)
+      {
+        vdip->chdir_root();
+        add_prompt();
+      }
     else
       {
         struct stat buf;

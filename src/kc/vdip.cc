@@ -241,6 +241,12 @@ VDIP::chdir_up(void)
 }
 
 void
+VDIP::chdir_root(void)
+{
+  _cwd->clear();
+}
+
+void
 VDIP::chdir(string dir)
 {
   _cwd->push_back(dir);

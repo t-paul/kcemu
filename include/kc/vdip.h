@@ -160,6 +160,7 @@ public:
   virtual string get_cwd(void) const;
   virtual string get_path(string dir) const;
   virtual void chdir_up(void);
+  virtual void chdir_root(void);
   virtual void chdir(string dir);
 
   virtual void register_pio(PIO *pio);
