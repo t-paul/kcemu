@@ -504,6 +504,21 @@ public:
   }
 };
 
+class VDIP_CMD_FWV : public VDIP_CMD
+{
+public:
+  VDIP_CMD_FWV(VDIP *vdip) : VDIP_CMD(vdip) { }
+  virtual ~VDIP_CMD_FWV(void) { }
+
+  void execute(void)
+  {
+    add_string("\rMAIN ");
+    add_string(get_vdip()->get_firmware_version().c_str());
+    add_string("\rRPRG 1.00R\r");
+    add_prompt();
+  }
+};
+
 /*
 class VDIP_CMD_CD : public VDIP_CMD
 {
@@ -734,6 +749,9 @@ VDIP_CMD::create_command(VDIP *vdip, vdip_command_t code)
       break;
     case CMD_EMPTY:
       vdip_cmd = new VDIP_CMD_EMPTY(vdip);
+      break;
+    case CMD_FWV:
+      vdip_cmd = new VDIP_CMD_FWV(vdip);
       break;
     default:
       vdip_cmd = new VDIP_CMD_UNKNOWN(vdip);

@@ -130,6 +130,12 @@ VDIP::~VDIP(void)
 {
 }
 
+string
+VDIP::get_firmware_version(void) const
+{
+  return "03.66VDAPF";
+}
+
 bool
 VDIP::is_short_command_set(void) const
 {
@@ -277,7 +283,7 @@ VDIP::reset(void)
 
   _input = false;
   _output = -1;
-  _output_buffer = "\rVer 03.66VDAPF On-Line:\r";
+  _output_buffer = "\rVer " + get_firmware_version() + " On-Line:\r";
   if (has_disk())
     _output_buffer += "Device Detected P2\rNo Upgrade\r";
   _output_buffer += "D:\\>\r";
@@ -381,6 +387,8 @@ VDIP::map_extended_command(string cmd)
     return CMD_IPA;
   else if (strcmp(cmd.c_str(), "DIRT") == 0)
     return CMD_DIRT;
+  else if (strcmp(cmd.c_str(), "FWV") == 0)
+    return CMD_FWV;
 
   return CMD_UNKNOWN;
 }

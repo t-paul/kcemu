@@ -47,6 +47,7 @@ typedef enum
   CMD_SCS  = 0x10,
   CMD_ECS  = 0x11,
   CMD_FS   = 0x12,
+  CMD_FWV  = 0x13,
   CMD_SEK  = 0x28,
   CMD_DSN  = 0x2d,
   CMD_DVL  = 0x2e,
@@ -141,6 +142,8 @@ private:
 public:
   VDIP(void);
   virtual ~VDIP(void);
+
+  virtual string get_firmware_version(void) const;
 
   virtual bool is_binary_mode(void) const;
   virtual void set_binary_mode(bool val);
