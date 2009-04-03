@@ -22,6 +22,7 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <time.h>
+#include <utime.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <dirent.h>
@@ -519,6 +520,70 @@ public:
   }
 };
 
+class VDIP_CMD_MKD : public VDIP_CMD
+{
+public:
+  VDIP_CMD_MKD(VDIP *vdip) : VDIP_CMD(vdip) { }
+  virtual ~VDIP_CMD_MKD(void) { }
+
+  void execute(void)
+  {
+    if (get_vdip()->get_file() != NULL)
+      add_error(ERR_FILE_OPEN);
+    else if (get_arg_count() == 1)
+      execute_with_name(get_arg(0));
+    else if (get_arg_count() >= 2)
+      execute_with_name_and_time(get_arg(0), get_dword_arg(1));
+    else
+      add_error(ERR_BAD_COMMAND);
+  }
+
+  long get_time(dword_t time)
+  {
+    struct tm tm;
+
+    tm.tm_year = ((time >> 25) & 127) + 80;
+    tm.tm_mon = ((time >> 21) & 15) - 1;
+    tm.tm_mday = ((time >> 16) & 31);
+    tm.tm_hour = ((time >> 11) & 31);
+    tm.tm_min = ((time >> 5) & 64);
+    tm.tm_sec = (time & 31) * 2;
+
+    return mktime(&tm);
+  }
+
+  void execute_with_name(string arg)
+  {
+    // default date: 2004-12-20 00:00:00
+    // date given in the documentation is wrong!
+    execute_with_name_and_time(arg, 0x31940000);
+  }
+
+  void execute_with_name_and_time(string arg, dword_t time)
+  {
+    struct stat buf;
+    string filename = get_vdip()->get_path(arg);
+    if (stat(filename.c_str(), &buf) != 0)
+      {
+        if (sys_mkdir(filename.c_str(), 0755) == 0)
+          {
+            struct utimbuf utimbuf;
+            
+            utimbuf.actime = get_time(time);
+            if (utimbuf.actime != -1)
+              {
+                utimbuf.modtime = utimbuf.actime;
+                utime(filename.c_str(), &utimbuf);
+              }
+            add_prompt();
+            return;
+          }
+      }
+
+    add_error(ERR_COMMAND_FAILED);
+  }
+};
+
 /*
 class VDIP_CMD_CD : public VDIP_CMD
 {
@@ -630,13 +695,22 @@ VDIP_CMD::add_string(const char *text)
 }
 
 bool
-VDIP_CMD::has_args(void)
+VDIP_CMD::has_args(void) const
 {
-  return (_args != NULL) && (_args->size() > 0);
+  return get_arg_count() > 0;
+}
+
+int
+VDIP_CMD::get_arg_count(void) const
+{
+  if (_args == NULL)
+    return 0;
+
+  return _args->size();
 }
 
 string
-VDIP_CMD::get_arg(unsigned int arg)
+VDIP_CMD::get_arg(unsigned int arg) const
 {
   if (!has_args())
     return "";
@@ -653,7 +727,7 @@ VDIP_CMD::get_arg(unsigned int arg)
 }
 
 dword_t
-VDIP_CMD::get_dword_arg(unsigned int arg)
+VDIP_CMD::get_dword_arg(unsigned int arg) const
 {
   string data = get_arg(arg);
   if (data.length() != 4)
@@ -752,6 +826,9 @@ VDIP_CMD::create_command(VDIP *vdip, vdip_command_t code)
       break;
     case CMD_FWV:
       vdip_cmd = new VDIP_CMD_FWV(vdip);
+      break;
+    case CMD_MKD:
+      vdip_cmd = new VDIP_CMD_MKD(vdip);
       break;
     default:
       vdip_cmd = new VDIP_CMD_UNKNOWN(vdip);

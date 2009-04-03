@@ -389,6 +389,8 @@ VDIP::map_extended_command(string cmd)
     return CMD_DIRT;
   else if (strcmp(cmd.c_str(), "FWV") == 0)
     return CMD_FWV;
+  else if (strcmp(cmd.c_str(), "MKD") == 0)
+    return CMD_MKD;
 
   return CMD_UNKNOWN;
 }

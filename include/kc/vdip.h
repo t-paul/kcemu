@@ -38,6 +38,7 @@ typedef enum
 {
   CMD_DIR  = 0x01,
   CMD_CD   = 0x02,
+  CMD_MKD  = 0x06,
   CMD_WRF  = 0x08,
   CMD_OPW  = 0x09,
   CMD_CLF  = 0x0a,
@@ -101,9 +102,10 @@ public:
   virtual void add_dword(dword_t val);
   virtual void add_string(const char *text);
 
-  virtual bool has_args(void);
-  virtual string get_arg(unsigned int arg);
-  virtual dword_t get_dword_arg(unsigned int arg);
+  virtual bool has_args(void) const;
+  virtual int get_arg_count(void) const;
+  virtual string get_arg(unsigned int arg) const;
+  virtual dword_t get_dword_arg(unsigned int arg) const;
   virtual void set_args(StringList *args);
   virtual string get_response(string input);
 
