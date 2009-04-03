@@ -191,9 +191,9 @@ VDIP::set_root(string root)
       if (had_disk != has_disk())
         {
           if (has_disk())
-            _output_buffer = is_short_command_set() ? "DD1\r" : "Device Detected P1\r";
+            _output_buffer = is_short_command_set() ? "DD2\r" : "Device Detected P2\r";
           else
-            _output_buffer = is_short_command_set() ? "DR1\r" : "Device Removed P1\r";
+            _output_buffer = is_short_command_set() ? "DR2\r" : "Device Removed P2\r";
 
           set_pio_ext_b(0x02);
           z80->addCallback(20000, this, NULL);
