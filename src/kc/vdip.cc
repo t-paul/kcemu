@@ -271,7 +271,10 @@ VDIP::reset(void)
 
   _input = false;
   _output = -1;
-  _output_buffer = "\rVer 03.60VDAPF On-Line:\r";
+  _output_buffer = "\rVer 03.66VDAPF On-Line:\r";
+  if (has_disk())
+    _output_buffer += "Device Detected P2\rNo Upgrade\r";
+  _output_buffer += "D:\\>\r";
 
   _pio_ext = 0;
 
