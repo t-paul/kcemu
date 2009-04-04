@@ -27,6 +27,7 @@
 #include <stdlib.h>
 #include <dirent.h>
 #include <unistd.h>
+#include <errno.h>
 
 #include "kc/system.h"
 
@@ -584,6 +585,39 @@ public:
   }
 };
 
+class VDIP_CMD_DLD : public VDIP_CMD
+{
+public:
+  VDIP_CMD_DLD(VDIP *vdip) : VDIP_CMD(vdip) { }
+  virtual ~VDIP_CMD_DLD(void) { }
+
+  void execute(void)
+  {
+    if (get_vdip()->get_file() != NULL)
+      add_error(ERR_FILE_OPEN);
+    else if (get_arg_count() >= 1)
+      execute_with_name(get_arg(0));
+    else
+      add_error(ERR_BAD_COMMAND);
+  }
+
+  void execute_with_name(string arg)
+  {
+    string filename = get_vdip()->get_path(arg);
+    if (rmdir(filename.c_str()) == 0)
+      {
+        add_prompt();
+      }
+    else
+      {
+        if (errno == ENOTEMPTY)
+          add_error(ERR_DIR_NOT_EMPTY);
+        else
+          add_error(ERR_COMMAND_FAILED);
+      }
+  }
+};
+
 /*
 class VDIP_CMD_CD : public VDIP_CMD
 {
@@ -829,6 +863,9 @@ VDIP_CMD::create_command(VDIP *vdip, vdip_command_t code)
       break;
     case CMD_MKD:
       vdip_cmd = new VDIP_CMD_MKD(vdip);
+      break;
+    case CMD_DLD:
+      vdip_cmd = new VDIP_CMD_DLD(vdip);
       break;
     default:
       vdip_cmd = new VDIP_CMD_UNKNOWN(vdip);
