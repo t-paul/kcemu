@@ -721,6 +721,43 @@ public:
   }
 };
 
+class VDIP_CMD_REN : public VDIP_CMD
+{
+public:
+  VDIP_CMD_REN(VDIP *vdip) : VDIP_CMD(vdip) { }
+  virtual ~VDIP_CMD_REN(void) { }
+
+  void execute(void)
+  {
+    if (get_vdip()->get_file() != NULL)
+      add_error(ERR_FILE_OPEN);
+    else if (get_arg_count() >= 2)
+      execute_with_names(get_arg(0), get_arg(1));
+    else
+      add_error(ERR_BAD_COMMAND);
+  }
+
+  void execute_with_names(string source, string target)
+  {
+    string source_path = get_vdip()->get_path(source);
+    string target_path = get_vdip()->get_path(target);
+
+    struct stat buf;
+    if (stat(target_path.c_str(), &buf) == 0)
+      {
+        add_error(ERR_COMMAND_FAILED);
+      }
+    else if (rename(source_path.c_str(), target_path.c_str()) == 0)
+      {
+        add_prompt();
+      }
+    else
+      {
+        add_error(ERR_COMMAND_FAILED);
+      }
+  }
+};
+
 /*
 class VDIP_CMD_CD : public VDIP_CMD
 {
@@ -975,6 +1012,9 @@ VDIP_CMD::create_command(VDIP *vdip, vdip_command_t code)
       break;
     case CMD_RD:
       vdip_cmd = new VDIP_CMD_RD(vdip);
+      break;
+    case CMD_REN:
+      vdip_cmd = new VDIP_CMD_REN(vdip);
       break;
     default:
       vdip_cmd = new VDIP_CMD_UNKNOWN(vdip);

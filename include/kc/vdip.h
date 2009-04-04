@@ -46,6 +46,7 @@ typedef enum
   CMD_OPW  = 0x09,
   CMD_CLF  = 0x0a,
   CMD_RDF  = 0x0b,
+  CMD_REN  = 0x0c,
   CMD_OPR  = 0x0e,
   CMD_IDD  = 0x0f,
   CMD_SCS  = 0x10,

@@ -397,6 +397,8 @@ VDIP::map_extended_command(string cmd)
     return CMD_DLF;
   else if (strcmp(cmd.c_str(), "RD") == 0)
     return CMD_RD;
+  else if (strcmp(cmd.c_str(), "REN") == 0)
+    return CMD_REN;
 
   return CMD_UNKNOWN;
 }
