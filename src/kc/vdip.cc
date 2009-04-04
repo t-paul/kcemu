@@ -356,74 +356,25 @@ VDIP::read_end(void)
     z80->addCallback(50, this, NULL);
 }
 
-vdip_command_t
-VDIP::map_extended_command(string cmd)
-{
-  if (strcmp(cmd.c_str(), "DIR") == 0)
-    return CMD_DIR;
-  else if (strcmp(cmd.c_str(), "CD") == 0)
-    return CMD_CD;
-  else if (strcmp(cmd.c_str(), "IDD") == 0)
-    return CMD_IDD;
-  else if (strcmp(cmd.c_str(), "CLF") == 0)
-    return CMD_CLF;
-  else if (strcmp(cmd.c_str(), "OPR") == 0)
-    return CMD_OPR;
-  else if (strcmp(cmd.c_str(), "RDF") == 0)
-    return CMD_RDF;
-  else if (strcmp(cmd.c_str(), "SCS") == 0)
-    return CMD_SCS;
-  else if (strcmp(cmd.c_str(), "ECS") == 0)
-    return CMD_ECS;
-  else if (strcmp(cmd.c_str(), "OPW") == 0)
-    return CMD_OPW;
-  else if (strcmp(cmd.c_str(), "WRF") == 0)
-    return CMD_WRF;
-  else if (strcmp(cmd.c_str(), "SEK") == 0)
-    return CMD_SEK;
-  else if (strcmp(cmd.c_str(), "IPH") == 0)
-    return CMD_IPH;
-  else if (strcmp(cmd.c_str(), "IPA") == 0)
-    return CMD_IPA;
-  else if (strcmp(cmd.c_str(), "DIRT") == 0)
-    return CMD_DIRT;
-  else if (strcmp(cmd.c_str(), "FWV") == 0)
-    return CMD_FWV;
-  else if (strcmp(cmd.c_str(), "MKD") == 0)
-    return CMD_MKD;
-  else if (strcmp(cmd.c_str(), "DLD") == 0)
-    return CMD_DLD;
-  else if (strcmp(cmd.c_str(), "DLF") == 0)
-    return CMD_DLF;
-  else if (strcmp(cmd.c_str(), "RD") == 0)
-    return CMD_RD;
-  else if (strcmp(cmd.c_str(), "REN") == 0)
-    return CMD_REN;
-
-  return CMD_UNKNOWN;
-}
-
 VDIP_CMD *
 VDIP::decode_command(string buf)
 {
   StringList *list = NULL;
-  vdip_command_t code = CMD_UNKNOWN;
+  VDIP_CMD *vdip_cmd = NULL;
 
   if (buf.length() == 0)
     {
-      code = CMD_EMPTY;
+      vdip_cmd = VDIP_CMD::create_command(this, CMD_EMPTY);
     }
   else
     {
       list = new StringList(buf, ' ');
       string cmd = list->front();
       if (cmd.length() == 1)
-        code = (vdip_command_t)(cmd.at(0) & 0xff);
+        vdip_cmd = VDIP_CMD::create_command(this, (vdip_command_t)(cmd.at(0) & 0xff));
       else
-        code = map_extended_command(list->front());
+        vdip_cmd = VDIP_CMD::create_command(this, list->front());
     }
-
-  VDIP_CMD *vdip_cmd = VDIP_CMD::create_command(this, code);
 
   if (list && (list->size() > 1))
     {

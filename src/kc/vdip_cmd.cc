@@ -940,6 +940,59 @@ VDIP_CMD::handle_input(byte_t data)
 {
 }
 
+vdip_command_t
+VDIP_CMD::map_extended_command(string cmd)
+{
+  if (strcmp(cmd.c_str(), "DIR") == 0)
+    return CMD_DIR;
+  else if (strcmp(cmd.c_str(), "CD") == 0)
+    return CMD_CD;
+  else if (strcmp(cmd.c_str(), "IDD") == 0)
+    return CMD_IDD;
+  else if (strcmp(cmd.c_str(), "CLF") == 0)
+    return CMD_CLF;
+  else if (strcmp(cmd.c_str(), "OPR") == 0)
+    return CMD_OPR;
+  else if (strcmp(cmd.c_str(), "RDF") == 0)
+    return CMD_RDF;
+  else if (strcmp(cmd.c_str(), "SCS") == 0)
+    return CMD_SCS;
+  else if (strcmp(cmd.c_str(), "ECS") == 0)
+    return CMD_ECS;
+  else if (strcmp(cmd.c_str(), "OPW") == 0)
+    return CMD_OPW;
+  else if (strcmp(cmd.c_str(), "WRF") == 0)
+    return CMD_WRF;
+  else if (strcmp(cmd.c_str(), "SEK") == 0)
+    return CMD_SEK;
+  else if (strcmp(cmd.c_str(), "IPH") == 0)
+    return CMD_IPH;
+  else if (strcmp(cmd.c_str(), "IPA") == 0)
+    return CMD_IPA;
+  else if (strcmp(cmd.c_str(), "DIRT") == 0)
+    return CMD_DIRT;
+  else if (strcmp(cmd.c_str(), "FWV") == 0)
+    return CMD_FWV;
+  else if (strcmp(cmd.c_str(), "MKD") == 0)
+    return CMD_MKD;
+  else if (strcmp(cmd.c_str(), "DLD") == 0)
+    return CMD_DLD;
+  else if (strcmp(cmd.c_str(), "DLF") == 0)
+    return CMD_DLF;
+  else if (strcmp(cmd.c_str(), "RD") == 0)
+    return CMD_RD;
+  else if (strcmp(cmd.c_str(), "REN") == 0)
+    return CMD_REN;
+
+  return CMD_UNKNOWN;
+}
+
+VDIP_CMD *
+VDIP_CMD::create_command(VDIP *vdip, string cmd)
+{
+  return create_command(vdip, map_extended_command(cmd));
+}
+
 VDIP_CMD *
 VDIP_CMD::create_command(VDIP *vdip, vdip_command_t code)
 {

@@ -92,6 +92,8 @@ private:
 protected:
   virtual void execute(void) = 0;
 
+  static vdip_command_t map_extended_command(string cmd);
+
 public:
   VDIP_CMD(VDIP *vdip, bool check_disk = false);
   virtual ~VDIP_CMD(void);
@@ -116,6 +118,7 @@ public:
   virtual void exec(void);
   virtual void handle_input(byte_t input);
 
+  static VDIP_CMD * create_command(VDIP *vdip, string cmd);
   static VDIP_CMD * create_command(VDIP *vdip, vdip_command_t code);
 };
 
@@ -143,7 +146,6 @@ private:
   void set_pio_ext_b(byte_t val);
 
   VDIP_CMD * decode_command(string buf);
-  vdip_command_t map_extended_command(string buf);
 
 public:
   VDIP(void);
