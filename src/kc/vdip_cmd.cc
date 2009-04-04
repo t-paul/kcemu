@@ -618,6 +618,54 @@ public:
   }
 };
 
+class VDIP_CMD_DLF : public VDIP_CMD
+{
+public:
+  VDIP_CMD_DLF(VDIP *vdip) : VDIP_CMD(vdip) { }
+  virtual ~VDIP_CMD_DLF(void) { }
+
+  void execute(void)
+  {
+    if (get_vdip()->get_file() != NULL)
+      add_error(ERR_FILE_OPEN);
+    else if (get_arg_count() >= 1)
+      execute_with_name(get_arg(0));
+    else
+      add_error(ERR_BAD_COMMAND);
+  }
+
+  void execute_with_name(string arg)
+  {
+    string filename = get_vdip()->get_path(arg);
+
+    if (access(filename.c_str(), W_OK) != 0)
+      {
+        add_error(ERR_READ_ONLY);
+      }
+    else if (unlink(filename.c_str()) == 0)
+      {
+        add_prompt();
+      }
+    else
+      {
+        switch (errno)
+          {
+          case EISDIR:
+            add_error(ERR_INVALID);
+            break;
+          case EACCES:
+          case EPERM:
+          case EROFS:
+            add_error(ERR_READ_ONLY);
+            break;
+          default:
+            add_error(ERR_COMMAND_FAILED);
+            break;
+          }
+      }
+  }
+};
+
 /*
 class VDIP_CMD_CD : public VDIP_CMD
 {
@@ -866,6 +914,9 @@ VDIP_CMD::create_command(VDIP *vdip, vdip_command_t code)
       break;
     case CMD_DLD:
       vdip_cmd = new VDIP_CMD_DLD(vdip);
+      break;
+    case CMD_DLF:
+      vdip_cmd = new VDIP_CMD_DLF(vdip);
       break;
     default:
       vdip_cmd = new VDIP_CMD_UNKNOWN(vdip);

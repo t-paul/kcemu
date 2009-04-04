@@ -40,6 +40,7 @@ typedef enum
   CMD_CD   = 0x02,
   CMD_DLD  = 0x05,
   CMD_MKD  = 0x06,
+  CMD_DLF  = 0x07,
   CMD_WRF  = 0x08,
   CMD_OPW  = 0x09,
   CMD_CLF  = 0x0a,
