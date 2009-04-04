@@ -666,6 +666,61 @@ public:
   }
 };
 
+class VDIP_CMD_RD : public VDIP_CMD
+{
+public:
+  VDIP_CMD_RD(VDIP *vdip) : VDIP_CMD(vdip) { }
+  virtual ~VDIP_CMD_RD(void) { }
+
+  void execute(void)
+  {
+    if (get_vdip()->get_file() != NULL)
+      add_error(ERR_FILE_OPEN);
+    else if (get_arg_count() >= 1)
+      execute_with_name(get_arg(0));
+    else
+      add_error(ERR_BAD_COMMAND);
+  }
+
+  void execute_with_name(string arg)
+  {
+    string filename = get_vdip()->get_path(arg);
+
+    struct stat buf;
+    if (stat(filename.c_str(), &buf) != 0)
+      {
+        add_error(ERR_COMMAND_FAILED);
+        return;
+      }
+
+    // this is not specified in the real VDIP firmware
+    // but we refuse to read files that are bigger than
+    // one megabyte.
+    if (buf.st_size > 1024 * 1024)
+      {
+        add_error(ERR_INVALID);
+        return;
+      }
+
+    FILE *f = fopen(filename.c_str(), "rb");
+    if (f == NULL)
+      {
+        add_error(ERR_COMMAND_FAILED);
+        return;
+      }
+
+    while (242)
+      {
+        int c = fgetc(f);
+        if (c == EOF)
+          break;
+        add_char(c);
+      }
+
+    fclose(f);
+  }
+};
+
 /*
 class VDIP_CMD_CD : public VDIP_CMD
 {
@@ -917,6 +972,9 @@ VDIP_CMD::create_command(VDIP *vdip, vdip_command_t code)
       break;
     case CMD_DLF:
       vdip_cmd = new VDIP_CMD_DLF(vdip);
+      break;
+    case CMD_RD:
+      vdip_cmd = new VDIP_CMD_RD(vdip);
       break;
     default:
       vdip_cmd = new VDIP_CMD_UNKNOWN(vdip);

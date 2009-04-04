@@ -38,6 +38,7 @@ typedef enum
 {
   CMD_DIR  = 0x01,
   CMD_CD   = 0x02,
+  CMD_RD   = 0x04,
   CMD_DLD  = 0x05,
   CMD_MKD  = 0x06,
   CMD_DLF  = 0x07,
