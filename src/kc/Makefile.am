@@ -28,7 +28,6 @@ AM_CPPFLAGS = \
 
 LINUX_EXTRA_kcemu_SOURCES = mod_v24.cc mod_js.cc
 MINGW_EXTRA_kcemu_SOURCES = kcemu.rc
-ALL_EXTRA_kcemu_SOURCES = $(LINUX_EXTRA_kcemu_SOURCES) $(MINGW_EXTRA_kcemu_SOURCES)
 
 if TARGET_LINUX
 EXTRA_kcemu_SOURCES = $(LINUX_EXTRA_kcemu_SOURCES)
@@ -38,7 +37,7 @@ if TARGET_MINGW
 EXTRA_kcemu_SOURCES = $(MINGW_EXTRA_kcemu_SOURCES)
 endif
 
-EXTRA_DIST = $(ALL_EXTRA_kcemu_SOURCES)
+EXTRA_DIST = $(LINUX_EXTRA_kcemu_SOURCES) $(MINGW_EXTRA_kcemu_SOURCES)
 
 kcemu_SOURCES = \
 	debug.cc	\
