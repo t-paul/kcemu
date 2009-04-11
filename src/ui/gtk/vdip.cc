@@ -146,7 +146,7 @@ VDIPWindow::set_name(int idx, const char *name)
 void
 VDIPWindow::sf_vdip_attach(GtkWidget *widget, gpointer data)
 {
-  int nr = (int)data;
+  long nr = (long)data;
   GtkEntry *entry = GTK_ENTRY(GTK_BIN(widget)->child);
   const gchar *text = gtk_entry_get_text(GTK_ENTRY(entry));
 
