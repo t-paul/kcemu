@@ -20,6 +20,7 @@
  */
 
 #include <stdio.h>
+#include <stdint.h>
 #include <stdlib.h>
 #include <string.h>
 #include <assert.h>
@@ -28,19 +29,19 @@
 
 typedef struct wav_header
 {
-  unsigned long  MainChunkID;                      // it will be 'RIFF'
-  unsigned long  Length;
-  unsigned long  ChunkTypeID;                      // it will be 'WAVE'
-  unsigned long  SubChunkID;                       // it will be 'fmt '
-  unsigned long  SubChunkLength;
-  unsigned short AudioFormat;
-  unsigned short NumChannels;
-  unsigned long  SampleFreq;
-  unsigned long  BytesPerSec;
-  unsigned short BytesPerSample;
-  unsigned short BitsPerSample;
-  unsigned long  DataChunkID;                      // it will be 'data'
-  unsigned long  DataLength;
+  uint32_t MainChunkID;                      // it will be 'RIFF'
+  uint32_t Length;
+  uint32_t ChunkTypeID;                      // it will be 'WAVE'
+  uint32_t SubChunkID;                       // it will be 'fmt '
+  uint32_t SubChunkLength;
+  uint16_t AudioFormat;
+  uint16_t NumChannels;
+  uint32_t SampleFreq;
+  uint32_t BytesPerSec;
+  uint16_t BytesPerSample;
+  uint16_t BitsPerSample;
+  uint32_t DataChunkID;                      // it will be 'data'
+  uint32_t DataLength;
 } wav_header_t;
 
 static char loader_name[1024];
