@@ -690,7 +690,10 @@ SystemInformation::SystemInformation(void) {
                  "caos43e.855", _("CAOS 4.3 (E)"),
                  "caos__e0.855", _("CAOS 4.4 (E)"),
                  NULL)
-        .add_rom(SystemROM::ROM_KEY_BASIC, 0x8000, "basic_c0.855", _("KC-BASIC"), NULL)
+        .add_rom(SystemROM::ROM_KEY_BASIC, 0x8000, 1,
+                 "basic_c0.855", _("KC-BASIC (EDAS/TEMO/FORTH)"),
+                 "basicusb.855", _("KC-BASIC (EDAS/TEMO/USB)"),
+                 NULL)
         .add_rom(SystemROM::ROM_KEY_D004_FC, 0x2000, 3,
                  "floppy20.rom", _("D004 Version 2.0 (02.01.1989)"),
                  "floppy30.rom", _("D004 Version 3.0 (07.12.1997)"),
