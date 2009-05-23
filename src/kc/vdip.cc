@@ -111,14 +111,16 @@ const char * CMD_vdip_attach::_path = NULL;
 
 VDIP::VDIP(void) : Callback("Vinculum USB")
 {
+  const char *vdip_root_1 = kcemu_vdip_root;
+  if (vdip_root_1 == NULL)
+    vdip_root_1 = Preferences::instance()->get_string_value("vdip_root_1", NULL);
+  if (vdip_root_1 == NULL)
+    vdip_root_1 = "";
+
   _pio = NULL;
   _file = NULL;
 
-  const char *vdip_root_1 = Preferences::instance()->get_string_value("vdip_root_1", NULL);
-  if (vdip_root_1 != NULL)
-    _root = vdip_root_1;
-  else
-    _root = "";
+  _root = vdip_root_1;
 
   _cmd = NULL;
   _cwd = new StringList();
