@@ -24,7 +24,7 @@
 
 #include "kc/mod_segm.h"
 
-class Module512k : public ModuleSegmentedRAM
+class Module512k : public ModuleSegmentedMemory
 {
  protected:
   virtual word_t get_base_address(word_t addr, byte_t val);

@@ -24,12 +24,12 @@
 #include "kc/mod_128k.h"
 
 Module128k::Module128k(Module128k &tmpl) :
-  ModuleSegmentedRAM(tmpl)
+  ModuleSegmentedMemory(tmpl)
 {
 }
 
 Module128k::Module128k(const char *name, byte_t id) :
-  ModuleSegmentedRAM(name, id, 8, 0x4000)
+  ModuleSegmentedMemory(name, id, 8, 0x4000)
 {
 }
 
