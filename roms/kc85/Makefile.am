@@ -33,6 +33,7 @@ ROMS = \
 	m012.rom \
 	m026.rom \
 	m027.rom \
+	m033.rom \
 	m900.rom \
 	m901.rom
 

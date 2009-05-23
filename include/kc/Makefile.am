@@ -77,6 +77,7 @@ EXTRA_DIST = \
 	mod_vdip.h	\
 	mod_ram.h	\
 	mod_ram1.h	\
+	mod_r16.h	\
 	mod_r64.h	\
 	mod_cpm.h	\
 	mod_ram8.h	\

@@ -106,6 +106,7 @@ kcemu_SOURCES = \
 	mod_vdip.cc	\
 	mod_ram.cc	\
 	mod_ram1.cc	\
+	mod_r16.cc	\
 	mod_r64.cc	\
 	mod_cpm.cc	\
 	mod_ram8.cc	\

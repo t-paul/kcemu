@@ -138,6 +138,7 @@
 #include "kc/mod_dio.h"
 #include "kc/mod_ram.h"
 #include "kc/mod_ram1.h"
+#include "kc/mod_r16.h"
 #include "kc/mod_r64.h"
 #include "kc/mod_cpm.h"
 #include "kc/mod_ram8.h"
@@ -491,6 +492,13 @@ ModuleList::ModuleList(void)
   m = new ModuleROM(kc85_m027_rom.c_str(), "M027", 0x2000, 0xfb);
   _mod_list.push_back(new ModuleListEntry(_("M027: Development"), m, KC_TYPE_85_2_CLASS));
 
+  /*
+   *  typestar + ramdos
+   */
+  string kc85_m033_rom = kc85_romdir + "/m033.rom";
+  m = new ModuleSegmentedROM16k(kc85_m033_rom.c_str(), "M033", 0x01);
+  _mod_list.push_back(new ModuleListEntry(_("M033: TypeStar + RAMDOS"), m, KC_TYPE_85_2_CLASS));
+  
   /*
    *  vinculum usb + driver rom
    */
