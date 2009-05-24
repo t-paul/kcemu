@@ -24,12 +24,12 @@
 #include "kc/mod_1m.h"
 
 Module1M::Module1M(Module1M &tmpl) :
-  ModuleSegmentedRAM(tmpl)
+  ModuleSegmentedMemory(tmpl)
 {
 }
 
 Module1M::Module1M(const char *name, byte_t id) :
-  ModuleSegmentedRAM(name, id, 64, 0x4000)
+  ModuleSegmentedMemory(name, id, 64, 0x4000)
 {
 }
 

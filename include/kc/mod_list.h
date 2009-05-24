@@ -25,6 +25,8 @@
 #include <list>
 #include <string.h>
 
+#include <stdlib.h>
+
 #include "kc/system.h"
 #include "kc/prefs/types.h"
 

@@ -1,6 +1,6 @@
 /*
  *  KCemu -- the KC 85/3 and KC 85/4 Emulator
- *  Copyright (C) 1997-2004 Torsten Paul
+ *  Copyright (C) 1997-2009 Torsten Paul
  *
  *  $Id$
  *
@@ -19,23 +19,38 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-#ifndef __kc_mod_1m_h
-#define __kc_mod_1m_h
+#include "kc/system.h"
 
-#include "kc/mod_segm.h"
+#include "kc/mod_r16.h"
 
-class Module1M : public ModuleSegmentedMemory
+ModuleSegmentedROM16k::ModuleSegmentedROM16k(ModuleSegmentedROM16k &tmpl) :
+  ModuleSegmentedMemory(tmpl)
 {
- protected:
-  virtual word_t get_base_address(word_t addr, byte_t val);
-  virtual int get_segment_index(word_t addr, byte_t val);
-  
- public:
-  Module1M(Module1M &tmpl);
-  Module1M(const char *name, byte_t id);
-  virtual ~Module1M(void);
+}
 
-  virtual ModuleInterface * clone(void);
-};
+ModuleSegmentedROM16k::ModuleSegmentedROM16k(const char *filename, const char *name, byte_t id) :
+  ModuleSegmentedMemory(name, id, 2, 0x2000, filename)
+{
+}
 
-#endif /* __kc_mod_1m_h */
+ModuleSegmentedROM16k::~ModuleSegmentedROM16k(void)
+{
+}
+
+int
+ModuleSegmentedROM16k::get_segment_index(word_t addr, byte_t val)
+{
+  return (val >> 4) & 0x01;
+}
+
+word_t
+ModuleSegmentedROM16k::get_base_address(word_t addr, byte_t val)
+{
+  return ((val >> 6) & 3) * 0x4000;
+}
+
+ModuleInterface *
+ModuleSegmentedROM16k::clone(void)
+{
+  return new ModuleSegmentedROM16k(*this);
+}

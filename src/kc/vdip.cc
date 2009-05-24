@@ -111,14 +111,16 @@ const char * CMD_vdip_attach::_path = NULL;
 
 VDIP::VDIP(void) : Callback("Vinculum USB")
 {
+  const char *vdip_root_1 = kcemu_vdip_root;
+  if (vdip_root_1 == NULL)
+    vdip_root_1 = Preferences::instance()->get_string_value("vdip_root_1", NULL);
+  if (vdip_root_1 == NULL)
+    vdip_root_1 = "";
+
   _pio = NULL;
   _file = NULL;
 
-  const char *vdip_root_1 = Preferences::instance()->get_string_value("vdip_root_1", NULL);
-  if (vdip_root_1 != NULL)
-    _root = vdip_root_1;
-  else
-    _root = "";
+  _root = vdip_root_1;
 
   _cmd = NULL;
   _cwd = new StringList();
@@ -128,6 +130,12 @@ VDIP::VDIP(void) : Callback("Vinculum USB")
 
 VDIP::~VDIP(void)
 {
+}
+
+string
+VDIP::get_firmware_version(void) const
+{
+  return "03.66VDAPF";
 }
 
 bool
@@ -191,9 +199,9 @@ VDIP::set_root(string root)
       if (had_disk != has_disk())
         {
           if (has_disk())
-            _output_buffer = is_short_command_set() ? "DD1\r" : "Device Detected P1\r";
+            _output_buffer = is_short_command_set() ? "DD2\r" : "Device Detected P2\r";
           else
-            _output_buffer = is_short_command_set() ? "DR1\r" : "Device Removed P1\r";
+            _output_buffer = is_short_command_set() ? "DR2\r" : "Device Removed P2\r";
 
           set_pio_ext_b(0x02);
           z80->addCallback(20000, this, NULL);
@@ -241,6 +249,12 @@ VDIP::chdir_up(void)
 }
 
 void
+VDIP::chdir_root(void)
+{
+  _cwd->clear();
+}
+
+void
 VDIP::chdir(string dir)
 {
   _cwd->push_back(dir);
@@ -271,7 +285,10 @@ VDIP::reset(void)
 
   _input = false;
   _output = -1;
-  _output_buffer = "\rVer 03.60VDAPF On-Line:\r";
+  _output_buffer = "\rVer " + get_firmware_version() + " On-Line:\r";
+  if (has_disk())
+    _output_buffer += "Device Detected P2\rNo Upgrade\r";
+  _output_buffer += "D:\\>\r";
 
   _pio_ext = 0;
 
@@ -341,62 +358,25 @@ VDIP::read_end(void)
     z80->addCallback(50, this, NULL);
 }
 
-vdip_command_t
-VDIP::map_extended_command(string cmd)
-{
-  if (strcmp(cmd.c_str(), "DIR") == 0)
-    return CMD_DIR;
-  else if (strcmp(cmd.c_str(), "CD") == 0)
-    return CMD_CD;
-  else if (strcmp(cmd.c_str(), "IDD") == 0)
-    return CMD_IDD;
-  else if (strcmp(cmd.c_str(), "CLF") == 0)
-    return CMD_CLF;
-  else if (strcmp(cmd.c_str(), "OPR") == 0)
-    return CMD_OPR;
-  else if (strcmp(cmd.c_str(), "RDF") == 0)
-    return CMD_RDF;
-  else if (strcmp(cmd.c_str(), "SCS") == 0)
-    return CMD_SCS;
-  else if (strcmp(cmd.c_str(), "ECS") == 0)
-    return CMD_ECS;
-  else if (strcmp(cmd.c_str(), "OPW") == 0)
-    return CMD_OPW;
-  else if (strcmp(cmd.c_str(), "WRF") == 0)
-    return CMD_WRF;
-  else if (strcmp(cmd.c_str(), "SEK") == 0)
-    return CMD_SEK;
-  else if (strcmp(cmd.c_str(), "IPH") == 0)
-    return CMD_IPH;
-  else if (strcmp(cmd.c_str(), "IPA") == 0)
-    return CMD_IPA;
-  else if (strcmp(cmd.c_str(), "DIRT") == 0)
-    return CMD_DIRT;
-
-  return CMD_UNKNOWN;
-}
-
 VDIP_CMD *
 VDIP::decode_command(string buf)
 {
   StringList *list = NULL;
-  vdip_command_t code = CMD_UNKNOWN;
+  VDIP_CMD *vdip_cmd = NULL;
 
   if (buf.length() == 0)
     {
-      code = CMD_EMPTY;
+      vdip_cmd = VDIP_CMD::create_command(this, CMD_EMPTY);
     }
   else
     {
       list = new StringList(buf, ' ');
       string cmd = list->front();
       if (cmd.length() == 1)
-        code = (vdip_command_t)(cmd.at(0) & 0xff);
+        vdip_cmd = VDIP_CMD::create_command(this, (vdip_command_t)(cmd.at(0) & 0xff));
       else
-        code = map_extended_command(list->front());
+        vdip_cmd = VDIP_CMD::create_command(this, list->front());
     }
-
-  VDIP_CMD *vdip_cmd = VDIP_CMD::create_command(this, code);
 
   if (list && (list->size() > 1))
     {

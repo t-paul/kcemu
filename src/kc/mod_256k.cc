@@ -24,12 +24,12 @@
 #include "kc/mod_256k.h"
 
 Module256k::Module256k(Module256k &tmpl) :
-  ModuleSegmentedRAM(tmpl)
+  ModuleSegmentedMemory(tmpl)
 {
 }
 
 Module256k::Module256k(const char *name, byte_t id) :
-  ModuleSegmentedRAM(name, id, 16, 0x4000)
+  ModuleSegmentedMemory(name, id, 16, 0x4000)
 {
 }
 

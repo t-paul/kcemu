@@ -25,16 +25,20 @@
 #include "kc/module.h"
 #include "kc/memory.h"
 
-class ModuleSegmentedRAM : public ModuleInterface
+class ModuleSegmentedMemory : public ModuleInterface
 {
  private:
   byte_t _val;
-  byte_t *_ram;
+  byte_t *_mem;
+  bool _is_rom;
+  bool _master;
   int _segments;
   word_t _segment_size;
   MemAreaGroup *_group;
 
  protected:
+  virtual bool is_rom(void);
+
   virtual int get_segment_count(void);
   virtual int get_segment_size(void);
 
@@ -42,9 +46,10 @@ class ModuleSegmentedRAM : public ModuleInterface
   virtual word_t   get_base_address(word_t addr, byte_t val) = 0;
 
  public:
-  ModuleSegmentedRAM(ModuleSegmentedRAM &tmpl);
-  ModuleSegmentedRAM(const char *name, byte_t id, int segments, int segment_size);
-  virtual ~ModuleSegmentedRAM(void);
+  ModuleSegmentedMemory(ModuleSegmentedMemory &tmpl);
+  ModuleSegmentedMemory(const char *name, byte_t id, int segments, int segment_size);
+  ModuleSegmentedMemory(const char *name, byte_t id, int segments, int segment_size, const char *filename);
+  virtual ~ModuleSegmentedMemory(void);
 
   virtual void m_out(word_t addr, byte_t val);
   virtual ModuleInterface * clone(void) = 0;
