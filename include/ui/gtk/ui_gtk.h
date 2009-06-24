@@ -95,15 +95,11 @@ protected:
     void tapeSelect(void);
     
     void text_update(void);
-    void attach_remote_listener(void);
     void wire_menu_item(const char *name, const char *shortcut, const char *command);
     
     static void sf_selection_received(GtkWidget *widget,
             GtkSelectionData *sel_data,
             gpointer *data);
-    static gboolean property_change(GtkWidget *widget,
-            GdkEventProperty *event,
-            gpointer data);
     
     static void key_press_release(GdkEventKey *event, bool press);
     
@@ -129,7 +125,6 @@ protected:
             gint row,
             gint column,
             GdkEventButton * bevent);
-    static void sf_expose(void);
     
     static void sf_load(void);
     static void sf_load_ok(GtkWidget *widget, GtkFileSelection *fs);
