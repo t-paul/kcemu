@@ -47,6 +47,7 @@ class PortInterface;
 class GDC;
 class VIS;
 class VDIP;
+class KCNET;
 class Poly880;
 class DisplayC80;
 class Plotter;
@@ -81,6 +82,7 @@ extern Ports           *fdc_ports;
 extern FDC             *fdc_fdc;
 extern Sound           *sound;
 extern VDIP            *vdip;
+extern KCNET           *kcnet;
 extern byte_t           fdc_mem[];
 
 extern int   kcemu_ui_scale;

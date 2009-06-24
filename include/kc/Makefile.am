@@ -1,6 +1,6 @@
 ## Process this file with automake to produce Makefile.in
 
-SUBDIRS = prefs kramermc muglerpc vcs80 c80
+SUBDIRS = prefs kcnet kramermc muglerpc vcs80 c80
 
 EXTRA_DIST = \
 	cb.h		\
@@ -101,6 +101,7 @@ EXTRA_DIST = \
 	mod_v24.h	\
 	mod_js.h	\
 	mod_4131.h	\
+	mod_m052.h	\
 	mod_segm.h	\
 	mod_boot.h	\
 	mod_list.h	\
