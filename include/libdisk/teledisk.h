@@ -31,9 +31,22 @@ extern "C" {
 typedef struct teledisk_prop
 {
   FILE *f;
-  int tracks;
+  char id[3];
+  int volume;
+  int signature;
+  int version_minor;
+  int version_major;
+  int heads;
+  int cylinders;
+  int sectors;
+  int sector_size;
+  int sectors_total;
+  int dos_mode;
   char *comment;
+  char *comment_date;
   char *filename;
+  char *density;
+  char *drive_type;
   unsigned char buf[2048];
 
   struct {

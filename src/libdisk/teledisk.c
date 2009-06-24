@@ -93,7 +93,6 @@ decode_sector_rle(teledisk_prop_t *prop, int track_idx, unsigned char *buf)
 	    {
 	      buf[idx++] = b1;
 	      buf[idx++] = b2;
-
 	    }
 	  break;
 	default:
@@ -108,11 +107,22 @@ static int
 decode_sector(teledisk_prop_t *prop, int track_idx, unsigned char *buf)
 {
   int type;
+  char *name;
 
   type = fgetc(prop->f);
 
-  printf("track: %d, type = %d\n", track_idx, type);
+  switch (type)
+    {
+    case 0x00: name = "copy"; break;
+    case 0x01: name = "mult"; break;
+    case 0x02: name = "rle"; break;
+    default: name = "unknown"; break;
+    }
+      
+  //printf("track: %d, type = %d (%s)\n", track_idx, type, name);
 
+  memset(prop->buf, 0, sizeof(prop->buf));
+  
   switch (type)
     {
     case 0x00:
@@ -128,7 +138,7 @@ decode_sector(teledisk_prop_t *prop, int track_idx, unsigned char *buf)
   return -1;
 }
 
-int
+static int
 read_sectors(teledisk_prop_t *prop)
 {
   int o, t, s1, s2, s3, s4, s5, s6, s7, s8;
@@ -146,14 +156,20 @@ read_sectors(teledisk_prop_t *prop)
 
   //printf("SECTOR: %02x %02x %02x %02x %02x %02x %02x %02x\n", s1, s2, s3, s4, s5, s6, s7, s8);
 
-  t = prop->tracks;
-  prop->tracks++;
+  t = prop->sectors_total;
+  prop->sectors_total++;
 
   prop->offset[t].c = s1;
   prop->offset[t].h = s2;
   prop->offset[t].s = s3;
   switch (s4)
     {
+    case 0:
+      prop->offset[t].l = 128;
+      break;
+    case 1:
+      prop->offset[t].l = 256;
+      break;
     case 2:
       prop->offset[t].l = 512;
       break;
@@ -164,8 +180,19 @@ read_sectors(teledisk_prop_t *prop)
       return -1;
     }
 
+  if (prop->sector_size == 0)
+    prop->sector_size = prop->offset[t].l;
+  else if (prop->sector_size != prop->offset[t].l)
+    prop->sector_size = -1;
+
+  if (prop->cylinders < (s1 + 1))
+    prop->cylinders = s1 + 1;
+
+  if (prop->sectors < s3)
+    prop->sectors = s3;
+
   prop->offset[t].o = o;
-  prop->offset[prop->tracks].o = 0;
+  prop->offset[prop->sectors_total].o = 0;
 
   return decode_sector(prop, t, prop->buf);
 }
@@ -180,10 +207,13 @@ read_tracks(teledisk_prop_t *prop)
   t3 = fgetc(prop->f);
   t4 = fgetc(prop->f);
 
-  if (t1 == 0xff) // end marker?
-    return 1;
-
   //printf("TRACK: %02x %02x %02x %02x\n", t1, t2, t3, t4);
+
+  if (t1 == 0xff) // end marker?
+    {
+      //printf("TRACK END MARKER?\n");
+      return 1;
+    }
 
   for (a = 0;a < t1;a++)
     if (read_sectors(prop) < 0)
@@ -192,13 +222,64 @@ read_tracks(teledisk_prop_t *prop)
   return 0;
 }
 
-static char *
-read_header(FILE *f)
+static int
+set_density(teledisk_prop_t *prop, int density)
 {
-  char *buf;
-  char *density;
-  char *drive;
-  int c, cnt, idx, len;
+  switch (density)
+    {
+    case 0:
+      prop->density = "250K bps MFM";
+      break;
+    case 1:
+      prop->density = "300K bps MFM";
+      break;
+    case 2:
+      prop->density = "500K bps MFM";
+      break;
+    case 128:
+      prop->density = "250K bps FM";
+      break;
+    case 129:
+      prop->density = "300K bps FM";
+      break;
+    case 130:
+      prop->density = "500K bps FM";
+      break;
+    default:
+      return 0;
+    }
+
+  return 1;
+}
+
+static int
+set_drive_type(teledisk_prop_t *prop, int drive_type)
+{
+  switch (drive_type)
+    {
+    case 1:
+      prop->drive_type = "360k";
+      break;
+    case 2:
+      prop->drive_type = "1.2M";
+      break;
+    case 3:
+      prop->drive_type = "720k";
+      break;
+    case 4:
+      prop->drive_type = "1.44k";
+      break;
+    default:
+      return 0;
+    }
+
+  return 1;
+}
+
+static int
+read_header(teledisk_prop_t *prop)
+{
+  char buf[2048];
   struct {
     unsigned char  file_id[2];
     unsigned char  volume_sequence;
@@ -208,7 +289,7 @@ read_header(FILE *f)
     unsigned char  drive_type;
     unsigned char  track_density;
     unsigned char  dos_mode;
-    unsigned char  sides;
+    unsigned char  heads;
     unsigned short crc;
   } h;
 
@@ -227,149 +308,98 @@ read_header(FILE *f)
     "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
   };
 
-  if (fread(&h, sizeof(h), 1, f) != 1)
-    return NULL;
+  if (fread(&h, sizeof(h), 1, prop->f) != 1)
+    return 0;
 
   /*
    *  check file identifier
    */
   if ((h.file_id[0] != 'T') && (h.file_id[0] != 't'))
-    return NULL;
+    return 0;
 
   if ((h.file_id[1] != 'D') && (h.file_id[1] != 'd'))
-    return NULL;
+    return 0;
 
   if (h.volume_sequence != 0)
-    return NULL;
+    return 0;
+
+  prop->id[0] = h.file_id[0];
+  prop->id[1] = h.file_id[1];
+  prop->id[2] = 0;
+  prop->volume = h.volume_sequence;
+  prop->signature = h.check_signature;
+  prop->version_major = h.version_number / 16;
+  prop->version_minor = h.version_number & 15;
+  prop->heads = h.heads;
+  prop->dos_mode = h.dos_mode;
+
+  if (!set_density(prop, h.source_density))
+    return 0;
+
+  if (!set_drive_type(prop, h.drive_type))
+    return 0;
 
   // check for comment
-  if ((h.track_density & 0x80) == 0)
+  if ((h.track_density & 0x80) != 0)
     {
-      buf = malloc(1);
-      buf[0] = 0;
-      return buf;
+      // comment header
+      if (fread(&comment, sizeof(comment), 1, prop->f) != 1)
+        return 0;
+
+      snprintf(buf, sizeof(buf), "%02d. %s %04d, %02d:%02d:%02d",
+             comment.day, month[comment.month], comment.year + 1900,
+             comment.hour, comment.minute, comment.second);
+      prop->comment_date = strdup(buf);
+
+      if (comment.len >= (sizeof(buf) - 1))
+        return 0;
+      
+      /*
+       *  read comment
+       */
+      memset(buf, 0, sizeof(buf));
+      if (fread(buf, 1, comment.len, prop->f) != comment.len)
+        return 0;
+
+      printf("comment: %s\n", buf);
+      prop->comment = strdup(buf);
     }
 
-  if (fread(&comment, sizeof(comment), 1, f) != 1)
-    return NULL;
-
-//printf("00: %02x, %3d\n", h.unknown00, h.unknown00);
-//printf("01: %02x, %3d\n", h.unknown01, h.unknown01);
-//printf("02: %02x, %3d\n", h.unknown02, h.unknown02);
-//printf("03: %02x, %3d\n", h.unknown03, h.unknown03);
-//printf("04: %02x, %3d\n", h.unknown04, h.unknown04);
-//printf("05: %02x, %3d\n", h.unknown05, h.unknown05);
-//printf("07: %02x, %3d\n", h.unknown07, h.unknown07);
-//printf("08: %02x, %3d\n", h.unknown08, h.unknown08);
-//printf("09: %02x, %3d\n", h.unknown09, h.unknown09);
-//printf("10: %02x, %3d\n", h.unknown10, h.unknown10);
-//printf("11: %02x, %3d\n", h.unknown11, h.unknown11);
-//printf("12: %02x, %3d\n", h.unknown12, h.unknown12);
-//
-
-  switch (h.source_density)
-    {
-    case 0:
-      density = "250K bps MFM";
-      break;
-    case 1:
-      density = "300K bps MFM";
-      break;
-    case 2:
-      density = "500K bps MFM";
-      break;
-    case 128:
-      density = "250K bps FM";
-      break;
-    case 129:
-      density = "300K bps FM";
-      break;
-    case 130:
-      density = "500K bps FM";
-      break;
-    default:
-      return NULL;
-    }
-
-  switch (h.drive_type)
-    {
-    case 1:
-      drive = "360k";
-      break;
-    case 2:
-      drive = "1.2M";
-      break;
-    case 3:
-      drive = "720k";
-      break;
-    case 4:
-      drive = "1.44k";
-      break;
-    default:
-      return NULL;
-    }
-
-  printf("file_id: %c%c (vol %d, check %d)\n", h.file_id[0], h.file_id[1], h.volume_sequence, h.check_signature);
-  printf("version_number: %d.%d\n", h.version_number / 16, h.version_number & 15);
-  printf("density: %s\n", density);
-  printf("drive_type: %s\n", drive);
-  printf("sides: %d\n", h.sides);
-  printf("dos_mode: %d\n", h.dos_mode);
-  printf("comment length: %d\n", comment.len);
-  printf("date: %02d. %s %04d, %02d:%02d:%02d\n",
-	 comment.day, month[comment.month], comment.year + 1900,
-	 comment.hour, comment.minute, comment.second);
-
-  /*
-   *  read comment
-   */
-  
-
-  cnt = 0;
-  idx = 0;
-  len = 128;
-  buf = (char *)malloc(comment.len);
-  if (fread(buf, 1, comment.len, f) != comment.len)
-    {
-      free(buf);
-      return NULL;
-    }
-
-  printf("comment: %s\n", buf);
-
-  return buf;
+  return 1;
 }
 
 teledisk_prop_t *
 teledisk_open(const char *filename)
 {
-  int a;
   int ret;
   FILE *f;
-  char *comment;
   teledisk_prop_t *prop;
 
   f = fopen(filename, "rb");
   if (f == NULL)
     return NULL;
 
-  comment = read_header(f);
-  if (comment == NULL)
-    return NULL;
-
   prop = malloc(sizeof(teledisk_prop_t));
   if (prop == NULL)
+    return NULL;
+
+  prop->f = f;
+  prop->heads = 0;
+  prop->cylinders = 0;
+  prop->sector_size = 0;
+  prop->sectors_total = 0;
+  prop->comment = NULL;
+  prop->comment_date = NULL;
+
+  if (!read_header(prop))
     {
-      free(comment);
+      free(prop);
       return NULL;
     }
 
-  prop->f = f;
-  prop->tracks = 0;
-  prop->comment = comment;
   prop->filename = strdup(filename);
 
-  for (a = 0;a < 160;a++)
+  while (242)
     {
       ret = read_tracks(prop);
       if (ret > 0)
@@ -393,6 +423,8 @@ teledisk_close(teledisk_prop_t *prop)
   free(prop->filename);
   if (prop->comment != NULL)
     free(prop->comment);
+  if (prop->comment_date != NULL)
+    free(prop->comment_date);
 
   free(prop);
   return;
@@ -401,9 +433,8 @@ teledisk_close(teledisk_prop_t *prop)
 int
 teledisk_read_sector(teledisk_prop_t *prop, int c, int h, int s)
 {
-  int a;
+  int a = -1;
 
-  a = -1;
   while (242)
     {
       a++;
@@ -420,10 +451,16 @@ teledisk_read_sector(teledisk_prop_t *prop, int c, int h, int s)
 
 
   if (fseek(prop->f, prop->offset[a].o + 8, SEEK_SET) < 0)
-    return -1;
+    {
+      memset(prop->buf, 0, sizeof(prop->buf));
+      return -1;
+    }
 
   if (decode_sector(prop, a, prop->buf) < 0)
-    return -1;
+    {
+      memset(prop->buf, 0, sizeof(prop->buf));
+      return -1;
+    }
 
-  return 0;
+  return prop->offset[a].l;
 }
