@@ -249,6 +249,53 @@ PKG_CHECK_MODULES(LIBGLADE, libglade-2.0 >= 2.6.0)
 AC_SUBST(LIBGLADE_CFLAGS)
 AC_SUBST(LIBGLADE_LIBS)
 
+dnl -----------------------
+dnl  check for z80ex
+dnl -----------------------
+
+req_z80ex_api=1
+min_z80ex_version_major=1
+min_z80ex_version_minor=18
+
+min_z80ex_version="${min_z80ex_version_major}.${min_z80ex_version_minor}"
+AC_CHECK_LIB(z80ex, z80ex_create, have_libz80ex=yes, have_libz80ex=no)
+if test x$have_libz80ex = xyes; then
+	AC_MSG_CHECKING(for z80ex - api = $req_z80ex_api - version >= $min_z80ex_version)
+	Z80EX_LIBS="-lz80ex -lz80ex_dasm"
+	ac_save_CFLAGS="$CFLAGS"
+	ac_save_LIBS="$LIBS"
+	CFLAGS="$CFLAGS $Z80EX_CFLAGS"
+	LIBS="$Z80EX_LIBS $LIBS"
+	AC_TRY_RUN([
+#include <stdio.h>
+#include <z80ex/z80ex.h>
+
+int
+main()
+{
+  Z80EX_VERSION *v = z80ex_get_version();
+  
+  if (v->API_revision != $req_z80ex_api)
+    return 1;
+  if (v->major < $min_z80ex_version_major)
+    return 2;
+  if ((v->major == $min_z80ex_version_major) && (v->minor < $min_z80ex_version_minor))
+    return 3;
+
+  return 0;
+}
+],AC_MSG_RESULT(yes),have_libz80ex=no)
+	CFLAGS="$ac_save_CFLAGS"
+	LIBS="$ac_save_LIBS"
+	AC_SUBST(Z80EX_LIBS)
+fi
+if test x$have_libz80ex = xno; then
+	AC_MSG_ERROR([
+***
+*** Can not find required library z80ex.
+***])
+fi
+
 dnl ---------------------
 dnl  check for libsndfile
 dnl ---------------------
@@ -531,8 +578,6 @@ AC_OUTPUT([
 	include/libtape/Makefile
 	include/libdisk/Makefile
 	include/libaudio/Makefile
-	include/z80core/Makefile
-	include/z80core2/Makefile
 	asm/Makefile
 	asm/autostart/Makefile
 	src/Makefile
@@ -561,8 +606,6 @@ AC_OUTPUT([
 	src/libdisk/Makefile
 	src/libaudio/Makefile
 	src/util/Makefile
-	src/z80core/Makefile
-	src/z80core2/Makefile
 	test/Makefile
 	test/kc/Makefile
 	test/kc/prefs/Makefile

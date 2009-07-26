@@ -27,6 +27,8 @@
 #include <iomanip>
 #include <sys/time.h>
 
+#include <z80ex/z80ex_dasm.h>
+
 #include "kc/system.h"
 #include "kc/prefs/prefs.h"
 
@@ -40,21 +42,14 @@
 
 #include "sys/sysdep.h"
 
-#include "z80core/z80.h"
-
 #include "cmd/cmd.h"
 
 #include "ui/ui.h"
 
 #include "libdbg/dbg.h"
 
-extern "C" {
-#include "z80core2/z80.h"
-}
-
 using namespace std;
 
-static byte_t _z80_reg_r = 0;
 static Z80 *self; // for the signal handler
 static void signalHandler(int sig);
 
@@ -129,99 +124,27 @@ public:
     }
 };
 
-byte_t
-RdZ80(word_t Addr)
-{
-  _z80_reg_r++;
-  byte_t Value = memory->memRead8(Addr);
-
-  return Value;
-}
-
-void
-WrZ80(word_t Addr, byte_t Value)
-{
-#if 0
-  if ((Addr == 0x3d7) || (Addr == 0x3d8))
-    {
-      z80->printPC();
-      printf("%04x: %02x\n", Addr, Value);
-      z80->debug(true);
-    }
-#endif
-  memory->memWrite8(Addr, Value);
-}
-
-byte_t
-LdRZ80(void)
-{
-  return _z80_reg_r;
-}
-
-void
-OutZ80(word_t Port, byte_t Value)
-{
-  DBG(3, form("KCemu/Z80/OutZ80",
-              "OutZ80(): %04x -> %02x\n",
-              Port, Value));
-  ports->out(Port, Value);
-}
-
-byte_t
-InZ80(word_t Port)
-{
-  byte_t Value;
-
-  Value = ports->in(Port);
-  DBG(3, form("KCemu/Z80/InZ80",
-              "InZ80():  %04x -> %02x\n",
-              Port, Value));
-  return Value;
-}
-
-void
-PatchZ80(_Z80 * /* R */)
-{
-}
-
-
-/*
- *  not used
- */
-word_t
-LoopZ80(_Z80 * /*R*/)
-{
-  return INT_NONE;
-}
-
-void
-RetiZ80(void)
-{
-  z80->reti();
-}
-
-const int Z80::I_PERIOD = 256;
-
 Z80::Z80(void)
 {
   self = this;
 
-  _regs.IPeriod = I_PERIOD;
-  _regs.TrapBadOps = 1;
-  _regs.Trace = 0;
-  _regs.Trap = 0xffff;
-  _regs.IRequest = INT_NONE;
-  ResetZ80(&_regs);
+  _context = z80ex_create(z80ex_mread_cb, this, z80ex_mwrite_cb, this,
+                           z80ex_pread_cb, this, z80ex_pwrite_cb, this,
+                           z80ex_intread_cb, this);
+
+  z80ex_set_reti_callback(_context, z80ex_reti_cb, this);
+  
+  z80ex_reset(_context);
 
   const EmulationType &emulation_type = Preferences::instance()->get_system_type()->get_emulation_type();
-  _regs.PC.W = emulation_type.get_power_on_addr();
+  z80ex_set_reg(_context, regPC, emulation_type.get_power_on_addr());
 
   /*
    *  FIXME: at least z1013 emulation breaks with the stackpointer
    *  FIXME: initialized with 0xf000; the CP/M bootlader BL4 will
    *  FIXME: overwrite it's own stack when clearing the screen :-(
    */
-  _regs.SP.W = 0x0000;
+  z80ex_set_reg(_context, regSP, 0x0000);
 
   _counter = 0;
 
@@ -287,12 +210,8 @@ Z80::run(void)
 {
   int a;
   CMD *cmd;
-  int iff, iff_old = 0;
 
-  signal(SIGINT, signalHandler);
-
-  Z80_IPeriod = 0;
-  Z80_IRQ = Z80_IGNORE_INT;
+  //signal(SIGINT, signalHandler);
 
   if (timer)
     timer->start();
@@ -334,80 +253,34 @@ Z80::run(void)
 	  }
 
       if (_debug)
-	{
-	  _regs.Trace = 2;
-	  if (!DebugZ80(&_regs))
-	    break;
-	  if (_regs.Trace == 0)
-	    debug(false);
+        {
+          int addr = getPC();
+          char buf[80];
+          int t, t2;
+          int base_addr;
+          
+          printf("%04X: ", addr);
+          addr += z80ex_dasm(buf, 80, 0, &t, &t2, z80ex_dasm_readbyte_cb, addr, &base_addr);
+          printf("%-15s  t=%d", buf, t);
+          if (t2) printf("/%d", t2);
+          printf("\n");
 	}
 
-      _regs.ICount = 0;
-      ExecZ80(&_regs);
+      int tstates = z80ex_step(_context);
+
+      if (_irq_line && z80ex_int_possible(_context))
+        {
+          _next_irq = irq_ack();
+          if (_next_irq != IRQ_NOT_ACK)
+            {
+              z80ex_int(_context);
+            }
+        }
 
       if (_enable_floppy_cpu && fdc_z80)
 	fdc_z80->execute();
 
-      iff = _regs.IFF & 1;
-      if (iff_old != iff)
-	{
-	  iff_old = iff;
-	  //cout << hex << getPC() << "h irqs are now: " << (iff ? "on" : "off") << endl;
-	}
-
-      if ((_regs.IRequest != INT_NONE) || (_irq_line != 0))
-	{
-	  if(_regs.IFF & 0x20)
-	    {
-	      /*
-               *  after EI state (delay pending irq by one instruction)
-	       *
-	       * IntZ80(&_regs, _regs.IRequest);
-	       * _regs.IRequest = INT_NONE;
-	       */
-	      _regs.IFF &= 0xdf;
-	    }
-	  else
-	    {
-	      /*
-	       *  trigger pending irq if IFF is set (= irqs enabled)
-	       *  (NMI is triggered even if IFF is not set!)
-	       */
-	      if (((_regs.IFF & 1) != 0) || (_regs.IRequest == 0x66))
-		{
-		  if (_irq_line)
-		    {
-		      word_t val = irq_ack();
-		      if (val != IRQ_NOT_ACK)
-			{
-			  IntZ80(&_regs, val);
-			}
-		    }
-		  else
-		    {
-		      IntZ80(&_regs, _regs.IRequest);
-		      _regs.IRequest = INT_NONE;
-		    }
-		}
-	    }
-	}
-
-      if (_regs.IFF & 0x80)
-        {
-          /*
-           *  the processor is executing HALT with ICount = 0!
-           *  but we need to decrement period to keep the
-           *  emulation running...
-           */
-          _regs.ICount = -4;
-	  _halt = true;
-        }
-      else
-	{
-	  _halt = false;
-	}
-
-      _counter -= _regs.ICount; // ICount is negative!
+      _counter += tstates;
 
       _cb_list.run_callbacks(_counter);
     }
@@ -478,15 +351,15 @@ Z80::reset(word_t pc, bool power_on)
 
   module->reset(power_on);
 
-  ResetZ80(&_regs);
-  _regs.PC.W = pc;
+  z80ex_reset(_context);
+  z80ex_set_reg(_context, regPC, pc);
 
   /*
    *  FIXME: at least z1013 emulation breaks with the stackpointer
    *  FIXME: initialized with 0xf000; the CP/M bootlader BL4 will
    *  FIXME: overwrite it's own stack when clearing the screen :-(
    */
-  _regs.SP.W = 0x0000;
+  z80ex_set_reg(_context, regSP, 0x0000);
 
   halt_floppy_cpu(power_on);
 
@@ -511,7 +384,7 @@ Z80::power_on(void)
 void
 Z80::jump(word_t pc)
 {
-  _regs.PC.W = pc;
+  z80ex_set_reg(_context, regPC, pc);
 }
 
 void
@@ -532,7 +405,7 @@ Z80::unregister_ic(InterfaceCircuit *h)
 bool
 Z80::irq_enabled(void)
 {
-  return (_regs.IFF & 1) != 0;
+  return z80ex_int_possible(_context);
 }
 
 dword_t
@@ -584,35 +457,32 @@ Z80::reti(void)
 int
 Z80::triggerIrq(int vector)
 {
-  /*
-   *  we can't call IntZ80() here!
-   *
-   *  this function may be called while an instruction is
-   *  not completely decoded; that can cause corrupted
-   *  instructions or invalid irq vectors
-   */
-  if (_regs.IRequest != INT_NONE)
-    return 0; // Irq already pending but not yet triggered!
-
-  /*
-   * if ((_regs.IFF & 1) == 0)
-   *   return 0; // Interrupts are disabled!
-   */
-
-  // Ok, no pending irq
-  return 1;
+  return z80ex_int_possible(_context);
 }
 
 void
 Z80::handleIrq(int vector)
 {
-  _regs.IRequest = vector;
+  if (vector == 0x66)
+    {
+      z80ex_nmi(_context);
+      return;
+    }
+
+  if (_irq_line)
+    {
+      _next_irq = irq_ack();
+      if (_next_irq != IRQ_NOT_ACK)
+        {
+          z80ex_int(_context);
+        }
+    }
 }
 
 void
 Z80::printPC(void)
 {
-  cout << setw(4) << setfill('0') << hex << _regs.PC.W << "h: ";
+  cout << setw(4) << setfill('0') << hex << getPC() << "h: ";
 }
 
 void
@@ -635,10 +505,65 @@ Z80::halt_floppy_cpu(bool power_on)
     }
 }
 
+Z80EX_BYTE
+Z80::z80ex_dasm_readbyte_cb(Z80EX_WORD addr, void *user_data)
+{
+  return memory->memRead8(addr);
+}
+
+Z80EX_BYTE
+Z80::z80ex_mread_cb(Z80EX_CONTEXT *cpu, Z80EX_WORD addr, int m1_state, void *user_data)
+{
+  return memory->memRead8(addr);
+}
+
+void
+Z80::z80ex_mwrite_cb(Z80EX_CONTEXT *cpu, Z80EX_WORD addr, Z80EX_BYTE value, void *user_data)
+{
+  memory->memWrite8(addr, value);
+}
+
+Z80EX_BYTE
+Z80::z80ex_pread_cb(Z80EX_CONTEXT *cpu, Z80EX_WORD port, void *user_data)
+{
+  byte_t Value;
+
+  Value = ports->in(port);
+  DBG(3, form("KCemu/Z80/InZ80",
+              "InZ80():  %04x -> %02x\n",
+              Port, Value));
+  return Value;
+}
+
+void
+Z80::z80ex_pwrite_cb(Z80EX_CONTEXT *cpu, Z80EX_WORD port, Z80EX_BYTE value, void *user_data)
+{
+  DBG(3, form("KCemu/Z80/OutZ80",
+              "OutZ80(): %04x -> %02x\n",
+              port, value));
+  ports->out(port, value);
+}
+
+Z80EX_BYTE
+Z80::z80ex_intread_cb(Z80EX_CONTEXT *cpu, void *user_data)
+{
+  Z80 *z80 = (Z80 *)user_data;
+  return z80->_next_irq;
+}
+
+void
+Z80::z80ex_reti_cb(Z80EX_CONTEXT *cpu, void *user_data)
+{
+  Z80 *z80 = (Z80 *)user_data;
+  z80->reti();
+}
+
 static void
 signalHandler(int sig) 
 {
+  static bool flag = false;
   cout << "\n *** signal caught (" << sig << ") ***\n\n";
   signal(sig, signalHandler);
-  self->debug(true);
+  flag = !flag;
+  self->debug(flag);
 }

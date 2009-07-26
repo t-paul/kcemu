@@ -22,11 +22,9 @@
 #ifndef __kc_z80_fdc_h
 #define __kc_z80_fdc_h
 
-#include "kc/system.h"
+#include <z80ex/z80ex.h>
 
-extern "C" {
-#include "z80core2/z80.h"
-}
+#include "kc/system.h"
 
 #include "kc/ic.h"
 #include "kc/cb.h"
@@ -37,9 +35,14 @@ class Z80_FDC
  private:
   typedef std::list<InterfaceCircuit *> ic_list_t;
 
+  byte_t _next_irq;
+  Z80EX_CONTEXT *_context;
+  
   ic_list_t _ic_list;
 
  public:
+  bool _debug;
+  
   unsigned long long _counter;
 
   CallbackList _cb_list;
@@ -47,7 +50,26 @@ class Z80_FDC
  private:
   void do_execute(void);
 
- public:
+  /*callback that returns byte for a given adress*/
+  static Z80EX_BYTE z80ex_dasm_readbyte_cb(Z80EX_WORD addr, void *user_data);
+  
+  /*read byte from memory <addr> -- called when RD & MREQ goes active.
+  m1_state will be 1 if M1 signal is active*/
+  static Z80EX_BYTE z80ex_mread_cb (Z80EX_CONTEXT *cpu, Z80EX_WORD addr, int m1_state, void *user_data);
+
+  /*write <value> to memory <addr> -- called when WR & MREQ goes active*/
+  static void z80ex_mwrite_cb (Z80EX_CONTEXT *cpu, Z80EX_WORD addr, Z80EX_BYTE value, void *user_data);
+
+  /*read byte from <port> -- called when RD & IORQ goes active*/
+  static Z80EX_BYTE z80ex_pread_cb (Z80EX_CONTEXT *cpu, Z80EX_WORD port, void *user_data);
+
+  /*write <value> to <port> -- called when WR & IORQ goes active*/
+  static void z80ex_pwrite_cb (Z80EX_CONTEXT *cpu, Z80EX_WORD port, Z80EX_BYTE value, void *user_data);
+
+  /*read byte of interrupt vector -- called when M1 and IORQ goes active*/
+  static Z80EX_BYTE z80ex_intread_cb (Z80EX_CONTEXT *cpu, void *user_data);
+
+  public:
   Z80_FDC(void);
   virtual ~Z80_FDC(void);
 
@@ -63,6 +85,9 @@ class Z80_FDC
 
   void reset(bool power_on = false);
   void power_on();
+
+  word_t getPC(void) { return z80ex_get_reg(_context, regPC); }
+  byte_t getI(void)   { return z80ex_get_reg(_context, regI); }
 };
 
 #endif /* __kc_z80_fdc_h */

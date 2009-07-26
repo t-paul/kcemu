@@ -29,10 +29,6 @@
 
 #include "libdbg/dbg.h"
 
-extern "C" {
-#include "z80core2/z80.h"
-}
-
 FloppyState::FloppyState(byte_t head, byte_t cylinder, byte_t sector, Floppy *floppy)
 {
   _head = head;

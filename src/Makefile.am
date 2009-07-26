@@ -5,8 +5,6 @@ GETOPTDIR = getopt
 endif
 
 SUBDIRS = \
-	z80core \
-	z80core2 \
 	sys \
 	$(GETOPTDIR) \
 	libdbg \

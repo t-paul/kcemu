@@ -27,139 +27,56 @@
 #include <iomanip>
 #include <sys/time.h>
 
+#include <z80ex/z80ex_dasm.h>
+
 #include "kc/system.h"
 
 #include "kc/kc.h"
 #include "kc/ports.h"
 #include "kc/cb_list.h"
 #include "kc/z80_fdc.h"
+
 #include "libdbg/dbg.h"
 
 #define MEM_SIZE (65536)
 byte_t fdc_mem[MEM_SIZE];
-int Z80_IRQ = Z80_IGNORE_INT;
-static int Z80_IRQ_VECTOR = Z80_IGNORE_INT;
 
-unsigned int
-Z80_RDMEM(dword A)
-{
-  return fdc_mem[(A & 0xffff)];
-}
-
-void
-Z80_WRMEM(dword A, byte V)
-{
-  fdc_mem[(A & 0xffff)] = V;
-
-#if 0
-  Z80_Regs r;
-  Z80_GetRegs(&r);
-
-  cout << "W: "
-       << hex << setw(4) << Z80_GetPC()
-       << " - HL = " << r.HL.D
-       << " (HL) = " << (int)fdc_mem[r.HL.D]
-       << endl;
-#endif
-}
-
-void
-Z80_Out(word Port, byte Value)
-{
-  DBG(3, form("KCemu/Z80FDC/OutZ80",
-	      "OutZ80(): %04x: %04x -> %02x\n",
-	      Z80_GetPC(), Port, Value));
-  fdc_ports->out(Port, Value);
-}
-
-byte
-Z80_In(word Port)
-{
-  byte_t Value;
-
-  Value = fdc_ports->in(Port);
-  DBG(3, form("KCemu/Z80FDC/InZ80",
-	      "InZ80():  %04x: %04x -> %02x\n",
-	      Z80_GetPC(), Port, Value));
-  return Value;
-}
-
-void
-Z80_Patch(Z80_Regs * /* Regs */)
-{
-}
-
-int
-Z80_Interrupt(void)
-{
-  int irq = Z80_IRQ_VECTOR;
-
-  if (Z80_IRQ_VECTOR != Z80_IGNORE_INT)
-    {
-      Z80_IRQ_VECTOR = Z80_IGNORE_INT;
-    }
-
-  return irq;
-}
-
-void
-Z80_Reti(void)
-{
-}
-
-void
-Z80_Retn(void)
-{
-}
-
-#if 0
-static void dump_core(void)
-{
-  int ok;
-  FILE *f;
-
-  printf("dumping floppy cpu memory... ");
-  ok = 0;
-  f = fopen("core-floppy.z80", "wb");
-  if (f)
-    {
-      if (fwrite(fdc_mem, 0x10000, 1, f) == 1)
-	ok = 1;
-    }
-  if (ok)
-    printf("done.\n");
-  else
-    printf("failed!\n");
-}
-#endif
+static Z80_FDC *self; // for the signal handler
+static void signalHandler(int sig);
 
 Z80_FDC::Z80_FDC(void)
 {
-  //atexit(dump_core);
-  Z80_InitTables();
+  self = this;
+  
+  _context = z80ex_create(z80ex_mread_cb, this, z80ex_mwrite_cb, this,
+                          z80ex_pread_cb, this, z80ex_pwrite_cb, this,
+                          z80ex_intread_cb, this);
+
+  z80ex_reset(_context);
+
+  _debug = false;
+  signal(SIGINT, signalHandler);
 }
 
-Z80_FDC::~Z80_FDC(void)
-{
-}
+Z80_FDC::~Z80_FDC(void) { }
 
 void
 Z80_FDC::do_execute(void)
 {
-#if 0
-  Z80_Regs r;
-  Z80_GetRegs(&r);
-
-  if (r.PC.D == 0xf4c8)
+  if (_debug)
     {
-      cout << "PC: " << hex << setw(4) << setfill('0') << r.PC.D << endl;
-      Z80_RegisterDump();
-    }
-#endif
+      int addr = getPC();
+      char buf[80];
+      int t, t2;
+      int base_addr = addr;
 
-  Z80_ICount = 0;
-  Z80_ExecuteSingle();
-  _counter -= Z80_ICount; // ICount is negative!
+      printf("FDC: %04X: ", addr);
+      addr += z80ex_dasm(buf, 80, 0, &t, &t2, z80ex_dasm_readbyte_cb, addr, &base_addr);
+      printf("%-15s  t=%d", buf, t);
+      if (t2) printf("/%d", t2);
+      printf("\n");
+    }
+  _counter += z80ex_step(_context);
 }
 
 void
@@ -183,10 +100,9 @@ Z80_FDC::execute(void)
     {
       x = 40000;
       if (DBG_check("KCemu/Z80core2/trace"))
-	{
-	  x = 500;
-	  Z80_Trace = 1;
-	}
+        {
+          x = 500;
+        }
     }
 }
 
@@ -199,9 +115,8 @@ Z80_FDC::get_counter()
 byte_t
 Z80_FDC::trigger_irq(byte_t irq_vector)
 {
-  if (Z80_IRQ_VECTOR == Z80_IGNORE_INT)
-    Z80_IRQ_VECTOR = irq_vector;
-
+  _next_irq = irq_vector;
+  z80ex_int(_context);
   return 0;
 }
 
@@ -226,24 +141,15 @@ Z80_FDC::unregister_ic(InterfaceCircuit *h)
 void
 Z80_FDC::reset(bool power_on)
 {
-  Z80_Regs r;
-
-  Z80_IPeriod = 0;
-  Z80_IRQ = Z80_IGNORE_INT;
-
   if (power_on)
     memset(fdc_mem, 0, MEM_SIZE);
 
-  Z80_Reset();
-  Z80_GetRegs(&r);
-  r.PC.D = 0xfc00;
-  Z80_SetRegs(&r);
-
-  Z80_Trace = DBG_check("KCemu/Z80core2/trace") ? 1 : 0;
+  z80ex_reset(_context);
+  z80ex_set_reg(_context, regPC, 0xfc00);
 
   _cb_list.clear();
 
-  for (ic_list_t::iterator it = _ic_list.begin();it != _ic_list.end();it++)
+  for (ic_list_t::iterator it = _ic_list.begin(); it != _ic_list.end(); it++)
     (*it)->reset(power_on);
 }
 
@@ -256,11 +162,62 @@ Z80_FDC::power_on()
 bool
 Z80_FDC::trace(void)
 {
-  return Z80_Trace;
+  return false;
 }
 
 void
-Z80_FDC::trace(bool value)
+Z80_FDC::trace(bool value) { }
+
+Z80EX_BYTE
+Z80_FDC::z80ex_dasm_readbyte_cb(Z80EX_WORD addr, void *user_data)
 {
-  Z80_Trace = value;
+  return fdc_mem[(addr & 0xffff)];
+}
+
+Z80EX_BYTE
+Z80_FDC::z80ex_mread_cb(Z80EX_CONTEXT *cpu, Z80EX_WORD addr, int m1_state, void *user_data)
+{
+  return fdc_mem[(addr & 0xffff)];
+}
+
+void
+Z80_FDC::z80ex_mwrite_cb(Z80EX_CONTEXT *cpu, Z80EX_WORD addr, Z80EX_BYTE value, void *user_data)
+{
+  fdc_mem[(addr & 0xffff)] = value;
+}
+
+Z80EX_BYTE
+Z80_FDC::z80ex_pread_cb(Z80EX_CONTEXT *cpu, Z80EX_WORD port, void *user_data)
+{
+  byte_t value = fdc_ports->in(port);
+  DBG(3, form("KCemu/Z80FDC/InZ80",
+              "InZ80():  %04x: %04x -> %02x\n",
+              Z80_GetPC(), port, value));
+  return value;
+}
+
+void
+Z80_FDC::z80ex_pwrite_cb(Z80EX_CONTEXT *cpu, Z80EX_WORD port, Z80EX_BYTE value, void *user_data)
+{
+  DBG(3, form("KCemu/Z80FDC/OutZ80",
+              "OutZ80(): %04x: %04x -> %02x\n",
+              Z80_GetPC(), port, value));
+  fdc_ports->out(port, value);
+}
+
+Z80EX_BYTE
+Z80_FDC::z80ex_intread_cb(Z80EX_CONTEXT *cpu, void *user_data)
+{
+  Z80_FDC *z80 = (Z80_FDC *) user_data;
+  return z80->_next_irq;
+}
+
+static void
+signalHandler(int sig)
+{
+  static bool flag = false;
+  std::cout << "\n *** signal caught (" << sig << ") ***\n\n";
+  signal(sig, signalHandler);
+  flag = !flag;
+  self->_debug = flag;
 }

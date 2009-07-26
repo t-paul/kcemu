@@ -41,7 +41,6 @@ endif
 EXTRA_DIST = $(ALL_EXTRA_kcemu_SOURCES)
 
 kcemu_SOURCES = \
-	debug.cc	\
 	kc.cc		\
 	ic.cc		\
 	ctc.cc		\
@@ -175,8 +174,6 @@ kcemu_LDADD = \
 	muglerpc/libmuglerpc.a		\
 	vcs80/libvcs80.a		\
 	c80/libc80.a			\
-	../z80core/libz80.a		\
-	../z80core2/libz80.a		\
 	../fileio/libfileio.a		\
 	../libtape/libtape.a		\
 	../libdisk/libdisk.a		\
@@ -189,6 +186,7 @@ kcemu_LDADD = \
 	prefs/libprefs.a		\
 	../libdbg/libdbg.a		\
 	../cmd/*.o			\
+	$(Z80EX_LIBS)			\
 	$(GTK_LIBS)			\
 	$(SDL_LIBS)			\
 	$(LIBGLADE_LIBS)		\
