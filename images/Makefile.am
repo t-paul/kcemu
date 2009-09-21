@@ -58,11 +58,8 @@ IMAGES = \
 	logo-vorbisdotcom.png \
 	media-end.png \
 	media-play.png \
-	media-play.png \
-	media-record.png \
 	media-record.png \
 	media-start.png \
-	media-stop.png \
 	media-stop.png \
 	window-about.png \
 	window-audio.png \
