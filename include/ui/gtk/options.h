@@ -233,7 +233,7 @@ protected:
     static gboolean tree_model_foreach_func_delete(GtkTreeModel *model, GtkTreePath *path, GtkTreeIter *iter, gpointer user_data);
     
 public:
-    OptionsWindow(const char *glade_xml_file);
+    OptionsWindow(const char *ui_xml_file);
     virtual ~OptionsWindow(void);
     
     void save(void);

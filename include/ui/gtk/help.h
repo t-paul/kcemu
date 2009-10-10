@@ -130,7 +130,7 @@ class HelpWindow : public UI_Gtk_Window
   static const gchar * get_attribute(const gchar *name, const gchar **attribute_names, const gchar **attribute_values);
   
  public:
-  HelpWindow(const char *glade_xml_file);
+  HelpWindow(const char *ui_xml_file);
   virtual ~HelpWindow(void);
 
   gboolean scroll_to(const char *topic, gboolean update_history);

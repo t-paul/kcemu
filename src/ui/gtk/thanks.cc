@@ -42,7 +42,7 @@ public:
     }
 };
 
-ThanksWindow::ThanksWindow(const char *glade_xml_file) : UI_Gtk_Window(glade_xml_file)
+ThanksWindow::ThanksWindow(const char *ui_xml_file) : UI_Gtk_Window(ui_xml_file)
 {
   _cmd = new CMD_thanks_window_toggle(this);
 }

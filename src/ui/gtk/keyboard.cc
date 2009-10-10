@@ -107,7 +107,7 @@ public:
     }
 };
 
-KeyboardWindow::KeyboardWindow(const char *glade_xml_file) : UI_Gtk_Window(glade_xml_file)
+KeyboardWindow::KeyboardWindow(const char *ui_xml_file) : UI_Gtk_Window(ui_xml_file)
 {
   _key_active = FALSE;
   _key_pressed = NULL;

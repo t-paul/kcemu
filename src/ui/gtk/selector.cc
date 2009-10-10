@@ -44,7 +44,7 @@ public:
     }
 };
 
-ProfileSelectorWindow::ProfileSelectorWindow(const char *glade_xml_file) : UI_Gtk_Window(glade_xml_file) {
+ProfileSelectorWindow::ProfileSelectorWindow(const char *ui_xml_file) : UI_Gtk_Window(ui_xml_file) {
     _w.liststore_iconview = NULL;
     _w.treestore_treeview = NULL;
     _cmd = new CMD_profile_selector_window_toggle(this);

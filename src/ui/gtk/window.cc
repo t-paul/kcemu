@@ -39,11 +39,11 @@ UI_Gtk_Window::UI_Gtk_Window(void)
   
   _window = 0;
   _visible = false;
-  _glade_xml = NULL;
+  _gtk_builder = NULL;
   _help_args = new CMD_Args();
 }
 
-UI_Gtk_Window::UI_Gtk_Window(const char *glade_xml_file)
+UI_Gtk_Window::UI_Gtk_Window(const char *ui_xml_file)
 {
   static_init();
   
@@ -51,8 +51,9 @@ UI_Gtk_Window::UI_Gtk_Window(const char *glade_xml_file)
   _visible = false;
   _help_args = new CMD_Args();
   
-  string glade_xml_file_path = _image_path + glade_xml_file;
-  _glade_xml = glade_xml_new(glade_xml_file_path.c_str(), NULL, NULL);
+  string ui_xml_file_path = _image_path + ui_xml_file;
+  _gtk_builder = gtk_builder_new();
+  gtk_builder_add_from_file(_gtk_builder, ui_xml_file_path.c_str(), NULL);
 }
 
 UI_Gtk_Window::~UI_Gtk_Window(void)
@@ -155,19 +156,12 @@ UI_Gtk_Window::get_image(const char *name)
     return get_pixbuf(_image_path + name);
 }
 
-GladeXML *
-UI_Gtk_Window::get_glade_xml(void)
-{
-    return _glade_xml;
-}
-
 GtkWidget *
 UI_Gtk_Window::get_widget_or_null(const char *name)
 {
-  g_assert(_glade_xml != NULL);
+  g_assert(_gtk_builder != NULL);
 
-  GtkWidget *widget = glade_xml_get_widget(_glade_xml, name);
-
+  GtkWidget *widget = GTK_WIDGET(gtk_builder_get_object(_gtk_builder, name));
   return widget;
 }
 

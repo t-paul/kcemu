@@ -8,8 +8,7 @@ AM_CPPFLAGS = \
         -DKCEMU_LOCALEDIR=\"$(localedir)\" \
         -DDEBUG \
         $(GTK_CFLAGS) \
-        $(SDL_CFLAGS) \
-        $(LIBGLADE_CFLAGS)
+        $(SDL_CFLAGS)
 
 INCLUDES = -I../../../include
 

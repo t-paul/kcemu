@@ -87,7 +87,7 @@ WavWindow::sf_expose(GtkWidget *widget, GdkEvent *event, gpointer *data)
   self->expose();
 }
 
-WavWindow::WavWindow(const char *glade_xml_file) : UI_Gtk_Window(glade_xml_file)
+WavWindow::WavWindow(const char *ui_xml_file) : UI_Gtk_Window(ui_xml_file)
 {
   _cmd_wav_info = new CMD_ui_wav_info(this);
   _cmd_wav_toggle = new CMD_ui_wav_window_toggle(this);

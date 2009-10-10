@@ -26,7 +26,7 @@
 #include "ui/gtk/cmd.h"
 #include "ui/gtk/tapeadd.h"
 
-TapeAddWindow::TapeAddWindow(const char *glade_xml_file) : UI_Gtk_Window(glade_xml_file), CMD("ui-tape-name-edit")
+TapeAddWindow::TapeAddWindow(const char *ui_xml_file) : UI_Gtk_Window(ui_xml_file), CMD("ui-tape-name-edit")
 {
   register_cmd("ui-tape-name-edit");
 }

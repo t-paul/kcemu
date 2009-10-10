@@ -25,7 +25,6 @@
 #include <string>
 
 #include <gtk/gtk.h>
-#include <glade/glade.h>
 
 #include "cmd/cmd.h"
 
@@ -36,9 +35,9 @@ using namespace std;
 class UI_Gtk_Window : public UI_Window
 {
  private:
-  bool      _visible;
-  CMD_Args *_help_args;
-  GladeXML *_glade_xml;
+  bool        _visible;
+  CMD_Args   *_help_args;
+  GtkBuilder *_gtk_builder;
 
   static bool   _static_init;
   static string _icon_path;
@@ -53,7 +52,6 @@ protected:
   GtkWidget *_window;
 
   virtual void init(void) = 0;
-  virtual GladeXML * get_glade_xml(void);
 
   GdkPixbuf * get_pixbuf(string path);
   GdkPixbuf * get_icon(const char *name);
@@ -67,7 +65,7 @@ protected:
   
  public:
   UI_Gtk_Window(void);
-  UI_Gtk_Window(const char *glade_xml_file);
+  UI_Gtk_Window(const char *ui_xml_file);
   virtual ~UI_Gtk_Window(void);
 
   void show(void);

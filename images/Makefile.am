@@ -78,25 +78,25 @@ IMAGES = \
 	window-plotter.png \
 	kcemu.png
 
-GLADE_XML = \
-        about.glade \
-        audio.glade \
-        plotter.glade \
-        color.glade \
-        legal.glade \
-        dialog.glade \
-	main.glade \
-        disk.glade \
-        vdip.glade \
-        help.glade \
-        keyboard.glade \
-        module.glade \
-        options.glade \
-        selector.glade \
-        savemem.glade \
-        tape.glade \
-        tapeedit.glade \
-        thanks.glade
+UI_XML = \
+        about.xml \
+        audio.xml \
+        plotter.xml \
+        color.xml \
+        legal.xml \
+        dialog.xml \
+	main.xml \
+        disk.xml \
+        vdip.xml \
+        help.xml \
+        keyboard.xml \
+        module.xml \
+        options.xml \
+        selector.xml \
+        savemem.xml \
+        tape.xml \
+        tapeedit.xml \
+        thanks.xml
 
 %.ico : %.xpm
 	xpmtoppm --alphaout /tmp/ico.alpha.1.$$$$ $< | ppmquant 256 > /tmp/ico.icon.$$$$ ; \
@@ -125,8 +125,8 @@ if TARGET_MINGW
 icon_DATA = $(ICONS) $(WINICONS)
 endif
 
-image_DATA = $(IMAGES) $(GLADE_XML)
+image_DATA = $(IMAGES) $(UI_XML)
 
 all : $(ICONS) $(WINICONS)
 
-EXTRA_DIST = $(ICONS) $(WINICONS) $(IMAGES) $(GLADE_XML)
+EXTRA_DIST = $(ICONS) $(WINICONS) $(IMAGES) $(UI_XML)

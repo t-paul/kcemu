@@ -31,8 +31,7 @@ EXTRA_DIST = $(KEYMAPS)
 INCLUDES = \
 	-I../../../include \
 	$(GTK_CFLAGS) \
-	$(SDL_CFLAGS) \
-	$(LIBGLADE_CFLAGS)
+	$(SDL_CFLAGS)
 
 libui_gtk_a_SOURCES = \
 	gtkledline.c		\

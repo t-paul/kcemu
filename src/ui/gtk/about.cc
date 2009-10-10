@@ -48,7 +48,7 @@ public:
     }
 };
 
-AboutWindow::AboutWindow(const char *glade_xml_file) : UI_Gtk_Window(glade_xml_file)
+AboutWindow::AboutWindow(const char *ui_xml_file) : UI_Gtk_Window(ui_xml_file)
 {
   _cmd = new CMD_about_window_toggle(this);
 }

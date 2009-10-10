@@ -99,7 +99,7 @@ class TapeWindow : public UI_Gtk_Window, public TapeInterface
   virtual void clear_list(void);
 
  public:
-  TapeWindow(const char *glade_xml_file);
+  TapeWindow(const char *ui_xml_file);
   virtual ~TapeWindow(void);
 
   virtual void stop(void);

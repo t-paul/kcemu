@@ -56,7 +56,7 @@ class TapeAddWindow : public UI_Gtk_Window, public CMD
   void init(void);
 
  public:
-  TapeAddWindow(const char *glade_xml_file);
+  TapeAddWindow(const char *ui_xml_file);
   ~TapeAddWindow(void);
 
   void init(const char *tapename, const char *text);

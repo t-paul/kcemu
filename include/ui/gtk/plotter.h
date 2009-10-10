@@ -79,7 +79,7 @@ protected:
   void expose(GdkEventExpose *event);
 
 public:
-  PlotterWindow(const char *glade_xml_file);
+  PlotterWindow(const char *ui_xml_file);
   virtual ~PlotterWindow(void);
 
   void toggle(void);

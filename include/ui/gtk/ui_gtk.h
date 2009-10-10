@@ -23,7 +23,6 @@
 #define __ui_ui_gtk_h
 
 #include <gtk/gtk.h>
-#include <glade/glade.h>
 
 #include "ui/ui.h"
 #include "ui/errorl.h"
@@ -77,8 +76,6 @@ protected:
     UI_Gtk_Window *_wav_window;
     UI_Gtk_Window *_plotter_window;
     UI_Gtk_Window *_save_memory_window;
-    
-    GladeXML *_glade_xml;
     
     FileBrowser      *_file_browser;
     DialogWindow     *_dialog_window;

@@ -53,7 +53,7 @@ public:
     }
 };
 
-CopyingWindow::CopyingWindow(const char *glade_xml_file) : UI_Gtk_Window(glade_xml_file)
+CopyingWindow::CopyingWindow(const char *ui_xml_file) : UI_Gtk_Window(ui_xml_file)
 {
   _font_desc = pango_font_description_new();
   pango_font_description_set_family(_font_desc, "Courier");

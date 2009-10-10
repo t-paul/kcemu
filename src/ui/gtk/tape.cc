@@ -186,7 +186,7 @@ public:
     }
 };
 
-TapeWindow::TapeWindow(const char *glade_xml_file) : UI_Gtk_Window(glade_xml_file)
+TapeWindow::TapeWindow(const char *ui_xml_file) : UI_Gtk_Window(ui_xml_file)
 {
    init(); 
 }

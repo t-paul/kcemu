@@ -25,7 +25,7 @@
 
 #include "ui/gtk/dialog.h"
 
-DialogWindow::DialogWindow(const char *glade_xml_file) : UI_Gtk_Window(glade_xml_file), CMD("ui-dialog-yes-no")
+DialogWindow::DialogWindow(const char *ui_xml_file) : UI_Gtk_Window(ui_xml_file), CMD("ui-dialog-yes-no")
 {
   _args = NULL;
   _delete_handler_id = 0;

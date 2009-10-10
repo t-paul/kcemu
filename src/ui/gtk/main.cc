@@ -55,7 +55,7 @@ public:
     }
 };
 
-MainWindow::MainWindow(const char *glade_xml_file) : UI_Gtk_Window(glade_xml_file) {
+MainWindow::MainWindow(const char *ui_xml_file) : UI_Gtk_Window(ui_xml_file) {
     _gc = NULL;
     _image = NULL;
     _colormap = NULL;

@@ -389,7 +389,7 @@ HelpWindow::sf_parser_error_handler(GMarkupParseContext *context, GError *error,
   DBG(1, form("KCemu/Help/parser", "error: %s\n", error->message));
 }
 
-HelpWindow::HelpWindow(const char *glade_xml_file) : UI_Gtk_Window(glade_xml_file)
+HelpWindow::HelpWindow(const char *ui_xml_file) : UI_Gtk_Window(ui_xml_file)
 {
   _history = NULL;
   _history_ptr = NULL;

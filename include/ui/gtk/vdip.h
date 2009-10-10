@@ -53,7 +53,7 @@ class VDIPWindow : public UI_Gtk_Window
   static void sf_vdip_attach(GtkWidget *widget, gpointer data);
 
  public:
-  VDIPWindow(const char *glade_xml_file);
+  VDIPWindow(const char *ui_xml_file);
   virtual ~VDIPWindow(void);
 
   virtual void set_name(int idx, const char *name);

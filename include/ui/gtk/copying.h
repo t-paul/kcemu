@@ -45,7 +45,7 @@ class CopyingWindow : public UI_Gtk_Window
   void init(void);
   
  public:
-  CopyingWindow(const char *glade_xml_file);
+  CopyingWindow(const char *ui_xml_file);
   virtual ~CopyingWindow(void);
 
   void scroll_to_copying(void);
