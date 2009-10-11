@@ -92,6 +92,7 @@ EXTRA_DIST = \
 	mod_auto.h	\
 	mod_rom1.h	\
 	mod_romb.h	\
+	mod_raf.h	\
 	mod_192k.h	\
 	mod_320k.h	\
 	mod_ramf.h	\

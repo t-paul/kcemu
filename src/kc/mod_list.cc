@@ -153,6 +153,7 @@
 #include "kc/mod_auto.h"
 #include "kc/mod_rom1.h"
 #include "kc/mod_romb.h"
+#include "kc/mod_raf.h"
 #include "kc/mod_boot.h"
 #include "kc/mod_192k.h"
 #include "kc/mod_320k.h"
@@ -431,6 +432,15 @@ ModuleList::ModuleList(void)
   _mod_list.push_back(new ModuleListEntry(_("CPM-Z9 64k RAM"), m, KC_TYPE_85_1_CLASS));
 
   /*
+   *  RAF (ram floppy module for KC85/1 and A5105 at port 20h/24h)
+   */
+  m = new ModuleRAF("RAF-4MB-20h", 0x20, 0x400000);
+  _mod_list.push_back(new ModuleListEntry(_("RAF 4MB (port 20h)"), m, (kc_type_t)(KC_TYPE_85_1_CLASS | KC_TYPE_A5105)));
+
+  m = new ModuleRAF("RAF-4MB-24h", 0x24, 0x400000);
+  _mod_list.push_back(new ModuleListEntry(_("RAF 4MB (port 24h)"), m, (kc_type_t)(KC_TYPE_85_1_CLASS | KC_TYPE_A5105)));
+
+  /*
    *  Digital I/O (kc85/2-4)
    */
   m = new ModuleDIO("M001", 0xef);
@@ -602,6 +612,7 @@ ModuleList::ModuleList(void)
     {
     case KC_TYPE_85_1:
     case KC_TYPE_87:
+    case KC_TYPE_A5105:
       cnt = 4;
       break;
     case KC_TYPE_LC80:
