@@ -25,6 +25,8 @@ ROMS = \
 	os_rb20.rom \
 	os_rb21.rom \
 	kc_caos.rom \
+	master.rom \
+	slave.rom \
 	zg_cga.rom \
 	zg_cgai.rom \
 	zg_de.rom

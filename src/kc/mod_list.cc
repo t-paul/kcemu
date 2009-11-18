@@ -354,6 +354,20 @@ ModuleList::ModuleList(void)
   _mod_list.push_back(new ModuleListEntry(_("KC-CAOS 3.1 (8000h-8fffh)"), m, KC_TYPE_85_1_CLASS));
 
   /*
+   *  network master (kc85/1)
+   */
+  string z9001_net_master_rom = z9001_romdir + "/master.rom";
+  m = new ModuleROM1(z9001_net_master_rom.c_str(), "MASTER", 0xb800, 0x0800);
+  _mod_list.push_back(new ModuleListEntry(_("NET MASTER (b800h-bfffh)"), m, KC_TYPE_85_1_CLASS));
+
+  /*
+   *  network slave (kc85/1)
+   */
+  string z9001_net_slave_rom = z9001_romdir + "/slave.rom";
+  m = new ModuleROM1(z9001_net_slave_rom.c_str(), "SLAVE", 0xb800, 0x0800);
+  _mod_list.push_back(new ModuleListEntry(_("NET SLAVE (b800h-bfffh)"), m, KC_TYPE_85_1_CLASS));
+
+  /*
    *  192 KByte RAM/EPROM module (kc85/1)
    */
   string z9001_192k_d2_rom = z9001_romdir + "/192k__d2.851";
