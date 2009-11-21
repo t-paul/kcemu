@@ -95,6 +95,7 @@ kcemu_SOURCES = \
 	fdc9.cc		\
 	fdc_cmd.cc	\
 	floppy.cc	\
+	dma.cc		\
 	pio.cc		\
 	pio0.cc		\
 	pio1.cc		\

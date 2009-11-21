@@ -44,6 +44,7 @@ EXTRA_DIST = \
 	memory7.h	\
 	memory8.h	\
 	memory9.h	\
+	dma.h		\
 	pio.h		\
 	pio0.h		\
 	pio1.h		\
