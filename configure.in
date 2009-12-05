@@ -547,6 +547,7 @@ AC_OUTPUT([
 	include/Makefile
 	include/kc/Makefile
 	include/kc/prefs/Makefile
+	include/kc/kcnet/Makefile
 	include/kc/kramermc/Makefile
 	include/kc/muglerpc/Makefile
 	include/kc/vcs80/Makefile
@@ -571,6 +572,7 @@ AC_OUTPUT([
 	src/kc/kcemu.rc
 	src/kc/Makefile
 	src/kc/prefs/Makefile
+	src/kc/kcnet/Makefile
 	src/kc/kramermc/Makefile
 	src/kc/muglerpc/Makefile
 	src/kc/vcs80/Makefile

@@ -80,6 +80,7 @@
 #include "kc/plotter.h"
 #include "kc/poly880.h"
 #include "kc/prefs/prefs.h"
+#include "kc/kcnet/kcnet.h"
 
 #include "ui/log.h"
 #include "cmd/cmd.h"
@@ -211,6 +212,7 @@ GDC           *gdc;
 VIS           *vis;
 SVG           *svg;
 VDIP          *vdip;
+KCNET         *kcnet;
 Poly880       *poly880;
 DisplayC80    *display_c80;
 Plotter       *plotter;
@@ -1165,6 +1167,7 @@ main(int argc, char **argv)
       ports = new Ports;
       daisy = new DaisyChain;
       vdip  = new VDIP;
+      kcnet = new KCNET;
       plotter = new Plotter;
       portg = ports->register_ports("-", 0, 0x100, new NullPort("NullPort"), 256);
 

@@ -1,6 +1,6 @@
 ## Process this file with automake to produce Makefile.in
 
-SUBDIRS = prefs kramermc muglerpc vcs80 c80
+SUBDIRS = prefs kcnet kramermc muglerpc vcs80 c80
 
 bin_PROGRAMS = kcemu
 
@@ -131,6 +131,7 @@ kcemu_SOURCES = \
 	mod_rtc.cc	\
 	mod_disk.cc	\
 	mod_4131.cc	\
+	mod_m052.cc	\
 	mod_list.cc	\
 	tape.cc		\
 	disk.cc		\
@@ -171,6 +172,7 @@ SYSLIBS_BEOS = ../sys/beos/libsys_beos.a -lbe
 endif
 
 kcemu_LDADD = \
+	kcnet/libkcnet.a		\
 	kramermc/libkramermc.a		\
 	muglerpc/libmuglerpc.a		\
 	vcs80/libvcs80.a		\

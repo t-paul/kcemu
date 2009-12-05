@@ -164,6 +164,7 @@
 #include "kc/mod_disk.h"
 #include "kc/mod_list.h"
 #include "kc/mod_4131.h"
+#include "kc/mod_m052.h"
 #include "kc/mod_vdip.h"
 
 #ifdef HOST_OS_LINUX
@@ -540,6 +541,13 @@ ModuleList::ModuleList(void)
   _mod_list.push_back(new ModuleListEntry(_("M036: 128k Segmented RAM"), m, KC_TYPE_85_2_CLASS));
 
   /*
+   *  M052 network + usb (kc85/2-4)
+   */
+  string kc85_m052_rom = kc85_romdir + "/m052.rom";
+  m = new ModuleNetworkUSB(kc85_m052_rom.c_str(), "M052", 0xfd);
+  _mod_list.push_back(new ModuleListEntry(_("M052: Network + USB"), m, KC_TYPE_85_2_CLASS));
+
+  /*
    *  wordpro ROM version for kc85/3
    */
   string kc85_m900_rom = kc85_romdir + "/m900.rom";
@@ -559,17 +567,13 @@ ModuleList::ModuleList(void)
   m = new ModuleVDIP("VDIP", 0xef);
   _mod_list.push_back(new ModuleListEntry(_("VDIP: Vinculum USB"), m, KC_TYPE_85_2_CLASS));
 
-  string kc85_vdip_rom = kc85_romdir + "/vdip12.rom";
-  m = new ModuleROM(kc85_vdip_rom.c_str(), "VDIPDRV", 0x0800, 0xfb);
-  _mod_list.push_back(new ModuleListEntry(_("VDIP: Vinculum USB ROM"), m, KC_TYPE_85_2_CLASS));
+  string kc85_vdip1_rom = kc85_romdir + "/vdip12.rom";
+  m = new ModuleROM(kc85_vdip1_rom.c_str(), "VDIP1", 0x0800, 0xfb);
+  _mod_list.push_back(new ModuleListEntry(_("VDIP1: Vinculum USB ROM V1.2"), m, KC_TYPE_85_2_CLASS));
 
-  string kc85_vdip2_42_rom = kc85_romdir + "/vdip2_42.rom";
-  m = new ModuleROM(kc85_vdip2_42_rom.c_str(), "VDIPDRV2_42", 0x1000, 0xfb);
-  _mod_list.push_back(new ModuleListEntry(_("VDIP2: Vinculum USB ROM (CAOS 4.2)"), m, KC_TYPE_85_2_CLASS));
-
-  string kc85_vdip2_44_rom = kc85_romdir + "/vdip2_44.rom";
-  m = new ModuleROM(kc85_vdip2_44_rom.c_str(), "VDIPDRV2_44", 0x1000, 0xfb);
-  _mod_list.push_back(new ModuleListEntry(_("VDIP2: Vinculum USB ROM (CAOS 4.4)"), m, KC_TYPE_85_2_CLASS));
+  string kc85_vdip2_rom = kc85_romdir + "/vdip21.rom";
+  m = new ModuleROM(kc85_vdip2_rom.c_str(), "VDIP2", 0x1000, 0xfb);
+  _mod_list.push_back(new ModuleListEntry(_("VDIP2: Vinculum USB ROM V2.1"), m, KC_TYPE_85_2_CLASS));
 
   int d004_enabled = Preferences::instance()->get_int_value("d004", 0);
 
