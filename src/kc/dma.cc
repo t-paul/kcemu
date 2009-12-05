@@ -71,52 +71,6 @@ DMA::irqack(void)
 void
 DMA::reti(void) { }
 
-byte_t
-DMA::in(word_t addr) { }
-
-void
-DMA::out(word_t addr, byte_t val)
-{
-  DBG(2, form("KCemu/DMA/out",
-              "DMA::out(): %04xh: %02x\n",
-              z80->getPC(), val));
-
-  if (_wcnt == 0)
-    {
-      out_base(addr, val);
-    }
-  else
-    {
-      int reg = _widx[_wcnt--];
-      _regs[reg] = val;
-
-      if (reg == DMA_REG_IRQ_CONTROL)
-        {
-          if (val & 0x10)
-            _widx[++_wcnt] = DMA_REG_IRQ_VECTOR;
-          if (val & 0x08)
-            _widx[++_wcnt] = DMA_REG_PULSE_OFFSET;
-        }
-      else if (reg == DMA_REG_READ_MASK)
-        {
-          if (val & 0x40)
-            _ridx[++_rcnt] = DMA_REG_RR6;
-          if (val & 0x20)
-            _ridx[++_rcnt] = DMA_REG_RR5;
-          if (val & 0x10)
-            _ridx[++_rcnt] = DMA_REG_RR4;
-          if (val & 0x08)
-            _ridx[++_rcnt] = DMA_REG_RR3;
-          if (val & 0x04)
-            _ridx[++_rcnt] = DMA_REG_RR2;
-          if (val & 0x02)
-            _ridx[++_rcnt] = DMA_REG_RR1;
-          if (val & 0x01)
-            _ridx[++_rcnt] = DMA_REG_RR0;
-        }
-    }
-}
-
 const char *
 DMA::get_reg_name(int reg)
 {
@@ -149,17 +103,57 @@ DMA::get_reg_name(int reg)
   return "???";
 }
 
-void
-DMA::queue_write(int base_reg, byte_t val, byte_t mask, byte_t result, int reg)
+byte_t
+DMA::in(word_t addr)
 {
-  if ((val & mask) != result)
-    return;
+  byte_t val = 0xff;
 
+  DBG(2, form("KCemu/DMA/in",
+              "DMA::in(): %04xh: %02x\n",
+              z80->getPC(), val));
+
+  return val;
+}
+
+void
+DMA::out(word_t addr, byte_t val)
+{
   DBG(2, form("KCemu/DMA/out",
-              "DMA::queue_write(): %04xh: %s - queue write to register %s\n",
-              z80->getPC(), get_reg_name(base_reg), get_reg_name(reg)));
+              "DMA::out(): %04xh: %02x\n",
+              z80->getPC(), val));
 
-  _widx[++_wcnt] = reg;
+  if (_wcnt == 0)
+    {
+      out_base(addr, val);
+    }
+  else
+    {
+      int reg = _widx[_wcnt--];
+      write(reg, val);
+
+      if (reg == DMA_REG_IRQ_CONTROL)
+        {
+          queue(DMA_REG_IRQ_CONTROL, val, 0x10, 0x10, DMA_REG_IRQ_VECTOR);
+          queue(DMA_REG_IRQ_CONTROL, val, 0x08, 0x08, DMA_REG_PULSE_OFFSET);
+        }
+      else if (reg == DMA_REG_READ_MASK)
+        {
+          if (val & 0x40)
+            _ridx[++_rcnt] = DMA_REG_RR6;
+          if (val & 0x20)
+            _ridx[++_rcnt] = DMA_REG_RR5;
+          if (val & 0x10)
+            _ridx[++_rcnt] = DMA_REG_RR4;
+          if (val & 0x08)
+            _ridx[++_rcnt] = DMA_REG_RR3;
+          if (val & 0x04)
+            _ridx[++_rcnt] = DMA_REG_RR2;
+          if (val & 0x02)
+            _ridx[++_rcnt] = DMA_REG_RR1;
+          if (val & 0x01)
+            _ridx[++_rcnt] = DMA_REG_RR0;
+        }
+    }
 }
 
 void
@@ -169,67 +163,277 @@ DMA::out_base(word_t addr, byte_t val)
     {
       if ((val & 0x03) != 0x00)
         {
-          DBG(2, form("KCemu/DMA/out",
-                      "DMA::out_base():    %04xh: %s -> %02x\n",
-                      z80->getPC(), get_reg_name(DMA_REG_WR0), val));
-          _regs[DMA_REG_WR0] = val;
-          queue_write(DMA_REG_WR0, val, 0x40, 0x40, DMA_REG_BLOCK_SIZE_H);
-          queue_write(DMA_REG_WR0, val, 0x20, 0x20, DMA_REG_BLOCK_SIZE_L);
-          queue_write(DMA_REG_WR0, val, 0x10, 0x10, DMA_REG_START_ADDR_A_H);
-          queue_write(DMA_REG_WR0, val, 0x08, 0x08, DMA_REG_START_ADDR_A_L);
+          write(DMA_REG_WR0, val);
+          queue(DMA_REG_WR0, val, 0x40, 0x40, DMA_REG_BLOCK_SIZE_H);
+          queue(DMA_REG_WR0, val, 0x20, 0x20, DMA_REG_BLOCK_SIZE_L);
+          queue(DMA_REG_WR0, val, 0x10, 0x10, DMA_REG_START_ADDR_A_H);
+          queue(DMA_REG_WR0, val, 0x08, 0x08, DMA_REG_START_ADDR_A_L);
+          exec0();
         }
       else if ((val & 0x07) == 0x04)
         {
-          DBG(2, form("KCemu/DMA/out",
-                      "DMA::out_base():    %04xh: %s -> %02x\n",
-                      z80->getPC(), get_reg_name(DMA_REG_WR1), val));
-          _regs[DMA_REG_WR1] = val;
-          queue_write(DMA_REG_WR1, val, 0x40, 0x40, DMA_REG_TIMING_A);
+          write(DMA_REG_WR1, val);
+          queue(DMA_REG_WR1, val, 0x40, 0x40, DMA_REG_TIMING_A);
+          exec1();
         }
       else if ((val & 0x07) == 0x00)
         {
-          DBG(2, form("KCemu/DMA/out",
-                      "DMA::out_base():    %04xh: %s -> %02x\n",
-                      z80->getPC(), get_reg_name(DMA_REG_WR2), val));
-          _regs[DMA_REG_WR2] = val;
-          queue_write(DMA_REG_WR2, val, 0x40, 0x40, DMA_REG_TIMING_B);
+          write(DMA_REG_WR2, val);
+          queue(DMA_REG_WR2, val, 0x40, 0x40, DMA_REG_TIMING_B);
+          exec2();
         }
     }
   else
     {
       if ((val & 0x03) == 0x00)
         {
-          DBG(2, form("KCemu/DMA/out",
-                      "DMA::out_base():    %04xh: %s -> %02x\n",
-                      z80->getPC(), get_reg_name(DMA_REG_WR3), val));
-          _regs[DMA_REG_WR3] = val;
-          queue_write(DMA_REG_WR3, val, 0x10, 0x10, DMA_REG_COMPARE_BYTE);
-          queue_write(DMA_REG_WR3, val, 0x08, 0x08, DMA_REG_MASK_BYTE);
+          write(DMA_REG_WR3, val);
+          queue(DMA_REG_WR3, val, 0x10, 0x10, DMA_REG_COMPARE_BYTE);
+          queue(DMA_REG_WR3, val, 0x08, 0x08, DMA_REG_MASK_BYTE);
+          exec3();
         }
       else if ((val & 0x03) == 0x01)
         {
-          DBG(2, form("KCemu/DMA/out",
-                      "DMA::out_base():    %04xh: %s -> %02x\n",
-                      z80->getPC(), get_reg_name(DMA_REG_WR4), val));
-          _regs[DMA_REG_WR4] = val;
-          queue_write(DMA_REG_WR4, val, 0x10, 0x10, DMA_REG_IRQ_CONTROL);
-          queue_write(DMA_REG_WR4, val, 0x08, 0x08, DMA_REG_START_ADDR_B_H);
-          queue_write(DMA_REG_WR4, val, 0x04, 0x04, DMA_REG_START_ADDR_B_L);
+          write(DMA_REG_WR4, val);
+          queue(DMA_REG_WR4, val, 0x10, 0x10, DMA_REG_IRQ_CONTROL);
+          queue(DMA_REG_WR4, val, 0x08, 0x08, DMA_REG_START_ADDR_B_H);
+          queue(DMA_REG_WR4, val, 0x04, 0x04, DMA_REG_START_ADDR_B_L);
+          exec4();
         }
       else if ((val & 0xc7) == 0x82)
         {
-          DBG(2, form("KCemu/DMA/out",
-                      "DMA::out_base():    %04xh: %s -> %02x\n",
-                      z80->getPC(), get_reg_name(DMA_REG_WR5), val));
-          _regs[DMA_REG_WR5] = val;
+          write(DMA_REG_WR5, val);
+          exec5();
         }
       else if ((val & 0x03) == 0x03)
         {
-          DBG(2, form("KCemu/DMA/out",
-                      "DMA::out_base():    %04xh: %s -> %02x\n",
-                      z80->getPC(), get_reg_name(DMA_REG_WR6), val));
-          _regs[DMA_REG_WR6] = val;
-          queue_write(DMA_REG_WR4, val, 0xff, 0xbb, DMA_REG_READ_MASK);
+          write(DMA_REG_WR6, val);
+          queue(DMA_REG_WR4, val, 0xff, 0xbb, DMA_REG_READ_MASK);
+          exec6();
         }
+    }
+}
+
+void
+DMA::queue(int base_reg, byte_t val, byte_t mask, byte_t result, int reg)
+{
+  if ((val & mask) != result)
+    return;
+
+  DBG(2, form("KCemu/DMA/out_reg",
+              "DMA::queue(): %04xh: %s -> queue write to register %s\n",
+              z80->getPC(), get_reg_name(base_reg), get_reg_name(reg)));
+
+  _widx[++_wcnt] = reg;
+}
+
+void
+DMA::write(int reg, byte_t val)
+{
+  DBG(2, form("KCemu/DMA/out_reg",
+              "DMA::write(): %04xh: %s -> %02x\n",
+              z80->getPC(), get_reg_name(reg), val));
+  _regs[reg] = val;
+}
+
+const char *
+DMA::get_text1(byte_t val, const char *text0, const char *text1)
+{
+  return val ? text1 : text0;
+}
+
+const char *
+DMA::get_text2(byte_t val, const char *text0, const char *text1, const char *text2, const char *text3)
+{
+  switch (val & 3)
+    {
+    case 0: return text0;
+    case 1: return text1;
+    case 2: return text2;
+    default: return text3;
+    }
+}
+
+void
+DMA::exec0(void)
+{
+  const char *r = get_reg_name(DMA_REG_WR0);
+  DBG(2, form("KCemu/DMA/out_WR0",
+              "DMA::exec():  %s: ------------------------------------\n"
+              "DMA::exec():  %s: Mode                    =  %s\n"
+              "DMA::exec():  %s: Direction               =  %s\n"
+              "DMA::exec():  %s: A: Start Address (lo) ? =  %s\n"
+              "DMA::exec():  %s: A: Start Address (hi) ? =  %s\n"
+              "DMA::exec():  %s: Block Length (lo) ?     =  %s\n"
+              "DMA::exec():  %s: Block Length (hi) ?     =  %s\n"
+              "DMA::exec():  %s: ------------------------------------\n",
+              r,
+              r, get_text2(_regs[DMA_REG_WR0] & 3, "invalid", "Copy", "Search", "Copy + Search"),
+              r, get_text1(_regs[DMA_REG_WR0] & 4, "B -> A", "A -> B"),
+              r, get_text1(_regs[DMA_REG_WR0] & 8, "unchanged", "follows"),
+              r, get_text1(_regs[DMA_REG_WR0] & 16, "unchanged", "follows"),
+              r, get_text1(_regs[DMA_REG_WR0] & 32, "unchanged", "follows"),
+              r, get_text1(_regs[DMA_REG_WR0] & 64, "unchanged", "follows"),
+              r));
+}
+
+void
+DMA::exec1(void)
+{
+  const char *r = get_reg_name(DMA_REG_WR1);
+  DBG(2, form("KCemu/DMA/out_WR1",
+              "DMA::exec():  %s: ------------------------------------\n"
+              "DMA::exec():  %s: A: Interface      =  %s\n"
+              "DMA::exec():  %s: A: Address Change =  %s\n"
+              "DMA::exec():  %s: A: Timing ?       =  %s\n"
+              "DMA::exec():  %s: ------------------------------------\n",
+              r,
+              r, get_text1(_regs[DMA_REG_WR1] & 8, "Memory", "I/O"),
+              r, get_text2(_regs[DMA_REG_WR1] >> 4, "Decrement", "Increment", "Fix", "Fix"),
+              r, get_text1(_regs[DMA_REG_WR1] & 64, "unchanged", "follows"),
+              r));
+}
+
+void
+DMA::exec2(void)
+{
+  const char *r = get_reg_name(DMA_REG_WR2);
+  DBG(2, form("KCemu/DMA/out_WR2",
+              "DMA::exec():  %s: ------------------------------------\n"
+              "DMA::exec():  %s: B: Interface      =  %s\n"
+              "DMA::exec():  %s: B: Address Change =  %s\n"
+              "DMA::exec():  %s: B: Timing ?       =  %s\n"
+              "DMA::exec():  %s: ------------------------------------\n",
+              r,
+              r, get_text1(_regs[DMA_REG_WR2] & 8, "Memory", "I/O"),
+              r, get_text2(_regs[DMA_REG_WR2] >> 4, "Decrement", "Increment", "Fix", "Fix"),
+              r, get_text1(_regs[DMA_REG_WR2] & 64, "unchanged", "follows"),
+              r));
+}
+
+void
+DMA::exec3(void)
+{
+  const char *r = get_reg_name(DMA_REG_WR3);
+  DBG(2, form("KCemu/DMA/out_WR3",
+              "DMA::exec():  %s: ------------------------------------\n"
+              "DMA::exec():  %s: End DMA on active search =  %s\n"
+              "DMA::exec():  %s: Enable Interrupts        =  %s\n"
+              "DMA::exec():  %s: Enable DMA               =  %s\n"
+              "DMA::exec():  %s: Mask Byte ?              =  %s\n"
+              "DMA::exec():  %s: Compare Byte ?           =  %s\n"
+              "DMA::exec():  %s: ------------------------------------\n",
+              r,
+              r, get_text1(_regs[DMA_REG_WR3] & 4, "No", "Yes"),
+              r, get_text1(_regs[DMA_REG_WR3] & 32, "No", "Yes"),
+              r, get_text1(_regs[DMA_REG_WR3] & 64, "No", "Yes"),
+              r, get_text1(_regs[DMA_REG_WR3] & 8, "unchanged", "follows"),
+              r, get_text1(_regs[DMA_REG_WR3] & 16, "unchanged", "follows"),
+              r));
+}
+
+void
+DMA::exec4(void)
+{
+  const char *r = get_reg_name(DMA_REG_WR4);
+  DBG(2, form("KCemu/DMA/out_WR4",
+              "DMA::exec():  %s: ------------------------------------\n"
+              "DMA::exec():  %s: DMA Mode                =  %s\n"
+              "DMA::exec():  %s: B: Start Address (lo) ? =  %s\n"
+              "DMA::exec():  %s: B: Start Address (hi) ? =  %s\n"
+              "DMA::exec():  %s: Interrupt Control ?     =  %s\n"
+              "DMA::exec():  %s: ------------------------------------\n",
+              r,
+              r, get_text2(_regs[DMA_REG_WR4] >> 5, "Byte", "Continuous", "Burst", "invalid"),
+              r, get_text1(_regs[DMA_REG_WR4] & 4, "unchanged", "follows"),
+              r, get_text1(_regs[DMA_REG_WR4] & 8, "unchanged", "follows"),
+              r, get_text1(_regs[DMA_REG_WR4] & 16, "unchanged", "follows"),
+              r));
+}
+
+void
+DMA::exec5(void)
+{
+  const char *r = get_reg_name(DMA_REG_WR5);
+  DBG(2, form("KCemu/DMA/out_WR5",
+              "DMA::exec():  %s: ------------------------------------\n"
+              "DMA::exec():  %s: Polarity RDY     =  %s\n"
+              "DMA::exec():  %s: Wait Function    =  %s\n"
+              "DMA::exec():  %s: DMA Auto-Restart =  %s\n"
+              "DMA::exec():  %s: ------------------------------------\n",
+              r,
+              r, get_text1(_regs[DMA_REG_WR5] & 8, "L (= /RDY)", "H (= RDY)"),
+              r, get_text1(_regs[DMA_REG_WR5] & 16, "No", "Yes"),
+              r, get_text1(_regs[DMA_REG_WR5] & 32, "No", "Yes"),
+              r));
+}
+
+void
+DMA::exec6_log(int reg, const char *text)
+{
+  const char *r = get_reg_name(reg);
+  DBG(2, form("KCemu/DMA/out_WR6",
+              "DMA::exec():  %s: ------------------------------------\n"
+              "DMA::exec():  %s: %s\n"
+              "DMA::exec():  %s: ------------------------------------\n",
+              r, r, text, r));
+}
+
+void
+DMA::exec6(void)
+{
+  switch (_regs[DMA_REG_WR6])
+    {
+    case 0xc3:
+      exec6_log(DMA_REG_WR6, "RESET");
+      break;
+    case 0xc7:
+      exec6_log(DMA_REG_WR6, "RESET TIMING PORT A");
+      break;
+    case 0xcb:
+      exec6_log(DMA_REG_WR6, "RESET TIMING PORT B");
+      break;
+    case 0xcf:
+      exec6_log(DMA_REG_WR6, "LOAD");
+      break;
+    case 0xd3:
+      exec6_log(DMA_REG_WR6, "CONTINUE");
+      break;
+    case 0xaf:
+      exec6_log(DMA_REG_WR6, "DISABLE INTERRUPT");
+      break;
+    case 0xab:
+      exec6_log(DMA_REG_WR6, "ENABLE INTERRUPT");
+      break;
+    case 0xa3:
+      exec6_log(DMA_REG_WR6, "RESET INTERRUPT");
+      break;
+    case 0xb7:
+      exec6_log(DMA_REG_WR6, "DMA AFTER RETI");
+      break;
+    case 0xbf:
+      exec6_log(DMA_REG_WR6, "READ STATUS");
+      break;
+    case 0x8b:
+      exec6_log(DMA_REG_WR6, "REFRESH STATUS");
+      break;
+    case 0xa7:
+      exec6_log(DMA_REG_WR6, "BEGIN READ");
+      break;
+    case 0xb3:
+      exec6_log(DMA_REG_WR6, "FORCE READY");
+      break;
+    case 0x87:
+      exec6_log(DMA_REG_WR6, "ENABLE DMA");
+      break;
+    case 0x83:
+      exec6_log(DMA_REG_WR6, "DISABLE DMA");
+      break;
+    case 0xbb:
+      exec6_log(DMA_REG_WR6, "LOAD STATUS MASK");
+      break;
+    default:
+      exec6_log(DMA_REG_WR6, "INVALID");
+      break;
     }
 }

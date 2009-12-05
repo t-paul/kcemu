@@ -58,6 +58,7 @@
 #include "kc/kc.h"
 #include "kc/ctc.h"
 #include "kc/pio.h"
+#include "kc/dma.h"
 #include "kc/z80.h"
 #include "kc/wav.h"
 #include "kc/tape.h"
@@ -1465,6 +1466,7 @@ main(int argc, char **argv)
 	    fdc_ports->register_ports("GIDE", 0, 16, fdc_gide, 10);
 	    fdc_ports->register_ports("FDC", 0xf0, 12, fdc_fdc, 10);
 	    fdc_ports->register_ports("CTC", 0xfc, 4, fdc_ctc, 10);
+	    fdc_ports->register_ports("DMA", 0x11, 1, new DMA(), 10);
 
 	    portg = ports->register_ports("FloppyIO", 0xf4, 1, fdc_io, 10);
 	    portg = ports->register_ports("FloppySHMEM", 0xf0, 4, fdc_shmem, 10);

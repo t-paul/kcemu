@@ -76,8 +76,19 @@ protected:
 protected:
   virtual const char * get_reg_name(int reg);
   virtual void out_base(word_t addr, byte_t val);
-  virtual void queue_write(int base_reg, byte_t val, byte_t mask, byte_t result, int reg);
-
+  virtual void write(int reg, byte_t val);
+  virtual void queue(int base_reg, byte_t val, byte_t mask, byte_t result, int reg);
+  virtual void exec0(void);
+  virtual void exec1(void);
+  virtual void exec2(void);
+  virtual void exec3(void);
+  virtual void exec4(void);
+  virtual void exec5(void);
+  virtual void exec6(void);
+  virtual void exec6_log(int reg, const char *text);
+  virtual const char * get_text1(byte_t val, const char *text0, const char *text1);
+  virtual const char * get_text2(byte_t val, const char *text0, const char *text1, const char *text2, const char *text3);
+  
 public:
   DMA(void);
   virtual ~DMA(void);
