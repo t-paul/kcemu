@@ -138,6 +138,7 @@
 #include "kc/mod_dio.h"
 #include "kc/mod_ram.h"
 #include "kc/mod_ram1.h"
+#include "kc/mod_r16.h"
 #include "kc/mod_r64.h"
 #include "kc/mod_cpm.h"
 #include "kc/mod_ram8.h"
@@ -152,6 +153,7 @@
 #include "kc/mod_auto.h"
 #include "kc/mod_rom1.h"
 #include "kc/mod_romb.h"
+#include "kc/mod_raf.h"
 #include "kc/mod_boot.h"
 #include "kc/mod_192k.h"
 #include "kc/mod_320k.h"
@@ -430,6 +432,15 @@ ModuleList::ModuleList(void)
   _mod_list.push_back(new ModuleListEntry(_("CPM-Z9 64k RAM"), m, KC_TYPE_85_1_CLASS));
 
   /*
+   *  RAF (ram floppy module for KC85/1 and A5105 at port 20h/24h)
+   */
+  m = new ModuleRAF("RAF-4MB-20h", 0x20, 0x400000);
+  _mod_list.push_back(new ModuleListEntry(_("RAF 4MB (port 20h)"), m, (kc_type_t)(KC_TYPE_85_1_CLASS | KC_TYPE_A5105)));
+
+  m = new ModuleRAF("RAF-4MB-24h", 0x24, 0x400000);
+  _mod_list.push_back(new ModuleListEntry(_("RAF 4MB (port 24h)"), m, (kc_type_t)(KC_TYPE_85_1_CLASS | KC_TYPE_A5105)));
+
+  /*
    *  Digital I/O (kc85/2-4)
    */
   m = new ModuleDIO("M001", 0xef);
@@ -492,28 +503,17 @@ ModuleList::ModuleList(void)
   _mod_list.push_back(new ModuleListEntry(_("M027: Development"), m, KC_TYPE_85_2_CLASS));
 
   /*
-   *  vinculum usb + driver rom
-   */
-  m = new ModuleVDIP("VDIP", 0xef);
-  _mod_list.push_back(new ModuleListEntry(_("VDIP: Vinculum USB"), m, KC_TYPE_85_2_CLASS));
-
-  string kc85_vdip_rom = kc85_romdir + "/vdip12.rom";
-  m = new ModuleROM(kc85_vdip_rom.c_str(), "VDIPDRV", 0x0800, 0xfb);
-  _mod_list.push_back(new ModuleListEntry(_("VDIP: Vinculum USB ROM"), m, KC_TYPE_85_2_CLASS));
-
-  string kc85_vdip2_42_rom = kc85_romdir + "/vdip2_42.rom";
-  m = new ModuleROM(kc85_vdip2_42_rom.c_str(), "VDIPDRV2_42", 0x1000, 0xfb);
-  _mod_list.push_back(new ModuleListEntry(_("VDIP2: Vinculum USB ROM (CAOS 4.2)"), m, KC_TYPE_85_2_CLASS));
-
-  string kc85_vdip2_44_rom = kc85_romdir + "/vdip2_44.rom";
-  m = new ModuleROM(kc85_vdip2_44_rom.c_str(), "VDIPDRV2_44", 0x1000, 0xfb);
-  _mod_list.push_back(new ModuleListEntry(_("VDIP2: Vinculum USB ROM (CAOS 4.4)"), m, KC_TYPE_85_2_CLASS));
-
-  /*
    *  RAM module 256k (kc85/2-4)
    */
   m = new Module256k("M032", 0x79);
   _mod_list.push_back(new ModuleListEntry(_("M032: 256k Segmented RAM"), m, KC_TYPE_85_2_CLASS));
+
+  /*
+   *  typestar + ramdos
+   */
+  string kc85_m033_rom = kc85_romdir + "/m033.rom";
+  m = new ModuleSegmentedROM16k(kc85_m033_rom.c_str(), "M033", 0x01);
+  _mod_list.push_back(new ModuleListEntry(_("M033: TypeStar + RAMDOS"), m, KC_TYPE_85_2_CLASS));
 
   /*
    *  RAM module 512k (kc85/2-4)
@@ -552,6 +552,24 @@ ModuleList::ModuleList(void)
   string kc85_m901_rom = kc85_romdir + "/m901.rom";
   m = new ModuleROM(kc85_m901_rom.c_str(), "M901", 0x2000, 0xfb);
   _mod_list.push_back(new ModuleListEntry(_("M901: WordPro '86 (KC85/4)"), m, KC_TYPE_85_4));
+
+  /*
+   *  vinculum usb + driver rom
+   */
+  m = new ModuleVDIP("VDIP", 0xef);
+  _mod_list.push_back(new ModuleListEntry(_("VDIP: Vinculum USB"), m, KC_TYPE_85_2_CLASS));
+
+  string kc85_vdip_rom = kc85_romdir + "/vdip12.rom";
+  m = new ModuleROM(kc85_vdip_rom.c_str(), "VDIPDRV", 0x0800, 0xfb);
+  _mod_list.push_back(new ModuleListEntry(_("VDIP: Vinculum USB ROM"), m, KC_TYPE_85_2_CLASS));
+
+  string kc85_vdip2_42_rom = kc85_romdir + "/vdip2_42.rom";
+  m = new ModuleROM(kc85_vdip2_42_rom.c_str(), "VDIPDRV2_42", 0x1000, 0xfb);
+  _mod_list.push_back(new ModuleListEntry(_("VDIP2: Vinculum USB ROM (CAOS 4.2)"), m, KC_TYPE_85_2_CLASS));
+
+  string kc85_vdip2_44_rom = kc85_romdir + "/vdip2_44.rom";
+  m = new ModuleROM(kc85_vdip2_44_rom.c_str(), "VDIPDRV2_44", 0x1000, 0xfb);
+  _mod_list.push_back(new ModuleListEntry(_("VDIP2: Vinculum USB ROM (CAOS 4.4)"), m, KC_TYPE_85_2_CLASS));
 
   int d004_enabled = Preferences::instance()->get_int_value("d004", 0);
 
@@ -594,6 +612,7 @@ ModuleList::ModuleList(void)
     {
     case KC_TYPE_85_1:
     case KC_TYPE_87:
+    case KC_TYPE_A5105:
       cnt = 4;
       break;
     case KC_TYPE_LC80:

@@ -668,7 +668,7 @@ KCTFile::read(int idx, kct_file_props_t *props)
   usize = _dirblock[idx].uncompressed_size;
   ubuf = new unsigned char[usize];
   ret = uncompress(ubuf, &usize, cbuf, csize);
-  delete cbuf;
+  delete[] cbuf;
 
   if (ret != Z_OK)
     {

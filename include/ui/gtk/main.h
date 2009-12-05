@@ -80,10 +80,13 @@ protected:
     void update_2_scanline(byte_t *bitmap, byte_t *dirty, int dirty_size, int width, int height);
     void update_3_smooth(byte_t *bitmap, byte_t *dirty, int dirty_size, int width, int height);
     
+    void attach_remote_listener(void);
+
     static gboolean on_expose_event(GtkWidget *widget, GdkEventExpose *event, gpointer user_data);
     static gboolean on_button_press_event(GtkWidget *widget, GdkEventButton *event, gpointer user_data);
     static void on_accel_group_changed(GtkAccelGroup *accel_group, guint keyval, GdkModifierType modifier, GClosure *accel_closure, gpointer user_data);
     static gboolean on_accel_group_changed_idle_func(gpointer data);
+    static gboolean on_property_change(GtkWidget *widget, GdkEventProperty *event, gpointer data);
     
 public:
     MainWindow(const char *glade_xml_file);

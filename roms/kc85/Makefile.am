@@ -18,6 +18,7 @@ ROMS = \
 	caos41c.854 \
 	caos41e.854 \
 	basic_c0.855 \
+	basicusb.855 \
 	caos__c0.855 \
 	caos__e0.855 \
 	caos43c.855 \
@@ -33,6 +34,7 @@ ROMS = \
 	m012.rom \
 	m026.rom \
 	m027.rom \
+	m033.rom \
 	m900.rom \
 	m901.rom
 

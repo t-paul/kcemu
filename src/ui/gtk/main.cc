@@ -103,6 +103,91 @@ MainWindow::~MainWindow(void) {
     delete _cmd_ui_toggle;
 }
 
+void
+MainWindow::attach_remote_listener(void)
+{
+  GdkAtom atom;
+
+  atom = gdk_atom_intern("_KCEMU_REMOTE_COMMAND", FALSE);
+  gdk_property_change(_window->window,
+                      atom, GDK_TARGET_STRING, 8, GDK_PROP_MODE_REPLACE,
+                      (unsigned char *) "", 1);
+  gdk_flush();
+}
+
+gboolean
+MainWindow::on_property_change(GtkWidget *widget, GdkEventProperty *event, gpointer data)
+{
+  gboolean ret;
+  guchar *prop_data;
+  char *ptr, *val, *atom;
+  GdkAtom actual_property_type;
+  gint actual_format, actual_length;
+  CMD_Args *args;
+
+  MainWindow *self = (MainWindow *) data;
+
+  if (event == NULL)
+    return TRUE;
+
+  atom = gdk_atom_name(event->atom);
+  if (atom == NULL)
+    return TRUE;
+
+  if (strcmp(atom, "_KCEMU_REMOTE_COMMAND") == 0)
+    {
+      DBG(1, form("KCemu/UI/remote",
+                  "property_change: %s\n",
+                  atom));
+
+      prop_data = NULL;
+      ret = gdk_property_get(self->_window->window,
+                             event->atom, GDK_TARGET_STRING,
+                             0, (65536 / sizeof (long)), FALSE,
+                             &actual_property_type,
+                             &actual_format, &actual_length,
+                             &prop_data);
+
+      if (!ret || (*prop_data == '\0'))
+        {
+          DBG(1, form("KCemu/UI/remote",
+                      "empty or invalid property!\n"));
+        }
+      else
+        {
+          ptr = (char *) prop_data;
+          DBG(1, form("KCemu/UI/remote",
+                      "command: %s'\n",
+                      ptr));
+          args = new CMD_Args();
+          while (242)
+            {
+              ptr += strlen(ptr) + 1;
+              if ((ptr - (char *) prop_data) >= actual_length)
+                break;
+              val = strchr(ptr, '=');
+              if (!val)
+                continue;
+              *val++ = '\0';
+              DBG(1, form("KCemu/UI/remote",
+                          " arg: %s -> '%s'\n",
+                          ptr, val));
+              args->set_string_arg(ptr, val);
+            }
+
+          CMD_EXEC_ARGS((const char *) prop_data, args);
+        }
+
+      if (prop_data != NULL)
+        g_free(prop_data);
+
+    }
+
+  g_free(atom);
+
+  return TRUE;
+}
+
 gboolean
 MainWindow::on_expose_event(GtkWidget *widget, GdkEventExpose *event, gpointer user_data) {
     static int x = 1;
@@ -113,7 +198,7 @@ MainWindow::on_expose_event(GtkWidget *widget, GdkEventExpose *event, gpointer u
     if (x) {
         x = 0;
         
-        //self->attach_remote_listener();
+        self->attach_remote_listener();
         Status::instance()->addStatusListener(self);
         
         string greeting("KCemu v" KCEMU_VERSION " (");
@@ -219,7 +304,8 @@ MainWindow::set_display_effect(gboolean effect) {
 void
 MainWindow::init(void) {
     _window = get_widget("main_window");
-    g_signal_connect(_window, "delete_event", G_CALLBACK(cmd_exec_sft), (gpointer)"emu-quit");
+    g_signal_connect(_window, "delete-event", G_CALLBACK(cmd_exec_sft), (gpointer)"emu-quit");
+    g_signal_connect(_window, "property-notify-event", G_CALLBACK(on_property_change), this);
     
     _w.accel_group = gtk_accel_group_new();
     gtk_window_add_accel_group(GTK_WINDOW(_window), _w.accel_group);

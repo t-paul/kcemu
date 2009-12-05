@@ -94,6 +94,7 @@ extern char *kcemu_localedir;
 extern char *kcemu_debug_output;
 extern char *kcemu_autostart_file;
 extern char *kcemu_autostart_addr;
+extern char *kcemu_vdip_root;
 
 const char * kc_get_license(void);
 const char * kc_get_warranty(void);

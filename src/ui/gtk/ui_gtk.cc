@@ -141,91 +141,6 @@ public:
 };
 
 void
-        UI_Gtk::attach_remote_listener(void) {
-//  GdkAtom atom;
-//
-//  atom = gdk_atom_intern("_KCEMU_REMOTE_COMMAND", FALSE);
-//  gdk_property_change(_main.window->window,
-//                      atom, GDK_TARGET_STRING, 8, GDK_PROP_MODE_REPLACE,
-//                      (unsigned char *)"", 1);
-//  gdk_flush();
-}
-
-gboolean
-UI_Gtk::property_change(GtkWidget *widget,
-        GdkEventProperty *event,
-        gpointer data) {
-//  gboolean ret;
-//  guchar *prop_data;
-//  char *ptr, *val, *atom;
-//  GdkAtom actual_property_type;
-//  gint    actual_format, actual_length;
-//  CMD_Args *args;
-//
-//  UI_Gtk *self = (UI_Gtk *)data;
-//
-//  if (event == NULL)
-//    return TRUE;
-//
-//  atom = gdk_atom_name(event->atom);
-//  if (atom == NULL)
-//    return TRUE;
-//
-//  if (strcmp(atom, "_KCEMU_REMOTE_COMMAND") == 0)
-//    {
-//      DBG(1, form("KCemu/UI/remote",
-//                  "property_change: %s\n",
-//                  atom));
-//
-//      prop_data = NULL;
-//      ret = gdk_property_get(self->_main.window->window,
-//			     event->atom, GDK_TARGET_STRING,
-//			     0, (65536 / sizeof(long)), FALSE,
-//			     &actual_property_type,
-//			     &actual_format, &actual_length,
-//			     &prop_data);
-//
-//      if (!ret || (*prop_data == '\0'))
-//	{
-//	  DBG(1, form("KCemu/UI/remote",
-//		      "empty or invalid property!\n"));
-//	}
-//      else
-//	{
-//	  ptr = (char *)prop_data;
-//	  DBG(1, form("KCemu/UI/remote",
-//		      "command: %s'\n",
-//		      ptr));
-//	  args = new CMD_Args();
-//	  while (242)
-//	    {
-//	      ptr += strlen(ptr) + 1;
-//	      if ((ptr - (char *)prop_data) >= actual_length)
-//		break;
-//	      val = strchr(ptr, '=');
-//	      if (!val)
-//		continue;
-//	      *val++ = '\0';
-//	      DBG(1, form("KCemu/UI/remote",
-//			  " arg: %s -> '%s'\n",
-//			  ptr, val));
-//	      args->set_string_arg(ptr, val);
-//	    }
-//
-//	  CMD_EXEC_ARGS((const char *)prop_data, args);
-//	}
-//
-//      if (prop_data != NULL)
-//	g_free(prop_data);
-//
-//    }
-//
-//  g_free(atom);
-//
-    return TRUE;
-}
-
-void
 UI_Gtk::idle(void) {
     gtk_main_quit();
 }
@@ -254,17 +169,6 @@ UI_Gtk::sf_selection_received(GtkWidget *widget,
     args = new CMD_Args();
     args->set_string_arg("text", (const char *)sel_data->data);
     CMD_EXEC_ARGS("keyboard-replay", args);
-}
-
-void
-UI_Gtk::sf_expose(void) {
-    static int x = 1;
-    
-    if (ui) ui->update(1);
-    if (x) {
-        x = 0;
-        self->attach_remote_listener();
-    }
 }
 
 void
@@ -651,7 +555,6 @@ UI_Gtk::init2(void) {
     cmd = new CMD_update_colortable(this, color_window);
     
     GtkWidget *main_window = _main_window->get_main_window();
-    g_signal_connect(main_window, "property_notify_event", G_CALLBACK(property_change), this);
     g_signal_connect(main_window, "selection_received", G_CALLBACK(sf_selection_received), this);
     g_signal_connect(main_window, "key_press_event", G_CALLBACK(sf_key_press), this);
     g_signal_connect(main_window, "key_release_event", G_CALLBACK(sf_key_release), this);

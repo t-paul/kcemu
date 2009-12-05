@@ -38,15 +38,21 @@ typedef enum
 {
   CMD_DIR  = 0x01,
   CMD_CD   = 0x02,
+  CMD_RD   = 0x04,
+  CMD_DLD  = 0x05,
+  CMD_MKD  = 0x06,
+  CMD_DLF  = 0x07,
   CMD_WRF  = 0x08,
   CMD_OPW  = 0x09,
   CMD_CLF  = 0x0a,
   CMD_RDF  = 0x0b,
+  CMD_REN  = 0x0c,
   CMD_OPR  = 0x0e,
   CMD_IDD  = 0x0f,
   CMD_SCS  = 0x10,
   CMD_ECS  = 0x11,
   CMD_FS   = 0x12,
+  CMD_FWV  = 0x13,
   CMD_SEK  = 0x28,
   CMD_DSN  = 0x2d,
   CMD_DVL  = 0x2e,
@@ -86,6 +92,8 @@ private:
 protected:
   virtual void execute(void) = 0;
 
+  static vdip_command_t map_extended_command(string cmd);
+
 public:
   VDIP_CMD(VDIP *vdip, bool check_disk = false);
   virtual ~VDIP_CMD(void);
@@ -100,15 +108,17 @@ public:
   virtual void add_dword(dword_t val);
   virtual void add_string(const char *text);
 
-  virtual bool has_args(void);
-  virtual string get_arg(unsigned int arg);
-  virtual dword_t get_dword_arg(unsigned int arg);
+  virtual bool has_args(void) const;
+  virtual int get_arg_count(void) const;
+  virtual string get_arg(unsigned int arg) const;
+  virtual dword_t get_dword_arg(unsigned int arg) const;
   virtual void set_args(StringList *args);
   virtual string get_response(string input);
 
   virtual void exec(void);
   virtual void handle_input(byte_t input);
 
+  static VDIP_CMD * create_command(VDIP *vdip, string cmd);
   static VDIP_CMD * create_command(VDIP *vdip, vdip_command_t code);
 };
 
@@ -136,11 +146,12 @@ private:
   void set_pio_ext_b(byte_t val);
 
   VDIP_CMD * decode_command(string buf);
-  vdip_command_t map_extended_command(string buf);
 
 public:
   VDIP(void);
   virtual ~VDIP(void);
+
+  virtual string get_firmware_version(void) const;
 
   virtual bool is_binary_mode(void) const;
   virtual void set_binary_mode(bool val);
@@ -160,6 +171,7 @@ public:
   virtual string get_cwd(void) const;
   virtual string get_path(string dir) const;
   virtual void chdir_up(void);
+  virtual void chdir_root(void);
   virtual void chdir(string dir);
 
   virtual void register_pio(PIO *pio);

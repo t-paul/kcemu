@@ -391,6 +391,16 @@ FDC_CMD_WRITE_DATA::write_byte(byte_t val)
           get_fdc()->seek_internal(_head, _cylinder, _sector);
           f->write_sector(_buf, _sector_size);
         }
+
+      if (_sector == _arg[6])
+        {
+          DBG(2, form("KCemu/FDC_CMD/WRITE_DATA",
+                      "FDC: WRITE DATA: Writing sector %2d hit end of track (EOT = %d)\n",
+                      _sector, _arg[6]));
+          get_fdc()->set_ST0(FDC::ST_0_IC_MASK, FDC::ST_0_IC_ABNORMAL_TERMINATION);
+          _data_transfer = false;
+          finish_cmd();
+        }
     }
 }
 
@@ -547,6 +557,10 @@ FDC_CMD_READ_DATA::fetch_next_sector(void)
   if (sector >= cnt)
     return false;
 
+  DBG(2, form("KCemu/FDC_CMD/READ_DATA",
+              "FDC: READ DATA: Reading sector %2d\n",
+              sector));
+
   get_fdc()->seek_internal(get_fdc()->get_head(),
 			   get_fdc()->get_cylinder(),
 			   sector + 1);
@@ -589,6 +603,17 @@ FDC_CMD_READ_DATA::read_byte(void)
 	      _idx - 1,
               b, b, isprint(b) ? b : '.'));
   
+  int sector = get_fdc()->get_sector();
+  if ((_idx == _size) && (sector == _arg[6]))
+    {
+      DBG(2, form("KCemu/FDC_CMD/READ_DATA",
+                  "FDC: READ DATA: Reading sector %2d hit end of track (EOT = %d)\n",
+                  sector, _arg[6]));
+      get_fdc()->set_ST0(FDC::ST_0_IC_MASK, FDC::ST_0_IC_ABNORMAL_TERMINATION);
+      _data_transfer = false;
+      finish_cmd();
+    }
+
   return b;
 }
 

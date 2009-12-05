@@ -28,7 +28,6 @@ AM_CPPFLAGS = \
 
 LINUX_EXTRA_kcemu_SOURCES = mod_v24.cc mod_js.cc
 MINGW_EXTRA_kcemu_SOURCES = kcemu.rc
-ALL_EXTRA_kcemu_SOURCES = $(LINUX_EXTRA_kcemu_SOURCES) $(MINGW_EXTRA_kcemu_SOURCES)
 
 if TARGET_LINUX
 EXTRA_kcemu_SOURCES = $(LINUX_EXTRA_kcemu_SOURCES)
@@ -38,7 +37,7 @@ if TARGET_MINGW
 EXTRA_kcemu_SOURCES = $(MINGW_EXTRA_kcemu_SOURCES)
 endif
 
-EXTRA_DIST = $(ALL_EXTRA_kcemu_SOURCES)
+EXTRA_DIST = $(LINUX_EXTRA_kcemu_SOURCES) $(MINGW_EXTRA_kcemu_SOURCES)
 
 kcemu_SOURCES = \
 	kc.cc		\
@@ -106,6 +105,7 @@ kcemu_SOURCES = \
 	mod_vdip.cc	\
 	mod_ram.cc	\
 	mod_ram1.cc	\
+	mod_r16.cc	\
 	mod_r64.cc	\
 	mod_cpm.cc	\
 	mod_ram8.cc	\
@@ -121,6 +121,7 @@ kcemu_SOURCES = \
 	mod_auto.cc	\
 	mod_rom1.cc	\
 	mod_romb.cc	\
+	mod_raf.cc	\
 	mod_boot.cc	\
 	mod_192k.cc	\
 	mod_320k.cc	\

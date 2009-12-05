@@ -540,19 +540,6 @@ if test x"$HOST_OS" = "xLinux" -o x"$HOST_OS" = "xMinGW"; then
 	fi
 	AC_DEFINE_UNQUOTED(USE_UI, "$use_ui", "user interface")
 	AC_MSG_RESULT($use_ui)
-
-	dnl ------------------------------------------------------------
-	dnl  check for cppunit, if not found unit test will be disabled
-	dnl ------------------------------------------------------------
-
-	AM_PATH_CPPUNIT(1.6.2,have_cppunit=yes,AC_MSG_WARN([
-***
-*** Cppunit not found. Unit test disabled
-***
-*** This is NO ERROR. It only means you can't execute some checks
-*** that verify some parts of the emulator. If you are not a
-*** developer you can safely ignore this warning.
-***]))
 fi
 
 AC_OUTPUT([
@@ -699,12 +686,6 @@ fi
 echo ""
 echo ""
 echo "- optional components:"
-echo -n "  * unit tests:      "
-if test x$have_cppunit = xyes; then
-	echo "yes (Cppunit $cppunit_major_version.$cppunit_minor_version.$cppunit_micro_version)"
-else
-	echo "no (make check will fail!)"
-fi
 echo -n "  * sound:           "
 if test x$enable_sound = xyes; then
 	echo "yes"

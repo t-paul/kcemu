@@ -24,12 +24,12 @@
 #include "kc/mod_512k.h"
 
 Module512k::Module512k(Module512k &tmpl) :
-  ModuleSegmentedRAM(tmpl)
+  ModuleSegmentedMemory(tmpl)
 {
 }
 
 Module512k::Module512k(const char *name, byte_t id) :
-  ModuleSegmentedRAM(name, id, 32, 0x4000)
+  ModuleSegmentedMemory(name, id, 32, 0x4000)
 {
 }
 

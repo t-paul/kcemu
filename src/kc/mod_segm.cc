@@ -26,57 +26,91 @@
 #include "kc/kc.h"
 #include "kc/mod_segm.h"
 
-ModuleSegmentedRAM::ModuleSegmentedRAM(ModuleSegmentedRAM &tmpl) :
+ModuleSegmentedMemory::ModuleSegmentedMemory(ModuleSegmentedMemory &tmpl) :
   ModuleInterface(tmpl.get_name(), tmpl.get_id(), tmpl.get_type())
 {
   _val = 0;
   _group = NULL;
+  _master = false;
+  _is_rom = tmpl._is_rom;
   _segments = tmpl.get_segment_count();
   _segment_size = tmpl.get_segment_size();
 
-  int ram_size = get_segment_count() * get_segment_size();
-
-  _ram = new byte_t[ram_size];
-  if (_ram)
+  if (is_rom())
     {
-      reset(true);
+      _mem = tmpl._mem;
       set_valid(true);
+    }
+  else
+    {
+      int mem_size = get_segment_count() * get_segment_size();
+      _mem = new byte_t[mem_size];
+      if (_mem)
+        {
+          reset(true);
+          set_valid(true);
+        }
     }
 }
 
-ModuleSegmentedRAM::ModuleSegmentedRAM(const char *name, byte_t id, int segments, int segment_size) :
+ModuleSegmentedMemory::ModuleSegmentedMemory(const char *name, byte_t id, int segments, int segment_size) :
   ModuleInterface(name, id, KC_MODULE_KC_85_3)
 {
   _val = 0;
-  _ram = NULL;
+  _mem = NULL;
   _group = NULL;
+  _master = true;
+  _is_rom = false;
   _segments = segments;
   _segment_size = segment_size;
+
   set_valid(true);
 }
 
-ModuleSegmentedRAM::~ModuleSegmentedRAM(void)
+ModuleSegmentedMemory::ModuleSegmentedMemory(const char *name, byte_t id, int segments, int segment_size, const char *filename) :
+  ModuleInterface(name, id, KC_MODULE_KC_85_3)
+{
+  int mem_size = segments * segment_size;
+
+  _val = 0;
+  _group = NULL;
+  _master = true;
+  _is_rom = true;
+  _segments = segments;
+  _segment_size = segment_size;
+  _mem = new byte_t[mem_size];
+
+  set_valid(Memory::load_rom(filename, _mem, mem_size, false));
+}
+
+ModuleSegmentedMemory::~ModuleSegmentedMemory(void)
 {
   if (_group)
     memory->unregister_memory(_group);
-  if (_ram)
-    delete[] _ram;
+  if (_master && _mem)
+    delete[] _mem;
+}
+
+bool
+ModuleSegmentedMemory::is_rom(void)
+{
+  return _is_rom;
 }
 
 int
-ModuleSegmentedRAM::get_segment_count(void)
+ModuleSegmentedMemory::get_segment_count(void)
 {
   return _segments;
 }
 
 int
-ModuleSegmentedRAM::get_segment_size(void)
+ModuleSegmentedMemory::get_segment_size(void)
 {
   return _segment_size;
 }
 
 void
-ModuleSegmentedRAM::m_out(word_t addr, byte_t val)
+ModuleSegmentedMemory::m_out(word_t addr, byte_t val)
 {
   if (_val == val)
     return;
@@ -95,20 +129,24 @@ ModuleSegmentedRAM::m_out(word_t addr, byte_t val)
 
       int idx = get_segment_index(addr, val);
       word_t mem = get_base_address(addr, val);
+      bool ro = is_rom() ? true : (_val & 2) == 0;
 
       sprintf(buf, "%s (%d)", get_name(), idx);
       _group = memory->register_memory(buf,
 				       mem,
 				       get_segment_size(),
-				       &_ram[idx * get_segment_size()],
+				       &_mem[idx * get_segment_size()],
 				       0x10,
-				       (_val & 2) == 0);
+				       ro);
     }
 }
 
 void
-ModuleSegmentedRAM::reset(bool power_on)
+ModuleSegmentedMemory::reset(bool power_on)
 {
+  if (is_rom())
+    return;
+
   if (power_on)
-    Memory::scratch_mem(_ram, get_segment_count() * get_segment_size());
+    Memory::scratch_mem(_mem, get_segment_count() * get_segment_size());
 }

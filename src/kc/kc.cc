@@ -237,6 +237,7 @@ char *kcemu_disk;
 char *kcemu_modules;
 char *kcemu_autostart_file;
 char *kcemu_autostart_addr;
+char *kcemu_vdip_root;
 char *kcemu_profile;
 
 static void
@@ -900,7 +901,7 @@ main(int argc, char **argv)
   int type;
   bool do_quit;
   int option_index;
-  const char *getopt_args = "0123456789a:A:d:DEf:FhH:l:LM:o:p:Ps:t:vVW";
+  const char *getopt_args = "0123456789a:A:d:DEf:FhH:l:LM:o:p:Ps:t:u:vVW";
 #ifdef HAVE_GETOPT_LONG
   static struct option long_options[] =
   {
@@ -921,6 +922,7 @@ main(int argc, char **argv)
     { "select-profile", 0, 0, 'P' },
     { "scale",          1, 0, 's' },
     { "tape",           1, 0, 't' },
+    { "vdip-root",      1, 0, 'u' },
     { "version",        0, 0, 'v' },
     { "viewlist",       0, 0, 'V' },
     { "warranty",       0, 0, 'W' },
@@ -958,6 +960,7 @@ main(int argc, char **argv)
   kcemu_debug_output = 0;
   kcemu_autostart_file = 0;
   kcemu_autostart_addr = 0;
+  kcemu_vdip_root = 0;
   kcemu_ui_scale = -1;
   kcemu_ui_debug = -1;
   kcemu_ui_fullscreen = 0;
@@ -1080,6 +1083,9 @@ main(int argc, char **argv)
 	case 't':
 	  kcemu_tape = strdup(optarg);
 	  break;
+        case 'u':
+          kcemu_vdip_root = strdup(optarg);
+          break;
 	case 'v':
 	  show_version(argv[0]);
 	  break;

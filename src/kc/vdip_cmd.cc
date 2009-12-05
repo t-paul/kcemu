@@ -22,10 +22,12 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <time.h>
+#include <utime.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <dirent.h>
 #include <unistd.h>
+#include <errno.h>
 
 #include "kc/system.h"
 
@@ -135,6 +137,11 @@ public:
     else if (strcmp(dir.c_str(), "..") == 0)
       {
         vdip->chdir_up();
+        add_prompt();
+      }
+    else if (strncmp(dir.c_str(), "/", 1) == 0)
+      {
+        vdip->chdir_root();
         add_prompt();
       }
     else
@@ -499,6 +506,258 @@ public:
   }
 };
 
+class VDIP_CMD_FWV : public VDIP_CMD
+{
+public:
+  VDIP_CMD_FWV(VDIP *vdip) : VDIP_CMD(vdip) { }
+  virtual ~VDIP_CMD_FWV(void) { }
+
+  void execute(void)
+  {
+    add_string("\rMAIN ");
+    add_string(get_vdip()->get_firmware_version().c_str());
+    add_string("\rRPRG 1.00R\r");
+    add_prompt();
+  }
+};
+
+class VDIP_CMD_MKD : public VDIP_CMD
+{
+public:
+  VDIP_CMD_MKD(VDIP *vdip) : VDIP_CMD(vdip) { }
+  virtual ~VDIP_CMD_MKD(void) { }
+
+  void execute(void)
+  {
+    if (get_vdip()->get_file() != NULL)
+      add_error(ERR_FILE_OPEN);
+    else if (get_arg_count() == 1)
+      execute_with_name(get_arg(0));
+    else if (get_arg_count() >= 2)
+      execute_with_name_and_time(get_arg(0), get_dword_arg(1));
+    else
+      add_error(ERR_BAD_COMMAND);
+  }
+
+  long get_time(dword_t time)
+  {
+    struct tm tm;
+
+    tm.tm_year = ((time >> 25) & 127) + 80;
+    tm.tm_mon = ((time >> 21) & 15) - 1;
+    tm.tm_mday = ((time >> 16) & 31);
+    tm.tm_hour = ((time >> 11) & 31);
+    tm.tm_min = ((time >> 5) & 64);
+    tm.tm_sec = (time & 31) * 2;
+
+    return mktime(&tm);
+  }
+
+  void execute_with_name(string arg)
+  {
+    // default date: 2004-12-20 00:00:00
+    // date given in the documentation is wrong!
+    execute_with_name_and_time(arg, 0x31940000);
+  }
+
+  void execute_with_name_and_time(string arg, dword_t time)
+  {
+    struct stat buf;
+    string filename = get_vdip()->get_path(arg);
+    if (stat(filename.c_str(), &buf) != 0)
+      {
+        if (sys_mkdir(filename.c_str(), 0755) == 0)
+          {
+            struct utimbuf utimbuf;
+            
+            utimbuf.actime = get_time(time);
+            if (utimbuf.actime != -1)
+              {
+                utimbuf.modtime = utimbuf.actime;
+                utime(filename.c_str(), &utimbuf);
+              }
+            add_prompt();
+            return;
+          }
+      }
+
+    add_error(ERR_COMMAND_FAILED);
+  }
+};
+
+class VDIP_CMD_DLD : public VDIP_CMD
+{
+public:
+  VDIP_CMD_DLD(VDIP *vdip) : VDIP_CMD(vdip) { }
+  virtual ~VDIP_CMD_DLD(void) { }
+
+  void execute(void)
+  {
+    if (get_vdip()->get_file() != NULL)
+      add_error(ERR_FILE_OPEN);
+    else if (get_arg_count() >= 1)
+      execute_with_name(get_arg(0));
+    else
+      add_error(ERR_BAD_COMMAND);
+  }
+
+  void execute_with_name(string arg)
+  {
+    string filename = get_vdip()->get_path(arg);
+    if (rmdir(filename.c_str()) == 0)
+      {
+        add_prompt();
+      }
+    else
+      {
+        if (errno == ENOTEMPTY)
+          add_error(ERR_DIR_NOT_EMPTY);
+        else
+          add_error(ERR_COMMAND_FAILED);
+      }
+  }
+};
+
+class VDIP_CMD_DLF : public VDIP_CMD
+{
+public:
+  VDIP_CMD_DLF(VDIP *vdip) : VDIP_CMD(vdip) { }
+  virtual ~VDIP_CMD_DLF(void) { }
+
+  void execute(void)
+  {
+    if (get_vdip()->get_file() != NULL)
+      add_error(ERR_FILE_OPEN);
+    else if (get_arg_count() >= 1)
+      execute_with_name(get_arg(0));
+    else
+      add_error(ERR_BAD_COMMAND);
+  }
+
+  void execute_with_name(string arg)
+  {
+    string filename = get_vdip()->get_path(arg);
+
+    if (access(filename.c_str(), W_OK) != 0)
+      {
+        add_error(ERR_READ_ONLY);
+      }
+    else if (unlink(filename.c_str()) == 0)
+      {
+        add_prompt();
+      }
+    else
+      {
+        switch (errno)
+          {
+          case EISDIR:
+            add_error(ERR_INVALID);
+            break;
+          case EACCES:
+          case EPERM:
+          case EROFS:
+            add_error(ERR_READ_ONLY);
+            break;
+          default:
+            add_error(ERR_COMMAND_FAILED);
+            break;
+          }
+      }
+  }
+};
+
+class VDIP_CMD_RD : public VDIP_CMD
+{
+public:
+  VDIP_CMD_RD(VDIP *vdip) : VDIP_CMD(vdip) { }
+  virtual ~VDIP_CMD_RD(void) { }
+
+  void execute(void)
+  {
+    if (get_vdip()->get_file() != NULL)
+      add_error(ERR_FILE_OPEN);
+    else if (get_arg_count() >= 1)
+      execute_with_name(get_arg(0));
+    else
+      add_error(ERR_BAD_COMMAND);
+  }
+
+  void execute_with_name(string arg)
+  {
+    string filename = get_vdip()->get_path(arg);
+
+    struct stat buf;
+    if (stat(filename.c_str(), &buf) != 0)
+      {
+        add_error(ERR_COMMAND_FAILED);
+        return;
+      }
+
+    // this is not specified in the real VDIP firmware
+    // but we refuse to read files that are bigger than
+    // one megabyte.
+    if (buf.st_size > 1024 * 1024)
+      {
+        add_error(ERR_INVALID);
+        return;
+      }
+
+    FILE *f = fopen(filename.c_str(), "rb");
+    if (f == NULL)
+      {
+        add_error(ERR_COMMAND_FAILED);
+        return;
+      }
+
+    while (242)
+      {
+        int c = fgetc(f);
+        if (c == EOF)
+          break;
+        add_char(c);
+      }
+
+    fclose(f);
+  }
+};
+
+class VDIP_CMD_REN : public VDIP_CMD
+{
+public:
+  VDIP_CMD_REN(VDIP *vdip) : VDIP_CMD(vdip) { }
+  virtual ~VDIP_CMD_REN(void) { }
+
+  void execute(void)
+  {
+    if (get_vdip()->get_file() != NULL)
+      add_error(ERR_FILE_OPEN);
+    else if (get_arg_count() >= 2)
+      execute_with_names(get_arg(0), get_arg(1));
+    else
+      add_error(ERR_BAD_COMMAND);
+  }
+
+  void execute_with_names(string source, string target)
+  {
+    string source_path = get_vdip()->get_path(source);
+    string target_path = get_vdip()->get_path(target);
+
+    struct stat buf;
+    if (stat(target_path.c_str(), &buf) == 0)
+      {
+        add_error(ERR_COMMAND_FAILED);
+      }
+    else if (rename(source_path.c_str(), target_path.c_str()) == 0)
+      {
+        add_prompt();
+      }
+    else
+      {
+        add_error(ERR_COMMAND_FAILED);
+      }
+  }
+};
+
 /*
 class VDIP_CMD_CD : public VDIP_CMD
 {
@@ -610,13 +869,22 @@ VDIP_CMD::add_string(const char *text)
 }
 
 bool
-VDIP_CMD::has_args(void)
+VDIP_CMD::has_args(void) const
 {
-  return (_args != NULL) && (_args->size() > 0);
+  return get_arg_count() > 0;
+}
+
+int
+VDIP_CMD::get_arg_count(void) const
+{
+  if (_args == NULL)
+    return 0;
+
+  return _args->size();
 }
 
 string
-VDIP_CMD::get_arg(unsigned int arg)
+VDIP_CMD::get_arg(unsigned int arg) const
 {
   if (!has_args())
     return "";
@@ -633,7 +901,7 @@ VDIP_CMD::get_arg(unsigned int arg)
 }
 
 dword_t
-VDIP_CMD::get_dword_arg(unsigned int arg)
+VDIP_CMD::get_dword_arg(unsigned int arg) const
 {
   string data = get_arg(arg);
   if (data.length() != 4)
@@ -670,6 +938,59 @@ VDIP_CMD::exec(void)
 void
 VDIP_CMD::handle_input(byte_t data)
 {
+}
+
+vdip_command_t
+VDIP_CMD::map_extended_command(string cmd)
+{
+  if (strcmp(cmd.c_str(), "DIR") == 0)
+    return CMD_DIR;
+  else if (strcmp(cmd.c_str(), "CD") == 0)
+    return CMD_CD;
+  else if (strcmp(cmd.c_str(), "IDD") == 0)
+    return CMD_IDD;
+  else if (strcmp(cmd.c_str(), "CLF") == 0)
+    return CMD_CLF;
+  else if (strcmp(cmd.c_str(), "OPR") == 0)
+    return CMD_OPR;
+  else if (strcmp(cmd.c_str(), "RDF") == 0)
+    return CMD_RDF;
+  else if (strcmp(cmd.c_str(), "SCS") == 0)
+    return CMD_SCS;
+  else if (strcmp(cmd.c_str(), "ECS") == 0)
+    return CMD_ECS;
+  else if (strcmp(cmd.c_str(), "OPW") == 0)
+    return CMD_OPW;
+  else if (strcmp(cmd.c_str(), "WRF") == 0)
+    return CMD_WRF;
+  else if (strcmp(cmd.c_str(), "SEK") == 0)
+    return CMD_SEK;
+  else if (strcmp(cmd.c_str(), "IPH") == 0)
+    return CMD_IPH;
+  else if (strcmp(cmd.c_str(), "IPA") == 0)
+    return CMD_IPA;
+  else if (strcmp(cmd.c_str(), "DIRT") == 0)
+    return CMD_DIRT;
+  else if (strcmp(cmd.c_str(), "FWV") == 0)
+    return CMD_FWV;
+  else if (strcmp(cmd.c_str(), "MKD") == 0)
+    return CMD_MKD;
+  else if (strcmp(cmd.c_str(), "DLD") == 0)
+    return CMD_DLD;
+  else if (strcmp(cmd.c_str(), "DLF") == 0)
+    return CMD_DLF;
+  else if (strcmp(cmd.c_str(), "RD") == 0)
+    return CMD_RD;
+  else if (strcmp(cmd.c_str(), "REN") == 0)
+    return CMD_REN;
+
+  return CMD_UNKNOWN;
+}
+
+VDIP_CMD *
+VDIP_CMD::create_command(VDIP *vdip, string cmd)
+{
+  return create_command(vdip, map_extended_command(cmd));
 }
 
 VDIP_CMD *
@@ -729,6 +1050,24 @@ VDIP_CMD::create_command(VDIP *vdip, vdip_command_t code)
       break;
     case CMD_EMPTY:
       vdip_cmd = new VDIP_CMD_EMPTY(vdip);
+      break;
+    case CMD_FWV:
+      vdip_cmd = new VDIP_CMD_FWV(vdip);
+      break;
+    case CMD_MKD:
+      vdip_cmd = new VDIP_CMD_MKD(vdip);
+      break;
+    case CMD_DLD:
+      vdip_cmd = new VDIP_CMD_DLD(vdip);
+      break;
+    case CMD_DLF:
+      vdip_cmd = new VDIP_CMD_DLF(vdip);
+      break;
+    case CMD_RD:
+      vdip_cmd = new VDIP_CMD_RD(vdip);
+      break;
+    case CMD_REN:
+      vdip_cmd = new VDIP_CMD_REN(vdip);
       break;
     default:
       vdip_cmd = new VDIP_CMD_UNKNOWN(vdip);

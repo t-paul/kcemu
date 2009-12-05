@@ -19,23 +19,23 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-#ifndef __kc_mod_1m_h
-#define __kc_mod_1m_h
+#ifndef __kc_mod_r16_h
+#define __kc_mod_r16_h
 
 #include "kc/mod_segm.h"
 
-class Module1M : public ModuleSegmentedMemory
+class ModuleSegmentedROM16k : public ModuleSegmentedMemory
 {
  protected:
   virtual word_t get_base_address(word_t addr, byte_t val);
   virtual int get_segment_index(word_t addr, byte_t val);
-  
+
  public:
-  Module1M(Module1M &tmpl);
-  Module1M(const char *name, byte_t id);
-  virtual ~Module1M(void);
+  ModuleSegmentedROM16k(ModuleSegmentedROM16k &tmpl);
+  ModuleSegmentedROM16k(const char *filename, const char *name, byte_t id);
+  virtual ~ModuleSegmentedROM16k(void);
 
   virtual ModuleInterface * clone(void);
 };
 
-#endif /* __kc_mod_1m_h */
+#endif /* __kc_mod_r16_h */
