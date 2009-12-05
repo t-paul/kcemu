@@ -508,29 +508,29 @@ UI_Gtk::init(int *argc, char ***argv) {
     
     Error::instance()->addErrorListener(this);
     
-    _dialog_window      = new DialogWindow("dialog.glade");
-    _selector_window    = new ProfileSelectorWindow("selector.glade");
-    _help_window        = new HelpWindow("help.glade");
+    _dialog_window      = new DialogWindow("dialog.xml");
+    _selector_window    = new ProfileSelectorWindow("selector.xml");
+    _help_window        = new HelpWindow("help.xml");
 }
 
 void
 UI_Gtk::init2(void) {
     create_ui();
-    _main_window        = new MainWindow("main.glade");
-    _about_window       = new AboutWindow("about.glade");
-    _thanks_window      = new ThanksWindow("thanks.glade");
-    _color_window       = new ColorWindow("color.glade");
-    _tape_window        = new TapeWindow("tape.glade");
-    _tape_add_window    = new TapeAddWindow("tapeedit.glade");
-    _disk_window        = new DiskWindow("disk.glade");
-    _vdip_window        = new VDIPWindow("vdip.glade");
-    _module_window      = new ModuleWindow("module.glade");
-    _keyboard_window    = new KeyboardWindow("keyboard.glade");
-    _copying_window     = new CopyingWindow("legal.glade");
-    _options_window     = new OptionsWindow("options.glade");
-    _wav_window         = new WavWindow("audio.glade");
-    _plotter_window     = new PlotterWindow("plotter.glade");
-    _save_memory_window = new SaveMemoryWindow("savemem.glade");
+    _main_window        = new MainWindow("main.xml");
+    _about_window       = new AboutWindow("about.xml");
+    _thanks_window      = new ThanksWindow("thanks.xml");
+    _color_window       = new ColorWindow("color.xml");
+    _tape_window        = new TapeWindow("tape.xml");
+    _tape_add_window    = new TapeAddWindow("tapeedit.xml");
+    _disk_window        = new DiskWindow("disk.xml");
+    _vdip_window        = new VDIPWindow("vdip.xml");
+    _module_window      = new ModuleWindow("module.xml");
+    _keyboard_window    = new KeyboardWindow("keyboard.xml");
+    _copying_window     = new CopyingWindow("legal.xml");
+    _options_window     = new OptionsWindow("options.xml");
+    _wav_window         = new WavWindow("audio.xml");
+    _plotter_window     = new PlotterWindow("plotter.xml");
+    _save_memory_window = new SaveMemoryWindow("savemem.xml");
     
     _edit_header_window = new EditHeaderWindow();
     _file_browser       = new FileBrowser();

@@ -77,7 +77,7 @@ class ColorWindow : public UI_Gtk_Window
   GtkAdjustment * init_adjustment(GtkRange* range, double *val_ptr);
 
  public:
-  ColorWindow(const char *glade_xml_file);
+  ColorWindow(const char *ui_xml_file);
   virtual ~ColorWindow(void);
 
   virtual double get_saturation_fg() { return _saturation_fg; }

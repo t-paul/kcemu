@@ -29,7 +29,7 @@ dnl ---------------------
 dnl  set package version
 dnl ---------------------
 
-source VERSION
+source ./VERSION
 
 AC_DEFINE_UNQUOTED(KCEMU_MAJOR_VERSION, $KCEMU_MAJOR_VERSION, "KCemu major version")
 AC_DEFINE_UNQUOTED(KCEMU_MINOR_VERSION, $KCEMU_MINOR_VERSION, "KCemu minor version")
@@ -241,13 +241,6 @@ dnl -----------------------
 dnl  initialize pkg-config
 dnl -----------------------
 PKG_PROG_PKG_CONFIG(0.20)
-
-dnl ---------------------------------
-dnl  check for glade runtime library
-dnl ---------------------------------
-PKG_CHECK_MODULES(LIBGLADE, libglade-2.0 >= 2.6.0)
-AC_SUBST(LIBGLADE_CFLAGS)
-AC_SUBST(LIBGLADE_LIBS)
 
 dnl -----------------------
 dnl  check for z80ex
@@ -469,7 +462,7 @@ if test x"$HOST_OS" = "xLinux" -o x"$HOST_OS" = "xMinGW"; then
 	dnl ------------------
 
 	if ! test "x$enable_gtktest" = "xno" ; then
-		AM_PATH_GTK_2_0(2.12.0, have_libgtk=yes, have_libgtk=no)
+		AM_PATH_GTK_2_0(2.16.5, have_libgtk=yes, have_libgtk=no)
 	else
 		have_libgtk=yes
 		gtk_config_major_version=?
@@ -624,22 +617,9 @@ AC_OUTPUT([
 	rpm/Makefile
 	rpm/KCemu.spec
 	po/Makefile.in
-	glade/Makefile
-	glade/about/Makefile
-	glade/audio/Makefile
-	glade/copying/Makefile
-	glade/dialog/Makefile
-	glade/disk/Makefile
-	glade/help/Makefile
-	glade/module/Makefile
-	glade/tape/Makefile
-	glade/thanks/Makefile
 	conf/Makefile
 	setup/Makefile
-	setup/KCemuSetup.nsi
-	setup/KCemuSetup_gtk2.6.nsi
-	setup/KCemuSetup_gtk2.8.nsi
-	setup/KCemuSetup_gtk2.10.nsi],
+	setup/KCemuSetup.nsi],
 	[])
 
 

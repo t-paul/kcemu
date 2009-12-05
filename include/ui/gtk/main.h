@@ -89,7 +89,7 @@ protected:
     static gboolean on_property_change(GtkWidget *widget, GdkEventProperty *event, gpointer data);
     
 public:
-    MainWindow(const char *glade_xml_file);
+    MainWindow(const char *ui_xml_file);
     virtual ~MainWindow(void);
 
     virtual GtkWidget * get_main_window(void);

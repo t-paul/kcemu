@@ -114,7 +114,7 @@ public:
   }
 };
 
-VDIPWindow::VDIPWindow(const char *glade_xml_file) : UI_Gtk_Window(glade_xml_file)
+VDIPWindow::VDIPWindow(const char *ui_xml_file) : UI_Gtk_Window(ui_xml_file)
 {
   init();
 

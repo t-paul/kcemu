@@ -94,7 +94,7 @@ class SaveMemoryWindow : public UI_Gtk_Window
   static void on_adjustment_length_value_changed(GtkAdjustment *adjustment, gpointer user_data);
 
  public:
-  SaveMemoryWindow(const char *glade_xml_file);
+  SaveMemoryWindow(const char *ui_xml_file);
   virtual ~SaveMemoryWindow(void);
 };
 

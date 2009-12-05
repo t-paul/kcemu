@@ -201,7 +201,7 @@ PlotterWindow::sf_show_plot_area(GtkToggleButton *widget, gpointer data)
   plotter->set_show_plot_area(gtk_toggle_button_get_active(widget));
 }
 
-PlotterWindow::PlotterWindow(const char *glade_xml_file) : UI_Gtk_Window(glade_xml_file)
+PlotterWindow::PlotterWindow(const char *ui_xml_file) : UI_Gtk_Window(ui_xml_file)
 {
   _display_refresh = 20;
   _cmd_plotter_toggle = new CMD_ui_plotter_window_toggle(this);

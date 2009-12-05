@@ -123,7 +123,7 @@ const char * OptionsWindow::TARGET_WIDGET1_KEY = "target_widget1_key";
 const char * OptionsWindow::TARGET_WIDGET2_KEY = "target_widget2_key";
 const char * OptionsWindow::TARGET_WIDGET3_KEY = "target_widget3_key";
 
-OptionsWindow::OptionsWindow(const char *glade_xml_file) : UI_Gtk_Window(glade_xml_file) {
+OptionsWindow::OptionsWindow(const char *ui_xml_file) : UI_Gtk_Window(ui_xml_file) {
     _current_profile = NULL;
     _current_kc_type = KC_TYPE_NONE;
     _open_rom_last_path = NULL;

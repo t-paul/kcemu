@@ -52,7 +52,7 @@ public:
 };
 
 
-ModuleWindow::ModuleWindow(const char *glade_xml_file) : UI_Gtk_Window(glade_xml_file)
+ModuleWindow::ModuleWindow(const char *ui_xml_file) : UI_Gtk_Window(ui_xml_file)
 {
   _cmd = new CMD_ui_module_window_toggle(this);
   init2(); // FIXME: can't use delayed init()

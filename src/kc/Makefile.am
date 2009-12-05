@@ -23,8 +23,7 @@ AM_CPPFLAGS = \
 	-DKCEMU_LOCALEDIR=\"$(localedir)\" \
 	-DDEBUG \
 	$(GTK_CFLAGS) \
-	$(SDL_CFLAGS) \
-	$(LIBGLADE_CFLAGS)
+	$(SDL_CFLAGS)
 
 LINUX_EXTRA_kcemu_SOURCES = mod_v24.cc mod_js.cc
 MINGW_EXTRA_kcemu_SOURCES = kcemu.rc
@@ -192,7 +191,6 @@ kcemu_LDADD = \
 	$(Z80EX_LIBS)			\
 	$(GTK_LIBS)			\
 	$(SDL_LIBS)			\
-	$(LIBGLADE_LIBS)		\
 	$(SNDFILE_LIBS)			\
 	$(AUDIOFILE_LIBS)		\
 	$(MP3LAME_LIBS)			\

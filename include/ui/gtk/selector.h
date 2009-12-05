@@ -94,7 +94,7 @@ protected:
     static gboolean on_window_delete_event(GtkWidget *widget, GdkEvent *event, gpointer user_data);
 
 public:
-    ProfileSelectorWindow(const char *glade_xml_file);
+    ProfileSelectorWindow(const char *ui_xml_file);
     virtual ~ProfileSelectorWindow(void);
     
     char * get_selected_profile(void);

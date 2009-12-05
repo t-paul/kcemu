@@ -47,7 +47,7 @@ class DialogWindow : public UI_Gtk_Window, public CMD
   } _w;
   
  public:
-  DialogWindow(const char *glade_xml_file);
+  DialogWindow(const char *ui_xml_file);
   virtual ~DialogWindow(void);
   
  protected:

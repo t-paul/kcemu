@@ -22,9 +22,12 @@
 #ifndef __kc_memstream_h
 #define __kc_memstream_h
 
+#include <stdio.h>
 #include <string.h>
 
 #include "kc/config.h"
+
+using namespace std;
 
 class membuf : public std::streambuf
 {

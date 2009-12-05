@@ -20,7 +20,6 @@ SUBDIRS = \
 	rpm \
 	conf \
 	setup \
-	glade \
 	po 
 
 EXTRA_DIST = VERSION README.de TODO THANKS COPYING COPYING.de

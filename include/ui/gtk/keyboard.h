@@ -78,7 +78,7 @@ class KeyboardWindow : public UI_Gtk_Window
   static gboolean sf_key_release(GtkWidget *widget, GdkEventKey *event, gpointer data);
 
  public:
-  KeyboardWindow(const char *glade_xml_file);
+  KeyboardWindow(const char *ui_xml_file);
   virtual ~KeyboardWindow(void);
 };
 

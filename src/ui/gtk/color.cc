@@ -53,7 +53,7 @@ ColorWindow::sf_adjustment_changed(GtkAdjustment *adj, double *data)
   CMD_EXEC("ui-update-colortable");
 }
 
-ColorWindow::ColorWindow(const char *glade_xml_file) : UI_Gtk_Window(glade_xml_file)
+ColorWindow::ColorWindow(const char *ui_xml_file) : UI_Gtk_Window(ui_xml_file)
 {
   _saturation_fg = Preferences::instance()->get_int_value("color_fg_saturation", 80) / 100.0;
   _brightness_fg = Preferences::instance()->get_int_value("color_fg_brightness", 95) / 100.0;

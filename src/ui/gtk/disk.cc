@@ -20,6 +20,7 @@
  */
 
 #include <stdio.h>
+#include <pango-1.0/pango/pango-layout.h>
 
 #include "kc/system.h"
 
@@ -120,7 +121,7 @@ public:
   }
 };
 
-DiskWindow::DiskWindow(const char *glade_xml_file) : UI_Gtk_Window(glade_xml_file)
+DiskWindow::DiskWindow(const char *ui_xml_file) : UI_Gtk_Window(ui_xml_file)
 {
   init();
 
@@ -182,6 +183,24 @@ DiskWindow::init(void)
     "ui-disk-detach-3",
     "ui-disk-detach-4",
   };
+  static const char * disk_files[] = {
+    "a5105sys.dump",
+    "caos.dump",
+    "cpmz9.dump",
+    "microdos.dump",
+    "tools.dump",
+    "z1013cpm.dump",
+    "z1013gdc.dump",
+    NULL
+  };
+
+  GtkTreeIter iter;
+  GtkListStore *store = gtk_list_store_new(1, G_TYPE_STRING);
+//  for (int a = 0;disk_files[a] != NULL;a++)
+//    {
+//      gtk_list_store_append(store, &iter);
+//      gtk_list_store_set(store, &iter, 0, disk_files[a], -1);
+//    }
 
   /*
    *  disk window
@@ -196,6 +215,14 @@ DiskWindow::init(void)
   _w.combo[1] = get_widget("disk_comboboxentry_2");
   _w.combo[2] = get_widget("disk_comboboxentry_3");
   _w.combo[3] = get_widget("disk_comboboxentry_4");
+
+  for (int a = 0;a < 4;a++)
+    {
+      gtk_combo_box_set_model(GTK_COMBO_BOX(_w.combo[a]), GTK_TREE_MODEL(store));
+      GtkCellRenderer *renderer = gtk_cell_renderer_text_new();
+      gtk_cell_layout_pack_start(GTK_CELL_LAYOUT(_w.combo[a]), renderer, TRUE);
+      gtk_cell_layout_set_attributes(GTK_CELL_LAYOUT(_w.combo[a]), renderer, "text", 0, NULL);
+    }
 
   _w.browse[0] = get_widget("disk_button_open_1");
   _w.browse[1] = get_widget("disk_button_open_2");
