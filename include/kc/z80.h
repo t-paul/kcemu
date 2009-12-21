@@ -22,21 +22,6 @@
 #ifndef __kc_z80_h
 #define __kc_z80_h
 
-/*
- *  we include a patched version of the Z80-core include file
- *  due to name conflicts...
- *
- *  it uses a 'struct Z80' that clashes with the 'class Z80'
- *  we want define here.
- *
- *  'struct Z80' is changed to 'struct _Z80'
- *
- *  another problem is the union pair that is used in pair.h which
- *  is part of the STL.
- *
- *  'union pair' is changed to 'union reg_pair'
- */
-
 #include <list>
 
 #include <z80ex/z80ex.h>
