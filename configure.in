@@ -136,16 +136,16 @@ dnl -----------------------------------
 dnl  check on which system we will run
 dnl -----------------------------------
 
-AM_CONDITIONAL(TARGET_BEOS,  false)
 AM_CONDITIONAL(TARGET_MINGW, false)
 AM_CONDITIONAL(TARGET_LINUX, false)
+AM_CONDITIONAL(TARGET_FREEBSD, false)
 
 case "$host_os" in
 	beos)
-		HOST_OS="BeOS"
-		HOST_OS_BEOS=1
-		AM_CONDITIONAL(TARGET_BEOS, true)
-		AC_DEFINE_UNQUOTED(HOST_OS_BEOS, $HOST_OS_BEOS, "host os is BeOS")
+		AC_MSG_ERROR([
+***
+*** BeOS is not supported anymore.
+***])
 		;;
 		
 	mingw32*)
@@ -158,7 +158,13 @@ case "$host_os" in
 		LDFLAGS="$LDFLAGS $use_ms_bitfields -mwindows"
 		;;
 
-	*)
+	freebsd*)
+		HOST_OS="FreeBSD"
+		HOST_OS_FREEBSD=1
+		AM_CONDITIONAL(TARGET_FREEBSD, true)
+		AC_DEFINE_UNQUOTED(HOST_OS_FREEBSD, $HOST_OS_FREEBSD, "host os is FreeBSD")
+		;; 
+	*) 
 		HOST_OS="Linux"
 		HOST_OS_LINUX=1
 		AM_CONDITIONAL(TARGET_LINUX, true)
@@ -241,6 +247,8 @@ dnl -----------------------
 dnl  initialize pkg-config
 dnl -----------------------
 PKG_PROG_PKG_CONFIG(0.20)
+PKG_CHECK_MODULES(X11, x11 >= 1.2)
+PKG_CHECK_MODULES(XMU, xmu >= 1.0)
 
 dnl -----------------------
 dnl  check for z80ex
@@ -437,17 +445,16 @@ dnl -------------------------------------
 dnl  check for system specific libraries
 dnl -------------------------------------
 
-if test x"$HOST_OS" = "xLinux" -o x"$HOST_OS" = "xMinGW"; then
-	dnl --------------
-	dnl  check for OSS
-	dnl --------------
+dnl --------------
+dnl  check for OSS
+dnl --------------
 
-	AC_CHECK_HEADERS(sys/soundcard.h)
-	AC_CHECK_HEADERS(machine/soundcard.h)
-	if test x$ac_cv_header_sys_soundcard_h = xyes -o x$ac_cv_header_machine_soundcard_h = xyes; then
-		AC_DEFINE(HAVE_OSS, 1, "have oss")
-	else
-		AC_MSG_WARN([
+AC_CHECK_HEADERS(sys/soundcard.h)
+AC_CHECK_HEADERS(machine/soundcard.h)
+if test x$ac_cv_header_sys_soundcard_h = xyes -o x$ac_cv_header_machine_soundcard_h = xyes; then
+	AC_DEFINE(HAVE_OSS, 1, "have oss")
+else
+	AC_MSG_WARN([
 ***
 *** Unable to find OSS header file soundcard.h! The audio loader
 *** module which requires OSS will be disabled.
@@ -455,84 +462,50 @@ if test x"$HOST_OS" = "xLinux" -o x"$HOST_OS" = "xMinGW"; then
 *** This is NO ERROR. It only means you can't directly load programs
 *** by reading directly from the soundcard line input.
 ***])
-	fi
+fi
 
-	dnl ------------------
-	dnl  check for libgtk
-	dnl ------------------
+dnl ------------------
+dnl  check for libgtk
+dnl ------------------
 
-	if ! test "x$enable_gtktest" = "xno" ; then
-		AM_PATH_GTK_2_0(2.16.5, have_libgtk=yes, have_libgtk=no)
-	else
-		have_libgtk=yes
-		gtk_config_major_version=?
-		gtk_config_minor_version=?
-		gtk_config_micro_version=?
-		AC_MSG_CHECKING([for GTK library])
-		AC_MSG_RESULT([gtk-check disabled, using only GTK_CFLAGS/GTK_LIBS environment variables])
-		AC_SUBST(GTK_CFLAGS, $GTK_CFLAGS)
-		AC_SUBST(GTK_LIBS, $GTK_LIBS)
-	fi
+if ! test "x$enable_gtktest" = "xno" ; then
+	AM_PATH_GTK_2_0(2.16.5, have_libgtk=yes, have_libgtk=no)
+else
+	have_libgtk=yes
+	gtk_config_major_version=?
+	gtk_config_minor_version=?
+	gtk_config_micro_version=?
+	AC_MSG_CHECKING([for GTK library])
+	AC_MSG_RESULT([gtk-check disabled, using only GTK_CFLAGS/GTK_LIBS environment variables])
+	AC_SUBST(GTK_CFLAGS, $GTK_CFLAGS)
+	AC_SUBST(GTK_LIBS, $GTK_LIBS)
+fi
 
-	if test x$have_libgtk = xyes; then
-		AC_DEFINE(HAVE_LIBGTK, 1, "have libgtk")
-	fi
+if test x$have_libgtk = xyes; then
+	AC_DEFINE(HAVE_LIBGTK, 1, "have libgtk")
+fi
 
-	dnl --------------------------------------
-	dnl  check for libSDL if sound is enabled
-	dnl --------------------------------------
+dnl --------------------------------------
+dnl  check for libSDL if sound is enabled
+dnl --------------------------------------
 
-	AM_PATH_SDL(1.2.0, have_libsdl=yes, have_libsdl=no)
+AM_PATH_SDL(1.2.0, have_libsdl=yes, have_libsdl=no)
 
-	if test x$have_libsdl = xyes; then
-		AC_DEFINE(HAVE_LIBSDL, 1, "have libSDL")
-	else
-		if test x$enable_sound = xyes; then
-			AC_MSG_WARN([
+if test x$have_libsdl = xyes; then
+	AC_DEFINE(HAVE_LIBSDL, 1, "have libSDL")
+else
+	if test x$enable_sound = xyes; then
+	AC_MSG_WARN([
 ***
 *** Unable to find SDL library (see http://www.libsdl.org/)
 *** Sound is disabled!
 ***])
-			enable_sound=no
-		fi
+	enable_sound=no
+fi
 	fi
 
-	if test x$enable_sound = xyes; then
-		AC_DEFINE(ENABLE_SOUND, 1, "enable sound")
-	fi
-
-	dnl -----------------------------------
-	dnl  check which user interface to use
-	dnl -----------------------------------
-
-	AC_MSG_CHECKING(which user interface to use)
-	if test x$have_libgtk = xyes -a \( "x$with_ui" = "xgtk" -o "x$with_ui" = "xauto" \); then
-		use_ui="GTK - The GIMP Toolkit"
-		AC_DEFINE(USE_UI_GTK, 1, "use UI GTK")
-		AM_CONDITIONAL(TARGET_UI_GTK, true)
-		AM_CONDITIONAL(TARGET_UI_SDL, false)
-	elif test x$have_libsdl = xyes -a \( "x$with_ui" = "xsdl" -o "x$with_ui" = "xauto" \); then
-		use_ui="SDL - Simple DirectMedia Layer"
-		AC_DEFINE(USE_UI_SDL, 1, "use UI SDL")
-		AM_CONDITIONAL(TARGET_UI_GTK, false)
-		AM_CONDITIONAL(TARGET_UI_SDL, true)
-	else
-		if test "x$with_ui" = "xauto"; then
-			AC_MSG_ERROR([
-***
-*** Couldn't find any user interface library! Currently it's
-*** possible to use GTK (www.gtk.org) or libSDL (www.libsdl.org).
-***])
-		else
-			AC_MSG_ERROR([
-***
-*** Specified user interface library is not valid: '$with_ui'.
-*** Please use --with-ui=gtk or --with-ui=sdl.
-***])
-		fi
-	fi
-	AC_DEFINE_UNQUOTED(USE_UI, "$use_ui", "user interface")
-	AC_MSG_RESULT($use_ui)
+if test x$enable_sound = xyes; then
+	AC_DEFINE(ENABLE_SOUND, 1, "enable sound")
 fi
 
 AC_OUTPUT([
@@ -633,7 +606,6 @@ echo "- host system:     $host"
 echo "- architecture:    $HOST_OS"
 echo "- debug level:     $DBG_LEVEL"
 echo "- install prefix:  $prefix"
-echo "- user interface:  $use_ui"
 echo ""
 echo -n "- libs:"
 comma=""

@@ -33,6 +33,10 @@ INCLUDES = \
 	$(GTK_CFLAGS) \
 	$(SDL_CFLAGS)
 
+AM_CPPFLAGS = \
+	$(X11_CFLAGS) \
+	$(XMU_CFLAGS)
+
 libui_gtk_a_SOURCES = \
 	gtkledline.c		\
 	ui_gtk.cc		\
@@ -77,5 +81,5 @@ libui_gtk_a_SOURCES = \
 if TARGET_LINUX
 bin_PROGRAMS = kcemu-remote
 kcemu_remote_SOURCES = kcemu-remote.c
-kcemu_remote_LDADD = -L/usr/X11R6/lib -lX11 -lXmu $(INTLLIBS)
+kcemu_remote_LDADD = $(X11_LIBS) $(XMU_LIBS) $(INTLLIBS)
 endif

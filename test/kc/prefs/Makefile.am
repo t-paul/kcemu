@@ -11,6 +11,10 @@ if TARGET_LINUX
 SYSLIB=../../../src/sys/linux/libsys_linux.a
 endif
 
+if TARGET_FREEBSD
+SYSLIB=../../../src/sys/linux/libsys_linux.a
+endif
+
 if TARGET_MINGW
 SYSLIB=../../../src/sys/mingw/libsys_mingw.a
 endif

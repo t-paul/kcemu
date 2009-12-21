@@ -8,6 +8,10 @@ if TARGET_LINUX
 noinst_PROGRAMS = kcemu-send
 endif
 
+if TARGET_FREEBSD
+noinst_PROGRAMS = kcemu-send
+endif
+
 if USE_INCLUDED_GETOPT
 GETOPTLIB = ../getopt/libgetopt.a
 endif
@@ -27,6 +31,7 @@ AM_CPPFLAGS = \
 
 LINUX_EXTRA_kcemu_SOURCES = mod_v24.cc mod_js.cc
 MINGW_EXTRA_kcemu_SOURCES = kcemu.rc
+FREEBSD_EXTRA_kcemu_SOURCES = mod_v24.cc
 
 if TARGET_LINUX
 EXTRA_kcemu_SOURCES = $(LINUX_EXTRA_kcemu_SOURCES)
@@ -36,7 +41,11 @@ if TARGET_MINGW
 EXTRA_kcemu_SOURCES = $(MINGW_EXTRA_kcemu_SOURCES)
 endif
 
-EXTRA_DIST = $(LINUX_EXTRA_kcemu_SOURCES) $(MINGW_EXTRA_kcemu_SOURCES)
+if TARGET_FREEBSD
+EXTRA_kcemu_SOURCES = $(FREEBSD_EXTRA_kcemu_SOURCES)
+endif
+
+EXTRA_DIST = $(LINUX_EXTRA_kcemu_SOURCES) $(MINGW_EXTRA_kcemu_SOURCES) $(FREEBSD_EXTRA_kcemu_SOURCES)
 
 kcemu_SOURCES = \
 	kc.cc		\
@@ -147,27 +156,17 @@ kcemu_SOURCES = \
 	disass.cc	\
 	$(EXTRA_kcemu_SOURCES)
 
-if TARGET_UI_GTK
-UILIBS_GTK = ../ui/gtk/libui_gtk.a
-endif
-
-if TARGET_UI_SDL
-UILIBS_SDL = ../ui/sdl/libui_sdl.a ../ui/sdlmtk/libsdlmtk.a -lSDL_ttf
-endif
 
 if TARGET_LINUX
-UILIBS_LINUX = $(UILIBS_GTK) $(UILIBS_SDL)
 SYSLIBS_LINUX = ../sys/linux/libsys_linux.a
 endif
 
-if TARGET_MINGW
-UILIBS_MINGW = $(UILIBS_GTK) $(UILIBS_SDL)
-SYSLIBS_MINGW = ../sys/mingw/libsys_mingw.a -lwinmm
+if TARGET_FREEBSD
+SYSLIBS_FREEBSD = ../sys/linux/libsys_linux.a
 endif
 
-if TARGET_BEOS
-UILIBS_BEOS = ../ui/beos/libui_beos.a
-SYSLIBS_BEOS = ../sys/beos/libsys_beos.a -lbe
+if TARGET_MINGW
+SYSLIBS_MINGW = ../sys/mingw/libsys_mingw.a -lwinmm
 endif
 
 kcemu_LDADD = \
@@ -180,9 +179,7 @@ kcemu_LDADD = \
 	../libtape/libtape.a		\
 	../libdisk/libdisk.a		\
 	../libaudio/libaudio.a		\
-	$(UILIBS_BEOS)			\
-	$(UILIBS_MINGW)			\
-	$(UILIBS_LINUX)			\
+	../ui/gtk/libui_gtk.a		\
 	../ui/generic/libui_generic.a	\
 	../ui/libui.a			\
 	prefs/libprefs.a		\
@@ -196,9 +193,9 @@ kcemu_LDADD = \
 	$(MP3LAME_LIBS)			\
 	$(VORBIS_LIBS)			\
 	$(F_L_A_C_LIBS)			\
-	$(SYSLIBS_BEOS)			\
 	$(SYSLIBS_MINGW)		\
 	$(SYSLIBS_LINUX)		\
+	$(SYSLIBS_FREEBSD)		\
 	$(GETOPTLIB)			\
 	$(INTLLIBS)
 

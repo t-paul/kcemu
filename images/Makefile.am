@@ -121,6 +121,10 @@ if TARGET_LINUX
 icon_DATA = $(ICONS)
 endif
 
+if TARGET_FREEBSD
+icon_DATA = $(ICONS)
+endif
+
 if TARGET_MINGW
 icon_DATA = $(ICONS) $(WINICONS)
 endif

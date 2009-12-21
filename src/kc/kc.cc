@@ -155,34 +155,7 @@
 #include "kc/c80/display.h"
 #include "kc/c80/keyboard.h"
 
-#ifdef USE_UI_GTK
 # include "ui/gtk/ui_gtk.h"
-#endif /* USE_UI_GTK */
-#ifdef USE_UI_SDL
-# include "ui/sdl/ui_sdl0.h"
-# include "ui/sdl/ui_sdl1.h"
-# include "ui/sdl/ui_sdl3.h"
-# include "ui/sdl/ui_sdl4.h"
-# include "ui/sdl/ui_sdl8.h"
-# include "ui/sdl/ui_sdl9.h"
-# define UI_0 UI_SDL0
-# define UI_1 UI_SDL1
-# define UI_3 UI_SDL3
-# define UI_4 UI_SDL4
-# define UI_8 UI_SDL8
-# define UI_9 UI_SDL9
-#endif /* USE_UI_SDL */
-
-#ifdef HOST_OS_BEOS
-# include "ui/beos/ui_beos1.h"
-# include "ui/beos/ui_beos3.h"
-# include "ui/beos/ui_beos4.h"
-# include "ui/beos/ui_beos8.h"
-# define UI_1 UI_BeOS1
-# define UI_3 UI_BeOS3
-# define UI_4 UI_BeOS4
-# define UI_8 UI_BeOS8
-#endif /* HOST_OS_BEOS */
 
 #include "libdbg/dbg.h"
 

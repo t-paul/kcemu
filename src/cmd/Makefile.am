@@ -6,6 +6,7 @@ INCLUDES = \
 	-I../../include
 
 AM_CPPFLAGS = \
+	$(CPPFLAGS) \
 	-DVERSION=\"$(VERSION)\"
 
 libcmd_a_SOURCES = \

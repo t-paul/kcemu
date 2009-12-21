@@ -4,10 +4,10 @@ if TARGET_LINUX
 SUBDIRS = linux
 endif
 
-if TARGET_MINGW
-SUBDIRS = mingw
+if TARGET_FREEBSD
+SUBDIRS = linux
 endif
 
-if TARGET_BEOS
-SUBDIRS = beos
+if TARGET_MINGW
+SUBDIRS = mingw
 endif
