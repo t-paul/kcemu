@@ -20,7 +20,7 @@
  */
 
 #include <string.h>
-#include <malloc.h>
+#include <stdlib.h>
 #include <iostream>
 
 #include "kc/system.h"

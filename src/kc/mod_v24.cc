@@ -22,6 +22,7 @@
 #include <fcntl.h>
 #include <stdio.h>
 #include <unistd.h>
+#include <signal.h>
 #include <sys/stat.h>
 #include <sys/types.h>
 #include <sys/types.h>
@@ -430,6 +431,8 @@ ModuleV24::set_signal_handler(int fd, void (*sig_func)(int))
   DBG(1, form("KCemu/ModuleV24/signal",
               "setting signal handler for fd = %d\n", fd));
 
+  memset(&saio, 0, sizeof(saio));
+
   if (fcntl(fd, F_SETOWN, getpid()) < 0)
     cerr << "can't set owner on filedescriptor " << fd << " to " << getpid() << endl;
   if (fcntl(fd, F_SETFL, FASYNC) < 0)
@@ -439,7 +442,6 @@ ModuleV24::set_signal_handler(int fd, void (*sig_func)(int))
   saio.sa_handler = sig_func;
   sigemptyset(&saio.sa_mask);
   saio.sa_flags = 0;
-  saio.sa_restorer = NULL;
 
   sigaction(SIGIO, &saio, (struct sigaction *)NULL);
 }

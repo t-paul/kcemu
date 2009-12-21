@@ -22,7 +22,7 @@
 #ifndef __kc_ic_h
 #define __kc_ic_h
 
-#include <malloc.h>
+#include <stdlib.h>
 #include <string.h>
 #include <iostream>
 
