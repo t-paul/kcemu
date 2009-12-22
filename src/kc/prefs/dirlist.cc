@@ -55,7 +55,10 @@ DirectoryList::DirectoryList(string basedir) : _basedir(basedir) {
     struct dirent *entry;
     
     dir = opendir(_basedir.c_str());
-    while(dir != NULL) {
+    if (dir == NULL)
+        return;
+
+    while (true) {
         entry = readdir(dir);
         if (entry == NULL)
             break;
