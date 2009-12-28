@@ -193,6 +193,7 @@ kcemu_LDADD = \
 	$(MP3LAME_LIBS)			\
 	$(VORBIS_LIBS)			\
 	$(F_L_A_C_LIBS)			\
+	$(LIBTHEORA_LIBS)		\
 	$(SYSLIBS_MINGW)		\
 	$(SYSLIBS_LINUX)		\
 	$(SYSLIBS_FREEBSD)		\

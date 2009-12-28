@@ -154,6 +154,9 @@
 /* "have libnsndfile version 1.0.x" */
 #undef HAVE_LIBSNDFILE_V1
 
+/* "have libtheoraenc" */
+#undef HAVE_LIBTHEORA
+
 /* "have libvorbis" */
 #undef HAVE_LIBVORBIS
 

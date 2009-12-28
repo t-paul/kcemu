@@ -30,6 +30,7 @@ EXTRA_DIST = $(KEYMAPS)
 
 INCLUDES = \
 	-I../../../include \
+	$(LIBTHEORA_CFLAGS) \
 	$(GTK_CFLAGS) \
 	$(SDL_CFLAGS)
 
@@ -76,6 +77,7 @@ libui_gtk_a_SOURCES = \
 	image.cc		\
 	wav.cc			\
 	plotter.cc		\
+	theora.cc		\
 	hedit.cc
 
 if TARGET_LINUX

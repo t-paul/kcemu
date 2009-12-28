@@ -20,6 +20,7 @@ AC_ARG_ENABLE(libaudiofile, [  --enable-libaudiofile   enable usage of libaudiof
 AC_ARG_ENABLE(libsndfile,   [  --enable-libsndfile     enable usage of libsndfile if present [default=yes]],,enable_libsndfile=yes)
 AC_ARG_ENABLE(libflac,      [  --enable-libflac        enable usage of libFLAC 1.0.x if present [default=yes]],,enable_libflac=yes)
 AC_ARG_ENABLE(libvorbis,    [  --enable-libvorbis      enable usage of libvorbis if present [default=yes]],,enable_libvorbis=yes)
+AC_ARG_ENABLE(libtheora,    [  --enable-libtheora      enable usage of libtheora if present [default=yes]],,enable_libtheora=yes)
 AC_ARG_ENABLE(libmp3lame,   [  --enable-libmp3lame     enable usage of libmp3lame if present [default=yes]],,enable_libmp3lame=yes)
 AC_ARG_ENABLE(ms-bitfields, [  --enable-ms-bitfields   enable usage of gcc -mms-bitfields on MinGW [default=yes]],,enable_ms_bitfields=yes)
 AC_ARG_WITH(ui,             [  --with-ui=UI            use User Interface UI (gtk or sdl) [default=auto]],,with_ui=auto)
@@ -310,6 +311,30 @@ if test x$have_libz80ex = xno; then
 ***
 *** Can not find required library z80ex.
 ***])
+fi
+
+dnl ---------------------------------
+dnl  check for theoraenc library
+dnl ---------------------------------
+min_theoraenc="1.1.1"
+if test "x$enable_libtheora" = xyes; then
+	PKG_CHECK_MODULES(LIBTHEORA, theoraenc >= $min_theoraenc,
+	[
+                AC_DEFINE(HAVE_LIBTHEORA, 1, "have libtheoraenc")
+		AC_SUBST(LIBTHEORA_CFLAGS)
+		AC_SUBST(LIBTHEORA_LIBS)
+	],[
+		AC_MSG_WARN([
+***
+*** Unable to find theora library (with version number >= $min_theoraenc)!
+***
+*** This is NO ERROR. It only means you can't capture video in
+*** theora/ogg format.
+***
+*** If you are still annoyed by this warning you can tell ./configure
+*** not to check for this library by using --disable-libtheora
+***])
+	])
 fi
 
 dnl ---------------------
