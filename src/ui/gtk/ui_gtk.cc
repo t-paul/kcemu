@@ -20,6 +20,7 @@
  */
 
 #include <iostream>
+
 #include <iomanip>
 
 #include <signal.h> /* FIXME: only for testing */
@@ -79,6 +80,7 @@
 #include "ui/gtk/ui_gtk_c80.h"
 
 #include "ui/generic/ui_0.h"
+
 
 #include "libdbg/dbg.h"
 
@@ -431,6 +433,7 @@ UI_Gtk::gtk_sync(void) {
 UI_Gtk::UI_Gtk(void) {
     _ui = 0;
     _init = false;
+    _video_encoder = new DummyVideoEncoder();
 }
 
 UI_Gtk::~UI_Gtk(void) {
@@ -600,11 +603,14 @@ UI_Gtk::allocate_colors(double saturation_fg, double saturation_bg, double brigh
     for (list<UI_Color>::const_iterator it = colors.begin();it != colors.end();it++, idx++) {
         if ((*it).is_rgb()) {
             _main_window->allocate_color_rgb(idx, (*it).get_red(), (*it).get_green(), (*it).get_blue());
+            _video_encoder->allocate_color_rgb(idx, (*it).get_red(), (*it).get_green(), (*it).get_blue());
         } else {
             if ((*it).is_bg()) {
                 _main_window->allocate_color_hsv(idx, (*it).get_hue(), saturation_bg, brightness_bg);
+                _video_encoder->allocate_color_hsv(idx, (*it).get_hue(), saturation_bg, brightness_bg);
             } else {
                 _main_window->allocate_color_hsv(idx, (*it).get_hue(), saturation_fg, brightness_fg);
+                _video_encoder->allocate_color_hsv(idx, (*it).get_hue(), saturation_fg, brightness_fg);
             }
         }
     }
@@ -658,6 +664,7 @@ UI_Gtk::update(bool full_update, bool clear_cache) {
     UI_Base *ui = _ui->get_generic_ui();
     ui->generic_update(scanline, memaccess, clear_cache);
     _main_window->update(ui, get_width(), get_height(), full_update);
+    _video_encoder->encode(ui->get_buffer(), ui->get_dirty_buffer());
     memset(ui->get_dirty_buffer(), 0, ui->get_dirty_buffer_size());
     processEvents();
     gtk_sync();

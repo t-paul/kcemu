@@ -34,4 +34,13 @@ public:
   virtual void close(void) = 0;
 };
 
+class DummyVideoEncoder : public VideoEncoder
+{
+  virtual bool init(const char *filename, int width, int height, double quality) { return true; }
+  virtual void allocate_color_rgb(int idx, int r, int g, int b) {}
+  virtual void allocate_color_hsv(int idx, double h, double s, double v) {}
+  virtual bool encode(byte_t *image, byte_t *dirty) { return true; }
+  virtual void close(void) {}
+};
+
 #endif /* __ui_gtk_videoenc_h */
