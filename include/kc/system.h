@@ -23,7 +23,6 @@
 #define __kc_system_h
 
 #include "kc/config.h"
-#include "sys/sysdep.h"
 
 #ifdef ENABLE_NLS
 # ifdef USE_INCLUDED_LIBINTL

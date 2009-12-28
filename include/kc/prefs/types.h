@@ -22,6 +22,7 @@
 #ifndef __kc_prefs_types_h
 #define __kc_prefs_types_h
 
+#include <stdarg.h>
 #include <list>
 #include <string>
 

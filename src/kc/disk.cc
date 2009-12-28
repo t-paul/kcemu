@@ -30,6 +30,8 @@
 
 #include "cmd/cmd.h"
 
+#include "sys/sysdep.h"
+
 #include "ui/status.h"
 
 #include "libdbg/dbg.h"

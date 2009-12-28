@@ -20,6 +20,7 @@
  */
 
 #include <time.h>
+#include <stdio.h>
 
 #include <iostream>
 #include <iomanip>
@@ -28,6 +29,8 @@
 
 #include "kc/kc.h"
 #include "kc/mod_rtc.h"
+
+#include "sys/sysdep.h"
 
 ModuleRTC::ModuleRTC(ModuleRTC &tmpl) :
   ModuleInterface(tmpl.get_name(), tmpl.get_id(), tmpl.get_type())

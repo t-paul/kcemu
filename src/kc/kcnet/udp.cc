@@ -29,6 +29,8 @@
 
 #include "kc/kcnet/udp.h"
 
+#include "sys/sysdep.h"
+
 #include "libdbg/dbg.h"
 
 UDP::UDP(void)

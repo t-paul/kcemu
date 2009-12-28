@@ -33,6 +33,8 @@
 
 #include "kc/kcnet/ipraw.h"
 
+#include "sys/sysdep.h"
+
 #include "libdbg/dbg.h"
 
 IPRAW::IPRAW(void)

@@ -24,6 +24,8 @@
 #include "kc/kc.h"
 #include "kc/prefs/prefs.h"
 
+#include "sys/sysdep.h"
+
 #undef Status
 #include "ui/status.h"
 

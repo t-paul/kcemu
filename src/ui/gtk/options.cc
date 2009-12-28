@@ -56,6 +56,8 @@
 
 #include "kc/mod_list.h"
 
+#include "sys/sysdep.h"
+
 #include "ui/gtk/cmd.h"
 #include "ui/gtk/dialog.h"
 #include "ui/gtk/options.h"

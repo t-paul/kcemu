@@ -31,6 +31,8 @@
 #include "kc/pio.h"
 #include "kc/wav.h"
 
+#include "sys/sysdep.h"
+
 #include "ui/status.h"
 
 #include "libdbg/dbg.h"

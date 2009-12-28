@@ -38,6 +38,8 @@
 #include "kc/memory.h" // text_update()
 #include "kc/keyboard.h"
 
+#include "sys/sysdep.h"
+
 #include "cmd/cmd.h"
 
 #include "ui/error.h"

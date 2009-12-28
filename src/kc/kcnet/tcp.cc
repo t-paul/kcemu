@@ -30,6 +30,8 @@
 
 #include "kc/kcnet/tcp.h"
 
+#include "sys/sysdep.h"
+
 #include "libdbg/dbg.h"
 
 TCP::TCP(void)

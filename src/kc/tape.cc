@@ -36,6 +36,8 @@
 #include "kc/memory.h"
 #include "kc/basicrun.h"
 
+#include "sys/sysdep.h"
+
 #include "ui/ui.h"
 #include "ui/error.h"
 #include "ui/status.h"

@@ -155,6 +155,8 @@
 #include "kc/c80/display.h"
 #include "kc/c80/keyboard.h"
 
+#include "sys/sysdep.h"
+
 # include "ui/gtk/ui_gtk.h"
 
 #include "libdbg/dbg.h"

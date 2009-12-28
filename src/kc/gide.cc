@@ -26,6 +26,8 @@
 
 #include "kc/gide.h"
 
+#include "sys/sysdep.h"
+
 #include "libdbg/dbg.h"
 
 using namespace std;
