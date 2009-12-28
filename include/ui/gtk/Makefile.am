@@ -43,5 +43,6 @@ EXTRA_DIST = \
 	plotter.h		\
 	videoenc.h		\
 	theora.h		\
+	xvid.h  		\
 	vnc.h			\
 	gtkledline.h
