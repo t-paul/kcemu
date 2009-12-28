@@ -51,6 +51,8 @@ protected:
     bool       _auto_skip;
     int        _cur_auto_skip;
     int        _max_auto_skip;
+
+    int        _video_encoder_state;
     
     unsigned long long _callback_value;
     unsigned long long _callback_value_retrace;
@@ -60,7 +62,12 @@ protected:
     MainWindow *_main_window;
 
     VideoEncoder *_video_encoder;
-    
+    VideoEncoder *_video_encoder_dummy;
+    const char   *_video_encoder_filename;
+    double        _video_encoder_quality;
+    int           _video_encoder_frame_skip;
+    bool          _video_encoder_start_on_reset;
+
     UI_Gtk_Window *_debug_window;
     UI_Gtk_Window *_about_window;
     UI_Gtk_Window *_help_window;
@@ -79,6 +86,7 @@ protected:
     UI_Gtk_Window *_wav_window;
     UI_Gtk_Window *_plotter_window;
     UI_Gtk_Window *_save_memory_window;
+    UI_Gtk_Window *_video_window;
     
     FileBrowser      *_file_browser;
     DialogWindow     *_dialog_window;
@@ -164,7 +172,11 @@ public:
             double brightness_bg,
             double black_level,
             double white_level);
-    
+
+    virtual void set_video_encoder(VideoEncoder *encoder);
+    virtual void set_video_encoder_state(int state);
+    virtual void set_video_encoder_config(const char *filename, double quality, int frame_skip, bool start_on_reset);
+
     void gtk_sync(void);
     void gtk_resize(void);
     void gtk_zoom(int zoom);
@@ -182,6 +194,8 @@ public:
     virtual DebugInterface * getDebugInterface(void);
     
     friend class KeyboardWindow; // allow KeyboardWindow to call event handlers
+
+    virtual void reset(bool power_on = false);
 };
 
 #endif /* __ui_ui_gtk_h */

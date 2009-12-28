@@ -79,6 +79,7 @@ libui_gtk_a_SOURCES = \
 	image.cc		\
 	wav.cc			\
 	plotter.cc		\
+	video.cc		\
 	theora.cc		\
 	xvid.cc			\
 	vnc.cc			\

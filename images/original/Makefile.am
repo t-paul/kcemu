@@ -18,6 +18,7 @@ EXTRA_DIST = \
 	player_stop.svg \
 	tux.svg \
 	xedit.svg \
+	xeyes.svg \
 	xmms.svg \
 	bar6.svg \
 	kxkb.svg \

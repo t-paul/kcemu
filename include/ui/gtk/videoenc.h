@@ -27,6 +27,14 @@
 class VideoEncoder
 {
 public:
+  enum
+  {
+    VIDEO_ENCODER_STATE_STOP = 0,
+    VIDEO_ENCODER_STATE_RECORD = 1,
+    VIDEO_ENCODER_STATE_PAUSE = 2,
+  };
+
+public:
   virtual bool init(const char *filename, int width, int height, double quality) = 0;
   virtual void allocate_color_rgb(int idx, int r, int g, int b) = 0;
   virtual void allocate_color_hsv(int idx, double h, double s, double v) = 0;

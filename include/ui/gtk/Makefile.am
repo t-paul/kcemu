@@ -41,6 +41,7 @@ EXTRA_DIST = \
 	hedit.h			\
 	wav.h			\
 	plotter.h		\
+	video.h			\
 	videoenc.h		\
 	theora.h		\
 	xvid.h  		\

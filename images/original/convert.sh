@@ -56,3 +56,4 @@ convert_big kxkb.svg            ../window-keyboard.png $COLOR_GREEN $GAMMA
 convert_big configure.svg       ../window-options.png  $COLOR_GREEN $GAMMA
 convert_big flower.svg          ../window-selector.png $COLOR_GREEN $GAMMA
 convert_big kmplot.svg          ../window-plotter.png  $COLOR_GREEN $GAMMA
+convert_big xeyes.svg           ../window-video.png    $COLOR_GREEN $GAMMA

@@ -1,0 +1,67 @@
+/*
+ *  KCemu -- the KC 85/3 and KC 85/4 Emulator
+ *  Copyright (C) 1997-2009 Torsten Paul
+ *
+ *  $Id$
+ *
+ *  This program is free software; you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation; either version 2 of the License, or
+ *  (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with this program; if not, write to the Free Software
+ *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+ */
+
+#ifndef __ui_gtk_video_h
+#define __ui_gtk_video_h
+
+#include "kc/system.h"
+
+#include "ui/gtk/window.h"
+
+class VideoWindow : public UI_Gtk_Window
+{
+private:
+
+  UI_Gtk *_ui;
+  
+  struct
+  {
+    GtkWidget *encoder_combobox;
+    GtkWidget *filebutton;
+    GtkWidget *fps_combobox;
+    GtkWidget *quality_spinbutton;
+    GtkWidget *start_on_reset_checkbutton;
+    GtkWidget *record_button;
+    GtkWidget *stop_button;
+    GtkWidget *pause_button;
+  } _w;
+
+  CMD *_cmd_video_toggle;
+
+protected:
+  void init(void);
+  void init_fps(GtkComboBox *combobox);
+  void init_encoder(GtkComboBox *combobox);
+
+  void set_state(int state);
+
+  static void on_record_clicked(GtkWidget *widget, gpointer user_data);
+  static void on_stop_clicked(GtkWidget *widget, gpointer user_data);
+  static void on_pause_clicked(GtkWidget *widget, gpointer user_data);
+  static void on_config_changed(GtkWidget *widget, gpointer user_data);
+  static void on_encoder_changed(GtkComboBox *combobox, gpointer user_data);
+
+public:
+  VideoWindow(const char *ui_xml_file, UI_Gtk *ui);
+  virtual ~VideoWindow(void);
+};
+
+#endif /* __ui_gtk_video_h */

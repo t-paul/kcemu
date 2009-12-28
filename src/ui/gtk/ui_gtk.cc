@@ -66,6 +66,7 @@
 #include "ui/gtk/selector.h"
 #include "ui/gtk/savemem.h"
 #include "ui/gtk/plotter.h"
+#include "ui/gtk/video.h"
 
 #include "ui/gtk/ui_gtk0.h"
 #include "ui/gtk/ui_gtk1.h"
@@ -433,7 +434,8 @@ UI_Gtk::gtk_sync(void) {
 UI_Gtk::UI_Gtk(void) {
     _ui = 0;
     _init = false;
-    _video_encoder = new DummyVideoEncoder();
+    _video_encoder_state = VideoEncoder::VIDEO_ENCODER_STATE_STOP;
+    _video_encoder = _video_encoder_dummy = new DummyVideoEncoder();
 }
 
 UI_Gtk::~UI_Gtk(void) {
@@ -455,6 +457,7 @@ UI_Gtk::~UI_Gtk(void) {
     delete _info_window;
     delete _wav_window;
     delete _plotter_window;
+    delete _video_window;
     delete _edit_header_window;
     delete _dialog_window;
     delete _file_browser;
@@ -534,6 +537,7 @@ UI_Gtk::init2(void) {
     _wav_window         = new WavWindow("audio.xml");
     _plotter_window     = new PlotterWindow("plotter.xml");
     _save_memory_window = new SaveMemoryWindow("savemem.xml");
+    _video_window       = new VideoWindow("video.xml", this);
     
     _edit_header_window = new EditHeaderWindow();
     _file_browser       = new FileBrowser();
@@ -578,7 +582,8 @@ UI_Gtk::init2(void) {
 
 void
 UI_Gtk::gtk_resize(void) {
-    _main_window->resize(get_width(), get_height());
+    if (_main_window->resize(get_width(), get_height()))
+      set_video_encoder_state(VideoEncoder::VIDEO_ENCODER_STATE_STOP);
 }
 
 void
@@ -614,6 +619,64 @@ UI_Gtk::allocate_colors(double saturation_fg, double saturation_bg, double brigh
             }
         }
     }
+}
+
+void
+UI_Gtk::set_video_encoder(VideoEncoder *encoder)
+{
+  if (_video_encoder == encoder)
+    return;
+
+  _video_encoder->close();
+  _video_encoder = (encoder == NULL) ? _video_encoder_dummy : encoder;
+}
+
+void
+UI_Gtk::set_video_encoder_state(int state)
+{
+  if (state == _video_encoder_state)
+    return;
+
+  if (state == VideoEncoder::VIDEO_ENCODER_STATE_PAUSE)
+    {
+      _video_encoder_state = VideoEncoder::VIDEO_ENCODER_STATE_PAUSE;
+    }
+
+  if (state == VideoEncoder::VIDEO_ENCODER_STATE_STOP)
+    {
+      if (_video_encoder_state == VideoEncoder::VIDEO_ENCODER_STATE_RECORD)
+        _video_encoder->close();
+      _video_encoder_state = VideoEncoder::VIDEO_ENCODER_STATE_STOP;
+    }
+
+  if (state == VideoEncoder::VIDEO_ENCODER_STATE_RECORD)
+    {
+      UI_Base *ui = _ui->get_generic_ui();
+      int width = _ui->get_generic_ui()->get_real_width();
+      int height = _ui->get_generic_ui()->get_real_height();
+      if (_video_encoder->init(_video_encoder_filename, width, height, _video_encoder_quality))
+        {
+          // cheat a bit by forcing color table update and repaint
+          CMD_EXEC("ui-update-colortable");
+          _video_encoder->encode(ui->get_buffer(), NULL);
+          _video_encoder_state = VideoEncoder::VIDEO_ENCODER_STATE_RECORD;
+        }
+      else
+        {
+          _video_encoder_state = VideoEncoder::VIDEO_ENCODER_STATE_STOP;
+        }
+    }
+}
+
+void
+UI_Gtk::set_video_encoder_config(const char *filename, double quality, int frame_skip, bool start_on_reset)
+{
+  _video_encoder_filename = filename;
+  _video_encoder_quality = quality;
+  _video_encoder_frame_skip = frame_skip;
+  _video_encoder_start_on_reset = start_on_reset;
+
+  printf("config: %s, %.2f, %d, %d\n", filename, quality, frame_skip, start_on_reset);
 }
 
 void
@@ -660,11 +723,12 @@ UI_Gtk::update(bool full_update, bool clear_cache) {
     if (memaccess != NULL) {
         memaccess->update();
     }
-    
+
     UI_Base *ui = _ui->get_generic_ui();
     ui->generic_update(scanline, memaccess, clear_cache);
     _main_window->update(ui, get_width(), get_height(), full_update);
-    _video_encoder->encode(ui->get_buffer(), ui->get_dirty_buffer());
+    if (_video_encoder_state == VideoEncoder::VIDEO_ENCODER_STATE_RECORD)
+      _video_encoder->encode(ui->get_buffer(), ui->get_dirty_buffer());
     memset(ui->get_dirty_buffer(), 0, ui->get_dirty_buffer_size());
     processEvents();
     gtk_sync();
@@ -836,4 +900,15 @@ UI_Gtk::get_width(void) {
 int
 UI_Gtk::get_height(void) {
     return kcemu_ui_scale * _ui->get_generic_ui()->get_real_height();
+}
+
+void
+UI_Gtk::reset(bool power_on)
+{
+  printf("*** RESET ***\n");
+  if (_video_encoder_start_on_reset)
+    {
+      _video_encoder_start_on_reset = false;
+      set_video_encoder_state(VideoEncoder::VIDEO_ENCODER_STATE_RECORD);
+    }
 }

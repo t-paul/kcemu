@@ -349,6 +349,7 @@ MainWindow::init(void) {
     wire_menu_item("menuitem_module",          "<alt>M", "ui-module-window-toggle");
     wire_menu_item("menuitem_audio",           "<alt>U", "ui-wav-window-toggle");
     wire_menu_item("menuitem_plotter",         "<alt>O", "ui-plotter-window-toggle");
+    wire_menu_item("menuitem_video",           NULL,     "ui-video-window-toggle");
     wire_menu_item("menuitem_reset",           "<alt>R", "emu-reset");
     wire_menu_item("menuitem_power",           "<alt>P", "emu-power-on");
     wire_menu_item("menuitem_quit",            "<alt>Q", "emu-quit");
@@ -404,10 +405,10 @@ MainWindow::show(int width, int height) {
     UI_Gtk_Window::show();
 }
 
-void
+bool
 MainWindow::resize(int width, int height) {
     if ((_width == width) && (_height == height))
-        return;
+        return false;
     
     if (_image)
         gdk_image_destroy(_image);
@@ -428,6 +429,8 @@ MainWindow::resize(int width, int height) {
         delete _dirty_old;
         _dirty_old = NULL;
     }
+
+    return true;
 }
 
 void

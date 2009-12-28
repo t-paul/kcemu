@@ -61,6 +61,7 @@ IMAGES = \
 	media-record.png \
 	media-start.png \
 	media-stop.png \
+	media-pause.png \
 	window-about.png \
 	window-audio.png \
 	window-color.png \
@@ -76,12 +77,14 @@ IMAGES = \
 	window-tape.png \
 	window-thanks.png \
 	window-plotter.png \
+	window-video.png \
 	kcemu.png
 
 UI_XML = \
         about.xml \
         audio.xml \
         plotter.xml \
+        video.xml \
         color.xml \
         legal.xml \
         dialog.xml \

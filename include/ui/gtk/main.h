@@ -96,7 +96,7 @@ public:
     
     virtual void process_events(void);
     virtual void show(int width, int height);
-    virtual void resize(int width, int height);
+    virtual bool resize(int width, int height);
     virtual void update(UI_Base *ui, int image_width, int image_height, bool full_update);
     virtual void allocate_colors(const char *color_names[]);
     virtual void allocate_color_rgb(int idx, int r, int g, int b);

@@ -87,6 +87,13 @@
                       </object>
                     </child>
                     <child>
+                      <object class="GtkMenuItem" id="menuitem_video">
+                        <property name="visible">True</property>
+                        <property name="label" translatable="yes">V_ideo...</property>
+                        <property name="use_underline">True</property>
+                      </object>
+                    </child>
+                    <child>
                       <object class="GtkMenuItem" id="menuitem_vdip">
                         <property name="visible">True</property>
                         <property name="label" translatable="yes">_Vinculum USB...</property>

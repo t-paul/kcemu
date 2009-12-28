@@ -183,6 +183,7 @@ kcemu_LDADD = \
 	../ui/generic/libui_generic.a	\
 	../ui/libui.a			\
 	prefs/libprefs.a		\
+	../libgtkex/libgtkex.a		\
 	../libdbg/libdbg.a		\
 	../cmd/*.o			\
 	$(Z80EX_LIBS)			\
