@@ -35,6 +35,7 @@
 #include "ui/gtk/fbrowse.h"
 #include "ui/gtk/dialog.h"
 #include "ui/gtk/hedit.h"
+#include "ui/gtk/videoenc.h"
 
 #include "cmd/cmd.h"
 #include "cmd/cmdargs.h"
@@ -57,6 +58,8 @@ protected:
     UI_Gtk_Base *_ui;
 
     MainWindow *_main_window;
+
+    VideoEncoder *_video_encoder;
     
     UI_Gtk_Window *_debug_window;
     UI_Gtk_Window *_about_window;

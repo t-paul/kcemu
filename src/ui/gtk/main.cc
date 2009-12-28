@@ -846,7 +846,6 @@ MainWindow::update(UI_Base *ui, int image_width, int image_height, bool full_upd
             if (!dirty[d])
                 continue;
             
-            dirty[d] = 0;
             gdk_draw_image(GTK_WIDGET(_w.drawingarea)->window, _gc, _image, x, y, x, y, s, s);
         }
     }

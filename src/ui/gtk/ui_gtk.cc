@@ -658,6 +658,7 @@ UI_Gtk::update(bool full_update, bool clear_cache) {
     UI_Base *ui = _ui->get_generic_ui();
     ui->generic_update(scanline, memaccess, clear_cache);
     _main_window->update(ui, get_width(), get_height(), full_update);
+    memset(ui->get_dirty_buffer(), 0, ui->get_dirty_buffer_size());
     processEvents();
     gtk_sync();
 }
