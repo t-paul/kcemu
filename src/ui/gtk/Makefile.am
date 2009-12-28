@@ -31,6 +31,7 @@ EXTRA_DIST = $(KEYMAPS)
 INCLUDES = \
 	-I../../../include \
 	$(LIBTHEORA_CFLAGS) \
+	$(VNCSERVER_CFLAGS) \
 	$(GTK_CFLAGS) \
 	$(SDL_CFLAGS)
 
@@ -78,6 +79,7 @@ libui_gtk_a_SOURCES = \
 	wav.cc			\
 	plotter.cc		\
 	theora.cc		\
+	vnc.cc			\
 	hedit.cc
 
 if TARGET_LINUX

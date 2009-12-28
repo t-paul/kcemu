@@ -21,6 +21,7 @@ AC_ARG_ENABLE(libsndfile,   [  --enable-libsndfile     enable usage of libsndfil
 AC_ARG_ENABLE(libflac,      [  --enable-libflac        enable usage of libFLAC 1.0.x if present [default=yes]],,enable_libflac=yes)
 AC_ARG_ENABLE(libvorbis,    [  --enable-libvorbis      enable usage of libvorbis if present [default=yes]],,enable_libvorbis=yes)
 AC_ARG_ENABLE(libtheora,    [  --enable-libtheora      enable usage of libtheora if present [default=yes]],,enable_libtheora=yes)
+AC_ARG_ENABLE(libvncserver, [  --enable-libvncserver   enable usage of libvncserver if present [default=yes]],,enable_libvncserver=yes)
 AC_ARG_ENABLE(libmp3lame,   [  --enable-libmp3lame     enable usage of libmp3lame if present [default=yes]],,enable_libmp3lame=yes)
 AC_ARG_ENABLE(ms-bitfields, [  --enable-ms-bitfields   enable usage of gcc -mms-bitfields on MinGW [default=yes]],,enable_ms_bitfields=yes)
 AC_ARG_WITH(ui,             [  --with-ui=UI            use User Interface UI (gtk or sdl) [default=auto]],,with_ui=auto)
@@ -335,6 +336,33 @@ if test "x$enable_libtheora" = xyes; then
 *** not to check for this library by using --disable-libtheora
 ***])
 	])
+fi
+
+dnl ---------------------------------
+dnl  check for libvncserver
+dnl ---------------------------------
+min_libvncserver="0.9"
+if test "x$enable_libvncserver" = xyes; then
+        AC_CHECK_LIB(vncserver,
+                     rfbGetScreen,
+                     have_libvncserver=yes,
+                     have_libvncserver=no)
+        if test x$have_libvncserver = xyes; then
+                VNCSERVER_LIBS="-lvncserver -lvncclient -ljpeg"
+                AC_SUBST(VNCSERVER_LIBS)
+                AC_DEFINE(HAVE_LIBVNCSERVER, 1, "have libvncserver")
+        else
+		AC_MSG_WARN([
+***
+*** Unable to find libvncserver (with version number >= $min_libvncserver)!
+***
+*** This is NO ERROR. It only means you can't connect to KCemu
+*** using a VNC client.
+***
+*** If you are still annoyed by this warning you can tell ./configure
+*** not to check for this library by using --disable-libvncserver
+***])
+        fi
 fi
 
 dnl ---------------------

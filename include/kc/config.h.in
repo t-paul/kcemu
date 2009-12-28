@@ -157,6 +157,9 @@
 /* "have libtheoraenc" */
 #undef HAVE_LIBTHEORA
 
+/* "have libvncserver" */
+#undef HAVE_LIBVNCSERVER
+
 /* "have libvorbis" */
 #undef HAVE_LIBVORBIS
 

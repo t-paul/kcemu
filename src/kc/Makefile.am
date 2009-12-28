@@ -194,6 +194,7 @@ kcemu_LDADD = \
 	$(VORBIS_LIBS)			\
 	$(F_L_A_C_LIBS)			\
 	$(LIBTHEORA_LIBS)		\
+	$(VNCSERVER_LIBS)               \
 	$(SYSLIBS_MINGW)		\
 	$(SYSLIBS_LINUX)		\
 	$(SYSLIBS_FREEBSD)		\
