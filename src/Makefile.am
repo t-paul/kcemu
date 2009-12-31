@@ -12,6 +12,7 @@ SUBDIRS = \
 	libtape \
 	libdisk \
 	libaudio \
+	libgtkex \
 	cmd \
 	ui \
 	kc \

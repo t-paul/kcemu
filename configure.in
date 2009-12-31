@@ -532,6 +532,7 @@ AC_OUTPUT([
 	include/libtape/Makefile
 	include/libdisk/Makefile
 	include/libaudio/Makefile
+	include/libgtkex/Makefile
 	asm/Makefile
 	asm/autostart/Makefile
 	src/Makefile
@@ -560,6 +561,7 @@ AC_OUTPUT([
 	src/libtape/Makefile
 	src/libdisk/Makefile
 	src/libaudio/Makefile
+	src/libgtkex/Makefile
 	src/util/Makefile
 	test/Makefile
 	test/kc/Makefile

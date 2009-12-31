@@ -140,6 +140,7 @@ src/sys/mingw/Makefile.in
 src/sys/mingw/Makefile
 src/sys/Makefile.in
 src/sys/Makefile
+src/libgtkex/libgtkex-test
 src/ui/beos/Makefile.in
 src/ui/beos/Makefile
 src/ui/generic/Makefile.in
