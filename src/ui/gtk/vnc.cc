@@ -112,7 +112,7 @@ VncVideoEncoder::encode(byte_t *image, byte_t *dirty)
       for (int x = 0;x < _width;x += 8)
         {
           d++;
-          if (!dirty[d])
+          if (dirty && !dirty[d])
             continue;
 
           if (x < x_min)

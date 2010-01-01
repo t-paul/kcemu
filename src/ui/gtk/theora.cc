@@ -47,6 +47,9 @@ TheoraVideoEncoder::~TheoraVideoEncoder(void)
 bool
 TheoraVideoEncoder::init(const char *filename, int width, int height, double quality)
 {
+  if (filename == NULL)
+    return false;
+  
   if (quality < 0)
     quality = 0;
   if (quality > 1)

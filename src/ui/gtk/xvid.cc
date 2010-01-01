@@ -45,6 +45,9 @@ XvidVideoEncoder::~XvidVideoEncoder(void)
 bool
 XvidVideoEncoder::init(const char *filename, int width, int height, double quality)
 {
+  if (filename == NULL)
+    return false;
+  
   if (quality < 0)
     quality = 0;
   if (quality > 1)
@@ -84,6 +87,7 @@ XvidVideoEncoder::init(const char *filename, int width, int height, double quali
 
    _buf = new byte_t[3 * width * height];
    _image = new byte_t[3 * width * height];
+   return true;
 }
 
 void
@@ -112,7 +116,7 @@ XvidVideoEncoder::encode(byte_t *image, byte_t *dirty)
       for (int x = 0;x < _enc_create.width;x += 8)
         {
           d++;
-          if (!dirty[d])
+          if (dirty && !dirty[d])
             continue;
 
           int z = y * _enc_create.width + x;
