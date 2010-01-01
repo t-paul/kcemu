@@ -45,6 +45,7 @@ private:
   FILE             *_f;
   
   th_info           _info;
+  th_pixel_fmt      _format;
   th_enc_ctx       *_context;
   
   ogg_stream_state  _stream;
@@ -58,6 +59,8 @@ private:
 protected:
   virtual bool flush(void);
   virtual bool write_page(ogg_page *page);
+  virtual void encode_444(byte_t *image, byte_t *dirty);
+  virtual void encode_420(byte_t *image, byte_t *dirty);
   
 public:
   TheoraVideoEncoder(void);

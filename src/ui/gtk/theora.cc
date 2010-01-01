@@ -59,6 +59,8 @@ TheoraVideoEncoder::init(const char *filename, int width, int height, double qua
   if (_f == NULL)
     return false;
 
+  _format = (quality >= 0.85) ? TH_PF_444 : TH_PF_420;
+
   th_info_init(&_info);
   _info.pic_x = 0;
   _info.pic_y = 0;
@@ -67,13 +69,13 @@ TheoraVideoEncoder::init(const char *filename, int width, int height, double qua
   _info.frame_width = (width + 15) & ~0x0f;
   _info.frame_height = (height + 15) & ~0x0f;
   _info.target_bitrate = 0;
-  _info.quality = 63 * quality;
+  _info.quality = 63.0 * quality;
   _info.fps_numerator = 50;
   _info.fps_denominator = 1;
   _info.aspect_numerator = 1;
   _info.aspect_denominator = 1;
   _info.colorspace = TH_CS_ITU_REC_470BG;
-  _info.pixel_fmt = TH_PF_444;
+  _info.pixel_fmt = _format;
 
   _buf_y = new byte_t[_info.frame_width * _info.frame_height];
   _buf_u = new byte_t[_info.frame_width * _info.frame_height];
@@ -152,33 +154,77 @@ TheoraVideoEncoder::flush(void)
   return true;
 }
 
+void
+TheoraVideoEncoder::encode_444(byte_t *image, byte_t *dirty)
+{
+  for (unsigned int y = 0;y < _info.frame_height;y++)
+    {
+      int z = y * _info.frame_width;
+      for (unsigned int x = 0;x < _info.frame_width;x++)
+        {
+          _buf_y[z + x] = _col[image[z + x]].y;
+          _buf_u[z + x] = _col[image[z + x]].u;
+          _buf_v[z + x] = _col[image[z + x]].v;
+        }
+    }
+}
+
+void
+TheoraVideoEncoder::encode_420(byte_t *image, byte_t *dirty)
+{
+  for (unsigned int y = 0;y < _info.frame_height;y++)
+    {
+      unsigned int z = y * _info.frame_width;
+      for (unsigned int x = 0;x < _info.frame_width;x++)
+        {
+          _buf_y[z + x] = _col[image[z + x]].y;
+        }
+    }
+  for (unsigned int y = 0;y < _info.frame_height;y += 2)
+    {
+      unsigned int z = y * _info.frame_width;
+      for (unsigned int x = 0;x < _info.frame_width;x += 2)
+        {
+          int u = _col[image[z + x]].u + _col[image[z + x + 1]].u + _col[image[z + x + _info.frame_width]].u + _col[image[z + x + _info.frame_width + 1]].u;
+          int v = _col[image[z + x]].v + _col[image[z + x + 1]].v + _col[image[z + x + _info.frame_width]].v + _col[image[z + x + _info.frame_width + 1]].v;
+          _buf_u[(z + x) / 2] = u / 4;
+          _buf_v[(z + x) / 2] = v / 4;
+        }
+    }
+}
+
 bool
 TheoraVideoEncoder::encode(byte_t *image, byte_t *dirty)
 {
   th_ycbcr_buffer buffer;
+
+  buffer[0].data = _buf_y;
+  buffer[1].data = _buf_u;
+  buffer[2].data = _buf_v;
   for (int a = 0;a < 3;a++)
     {
       buffer[a].width = _info.frame_width;
       buffer[a].height = _info.frame_height;
       buffer[a].stride = buffer[a].width;
     }
-  buffer[0].data = _buf_y;
-  buffer[1].data = _buf_u;
-  buffer[2].data = _buf_v;
 
-  for (int y = 0;y < _info.frame_height;y++)
-  {
-    int z = y * _info.frame_width;
-    for (int x = 0;x < _info.frame_width;x++)
-    {
-      _buf_y[z + x] = _col[image[z + x]].y;
-      _buf_u[z + x] = _col[image[z + x]].u;
-      _buf_v[z + x] = _col[image[z + x]].v;
+  if (_format == TH_PF_444)
+    { 
+      encode_444(image, dirty);
     }
-  }
+  else
+    {
+      buffer[1].width /= 2;
+      buffer[2].width /= 2;
+      buffer[1].height /= 2;
+      buffer[2].height /= 2;
+      encode_420(image, dirty);
+    }
 
-  if (th_encode_ycbcr_in(_context, buffer) != 0)
+  if (th_encode_ycbcr_in(_context, buffer) != 0) {
+      printf("error in encode\n");
     return false;
+    }
 
   ogg_packet packet;
   while (th_encode_packetout(_context, 0, &packet))
@@ -191,7 +237,7 @@ TheoraVideoEncoder::encode(byte_t *image, byte_t *dirty)
           return false;
     }
 
-  flush();
+  return flush();
 }
 
 void
