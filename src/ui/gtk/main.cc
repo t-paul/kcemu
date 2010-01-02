@@ -348,6 +348,7 @@ MainWindow::init(void) {
     wire_menu_item("menuitem_vdip",            "<alt>V", "ui-vdip-window-toggle");
     wire_menu_item("menuitem_module",          "<alt>M", "ui-module-window-toggle");
     wire_menu_item("menuitem_audio",           "<alt>U", "ui-wav-window-toggle");
+    wire_menu_item("menuitem_screenshot",      "<alt>H", "ui-screenshot-window-toggle");
     wire_menu_item("menuitem_plotter",         "<alt>O", "ui-plotter-window-toggle");
     wire_menu_item("menuitem_reset",           "<alt>R", "emu-reset");
     wire_menu_item("menuitem_power",           "<alt>P", "emu-power-on");
@@ -883,4 +884,10 @@ MainWindow::setStatus(const char *msg) {
     _w.status_sec = tv_sec;
     gtk_statusbar_pop(GTK_STATUSBAR(_w.status_statusbar), 1);
     gtk_statusbar_push(GTK_STATUSBAR(_w.status_statusbar), 1, msg);
+}
+
+GdkColor *
+MainWindow::get_colormap()
+{
+  return _col;
 }

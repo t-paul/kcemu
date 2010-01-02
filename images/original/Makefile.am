@@ -3,6 +3,7 @@
 EXTRA_DIST = \
 	convert.sh \
 	5floppy_mount.svg \
+	14_layer_visible.svg \
 	blockdevice.svg \
 	jabber_protocol.svg \
 	kdat.svg \

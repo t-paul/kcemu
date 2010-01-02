@@ -74,6 +74,7 @@ protected:
     UI_Gtk_Window *_keyboard_window;
     UI_Gtk_Window *_info_window;
     UI_Gtk_Window *_wav_window;
+    UI_Gtk_Window *_screenshot_window;
     UI_Gtk_Window *_plotter_window;
     UI_Gtk_Window *_save_memory_window;
     
@@ -93,6 +94,8 @@ protected:
     
     void text_update(void);
     void wire_menu_item(const char *name, const char *shortcut, const char *command);
+
+    static void on_pixbuf_destroy(guchar *pixels, gpointer user_data);
     
     static void sf_selection_received(GtkWidget *widget,
             GtkSelectionData *sel_data,
@@ -149,6 +152,8 @@ public:
 
     virtual char *select_profile(void);
 
+    virtual GdkPixbuf * get_screenshot(void);
+    
     virtual void speed_limit_toggle(void);
     virtual void display_effects_toggle(void);
     

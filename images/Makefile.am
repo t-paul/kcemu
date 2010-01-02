@@ -73,6 +73,7 @@ IMAGES = \
 	window-options.png \
 	window-selector.png \
 	window-question.png \
+	window-screenshot.png \
 	window-tape.png \
 	window-thanks.png \
 	window-plotter.png \
@@ -93,6 +94,7 @@ UI_XML = \
         module.xml \
         options.xml \
         selector.xml \
+        screenshot.xml \
         savemem.xml \
         tape.xml \
         tapeedit.xml \

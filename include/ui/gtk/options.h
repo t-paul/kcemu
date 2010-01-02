@@ -185,7 +185,6 @@ protected:
     void collapse_tree(void);
     void add_system(GtkTreeStore *store, GtkTreeIter *iter, const char *name, const char *config_name, const char *icon_name);
     void move_row(GtkPathMoveFunc path_func, GtkIterMoveFunc move_func);
-    void bind_list_model_column(GtkComboBox *combobox, int column);
     void set_roms_liststore(int idx, const char *rom_key, SystemROM *rom);
     bool check_button_toggled(GtkToggleButton *togglebutton);
     void set_widget_sensitive_by_key(GObject *object, const gchar *key, bool sensitive);

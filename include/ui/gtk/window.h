@@ -59,6 +59,7 @@ protected:
 
   GtkCellRenderer * add_text_renderer(GtkTreeView *treeview, GtkTreeViewColumn *, const char *title, ...);
   GtkCellRenderer * add_icon_renderer(GtkTreeView *treeview, GtkTreeViewColumn *, const char *title, ...);
+  GtkCellRenderer * bind_list_model_column(GtkComboBox *combobox, int column, ...);
   
   static void sf_help(GtkWidget *widget, gpointer data);
   static void sf_help_recursive(GtkWidget *widget, gpointer data);

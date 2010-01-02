@@ -185,6 +185,30 @@ UI_Gtk_Window::get_widget(const char *name, int nr)
 }
 
 GtkCellRenderer *
+UI_Gtk_Window::bind_list_model_column(GtkComboBox *combobox, int column, ...)
+{
+    GtkCellRenderer *renderer = gtk_cell_renderer_text_new();
+    gtk_cell_layout_pack_start(GTK_CELL_LAYOUT(combobox), renderer, TRUE);
+    gtk_cell_layout_set_attributes(GTK_CELL_LAYOUT(combobox), renderer, "text", column, NULL);
+
+    va_list ap;
+    va_start(ap, column);
+
+    while (242) {
+        const char *attr = va_arg(ap, const char *);
+        if (attr == NULL)
+            break;
+
+        int index = va_arg(ap, int);
+        gtk_cell_layout_add_attribute(GTK_CELL_LAYOUT(combobox), renderer, attr, index);
+    }
+
+    va_end(ap);
+
+    return renderer;
+}
+
+GtkCellRenderer *
 UI_Gtk_Window::add_text_renderer(GtkTreeView *treeview, GtkTreeViewColumn *column, const char *title, ...) {
     GtkCellRenderer *renderer = gtk_cell_renderer_text_new();
     

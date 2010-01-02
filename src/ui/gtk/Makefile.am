@@ -67,6 +67,7 @@ libui_gtk_a_SOURCES = \
 	module.cc		\
 	keyboard.cc		\
 	options.cc		\
+	screenshot.cc		\
 	selector.cc		\
 	debug.cc		\
 	copying.cc		\

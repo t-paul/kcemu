@@ -420,7 +420,7 @@ Memory::loadRAM(const char *filename)
     return;
 
   long addr = 0;
-  char *ptr = strstr(filename, "0x");
+  const char *ptr = strstr(filename, "0x");
   if (ptr != NULL)
     addr = strtol(ptr, NULL, 0) & 0xffff;
 

@@ -1127,13 +1127,6 @@ OptionsWindow::get_modules_list_model(kc_type_t kc_type) {
 }
 
 void
-OptionsWindow::bind_list_model_column(GtkComboBox *combobox, int column) {
-    GtkCellRenderer *renderer = gtk_cell_renderer_text_new();
-    gtk_cell_layout_pack_start(GTK_CELL_LAYOUT(combobox), renderer, TRUE);
-    gtk_cell_layout_set_attributes(GTK_CELL_LAYOUT(combobox), renderer, "text", column, NULL);
-}
-
-void
 OptionsWindow::wire_check_button(const char *preferences_key, const char *default_dir, const char *check_button_name, const char *filechooser_button_name, const char *button_clear_name) {
     GtkWidget *check_button = get_widget(check_button_name);
     GtkWidget *filechooser_button = get_widget(filechooser_button_name);
@@ -1274,7 +1267,7 @@ OptionsWindow::init(void) {
     for (int a = 0;a < NR_OF_MODULES;a++) {
         _w.combobox_module[a] = GTK_COMBO_BOX(get_widget("modules_combobox_module", a + 1));
         _w.on_module_changed_id[a] = g_signal_connect(_w.combobox_module[a], "changed", G_CALLBACK(on_module_changed), this);
-        bind_list_model_column(_w.combobox_module[a], MODULES_NAME_COLUMN);
+        bind_list_model_column(_w.combobox_module[a], MODULES_NAME_COLUMN, NULL);
     }
     _w.check_button_modules = GTK_CHECK_BUTTON(get_widget("modules_check_button"));
     g_signal_connect(_w.check_button_modules, "toggled", G_CALLBACK(on_modules_check_button_toggled), this);
@@ -1282,11 +1275,11 @@ OptionsWindow::init(void) {
     _w.liststore_system = get_system_list_model();
     _w.combobox_system_type = GTK_COMBO_BOX(get_widget("system_combobox_system_type"));
     gtk_combo_box_set_model(_w.combobox_system_type, GTK_TREE_MODEL(_w.liststore_system));
-    bind_list_model_column(_w.combobox_system_type, 0);
+    bind_list_model_column(_w.combobox_system_type, 0, NULL);
     _w.on_system_type_changed_id = g_signal_connect(_w.combobox_system_type, "changed", G_CALLBACK(on_system_type_changed), this);
     
     _w.combobox_system_variant = GTK_COMBO_BOX(get_widget("system_combobox_system_variant"));
-    bind_list_model_column(_w.combobox_system_variant, 0);
+    bind_list_model_column(_w.combobox_system_variant, 0, NULL);
     
     _w.on_system_variant_changed_id = g_signal_connect(_w.combobox_system_variant, "changed", G_CALLBACK(on_system_variant_changed), this);
     
