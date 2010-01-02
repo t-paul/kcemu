@@ -31,6 +31,7 @@
 
 #include "ui/gtk/vnc.h"
 #include "ui/gtk/xvid.h"
+#include "ui/gtk/ffmpeg.h"
 #include "ui/gtk/theora.h"
 
 #include "libgtkex/libgtkex.h"
@@ -178,6 +179,10 @@ VideoWindow::init_encoder(GtkComboBox *combobox)
 #ifdef HAVE_LIBTHEORA
   gtk_list_store_append(store, &iter);
   gtk_list_store_set(store, &iter, 0, "Theora/Ogg", 1, new TheoraVideoEncoder(), 2, TRUE, 3, TRUE, -1);
+#endif
+#ifdef HAVE_LIBAVFORMAT
+  gtk_list_store_append(store, &iter);
+  gtk_list_store_set(store, &iter, 0, "AVI", 1, new FfmpegVideoEncoder(), 2, TRUE, 3, TRUE, -1);
 #endif
 #ifdef HAVE_LIBXVIDCORE
   gtk_list_store_append(store, &iter);

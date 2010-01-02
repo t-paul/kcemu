@@ -22,6 +22,7 @@ AC_ARG_ENABLE(libflac,      [  --enable-libflac        enable usage of libFLAC 1
 AC_ARG_ENABLE(libvorbis,    [  --enable-libvorbis      enable usage of libvorbis if present [default=yes]],,enable_libvorbis=yes)
 AC_ARG_ENABLE(libtheora,    [  --enable-libtheora      enable usage of libtheora if present [default=yes]],,enable_libtheora=yes)
 AC_ARG_ENABLE(libxvidcore,  [  --enable-libxvidcore    enable usage of libxvidcore if present [default=yes]],,enable_libxvidcore=yes)
+AC_ARG_ENABLE(libavformat,  [  --enable-libavformat    enable usage of libavformat if present [default=yes]],,enable_libavformat=yes)
 AC_ARG_ENABLE(libvncserver, [  --enable-libvncserver   enable usage of libvncserver if present [default=yes]],,enable_libvncserver=yes)
 AC_ARG_ENABLE(libmp3lame,   [  --enable-libmp3lame     enable usage of libmp3lame if present [default=yes]],,enable_libmp3lame=yes)
 AC_ARG_ENABLE(ms-bitfields, [  --enable-ms-bitfields   enable usage of gcc -mms-bitfields on MinGW [default=yes]],,enable_ms_bitfields=yes)
@@ -335,6 +336,30 @@ if test "x$enable_libtheora" = xyes; then
 ***
 *** If you are still annoyed by this warning you can tell ./configure
 *** not to check for this library by using --disable-libtheora
+***])
+	])
+fi
+
+dnl ---------------------------------
+dnl  check for libavformat library
+dnl ---------------------------------
+min_libavformat="52.41.0"
+if test "x$enable_libavformat" = xyes; then
+	PKG_CHECK_MODULES(LIBAVFORMAT, libavformat >= $min_libavformat,
+	[
+                AC_DEFINE(HAVE_LIBAVFORMAT, 1, "have libavformat")
+		AC_SUBST(LIBAVFORMAT_CFLAGS)
+		AC_SUBST(LIBAVFORMAT_LIBS)
+	],[
+		AC_MSG_WARN([
+***
+*** Unable to find avformat library (with version number >= $min_libavformat)!
+***
+*** This is NO ERROR. It only means you can't capture video in
+*** avi format.
+***
+*** If you are still annoyed by this warning you can tell ./configure
+*** not to check for this library by using --disable-libavformat
 ***])
 	])
 fi

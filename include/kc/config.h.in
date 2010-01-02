@@ -130,6 +130,9 @@
 /* "have libaudiofile" */
 #undef HAVE_LIBAUDIOFILE
 
+/* "have libavformat" */
+#undef HAVE_LIBAVFORMAT
+
 /* "have libFLAC" */
 #undef HAVE_LIBFLAC
 
