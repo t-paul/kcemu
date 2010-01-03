@@ -133,6 +133,9 @@
 /* "have libavformat" */
 #undef HAVE_LIBAVFORMAT
 
+/* "have libdirac" */
+#undef HAVE_LIBDIRAC
+
 /* "have libFLAC" */
 #undef HAVE_LIBFLAC
 

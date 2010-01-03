@@ -196,6 +196,7 @@ kcemu_LDADD = \
 	$(F_L_A_C_LIBS)			\
 	$(LIBTHEORA_LIBS)		\
 	$(XVIDCORE_LIBS)		\
+	$(LIBDIRAC_LIBS)		\
 	$(LIBAVFORMAT_LIBS)		\
 	$(VNCSERVER_LIBS)               \
 	$(SYSLIBS_MINGW)		\

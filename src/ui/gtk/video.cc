@@ -31,6 +31,7 @@
 
 #include "ui/gtk/vnc.h"
 #include "ui/gtk/xvid.h"
+#include "ui/gtk/dirac.h"
 #include "ui/gtk/ffmpeg.h"
 #include "ui/gtk/theora.h"
 
@@ -267,6 +268,10 @@ VideoWindow::init_encoder(GtkComboBox *combobox)
 #ifdef HAVE_LIBXVIDCORE
   gtk_list_store_append(store, &iter);
   gtk_list_store_set(store, &iter, 0, "MPEG 4", 1, new XvidVideoEncoder(), 2, TRUE, 3, TRUE, -1);
+#endif
+#ifdef HAVE_LIBDIRAC
+  gtk_list_store_append(store, &iter);
+  gtk_list_store_set(store, &iter, 0, "Dirac", 1, new DiracVideoEncoder(), 2, TRUE, 3, TRUE, -1);
 #endif
 #ifdef HAVE_LIBVNCSERVER
   gtk_list_store_append(store, &iter);

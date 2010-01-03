@@ -22,6 +22,7 @@ AC_ARG_ENABLE(libflac,      [  --enable-libflac        enable usage of libFLAC 1
 AC_ARG_ENABLE(libvorbis,    [  --enable-libvorbis      enable usage of libvorbis if present [default=yes]],,enable_libvorbis=yes)
 AC_ARG_ENABLE(libtheora,    [  --enable-libtheora      enable usage of libtheora if present [default=yes]],,enable_libtheora=yes)
 AC_ARG_ENABLE(libxvidcore,  [  --enable-libxvidcore    enable usage of libxvidcore if present [default=yes]],,enable_libxvidcore=yes)
+AC_ARG_ENABLE(libdirac,     [  --enable-libdirac       enable usage of libdirac if present [default=yes]],,enable_libdirac=yes)
 AC_ARG_ENABLE(libavformat,  [  --enable-libavformat    enable usage of libavformat if present [default=yes]],,enable_libavformat=yes)
 AC_ARG_ENABLE(libvncserver, [  --enable-libvncserver   enable usage of libvncserver if present [default=yes]],,enable_libvncserver=yes)
 AC_ARG_ENABLE(libmp3lame,   [  --enable-libmp3lame     enable usage of libmp3lame if present [default=yes]],,enable_libmp3lame=yes)
@@ -360,6 +361,30 @@ if test "x$enable_libavformat" = xyes; then
 ***
 *** If you are still annoyed by this warning you can tell ./configure
 *** not to check for this library by using --disable-libavformat
+***])
+	])
+fi
+
+dnl ---------------------------------
+dnl  check for libdirac
+dnl ---------------------------------
+min_libdirac="1.0.2"
+if test "x$enable_libdirac" = xyes; then
+	PKG_CHECK_MODULES(LIBDIRAC, dirac >= $min_libdirac,
+	[
+                AC_DEFINE(HAVE_LIBDIRAC, 1, "have libdirac")
+		AC_SUBST(LIBDIRAC_CFLAGS)
+		AC_SUBST(LIBDIRAC_LIBS)
+	],[
+		AC_MSG_WARN([
+***
+*** Unable to find dirac library (with version number >= $min_libdirac)!
+***
+*** This is NO ERROR. It only means you can't capture video in
+*** dirac format.
+***
+*** If you are still annoyed by this warning you can tell ./configure
+*** not to check for this library by using --disable-libdirac
 ***])
 	])
 fi
