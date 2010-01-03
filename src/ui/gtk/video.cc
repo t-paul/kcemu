@@ -32,6 +32,7 @@
 #include "ui/gtk/vnc.h"
 #include "ui/gtk/xvid.h"
 #include "ui/gtk/dirac.h"
+#include "ui/gtk/schro.h"
 #include "ui/gtk/ffmpeg.h"
 #include "ui/gtk/theora.h"
 
@@ -273,6 +274,10 @@ VideoWindow::init_encoder(GtkComboBox *combobox)
   gtk_list_store_append(store, &iter);
   gtk_list_store_set(store, &iter, 0, "Dirac", 1, new DiracVideoEncoder(), 2, TRUE, 3, TRUE, -1);
 #endif
+#ifdef HAVE_LIBSCHROEDINGER
+  gtk_list_store_append(store, &iter);
+  gtk_list_store_set(store, &iter, 0, "Schroedinger", 1, new SchroedingerVideoEncoder(), 2, TRUE, 3, TRUE, -1);
+#endif
 #ifdef HAVE_LIBVNCSERVER
   gtk_list_store_append(store, &iter);
   gtk_list_store_set(store, &iter, 0, "VNC", 1, new VncVideoEncoder(), 2, FALSE, 3, TRUE, -1);
@@ -310,8 +315,7 @@ VideoWindow::init(void)
   init_encoder(GTK_COMBO_BOX(_w.encoder_combobox));
   g_signal_connect(_w.encoder_combobox, "changed", G_CALLBACK(on_encoder_changed), this);
 
-  _w.filebutton = gtk_filebutton_new();
-  gtk_filebutton_set_recent_group(GTK_FILEBUTTON(_w.filebutton), "Video");
+  _w.filebutton = gtk_filebutton_new("Video");
   GtkWidget *c = get_widget("video_file_container");
   gtk_container_add(GTK_CONTAINER(c), _w.filebutton);
   gtk_widget_set_sensitive(_w.filebutton, FALSE);

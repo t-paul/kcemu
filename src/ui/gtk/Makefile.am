@@ -33,6 +33,7 @@ INCLUDES = \
 	$(LIBTHEORA_CFLAGS) \
 	$(XVIDCORE_CFLAGS) \
 	$(LIBDIRAC_CFLAGS) \
+	$(LIBSCHROEDINGER_CFLAGS) \
 	$(LIBAVFORMAT_CFLAGS) \
 	$(VNCSERVER_CFLAGS) \
 	$(GTK_CFLAGS) \
@@ -85,6 +86,7 @@ libui_gtk_a_SOURCES = \
 	theora.cc		\
 	xvid.cc			\
 	dirac.cc		\
+	schro.cc		\
 	ffmpeg.cc		\
 	vnc.cc			\
 	hedit.cc

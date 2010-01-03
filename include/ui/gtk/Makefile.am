@@ -46,6 +46,7 @@ EXTRA_DIST = \
 	theora.h		\
 	xvid.h  		\
 	dirac.h  		\
+	schro.h  		\
 	ffmpeg.h  		\
 	vnc.h			\
 	gtkledline.h

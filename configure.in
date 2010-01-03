@@ -23,6 +23,7 @@ AC_ARG_ENABLE(libvorbis,    [  --enable-libvorbis      enable usage of libvorbis
 AC_ARG_ENABLE(libtheora,    [  --enable-libtheora      enable usage of libtheora if present [default=yes]],,enable_libtheora=yes)
 AC_ARG_ENABLE(libxvidcore,  [  --enable-libxvidcore    enable usage of libxvidcore if present [default=yes]],,enable_libxvidcore=yes)
 AC_ARG_ENABLE(libdirac,     [  --enable-libdirac       enable usage of libdirac if present [default=yes]],,enable_libdirac=yes)
+AC_ARG_ENABLE(libschroedinger, [  --enable-libschroedinger enable usage of libschroedinger if present [default=yes]],,enable_libschroedinger=yes)
 AC_ARG_ENABLE(libavformat,  [  --enable-libavformat    enable usage of libavformat if present [default=yes]],,enable_libavformat=yes)
 AC_ARG_ENABLE(libvncserver, [  --enable-libvncserver   enable usage of libvncserver if present [default=yes]],,enable_libvncserver=yes)
 AC_ARG_ENABLE(libmp3lame,   [  --enable-libmp3lame     enable usage of libmp3lame if present [default=yes]],,enable_libmp3lame=yes)
@@ -385,6 +386,30 @@ if test "x$enable_libdirac" = xyes; then
 ***
 *** If you are still annoyed by this warning you can tell ./configure
 *** not to check for this library by using --disable-libdirac
+***])
+	])
+fi
+
+dnl ---------------------------------
+dnl  check for libschroedinger
+dnl ---------------------------------
+min_libschroedinger="1.0.8"
+if test "x$enable_libschroedinger" = xyes; then
+	PKG_CHECK_MODULES(LIBSCHROEDINGER, schroedinger-1.0 >= $min_libschroedinger,
+	[
+                AC_DEFINE(HAVE_LIBSCHROEDINGER, 1, "have libschroedinger")
+		AC_SUBST(LIBSCHROEDINGER_CFLAGS)
+		AC_SUBST(LIBSCHROEDINGER_LIBS)
+	],[
+		AC_MSG_WARN([
+***
+*** Unable to find schroedinger library (with version number >= $min_libschroedinger)!
+***
+*** This is NO ERROR. It only means you can't capture video in
+*** schroedinger format.
+***
+*** If you are still annoyed by this warning you can tell ./configure
+*** not to check for this library by using --disable-libschroedinger
 ***])
 	])
 fi

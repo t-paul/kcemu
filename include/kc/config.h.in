@@ -148,6 +148,9 @@
 /* "have libmp3lame" */
 #undef HAVE_LIBMP3LAME
 
+/* "have libschroedinger" */
+#undef HAVE_LIBSCHROEDINGER
+
 /* "have libSDL" */
 #undef HAVE_LIBSDL
 
