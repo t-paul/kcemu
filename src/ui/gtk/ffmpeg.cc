@@ -28,6 +28,10 @@
 
 FfmpegVideoEncoder::FfmpegVideoEncoder(void)
 {
+  _context = NULL;
+  _stream = NULL;
+  _frame = NULL;
+  _buf = NULL;
 }
 
 FfmpegVideoEncoder::~FfmpegVideoEncoder(void)
@@ -51,10 +55,18 @@ FfmpegVideoEncoder::init(const char *filename, int width, int height, int fps_de
     return false;
 
   _context = avformat_alloc_context();
+  if (_context == NULL)
+    return false;
+
   _context->oformat = fmt;
   snprintf(_context->filename, sizeof (_context->filename), "%s", filename);
 
   _stream = av_new_stream(_context, 0);
+  if (_stream == NULL)
+    {
+      close();
+      return false;
+    }
   _stream->codec->codec_id = fmt->video_codec;
   _stream->codec->codec_type = CODEC_TYPE_VIDEO;
   _stream->codec->codec_tag = MKTAG('D', 'X', '5', '0');
@@ -72,31 +84,48 @@ FfmpegVideoEncoder::init(const char *filename, int width, int height, int fps_de
     _stream->codec->flags |= CODEC_FLAG_GLOBAL_HEADER;
 
   if (av_set_parameters(_context, NULL) < 0)
-    return false;
+    {
+      close();
+      return false;
+    }
 
   AVCodec *codec = avcodec_find_encoder(_stream->codec->codec_id);
   if (avcodec_open(_stream->codec, codec) < 0)
-    return false;
+    {
+      close();
+      return false;
+    }
 
   _bufsize = 10 * width * height;
   _buf = (byte_t *)av_malloc(_bufsize);
+  if (_buf == NULL)
+    {
+      close();
+      return false;
+    }
 
   _frame = avcodec_alloc_frame();
   if (_frame == NULL)
-    return false;
+    {
+      close();
+      return false;
+    }
 
   int size = avpicture_get_size(_stream->codec->pix_fmt, width, height);
   byte_t *buf = (byte_t *) av_malloc(size);
   if (buf == NULL)
     {
-      av_free(_frame);
+      close();
       return false;
     }
 
   avpicture_fill((AVPicture *) _frame, buf, _stream->codec->pix_fmt, width, height);
 
   if (url_fopen(&_context->pb, filename, URL_WRONLY) < 0)
-    return false;
+    {
+      close();
+      return false;
+    }
 
   //dump_format(_context, 0, filename, 1);
   av_write_header(_context);
@@ -164,22 +193,29 @@ FfmpegVideoEncoder::encode(byte_t *image, byte_t *dirty)
 void
 FfmpegVideoEncoder::close(void)
 {
+  if (_context == NULL)
+    return;
+
   av_write_trailer(_context);
+  
   avcodec_close(_stream->codec);
   av_free(_frame->data[0]);
   av_free(_frame);
   av_free(_buf);
 
-  /* free the streams */
-  for (int i = 0;i < _context->nb_streams;i++)
+  for (unsigned int i = 0;i < _context->nb_streams;i++)
     {
       av_freep(&_context->streams[i]->codec);
       av_freep(&_context->streams[i]);
     }
   url_fclose(_context->pb);
   
-  /* free the stream */
   av_free(_context);
+  
+  _context = NULL;
+  _stream = NULL;
+  _frame = NULL;
+  _buf = NULL;
 }
 
 #endif /* HAVE_LIBAVFORMAT */

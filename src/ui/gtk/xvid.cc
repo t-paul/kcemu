@@ -35,6 +35,8 @@ using namespace std;
 XvidVideoEncoder::XvidVideoEncoder(void)
 {
   _f = NULL;
+  _buf = NULL;
+  _image = NULL;
 }
 
 XvidVideoEncoder::~XvidVideoEncoder(void)
@@ -157,12 +159,21 @@ XvidVideoEncoder::encode(byte_t *image, byte_t *dirty)
 void
 XvidVideoEncoder::close(void)
 {
- xvid_encore(_enc_create.handle, XVID_ENC_DESTROY, NULL, NULL);
- if (_f != NULL)
+  if (_f != NULL)
     {
+      xvid_encore(_enc_create.handle, XVID_ENC_DESTROY, NULL, NULL);
       fclose(_f);
-      _f = NULL;
     }
+
+  if (_buf != NULL)
+    delete _buf;
+
+  if (_image != NULL)
+    delete _image;
+
+  _f = NULL;
+  _buf = NULL;
+  _image = NULL;
 }
 
 #endif /* HAVE_LIBXVIDCORE */
