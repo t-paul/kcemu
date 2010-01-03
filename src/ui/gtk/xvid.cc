@@ -43,7 +43,7 @@ XvidVideoEncoder::~XvidVideoEncoder(void)
 }
 
 bool
-XvidVideoEncoder::init(const char *filename, int width, int height, double quality)
+XvidVideoEncoder::init(const char *filename, int width, int height, int fps_den, double quality)
 {
   if (filename == NULL)
     return false;
@@ -68,9 +68,9 @@ XvidVideoEncoder::init(const char *filename, int width, int height, double quali
   _enc_create.width = width;
   _enc_create.height = height;
   _enc_create.zones = NULL;
-  _enc_create.fincr = 1;
+  _enc_create.fincr = fps_den;
   _enc_create.fbase = 50;
-  _enc_create.max_key_interval = 50;
+  _enc_create.max_key_interval = 500 / fps_den;
   _enc_create.bquant_ratio = 150;
   _enc_create.bquant_offset = 100;
 

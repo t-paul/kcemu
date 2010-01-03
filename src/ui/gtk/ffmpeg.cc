@@ -36,7 +36,7 @@ FfmpegVideoEncoder::~FfmpegVideoEncoder(void)
 }
 
 bool
-FfmpegVideoEncoder::init(const char *filename, int width, int height, double quality)
+FfmpegVideoEncoder::init(const char *filename, int width, int height, int fps_den, double quality)
 {
   if (filename == NULL)
     return false;
@@ -63,8 +63,8 @@ FfmpegVideoEncoder::init(const char *filename, int width, int height, double qua
   _stream->codec->width = width;
   _stream->codec->height = height;
   _stream->codec->time_base.den = 50;
-  _stream->codec->time_base.num = 1;
-  _stream->codec->gop_size = 25;
+  _stream->codec->time_base.num = fps_den;
+  _stream->codec->gop_size = 100 / fps_den;
   _stream->codec->pix_fmt = PIX_FMT_YUV420P;
 
   // some formats want stream headers to be separate

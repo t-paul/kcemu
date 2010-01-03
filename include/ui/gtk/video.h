@@ -45,6 +45,7 @@ private:
   } _w;
 
   CMD *_cmd_video_toggle;
+  CMD *_cmd_video_record;
 
 protected:
   void init(void);
@@ -52,6 +53,7 @@ protected:
   void init_encoder(GtkComboBox *combobox);
 
   void set_state(int state);
+  void set_config_widget_sensitivity(bool enable);
 
   static void on_record_clicked(GtkWidget *widget, gpointer user_data);
   static void on_stop_clicked(GtkWidget *widget, gpointer user_data);
@@ -59,9 +61,13 @@ protected:
   static void on_config_changed(GtkWidget *widget, gpointer user_data);
   static void on_encoder_changed(GtkComboBox *combobox, gpointer user_data);
 
+  static gint get_active_value_as_int(GtkComboBox *combobox, int column);
+  
 public:
   VideoWindow(const char *ui_xml_file, UI_Gtk *ui);
   virtual ~VideoWindow(void);
+  
+  void ui_set_state(int state);
 };
 
 #endif /* __ui_gtk_video_h */

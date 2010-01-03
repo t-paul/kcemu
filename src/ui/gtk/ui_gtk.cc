@@ -640,6 +640,7 @@ UI_Gtk::set_video_encoder_state(int state)
   if (state == VideoEncoder::VIDEO_ENCODER_STATE_PAUSE)
     {
       _video_encoder_state = VideoEncoder::VIDEO_ENCODER_STATE_PAUSE;
+      CMD_EXEC("ui-video-pause");
     }
 
   if (state == VideoEncoder::VIDEO_ENCODER_STATE_STOP)
@@ -647,6 +648,7 @@ UI_Gtk::set_video_encoder_state(int state)
       if (_video_encoder_state == VideoEncoder::VIDEO_ENCODER_STATE_RECORD)
         _video_encoder->close();
       _video_encoder_state = VideoEncoder::VIDEO_ENCODER_STATE_STOP;
+      CMD_EXEC("ui-video-stop");
     }
 
   if (state == VideoEncoder::VIDEO_ENCODER_STATE_RECORD)
@@ -654,16 +656,19 @@ UI_Gtk::set_video_encoder_state(int state)
       UI_Base *ui = _ui->get_generic_ui();
       int width = _ui->get_generic_ui()->get_real_width();
       int height = _ui->get_generic_ui()->get_real_height();
-      if (_video_encoder->init(_video_encoder_filename, width, height, _video_encoder_quality))
+      if (_video_encoder->init(_video_encoder_filename, width, height, _video_encoder_frame_skip, _video_encoder_quality))
         {
           // cheat a bit by forcing color table update and repaint
           CMD_EXEC("ui-update-colortable");
           _video_encoder->encode(ui->get_buffer(), NULL);
           _video_encoder_state = VideoEncoder::VIDEO_ENCODER_STATE_RECORD;
+          _video_frame = _video_skip = _video_encoder_frame_skip;
+          CMD_EXEC("ui-video-record");
         }
       else
         {
           _video_encoder_state = VideoEncoder::VIDEO_ENCODER_STATE_STOP;
+          CMD_EXEC("ui-video-stop");
         }
     }
 }
@@ -675,8 +680,6 @@ UI_Gtk::set_video_encoder_config(const char *filename, double quality, int frame
   _video_encoder_quality = quality;
   _video_encoder_frame_skip = frame_skip;
   _video_encoder_start_on_reset = start_on_reset;
-
-  printf("config: %s, %.2f, %d, %d\n", filename, quality, frame_skip, start_on_reset);
 }
 
 void
@@ -728,7 +731,15 @@ UI_Gtk::update(bool full_update, bool clear_cache) {
     ui->generic_update(scanline, memaccess, clear_cache);
     _main_window->update(ui, get_width(), get_height(), full_update);
     if (_video_encoder_state == VideoEncoder::VIDEO_ENCODER_STATE_RECORD)
-      _video_encoder->encode(ui->get_buffer(), ui->get_dirty_buffer());
+      {
+        if (_video_frame <= 0)
+          {
+            _video_frame = _video_skip;
+            // we can use the dirty buffer only when not skipping frames
+            _video_encoder->encode(ui->get_buffer(), _video_skip == 0 ? ui->get_dirty_buffer() : NULL);
+          }
+        _video_frame--;
+      }
     memset(ui->get_dirty_buffer(), 0, ui->get_dirty_buffer_size());
     processEvents();
     gtk_sync();
@@ -905,10 +916,10 @@ UI_Gtk::get_height(void) {
 void
 UI_Gtk::reset(bool power_on)
 {
-  printf("*** RESET ***\n");
   if (_video_encoder_start_on_reset)
     {
       _video_encoder_start_on_reset = false;
+      CMD_EXEC("ui-video-reset");
       set_video_encoder_state(VideoEncoder::VIDEO_ENCODER_STATE_RECORD);
     }
 }

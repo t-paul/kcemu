@@ -51,6 +51,9 @@ protected:
     bool       _auto_skip;
     int        _cur_auto_skip;
     int        _max_auto_skip;
+    
+    int        _video_skip;
+    int        _video_frame;
 
     int        _video_encoder_state;
     

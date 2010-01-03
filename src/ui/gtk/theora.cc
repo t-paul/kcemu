@@ -45,7 +45,7 @@ TheoraVideoEncoder::~TheoraVideoEncoder(void)
 }
 
 bool
-TheoraVideoEncoder::init(const char *filename, int width, int height, double quality)
+TheoraVideoEncoder::init(const char *filename, int width, int height, int fps_den, double quality)
 {
   if (filename == NULL)
     return false;
@@ -71,7 +71,7 @@ TheoraVideoEncoder::init(const char *filename, int width, int height, double qua
   _info.target_bitrate = 0;
   _info.quality = 63.0 * quality;
   _info.fps_numerator = 50;
-  _info.fps_denominator = 1;
+  _info.fps_denominator = fps_den;
   _info.aspect_numerator = 1;
   _info.aspect_denominator = 1;
   _info.colorspace = TH_CS_ITU_REC_470BG;

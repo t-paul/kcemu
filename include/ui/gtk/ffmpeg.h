@@ -58,7 +58,7 @@ public:
   FfmpegVideoEncoder(void);
   virtual ~FfmpegVideoEncoder(void);
   
-  virtual bool init(const char *filename, int width, int height, double quality);
+  virtual bool init(const char *filename, int width, int height, int fps_den, double quality);
   virtual void allocate_color_rgb(int idx, int r, int g, int b);
   virtual void allocate_color_hsv(int idx, double h, double s, double v);
   virtual bool encode(byte_t *image, byte_t *dirty);

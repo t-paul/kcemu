@@ -46,7 +46,7 @@ VncVideoEncoder::~VncVideoEncoder(void)
 }
 
 bool
-VncVideoEncoder::init(const char *filename, int width, int height, double quality)
+VncVideoEncoder::init(const char *filename, int width, int height, int fps_den, double quality)
 {
   if ((_width == width) && (_height == height) && (_rfbScreen != NULL))
     {

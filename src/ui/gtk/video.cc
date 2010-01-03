@@ -42,31 +42,64 @@ private:
   VideoWindow *_w;
 
 public:
-  CMD_ui_video_window_toggle(VideoWindow *w) : CMD("ui-video-window-toggle")
-    {
-      _w = w;
-      register_cmd("ui-video-window-toggle");
-    }
 
-  void execute(CMD_Args *args, CMD_Context context)
-    {
-      _w->toggle();
-    }
+  CMD_ui_video_window_toggle(VideoWindow *w) : CMD("ui-video-window-toggle")
+  {
+    _w = w;
+    register_cmd("ui-video-window-toggle");
+  }
+
+  void
+  execute(CMD_Args *args, CMD_Context context)
+  {
+    _w->toggle();
+  }
+};
+
+class CMD_ui_video_record : public CMD
+{
+private:
+  VideoWindow *_w;
+
+public:
+
+  CMD_ui_video_record(VideoWindow *w) : CMD("ui-video-record")
+  {
+    _w = w;
+    register_cmd("ui-video-reset", -1);
+    register_cmd("ui-video-record", VideoEncoder::VIDEO_ENCODER_STATE_RECORD);
+    register_cmd("ui-video-pause", VideoEncoder::VIDEO_ENCODER_STATE_PAUSE);
+    register_cmd("ui-video-stop", VideoEncoder::VIDEO_ENCODER_STATE_STOP);
+  }
+
+  void
+  execute(CMD_Args *args, CMD_Context context)
+  {
+    _w->ui_set_state(context);
+  }
 };
 
 VideoWindow::VideoWindow(const char *ui_xml_file, UI_Gtk *ui) : UI_Gtk_Window(ui_xml_file)
 {
   _ui = ui;
   _cmd_video_toggle = new CMD_ui_video_window_toggle(this);
+  _cmd_video_record = new CMD_ui_video_record(this);
 }
 
 VideoWindow::~VideoWindow(void)
 {
   delete _cmd_video_toggle;
+  delete _cmd_video_record;
 }
 
 void
 VideoWindow::set_state(int state)
+{
+  _ui->set_video_encoder_state(state);
+}
+
+void
+VideoWindow::ui_set_state(int state)
 {
   switch (state)
     {
@@ -75,6 +108,9 @@ VideoWindow::set_state(int state)
       gtk_widget_set_sensitive(_w.record_button, false);
       gtk_widget_set_sensitive(_w.stop_button, true);
       gtk_widget_set_sensitive(_w.pause_button, true);
+      gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(_w.record_button), TRUE);
+      gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(_w.pause_button), FALSE);
+      set_config_widget_sensitivity(false);
       break;
     case VideoEncoder::VIDEO_ENCODER_STATE_STOP:
       gtk_widget_set_sensitive(_w.encoder_combobox, true);
@@ -83,17 +119,39 @@ VideoWindow::set_state(int state)
       gtk_widget_set_sensitive(_w.pause_button, false);
       gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(_w.record_button), FALSE);
       gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(_w.pause_button), FALSE);
+      set_config_widget_sensitivity(true);
       break;
     case VideoEncoder::VIDEO_ENCODER_STATE_PAUSE:
+      gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(_w.pause_button), TRUE);
+      break;
+    default:
+      gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(_w.start_on_reset_checkbutton), FALSE);
       break;
     }
-  _ui->set_video_encoder_state(state);
+}
+
+void
+VideoWindow::set_config_widget_sensitivity(bool enable)
+{
+  gboolean enable_encoder = FALSE, enable_filebutton = FALSE, enable_config = FALSE;
+
+  GtkTreeIter iter;
+  if (enable && gtk_combo_box_get_active_iter(GTK_COMBO_BOX(_w.encoder_combobox), &iter))
+    {
+      enable_encoder = TRUE;
+      gtk_tree_model_get(GTK_TREE_MODEL(gtk_combo_box_get_model(GTK_COMBO_BOX(_w.encoder_combobox))), &iter, 2, &enable_filebutton, 3, &enable_config, -1);
+    }
+
+  gtk_widget_set_sensitive(_w.filebutton, enable_filebutton);
+  gtk_widget_set_sensitive(_w.fps_combobox, enable_config);
+  gtk_widget_set_sensitive(_w.quality_spinbutton, enable_config);
+  gtk_widget_set_sensitive(_w.start_on_reset_checkbutton, enable_config);
 }
 
 void
 VideoWindow::on_record_clicked(GtkWidget *widget, gpointer user_data)
 {
-  VideoWindow *self = (VideoWindow *)user_data;
+  VideoWindow *self = (VideoWindow *) user_data;
   GtkToggleButton *button = GTK_TOGGLE_BUTTON(widget);
   if (button->active)
     {
@@ -104,14 +162,14 @@ VideoWindow::on_record_clicked(GtkWidget *widget, gpointer user_data)
 void
 VideoWindow::on_stop_clicked(GtkWidget *widget, gpointer user_data)
 {
-  VideoWindow *self = (VideoWindow *)user_data;
+  VideoWindow *self = (VideoWindow *) user_data;
   self->set_state(VideoEncoder::VIDEO_ENCODER_STATE_STOP);
 }
 
 void
 VideoWindow::on_pause_clicked(GtkWidget *widget, gpointer user_data)
 {
-  VideoWindow *self = (VideoWindow *)user_data;  
+  VideoWindow *self = (VideoWindow *) user_data;
   GtkToggleButton *button = GTK_TOGGLE_BUTTON(widget);
   int state = button->active ? VideoEncoder::VIDEO_ENCODER_STATE_PAUSE : VideoEncoder::VIDEO_ENCODER_STATE_RECORD;
   self->set_state(state);
@@ -120,11 +178,12 @@ VideoWindow::on_pause_clicked(GtkWidget *widget, gpointer user_data)
 void
 VideoWindow::on_config_changed(GtkWidget *widget, gpointer user_data)
 {
-  VideoWindow *self = (VideoWindow *)user_data;
+  VideoWindow *self = (VideoWindow *) user_data;
   gchar *filename = gtk_filebutton_get_filename(GTK_FILEBUTTON(self->_w.filebutton));
   double quality = gtk_spin_button_get_value(GTK_SPIN_BUTTON(self->_w.quality_spinbutton));
+  int video_skip = get_active_value_as_int(GTK_COMBO_BOX(self->_w.fps_combobox), 1);
   bool start_on_reset = gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(self->_w.start_on_reset_checkbutton));
-  self->_ui->set_video_encoder_config(filename, quality / 100.0, 0, start_on_reset);
+  self->_ui->set_video_encoder_config(filename, quality / 100.0, video_skip, start_on_reset);
 }
 
 void
@@ -137,13 +196,24 @@ VideoWindow::on_encoder_changed(GtkComboBox *combobox, gpointer user_data)
     return;
 
   gpointer encoder;
-  gboolean enable_filebutton, enable_config;
-  gtk_tree_model_get(GTK_TREE_MODEL(gtk_combo_box_get_model(combobox)), &iter, 1, &encoder, 2, &enable_filebutton, 3, &enable_config, -1);
-  self->_ui->set_video_encoder((VideoEncoder *)encoder);
-  gtk_widget_set_sensitive(self->_w.filebutton, enable_filebutton);
-  gtk_widget_set_sensitive(self->_w.fps_combobox, enable_config);
-  gtk_widget_set_sensitive(self->_w.quality_spinbutton, enable_config);
-  gtk_widget_set_sensitive(self->_w.start_on_reset_checkbutton, enable_config);
+  gtk_tree_model_get(GTK_TREE_MODEL(gtk_combo_box_get_model(combobox)), &iter, 1, &encoder, -1);
+  self->_ui->set_video_encoder((VideoEncoder *) encoder);
+
+  self->set_config_widget_sensitivity(true);
+
+  on_config_changed(GTK_WIDGET(combobox), user_data);
+}
+
+gint
+VideoWindow::get_active_value_as_int(GtkComboBox *combobox, int column)
+{
+  GtkTreeIter iter;
+  if (!gtk_combo_box_get_active_iter(combobox, &iter))
+    return 0;
+
+  guint value;
+  gtk_tree_model_get(gtk_combo_box_get_model(combobox), &iter, 1, &value, -1);
+  return value;
 }
 
 void
@@ -157,7 +227,17 @@ VideoWindow::init_fps(GtkComboBox *combobox)
   gtk_list_store_append(store, &iter);
   gtk_list_store_set(store, &iter, 0, "25", 1, 2, -1);
   gtk_list_store_append(store, &iter);
-  gtk_list_store_set(store, &iter, 0, "12.5", 1, 4, -1);
+  gtk_list_store_set(store, &iter, 0, "16", 1, 3, -1);
+  gtk_list_store_append(store, &iter);
+  gtk_list_store_set(store, &iter, 0, "12", 1, 4, -1);
+  gtk_list_store_append(store, &iter);
+  gtk_list_store_set(store, &iter, 0, "10", 1, 5, -1);
+  gtk_list_store_append(store, &iter);
+  gtk_list_store_set(store, &iter, 0, "5", 1, 10, -1);
+  gtk_list_store_append(store, &iter);
+  gtk_list_store_set(store, &iter, 0, "2", 1, 25, -1);
+  gtk_list_store_append(store, &iter);
+  gtk_list_store_set(store, &iter, 0, "1", 1, 50, -1);
 
   gtk_combo_box_set_model(combobox, GTK_TREE_MODEL(store));
   GtkCellRenderer *renderer = gtk_cell_renderer_text_new();
@@ -208,7 +288,7 @@ VideoWindow::init(void)
    *  video window
    */
   _window = get_widget("video_window");
-  g_signal_connect(_window, "delete_event", G_CALLBACK(cmd_exec_sft), (char *)"ui-video-window-toggle"); // FIXME:
+  g_signal_connect(_window, "delete_event", G_CALLBACK(cmd_exec_sft), (char *) "ui-video-window-toggle");// FIXME:
 
   _w.start_on_reset_checkbutton = get_widget("start_on_reset_checkbutton");
   g_signal_connect(_w.start_on_reset_checkbutton, "toggled", G_CALLBACK(on_config_changed), this);
@@ -231,6 +311,7 @@ VideoWindow::init(void)
   gtk_container_add(GTK_CONTAINER(c), _w.filebutton);
   gtk_widget_set_sensitive(_w.filebutton, FALSE);
   gtk_widget_show(_w.filebutton);
+  g_signal_connect(_w.filebutton, "changed", G_CALLBACK(on_config_changed), this);
 
   _w.record_button = get_widget("record_button");
   g_signal_connect(_w.record_button, "clicked", G_CALLBACK(on_record_clicked), this);
