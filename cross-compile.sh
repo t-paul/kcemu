@@ -55,7 +55,7 @@ u () {
 
 x () {
 	echo "unpacking $1..."
-	tar xfz "$1"
+	tar xf "$1"
 }
 
 unpack_dev_libs () {
