@@ -1,3 +1,3 @@
 ## Process this file with automake to produce Makefile.in
 
-SUBDIRS = kc libaudio
+SUBDIRS = kc libaudio libgtkex

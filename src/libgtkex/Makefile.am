@@ -2,8 +2,6 @@
 
 noinst_LIBRARIES = libgtkex.a
 
-noinst_PROGRAMS = libgtkex-test
-
 INCLUDES = \
 	-I../../include
 
@@ -13,10 +11,3 @@ AM_CPPFLAGS = \
 libgtkex_a_SOURCES = \
 	gtkfilebutton.c \
 	gtkledline.c
-
-libgtkex_test_SOURCES = \
-	libgtkex-test.c
-
-libgtkex_test_LDADD = \
-	libgtkex.a \
-	$(GTK_LIBS)

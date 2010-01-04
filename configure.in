@@ -568,6 +568,7 @@ AC_OUTPUT([
 	test/kc/prefs/Makefile
 	test/libaudio/Makefile
 	test/libaudio/data/Makefile
+	test/libgtkex/Makefile
 	roms/Makefile
 	roms/z1013/Makefile
 	roms/z9001/Makefile

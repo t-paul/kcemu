@@ -140,7 +140,6 @@ src/sys/mingw/Makefile.in
 src/sys/mingw/Makefile
 src/sys/Makefile.in
 src/sys/Makefile
-src/libgtkex/libgtkex-test
 src/ui/beos/Makefile.in
 src/ui/beos/Makefile
 src/ui/generic/Makefile.in
@@ -169,6 +168,7 @@ test/libaudio/data/Makefile.in
 test/libaudio/data/Makefile
 test/libaudio/Makefile.in
 test/libaudio/Makefile
+test/libgtkex/libgtkex-test
 test/Makefile.in
 test/Makefile
 aclocal.m4
