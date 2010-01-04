@@ -247,7 +247,7 @@ dnl -----------------------
 dnl  initialize pkg-config
 dnl -----------------------
 PKG_PROG_PKG_CONFIG(0.20)
-PKG_CHECK_MODULES(GTK, gtk+-2.0 >= 1.16.5)
+PKG_CHECK_MODULES(GTK, gtk+-2.0 >= 2.16.5)
 
 if test x$cross_compiling = xno; then
 	PKG_CHECK_MODULES(X11, x11 >= 1.2)
