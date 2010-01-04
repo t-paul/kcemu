@@ -280,6 +280,7 @@ Section Uninstall
   Delete "$INSTDIR\share\KCemu\images\window-options.png"
   Delete "$INSTDIR\share\KCemu\images\window-selector.png"
   Delete "$INSTDIR\share\KCemu\images\window-plotter.png"
+  Delete "$INSTDIR\share\KCemu\images\window-screenshot.png"
 
   Delete "$INSTDIR\share\KCemu\images\about.xml"
   Delete "$INSTDIR\share\KCemu\images\audio.xml"
@@ -299,6 +300,7 @@ Section Uninstall
   Delete "$INSTDIR\share\KCemu\images\savemem.xml"
   Delete "$INSTDIR\share\KCemu\images\plotter.xml"
   Delete "$INSTDIR\share\KCemu\images\vdip.xml"
+  Delete "$INSTDIR\share\KCemu\images\screenshot.xml"
 
   Delete "$INSTDIR\share\KCemu\roms\z1013\z1013_20.rom"
   Delete "$INSTDIR\share\KCemu\roms\z1013\z1013_a2.rom"
