@@ -44,26 +44,24 @@ add_recent_info(const gchar *filename, const gchar *group)
   GtkRecentManager *manager = gtk_recent_manager_get_default();
 
   GFile *file = g_file_new_for_path(filename);
-  gchar *basename = g_file_get_basename(file);
+  gchar *uri = g_file_get_uri(file);
   g_object_unref(file);
 
-  GtkRecentData *recent_data = g_new0(GtkRecentData, 1);
-  recent_data->display_name = basename;
-  recent_data->mime_type = "application/octet-stream";
-  recent_data->app_name = "KCemu";
-  recent_data->app_exec = "xdg-open %u";
-  recent_data->groups = g_new0(gchar *, 1);
+  gchar *groups[2];
+  GtkRecentData recent_data;
+  memset(&recent_data, 0, sizeof(recent_data));
+  recent_data.mime_type = "application/octet-stream";
+  recent_data.app_name = "KCemu";
+  recent_data.app_exec = "xdg-open %u";
   if (group != NULL)
-    recent_data->groups[0] = g_strdup(group);
+    {
+      recent_data.groups = groups;
+      recent_data.groups[0] = group;
+      recent_data.groups[1] = NULL;
+    }
 
-  gchar *uri = g_strjoin(NULL, "file://", filename, NULL);
-  gtk_recent_manager_add_full(manager, uri, recent_data);
+  gtk_recent_manager_add_full(manager, uri, &recent_data);
   g_free(uri);
-
-  g_free(recent_data->groups[0]);
-  g_free(recent_data->groups);
-  g_free(recent_data->display_name);
-  g_free(recent_data);
 }
 
 static GtkListStore *
