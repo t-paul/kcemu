@@ -153,6 +153,9 @@ gtk_filebutton_set_entry_text(GtkFilebutton *filebutton, const gchar *text)
 static void
 gtk_filebutton_set_filename(GtkFilebutton *filebutton, const gchar *filename)
 {
+  if (g_strcmp0(filebutton->filename, filename) == 0)
+    return;
+
   g_free(filebutton->filename);
   filebutton->filename = g_strdup(filename);
 
