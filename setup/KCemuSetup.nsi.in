@@ -265,6 +265,7 @@ Section Uninstall
   Delete "$INSTDIR\share\KCemu\images\media-record.png"
   Delete "$INSTDIR\share\KCemu\images\media-start.png"
   Delete "$INSTDIR\share\KCemu\images\media-stop.png"
+  Delete "$INSTDIR\share\KCemu\images\media-pause.png"
   Delete "$INSTDIR\share\KCemu\images\window-about.png"
   Delete "$INSTDIR\share\KCemu\images\window-audio.png"
   Delete "$INSTDIR\share\KCemu\images\window-copying.png"
@@ -278,6 +279,7 @@ Section Uninstall
   Delete "$INSTDIR\share\KCemu\images\window-color.png"
   Delete "$INSTDIR\share\KCemu\images\window-keyboard.png"
   Delete "$INSTDIR\share\KCemu\images\window-options.png"
+  Delete "$INSTDIR\share\KCemu\images\window-video.png"
   Delete "$INSTDIR\share\KCemu\images\window-selector.png"
   Delete "$INSTDIR\share\KCemu\images\window-plotter.png"
 
@@ -297,6 +299,7 @@ Section Uninstall
   Delete "$INSTDIR\share\KCemu\images\tape.xml"
   Delete "$INSTDIR\share\KCemu\images\thanks.xml"
   Delete "$INSTDIR\share\KCemu\images\savemem.xml"
+  Delete "$INSTDIR\share\KCemu\images\video.xml"
   Delete "$INSTDIR\share\KCemu\images\plotter.xml"
   Delete "$INSTDIR\share\KCemu\images\vdip.xml"
 
