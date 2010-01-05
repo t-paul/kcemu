@@ -666,7 +666,7 @@ OptionsWindow::on_network_changed(GtkEntry *entry, gpointer user_data)
   OptionsWindow *self = (OptionsWindow *)user_data;
   const char * key = self->get_preferences_key(G_OBJECT(entry));
   gchar *text = pango_trim_string(gtk_entry_get_text(entry));
-  gtk_entry_set_icon_from_stock(entry, GTK_ENTRY_ICON_PRIMARY, *text && !g_hostname_is_ip_address(text) ? GTK_STOCK_DIALOG_WARNING : NULL);
+  gtk_entry_set_icon_from_stock(entry, GTK_ENTRY_ICON_PRIMARY, *text && !self->is_ip_address(text) ? GTK_STOCK_DIALOG_WARNING : NULL);
   gtk_entry_set_icon_activatable(entry, GTK_ENTRY_ICON_PRIMARY, FALSE);
   self->_current_profile->set_string_value(key, text);
   g_free(text);
@@ -681,6 +681,23 @@ OptionsWindow::get_selected_tree_iter(GtkTreeIter *iter) {
         return model;
     
     return NULL;
+}
+
+/**
+ * FreeBSD 8 still uses glib 2.20 as default version. That does
+ * not include g_hostname_is_ip_address() which has the good point
+ * to be available in MinGW environment too.
+ * I'm not going to to create a wrapper just for the GUI check, so
+ * there's no nice warning icon until glib is upgraded to at least 2.22.
+ */
+bool
+OptionsWindow::is_ip_address(const char *addr)
+{
+#if GLIB_CHECK_VERSION(2, 22, 0)
+  return g_hostname_is_ip_address(addr);
+#else
+  return true;
+#endif
 }
 
 ProfileValue *

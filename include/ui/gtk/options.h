@@ -165,7 +165,9 @@ private:
 
 protected:
     void init(void);
-    
+
+    bool is_ip_address(const char *addr);
+
     GtkTreeStore * get_tree_model(void);
     GtkListStore * get_system_list_model(void);
     GtkListStore * get_variant_list_model(kc_variant_t kc_variant, const char *name, ...);
