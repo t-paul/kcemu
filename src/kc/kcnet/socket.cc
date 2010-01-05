@@ -19,13 +19,13 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-#include <arpa/inet.h>
-
 #include "kc/system.h"
 
 #include "kc/kc.h"
 
 #include "kc/kcnet/socket.h"
+
+#include "sys/sysdep.h"
 
 #include "libdbg/dbg.h"
 
@@ -59,7 +59,7 @@ SocketData::put_byte(byte_t val)
 void
 SocketData::put_word(word_t val)
 {
-  word_t nval = htons(val);
+  word_t nval = sys_htons(val);
   put_byte(nval);
   put_byte(nval >> 8);
 }
@@ -67,7 +67,7 @@ SocketData::put_word(word_t val)
 void
 SocketData::put_long(dword_t val)
 {
-  word_t nval = htonl(val);
+  word_t nval = sys_htonl(val);
   put_byte(nval);
   put_byte(nval >> 8);
   put_byte(nval >> 16);

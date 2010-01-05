@@ -21,14 +21,9 @@
 
 #include <string>
 
-#include <fcntl.h>
 #include <stdio.h>
 #include <errno.h>
 #include <unistd.h>
-#include <netinet/in.h>
-#include <arpa/inet.h>
-#include <sys/types.h>
-#include <sys/socket.h>
 
 #include "kc/system.h"
 
@@ -91,8 +86,7 @@ IPRAW::close(void)
 void
 IPRAW::close_socket(void)
 {
-  shutdown(_socket, SHUT_RDWR);
-  ::close(_socket);
+  sys_socket_close(_socket);
   _socket = 0;
 }
 
@@ -101,35 +95,38 @@ IPRAW::poll(void)
 {
   if (_socket == 0)
     return;
-  
-  int ret = connect(_socket, (struct sockaddr *)&_send_addr, sizeof(_send_addr));
-  if (ret < 0)
+
+  // Use hard coded port 80, this is currently only intended to
+  // simulate ping. Because we can't simply send raw ip packets
+  // from user space program, we try to connect to web server
+  // port 80 and interpet a successful connect as ping reply.
+  int ret = sys_socket_connect(_socket, _ip0, _ip1, _ip2, _ip3, 80);
+
+  switch (ret)
     {
-      switch (errno)
-        {
-        case EINTR:
-          printf("IPRAW::send(): connect() failed with EINTR\n");
-          break;
-        case EINPROGRESS:
-          printf("IPRAW::send(): connect() failed with EINPROGRESS\n");
-          break;
-        case EALREADY:
-          printf("IPRAW::send(): connect() failed with EALREADY\n");
-          break;
-        case EISCONN:
-          _send_data = _data;
-          _data = NULL;
-          close_socket();
-          break;
-        default:
-          printf("IPRAW::send(): connect() failed with errno %d\n", errno);
-          if (_data)
-            delete _data;
-          _data = NULL;
-          _send_data = NULL;
-          close_socket();
-          break;
-        }
+    case 0:
+    case SYS_SOCKET_ERR_ISCONN:
+      _send_data = _data;
+      _data = NULL;
+      close_socket();
+      break;
+    case SYS_SOCKET_ERR_INTR:
+      printf("IPRAW::send(): connect() failed with EINTR\n");
+      break;
+    case SYS_SOCKET_ERR_INPROGRESS:
+      printf("IPRAW::send(): connect() failed with EINPROGRESS\n");
+      break;
+    case SYS_SOCKET_ERR_ALREADY:
+      printf("IPRAW::send(): connect() failed with EALREADY\n");
+      break;
+    default:
+      printf("IPRAW::send(): connect() failed with errno %d\n", errno);
+      if (_data)
+        delete _data;
+      _data = NULL;
+      _send_data = NULL;
+      close_socket();
+      break;
     }
 }
 
@@ -145,29 +142,21 @@ IPRAW::send(SocketData *data)
       return;
     }
 
-  char buf[4096];
-  snprintf(buf, sizeof(buf), "%d.%d.%d.%d", _ip0, _ip1, _ip2, _ip3);
-
-  memset(&_send_addr, 0, sizeof (_send_addr));
-  _send_addr.sin_family = AF_INET;
-  _send_addr.sin_port = htons(80);
-  inet_pton(AF_INET, buf, &_send_addr.sin_addr);
-
-  printf("IPRAW::send(): len = %d - %s:%d\n", data->length(), inet_ntoa(_send_addr.sin_addr), _port);
+  printf("IPRAW::send(): len = %d - %d.%d.%d.%d:%d\n", data->length(), _ip0, _ip1, _ip2, _ip3, _port);
   printf("IPRAW::send(): data = ");
   for (int a = 0;a < data->length();a++)
     printf("%02x ", data->get(a));
   printf("\n");
 
-  int s = socket(AF_INET, SOCK_STREAM, 0);
-  if (fcntl(s, F_SETFL, O_NONBLOCK) < 0)
+  int s = sys_socket_create(1, 1);
+  if (s < 0)
     return;
 
   _data = new SocketData(data->length() + 6);
-  _data->put_byte(_send_addr.sin_addr.s_addr);
-  _data->put_byte(_send_addr.sin_addr.s_addr >> 8);
-  _data->put_byte(_send_addr.sin_addr.s_addr >> 16);
-  _data->put_byte(_send_addr.sin_addr.s_addr >> 24);
+  _data->put_byte(_ip0);
+  _data->put_byte(_ip1);
+  _data->put_byte(_ip2);
+  _data->put_byte(_ip3);
   _data->put_word(data->length());
   _data->put_byte(0); // ECHO REPLY
   _data->put_byte(0); // code

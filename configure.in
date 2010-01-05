@@ -247,8 +247,12 @@ dnl -----------------------
 dnl  initialize pkg-config
 dnl -----------------------
 PKG_PROG_PKG_CONFIG(0.20)
-PKG_CHECK_MODULES(X11, x11 >= 1.2)
-PKG_CHECK_MODULES(XMU, xmu >= 1.0)
+PKG_CHECK_MODULES(GTK, gtk+-2.0 >= 1.16.5)
+
+if test x$cross_compiling = xno; then
+	PKG_CHECK_MODULES(X11, x11 >= 1.2)
+	PKG_CHECK_MODULES(XMU, xmu >= 1.0)
+fi
 
 dnl -----------------------
 dnl  check for z80ex
@@ -261,13 +265,14 @@ min_z80ex_version_minor=18
 min_z80ex_version="${min_z80ex_version_major}.${min_z80ex_version_minor}"
 AC_CHECK_LIB(z80ex, z80ex_create, have_libz80ex=yes, have_libz80ex=no)
 if test x$have_libz80ex = xyes; then
-	AC_MSG_CHECKING(for z80ex - api = $req_z80ex_api - version >= $min_z80ex_version)
 	Z80EX_LIBS="-lz80ex -lz80ex_dasm"
-	ac_save_CFLAGS="$CFLAGS"
-	ac_save_LIBS="$LIBS"
-	CFLAGS="$CFLAGS $Z80EX_CFLAGS"
-	LIBS="$Z80EX_LIBS $LIBS"
-	AC_TRY_RUN([
+	AC_MSG_CHECKING(for z80ex - api = $req_z80ex_api - version >= $min_z80ex_version)
+	if test x$cross_compiling = xno; then
+		ac_save_CFLAGS="$CFLAGS"
+		ac_save_LIBS="$LIBS"
+		CFLAGS="$CFLAGS $Z80EX_CFLAGS"
+		LIBS="$Z80EX_LIBS $LIBS"
+		AC_TRY_RUN([
 #include <stdio.h>
 #include <z80ex/z80ex.h>
 
@@ -286,9 +291,12 @@ main()
   return 0;
 }
 ],AC_MSG_RESULT(yes),have_libz80ex=no)
-	CFLAGS="$ac_save_CFLAGS"
-	LIBS="$ac_save_LIBS"
-	AC_SUBST(Z80EX_LIBS)
+		CFLAGS="$ac_save_CFLAGS"
+		LIBS="$ac_save_LIBS"
+		AC_SUBST(Z80EX_LIBS)
+	else
+		AC_MSG_RESULT([cross compiling; assumed OK...])
+	fi
 fi
 if test x$have_libz80ex = xno; then
 	AC_MSG_ERROR([
@@ -464,27 +472,6 @@ else
 ***])
 fi
 
-dnl ------------------
-dnl  check for libgtk
-dnl ------------------
-
-if ! test "x$enable_gtktest" = "xno" ; then
-	AM_PATH_GTK_2_0(2.16.5, have_libgtk=yes, have_libgtk=no)
-else
-	have_libgtk=yes
-	gtk_config_major_version=?
-	gtk_config_minor_version=?
-	gtk_config_micro_version=?
-	AC_MSG_CHECKING([for GTK library])
-	AC_MSG_RESULT([gtk-check disabled, using only GTK_CFLAGS/GTK_LIBS environment variables])
-	AC_SUBST(GTK_CFLAGS, $GTK_CFLAGS)
-	AC_SUBST(GTK_LIBS, $GTK_LIBS)
-fi
-
-if test x$have_libgtk = xyes; then
-	AC_DEFINE(HAVE_LIBGTK, 1, "have libgtk")
-fi
-
 dnl --------------------------------------
 dnl  check for libSDL if sound is enabled
 dnl --------------------------------------
@@ -523,9 +510,6 @@ AC_OUTPUT([
 	include/cmd/Makefile
 	include/ui/Makefile
 	include/ui/gtk/Makefile
-	include/ui/sdl/Makefile
-	include/ui/sdlmtk/Makefile
-	include/ui/beos/Makefile
 	include/ui/generic/Makefile
 	include/fileio/Makefile
 	include/libdbg/Makefile
@@ -544,16 +528,12 @@ AC_OUTPUT([
 	src/kc/vcs80/Makefile
 	src/kc/c80/Makefile
 	src/sys/Makefile
-	src/sys/beos/Makefile
 	src/sys/mingw/Makefile
 	src/sys/linux/Makefile
 	src/getopt/Makefile
 	src/cmd/Makefile
 	src/ui/Makefile
 	src/ui/gtk/Makefile
-	src/ui/sdl/Makefile
-	src/ui/sdlmtk/Makefile
-	src/ui/beos/Makefile
 	src/ui/generic/Makefile
 	src/fileio/Makefile
 	src/libdbg/Makefile
@@ -609,10 +589,6 @@ echo "- install prefix:  $prefix"
 echo ""
 echo -n "- libs:"
 comma=""
-if test x$have_libgtk = xyes; then
-echo -n "$comma Gtk+ ($gtk_config_major_version.$gtk_config_minor_version.$gtk_config_micro_version)"
-comma=","
-fi
 if test x$have_libsdl = xyes; then
 echo -n "$comma SDL ($sdl_major_version.$sdl_minor_version.$sdl_micro_version)"
 comma=","

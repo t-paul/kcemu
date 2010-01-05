@@ -166,7 +166,7 @@ SYSLIBS_FREEBSD = ../sys/linux/libsys_linux.a
 endif
 
 if TARGET_MINGW
-SYSLIBS_MINGW = ../sys/mingw/libsys_mingw.a -lwinmm
+SYSLIBS_MINGW = ../sys/mingw/libsys_mingw.a -lwinmm -lws2_32
 endif
 
 kcemu_LDADD = \

@@ -19,14 +19,7 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-#include <string>
 #include <stdio.h>
-#include <netinet/in.h>
-#include <arpa/inet.h>
-#include <sys/types.h>
-#include <sys/socket.h>
-#include <unistd.h>
-#include <fcntl.h>
 #include <errno.h>
 
 #include "kc/system.h"
@@ -72,14 +65,8 @@ TCP::open(void)
 {
   printf("TCP::open()\n");
   _is_open = false;
-  _socket = socket(AF_INET, SOCK_STREAM, 0);
+  _socket = sys_socket_create(1, 1);
   if (_socket < 0)
-    {
-      close();
-      return false;
-    }
-
-  if (fcntl(_socket, F_SETFL, O_NONBLOCK) < 0)
     {
       close();
       return false;
@@ -97,38 +84,28 @@ TCP::is_open(void)
   if (_is_open)
     return true;
 
-  char buf[4096];
-  snprintf(buf, sizeof(buf), "%d.%d.%d.%d", _ip0, _ip1, _ip2, _ip3);
+  int ret = sys_socket_connect(_socket, _ip0, _ip1, _ip2, _ip3, _port);
+  if (ret == 0)
+    return true;
 
-  struct sockaddr_in addr;
-  memset(&addr, 0, sizeof (addr));
-  addr.sin_family = AF_INET;
-  addr.sin_port = htons(_port);
-  inet_pton(AF_INET, buf, &addr.sin_addr);
-
-  int ret = connect(_socket, (struct sockaddr *)&addr, sizeof(struct sockaddr));
-  if (ret < 0)
+  switch (ret)
     {
-      switch (errno)
-        {
-        case EINTR:
-          printf("TCP::is_open(): connect() failed with EINTR (%s:%d)\n", inet_ntoa(addr.sin_addr), ntohs(addr.sin_port));
-          return false;
-        case EINPROGRESS:
-          printf("TCP::is_open(): connect() failed with EINPROGRESS (%s:%d)\n", inet_ntoa(addr.sin_addr), ntohs(addr.sin_port));
-          return false;
-        case EALREADY:
-          printf("TCP::is_open(): connect() failed with EALREADY (%s:%d)\n", inet_ntoa(addr.sin_addr), ntohs(addr.sin_port));
-          return false;
-        case EISCONN:
-          return true;
-        default:
-          printf("TCP::is_open(): connect() failed with errno %d (%s:%d)\n", errno, inet_ntoa(addr.sin_addr), ntohs(addr.sin_port));
-          close();
-          return false;
-        }
+    case SYS_SOCKET_ERR_INTR:
+      printf("TCP::is_open(): connect() failed with EINTR (%d.%d.%d.%d:%d)\n", _ip0, _ip1, _ip2, _ip3, _port);
+      return false;
+    case SYS_SOCKET_ERR_INPROGRESS:
+      printf("TCP::is_open(): connect() failed with EINPROGRESS (%d.%d.%d.%d:%d)\n", _ip0, _ip1, _ip2, _ip3, _port);
+      return false;
+    case SYS_SOCKET_ERR_ALREADY:
+      printf("TCP::is_open(): connect() failed with EALREADY (%d.%d.%d.%d:%d)\n", _ip0, _ip1, _ip2, _ip3, _port);
+      return false;
+    case SYS_SOCKET_ERR_ISCONN:
+      return true;
+    default:
+      printf("TCP::is_open(): connect() failed with errno %d (%d.%d.%d.%d:%d)\n", ret, _ip0, _ip1, _ip2, _ip3, _port);
+      close();
+      return false;
     }
-  return true;
 }
 
 void
@@ -137,8 +114,7 @@ TCP::close(void)
   printf("TCP::close()\n");
   if (_socket > 0)
     {
-      shutdown(_socket, SHUT_RDWR);
-      ::close(_socket);
+      sys_socket_close(_socket);
     }
   _socket = 0;
   _is_open = false;
@@ -147,7 +123,7 @@ TCP::close(void)
 void
 TCP::poll(void)
 {
-  char buf[512];
+  unsigned char buf[512];
 
   if (_socket == 0)
     return;
@@ -155,7 +131,7 @@ TCP::poll(void)
   if (_send_data != NULL)
     return;
 
-  int r = recv(_socket, buf, sizeof(buf), MSG_DONTWAIT);
+  int r = sys_socket_recvfrom(_socket, buf, sizeof(buf), NULL, NULL, NULL, NULL, NULL);
 
   if (r < 0)
     {
@@ -191,7 +167,7 @@ TCP::send(SocketData *data)
   for (int a = 0;a < data->length();a++)
     printf("%02x ", data->get(a));
   printf("\n");
-  int n = ::send(_socket, data->get(), data->length(), 0);
+  int n = sys_socket_send(_socket, data->get(), data->length());
   printf("TCP::send(): send() returned %d\n", n);
 }
 

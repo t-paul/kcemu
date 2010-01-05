@@ -956,6 +956,7 @@ main(int argc, char **argv)
   fileio_init();
   libdisk_init();
   libaudio_init(LIBAUDIO_TYPE_ALL);
+  sys_socket_init();
 
   while (1)
     {

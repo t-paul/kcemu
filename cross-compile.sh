@@ -12,7 +12,7 @@
 
 #BUILD_DIR="/tmp/kcemu.build.$$"
 BUILD_DIR="/tmp/kcemu.build"
-GTK_DEV_PACKAGES_DIR="/data/download/win32-dev/gtk-win32/gtk+-2.16.6"
+GTK_DEV_PACKAGES_DIR="/data/download/win32-dev/gtk-win32/gtk+-2.18.5"
 GTK_RUNTIME_PACKAGES_BASE="/data/download/win32-dev/gtk-win32"
 DEP_PACKAGES_DIR="/data/download/win32-dev/gtk-win32/dependencies"
 SDL_PACKAGES_DIR="/data/download/win32-dev/libsdl"
@@ -38,6 +38,11 @@ export SDL_CONFIG="$DEV_DIR"/bin/i386-mingw32msvc-sdl-config
 export TARGET="i586-mingw32msvc"
 
 u () {
+	if [ ! -f "$1" ]
+	then
+		echo "can't find file '$1'."
+		exit 1
+	fi
 	if [ "x$2" = "x" ]
 	then
 		echo "unpacking $1..."
@@ -62,17 +67,20 @@ unpack_dev_libs () {
 	else
 		mkdir -p "$DIR" && cd "$DIR" || exit 5
 
-		u "$GTK_DEV_PACKAGES_DIR"/glib-dev_2.20.5-1_win32.zip
-		u "$GTK_DEV_PACKAGES_DIR"/gtk+-dev_2.16.6-1_win32.zip
-		u "$GTK_DEV_PACKAGES_DIR"/pango-dev_1.24.5-2_win32.zip
-		u "$GTK_DEV_PACKAGES_DIR"/atk-dev_1.26.0-1_win32.zip
-		u "$GTK_DEV_PACKAGES_DIR"/cairo-dev_1.8.8-2_win32.zip
+		u "$GTK_DEV_PACKAGES_DIR"/glib-dev_*_win32.zip
+		u "$GTK_DEV_PACKAGES_DIR"/gtk+-dev_*_win32.zip
+		u "$GTK_DEV_PACKAGES_DIR"/pango-dev_*_win32.zip
+		u "$GTK_DEV_PACKAGES_DIR"/atk-dev_*_win32.zip
+		u "$GTK_DEV_PACKAGES_DIR"/cairo-dev_*_win32.zip
 
-		u "$DEP_PACKAGES_DIR"/pkg-config-0.23-2.zip
+		u "$DEP_PACKAGES_DIR"/pkg-config_0.23-3_win32.zip
 		u "$DEP_PACKAGES_DIR"/libiconv-1.9.1.bin.woe32.zip
 		u "$DEP_PACKAGES_DIR"/gettext-runtime-dev-0.17-1.zip
-		u "$DEP_PACKAGES_DIR"/libpng-dev_1.2.39-1_win32.zip
+		u "$DEP_PACKAGES_DIR"/libpng-dev_1.2.40-1_win32.zip
 		u "$DEP_PACKAGES_DIR"/jpeg_7-1_win32.zip
+		u "$DEP_PACKAGES_DIR"/freetype-dev_2.3.11-1_win32.zip
+		u "$DEP_PACKAGES_DIR"/fontconfig-dev_2.8.0-1_win32.zip
+		u "$DEP_PACKAGES_DIR"/z80ex-1.1.18_win32.zip
 
 		u "$DEP_PACKAGES_DIR"/zlib123-dll.zip
 		mv zlib1.dll bin/
@@ -86,30 +94,10 @@ unpack_dev_libs () {
     )
 }
 
-patch_libxml2_pkg_config_file () {
-	echo "*"
-	echo "* patching libxml2 pkgconfig file to use -lzdll"
-	echo "*"
-	sleep 1
-	patch -p0 << EOF
---- lib/pkgconfig/libxml-2.0.pc.orig	2006-12-13 08:31:44.000000000 +0100
-+++ lib/pkgconfig/libxml-2.0.pc	2008-03-21 16:23:12.000000000 +0100
-@@ -7,5 +7,5 @@
- Version: 2.6.27
- Description: libXML library version 2.
- Requires:
--Libs: -L\${libdir} -lxml2 -lz
-+Libs: -L\${libdir} -lxml2 -lzdll
- Cflags: -I\${includedir}
-EOF
-	sleep 2
-	echo
-}
-
 unpack_cur_libs_common () {
 	u "$DEP_PACKAGES_DIR"/libiconv-1.9.1.bin.woe32.zip
 	u "$DEP_PACKAGES_DIR"/gettext-runtime-0.17-1.zip
-	u "$DEP_PACKAGES_DIR"/libpng_1.2.39-1_win32.zip
+	u "$DEP_PACKAGES_DIR"/libpng_1.2.40-1_win32.zip
 	u "$DEP_PACKAGES_DIR"/jpeg_7-1_win32.zip
 	u "$DEP_PACKAGES_DIR"/libtiff_3.9.1-1_win32.zip
 
@@ -158,7 +146,12 @@ compile_kcemu () {
 
 	(
 	  cd "KCemu-${KCEMU_VERSION}" || exit 9
-	  ./configure \
+	  if [ -f config.status ]
+	  then
+	    echo "File config.status already exists, skipping ./configure run"
+	    make install
+          else
+	    ./configure \
 	  		--build="$BUILD" \
 			--host="$TARGET" \
 			--target="$TARGET" \
@@ -167,6 +160,7 @@ compile_kcemu () {
 			--with-debug-level=1 \
 			--enable-sound \
 		&& make install
+	  fi
 	)
 }
 
@@ -199,11 +193,11 @@ unpack_dev_libs "$DEV_DIR"
 #
 #  unpack runtime libraries
 #
-unpack_cur_libs_gtk gtk+-2.16.6 \
-	glib_2.20.5-1_win32.zip \
-	gtk+_2.16.6-1_win32.zip \
-	pango_1.24.5-2_win32.zip \
-	atk_1.26.0-1_win32.zip \
+unpack_cur_libs_gtk gtk+-2.18.5 \
+	glib_2.22.3-1_win32.zip \
+	gtk+_2.18.5-1_win32.zip \
+	pango_1.26.1-1_win32.zip \
+	atk_1.28.0-1_win32.zip \
 	cairo_1.8.8-2_win32.zip
 
 #

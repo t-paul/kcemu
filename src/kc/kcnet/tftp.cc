@@ -20,7 +20,9 @@
  */
 
 #include <string>
+
 #include <stdio.h>
+#include <unistd.h>
 
 #include "kc/system.h"
 
