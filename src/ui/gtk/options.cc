@@ -592,7 +592,7 @@ OptionsWindow::on_rom_changed(GtkComboBoxEntry *comboboxentry, gpointer user_dat
     GtkTreeModel *model = gtk_combo_box_get_model(GTK_COMBO_BOX(comboboxentry));
     gtk_tree_model_get(model, &iter, 1, &rom, -1);
     
-    const char *key = self->get_preferences_key(GTK_CHECK_BUTTON(g_object_get_data(G_OBJECT(comboboxentry), DATA_KEY_CHECK_BUTTON)));
+    const char *key = self->get_preferences_key(G_OBJECT(g_object_get_data(G_OBJECT(comboboxentry), DATA_KEY_CHECK_BUTTON)));
     self->_current_profile->set_string_value(key, rom);
 
     self->apply_system_type(); // let apply_roms_settings change the tooltip text for the combobox!
@@ -615,7 +615,7 @@ OptionsWindow::on_rom_open_clicked(GtkButton *button, gpointer user_data) {
   gtk_file_chooser_set_current_folder(GTK_FILE_CHOOSER(filechooser), self->_open_rom_last_path);
   free(self->_open_rom_last_path);
 
-  const char *key = self->get_preferences_key(GTK_CHECK_BUTTON(g_object_get_data(G_OBJECT(button), DATA_KEY_CHECK_BUTTON)));
+  const char *key = self->get_preferences_key(G_OBJECT(g_object_get_data(G_OBJECT(button), DATA_KEY_CHECK_BUTTON)));
   if (gtk_dialog_run(GTK_DIALOG(filechooser)) == GTK_RESPONSE_ACCEPT)
     {
       char *filename = gtk_file_chooser_get_filename(GTK_FILE_CHOOSER(filechooser));
@@ -628,6 +628,48 @@ OptionsWindow::on_rom_open_clicked(GtkButton *button, gpointer user_data) {
   gtk_widget_destroy(filechooser);
 
   self->apply_system_type(); // let apply_roms_settings add the filename from profile to combobox model!
+}
+
+void
+OptionsWindow::apply_entry_value(GtkEntry *entry, gint signal_id)
+{
+  const char * key = get_preferences_key(G_OBJECT(entry));
+  ProfileValue *value = get_current_profile_value(key);
+  g_signal_handler_block(entry, signal_id);
+  gtk_entry_set_text(entry, value == NULL ? "" : value->get_string_value());
+  g_signal_handler_unblock(entry, signal_id);
+
+  GtkToggleButton *toggle_button = GTK_TOGGLE_BUTTON(g_object_get_data(G_OBJECT(entry), DATA_KEY_CHECK_BUTTON));
+  gtk_toggle_button_set_active(toggle_button, _current_profile->contains_key(key));
+}
+
+void
+OptionsWindow::apply_network_settings(void)
+{
+  apply_entry_value(_w.entry_network_ip_address, _w.on_network_changed_id[0]);
+  apply_entry_value(_w.entry_network_netmask, _w.on_network_changed_id[1]);
+  apply_entry_value(_w.entry_network_gateway, _w.on_network_changed_id[2]);
+  apply_entry_value(_w.entry_network_dns_server, _w.on_network_changed_id[3]);
+}
+
+void
+OptionsWindow::on_network_settings_check_button_toggled(GtkToggleButton *togglebutton, gpointer user_data)
+{
+    OptionsWindow *self = (OptionsWindow *)user_data;
+    if (self->check_button_toggled(togglebutton))
+        self->apply_network_settings();
+}
+
+void
+OptionsWindow::on_network_changed(GtkEntry *entry, gpointer user_data)
+{
+  OptionsWindow *self = (OptionsWindow *)user_data;
+  const char * key = self->get_preferences_key(G_OBJECT(entry));
+  gchar *text = pango_trim_string(gtk_entry_get_text(entry));
+  gtk_entry_set_icon_from_stock(entry, GTK_ENTRY_ICON_PRIMARY, *text && !g_hostname_is_ip_address(text) ? GTK_STOCK_DIALOG_WARNING : NULL);
+  gtk_entry_set_icon_activatable(entry, GTK_ENTRY_ICON_PRIMARY, FALSE);
+  self->_current_profile->set_string_value(key, text);
+  g_free(text);
 }
 
 GtkTreeModel *
@@ -650,10 +692,18 @@ OptionsWindow::get_current_profile_value(const char *key) {
 }
 
 const char *
-OptionsWindow::get_preferences_key(GtkCheckButton *check_button) {
-    const char * key = (const char *)g_object_get_data(G_OBJECT(check_button), PREFERENCES_KEY);
+OptionsWindow::get_preferences_key(GObject *object) {
+    const char * key = (const char *)g_object_get_data(object, PREFERENCES_KEY);
     g_assert(key != NULL);
     return key;
+}
+
+void
+OptionsWindow::set_preferences_key(GObject *object, const char *key)
+{
+    g_assert(object != NULL);
+    g_assert(key != NULL);
+    g_object_set_data(object, PREFERENCES_KEY, strdup(key));
 }
 
 /**
@@ -665,7 +715,7 @@ OptionsWindow::get_preferences_key(GtkCheckButton *check_button) {
  */
 void
 OptionsWindow::apply_spin_button_value(GtkCheckButton *check_button, GtkSpinButton *spin_button, gint signal_id, int default_value) {
-    const char *key = get_preferences_key(check_button);
+    const char *key = get_preferences_key(G_OBJECT(check_button));
     ProfileValue *value = get_current_profile_value(key);
     int spin_value = value == NULL ? default_value : value->get_int_value();
     
@@ -687,7 +737,7 @@ OptionsWindow::apply_spin_button_value(GtkCheckButton *check_button, GtkSpinButt
  */
 void
 OptionsWindow::apply_combobox_value(GtkCheckButton *check_button, GtkComboBox *combobox, gint handler_id) {
-    const char *key = get_preferences_key(check_button);
+    const char *key = get_preferences_key(G_OBJECT(check_button));
     ProfileValue *value = get_current_profile_value(key);
     int val = value == NULL ? 0 : value->get_int_value();
     
@@ -709,6 +759,7 @@ OptionsWindow::apply_profile(void) {
     apply_system_type();
     apply_display_settings();
     apply_kc85_settings();
+    apply_network_settings();
     
     apply_filechooserbutton(GTK_FILE_CHOOSER(get_widget("media_filechooserbutton_tape")));
     apply_filechooserbutton(GTK_FILE_CHOOSER(get_widget("media_filechooserbutton_audio")));
@@ -1312,7 +1363,27 @@ OptionsWindow::init(void) {
         gtk_combo_box_entry_set_text_column(_w.roms_comboboxentry[a], 0);
         g_object_unref(store);
     }
-    
+
+    _w.entry_network_ip_address = GTK_ENTRY(get_widget("ip_address_entry"));
+    set_preferences_key(G_OBJECT(_w.entry_network_ip_address), "network_ip_address");
+    _w.on_network_changed_id[0] = g_signal_connect(_w.entry_network_ip_address, "changed", G_CALLBACK(on_network_changed), this);
+    wire_check_button("network_ip_address", GTK_CHECK_BUTTON(get_widget("ip_address_checkbutton")), G_CALLBACK(on_network_settings_check_button_toggled), GTK_WIDGET(_w.entry_network_ip_address));
+
+    _w.entry_network_netmask = GTK_ENTRY(get_widget("netmask_entry"));
+    set_preferences_key(G_OBJECT(_w.entry_network_netmask), "network_netmask");
+    _w.on_network_changed_id[1] = g_signal_connect(_w.entry_network_netmask, "changed", G_CALLBACK(on_network_changed), this);
+    wire_check_button("network_netmask", GTK_CHECK_BUTTON(get_widget("netmask_checkbutton")), G_CALLBACK(on_network_settings_check_button_toggled), GTK_WIDGET(_w.entry_network_netmask));
+
+    _w.entry_network_gateway = GTK_ENTRY(get_widget("gateway_entry"));
+    set_preferences_key(G_OBJECT(_w.entry_network_gateway), "network_gateway");
+    _w.on_network_changed_id[2] = g_signal_connect(_w.entry_network_gateway, "changed", G_CALLBACK(on_network_changed), this);
+    wire_check_button("network_gateway", GTK_CHECK_BUTTON(get_widget("gateway_checkbutton")), G_CALLBACK(on_network_settings_check_button_toggled), GTK_WIDGET(_w.entry_network_gateway));
+
+    _w.entry_network_dns_server = GTK_ENTRY(get_widget("dns_server_entry"));
+    set_preferences_key(G_OBJECT(_w.entry_network_dns_server), "network_dns_server");
+    _w.on_network_changed_id[3] = g_signal_connect(_w.entry_network_dns_server, "changed", G_CALLBACK(on_network_changed), this);
+    wire_check_button("network_dns_server", GTK_CHECK_BUTTON(get_widget("dns_server_checkbutton")), G_CALLBACK(on_network_settings_check_button_toggled), GTK_WIDGET(_w.entry_network_dns_server));
+
     collapse_tree();
     
     init_dialog(NULL, NULL);

@@ -25,6 +25,8 @@
 #include <sys/time.h>
 
 #include "kc/system.h"
+#include "kc/prefs/prefs.h"
+#include "kc/prefs/strlist.h"
 
 #include "kc/kc.h"
 #include "kc/pio.h"
@@ -131,28 +133,74 @@ KCNET::init(bool power_on, bool set_config)
 
   if (set_config)
     {
-      // gateway
-      _mem[ADDR_GAR0] = 192;
-      _mem[ADDR_GAR1] = 168;
-      _mem[ADDR_GAR2] = 46;
-      _mem[ADDR_GAR3] = 100;
+      byte_t ip0, ip1, ip2, ip3;
 
-      // subnet
-      _mem[ADDR_SUBR0] = 255;
-      _mem[ADDR_SUBR1] = 255;
-      _mem[ADDR_SUBR2] = 255;
-      _mem[ADDR_SUBR3] = 0;
 
-      // ip addr
-      _mem[ADDR_SIPR0] = 192;
-      _mem[ADDR_SIPR1] = 168;
-      _mem[ADDR_SIPR2] = 46;
-      _mem[ADDR_SIPR3] = 16;
+      if (get_ip_address_from_prefs("network_gateway", ip0, ip1, ip2, ip3))
+        {
+          _mem[ADDR_GAR0] = ip0;
+          _mem[ADDR_GAR1] = ip1;
+          _mem[ADDR_GAR2] = ip2;
+          _mem[ADDR_GAR3] = ip3;
+        }
 
-      // dns
-      //set_ip_address(0, (212 << 24) | (23 << 16) | (97 << 8) | 2);
-      set_ip_address(0, (192 << 24) | (168 << 16) | (46 << 8) | 1);
+      if (get_ip_address_from_prefs("network_netmask", ip0, ip1, ip2, ip3))
+        {
+          _mem[ADDR_SUBR0] = ip0;
+          _mem[ADDR_SUBR1] = ip1;
+          _mem[ADDR_SUBR2] = ip2;
+          _mem[ADDR_SUBR3] = ip3;
+        }
+
+      if (get_ip_address_from_prefs("network_ip_address", ip0, ip1, ip2, ip3))
+        {
+          _mem[ADDR_SIPR0] = ip0;
+          _mem[ADDR_SIPR1] = ip1;
+          _mem[ADDR_SIPR2] = ip2;
+          _mem[ADDR_SIPR3] = ip3;
+        }
+
+      if (get_ip_address_from_prefs("network_dns_server", ip0, ip1, ip2, ip3))
+        {
+          set_ip_address(0, (ip0 << 24) | (ip1 << 16) | (ip2 << 8) | ip3);
+        }
     }
+}
+
+const bool
+KCNET::get_ip_address_from_prefs(const char *key, byte_t &ip0, byte_t &ip1, byte_t &ip2, byte_t &ip3) const
+{
+  ip0 = ip1 = ip2 =  ip3 = 0;
+  
+  const char *addr = Preferences::instance()->get_string_value(key, NULL);
+  if (addr == NULL)
+    return false;
+
+  StringList list(addr, '.');
+  if (list.size() != 4)
+    return false;
+
+  int ip[4];
+  int idx = 0;
+  for (StringList::iterator it = list.begin();it != list.end();it++)
+    {
+      char *endptr;
+      unsigned long n = strtoul((*it).c_str(), &endptr, 10);
+      if (*endptr != 0)
+        return false;
+
+      if (n > 255)
+        return false;
+
+      ip[idx++] = n;
+    }
+
+  ip0 = ip[0];
+  ip1 = ip[1];
+  ip2 = ip[2];
+  ip3 = ip[3];
+  
+  return true;
 }
 
 void

@@ -62,6 +62,7 @@ private:
     enum {
         NR_OF_MODULES = 8,
         NR_OF_ROMS = 8,
+        NR_OF_NETWORK_SETTINGS = 4,
     };
     
     static const char * FILE_CHOOSER_BUTTON_KEY;
@@ -120,6 +121,11 @@ private:
         GtkComboBox    *combobox_module[NR_OF_MODULES];
         GtkCheckButton *check_button_modules;
         
+        GtkEntry       *entry_network_ip_address;
+        GtkEntry       *entry_network_netmask;
+        GtkEntry       *entry_network_gateway;
+        GtkEntry       *entry_network_dns_server;
+
         GtkLabel         *roms_label[NR_OF_ROMS];
         GtkComboBoxEntry *roms_comboboxentry[NR_OF_ROMS];
         GtkButton        *roms_open_button[NR_OF_ROMS];
@@ -146,6 +152,7 @@ private:
         gint          on_kc85_busdrivers_changed_id;
         gint          on_module_changed_id[NR_OF_MODULES];
         gint          on_rom_changed_id[NR_OF_ROMS];
+        gint          on_network_changed_id[NR_OF_NETWORK_SETTINGS];
     } _w;
     
     CMD *_cmd;
@@ -167,17 +174,20 @@ protected:
     GtkTreeModel * get_selected_tree_iter(GtkTreeIter *iter);
     void expand_and_select(GtkTreeView *treeview, GtkTreeModel *model, GtkTreeIter *iter);
     ProfileValue * get_current_profile_value(const char *key);
-    const char * get_preferences_key(GtkCheckButton *check_button);
+    const char * get_preferences_key(GObject *object);
+    void set_preferences_key(GObject *object, const char *key);
 
     void apply_profile(void);
     void apply_comment(void);
     void apply_system_type(void);
     void apply_kc85_settings(void);
     void apply_display_settings(void);
+    void apply_network_settings(void);
     void apply_modules_settings(kc_type_t kc_type);
     void apply_roms_settings(kc_type_t kc_type, kc_variant_t kc_variant);
     void apply_system_variant(kc_type_t kc_type, kc_variant_t kc_variant);
     void apply_filechooserbutton(GtkFileChooser *filechooser);
+    void apply_entry_value(GtkEntry *entry, gint signal_id);
     void apply_combobox_value(GtkCheckButton *check_button, GtkComboBox *combobox, gint handler_id);
     void apply_spin_button_value(GtkCheckButton *check_button, GtkSpinButton *spin_button, gint signal_id, int default_value);
 
@@ -229,6 +239,9 @@ protected:
     static void on_rom_changed(GtkComboBoxEntry *comboboxentry, gpointer user_data);
     static void on_rom_open_clicked(GtkButton *button, gpointer user_data);
     static void on_roms_settings_check_button_toggled(GtkToggleButton *togglebutton, gpointer user_data);
+
+    static void on_network_settings_check_button_toggled(GtkToggleButton *togglebutton, gpointer user_data);
+    static void on_network_changed(GtkEntry *entry, gpointer user_data);
 
     static gboolean tree_model_foreach_func_delete(GtkTreeModel *model, GtkTreePath *path, GtkTreeIter *iter, gpointer user_data);
     
