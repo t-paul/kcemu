@@ -82,26 +82,26 @@ IMAGES = \
 	kcemu.png
 
 UI_XML = \
-        about.xml \
-        audio.xml \
-        plotter.xml \
-        video.xml \
-        color.xml \
-        legal.xml \
-        dialog.xml \
-	main.xml \
-        disk.xml \
-        vdip.xml \
-        help.xml \
-        keyboard.xml \
-        module.xml \
-        options.xml \
-        selector.xml \
-        screenshot.xml \
-        savemem.xml \
-        tape.xml \
-        tapeedit.xml \
-        thanks.xml
+	about.glade \
+	audio.glade \
+	color.glade \
+	dialog.glade \
+	disk.glade \
+	help.glade \
+	keyboard.glade \
+	legal.glade \
+	main.glade \
+	module.glade \
+	options.glade \
+	plotter.glade \
+	savemem.glade \
+	screenshot.glade \
+	selector.glade \
+	tapeedit.glade \
+	tape.glade \
+	thanks.glade \
+	vdip.glade \
+	video.glade
 
 %.ico : %.xpm
 	xpmtoppm --alphaout /tmp/ico.alpha.1.$$$$ $< | ppmquant 256 > /tmp/ico.icon.$$$$ ; \

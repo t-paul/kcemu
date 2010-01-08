@@ -53,6 +53,7 @@ UI_Gtk_Window::UI_Gtk_Window(const char *ui_xml_file)
   
   string ui_xml_file_path = _image_path + ui_xml_file;
   _gtk_builder = gtk_builder_new();
+  gtk_builder_set_translation_domain(_gtk_builder, PACKAGE);
   gtk_builder_add_from_file(_gtk_builder, ui_xml_file_path.c_str(), NULL);
 }
 
