@@ -108,13 +108,13 @@
 /* Define to 1 if you have the `getuid' function. */
 #undef HAVE_GETUID
 
-/* Define if you have the iconv() function. */
+/* Define if you have the iconv() function and it works. */
 #undef HAVE_ICONV
 
 /* Define if you have the 'intmax_t' type in <stdint.h> or <inttypes.h>. */
 #undef HAVE_INTMAX_T
 
-/* Define if <inttypes.h> exists and doesn't clash with <sys/types.h>. */
+/* Define to 1 if you have the <inttypes.h> header file. */
 #undef HAVE_INTTYPES_H
 
 /* Define if <inttypes.h> exists, doesn't clash with <sys/types.h>, and
@@ -187,11 +187,8 @@
 /* "localtime_r" */
 #undef HAVE_LOCALTIME_R
 
-/* Define if you have the 'long double' type. */
-#undef HAVE_LONG_DOUBLE
-
-/* Define if you have the 'long long' type. */
-#undef HAVE_LONG_LONG
+/* Define to 1 if the system has the type `long long int'. */
+#undef HAVE_LONG_LONG_INT
 
 /* Define to 1 if you have the <machine/soundcard.h> header file. */
 #undef HAVE_MACHINE_SOUNDCARD_H
@@ -312,8 +309,8 @@
 /* Define to 1 if you have the <unistd.h> header file. */
 #undef HAVE_UNISTD_H
 
-/* Define if you have the 'unsigned long long' type. */
-#undef HAVE_UNSIGNED_LONG_LONG
+/* Define to 1 if the system has the type `unsigned long long int'. */
+#undef HAVE_UNSIGNED_LONG_LONG_INT
 
 /* Define to 1 or 0, depending whether the compiler supports simple visibility
    declarations. */
@@ -492,9 +489,6 @@
 /* Define as the type of the result of subtracting two pointers, if the system
    doesn't define it. */
 #undef ptrdiff_t
-
-/* Define to empty if the C compiler doesn't support this keyword. */
-#undef signed
 
 /* Define to `unsigned int' if <sys/types.h> does not define. */
 #undef size_t

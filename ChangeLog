@@ -1,3 +1,35 @@
+2010-01-08  gettextize  <bug-gnu-gettext@gnu.org>
+
+	* config/gettext.m4: New file, from gettext-0.17.
+	* config/iconv.m4: New file, from gettext-0.17.
+	* config/lib-ld.m4: New file, from gettext-0.17.
+	* config/lib-link.m4: New file, from gettext-0.17.
+	* config/lib-prefix.m4: New file, from gettext-0.17.
+	* config/nls.m4: New file, from gettext-0.17.
+	* config/po.m4: New file, from gettext-0.17.
+	* config/progtest.m4: New file, from gettext-0.17.
+	* config/codeset.m4: New file, from gettext-0.17.
+	* config/glibc2.m4: New file, from gettext-0.17.
+	* config/glibc21.m4: New file, from gettext-0.17.
+	* config/intdiv0.m4: New file, from gettext-0.17.
+	* config/intl.m4: New file, from gettext-0.17.
+	* config/intldir.m4: New file, from gettext-0.17.
+	* config/intlmacosx.m4: New file, from gettext-0.17.
+	* config/intmax.m4: New file, from gettext-0.17.
+	* config/inttypes_h.m4: New file, from gettext-0.17.
+	* config/inttypes-pri.m4: New file, from gettext-0.17.
+	* config/lcmessage.m4: New file, from gettext-0.17.
+	* config/lock.m4: New file, from gettext-0.17.
+	* config/longlong.m4: New file, from gettext-0.17.
+	* config/printf-posix.m4: New file, from gettext-0.17.
+	* config/size_max.m4: New file, from gettext-0.17.
+	* config/stdint_h.m4: New file, from gettext-0.17.
+	* config/uintmax_t.m4: New file, from gettext-0.17.
+	* config/visibility.m4: New file, from gettext-0.17.
+	* config/wchar_t.m4: New file, from gettext-0.17.
+	* config/wint_t.m4: New file, from gettext-0.17.
+	* config/xsize.m4: New file, from gettext-0.17.
+
 2006-11-17  gettextize  <bug-gnu-gettext@gnu.org>
 
 	* Makefile.am (SUBDIRS): Add intl, m4, po.
