@@ -222,7 +222,7 @@ banner(void)
 {
   cout << ("   _  ______\n"
 	   "  | |/ / ___|___ _ __ ___  _   _               KCemu " KCEMU_VERSION "\n"
-	   "  | ' / |   / _ \\ '_ ` _ \\| | | |      (c) 1997-2009 Torsten Paul\n"
+	   "  | ' / |   / _ \\ '_ ` _ \\| | | |      (c) 1997-2010 Torsten Paul\n"
 	   "  | . \\ |__|  __/ | | | | | |_| |        <Torsten.Paul@gmx.de>\n"
 	   "  |_|\\_\\____\\___|_| |_| |_|\\__,_|     http://kcemu.sourceforge.net/\n");
 }

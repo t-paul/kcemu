@@ -13,21 +13,17 @@
         <child>
           <object class="GtkMenuBar" id="menubar">
             <property name="visible">True</property>
-            <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
             <child>
               <object class="GtkMenuItem" id="menubaritem_emulator">
                 <property name="visible">True</property>
-                <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
                 <property name="label" translatable="yes">_Emulator</property>
                 <property name="use_underline">True</property>
                 <child type="submenu">
                   <object class="GtkMenu" id="menu_emulator">
                     <property name="visible">True</property>
-                    <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
                     <child>
                       <object class="GtkMenuItem" id="menuitem_run">
                         <property name="visible">True</property>
-                        <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
                         <property name="label" translatable="yes">_Run...</property>
                         <property name="use_underline">True</property>
                       </object>
@@ -35,7 +31,6 @@
                     <child>
                       <object class="GtkMenuItem" id="menuitem_load">
                         <property name="visible">True</property>
-                        <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
                         <property name="label" translatable="yes">_Load...</property>
                         <property name="use_underline">True</property>
                       </object>
@@ -50,7 +45,6 @@
                     <child>
                       <object class="GtkMenuItem" id="menuitem_tape">
                         <property name="visible">True</property>
-                        <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
                         <property name="label" translatable="yes">_Tape...</property>
                         <property name="use_underline">True</property>
                       </object>
@@ -58,7 +52,6 @@
                     <child>
                       <object class="GtkMenuItem" id="menuitem_disk">
                         <property name="visible">True</property>
-                        <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
                         <property name="label" translatable="yes">_Disk...</property>
                         <property name="use_underline">True</property>
                       </object>
@@ -66,23 +59,14 @@
                     <child>
                       <object class="GtkMenuItem" id="menuitem_module">
                         <property name="visible">True</property>
-                        <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
                         <property name="label" translatable="yes">_Module...</property>
-                        <property name="use_underline">True</property>
-                      </object>
-                    </child>
-                    <child>
-                      <object class="GtkMenuItem" id="menuitem_screenshot">
-                        <property name="visible">True</property>
-                        <property name="label" translatable="yes">Screens_hot...</property>
                         <property name="use_underline">True</property>
                       </object>
                     </child>
                     <child>
                       <object class="GtkMenuItem" id="menuitem_audio">
                         <property name="visible">True</property>
-                        <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
-                        <property name="label" translatable="yes">A_udio...</property>
+                        <property name="label" translatable="yes">_Audio...</property>
                         <property name="use_underline">True</property>
                       </object>
                     </child>
@@ -94,29 +78,39 @@
                       </object>
                     </child>
                     <child>
-                      <object class="GtkMenuItem" id="menuitem_video">
-                        <property name="visible">True</property>
-                        <property name="label" translatable="yes">V_ideo...</property>
-                        <property name="use_underline">True</property>
-                      </object>
-                    </child>
-                    <child>
                       <object class="GtkMenuItem" id="menuitem_vdip">
                         <property name="visible">True</property>
-                        <property name="label" translatable="yes">_Vinculum USB...</property>
+                        <property name="label" translatable="yes">Vinculum _USB...</property>
                         <property name="use_underline">True</property>
                       </object>
                     </child>
                     <child>
                       <object class="GtkSeparatorMenuItem" id="separatormenuitem8">
                         <property name="visible">True</property>
-                        <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkMenuItem" id="menuitem_screenshot">
+                        <property name="visible">True</property>
+                        <property name="label" translatable="yes">Screens_hot...</property>
+                        <property name="use_underline">True</property>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkMenuItem" id="menuitem_video">
+                        <property name="visible">True</property>
+                        <property name="label" translatable="yes">_Video...</property>
+                        <property name="use_underline">True</property>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkSeparatorMenuItem" id="separatormenuitem13">
+                        <property name="visible">True</property>
                       </object>
                     </child>
                     <child>
                       <object class="GtkMenuItem" id="menuitem_reset">
                         <property name="visible">True</property>
-                        <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
                         <property name="label" translatable="yes">R_eset</property>
                         <property name="use_underline">True</property>
                       </object>
@@ -124,7 +118,6 @@
                     <child>
                       <object class="GtkMenuItem" id="menuitem_power">
                         <property name="visible">True</property>
-                        <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
                         <property name="label" translatable="yes">_Power On</property>
                         <property name="use_underline">True</property>
                       </object>
@@ -132,13 +125,11 @@
                     <child>
                       <object class="GtkSeparatorMenuItem" id="separatormenuitem7">
                         <property name="visible">True</property>
-                        <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
                       </object>
                     </child>
                     <child>
                       <object class="GtkMenuItem" id="menuitem_quit">
                         <property name="visible">True</property>
-                        <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
                         <property name="label" translatable="yes">_Quit Emulator</property>
                         <property name="use_underline">True</property>
                       </object>
@@ -150,17 +141,14 @@
             <child>
               <object class="GtkMenuItem" id="menubaritem_view">
                 <property name="visible">True</property>
-                <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
                 <property name="label" translatable="yes">_View</property>
                 <property name="use_underline">True</property>
                 <child type="submenu">
                   <object class="GtkMenu" id="menu_view">
                     <property name="visible">True</property>
-                    <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
                     <child>
                       <object class="GtkMenuItem" id="menuitem_zoom1">
                         <property name="visible">True</property>
-                        <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
                         <property name="label" translatable="yes">Zoom x_1</property>
                         <property name="use_underline">True</property>
                       </object>
@@ -168,7 +156,6 @@
                     <child>
                       <object class="GtkMenuItem" id="menuitem_zoom2">
                         <property name="visible">True</property>
-                        <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
                         <property name="label" translatable="yes">Zoom x_2</property>
                         <property name="use_underline">True</property>
                       </object>
@@ -176,7 +163,6 @@
                     <child>
                       <object class="GtkMenuItem" id="menuitem_zoom3">
                         <property name="visible">True</property>
-                        <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
                         <property name="label" translatable="yes">Zoom x_3</property>
                         <property name="use_underline">True</property>
                       </object>
@@ -184,13 +170,11 @@
                     <child>
                       <object class="GtkSeparatorMenuItem" id="separatormenuitem10">
                         <property name="visible">True</property>
-                        <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
                       </object>
                     </child>
                     <child>
                       <object class="GtkMenuItem" id="menuitem_keyboard">
                         <property name="visible">True</property>
-                        <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
                         <property name="label" translatable="yes">_Keyboard</property>
                         <property name="use_underline">True</property>
                       </object>
@@ -198,13 +182,11 @@
                     <child>
                       <object class="GtkSeparatorMenuItem" id="separatormenuitem9">
                         <property name="visible">True</property>
-                        <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
                       </object>
                     </child>
                     <child>
                       <object class="GtkMenuItem" id="menuitem_menubar">
                         <property name="visible">True</property>
-                        <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
                         <property name="label" translatable="yes">_Menubar</property>
                         <property name="use_underline">True</property>
                       </object>
@@ -212,7 +194,6 @@
                     <child>
                       <object class="GtkMenuItem" id="menuitem_statusbar">
                         <property name="visible">True</property>
-                        <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
                         <property name="label" translatable="yes">_Statusbar</property>
                         <property name="use_underline">True</property>
                       </object>
@@ -224,17 +205,14 @@
             <child>
               <object class="GtkMenuItem" id="menubaritem_options">
                 <property name="visible">True</property>
-                <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
                 <property name="label" translatable="yes">_Options</property>
                 <property name="use_underline">True</property>
                 <child type="submenu">
                   <object class="GtkMenu" id="menu_options">
                     <property name="visible">True</property>
-                    <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
                     <child>
                       <object class="GtkMenuItem" id="menuitem_colors">
                         <property name="visible">True</property>
-                        <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
                         <property name="label" translatable="yes">_Colors...</property>
                         <property name="use_underline">True</property>
                       </object>
@@ -242,7 +220,6 @@
                     <child>
                       <object class="GtkCheckMenuItem" id="menuitem_display_effects">
                         <property name="visible">True</property>
-                        <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
                         <property name="label" translatable="yes">_Display Effects</property>
                         <property name="use_underline">True</property>
                       </object>
@@ -250,7 +227,6 @@
                     <child>
                       <object class="GtkCheckMenuItem" id="menuitem_no_speed_limit">
                         <property name="visible">True</property>
-                        <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
                         <property name="label" translatable="yes">No _Speed Limit</property>
                         <property name="use_underline">True</property>
                       </object>
@@ -258,13 +234,11 @@
                     <child>
                       <object class="GtkSeparatorMenuItem" id="separatormenuitem1">
                         <property name="visible">True</property>
-                        <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
                       </object>
                     </child>
                     <child>
                       <object class="GtkMenuItem" id="menuitem_profiles">
                         <property name="visible">True</property>
-                        <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
                         <property name="label" translatable="yes">_Profiles...</property>
                         <property name="use_underline">True</property>
                       </object>
@@ -276,17 +250,14 @@
             <child>
               <object class="GtkMenuItem" id="menubaritem_help">
                 <property name="visible">True</property>
-                <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
                 <property name="label" translatable="yes">_Help</property>
                 <property name="use_underline">True</property>
                 <child type="submenu">
                   <object class="GtkMenu" id="menu_help">
                     <property name="visible">True</property>
-                    <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
                     <child>
                       <object class="GtkMenuItem" id="menuitem_help">
                         <property name="visible">True</property>
-                        <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
                         <property name="label" translatable="yes">_Help</property>
                         <property name="use_underline">True</property>
                       </object>
@@ -294,7 +265,6 @@
                     <child>
                       <object class="GtkMenuItem" id="menuitem_help_index">
                         <property name="visible">True</property>
-                        <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
                         <property name="label" translatable="yes">Help _Index</property>
                         <property name="use_underline">True</property>
                       </object>
@@ -302,7 +272,6 @@
                     <child>
                       <object class="GtkMenuItem" id="menuitem_context_help">
                         <property name="visible">True</property>
-                        <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
                         <property name="label" translatable="yes">_Context Help</property>
                         <property name="use_underline">True</property>
                       </object>
@@ -310,13 +279,11 @@
                     <child>
                       <object class="GtkSeparatorMenuItem" id="separatormenuitem2">
                         <property name="visible">True</property>
-                        <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
                       </object>
                     </child>
                     <child>
                       <object class="GtkMenuItem" id="menuitem_about">
                         <property name="visible">True</property>
-                        <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
                         <property name="label" translatable="yes">_About</property>
                         <property name="use_underline">True</property>
                       </object>
@@ -324,7 +291,6 @@
                     <child>
                       <object class="GtkMenuItem" id="menuitem_thanks">
                         <property name="visible">True</property>
-                        <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
                         <property name="label" translatable="yes">_Thanks!</property>
                         <property name="use_underline">True</property>
                       </object>
@@ -332,13 +298,11 @@
                     <child>
                       <object class="GtkSeparatorMenuItem" id="separatormenuitem3">
                         <property name="visible">True</property>
-                        <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
                       </object>
                     </child>
                     <child>
                       <object class="GtkMenuItem" id="menuitem_licence">
                         <property name="visible">True</property>
-                        <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
                         <property name="label" translatable="yes">KCemu _Licence</property>
                         <property name="use_underline">True</property>
                       </object>
@@ -346,7 +310,6 @@
                     <child>
                       <object class="GtkMenuItem" id="menuitem_no_warranty">
                         <property name="visible">True</property>
-                        <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
                         <property name="label" translatable="yes">No _Warranty!</property>
                         <property name="use_underline">True</property>
                       </object>
@@ -419,11 +382,9 @@
   </object>
   <object class="GtkMenu" id="menu_popup">
     <property name="visible">True</property>
-    <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
     <child>
       <object class="GtkMenuItem" id="menuitem_run_p">
         <property name="visible">True</property>
-        <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
         <property name="label" translatable="yes">_Run...</property>
         <property name="use_underline">True</property>
       </object>
@@ -431,7 +392,6 @@
     <child>
       <object class="GtkMenuItem" id="menuitem_load_p">
         <property name="visible">True</property>
-        <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
         <property name="label" translatable="yes">_Load...</property>
         <property name="use_underline">True</property>
       </object>
@@ -446,7 +406,6 @@
     <child>
       <object class="GtkMenuItem" id="menuitem_tape_p">
         <property name="visible">True</property>
-        <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
         <property name="label" translatable="yes">_Tape...</property>
         <property name="use_underline">True</property>
       </object>
@@ -454,7 +413,6 @@
     <child>
       <object class="GtkMenuItem" id="menuitem_disk_p">
         <property name="visible">True</property>
-        <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
         <property name="label" translatable="yes">_Disk...</property>
         <property name="use_underline">True</property>
       </object>
@@ -462,7 +420,6 @@
     <child>
       <object class="GtkMenuItem" id="menuitem_module_p">
         <property name="visible">True</property>
-        <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
         <property name="label" translatable="yes">_Module...</property>
         <property name="use_underline">True</property>
       </object>
@@ -470,7 +427,6 @@
     <child>
       <object class="GtkMenuItem" id="menuitem_audio_p">
         <property name="visible">True</property>
-        <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
         <property name="label" translatable="yes">_Audio...</property>
         <property name="use_underline">True</property>
       </object>
@@ -492,23 +448,38 @@
     <child>
       <object class="GtkSeparatorMenuItem" id="separatormenuitem4">
         <property name="visible">True</property>
-        <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
+      </object>
+    </child>
+    <child>
+      <object class="GtkMenuItem" id="menuitem_screenshot_p">
+        <property name="visible">True</property>
+        <property name="label" translatable="yes">Screens_hot...</property>
+        <property name="use_underline">True</property>
+      </object>
+    </child>
+    <child>
+      <object class="GtkMenuItem" id="menuitem_video_p">
+        <property name="visible">True</property>
+        <property name="label" translatable="yes">_Video...</property>
+        <property name="use_underline">True</property>
+      </object>
+    </child>
+    <child>
+      <object class="GtkSeparatorMenuItem" id="separatormenuitem14">
+        <property name="visible">True</property>
       </object>
     </child>
     <child>
       <object class="GtkMenuItem" id="menuitem_view_p">
         <property name="visible">True</property>
-        <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
         <property name="label" translatable="yes">_View</property>
         <property name="use_underline">True</property>
         <child type="submenu">
           <object class="GtkMenu" id="menu_view_p">
             <property name="visible">True</property>
-            <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
             <child>
               <object class="GtkMenuItem" id="menuitem_zoom1_p">
                 <property name="visible">True</property>
-                <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
                 <property name="label" translatable="yes">Zoom x1</property>
                 <property name="use_underline">True</property>
               </object>
@@ -516,7 +487,6 @@
             <child>
               <object class="GtkMenuItem" id="menuitem_zoom2_p">
                 <property name="visible">True</property>
-                <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
                 <property name="label" translatable="yes">Zoom x2</property>
                 <property name="use_underline">True</property>
               </object>
@@ -524,7 +494,6 @@
             <child>
               <object class="GtkMenuItem" id="menuitem_zoom3_p">
                 <property name="visible">True</property>
-                <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
                 <property name="label" translatable="yes">Zoom x3</property>
                 <property name="use_underline">True</property>
               </object>
@@ -532,13 +501,11 @@
             <child>
               <object class="GtkSeparatorMenuItem" id="separatormenuitem11">
                 <property name="visible">True</property>
-                <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
               </object>
             </child>
             <child>
               <object class="GtkMenuItem" id="menuitem_keyboard_p">
                 <property name="visible">True</property>
-                <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
                 <property name="label" translatable="yes">_Keyboard</property>
                 <property name="use_underline">True</property>
               </object>
@@ -546,13 +513,11 @@
             <child>
               <object class="GtkSeparatorMenuItem" id="separatormenuitem5">
                 <property name="visible">True</property>
-                <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
               </object>
             </child>
             <child>
               <object class="GtkMenuItem" id="menuitem_menubar_p">
                 <property name="visible">True</property>
-                <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
                 <property name="label" translatable="yes">_Menubar</property>
                 <property name="use_underline">True</property>
               </object>
@@ -560,7 +525,6 @@
             <child>
               <object class="GtkMenuItem" id="menuitem_statusbar_p">
                 <property name="visible">True</property>
-                <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
                 <property name="label" translatable="yes">_Statusbar</property>
                 <property name="use_underline">True</property>
               </object>
@@ -572,13 +536,11 @@
     <child>
       <object class="GtkSeparatorMenuItem" id="separatormenuitem12">
         <property name="visible">True</property>
-        <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
       </object>
     </child>
     <child>
       <object class="GtkMenuItem" id="menuitem_reset_p">
         <property name="visible">True</property>
-        <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
         <property name="label" translatable="yes">R_eset</property>
         <property name="use_underline">True</property>
       </object>
@@ -586,7 +548,6 @@
     <child>
       <object class="GtkMenuItem" id="menuitem_power_p">
         <property name="visible">True</property>
-        <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
         <property name="label" translatable="yes">_Power On</property>
         <property name="use_underline">True</property>
       </object>
@@ -594,13 +555,11 @@
     <child>
       <object class="GtkSeparatorMenuItem" id="separatormenuitem6">
         <property name="visible">True</property>
-        <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
       </object>
     </child>
     <child>
       <object class="GtkMenuItem" id="menuitem_quit_p">
         <property name="visible">True</property>
-        <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
         <property name="label" translatable="yes">_Quit Emulator</property>
         <property name="use_underline">True</property>
       </object>

@@ -56,6 +56,10 @@ IMAGES = \
 	logo-libsndfile.png \
 	logo-openclipartlibrary.png \
 	logo-vorbisdotcom.png \
+        logo-theora_org.png \
+        logo-ffmpeg.png \
+        logo-bbc.png \
+        logo-xvid.png \
 	media-end.png \
 	media-play.png \
 	media-record.png \

@@ -12,7 +12,7 @@
  <img src="kcemu.png"/> 
 
 
-<b><size value="1">(c) 1997-2009 Torsten Paul</size></b>
+<b><size value="1">(c) 1997-2010 Torsten Paul</size></b>
 <i><size value="-1">&lt;Torsten.Paul@gmx.de&gt;</size></i>
 
 
@@ -61,6 +61,8 @@
 3.6. <link ref="window-save-memory">Speichern von Memory-Bereichen</link>
 3.7. <link ref="window-vdip">Vinculum USB</link>
 3.8. <link ref="window-plotter">Plotter</link>
+3.9. <link ref="window-screenshot">Screenshot</link>
+3.10. <link ref="window-video">Video</link>
 
 </p>
 
@@ -96,7 +98,7 @@
 <p>
 <size value="2"><ref name="license"/>1.2. Lizenz</size>
 
-  <b>KCemu @VERSION@, Copyright (c) 1997-2009 Torsten Paul.</b>
+  <b>KCemu @VERSION@, Copyright (c) 1997-2010 Torsten Paul.</b>
 
   Dieses Programm ist freie Software. Sie können es unter
   den Bedingungen der GNU General Public License, wie von der
@@ -533,22 +535,6 @@ VEB Robotron-Meßelektronik "Otto Schön" Dresden
   Wird diese Option eingeschaltet, wird der Zugriff auf den zweiten System-ROM
   freigeschaltet.
 
-  <b>ROMs tauschen</b>
-  Im Emulator sind immer zwei D004-System-ROMs vorhanden. Die original mitgelieferte
-  Version 2.0 und die erweiterte Version 3.1. Diese Option vertauscht die Zuordnung
-  der beiden Versionen auf die Modul-Schächte FC und F8 (wobei der Zugriff auf den
-  Modul in Schacht F8 nur möglich ist wenn die Option "F8 ROM" eingeschaltet ist).
-
-  Die Zuordnung der Versionen zu den Modul-Schächten ist abhängig vom emulierten System:
-<m>
-             |    normal   ||  vertauscht |
-             |  FC  |  F8  ||  FC  |  F8  |
-    =========+======+======++======+======+
-    KC85/2   | 2.0  | 3.1  || 3.1  | 2.0  |
-    KC85/3   | 2.0  | 3.1  || 3.1  | 2.0  |
-    KC85/4   | 2.0  | 3.1  || 3.1  | 2.0  |
-    KC85/5   | 3.1  | 2.0  || 2.0  | 3.1  |
-</m>
   <b>Bustreiber</b>
   Diese Option gibt an, wie viele D002 Bustreiber emuliert werden sollen. Maximalwert
   für den Emulator sind 4 Geräte.
@@ -1083,6 +1069,79 @@ VEB Robotron-Meßelektronik "Otto Schön" Dresden
   <m>Zeichengeschwindigkeit   </m>100 mm/s
   <m>Abmessungen              </m>396 mm x 177 mm x 82 mm
   <m>Masse                    </m>3 kg
+
+</p>
+
+<p><size value="2"><ref name="window-screenshot"/>3.9. Screenshot</size>
+
+  Screenshots der Bildschirmausgabe des emulierten Systems können in
+  verschiedenen Formaten gespeichert werden. Die zur Verfügung stehenden
+  Formate sind abhängig vom (Host-) System auf dem der Emulator läuft,
+  aber normalerweise stehen die folgenden Formate zur Verfügung.
+
+  - PNG
+  - JPEG
+  - TIFF
+  - BMP
+
+  <img src="window-screenshot.png"/>
+  <size value="-2"><c>Das Screenshot-Fenster</c></size>
+
+  Der aktuelle Bildschirminhalt wird beim Öffnen des Screenshot-Fensters
+  und beim Drücken des Buttons "Screenshot" übernommen und angezeigt. Soll
+  nur ein Ausschnitt des Bildschirminhaltes gespeichert werden, kann mit
+  Hilfe der Eingabefelder "Links"/"Rechts"/"Oben"/"Unten" jeweils eine
+  bestimmte Anzahl an Pixelzeilen abgeschnitten werden. Der ausgewählte
+  Bereich wird dabei durch eine schwarz/weiß gestrichelte Linie dargestellt.
+
+  Zum Speichern muss dann das gewünschte Format und der Dateiname ausgewählt
+  werden. Durch Drücken des Buttons "Speichern" wird der angezeigte
+  Bildschirminhalt bzw. -ausschnitt in der Datei abgespeichert.
+
+</p>
+
+<p><size value="2"><ref name="window-video"/>3.10. Video</size>
+
+  Zusätzlich zur Ausgabe im Emulator-Fenster kann der Bildschirminhalt
+  des emulierten Systems auch in eine Video-Datei geschrieben werden.
+
+  <img src="window-video.png"/>
+  <size value="-2"><c>Das Video-Fenster</c></size>
+
+  Möglich sind dabei die folgenden Video-Formate
+
+  <b>- Theora/Ogg</b>
+    Ein lizenzfreies Video-Format der Xiph.org Foundation. Dieses Format
+    können aktuelle Versionen des Firefox Internet Browsers (ab Version 3.5)
+    ohne zusätzliche Software abspielen.
+
+  <b>- AVI</b>
+    Das "Audio Video Interleave" Format ist ein weit verbreitetes, von
+    Microsoft definiertes Container Format welches verschiedene Typen
+    von Ton- und Video-Spuren erlaubt. KCemu nutzt als Videoformat
+    "DivX MPEG-4 Version 5".
+
+  <b>- MPEG 4</b>
+    Video-Format nach MPEG-Standard.
+
+  <b>- Dirac</b>
+    Lizenzfreies Video-Format entwickelt von der BBC Research Abteilung
+    der BBC (British Broadcasting Corporation). Dirac ist die Referenz-
+    Implementierung des Video-Formates.
+
+  <b>- Schroedinger</b>
+    Optimierte aber zum Teil noch experimentelle Implementierung des von
+    der BBC entwickelten Dirac Video-Formates.
+
+  <b>- VNC</b>
+    Hier erfolgt die Ausgabe des Videos nicht in eine Datei, sondern der
+    Emulator kann so die Rolle eines VNC Servers übernehmen. Das bedeutet,
+    das die Bildschirmausgabe des emulierten Systems von einem anderen
+    Rechner per VNC-Client angezeigt werden kann (Vergleichbar mit
+    Remote-Desktop für Windows).
+
+  Welche dieser Formate verfügbar sind, hängt von der Installation ab,
+  normalerweise sollte mindestens "Theora/Ogg" verfügbar sein.
 
 </p>
 

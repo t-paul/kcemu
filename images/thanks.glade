@@ -3,15 +3,9 @@
   <requires lib="gtk+" version="2.16"/>
   <!-- interface-naming-policy toplevel-contextual -->
   <object class="GtkTextBuffer" id="textbuffer1">
-    <property name="text">Marat Fayzullin
-        for the Z80 emulation core used for the main processor
-        (I needed to tweak some bits of the emulation core; see
-        src/z80core/README for the list of changes)
-Marcel de Kogel
-        for the Z80 emulation core used for the KC floppy
-        processor
-Thomas Bretz
-        for the OS/2 port of KCemu (see http://www.d4m.de/)
+    <property name="text" translatable="yes">Volker Pohlers
+        for help with the windows port, technical information and
+        bugreports
 Thomas Ludwig
         for the great KC website at http://www.kc85emu.de/ and
         lots of bugreports and hints how to make KCemu better
@@ -22,13 +16,23 @@ Kev Thacker
         for interesting insights concerning the floppy emulation
         (he's also the author of the KC driver for M.E.S.S. the
         Multi-Emulator Super System, see http://mess.emuverse.com/)
-Volker Pohlers
-        for help with the windows port, technical information and
-        bugreports
 Alexander Sch&#xF6;n
         for starting the windows port, lots of tips and for providing
         a huge pile of files for use with the emulator or with
-        information about the various systems</property>
+        information about the various systems
+Sourceforge User Boo-boo
+        for the libz80ex emulation library which is now used to emulate
+        the Z80 CPUs
+Marat Fayzullin
+        for the Z80 emulation core used for the main processor
+        up to KCemu version 0.4.2
+        (I needed to tweak some bits of the emulation core; see
+        src/z80core/README for the list of changes)
+Marcel de Kogel
+        for the Z80 emulation core used for the KC floppy
+        processor up to KCemu version 0.4.2
+Thomas Bretz
+        for the OS/2 port of KCemu (see http://www.d4m.de/)</property>
   </object>
   <object class="GtkWindow" id="thanks_window">
     <property name="title" translatable="yes">KCemu: Thanks</property>
@@ -93,7 +97,7 @@ Alexander Sch&#xF6;n
         <child>
           <object class="GtkNotebook" id="main_notebook">
             <property name="width_request">500</property>
-            <property name="height_request">250</property>
+            <property name="height_request">400</property>
             <property name="visible">True</property>
             <property name="can_focus">True</property>
             <child>
@@ -109,7 +113,6 @@ Alexander Sch&#xF6;n
                     <property name="ypad">4</property>
                     <property name="label" translatable="yes">I'd like to say thanks to many people who helped to bring KCemu to the point where it is now. The following list just lists some of them in no particular order...</property>
                     <property name="wrap">True</property>
-                    <property name="selectable">True</property>
                   </object>
                   <packing>
                     <property name="expand">False</property>
@@ -164,7 +167,6 @@ Alexander Sch&#xF6;n
                     <property name="ypad">4</property>
                     <property name="label" translatable="yes">Lots of tools and libraries made it easier to write KCemu. Many thanks to the people behind all those projects for their work...</property>
                     <property name="wrap">True</property>
-                    <property name="selectable">True</property>
                   </object>
                   <packing>
                     <property name="expand">False</property>
@@ -184,17 +186,124 @@ Alexander Sch&#xF6;n
                           <object class="GtkTable" id="main_table_libraries">
                             <property name="visible">True</property>
                             <property name="border_width">6</property>
-                            <property name="n_rows">14</property>
+                            <property name="n_rows">44</property>
                             <property name="n_columns">2</property>
                             <property name="column_spacing">16</property>
-                            <property name="row_spacing">4</property>
                             <child>
-                              <object class="GtkLabel" id="label20">
+                              <object class="GtkLabel" id="label19">
                                 <property name="visible">True</property>
                                 <property name="can_focus">True</property>
                                 <property name="xalign">0</property>
-                                <property name="label" translatable="yes">http://www.mega-nerd.com/libsndfile/
-</property>
+                                <property name="xpad">6</property>
+                                <property name="label" translatable="yes">libsndfile</property>
+                                <property name="selectable">True</property>
+                              </object>
+                              <packing>
+                                <property name="left_attach">1</property>
+                                <property name="right_attach">2</property>
+                                <property name="top_attach">25</property>
+                                <property name="bottom_attach">26</property>
+                                <property name="x_options">GTK_FILL</property>
+                                <property name="y_options">GTK_FILL</property>
+                              </packing>
+                            </child>
+                            <child>
+                              <object class="GtkImage" id="image8">
+                                <property name="visible">True</property>
+                                <property name="ypad">8</property>
+                                <property name="pixbuf">logo-libsndfile.png</property>
+                              </object>
+                              <packing>
+                                <property name="top_attach">24</property>
+                                <property name="bottom_attach">28</property>
+                                <property name="x_options">GTK_FILL</property>
+                                <property name="y_options">GTK_FILL</property>
+                              </packing>
+                            </child>
+                            <child>
+                              <object class="GtkLabel" id="label17">
+                                <property name="visible">True</property>
+                                <property name="can_focus">True</property>
+                                <property name="xalign">0</property>
+                                <property name="xpad">6</property>
+                                <property name="label" translatable="yes">Ogg &amp; Vorbis libraries</property>
+                                <property name="selectable">True</property>
+                              </object>
+                              <packing>
+                                <property name="left_attach">1</property>
+                                <property name="right_attach">2</property>
+                                <property name="top_attach">21</property>
+                                <property name="bottom_attach">22</property>
+                                <property name="x_options">GTK_FILL</property>
+                                <property name="y_options">GTK_FILL</property>
+                              </packing>
+                            </child>
+                            <child>
+                              <object class="GtkImage" id="image7">
+                                <property name="visible">True</property>
+                                <property name="ypad">8</property>
+                                <property name="pixbuf">logo-vorbisdotcom.png</property>
+                              </object>
+                              <packing>
+                                <property name="top_attach">20</property>
+                                <property name="bottom_attach">24</property>
+                                <property name="x_options">GTK_FILL</property>
+                                <property name="y_options">GTK_FILL</property>
+                              </packing>
+                            </child>
+                            <child>
+                              <object class="GtkImage" id="image6">
+                                <property name="visible">True</property>
+                                <property name="yalign">0</property>
+                                <property name="ypad">8</property>
+                                <property name="pixbuf">logo-openclipartlibrary.png</property>
+                              </object>
+                              <packing>
+                                <property name="top_attach">16</property>
+                                <property name="bottom_attach">20</property>
+                                <property name="x_options">GTK_FILL</property>
+                                <property name="y_options">GTK_FILL</property>
+                              </packing>
+                            </child>
+                            <child>
+                              <object class="GtkLabel" id="label15">
+                                <property name="visible">True</property>
+                                <property name="can_focus">True</property>
+                                <property name="xalign">0</property>
+                                <property name="xpad">6</property>
+                                <property name="label" translatable="yes">Open Clip Art Library</property>
+                                <property name="selectable">True</property>
+                              </object>
+                              <packing>
+                                <property name="left_attach">1</property>
+                                <property name="right_attach">2</property>
+                                <property name="top_attach">17</property>
+                                <property name="bottom_attach">18</property>
+                                <property name="x_options">GTK_FILL</property>
+                                <property name="y_options">GTK_FILL</property>
+                              </packing>
+                            </child>
+                            <child>
+                              <object class="GtkImage" id="image5">
+                                <property name="visible">True</property>
+                                <property name="yalign">0</property>
+                                <property name="ypad">8</property>
+                                <property name="pixbuf">logo-lame.png</property>
+                              </object>
+                              <packing>
+                                <property name="top_attach">12</property>
+                                <property name="bottom_attach">16</property>
+                                <property name="x_options">GTK_FILL</property>
+                                <property name="y_options">GTK_FILL</property>
+                              </packing>
+                            </child>
+                            <child>
+                              <object class="GtkLabel" id="label13">
+                                <property name="visible">True</property>
+                                <property name="can_focus">True</property>
+                                <property name="xalign">0</property>
+                                <property name="xpad">6</property>
+                                <property name="label" translatable="yes">LAME - LAME Ain't an MP3 Encoder</property>
                                 <property name="selectable">True</property>
                               </object>
                               <packing>
@@ -203,103 +312,16 @@ Alexander Sch&#xF6;n
                                 <property name="top_attach">13</property>
                                 <property name="bottom_attach">14</property>
                                 <property name="x_options">GTK_FILL</property>
-                                <property name="y_options"></property>
-                              </packing>
-                            </child>
-                            <child>
-                              <object class="GtkLabel" id="label19">
-                                <property name="visible">True</property>
-                                <property name="can_focus">True</property>
-                                <property name="xalign">0</property>
-                                <property name="label" translatable="yes">libsndfile</property>
-                                <property name="selectable">True</property>
-                              </object>
-                              <packing>
-                                <property name="left_attach">1</property>
-                                <property name="right_attach">2</property>
-                                <property name="top_attach">12</property>
-                                <property name="bottom_attach">13</property>
-                                <property name="x_options">GTK_FILL</property>
-                                <property name="y_options"></property>
-                              </packing>
-                            </child>
-                            <child>
-                              <object class="GtkImage" id="image8">
-                                <property name="visible">True</property>
-                                <property name="pixbuf">logo-libsndfile.png</property>
-                              </object>
-                              <packing>
-                                <property name="top_attach">12</property>
-                                <property name="bottom_attach">14</property>
-                                <property name="x_options">GTK_FILL</property>
-                              </packing>
-                            </child>
-                            <child>
-                              <object class="GtkLabel" id="label18">
-                                <property name="visible">True</property>
-                                <property name="can_focus">True</property>
-                                <property name="xalign">0</property>
-                                <property name="label" translatable="yes">http://www.vorbis.com/
-</property>
-                                <property name="selectable">True</property>
-                              </object>
-                              <packing>
-                                <property name="left_attach">1</property>
-                                <property name="right_attach">2</property>
-                                <property name="top_attach">11</property>
-                                <property name="bottom_attach">12</property>
-                                <property name="x_options">GTK_FILL</property>
-                                <property name="y_options"></property>
-                              </packing>
-                            </child>
-                            <child>
-                              <object class="GtkLabel" id="label17">
-                                <property name="visible">True</property>
-                                <property name="can_focus">True</property>
-                                <property name="xalign">0</property>
-                                <property name="label" translatable="yes">Ogg &amp; Vorbis libraries</property>
-                                <property name="selectable">True</property>
-                              </object>
-                              <packing>
-                                <property name="left_attach">1</property>
-                                <property name="right_attach">2</property>
-                                <property name="top_attach">10</property>
-                                <property name="bottom_attach">11</property>
-                                <property name="x_options">GTK_FILL</property>
-                                <property name="y_options"></property>
-                              </packing>
-                            </child>
-                            <child>
-                              <object class="GtkImage" id="image7">
-                                <property name="visible">True</property>
-                                <property name="pixbuf">logo-vorbisdotcom.png</property>
-                              </object>
-                              <packing>
-                                <property name="top_attach">10</property>
-                                <property name="bottom_attach">12</property>
-                                <property name="x_options">GTK_FILL</property>
-                              </packing>
-                            </child>
-                            <child>
-                              <object class="GtkImage" id="image6">
-                                <property name="visible">True</property>
-                                <property name="yalign">0</property>
-                                <property name="pixbuf">logo-openclipartlibrary.png</property>
-                              </object>
-                              <packing>
-                                <property name="top_attach">8</property>
-                                <property name="bottom_attach">10</property>
-                                <property name="x_options">GTK_FILL</property>
                                 <property name="y_options">GTK_FILL</property>
                               </packing>
                             </child>
                             <child>
-                              <object class="GtkLabel" id="label16">
+                              <object class="GtkLabel" id="label11">
                                 <property name="visible">True</property>
                                 <property name="can_focus">True</property>
                                 <property name="xalign">0</property>
-                                <property name="label" translatable="yes">http://openclipart.org/
-</property>
+                                <property name="xpad">6</property>
+                                <property name="label" translatable="yes">FLAC - Free Lossless Audio Codec</property>
                                 <property name="selectable">True</property>
                               </object>
                               <packing>
@@ -308,81 +330,16 @@ Alexander Sch&#xF6;n
                                 <property name="top_attach">9</property>
                                 <property name="bottom_attach">10</property>
                                 <property name="x_options">GTK_FILL</property>
-                                <property name="y_options"></property>
-                              </packing>
-                            </child>
-                            <child>
-                              <object class="GtkLabel" id="label15">
-                                <property name="visible">True</property>
-                                <property name="can_focus">True</property>
-                                <property name="xalign">0</property>
-                                <property name="label" translatable="yes">Open Clip Art Library</property>
-                                <property name="selectable">True</property>
-                              </object>
-                              <packing>
-                                <property name="left_attach">1</property>
-                                <property name="right_attach">2</property>
-                                <property name="top_attach">8</property>
-                                <property name="bottom_attach">9</property>
-                                <property name="x_options">GTK_FILL</property>
-                                <property name="y_options"></property>
-                              </packing>
-                            </child>
-                            <child>
-                              <object class="GtkImage" id="image5">
-                                <property name="visible">True</property>
-                                <property name="yalign">0</property>
-                                <property name="pixbuf">logo-lame.png</property>
-                              </object>
-                              <packing>
-                                <property name="top_attach">6</property>
-                                <property name="bottom_attach">8</property>
-                                <property name="x_options">GTK_FILL</property>
                                 <property name="y_options">GTK_FILL</property>
                               </packing>
                             </child>
                             <child>
-                              <object class="GtkLabel" id="label14">
+                              <object class="GtkLabel" id="label8">
                                 <property name="visible">True</property>
                                 <property name="can_focus">True</property>
                                 <property name="xalign">0</property>
-                                <property name="label" translatable="yes">http://lame.sourceforge.net/
-</property>
-                                <property name="selectable">True</property>
-                              </object>
-                              <packing>
-                                <property name="left_attach">1</property>
-                                <property name="right_attach">2</property>
-                                <property name="top_attach">7</property>
-                                <property name="bottom_attach">8</property>
-                                <property name="x_options">GTK_FILL</property>
-                                <property name="y_options"></property>
-                              </packing>
-                            </child>
-                            <child>
-                              <object class="GtkLabel" id="label13">
-                                <property name="visible">True</property>
-                                <property name="can_focus">True</property>
-                                <property name="xalign">0</property>
-                                <property name="label" translatable="yes">LAME - LAME Ain't an MP3 Encoder</property>
-                                <property name="selectable">True</property>
-                              </object>
-                              <packing>
-                                <property name="left_attach">1</property>
-                                <property name="right_attach">2</property>
-                                <property name="top_attach">6</property>
-                                <property name="bottom_attach">7</property>
-                                <property name="x_options">GTK_FILL</property>
-                                <property name="y_options"></property>
-                              </packing>
-                            </child>
-                            <child>
-                              <object class="GtkLabel" id="label9">
-                                <property name="visible">True</property>
-                                <property name="can_focus">True</property>
-                                <property name="xalign">0</property>
-                                <property name="label" translatable="yes">http://www.gtk.org/
-</property>
+                                <property name="xpad">6</property>
+                                <property name="label" translatable="yes">GTK+ - The GIMP Toolkit</property>
                                 <property name="selectable">True</property>
                               </object>
                               <packing>
@@ -395,82 +352,15 @@ Alexander Sch&#xF6;n
                               </packing>
                             </child>
                             <child>
-                              <object class="GtkLabel" id="label12">
-                                <property name="visible">True</property>
-                                <property name="can_focus">True</property>
-                                <property name="xalign">0</property>
-                                <property name="label" translatable="yes">http://flac.sourceforge.net/
-</property>
-                                <property name="selectable">True</property>
-                              </object>
-                              <packing>
-                                <property name="left_attach">1</property>
-                                <property name="right_attach">2</property>
-                                <property name="top_attach">5</property>
-                                <property name="bottom_attach">6</property>
-                                <property name="x_options">GTK_FILL</property>
-                                <property name="y_options"></property>
-                              </packing>
-                            </child>
-                            <child>
-                              <object class="GtkLabel" id="label11">
-                                <property name="visible">True</property>
-                                <property name="can_focus">True</property>
-                                <property name="xalign">0</property>
-                                <property name="label" translatable="yes">FLAC - Free Lossless Audio Codec</property>
-                                <property name="selectable">True</property>
-                              </object>
-                              <packing>
-                                <property name="left_attach">1</property>
-                                <property name="right_attach">2</property>
-                                <property name="top_attach">4</property>
-                                <property name="bottom_attach">5</property>
-                                <property name="x_options">GTK_FILL</property>
-                                <property name="y_options"></property>
-                              </packing>
-                            </child>
-                            <child>
-                              <object class="GtkLabel" id="label10">
-                                <property name="visible">True</property>
-                                <property name="can_focus">True</property>
-                                <property name="xalign">0</property>
-                                <property name="label" translatable="yes">http://www.libsdl.org/
-</property>
-                                <property name="selectable">True</property>
-                              </object>
-                              <packing>
-                                <property name="left_attach">1</property>
-                                <property name="right_attach">2</property>
-                                <property name="top_attach">3</property>
-                                <property name="bottom_attach">4</property>
-                                <property name="x_options">GTK_FILL</property>
-                                <property name="y_options"></property>
-                              </packing>
-                            </child>
-                            <child>
-                              <object class="GtkLabel" id="label8">
-                                <property name="visible">True</property>
-                                <property name="can_focus">True</property>
-                                <property name="xalign">0</property>
-                                <property name="label" translatable="yes">GTK+ - The GIMP Toolkit</property>
-                                <property name="selectable">True</property>
-                              </object>
-                              <packing>
-                                <property name="left_attach">1</property>
-                                <property name="right_attach">2</property>
-                                <property name="x_options">GTK_FILL</property>
-                                <property name="y_options"></property>
-                              </packing>
-                            </child>
-                            <child>
                               <object class="GtkImage" id="image4">
                                 <property name="visible">True</property>
                                 <property name="yalign">0</property>
+                                <property name="ypad">8</property>
                                 <property name="pixbuf">logo-flac.png</property>
                               </object>
                               <packing>
-                                <property name="top_attach">4</property>
-                                <property name="bottom_attach">6</property>
+                                <property name="top_attach">8</property>
+                                <property name="bottom_attach">12</property>
                                 <property name="x_options">GTK_FILL</property>
                                 <property name="y_options">GTK_FILL</property>
                               </packing>
@@ -479,11 +369,12 @@ Alexander Sch&#xF6;n
                               <object class="GtkImage" id="image3">
                                 <property name="visible">True</property>
                                 <property name="yalign">0</property>
+                                <property name="ypad">8</property>
                                 <property name="pixbuf">logo-libsdl.png</property>
                               </object>
                               <packing>
-                                <property name="top_attach">2</property>
-                                <property name="bottom_attach">4</property>
+                                <property name="top_attach">4</property>
+                                <property name="bottom_attach">8</property>
                                 <property name="x_options">GTK_FILL</property>
                                 <property name="y_options">GTK_FILL</property>
                               </packing>
@@ -492,10 +383,11 @@ Alexander Sch&#xF6;n
                               <object class="GtkImage" id="image2">
                                 <property name="visible">True</property>
                                 <property name="yalign">0</property>
+                                <property name="ypad">8</property>
                                 <property name="pixbuf">logo-gtk.png</property>
                               </object>
                               <packing>
-                                <property name="bottom_attach">2</property>
+                                <property name="bottom_attach">4</property>
                                 <property name="x_options">GTK_FILL</property>
                                 <property name="y_options">GTK_FILL</property>
                               </packing>
@@ -505,8 +397,233 @@ Alexander Sch&#xF6;n
                                 <property name="visible">True</property>
                                 <property name="can_focus">True</property>
                                 <property name="xalign">0</property>
+                                <property name="xpad">6</property>
                                 <property name="label" translatable="yes">libSDL - Simple DirectMedia Layer</property>
                                 <property name="selectable">True</property>
+                              </object>
+                              <packing>
+                                <property name="left_attach">1</property>
+                                <property name="right_attach">2</property>
+                                <property name="top_attach">5</property>
+                                <property name="bottom_attach">6</property>
+                                <property name="x_options">GTK_FILL</property>
+                                <property name="y_options">GTK_FILL</property>
+                              </packing>
+                            </child>
+                            <child>
+                              <object class="GtkImage" id="image1">
+                                <property name="visible">True</property>
+                                <property name="ypad">8</property>
+                                <property name="pixbuf">logo-theora_org.png</property>
+                              </object>
+                              <packing>
+                                <property name="top_attach">28</property>
+                                <property name="bottom_attach">32</property>
+                                <property name="x_options">GTK_FILL</property>
+                                <property name="y_options">GTK_FILL</property>
+                              </packing>
+                            </child>
+                            <child>
+                              <object class="GtkLabel" id="label1">
+                                <property name="visible">True</property>
+                                <property name="xalign">0</property>
+                                <property name="xpad">6</property>
+                                <property name="label" translatable="yes">Xiph.org Foundation - Theora video compression</property>
+                                <property name="selectable">True</property>
+                              </object>
+                              <packing>
+                                <property name="left_attach">1</property>
+                                <property name="right_attach">2</property>
+                                <property name="top_attach">29</property>
+                                <property name="bottom_attach">30</property>
+                                <property name="x_options">GTK_FILL</property>
+                                <property name="y_options">GTK_FILL</property>
+                              </packing>
+                            </child>
+                            <child>
+                              <object class="GtkImage" id="image9">
+                                <property name="visible">True</property>
+                                <property name="ypad">8</property>
+                                <property name="pixbuf">logo-ffmpeg.png</property>
+                              </object>
+                              <packing>
+                                <property name="top_attach">32</property>
+                                <property name="bottom_attach">36</property>
+                                <property name="x_options">GTK_FILL</property>
+                                <property name="y_options">GTK_FILL</property>
+                              </packing>
+                            </child>
+                            <child>
+                              <object class="GtkLabel" id="label3">
+                                <property name="visible">True</property>
+                                <property name="xalign">0</property>
+                                <property name="xpad">6</property>
+                                <property name="label" translatable="yes">Audio/Video codec library libavcodec</property>
+                                <property name="selectable">True</property>
+                              </object>
+                              <packing>
+                                <property name="left_attach">1</property>
+                                <property name="right_attach">2</property>
+                                <property name="top_attach">33</property>
+                                <property name="bottom_attach">34</property>
+                                <property name="x_options">GTK_FILL</property>
+                                <property name="y_options">GTK_FILL</property>
+                              </packing>
+                            </child>
+                            <child>
+                              <object class="GtkImage" id="image10">
+                                <property name="visible">True</property>
+                                <property name="ypad">8</property>
+                                <property name="pixbuf">logo-bbc.png</property>
+                              </object>
+                              <packing>
+                                <property name="top_attach">36</property>
+                                <property name="bottom_attach">40</property>
+                                <property name="x_options">GTK_FILL</property>
+                                <property name="y_options">GTK_FILL</property>
+                              </packing>
+                            </child>
+                            <child>
+                              <object class="GtkLabel" id="label5">
+                                <property name="visible">True</property>
+                                <property name="xalign">0</property>
+                                <property name="xpad">6</property>
+                                <property name="label" translatable="yes">BBC Research - Dirac Video Codec</property>
+                                <property name="selectable">True</property>
+                              </object>
+                              <packing>
+                                <property name="left_attach">1</property>
+                                <property name="right_attach">2</property>
+                                <property name="top_attach">37</property>
+                                <property name="bottom_attach">38</property>
+                                <property name="x_options">GTK_FILL</property>
+                                <property name="y_options">GTK_FILL</property>
+                              </packing>
+                            </child>
+                            <child>
+                              <object class="GtkImage" id="image11">
+                                <property name="visible">True</property>
+                                <property name="ypad">8</property>
+                                <property name="pixbuf">logo-xvid.png</property>
+                              </object>
+                              <packing>
+                                <property name="top_attach">40</property>
+                                <property name="bottom_attach">44</property>
+                                <property name="x_options">GTK_FILL</property>
+                                <property name="y_options">GTK_FILL</property>
+                              </packing>
+                            </child>
+                            <child>
+                              <object class="GtkLabel" id="label21">
+                                <property name="visible">True</property>
+                                <property name="xalign">0</property>
+                                <property name="xpad">6</property>
+                                <property name="label" translatable="yes">Xvid project</property>
+                              </object>
+                              <packing>
+                                <property name="left_attach">1</property>
+                                <property name="right_attach">2</property>
+                                <property name="top_attach">41</property>
+                                <property name="bottom_attach">42</property>
+                                <property name="x_options">GTK_FILL</property>
+                                <property name="y_options">GTK_FILL</property>
+                              </packing>
+                            </child>
+                            <child>
+                              <object class="GtkLinkButton" id="linkbutton1">
+                                <property name="label" translatable="yes">http://www.theora.org/</property>
+                                <property name="visible">True</property>
+                                <property name="can_focus">True</property>
+                                <property name="receives_default">True</property>
+                                <property name="has_tooltip">True</property>
+                                <property name="relief">none</property>
+                                <property name="xalign">0</property>
+                                <property name="yalign">0</property>
+                                <property name="uri">http://www.theora.org/</property>
+                              </object>
+                              <packing>
+                                <property name="left_attach">1</property>
+                                <property name="right_attach">2</property>
+                                <property name="top_attach">30</property>
+                                <property name="bottom_attach">31</property>
+                                <property name="x_options">GTK_FILL</property>
+                                <property name="y_options">GTK_FILL</property>
+                              </packing>
+                            </child>
+                            <child>
+                              <object class="GtkLinkButton" id="linkbutton2">
+                                <property name="label" translatable="yes">http://ffmpeg.org/</property>
+                                <property name="visible">True</property>
+                                <property name="can_focus">True</property>
+                                <property name="receives_default">True</property>
+                                <property name="has_tooltip">True</property>
+                                <property name="relief">none</property>
+                                <property name="xalign">0</property>
+                                <property name="uri">http://ffmpeg.org/</property>
+                              </object>
+                              <packing>
+                                <property name="left_attach">1</property>
+                                <property name="right_attach">2</property>
+                                <property name="top_attach">34</property>
+                                <property name="bottom_attach">35</property>
+                                <property name="x_options">GTK_FILL</property>
+                                <property name="y_options">GTK_FILL</property>
+                              </packing>
+                            </child>
+                            <child>
+                              <object class="GtkLinkButton" id="linkbutton3">
+                                <property name="label" translatable="yes">http://www.bbc.co.uk/rd/projects/dirac/</property>
+                                <property name="visible">True</property>
+                                <property name="can_focus">True</property>
+                                <property name="receives_default">True</property>
+                                <property name="has_tooltip">True</property>
+                                <property name="relief">none</property>
+                                <property name="xalign">0</property>
+                                <property name="yalign">0</property>
+                                <property name="uri">http://www.bbc.co.uk/rd/projects/dirac/</property>
+                              </object>
+                              <packing>
+                                <property name="left_attach">1</property>
+                                <property name="right_attach">2</property>
+                                <property name="top_attach">38</property>
+                                <property name="bottom_attach">39</property>
+                                <property name="x_options">GTK_FILL</property>
+                                <property name="y_options">GTK_FILL</property>
+                              </packing>
+                            </child>
+                            <child>
+                              <object class="GtkLinkButton" id="linkbutton4">
+                                <property name="label" translatable="yes">http://www.xvid.org/</property>
+                                <property name="visible">True</property>
+                                <property name="can_focus">True</property>
+                                <property name="receives_default">True</property>
+                                <property name="has_tooltip">True</property>
+                                <property name="relief">none</property>
+                                <property name="xalign">0</property>
+                                <property name="yalign">0</property>
+                                <property name="uri">http://www.xvid.org/</property>
+                              </object>
+                              <packing>
+                                <property name="left_attach">1</property>
+                                <property name="right_attach">2</property>
+                                <property name="top_attach">42</property>
+                                <property name="bottom_attach">43</property>
+                                <property name="x_options">GTK_FILL</property>
+                                <property name="y_options">GTK_FILL</property>
+                              </packing>
+                            </child>
+                            <child>
+                              <object class="GtkLinkButton" id="linkbutton5">
+                                <property name="label" translatable="yes">http://www.gtk.org/</property>
+                                <property name="visible">True</property>
+                                <property name="can_focus">True</property>
+                                <property name="receives_default">True</property>
+                                <property name="has_tooltip">True</property>
+                                <property name="relief">none</property>
+                                <property name="focus_on_click">False</property>
+                                <property name="xalign">0</property>
+                                <property name="yalign">0</property>
+                                <property name="uri">http://www.gtk.org/</property>
                               </object>
                               <packing>
                                 <property name="left_attach">1</property>
@@ -514,7 +631,373 @@ Alexander Sch&#xF6;n
                                 <property name="top_attach">2</property>
                                 <property name="bottom_attach">3</property>
                                 <property name="x_options">GTK_FILL</property>
-                                <property name="y_options"></property>
+                                <property name="y_options">GTK_FILL</property>
+                              </packing>
+                            </child>
+                            <child>
+                              <object class="GtkLinkButton" id="linkbutton6">
+                                <property name="label" translatable="yes">http://www.libsdl.org/</property>
+                                <property name="visible">True</property>
+                                <property name="can_focus">True</property>
+                                <property name="receives_default">True</property>
+                                <property name="has_tooltip">True</property>
+                                <property name="relief">none</property>
+                                <property name="xalign">0</property>
+                                <property name="yalign">0</property>
+                                <property name="uri">http://www.libsdl.org/</property>
+                              </object>
+                              <packing>
+                                <property name="left_attach">1</property>
+                                <property name="right_attach">2</property>
+                                <property name="top_attach">6</property>
+                                <property name="bottom_attach">7</property>
+                                <property name="x_options">GTK_FILL</property>
+                                <property name="y_options">GTK_FILL</property>
+                              </packing>
+                            </child>
+                            <child>
+                              <object class="GtkLinkButton" id="linkbutton7">
+                                <property name="label" translatable="yes">http://flac.sourceforge.net/</property>
+                                <property name="visible">True</property>
+                                <property name="can_focus">True</property>
+                                <property name="receives_default">True</property>
+                                <property name="has_tooltip">True</property>
+                                <property name="relief">none</property>
+                                <property name="xalign">0</property>
+                                <property name="yalign">0</property>
+                                <property name="uri">http://flac.sourceforge.net/</property>
+                              </object>
+                              <packing>
+                                <property name="left_attach">1</property>
+                                <property name="right_attach">2</property>
+                                <property name="top_attach">10</property>
+                                <property name="bottom_attach">11</property>
+                                <property name="x_options">GTK_FILL</property>
+                                <property name="y_options">GTK_FILL</property>
+                              </packing>
+                            </child>
+                            <child>
+                              <object class="GtkLinkButton" id="linkbutton8">
+                                <property name="label" translatable="yes">http://lame.sourceforge.net/</property>
+                                <property name="visible">True</property>
+                                <property name="can_focus">True</property>
+                                <property name="receives_default">True</property>
+                                <property name="has_tooltip">True</property>
+                                <property name="relief">none</property>
+                                <property name="xalign">0</property>
+                                <property name="yalign">0</property>
+                                <property name="uri">http://lame.sourceforge.net/</property>
+                              </object>
+                              <packing>
+                                <property name="left_attach">1</property>
+                                <property name="right_attach">2</property>
+                                <property name="top_attach">14</property>
+                                <property name="bottom_attach">15</property>
+                                <property name="x_options">GTK_FILL</property>
+                                <property name="y_options">GTK_FILL</property>
+                              </packing>
+                            </child>
+                            <child>
+                              <object class="GtkLabel" id="label2">
+                                <property name="visible">True</property>
+                              </object>
+                              <packing>
+                                <property name="left_attach">1</property>
+                                <property name="right_attach">2</property>
+                              </packing>
+                            </child>
+                            <child>
+                              <object class="GtkLabel" id="label4">
+                                <property name="visible">True</property>
+                              </object>
+                              <packing>
+                                <property name="left_attach">1</property>
+                                <property name="right_attach">2</property>
+                                <property name="top_attach">3</property>
+                                <property name="bottom_attach">4</property>
+                              </packing>
+                            </child>
+                            <child>
+                              <object class="GtkLabel" id="label6">
+                                <property name="visible">True</property>
+                              </object>
+                              <packing>
+                                <property name="left_attach">1</property>
+                                <property name="right_attach">2</property>
+                                <property name="top_attach">4</property>
+                                <property name="bottom_attach">5</property>
+                              </packing>
+                            </child>
+                            <child>
+                              <object class="GtkLabel" id="label9">
+                                <property name="visible">True</property>
+                              </object>
+                              <packing>
+                                <property name="left_attach">1</property>
+                                <property name="right_attach">2</property>
+                                <property name="top_attach">7</property>
+                                <property name="bottom_attach">8</property>
+                              </packing>
+                            </child>
+                            <child>
+                              <object class="GtkLabel" id="label10">
+                                <property name="visible">True</property>
+                              </object>
+                              <packing>
+                                <property name="left_attach">1</property>
+                                <property name="right_attach">2</property>
+                                <property name="top_attach">8</property>
+                                <property name="bottom_attach">9</property>
+                              </packing>
+                            </child>
+                            <child>
+                              <object class="GtkLinkButton" id="linkbutton9">
+                                <property name="label" translatable="yes">http://openclipart.org/</property>
+                                <property name="visible">True</property>
+                                <property name="can_focus">True</property>
+                                <property name="receives_default">True</property>
+                                <property name="has_tooltip">True</property>
+                                <property name="relief">none</property>
+                                <property name="xalign">0</property>
+                                <property name="yalign">0</property>
+                                <property name="uri">http://openclipart.org/</property>
+                              </object>
+                              <packing>
+                                <property name="left_attach">1</property>
+                                <property name="right_attach">2</property>
+                                <property name="top_attach">18</property>
+                                <property name="bottom_attach">19</property>
+                                <property name="x_options">GTK_FILL</property>
+                                <property name="y_options">GTK_FILL</property>
+                              </packing>
+                            </child>
+                            <child>
+                              <object class="GtkLinkButton" id="linkbutton10">
+                                <property name="label" translatable="yes">http://www.vorbis.com/</property>
+                                <property name="visible">True</property>
+                                <property name="can_focus">True</property>
+                                <property name="receives_default">True</property>
+                                <property name="has_tooltip">True</property>
+                                <property name="relief">none</property>
+                                <property name="xalign">0</property>
+                                <property name="yalign">0</property>
+                                <property name="uri">http://www.vorbis.com/</property>
+                              </object>
+                              <packing>
+                                <property name="left_attach">1</property>
+                                <property name="right_attach">2</property>
+                                <property name="top_attach">22</property>
+                                <property name="bottom_attach">23</property>
+                                <property name="x_options">GTK_FILL</property>
+                                <property name="y_options">GTK_FILL</property>
+                              </packing>
+                            </child>
+                            <child>
+                              <object class="GtkLinkButton" id="linkbutton11">
+                                <property name="label" translatable="yes">http://www.mega-nerd.com/libsndfile/</property>
+                                <property name="visible">True</property>
+                                <property name="can_focus">True</property>
+                                <property name="receives_default">True</property>
+                                <property name="has_tooltip">True</property>
+                                <property name="relief">none</property>
+                                <property name="xalign">0</property>
+                                <property name="yalign">0</property>
+                                <property name="uri">http://www.mega-nerd.com/libsndfile/</property>
+                              </object>
+                              <packing>
+                                <property name="left_attach">1</property>
+                                <property name="right_attach">2</property>
+                                <property name="top_attach">26</property>
+                                <property name="bottom_attach">27</property>
+                                <property name="x_options">GTK_FILL</property>
+                                <property name="y_options">GTK_FILL</property>
+                              </packing>
+                            </child>
+                            <child>
+                              <object class="GtkLabel" id="label12">
+                                <property name="visible">True</property>
+                              </object>
+                              <packing>
+                                <property name="left_attach">1</property>
+                                <property name="right_attach">2</property>
+                                <property name="top_attach">11</property>
+                                <property name="bottom_attach">12</property>
+                              </packing>
+                            </child>
+                            <child>
+                              <object class="GtkLabel" id="label14">
+                                <property name="visible">True</property>
+                              </object>
+                              <packing>
+                                <property name="left_attach">1</property>
+                                <property name="right_attach">2</property>
+                                <property name="top_attach">12</property>
+                                <property name="bottom_attach">13</property>
+                              </packing>
+                            </child>
+                            <child>
+                              <object class="GtkLabel" id="label16">
+                                <property name="visible">True</property>
+                              </object>
+                              <packing>
+                                <property name="left_attach">1</property>
+                                <property name="right_attach">2</property>
+                                <property name="top_attach">15</property>
+                                <property name="bottom_attach">16</property>
+                              </packing>
+                            </child>
+                            <child>
+                              <object class="GtkLabel" id="label18">
+                                <property name="visible">True</property>
+                              </object>
+                              <packing>
+                                <property name="left_attach">1</property>
+                                <property name="right_attach">2</property>
+                                <property name="top_attach">16</property>
+                                <property name="bottom_attach">17</property>
+                              </packing>
+                            </child>
+                            <child>
+                              <object class="GtkLabel" id="label20">
+                                <property name="visible">True</property>
+                              </object>
+                              <packing>
+                                <property name="left_attach">1</property>
+                                <property name="right_attach">2</property>
+                                <property name="top_attach">19</property>
+                                <property name="bottom_attach">20</property>
+                              </packing>
+                            </child>
+                            <child>
+                              <object class="GtkLabel" id="label22">
+                                <property name="visible">True</property>
+                              </object>
+                              <packing>
+                                <property name="left_attach">1</property>
+                                <property name="right_attach">2</property>
+                                <property name="top_attach">20</property>
+                                <property name="bottom_attach">21</property>
+                              </packing>
+                            </child>
+                            <child>
+                              <object class="GtkLabel" id="label23">
+                                <property name="visible">True</property>
+                              </object>
+                              <packing>
+                                <property name="left_attach">1</property>
+                                <property name="right_attach">2</property>
+                                <property name="top_attach">23</property>
+                                <property name="bottom_attach">24</property>
+                              </packing>
+                            </child>
+                            <child>
+                              <object class="GtkLabel" id="label24">
+                                <property name="visible">True</property>
+                              </object>
+                              <packing>
+                                <property name="left_attach">1</property>
+                                <property name="right_attach">2</property>
+                                <property name="top_attach">24</property>
+                                <property name="bottom_attach">25</property>
+                              </packing>
+                            </child>
+                            <child>
+                              <object class="GtkLabel" id="label25">
+                                <property name="visible">True</property>
+                              </object>
+                              <packing>
+                                <property name="left_attach">1</property>
+                                <property name="right_attach">2</property>
+                                <property name="top_attach">27</property>
+                                <property name="bottom_attach">28</property>
+                              </packing>
+                            </child>
+                            <child>
+                              <object class="GtkLabel" id="label26">
+                                <property name="visible">True</property>
+                              </object>
+                              <packing>
+                                <property name="left_attach">1</property>
+                                <property name="right_attach">2</property>
+                                <property name="top_attach">28</property>
+                                <property name="bottom_attach">29</property>
+                              </packing>
+                            </child>
+                            <child>
+                              <object class="GtkLabel" id="label27">
+                                <property name="visible">True</property>
+                              </object>
+                              <packing>
+                                <property name="left_attach">1</property>
+                                <property name="right_attach">2</property>
+                                <property name="top_attach">31</property>
+                                <property name="bottom_attach">32</property>
+                              </packing>
+                            </child>
+                            <child>
+                              <object class="GtkLabel" id="label28">
+                                <property name="visible">True</property>
+                              </object>
+                              <packing>
+                                <property name="left_attach">1</property>
+                                <property name="right_attach">2</property>
+                                <property name="top_attach">32</property>
+                                <property name="bottom_attach">33</property>
+                              </packing>
+                            </child>
+                            <child>
+                              <object class="GtkLabel" id="label29">
+                                <property name="visible">True</property>
+                              </object>
+                              <packing>
+                                <property name="left_attach">1</property>
+                                <property name="right_attach">2</property>
+                                <property name="top_attach">35</property>
+                                <property name="bottom_attach">36</property>
+                              </packing>
+                            </child>
+                            <child>
+                              <object class="GtkLabel" id="label30">
+                                <property name="visible">True</property>
+                              </object>
+                              <packing>
+                                <property name="left_attach">1</property>
+                                <property name="right_attach">2</property>
+                                <property name="top_attach">36</property>
+                                <property name="bottom_attach">37</property>
+                              </packing>
+                            </child>
+                            <child>
+                              <object class="GtkLabel" id="label31">
+                                <property name="visible">True</property>
+                              </object>
+                              <packing>
+                                <property name="left_attach">1</property>
+                                <property name="right_attach">2</property>
+                                <property name="top_attach">39</property>
+                                <property name="bottom_attach">40</property>
+                              </packing>
+                            </child>
+                            <child>
+                              <object class="GtkLabel" id="label32">
+                                <property name="visible">True</property>
+                              </object>
+                              <packing>
+                                <property name="left_attach">1</property>
+                                <property name="right_attach">2</property>
+                                <property name="top_attach">40</property>
+                                <property name="bottom_attach">41</property>
+                              </packing>
+                            </child>
+                            <child>
+                              <object class="GtkLabel" id="label33">
+                                <property name="visible">True</property>
+                              </object>
+                              <packing>
+                                <property name="left_attach">1</property>
+                                <property name="right_attach">2</property>
+                                <property name="top_attach">43</property>
+                                <property name="bottom_attach">44</property>
                               </packing>
                             </child>
                           </object>

@@ -33,6 +33,8 @@ IMAGES = \
 	window-plotter-1_small.png \
 	window-plotter-2.png \
 	window-plotter-2_small.png \
+	window-screenshot.png \
+	window-video.png \
 	kcemu.png
 
 docdir = $(pkgdatadir)/doc
