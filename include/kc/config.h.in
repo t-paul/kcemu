@@ -163,8 +163,14 @@
 /* "have libnsndfile version 1.0.x" */
 #undef HAVE_LIBSNDFILE_V1
 
-/* "have libtheoraenc" */
+/* "have libtheora" */
 #undef HAVE_LIBTHEORA
+
+/* "have libtheora version 1.0" */
+#undef HAVE_LIBTHEORA10
+
+/* "have libtheora version 1.1" */
+#undef HAVE_LIBTHEORA11
 
 /* "have libvncserver" */
 #undef HAVE_LIBVNCSERVER

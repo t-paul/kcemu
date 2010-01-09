@@ -59,7 +59,11 @@ TheoraVideoEncoder::init(const char *filename, int width, int height, int fps_de
   if (_f == NULL)
     return false;
 
+#ifdef HAVE_LIBTHEORA11
   _format = (quality >= 0.85) ? TH_PF_444 : TH_PF_420;
+#else
+  _format = TH_PF_420;
+#endif
 
   th_info_init(&_info);
   _info.pic_x = 0;
@@ -116,8 +120,6 @@ TheoraVideoEncoder::allocate_color_rgb(int idx, int r, int g, int b)
   _col[idx].y =  (0.257 * r) + (0.504 * g) + (0.098 * b) + 16;
   _col[idx].u = -(0.148 * r) - (0.291 * g) + (0.439 * b) + 128;
   _col[idx].v =  (0.439 * r) - (0.368 * g) - (0.071 * b) + 128;
-
-  printf("rgb: %d, %d, %d -> %d, %d, %d\n", r, g, b, _col[idx].y, _col[idx].u, _col[idx].v);
 }
 
 void
@@ -221,9 +223,9 @@ TheoraVideoEncoder::encode(byte_t *image, byte_t *dirty)
       encode_420(image, dirty);
     }
 
-  if (th_encode_ycbcr_in(_context, buffer) != 0) {
-      printf("error in encode\n");
-    return false;
+  if (th_encode_ycbcr_in(_context, buffer) != 0)
+    {
+      return false;
     }
 
   ogg_packet packet;

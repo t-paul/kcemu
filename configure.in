@@ -321,17 +321,30 @@ fi
 dnl ---------------------------------
 dnl  check for theoraenc library
 dnl ---------------------------------
+min_theora="1.0"
 min_theoraenc="1.1.1"
 if test "x$enable_libtheora" = xyes; then
-	PKG_CHECK_MODULES(LIBTHEORA, theoraenc >= $min_theoraenc,
+	PKG_CHECK_MODULES(LIBTHEORA11, theoraenc >= $min_theoraenc,
 	[
-                AC_DEFINE(HAVE_LIBTHEORA, 1, "have libtheoraenc")
+                AC_DEFINE(HAVE_LIBTHEORA, 1, "have libtheora")
+                AC_DEFINE(HAVE_LIBTHEORA11, 1, "have libtheora version 1.1")
+                LIBTHEORA_CFLAGS="$LIBTHEORA11_CFLAGS"
+                LIBTHEORA_LIBS="$LIBTHEORA11_LIBS"
 		AC_SUBST(LIBTHEORA_CFLAGS)
 		AC_SUBST(LIBTHEORA_LIBS)
 	],[
-		AC_MSG_WARN([
+                PKG_CHECK_MODULES(LIBTHEORA10, theoraenc >= $min_theora theoradec >= $min_theora,
+                [
+                        AC_DEFINE(HAVE_LIBTHEORA, 1, "have libtheora")
+                        AC_DEFINE(HAVE_LIBTHEORA10, 1, "have libtheora version 1.0")
+                        LIBTHEORA_CFLAGS="$LIBTHEORA10_CFLAGS"
+                        LIBTHEORA_LIBS="$LIBTHEORA10_LIBS"
+                        AC_SUBST(LIBTHEORA_CFLAGS)
+                        AC_SUBST(LIBTHEORA_LIBS)
+                ],[
+                        AC_MSG_WARN([
 ***
-*** Unable to find theora library (with version number >= $min_theoraenc)!
+*** Unable to find theora library (with version number >= $min_theora)!
 ***
 *** This is NO ERROR. It only means you can't capture video in
 *** theora/ogg format.
@@ -339,6 +352,7 @@ if test "x$enable_libtheora" = xyes; then
 *** If you are still annoyed by this warning you can tell ./configure
 *** not to check for this library by using --disable-libtheora
 ***])
+                ])
 	])
 fi
 
