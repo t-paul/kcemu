@@ -35,7 +35,7 @@ dnl ---------------------
 dnl  set package version
 dnl ---------------------
 
-source ./VERSION
+. ./VERSION
 
 VERSION=$KCEMU_VERSION
 
