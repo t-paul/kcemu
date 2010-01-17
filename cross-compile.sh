@@ -30,7 +30,7 @@ INSTALL_DIR="$BUILD_DIR/kcemu"
 CROSS_PKG_CONFIG="$DEV_DIR/cross-pkg-config.sh"
 
 export CPPFLAGS="-I$DEV_DIR/include"
-export LDFLAGS="-L$DEV_DIR/lib -L../../intl"
+export LDFLAGS="-L$DEV_DIR/lib"
 export PKG_CONFIG="$CROSS_PKG_CONFIG"
 export PKG_CONFIG_LIBDIR="$DEV_DIR/lib/pkgconfig"
 export SDL_CONFIG="$DEV_DIR"/bin/i386-mingw32msvc-sdl-config
@@ -75,7 +75,7 @@ unpack_dev_libs () {
 
             u "$DEP_PACKAGES_DIR"/pkg-config_0.23-3_win32.zip
             u "$DEP_PACKAGES_DIR"/libiconv-1.9.1.bin.woe32.zip
-            #u "$DEP_PACKAGES_DIR"/gettext-runtime-dev-0.17-1.zip
+            u "$DEP_PACKAGES_DIR"/gettext-runtime-dev-0.17-1.zip
             u "$DEP_PACKAGES_DIR"/libpng-dev_1.2.40-1_win32.zip
             u "$DEP_PACKAGES_DIR"/jpeg_7-1_win32.zip
             u "$DEP_PACKAGES_DIR"/freetype-dev_2.3.11-1_win32.zip

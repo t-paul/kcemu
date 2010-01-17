@@ -78,17 +78,6 @@ dnl ---------------------
 AM_CONFIG_HEADER(include/kc/config.h)
 AM_INIT_AUTOMAKE($PACKAGE, $VERSION, no-define)
 
-dnl -------------------
-dnl  configure gettext
-dnl -------------------
-
-ALL_LINGUAS="en de"
-AM_PO_SUBDIRS
-AM_GNU_GETTEXT([no-libtool])
-if test "x$USE_INCLUDED_LIBINTL" = "xyes"; then
-	AC_DEFINE(USE_INCLUDED_LIBINTL, 1, "use included libintl")
-fi
-
 dnl ---------------------
 dnl  checks for programs
 dnl ---------------------
@@ -244,6 +233,28 @@ else
         AC_DEFINE(HAVE_GETOPT_LONG, 1, "getopt_long() available")
 fi
 AC_MSG_RESULT($use_included_getopt)
+
+dnl -------------------
+dnl  configure gettext
+dnl -------------------
+
+ALL_LINGUAS="en de"
+AM_PO_SUBDIRS
+AM_GNU_GETTEXT([no-libtool])
+dnl MinGW hack, libintl is there but configure failes with
+dnl error undefined reference to `__nl_expand_alias'
+if test "x$HOST_OS" = "xMinGW"; then
+	LTLIBINTL=""
+	LIBINTL=""
+	INTLLIBS="-lintl"
+	INTLOBJS=""
+	USE_INCLUDED_LIBINTL=no
+	BUILD_INCLUDED_LIBINTL=no
+	AC_MSG_WARN([Disable building libintl for MinGW compilation])
+fi
+if test "x$USE_INCLUDED_LIBINTL" = "xyes"; then
+	AC_DEFINE(USE_INCLUDED_LIBINTL, 1, "use included libintl")
+fi
 
 dnl -----------------------------
 dnl  check for common libraries
