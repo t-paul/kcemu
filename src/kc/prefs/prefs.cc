@@ -38,6 +38,8 @@
 #include "kc/prefs/dirlist.h"
 #include "kc/prefs/strlist.h"
 
+#include "sys/sysdep.h"
+
 #include "libdbg/dbg.h"
 
 using namespace std;

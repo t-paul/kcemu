@@ -57,7 +57,6 @@ src/kc/ctc_base.cc
 src/kc/ctc_dio.cc
 src/kc/ctc_fdc.cc
 src/kc/daisy.cc
-src/kc/debug.cc
 src/kc/disass.cc
 src/kc/disk.cc
 src/kc/disk_io.cc

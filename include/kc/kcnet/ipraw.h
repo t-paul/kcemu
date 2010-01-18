@@ -22,15 +22,6 @@
 #ifndef __kc_kcnet_ipraw_h
 #define __kc_kcnet_ipraw_h
 
-#include <string>
-
-#include <stdio.h>
-#include <sys/types.h>
-#include <sys/socket.h>
-#include <netinet/in.h>
-#include <netdb.h>
-#include <errno.h>
-
 #include "kc/kc.h"
 
 #include "kc/kcnet/socket.h"
@@ -45,7 +36,6 @@ private:
   int _socket;
   SocketData *_data;
   SocketData *_send_data;
-  struct sockaddr_in _send_addr;
 
 protected:
   void close_socket(void);

@@ -39,6 +39,8 @@
 #include "kc/memory.h" // text_update()
 #include "kc/keyboard.h"
 
+#include "sys/sysdep.h"
+
 #include "cmd/cmd.h"
 
 #include "ui/error.h"
@@ -65,6 +67,7 @@
 #include "ui/gtk/options.h"
 #include "ui/gtk/selector.h"
 #include "ui/gtk/savemem.h"
+#include "ui/gtk/screenshot.h"
 #include "ui/gtk/plotter.h"
 #include "ui/gtk/video.h"
 
@@ -456,6 +459,7 @@ UI_Gtk::~UI_Gtk(void) {
     delete _debug_window;
     delete _info_window;
     delete _wav_window;
+    delete _screenshot_window;
     delete _plotter_window;
     delete _video_window;
     delete _edit_header_window;
@@ -535,6 +539,7 @@ UI_Gtk::init2(void) {
     _copying_window     = new CopyingWindow("legal.xml");
     _options_window     = new OptionsWindow("options.xml");
     _wav_window         = new WavWindow("audio.xml");
+    _screenshot_window  = new ScreenshotWindow("screenshot.xml", this);
     _plotter_window     = new PlotterWindow("plotter.xml");
     _save_memory_window = new SaveMemoryWindow("savemem.xml");
     _video_window       = new VideoWindow("video.xml", this);
@@ -763,6 +768,36 @@ UI_Gtk::getDebugInterface(void) {
 void
 UI_Gtk::errorInfo(const char *msg) {
     _dialog_window->show_dialog_ok(_("Info"), msg);
+}
+
+GdkPixbuf *
+UI_Gtk::get_screenshot(void)
+{
+  UI_Base *ui = _ui->get_generic_ui();
+  GdkColor *colormap = _main_window->get_colormap();
+
+  int width = ui->get_real_width();
+  int height = ui->get_real_height();
+  int count = width * height;
+
+  byte_t *image = ui->get_buffer();
+  byte_t *buf = new byte_t[3 * count];
+
+  for (int src = 0, dst = 0;src < count;src++)
+    {
+      GdkColor col = colormap[image[src]];
+      buf[dst++] = col.red >> 8;
+      buf[dst++] = col.green >> 8;
+      buf[dst++] = col.blue >> 8;
+    }
+
+  return gdk_pixbuf_new_from_data(buf, GDK_COLORSPACE_RGB, FALSE, 8, width, height, 3 * width, on_pixbuf_destroy, NULL);
+}
+
+void
+UI_Gtk::on_pixbuf_destroy(guchar *pixels, gpointer user_data)
+{
+  delete[] pixels;
 }
 
 char *

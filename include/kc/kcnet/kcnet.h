@@ -309,6 +309,9 @@ private:
   word_t _old_read_ptr[4];
   word_t _old_write_ptr[4];
 
+protected:
+  const bool get_ip_address_from_prefs(const char *key, byte_t &ip0, byte_t &ip1, byte_t &ip2, byte_t &ip3) const;
+
 public:
   KCNET(void);
   virtual ~KCNET(void);

@@ -19,12 +19,7 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-#include <string>
 #include <stdio.h>
-#include <netinet/in.h>
-#include <arpa/inet.h>
-#include <sys/types.h>
-#include <sys/socket.h>
 
 #include "kc/system.h"
 
@@ -33,6 +28,8 @@
 #include "kc/prefs/prefs.h"
 
 #include "kc/kcnet/udp.h"
+
+#include "sys/sysdep.h"
 
 #include "libdbg/dbg.h"
 
@@ -67,7 +64,7 @@ bool
 UDP::open(void)
 {
   printf("UDP::open()\n");
-  _socket = socket(AF_INET, SOCK_DGRAM, 0);
+  _socket = sys_socket_create(0, 0);
   if (_socket < 0)
     {
       close();
@@ -85,11 +82,9 @@ UDP::is_open(void)
 void
 UDP::close(void)
 {
-  printf("UDP::close()\n");
   if (_socket > 0)
     {
-      shutdown(_socket, SHUT_RDWR);
-      ::close(_socket);
+      sys_socket_close(_socket);
     }
   _socket = 0;
 }
@@ -97,28 +92,26 @@ UDP::close(void)
 void
 UDP::poll(void)
 {
-  char buf[4096];
+  unsigned short port;
+  unsigned char ip0, ip1, ip2, ip3;
+  unsigned char buf[4096];
 
   if (_send_data != NULL)
     return;
-  
-  struct sockaddr_storage peer_addr;
-  socklen_t peer_addr_len;
-  int r = recvfrom(_socket, buf, sizeof (buf), MSG_DONTWAIT, (struct sockaddr *) &peer_addr, &peer_addr_len);
+
+  printf("poll: socket = %d\n", _socket);
+  int r = sys_socket_recvfrom(_socket, buf, sizeof(buf), &ip0, &ip1, &ip2, &ip3, &port);
   if (r < 0)
     return;
 
-  struct sockaddr_in *addr;
-  addr = (sockaddr_in *)&peer_addr;
-   word_t port = ntohs(addr->sin_port);
-  printf("UDP::poll(): recvfrom() returned %d - %s:%d\n", r, inet_ntoa(addr->sin_addr), port);
+  printf("UDP::poll(): recvfrom() returned %d - %d.%d.%d.%d:%d\n", r, ip0, ip1, ip2, ip3, port);
 
   _send_data = new SocketData(r + 8);
 
-  _send_data->put_byte(addr->sin_addr.s_addr);
-  _send_data->put_byte(addr->sin_addr.s_addr >> 8);
-  _send_data->put_byte(addr->sin_addr.s_addr >> 16);
-  _send_data->put_byte(addr->sin_addr.s_addr >> 24);
+  _send_data->put_byte(ip0);
+  _send_data->put_byte(ip1);
+  _send_data->put_byte(ip2);
+  _send_data->put_byte(ip3);
   _send_data->put_word(port);
   _send_data->put_word(r);
 
@@ -129,21 +122,12 @@ UDP::poll(void)
 void
 UDP::send(SocketData *data)
 {
-  char buf[4096];
-  snprintf(buf, sizeof(buf), "%d.%d.%d.%d", _ip0, _ip1, _ip2, _ip3);
-
-  struct sockaddr_in addr;
-  memset(&addr, 0, sizeof (addr));
-  addr.sin_family = AF_INET;
-  addr.sin_port = htons(_port);
-  inet_pton(AF_INET, buf, &addr.sin_addr);
-
-  printf("UDP::send(): len = %d - %s:%d\n", data->length(), inet_ntoa(addr.sin_addr), _port);
+  printf("UDP::send(): len = %d - %d.%d.%d.%d:%d\n", data->length(), _ip0, _ip1, _ip2, _ip3, _port);
   printf("UDP::send(): data = ");
   for (int a = 0;a < data->length();a++)
     printf("%02x ", data->get(a));
   printf("\n");
-  int n = sendto(_socket, data->get(), data->length(), 0, (sockaddr*)&addr, sizeof(addr));
+  int n = sys_socket_sendto(_socket, data->get(), data->length(), _ip0, _ip1, _ip2, _ip3, _port);
   printf("UDP::send(): sendto() returned %d\n", n);
 }
 

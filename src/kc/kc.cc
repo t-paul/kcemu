@@ -155,6 +155,8 @@
 #include "kc/c80/display.h"
 #include "kc/c80/keyboard.h"
 
+#include "sys/sysdep.h"
+
 # include "ui/gtk/ui_gtk.h"
 
 #include "libdbg/dbg.h"
@@ -956,6 +958,7 @@ main(int argc, char **argv)
   fileio_init();
   libdisk_init();
   libaudio_init(LIBAUDIO_TYPE_ALL);
+  sys_socket_init();
 
   while (1)
     {

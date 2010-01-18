@@ -46,6 +46,7 @@ convert_big tux.svg             ../window-about.png    $COLOR_GREEN $GAMMA
 convert_big xmms.svg            ../window-audio.png    $COLOR_GREEN $GAMMA
 convert_big xedit.svg           ../window-copying.png  $COLOR_GREEN $GAMMA
 convert_big 5floppy_mount.svg   ../window-disk.png     $COLOR_GREEN $GAMMA
+convert_big 14_layer_visible.svg ../window-screenshot.png $COLOR_GREEN $GAMMA
 convert_big blockdevice.svg     ../window-module.png   $COLOR_GREEN $GAMMA
 convert_big kdat.svg            ../window-tape.png     $COLOR_GREEN $GAMMA
 convert_big kuser.svg           ../window-thanks.png   $COLOR_GREEN $GAMMA

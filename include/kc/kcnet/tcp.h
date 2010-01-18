@@ -22,14 +22,6 @@
 #ifndef __kc_kcnet_tcp_h
 #define __kc_kcnet_tcp_h
 
-#include <string>
-
-#include <stdio.h>
-#include <sys/types.h>
-#include <sys/socket.h>
-#include <netdb.h>
-#include <errno.h>
-
 #include "kc/kc.h"
 
 #include "kc/kcnet/socket.h"

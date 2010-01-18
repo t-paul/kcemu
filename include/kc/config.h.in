@@ -139,9 +139,6 @@
 /* "have libFLAC" */
 #undef HAVE_LIBFLAC
 
-/* "have libgtk" */
-#undef HAVE_LIBGTK
-
 /* Define to 1 if you have the `m' library (-lm). */
 #undef HAVE_LIBM
 
@@ -337,8 +334,8 @@
 /* "host os" */
 #undef HOST_OS
 
-/* "host os is BeOS" */
-#undef HOST_OS_BEOS
+/* "host os is FreeBSD" */
+#undef HOST_OS_FREEBSD
 
 /* "host os is Linux" */
 #undef HOST_OS_LINUX
@@ -466,15 +463,6 @@
 # undef __EXTENSIONS__
 #endif
 
-
-/* "user interface" */
-#undef USE_UI
-
-/* "use UI GTK" */
-#undef USE_UI_GTK
-
-/* "use UI SDL" */
-#undef USE_UI_SDL
 
 /* Define if the Win32 multithreading API can be used. */
 #undef USE_WIN32_THREADS

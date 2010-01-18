@@ -19,6 +19,7 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
+#include <stdio.h>
 #include <string.h>
 
 #include "kc/system.h"
@@ -131,7 +132,7 @@ ModuleSegmentedMemory::m_out(word_t addr, byte_t val)
       word_t mem = get_base_address(addr, val);
       bool ro = is_rom() ? true : (_val & 2) == 0;
 
-      sprintf(buf, "%s (%d)", get_name(), idx);
+      snprintf(buf, sizeof(buf), "%s (%d)", get_name(), idx);
       _group = memory->register_memory(buf,
 				       mem,
 				       get_segment_size(),

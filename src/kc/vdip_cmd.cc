@@ -34,6 +34,8 @@
 #include "kc/kc.h"
 #include "kc/vdip.h"
 
+#include "sys/sysdep.h"
+
 class VDIP_CMD_UNKNOWN : public VDIP_CMD
 {
 public:

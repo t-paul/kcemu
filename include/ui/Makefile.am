@@ -1,6 +1,6 @@
 ## Process this file with automake to produce Makefile.in
 
-SUBDIRS = generic gtk beos sdl sdlmtk
+SUBDIRS = generic gtk
 
 EXTRA_DIST = \
 	ui.h		\

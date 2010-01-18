@@ -108,7 +108,8 @@ public:
     virtual void set_fps(unsigned long fps);
     virtual void status_bar_toggle(void);
     virtual void menu_bar_toggle(void);
-
+    
+    virtual GdkColor * get_colormap(void);
     /*
      *  StatusListener
      */
