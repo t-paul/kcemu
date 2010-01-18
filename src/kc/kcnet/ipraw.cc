@@ -22,7 +22,6 @@
 #include <string>
 
 #include <stdio.h>
-#include <errno.h>
 #include <unistd.h>
 
 #include "kc/system.h"
@@ -51,7 +50,9 @@ IPRAW::~IPRAW(void)
 void
 IPRAW::set_ip_address(byte_t a0, byte_t a1, byte_t a2, byte_t a3)
 {
-  printf("IPRAW::set_ip_address(): %d.%d.%d.%d\n", a0, a1, a2, a3);
+  DBG(2, form("KCemu/KCNET/ipraw",
+              "IPRAW::set_ip_address(): %d.%d.%d.%d\n",
+              a0, a1, a2, a3));
   _ip0 = a0;
   _ip1 = a1;
   _ip2 = a2;
@@ -61,14 +62,17 @@ IPRAW::set_ip_address(byte_t a0, byte_t a1, byte_t a2, byte_t a3)
 void
 IPRAW::set_port(word_t port)
 {
-  printf("IPRAW::set_port(): %d\n", port);
+  DBG(2, form("KCemu/KCNET/ipraw",
+              "IPRAW::set_port(): %d\n",
+              port));
   _port = port;
 }
 
 bool
 IPRAW::open(void)
 {
-  printf("IPRAW::open()\n");
+  DBG(2, form("KCemu/KCNET/ipraw",
+              "IPRAW::open()\n"));
   return true;
 }
 
@@ -81,7 +85,8 @@ IPRAW::is_open(void)
 void
 IPRAW::close(void)
 {
-  printf("IPRAW::close()\n");
+  DBG(2, form("KCemu/KCNET/ipraw",
+              "IPRAW::close()\n"));
   close_socket();
 }
 
@@ -113,16 +118,21 @@ IPRAW::poll(void)
       close_socket();
       break;
     case SYS_SOCKET_ERR_INTR:
-      printf("IPRAW::send(): connect() failed with EINTR\n");
+      DBG(2, form("KCemu/KCNET/ipraw",
+                  "IPRAW::send(): connect() failed with EINTR\n"));
       break;
     case SYS_SOCKET_ERR_INPROGRESS:
-      printf("IPRAW::send(): connect() failed with EINPROGRESS\n");
+      DBG(2, form("KCemu/KCNET/ipraw",
+                  "IPRAW::send(): connect() failed with EINPROGRESS\n"));
       break;
     case SYS_SOCKET_ERR_ALREADY:
-      printf("IPRAW::send(): connect() failed with EALREADY\n");
+      DBG(2, form("KCemu/KCNET/ipraw",
+                  "IPRAW::send(): connect() failed with EALREADY\n"));
       break;
     default:
-      printf("IPRAW::send(): connect() failed with errno %d\n", errno);
+      DBG(2, form("KCemu/KCNET/ipraw",
+                  "IPRAW::send(): connect() failed with error code %d\n",
+                  ret));
       if (_data)
         delete _data;
       _data = NULL;
@@ -135,20 +145,27 @@ IPRAW::poll(void)
 void
 IPRAW::send(SocketData *data)
 {
+  DBG(2, form("KCemu/KCNET/ipraw",
+              "IPRAW::send(): len = %d - %d.%d.%d.%d:%d\n",
+              data->length(), _ip0, _ip1, _ip2, _ip3, _port));
+
+  string text;
+  char buf[10];
+  for (int a = 0;a < data->length();a++)
+    {
+      snprintf(buf, sizeof (buf), " %02x", data->get(a));
+      text += buf;
+    }
+  DBG(2, form("KCemu/KCNET/ipraw",
+              "IPRAW::send(): data =%s\n",
+              text.c_str()));
+
   if (data->get(0) != 8) // ECHO REQUEST
     {
-      printf("IPRAW::send(): not an echo request: data = ");
-      for (int a = 0;a < data->length();a++)
-        printf("%02x ", data->get(a));
-      printf("\n");
+      DBG(2, form("KCemu/KCNET/ipraw",
+                  "IPRAW::send(): not an echo request!\n"));
       return;
     }
-
-  printf("IPRAW::send(): len = %d - %d.%d.%d.%d:%d\n", data->length(), _ip0, _ip1, _ip2, _ip3, _port);
-  printf("IPRAW::send(): data = ");
-  for (int a = 0;a < data->length();a++)
-    printf("%02x ", data->get(a));
-  printf("\n");
 
   int s = sys_socket_create(1, 1);
   if (s < 0)
@@ -169,7 +186,9 @@ IPRAW::send(SocketData *data)
   word_t sum = checksum(_data, 6);
   _data->put(8, sum);
   _data->put(9, sum >> 8);
-  printf("IPRAW::send(): new checksum: %04x\n", sum);
+  DBG(2, form("KCemu/KCNET/ipraw",
+              "IPRAW::send(): new checksum: %04x\n",
+              sum));
 
   _socket = s;
   poll();
@@ -211,11 +230,18 @@ IPRAW::receive(void)
     return NULL;
 
   SocketData *ret = _send_data;
-  printf("IPRAW::receive(): len = %d\n", ret->length());
-  printf("IPRAW::receive(): data = ");
+
+  string text;
+  char buf[10];
   for (int a = 0;a < ret->length();a++)
-    printf("%02x ", ret->get(a));
-  printf("\n");
+    {
+      snprintf(buf, sizeof(buf), " %02x", ret->get(a));
+      text += buf;
+    }
+  DBG(2, form("KCemu/KCNET/ipraw",
+              "IPRAW::receive(): len = %d, data =%s\n",
+              ret->length(), text.c_str()));
+
   _send_data = NULL;
   return ret;
 }

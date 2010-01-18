@@ -13,17 +13,14 @@ int
 sys_socket_connect(int socket, unsigned char ip0, unsigned char ip1, unsigned char ip2, unsigned char ip3, unsigned short port)
 {
   int err;
-  char buf[4096];
-  struct sockaddr_in _send_addr;
+  struct sockaddr_in addr;
   
-  snprintf(buf, sizeof(buf), "%d.%d.%d.%d", ip0, ip1, ip2, ip3);
+  memset(&addr, 0, sizeof(addr));
+  addr.sin_family = AF_INET;
+  addr.sin_port = htons(port);
+  addr.sin_addr.s_addr = ip0 | ip1 << 8 | ip2 << 16 | ip3 << 24;
 
-  memset(&_send_addr, 0, sizeof (_send_addr));
-  _send_addr.sin_family = AF_INET;
-  _send_addr.sin_port = htons(port);
-  inet_pton(AF_INET, buf, &_send_addr.sin_addr);
-
-  err = connect(socket, (struct sockaddr *)&_send_addr, sizeof(_send_addr));
+  err = connect(socket, (struct sockaddr *)&addr, sizeof(addr));
   if (err >= 0)
     return 0;
 
