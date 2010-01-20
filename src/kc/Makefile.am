@@ -186,7 +186,6 @@ kcemu_LDADD = \
 	../libgtkex/libgtkex.a		\
 	../libdbg/libdbg.a		\
 	../cmd/*.o			\
-	$(Z80EX_LIBS)			\
 	$(GTK_LIBS)			\
 	$(SDL_LIBS)			\
 	$(SNDFILE_LIBS)			\
@@ -204,7 +203,8 @@ kcemu_LDADD = \
 	$(SYSLIBS_LINUX)		\
 	$(SYSLIBS_FREEBSD)		\
 	$(GETOPTLIB)			\
-	$(INTLLIBS)
+	$(INTLLIBS)			\
+	$(Z80EX_LIBS)
 
 kcemu_send_SOURCES = \
 	kcemu-send.c

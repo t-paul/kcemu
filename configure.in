@@ -15,6 +15,7 @@ dnl -----------------------
 dnl  declare extra options
 dnl -----------------------
 
+AC_ARG_ENABLE(static-z80ex, [  --enable-static-z80ex   link Z80 emulation statically [default=no]],,enable_static_z80ex=no)
 AC_ARG_ENABLE(sound,        [  --enable-sound          enable sound using libSDL (broken!) [default=no]],,enable_sound=no)
 AC_ARG_ENABLE(libaudiofile, [  --enable-libaudiofile   enable usage of libaudiofile if present [default=yes]],,enable_libaudiofile=yes)
 AC_ARG_ENABLE(libsndfile,   [  --enable-libsndfile     enable usage of libsndfile if present [default=yes]],,enable_libsndfile=yes)
@@ -326,6 +327,7 @@ main()
 		CFLAGS="$ac_save_CFLAGS"
 		LIBS="$ac_save_LIBS"
 		AC_SUBST(Z80EX_LIBS)
+                z80_emulation_type="dynamic"
 	else
 		AC_MSG_RESULT([cross compiling; assumed OK...])
 	fi
@@ -337,14 +339,39 @@ if test x$have_libz80ex = xno; then
 ***])
 fi
 
+AC_MSG_CHECKING(if static linking of z80ex is requested)
+if test "x$enable_static_z80ex" = "xyes"; then
+	AC_MSG_RESULT(yes)
+	AC_MSG_CHECKING(for path of static z80ex libraries)
+	z80ex_so=`gcc $LDFLAGS -lz80ex -Wl,--trace /dev/null 2>/dev/null | grep -- '-lz80ex' | sed -e 's/.*(//; s/).*//;'`
+	z80ex_path=`dirname "$z80ex_so"`
+	z80ex_lib="$z80ex_path/libz80ex.a"
+	z80ex_dasm_lib="$z80ex_path/libz80ex_dasm.a"
+	if test -f "$z80ex_lib" -a -f "$z80ex_dasm_lib"; then
+		AC_MSG_RESULT([$z80ex_path])
+		Z80EX_LIBS="$z80ex_lib $z80ex_dasm_lib"
+                z80_emulation_type="static"
+	else
+		AC_MSG_ERROR([
+***
+*** Can not find path for static z80ex library.
+***])
+	fi
+else
+	AC_MSG_RESULT(no)
+fi
+
 dnl ---------------------------------
 dnl  check for theoraenc library
 dnl ---------------------------------
+have_theora=no
 min_theora="1.0"
 min_theoraenc="1.1.1"
 if test "x$enable_libtheora" = xyes; then
 	PKG_CHECK_MODULES(LIBTHEORA11, theoraenc >= $min_theoraenc,
 	[
+                have_theora=yes
+                have_theora_version=" (version 1.1)"
                 AC_DEFINE(HAVE_LIBTHEORA, 1, "have libtheora")
                 AC_DEFINE(HAVE_LIBTHEORA11, 1, "have libtheora version 1.1")
                 LIBTHEORA_CFLAGS="$LIBTHEORA11_CFLAGS"
@@ -354,6 +381,8 @@ if test "x$enable_libtheora" = xyes; then
 	],[
                 PKG_CHECK_MODULES(LIBTHEORA10, theoraenc >= $min_theora theoradec >= $min_theora,
                 [
+                        have_theora=yes
+                        have_theora_version=" (version 1.0)"
                         AC_DEFINE(HAVE_LIBTHEORA, 1, "have libtheora")
                         AC_DEFINE(HAVE_LIBTHEORA10, 1, "have libtheora version 1.0")
                         LIBTHEORA_CFLAGS="$LIBTHEORA10_CFLAGS"
@@ -378,10 +407,12 @@ fi
 dnl ---------------------------------
 dnl  check for libavformat library
 dnl ---------------------------------
+have_avformat=no
 min_libavformat="52.41.0"
 if test "x$enable_libavformat" = xyes; then
 	PKG_CHECK_MODULES(LIBAVFORMAT, libavformat >= $min_libavformat,
 	[
+                have_avformat=yes
                 AC_DEFINE(HAVE_LIBAVFORMAT, 1, "have libavformat")
 		AC_SUBST(LIBAVFORMAT_CFLAGS)
 		AC_SUBST(LIBAVFORMAT_LIBS)
@@ -402,10 +433,12 @@ fi
 dnl ---------------------------------
 dnl  check for libdirac
 dnl ---------------------------------
+have_dirac=no
 min_libdirac="1.0.2"
 if test "x$enable_libdirac" = xyes; then
 	PKG_CHECK_MODULES(LIBDIRAC, dirac >= $min_libdirac,
 	[
+                have_dirac=yes
                 AC_DEFINE(HAVE_LIBDIRAC, 1, "have libdirac")
 		AC_SUBST(LIBDIRAC_CFLAGS)
 		AC_SUBST(LIBDIRAC_LIBS)
@@ -426,10 +459,12 @@ fi
 dnl ---------------------------------
 dnl  check for libschroedinger
 dnl ---------------------------------
+have_libschroedinger=no
 min_libschroedinger="1.0.8"
 if test "x$enable_libschroedinger" = xyes; then
 	PKG_CHECK_MODULES(LIBSCHROEDINGER, schroedinger-1.0 >= $min_libschroedinger,
 	[
+                have_libschroedinger=yes
                 AC_DEFINE(HAVE_LIBSCHROEDINGER, 1, "have libschroedinger")
 		AC_SUBST(LIBSCHROEDINGER_CFLAGS)
 		AC_SUBST(LIBSCHROEDINGER_LIBS)
@@ -450,6 +485,7 @@ fi
 dnl ---------------------------------
 dnl  check for libxvidcore
 dnl ---------------------------------
+have_libxvidcore=no
 min_libxvidcore="1.2.2"
 if test "x$enable_libxvidcore" = xyes; then
         AC_CHECK_LIB(xvidcore,
@@ -477,6 +513,7 @@ fi
 dnl ---------------------------------
 dnl  check for libvncserver
 dnl ---------------------------------
+have_libvncserver=no
 min_libvncserver="0.9"
 if test "x$enable_libvncserver" = xyes; then
         AC_CHECK_LIB(vncserver,
@@ -504,7 +541,7 @@ fi
 dnl ---------------------
 dnl  check for libsndfile
 dnl ---------------------
-
+have_libsndfile=no
 if test x$enable_libsndfile = xyes; then
 	AC_CHECK_LIB(sndfile,
 		     sf_open_read,
@@ -545,7 +582,7 @@ fi
 dnl -----------------------
 dnl  check for libaudiofile
 dnl -----------------------
-
+have_libaudiofile=no
 if test x$enable_libaudiofile = xyes; then
 	AC_CHECK_LIB(audiofile, afOpenFile, have_libaudiofile=yes, have_libaudiofile=no)
 	if test x$have_libaudiofile = xyes; then
@@ -571,7 +608,7 @@ fi
 dnl ---------------------
 dnl  check for libmp3lame
 dnl ---------------------
-
+have_libmp3lame=no
 if test x$enable_libmp3lame = xyes; then
 	AC_CHECK_LIB(mp3lame, lame_decode1_headers, have_libmp3lame=yes, have_libmp3lame=no)
 	if test x$have_libmp3lame = xyes; then
@@ -596,7 +633,7 @@ fi
 dnl --------------------
 dnl  check for libvorbis
 dnl --------------------
-
+have_libvorbis=no
 if test x$enable_libvorbis = xyes; then
 	AC_CHECK_LIB(vorbisfile, ov_open, have_libvorbis=yes, have_libvorbis=no, -lvorbis)
 	if test x$have_libvorbis = xyes; then
@@ -621,7 +658,7 @@ fi
 dnl ------------------
 dnl  check for libflac
 dnl ------------------
-
+have_libflac=no
 if test x$enable_libflac = xyes; then
 	AC_CHECK_LIB(FLAC, FLAC__file_decoder_process_metadata, have_libflac=yes, have_libflac=no)
 	if test x$have_libflac = xyes; then
@@ -775,50 +812,38 @@ AC_OUTPUT([
 	[])
 
 
+
+
 echo ""
 echo ""
-echo "KCemu summary:"
-echo "--------------"
+echo "KCemu configuration summary:"
+echo "----------------------------"
 echo ""
-echo "- version:         KCemu $KCEMU_VERSION"
-echo "- host system:     $host"
-echo "- architecture:    $HOST_OS"
-echo "- debug level:     $DBG_LEVEL"
-echo "- install prefix:  $prefix"
+echo "- version        : KCemu $KCEMU_VERSION"
 echo ""
-echo -n "- libs:"
-comma=""
-if test x$have_libsdl = xyes; then
-echo -n "$comma SDL ($sdl_major_version.$sdl_minor_version.$sdl_micro_version)"
-comma=","
-fi
-if test x$have_libsndfile = xyes; then
-echo -n "$comma sndfile"
-comma=","
-fi
-if test x$have_libaudiofile = xyes; then
-echo -n "$comma audiofile"
-comma=","
-fi
-if test x$have_libvorbis = xyes; then
-echo -n "$comma vorbis"
-comma=","
-fi
-if test x$have_libmp3lame = xyes; then
-echo -n "$comma mp3lame"
-comma=","
-fi
-if test x$have_libflac = xyes; then
-echo -n "$comma FLAC"
-comma=","
-fi
+echo "- architecture   : $HOST_OS"
+echo "- host system    : $host"
+echo "- install prefix : $prefix"
 echo ""
+echo "- z80 emulation  : $z80_emulation_type"
+echo "- sound          : $enable_sound"
+echo "- debug level    : $DBG_LEVEL"
 echo ""
-echo "- optional components:"
-echo -n "  * sound:           "
-if test x$enable_sound = xyes; then
-	echo "yes"
-else
-	echo "no"
-fi
+echo "- audio:"
+echo ""
+echo "  * sndfile      : $have_libsndfile"
+echo "  * audiofile    : $have_libaudiofile"
+echo "  * vorbis       : $have_libvorbis"
+echo "  * mp3lame      : $have_libmp3lame"
+echo "  * FLAC         : $have_libflac"
+echo ""
+echo "- video:"
+echo ""
+echo "  * theora       : $have_theora$have_theora_version"
+echo "  * avformat     : $have_avformat"
+echo "  * dirac        : $have_dirac"
+echo "  * schroedinger : $have_libschroedinger"
+echo "  * xvid         : $have_libxvidcore"
+echo "  * vncserver    : $have_libvncserver"
+echo ""
 echo ""
