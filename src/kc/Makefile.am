@@ -211,18 +211,3 @@ kcemu_send_SOURCES = \
 
 kcemu_send_LDADD = \
 	-lncurses $(INTLLIBS)
-
-#
-# Setting icons for Windows programs with gcc
-# http://fragglet.livejournal.com/4448.html
-#
-# I found I needed the windres rule twice, in the two forms
-# shown. The first tells automake to recognise .rc files
-# (it doesn't understand the second form), while the version
-# of make I was using (GNU make) didn't seem to like the
-# second form. Weird.
-#
-.rc.o:
-	$(RC) $^ -o $@
-%.o : %.rc
-	$(RC) $^ -o $@

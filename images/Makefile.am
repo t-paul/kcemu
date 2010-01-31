@@ -107,12 +107,12 @@ UI_XML = \
 	vdip.glade \
 	video.glade
 
-%.ico : %.xpm
+.xpm.ico:
 	xpmtoppm --alphaout /tmp/ico.alpha.1.$$$$ $< | ppmquant 256 > /tmp/ico.icon.$$$$ ; \
 	ppmtowinicon -andpgms /tmp/ico.icon.$$$$ /tmp/ico.alpha.1.$$$$ > $@ ; \
 	rm -f /tmp/ico.icon.$$$$ /tmp/ico.alpha.1.$$$$
 
-%.ppm : %.png
+.png.ppm:
 	SIZE=`echo "$<" | sed -e 's/.*[0-9]*x\([0-9]*\).*/\1/'`; \
 	COLORS=`expr 16 + "(" $$SIZE / 48 ")" "*" 240`; \
 	echo "### Found png icon of size $$SIZE, setting number of colors to $$COLORS"; \
