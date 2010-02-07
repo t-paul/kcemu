@@ -97,15 +97,13 @@ class Z80
 	bool singlestep();
 	void singlestep(bool value);
 
+	void nmi(void);
 	void reset(void);
 	void power_on(void);
 	void jump(word_t pc);
 	void reti(void);
 	void register_ic(InterfaceCircuit *h);
 	void unregister_ic(InterfaceCircuit *h);
-	int triggerIrq(int vector);
-	void handleIrq(int vector);
-	bool irq_enabled(void);
 
 	void addCallback(unsigned long long offset, Callback *cb, void *data);
 	void remove_callback_listener(Callback *cb);

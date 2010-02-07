@@ -347,16 +347,16 @@ ModuleV24::reti(void)
   if (!_in_buf_ptr)
     return;
   
-  if (z80->triggerIrq(_reg_wr[B][2]))
-    {
-      _irq_active[B] = 1;
-      _data_in[B] = *_in_buf_ptr++;
-      if (*_in_buf_ptr == 0) _in_buf_ptr = 0;
-      z80->handleIrq(_reg_wr[B][2]);
-      return;
-    }
-  else
-    _irq_pending[B] = 1;
+//  if (z80->triggerIrq(_reg_wr[B][2]))
+//    {
+//      _irq_active[B] = 1;
+//      _data_in[B] = *_in_buf_ptr++;
+//      if (*_in_buf_ptr == 0) _in_buf_ptr = 0;
+//      z80->handleIrq(_reg_wr[B][2]);
+//      return;
+//    }
+//  else
+//    _irq_pending[B] = 1;
 }
 
 void
@@ -377,16 +377,16 @@ ModuleV24::push_data(char *buf, int len)
   strcpy((char *)_in_buf, buf);
   _in_buf_ptr = _in_buf;
 
-  if (z80->triggerIrq(_reg_wr[B][2]))
-    {
-      _irq_active[B] = 1;
-      _data_in[B] = *_in_buf_ptr++;
-      if (*_in_buf_ptr == 0) _in_buf_ptr = 0;
-      z80->handleIrq(_reg_wr[B][2]);
-      return;
-    }
-  else
-    _irq_pending[B] = 1;
+//  if (z80->triggerIrq(_reg_wr[B][2]))
+//    {
+//      _irq_active[B] = 1;
+//      _data_in[B] = *_in_buf_ptr++;
+//      if (*_in_buf_ptr == 0) _in_buf_ptr = 0;
+//      z80->handleIrq(_reg_wr[B][2]);
+//      return;
+//    }
+//  else
+//    _irq_pending[B] = 1;
 }
 
 void

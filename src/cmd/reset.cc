@@ -50,7 +50,7 @@ public:
 	  break;
 	case 2:
           Status::instance()->setMessage("*** NMI ***");
-	  z80->handleIrq(0x0066);
+	  z80->nmi();
 	  break;
         }
     }

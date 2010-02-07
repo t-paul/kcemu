@@ -27,13 +27,10 @@
 
 InterfaceCircuit::InterfaceCircuit(const char *name)
 {
-  _iei       = 0;
-  _ieo_reti  = 0;
-  _irqreq    = 0;
-  _irqactive = 0;
   _next      = 0;
   _prev      = 0;
   _name      = strdup(name);
+  reset();
 }
 
 InterfaceCircuit::~InterfaceCircuit(void)
@@ -50,9 +47,9 @@ InterfaceCircuit::get_ic_name(void)
 void
 InterfaceCircuit::debug(void)
 {
-   DBG(2, form("KCemu/IC/irq",
-               "%s: iei = %d - ieo = %d - irqreq = %d - irqactive = %d\n",
-	       _name, _iei, ieo(), _irqreq, _irqactive));
+  DBG(2, form("KCemu/IC/irq",
+              "IC::debug():   %-8s: iei = %d - ieo = %d - irqreq = %d - irqactive = %d\n",
+              _name, _iei, ieo(), _irqreq, _irqactive));
 
   if (_next)
     _next->debug();
@@ -61,6 +58,9 @@ InterfaceCircuit::debug(void)
 void
 InterfaceCircuit::irq(void)
 {
+  DBG(2, form("KCemu/IC/irq",
+              "IC::irq():     %-8s: iei = %d - ieo = %d - irqreq = %d - irqactive = %d\n",
+              _name, _iei, ieo(), _irqreq, _irqactive));
   if (_irqactive || _irqreq)
     return;
 
@@ -71,7 +71,7 @@ InterfaceCircuit::irq(void)
   if ((_iei == 1) && (ieo() == 0))
     {
       DBG(2, form("KCemu/IC/irq",
-		  "IC::irq(): %s: will call irqreq()\n",
+		  "IC::irq():     %-8s: will call irqreq()\n",
 		  get_ic_name()));
       irqreq();
     }
@@ -80,10 +80,13 @@ InterfaceCircuit::irq(void)
 word_t
 InterfaceCircuit::ack(void)
 {
+  DBG(2, form("KCemu/IC/ack",
+              "IC::ack():     %-8s: iei = %d - ieo = %d - irqreq = %d - irqactive = %d\n",
+              _name, _iei, ieo(), _irqreq, _irqactive));
   if ((_iei == 1) && (ieo() == 0))
     {
       DBG(2, form("KCemu/IC/ack",
-		  "IC::ack(): %s: will call irqack()\n",
+		  "IC::ack():     %-8s: will call irqack()\n",
 		  get_ic_name()));
       _irqreq = 0;
       _irqactive = 1;
@@ -162,6 +165,9 @@ InterfaceCircuit::get_last()
 void
 InterfaceCircuit::reti_ED(void)
 {
+  DBG(2, form("KCemu/IC/reti",
+              "IC::reti_ED(): %-8s: iei = %d - ieo = %d - irqreq = %d - irqactive = %d\n",
+              _name, _iei, ieo(), _irqreq, _irqactive));
   if ((_iei == 1) && (ieo() == 0))
     if (!_irqactive)
       {
@@ -179,10 +185,13 @@ InterfaceCircuit::reti_ED(void)
 void
 InterfaceCircuit::reti_4D(void)
 {
+  DBG(2, form("KCemu/IC/reti",
+              "IC::reti_4D(): %-8s: iei = %d - ieo = %d - irqreq = %d - irqactive = %d\n",
+              _name, _iei, ieo(), _irqreq, _irqactive));
   if ((_iei == 1) && (ieo() == 0) && _irqactive)
     {
       DBG(2, form("KCemu/IC/reti",
-		  "IC::reti_4D(): %s\n",
+		  "IC::reti_4D(): %-8s:\n",
 		  get_ic_name()));
       _irqreq = 0;
       _irqactive = 0;
@@ -206,7 +215,7 @@ InterfaceCircuit::reti_4D(void)
   if (_irqreq != 0)
     {
       DBG(2, form("KCemu/IC/reti",
-		  "IC::reti_4D(): ### %s: irqreq is set!\n",
+		  "IC::reti_4D(): %-8s: irqreq is set!\n",
 		  get_ic_name()));
 
       if (_next)
@@ -215,7 +224,7 @@ InterfaceCircuit::reti_4D(void)
       if ((_iei == 1) && (ieo() == 0))
 	{
 	  DBG(2, form("KCemu/IC/reti",
-		      "IC::reti_4D(): %s: will call irqreq()\n",
+		      "IC::reti_4D(): %-8s: will call irqreq()\n",
 		      get_ic_name()));
 	  irqreq();
 	}
@@ -225,4 +234,12 @@ InterfaceCircuit::reti_4D(void)
 void
 InterfaceCircuit::reset(bool power_on)
 {
+  DBG(2, form("KCemu/IC/reset",
+              "IC::reset():   %-8s\n",
+              _name));
+
+  _iei       = 0;
+  _ieo_reti  = 0;
+  _irqreq    = 0;
+  _irqactive = 0;
 }

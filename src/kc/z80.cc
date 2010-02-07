@@ -211,7 +211,7 @@ Z80::run(void)
   int a;
   CMD *cmd;
 
-  //signal(SIGINT, signalHandler);
+  signal(SIGINT, signalHandler);
 
   if (timer)
     timer->start();
@@ -221,10 +221,8 @@ Z80::run(void)
   a = 0;
   while (!_do_quit)
     {
-#if 0
-      if (DBG_check("KCemu/Z80core/trace"))
-	debug(true);
-#endif
+//      if (DBG_check("KCemu/Z80core/trace"))
+//	debug(true);
 
       //if (_regs.PC.W <= 0x8000)
       //z80->printPC(); cout << endl;
@@ -399,15 +397,6 @@ Z80::unregister_ic(InterfaceCircuit *h)
   _ic_list.remove(h);
 }
 
-/**
- *  return true if interrupts are enabled
- */
-bool
-Z80::irq_enabled(void)
-{
-  return z80ex_int_possible(_context);
-}
-
 dword_t
 Z80::get_irq_mask(void)
 {
@@ -427,10 +416,11 @@ Z80::get_irq_mask(void)
 void
 Z80::set_irq_line(dword_t mask)
 {
-  _irq_line = _irq_line | mask;
+  dword_t irq_line = _irq_line | mask;
   DBG(2, form("KCemu/Z80/irq",
-              "set_irq_line():   %04x -> %04x\n",
-              mask, _irq_line));
+              "set_irq_line():   %04x: %04x -> %04x\n",
+              mask, _irq_line, irq_line));
+  _irq_line = irq_line;
 }
 
 void
@@ -454,29 +444,10 @@ Z80::reti(void)
   daisy->reti();
 }
 
-int
-Z80::triggerIrq(int vector)
-{
-  return z80ex_int_possible(_context);
-}
-
 void
-Z80::handleIrq(int vector)
+Z80::nmi(void)
 {
-  if (vector == 0x66)
-    {
-      z80ex_nmi(_context);
-      return;
-    }
-
-  if (_irq_line)
-    {
-      _next_irq = irq_ack();
-      if (_next_irq != IRQ_NOT_ACK)
-        {
-          z80ex_int(_context);
-        }
-    }
+  z80ex_nmi(_context);
 }
 
 void
