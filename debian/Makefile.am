@@ -9,4 +9,6 @@ EXTRA_DIST = \
 	kcemu.manpages	\
 	menu		\
 	rules		\
-	README.Debian
+	README.Debian	\
+	source/format	\
+	patches/*
