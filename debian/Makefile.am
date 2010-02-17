@@ -8,6 +8,7 @@ EXTRA_DIST = \
 	docs		\
 	kcemu.manpages	\
 	menu		\
+	watch		\
 	rules		\
 	README.Debian	\
 	README.source	\
