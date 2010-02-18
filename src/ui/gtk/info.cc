@@ -23,8 +23,6 @@
 
 #include "kc/system.h"
 
-#include "ui/gtk/gtkledline.h"
-
 #include "kc/z80.h"
 #include "kc/pio.h"
 #include "kc/ctc.h"
@@ -32,6 +30,8 @@
 
 #include "ui/gtk/cmd.h"
 #include "ui/gtk/info.h"
+
+#include "libgtkex/libgtkex.h"
 
 class CMD_info_window_toggle : public CMD
 {
@@ -120,7 +120,7 @@ InfoWindow::do_update_cpu(void)
 	}
       else
 	{
-	  gtk_led_line_set_value(GTK_LED_LINE(_cpu.reg_led[r[a].reg]), b);
+	  //gtk_led_line_set_value(GTK_LED_LINE(_cpu.reg_led[r[a].reg]), b);
 	}
     }
 }

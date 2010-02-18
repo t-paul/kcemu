@@ -153,7 +153,6 @@ kcemu_SOURCES = \
 	sound.cc	\
 	sound3.cc	\
 	sound8.cc	\
-	disass.cc	\
 	$(EXTRA_kcemu_SOURCES)
 
 

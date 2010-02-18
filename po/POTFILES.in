@@ -60,7 +60,6 @@ src/kc/ctc_base.cc
 src/kc/ctc_dio.cc
 src/kc/ctc_fdc.cc
 src/kc/daisy.cc
-src/kc/disass.cc
 src/kc/disk.cc
 src/kc/disk_io.cc
 src/kc/fdc.cc
@@ -222,7 +221,6 @@ src/ui/gtk/debug.cc
 src/ui/gtk/dialog.cc
 src/ui/gtk/disk.cc
 src/ui/gtk/fbrowse.cc
-src/ui/gtk/gtkledline.c
 src/ui/gtk/hedit.cc
 src/ui/gtk/help.cc
 src/ui/gtk/image.cc

@@ -124,9 +124,5 @@ EXTRA_DIST = \
 	system.h	\
 	memstream.h	\
 	disass.h	\
-	op.h		\
-	opcb.h		\
-	opxx.h		\
-	opxxxx.h	\
 	basicrun.h	\
 	basicrun.asm

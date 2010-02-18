@@ -31,7 +31,8 @@
 
 #include "ui/gtk/cmd.h"
 #include "ui/gtk/module.h"
-#include "ui/gtk/gtkledline.h"
+
+#include "libgtkex/libgtkex.h"
 
 class CMD_ui_module_window_toggle : public CMD
 {
@@ -378,6 +379,6 @@ ModuleWindow::activate(int slot, byte_t value)
   if (_w.m[slot])
     {
       gtk_widget_set_sensitive(_w.m[slot], !(value & 1));
-      gtk_led_line_set_led(GTK_LED_LINE(_w.led[slot]), 0, value & 1);
+      //gtk_led_line_set_led(GTK_LED_LINE(_w.led[slot]), 0, value & 1);
     }
 }

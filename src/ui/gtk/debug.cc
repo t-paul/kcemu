@@ -449,7 +449,7 @@ debug_op_asm::update(DebugWindow *w, scroll_dir_t direction)
   do
     {
       pc = newpc;
-      newpc = disass(pc, &ptr);
+      newpc = 0; // FIXME: call disassembler here
       free(ptr);
       switch (direction)
 	{
@@ -486,7 +486,7 @@ debug_op_asm::update(DebugWindow *w, scroll_dir_t direction)
     {
       if (a == (DEBUG_NR_OF_ASM_LABELS - 2))
 	w->_pc_np = pc;
-      pc = disass(pc, &ptr);
+      pc = 0; // FIXME: call disassembler here
       gtk_label_set_text(GTK_LABEL(w->_w.l_asm[a]), ptr);
       free(ptr);
     }
