@@ -67,8 +67,6 @@ include/libtape/Makefile.in
 include/libtape/Makefile
 include/sys/Makefile.in
 include/sys/Makefile
-include/ui/beos/Makefile.in
-include/ui/beos/Makefile
 include/ui/generic/Makefile.in
 include/ui/generic/Makefile
 include/ui/gtk/Makefile.in
@@ -132,16 +130,12 @@ src/libdisk/Makefile.in
 src/libdisk/Makefile
 src/libtape/Makefile.in
 src/libtape/Makefile
-src/sys/beos/Makefile.in
-src/sys/beos/Makefile
 src/sys/linux/Makefile.in
 src/sys/linux/Makefile
 src/sys/mingw/Makefile.in
 src/sys/mingw/Makefile
 src/sys/Makefile.in
 src/sys/Makefile
-src/ui/beos/Makefile.in
-src/ui/beos/Makefile
 src/ui/generic/Makefile.in
 src/ui/generic/Makefile
 src/ui/gtk/Makefile.in
