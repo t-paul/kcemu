@@ -71,10 +71,6 @@ include/ui/generic/Makefile.in
 include/ui/generic/Makefile
 include/ui/gtk/Makefile.in
 include/ui/gtk/Makefile
-include/ui/sdl/Makefile.in
-include/ui/sdl/Makefile
-include/ui/sdlmtk/Makefile.in
-include/ui/sdlmtk/Makefile
 include/ui/Makefile.in
 include/ui/Makefile
 include/z80core/Makefile.in
@@ -140,10 +136,6 @@ src/ui/generic/Makefile.in
 src/ui/generic/Makefile
 src/ui/gtk/Makefile.in
 src/ui/gtk/Makefile
-src/ui/sdl/Makefile.in
-src/ui/sdl/Makefile
-src/ui/sdlmtk/Makefile.in
-src/ui/sdlmtk/Makefile
 src/ui/Makefile.in
 src/ui/Makefile
 src/util/Makefile.in
