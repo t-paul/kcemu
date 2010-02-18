@@ -49,5 +49,4 @@ EXTRA_DIST = \
 	dirac.h  		\
 	schro.h  		\
 	ffmpeg.h  		\
-	vnc.h			\
-	gtkledline.h
+	vnc.h

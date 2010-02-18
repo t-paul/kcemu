@@ -1,8 +1,6 @@
 /*
- *  KCemu -- the KC 85/3 and KC 85/4 Emulator
- *  Copyright (C) 1997-2001 Torsten Paul
- *
- *  $Id: ctc_fdc.cc,v 1.8 2002/10/31 01:46:35 torsten_paul Exp $
+ *  KCemu -- The emulator for the KC85 homecomputer series and much more.
+ *  Copyright (C) 1997-2010 Torsten Paul
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -14,9 +12,9 @@
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  *  GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with this program; if not, write to the Free Software
- *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+ *  You should have received a copy of the GNU General Public License along
+ *  with this program; if not, write to the Free Software Foundation, Inc.,
+ *  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
 #include <iostream>
@@ -33,10 +31,10 @@
 /*
  *  quoting the D004 programming manual:
  * 
- *  Alle vier Kanäle des CTC sind hardwaremäßig kaskadiert. Die
- *  Zählereingangsfrequenz des Kanals 0 beträgt 500kHz. Der Kanal 3 ist
- *  vom Betriebssystem interruptmäßig zur Laufwerksteuerung belegt. Die
- *  Kanäle 0 und 1 werden von der Systemuhr verwendet. Kanal 1 arbeitet
+ *  Alle vier Kanï¿½le des CTC sind hardwaremï¿½ï¿½ig kaskadiert. Die
+ *  Zï¿½hlereingangsfrequenz des Kanals 0 betrï¿½gt 500kHz. Der Kanal 3 ist
+ *  vom Betriebssystem interruptmï¿½ï¿½ig zur Laufwerksteuerung belegt. Die
+ *  Kanï¿½le 0 und 1 werden von der Systemuhr verwendet. Kanal 1 arbeitet
  *  dabei interruptgesteuert.
  *
  *  Die Adressen der Interruptserviceroutinen sind folgender Tabelle zu

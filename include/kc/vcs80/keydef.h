@@ -1,8 +1,6 @@
 /*
- *  KCemu -- the KC 85/3 and KC 85/4 Emulator
- *  Copyright (C) 1997-2004 Torsten Paul
- *
- *  $Id$
+ *  KCemu -- The emulator for the KC85 homecomputer series and much more.
+ *  Copyright (C) 1997-2010 Torsten Paul
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -14,9 +12,9 @@
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  *  GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with this program; if not, write to the Free Software
- *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+ *  You should have received a copy of the GNU General Public License along
+ *  with this program; if not, write to the Free Software Foundation, Inc.,
+ *  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
 #ifndef __kc_vcs80_keydef_h
@@ -27,31 +25,31 @@
  *  |        |        |        
  *  *-[ 7]-* *-[ F]-* *-[PE]-* 
  *  |      | |      | |      | 
- *  ¦      *-+------*-+------*-------*--07 (1)
+ *  ï¿½      *-+------*-+------*-------*--07 (1)
  *  |        |        |
  *  *-[ 6]-* *-[ E]-* *-[ST]-*
  *  |      | |      | |      |
- *  ¦      *-+------*-+------*-------*--06 (2)
+ *  ï¿½      *-+------*-+------*-------*--06 (2)
  *  |        |        |
  *  *-[ 5]-* *-[ D]-* *-[TR]-*
  *  |      | |      | |      |
- *  ¦      *-+------*-+------*-------*--05 (3)
+ *  ï¿½      *-+------*-+------*-------*--05 (3)
  *  |        |        |
  *  *-[ 4]-* *-[ C]-* *-[GO]-*
  *  |      | |      | |      |
- *  ¦      *-+------*-+------*-------*--04 (4)
+ *  ï¿½      *-+------*-+------*-------*--04 (4)
  *  |        |        |
  *  *-[ 3]-* *-[ B]-* *-[RE]-*
  *  |      | |      | |      |
- *  ¦      *-+------*-+------*-------*--03 (5)
+ *  ï¿½      *-+------*-+------*-------*--03 (5)
  *  |        |        |
  *  *-[ 2]-* *-[ A]-* *-[MA]-*
  *  |      | |      | |      |
- *  ¦      *-+------*-+------*-------*--02 (6)
+ *  ï¿½      *-+------*-+------*-------*--02 (6)
  *  |        |        |
  *  *-[ 1]-* *-[ 9]-* *-[A-]-*
  *  |      | |      | |      |
- *  ¦      *-+------*-+------*-------*--01 (7)
+ *  ï¿½      *-+------*-+------*-------*--01 (7)
  *  |        |        |
  *  *-[ 0]-* *-[ 8]-* *-[A+]-*
  *         |        |        |

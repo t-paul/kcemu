@@ -1,8 +1,6 @@
 /*
- *  KCemu -- the KC 85/3 and KC 85/4 Emulator
- *  Copyright (C) 1997-2007 Torsten Paul
- *
- *  $Id$
+ *  KCemu -- The emulator for the KC85 homecomputer series and much more.
+ *  Copyright (C) 1997-2010 Torsten Paul
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -14,9 +12,9 @@
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  *  GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with this program; if not, write to the Free Software
- *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+ *  You should have received a copy of the GNU General Public License along
+ *  with this program; if not, write to the Free Software Foundation, Inc.,
+ *  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
 #ifndef __kc_c80_keydef_h
@@ -27,11 +25,11 @@
  *  |        |        |        |        |        |        |        |
  *  *-[ 1]-* *-[ 2]-* *-[ 3]-* *-[ 4]-+ *-[ 5]-* *-[ 6]-* *-[ 7]-* *-[ 8]-*
  *  |  REG | |  GO  | |   D  | |   A  | |   7  | |   4  | |   1  | |  FCN |
- *  ¦      *-+------*-+------*-+------*-+------*-+------*-+------*-+------*-- A0 (01)
+ *  ï¿½      *-+------*-+------*-+------*-+------*-+------*-+------*-+------*-- A0 (01)
  *  |        |        |        |        |        |        |        |
  *  *-[ 9]-* *-[10]-* *-[11]-* *-[12]-+ *-[13]-* *-[14]-* *-[15]-* *-[16]-*
  *  |   +  | |   -  | |   E  | |   B  | |   8  | |   5  | |   2  | |   0  |
- *  ¦      *-+------*-+------*-+------*-+------*-+------*-+------*-+------*-- A1 (02)
+ *  ï¿½      *-+------*-+------*-+------*-+------*-+------*-+------*-+------*-- A1 (02)
  *  |        |        |        |        |        |        |        |
  *  *-[17]-* *-[18]-* *-[19]-* *-[20]-+ *-[21]-* *-[22]-* *-[23]-* *-[24]-*
  *         |        |     F  |     C  |     9  |     6  |     3  |    MEM |

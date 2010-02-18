@@ -1,8 +1,6 @@
 /*
- *  KCemu -- the KC 85/3 and KC 85/4 Emulator
- *  Copyright (C) 1997-2001 Torsten Paul
- *
- *  $Id: keyb3.h,v 1.9 2002/10/31 01:46:33 torsten_paul Exp $
+ *  KCemu -- The emulator for the KC85 homecomputer series and much more.
+ *  Copyright (C) 1997-2010 Torsten Paul
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -14,9 +12,9 @@
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  *  GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with this program; if not, write to the Free Software
- *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+ *  You should have received a copy of the GNU General Public License along
+ *  with this program; if not, write to the Free Software Foundation, Inc.,
+ *  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
 #ifndef __kc_keyb3_h
@@ -29,11 +27,11 @@
 /*
  *  serial keyboard protocol (U807/ SAB 3011)
  *
- *  bit 0 = 5.120 ms = 5 * 64 * 16µs
- *  bit 1 = 7.168 ms = 7 * 64 * 16µs
+ *  bit 0 = 5.120 ms = 5 * 64 * 16ï¿½s
+ *  bit 1 = 7.168 ms = 7 * 64 * 16ï¿½s
  *
- *  Tw  = 14.336 ms = 14 * 64 * 16µs (time between repeated words)
- *  Tdw = 19.456 ms = 19 * 64 * 16µs (time between double words)
+ *  Tw  = 14.336 ms = 14 * 64 * 16ï¿½s (time between repeated words)
+ *  Tdw = 19.456 ms = 19 * 64 * 16ï¿½s (time between double words)
  *
  *  Every keypress is encoded by sending a double word (2 x 7 bits)
  *  with a delay (Tw) between both words.
@@ -50,7 +48,7 @@
  *  KC85/4 runs with 1.75 MHz which gives the following cycle
  *  counts for the delays above:
  *
- *  1 cycle is 1/1750000 seconds = 0.0005714 ms = 0.5714 µs
+ *  1 cycle is 1/1750000 seconds = 0.0005714 ms = 0.5714 ï¿½s
  *
  *  bit 0 =  5.120 ms  =>  8960 cycles
  *  bit 1 =  7.168 ms  => 12544 cycles

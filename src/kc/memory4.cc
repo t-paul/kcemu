@@ -1,8 +1,6 @@
 /*
- *  KCemu -- the KC 85/3 and KC 85/4 Emulator
- *  Copyright (C) 1997-2001 Torsten Paul
- *
- *  $Id: memory4.cc,v 1.18 2002/10/31 01:46:35 torsten_paul Exp $
+ *  KCemu -- The emulator for the KC85 homecomputer series and much more.
+ *  Copyright (C) 1997-2010 Torsten Paul
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -14,9 +12,9 @@
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  *  GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with this program; if not, write to the Free Software
- *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+ *  You should have received a copy of the GNU General Public License along
+ *  with this program; if not, write to the Free Software Foundation, Inc.,
+ *  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
 #include <stdlib.h>
@@ -416,9 +414,9 @@ Memory4::selectRAM_8(int segment)
    *  256 kByte on Board ... der erste Schritt zum KC 85/5?
    *  von Mario Leubner
    *
-   *  Segment   Block           SWITCH 3 .. (für wr/on)
-   *     0      RAM8 E (RAM0)   3B (legt RAM0 zusätzlich auf 8000H)
-   *     1      RAM8 F (RAM4)   3F (legt RAM4 zusätzlich auf 8000H)
+   *  Segment   Block           SWITCH 3 .. (fï¿½r wr/on)
+   *     0      RAM8 E (RAM0)   3B (legt RAM0 zusï¿½tzlich auf 8000H)
+   *     1      RAM8 F (RAM4)   3F (legt RAM4 zusï¿½tzlich auf 8000H)
    *     2      RAM8 0          03 (bisher auch Block 0)
    *     3      RAM8 1          07 (bisher auch Block 1)
    *     4      RAM8 2          0B (ab hier neu)
