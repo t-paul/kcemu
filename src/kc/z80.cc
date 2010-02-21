@@ -268,9 +268,10 @@ Z80::run(void)
 
       if (_irq_line && z80ex_int_possible(_context))
         {
-          _next_irq = irq_ack();
-          if (_next_irq != IRQ_NOT_ACK)
+          word_t irq = daisy->irq_ack();
+          if (irq != IRQ_NOT_ACK)
             {
+              _next_irq = (byte_t)irq;
               z80ex_int(_context);
             }
         }
@@ -432,12 +433,6 @@ Z80::reset_irq_line(dword_t mask)
               mask, _irq_line));
 }
 
-word_t
-Z80::irq_ack(void)
-{
-  return daisy->irq_ack();
-}
-
 void
 Z80::reti(void)
 {
@@ -497,20 +492,20 @@ Z80::z80ex_mwrite_cb(Z80EX_CONTEXT *cpu, Z80EX_WORD addr, Z80EX_BYTE value, void
 Z80EX_BYTE
 Z80::z80ex_pread_cb(Z80EX_CONTEXT *cpu, Z80EX_WORD port, void *user_data)
 {
-  byte_t Value;
+  byte_t value;
 
-  Value = ports->in(port);
-  DBG(3, form("KCemu/Z80/InZ80",
-              "InZ80():  %04x -> %02x\n",
-              Port, Value));
-  return Value;
+  value = ports->in(port);
+  DBG(2, form("KCemu/Z80/pread_cb",
+              "Z80::z80ex_pread_cb():  %04x -> %02x\n",
+              port, value));
+  return value;
 }
 
 void
 Z80::z80ex_pwrite_cb(Z80EX_CONTEXT *cpu, Z80EX_WORD port, Z80EX_BYTE value, void *user_data)
 {
-  DBG(3, form("KCemu/Z80/OutZ80",
-              "OutZ80(): %04x -> %02x\n",
+  DBG(2, form("KCemu/Z80/pwrite_cb",
+              "Z80::z80ex_pwrite_cb(): %04x -> %02x\n",
               port, value));
   ports->out(port, value);
 }
@@ -519,6 +514,9 @@ Z80EX_BYTE
 Z80::z80ex_intread_cb(Z80EX_CONTEXT *cpu, void *user_data)
 {
   Z80 *z80 = (Z80 *)user_data;
+  DBG(2, form("KCemu/Z80/intread_cb",
+              "Z80::z80ex_intread_cb(): %02x\n",
+              z80->_next_irq));
   return z80->_next_irq;
 }
 
@@ -526,6 +524,8 @@ void
 Z80::z80ex_reti_cb(Z80EX_CONTEXT *cpu, void *user_data)
 {
   Z80 *z80 = (Z80 *)user_data;
+  DBG(2, form("KCemu/Z80/reti_cb",
+              "Z80::z80ex_reti_cb(): RETI\n"));
   z80->reti();
 }
 

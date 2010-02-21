@@ -112,7 +112,6 @@ class Z80
 	dword_t get_irq_mask(void);
 	void set_irq_line(dword_t mask);
 	void reset_irq_line(dword_t mask);
-	word_t irq_ack(void);
 
         void printPC(void);
 
