@@ -13,7 +13,6 @@ EXTRA_DIST = \
 	menu		\
 	watch		\
 	rules		\
-	README.Debian	\
 	README.source	\
 	source/format	\
 	patches/*
