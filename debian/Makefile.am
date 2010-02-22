@@ -6,6 +6,8 @@ EXTRA_DIST = \
 	copyright	\
 	dirs		\
 	docs		\
+	kcemu.desktop	\
+	kcemu.install	\
 	kcemu.manpages	\
 	menu		\
 	watch		\
