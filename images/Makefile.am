@@ -8,6 +8,8 @@ icondir = $(pkgdatadir)/icons
 imagedir = $(pkgdatadir)/images
 
 ICONS = \
+	kcemu-icon.png \
+	kcemu-icon.xpm \
 	kcemu-bic.xpm \
 	kcemu-kc85.xpm \
 	kcemu-kc87.xpm \
