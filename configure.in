@@ -276,6 +276,8 @@ fi
 
 AC_CHECK_LIB(m, pow,,AC_MSG_WARN(Cannot link libm -- check CFLAGS/LDFLAGS))
 
+AM_CONDITIONAL(HAVE_CPPUNIT, false)
+
 dnl -----------------------
 dnl  initialize pkg-config
 dnl -----------------------
