@@ -476,7 +476,7 @@ SystemInformation::SystemInformation(void) {
     add_system_type(101, "z1013.01", -1, EmulationType::_emulation_type_z1013, KC_VARIANT_Z1013_01,
             N_("    Z1013 with 16k RAM and 2k ROM, running at 1MHz. This was the\n"
             "    first version with cheap circuits so the CPU was clocked at only 1MHz\n"
-            "    The ROM containes the Z1013 monitor version 2.02.\n"))
+            "    The ROM contains the Z1013 monitor version 2.02.\n"))
         .set_display_name("Z1013.01")
         .set_ui_callback_value(20000)
         .set_ui_callback_retrace_value(1000)
@@ -676,7 +676,7 @@ SystemInformation::SystemInformation(void) {
      *  KC 85/5
      */
     add_system_type(600, "kc85/5", 5, EmulationType::_emulation_type_kc85_5, KC_VARIANT_NONE,
-            N_("    Inofficial successor of the KC 85/4 with 256k RAM, 64k screen memory,\n"
+            N_("    Unofficial successor of the KC 85/4 with 256k RAM, 64k screen memory,\n"
             "    16k system ROM with HC-CAOS 4.4, 8k BASIC ROM and 24k User ROM. It is\n"
             "    intended to be used with a modified D004 floppy device with additional\n"
             "    hard-disk support.\n"))
