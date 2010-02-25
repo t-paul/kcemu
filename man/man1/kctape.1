@@ -2,9 +2,9 @@
 .SH NAME
 kctape \- handle tape files for KCemu
 .SH SYNOPSIS
-.B kctape -t tapefile [command [command_args]]
+.B kctape \-t tapefile [command [command_args]]
 .br
-.B kctape --help
+.B kctape \-\-help
 .br
 .SH "DESCRIPTION"
 This manual page documents briefly the
@@ -14,43 +14,43 @@ This manual page was written for the Debian GNU/Linux distribution
 because the original program does not have a manual page.
 .SH OPTIONS
 .TP
-.B \-h, --help
+.B \-h, \-\-help
 Show short help text.
 .TP
-.B \-v, --verbose
+.B \-v, \-\-verbose
 Be verbose about what's going on.
 .TP
-.B \-t, --tape tapefile
+.B \-t, \-\-tape tapefile
 tape archive to process.
 .TP
-.B \-l, --list
+.B \-l, \-\-list
 List the content of the tapefile.
 .TP
-.B \-c, --create
+.B \-c, \-\-create
 Create the specified tapefile.
 .TP
-.B \-a, --add file [file ...]
+.B \-a, \-\-add file [file ...]
 Add new file to tapefile (in KC85/3 mode).
 .TP
-.B \-1, --add1 file [file ...]
+.B \-1, \-\-add1 file [file ...]
 Add new file to tapefile (in KC85/1 mode).
 .TP
-.B \-r, --remove filename
+.B \-r, \-\-remove filename
 Remove file from tapefile.
 .TP
-.B \-x, --extract filename
-Extract file to stdout or to the file specified by -o.
+.B \-x, \-\-extract filename
+Extract file to stdout or to the file specified by \-o.
 .TP
-.B \-d, --dump filename
+.B \-d, \-\-dump filename
 Hexdump file from tapefile.
 .TP
-.B \-o, --output filename
+.B \-o, \-\-output filename
 Output file for the extract command.
 .TP
-.B \-b, --print-bam
+.B \-b, \-\-print\-bam
 Show internal block allocation map.
 .TP
-.B \-B, --print-block-list
+.B \-B, \-\-print\-block\-list
 Show internal block list.
 .SH SEE ALSO
 kcemu(1x), kc2tap(1), kc2wav(1), kc2img(1), kc2raw(1)
