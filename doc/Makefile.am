@@ -10,6 +10,7 @@ IMAGES = \
 	sys-z9001.jpg \
 	sys-xy4131.jpg \
 	window-audio.png \
+	window-colors.png \
 	window-disk.png \
 	window-module-kc85.png \
 	window-module-z1013.png \

@@ -63,6 +63,7 @@
 3.8. <link ref="window-plotter">Plotter</link>
 3.9. <link ref="window-screenshot">Screenshot</link>
 3.10. <link ref="window-video">Video</link>
+3.11. <link ref="window-colors">Farbeinstellung</link>
 
 </p>
 
@@ -1142,6 +1143,20 @@ VEB Robotron-Meßelektronik "Otto Schön" Dresden
 
   Welche dieser Formate verfügbar sind, hängt von der Installation ab,
   normalerweise sollte mindestens "Theora/Ogg" verfügbar sein.
+
+</p>
+
+<p><size value="2"><ref name="window-colors"/>3.11. Farbeinstellung</size>
+
+  Zur Farbeinstellung können die Werte Helligkeit und Kontrast verändert
+  werden. Bei einigen Systemen wie KC85/2 bis KC85/5 und BIC / A5105
+  können dabei Vordergrund und Hintergrundfarbe getrennt eingestellt
+  werden.
+  Bei allen anderen Systemen wirkt sich nur die Einstellung der Fordergrund-
+  Farbe aus.
+
+  <img src="window-colors.png"/>
+  <size value="-2"><c>Die Farbeinstellung</c></size>
 
 </p>
 

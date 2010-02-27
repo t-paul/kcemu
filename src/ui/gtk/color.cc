@@ -112,5 +112,5 @@ ColorWindow::init(void)
   _w.b_bg_vscale = get_widget("background_brightness_vscale");
   _w.v_bg_adj = init_adjustment(GTK_RANGE(_w.b_bg_vscale), &_brightness_bg);
 
-  init_dialog("ui-color-window-toggle", NULL);
+  init_dialog("ui-color-window-toggle", "window-colors");
 }
