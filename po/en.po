@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: KCemu 0.4\n"
 "Report-Msgid-Bugs-To: Torsten.Paul@gmx.de\n"
-"POT-Creation-Date: 2010-01-17 18:03+0100\n"
-"PO-Revision-Date: 2010-01-17 18:03+0100\n"
+"POT-Creation-Date: 2010-02-28 00:17+0100\n"
+"PO-Revision-Date: 2010-02-28 00:17+0100\n"
 "Last-Translator: Torsten Paul <Torsten.Paul@gmx.de>\n"
 "Language-Team: English <Torsten.Paul@gmx.de>\n"
 "MIME-Version: 1.0\n"
@@ -63,12 +63,12 @@ msgid "Colors"
 msgstr "Colors"
 
 #: images/color.glade:132 images/color.glade:232
-msgid "Saturation"
-msgstr "Saturation"
-
-#: images/color.glade:166 images/color.glade:266
 msgid "Brightness"
 msgstr "Brightness"
+
+#: images/color.glade:166 images/color.glade:266
+msgid "Contrast"
+msgstr "Contrast"
 
 #: images/color.glade:183
 msgid "Foreground"
@@ -77,14 +77,6 @@ msgstr "Foreground"
 #: images/color.glade:283
 msgid "Background"
 msgstr "Background"
-
-#: images/color.glade:322
-msgid "Black Level"
-msgstr "Black Level"
-
-#: images/color.glade:356
-msgid "White Level"
-msgstr "White Level"
 
 #: images/dialog.glade:6
 msgid "KCemu"
@@ -3190,7 +3182,7 @@ msgstr "/Export File"
 msgid "/Export Wav"
 msgstr "/Export Wav"
 
-#: src/ui/gtk/ui_gtk.cc:770
+#: src/ui/gtk/ui_gtk.cc:796
 msgid "Info"
 msgstr "Info"
 
@@ -3226,6 +3218,15 @@ msgstr "Open ROM Image..."
 #, c-format
 msgid "ROM image is '%s'. The ROM size needs to be %04xh (%d) bytes."
 msgstr "ROM image is '%s'. The ROM size needs to be %04xh (%d) bytes."
+
+#~ msgid "Saturation"
+#~ msgstr "Saturation"
+
+#~ msgid "Black Level"
+#~ msgstr "Black Level"
+
+#~ msgid "White Level"
+#~ msgstr "White Level"
 
 #~ msgid "A_udio..."
 #~ msgstr "A_udio..."

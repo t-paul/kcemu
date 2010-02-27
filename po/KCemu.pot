@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: KCemu 0.5\n"
 "Report-Msgid-Bugs-To: Torsten.Paul@gmx.de\n"
-"POT-Creation-Date: 2010-01-17 18:03+0100\n"
+"POT-Creation-Date: 2010-02-28 00:17+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -61,11 +61,11 @@ msgid "Colors"
 msgstr ""
 
 #: images/color.glade:132 images/color.glade:232
-msgid "Saturation"
+msgid "Brightness"
 msgstr ""
 
 #: images/color.glade:166 images/color.glade:266
-msgid "Brightness"
+msgid "Contrast"
 msgstr ""
 
 #: images/color.glade:183
@@ -74,14 +74,6 @@ msgstr ""
 
 #: images/color.glade:283
 msgid "Background"
-msgstr ""
-
-#: images/color.glade:322
-msgid "Black Level"
-msgstr ""
-
-#: images/color.glade:356
-msgid "White Level"
 msgstr ""
 
 #: images/dialog.glade:6
@@ -2614,7 +2606,7 @@ msgstr ""
 msgid "/Export Wav"
 msgstr ""
 
-#: src/ui/gtk/ui_gtk.cc:770
+#: src/ui/gtk/ui_gtk.cc:796
 msgid "Info"
 msgstr ""
 
