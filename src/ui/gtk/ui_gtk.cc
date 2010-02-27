@@ -136,12 +136,7 @@ public:
     }
     
     void execute(CMD_Args *args, CMD_Context context) {
-        _ui->allocate_colors(_colwin->get_saturation_fg(),
-                _colwin->get_saturation_bg(),
-                _colwin->get_brightness_fg(),
-                _colwin->get_brightness_bg(),
-                _colwin->get_black_level(),
-                _colwin->get_white_level());
+        _ui->allocate_colors(_colwin->get_brightness_fg(), _colwin->get_contrast_fg(), _colwin->get_brightness_bg(), _colwin->get_contrast_bg());
         _ui->update(true, true);
     }
 };
@@ -552,12 +547,7 @@ UI_Gtk::init2(void) {
     
     ColorWindow *color_window = (ColorWindow *)_color_window;
     
-    allocate_colors(color_window->get_saturation_fg(),
-            color_window->get_saturation_bg(),
-            color_window->get_brightness_fg(),
-            color_window->get_brightness_bg(),
-            color_window->get_black_level(),
-            color_window->get_white_level());
+    allocate_colors(color_window->get_brightness_fg(), color_window->get_contrast_fg(), color_window->get_brightness_bg(), color_window->get_contrast_bg());
     
     /* this _must_ come last due to some initialization for menus */
     _main_window->show(get_width(), get_height());
@@ -591,38 +581,74 @@ UI_Gtk::gtk_resize(void) {
       set_video_encoder_state(VideoEncoder::VIDEO_ENCODER_STATE_STOP);
 }
 
-void
-UI_Gtk::allocate_color_hsv(int idx, double h, double s, double v) {
-    _main_window->allocate_color_hsv(idx, h, s, v);
+int
+UI_Gtk::ensure_range(double val)
+{
+  if (val < 0)
+    return 0;
+  if (val > 255)
+    return 255;
+  return (int)val;
 }
 
 void
-UI_Gtk::allocate_color_rgb(int idx, int r, int g, int b) {
-    _main_window->allocate_color_rgb(idx, r, g, b);
-}
-
-void
-UI_Gtk::allocate_colors_by_name(const char **color_names) {
-    _main_window->allocate_colors(color_names);
-}
-
-void
-UI_Gtk::allocate_colors(double saturation_fg, double saturation_bg, double brightness_fg, double brightness_bg, double black_level, double white_level) {
-    int idx = 0;
-    list<UI_Color> colors(_ui->get_colors());
-    for (list<UI_Color>::const_iterator it = colors.begin();it != colors.end();it++, idx++) {
-        if ((*it).is_rgb()) {
-            _main_window->allocate_color_rgb(idx, (*it).get_red(), (*it).get_green(), (*it).get_blue());
-            _video_encoder->allocate_color_rgb(idx, (*it).get_red(), (*it).get_green(), (*it).get_blue());
-        } else {
-            if ((*it).is_bg()) {
-                _main_window->allocate_color_hsv(idx, (*it).get_hue(), saturation_bg, brightness_bg);
-                _video_encoder->allocate_color_hsv(idx, (*it).get_hue(), saturation_bg, brightness_bg);
-            } else {
-                _main_window->allocate_color_hsv(idx, (*it).get_hue(), saturation_fg, brightness_fg);
-                _video_encoder->allocate_color_hsv(idx, (*it).get_hue(), saturation_fg, brightness_fg);
-            }
+UI_Gtk::allocate_colors(double brightness_fg, double contrast_fg, double brightness_bg, double contrast_bg)
+{
+  int idx = 0;
+  list<UI_Color> colors(_ui->get_colors());
+  for (list<UI_Color>::const_iterator it = colors.begin();it != colors.end();it++, idx++)
+    {
+      double r, g, b;
+      if ((*it).is_rgb())
+        {
+          r = (*it).get_red();
+          g = (*it).get_green();
+          b = (*it).get_blue();
         }
+      else
+        {
+          int red, green, blue;
+          //double s = (*it).is_bg() ? 0.85 : 1.0;
+          //double v = (*it).is_bg() ? 0.70 : 1.0;
+          hsv2rgb((*it).get_hue(), 1.0, 1.0, &red, &green, &blue);
+          r = red;
+          g = green;
+          b = blue;
+        }
+
+      double contrast;
+      double brightness;
+      if ((*it).is_bg())
+        {
+          contrast = contrast_bg;
+          brightness = brightness_bg;
+        }
+      else
+        {
+          contrast = contrast_fg;
+          brightness  = brightness_fg;
+        }
+
+      r *= 1.5 * contrast;
+      g *= 1.5 * contrast;
+      b *= 1.5 * contrast;
+      r += (256 * brightness - 127);
+      g += (256 * brightness - 127);
+      b += (256 * brightness - 127);
+
+      int red = ensure_range(r);
+      int green = ensure_range(g);
+      int blue = ensure_range(b);
+
+      DBG(2, form("KCemu/UI/color",
+                  "%c(%3d): %5.2f / %5.2f - %7.2f, %7.2f, %7.2f - %3d, %3d, %3d\n",
+                  (*it).is_bg() ? 'B' : 'F',
+                  idx, brightness, contrast,
+                  r, g, b,
+                  red, green, blue));
+
+      _main_window->allocate_color_rgb(idx, red, green, blue);
+      _video_encoder->allocate_color_rgb(idx, red, green, blue);
     }
 }
 

@@ -30,8 +30,6 @@
 
 #include "kc/system.h"
 
-#include "ui/hsv2rgb.h"
-
 #include "ui/gtk/videoenc.h"
 
 class XvidVideoEncoder : public VideoEncoder
@@ -58,7 +56,6 @@ public:
   
   virtual bool init(const char *filename, int width, int height, int fps_den, double quality);
   virtual void allocate_color_rgb(int idx, int r, int g, int b);
-  virtual void allocate_color_hsv(int idx, double h, double s, double v);
   virtual bool encode(byte_t *image, byte_t *dirty);
   virtual void close(void);
 };

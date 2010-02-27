@@ -437,34 +437,12 @@ MainWindow::resize(int width, int height) {
 }
 
 void
-MainWindow::allocate_color_hsv(int idx, double h, double s, double v) {
-    int r, g, b;
-    
-    hsv2rgb(h, s, v, &r, &g, &b);
-
-    _col[idx].red = r << 8;
-    _col[idx].green = g << 8;
-    _col[idx].blue = b << 8;
-    _colormap = gdk_colormap_get_system();
-    gdk_color_alloc(_colormap, &_col[idx]);
-}
-
-void
 MainWindow::allocate_color_rgb(int idx, int r, int g, int b) {
     _col[idx].red = r << 8;
     _col[idx].green = g << 8;
     _col[idx].blue = b << 8;
     _colormap = gdk_colormap_get_system();
     gdk_color_alloc(_colormap, &_col[idx]);
-}
-
-void
-MainWindow::allocate_colors(const char *color_names[]) {
-    _colormap = gdk_colormap_get_system();
-    for (int a = 0;color_names[a];a++) {
-        gdk_color_parse(color_names[a], &_col[a]);
-        gdk_color_alloc(_colormap, &_col[a]);
-    }
 }
 
 static gulong

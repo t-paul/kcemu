@@ -98,9 +98,7 @@ public:
     virtual void show(int width, int height);
     virtual bool resize(int width, int height);
     virtual void update(UI_Base *ui, int image_width, int image_height, bool full_update);
-    virtual void allocate_colors(const char *color_names[]);
     virtual void allocate_color_rgb(int idx, int r, int g, int b);
-    virtual void allocate_color_hsv(int idx, double h, double s, double v);
 
     virtual gboolean get_display_effect(void);
     virtual void set_display_effect(gboolean effect);

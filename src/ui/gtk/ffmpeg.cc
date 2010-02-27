@@ -140,15 +140,6 @@ FfmpegVideoEncoder::allocate_color_rgb(int idx, int r, int g, int b)
   _col[idx].v =  (0.439 * r) - (0.368 * g) - (0.071 * b) + 128;
 }
 
-void
-FfmpegVideoEncoder::allocate_color_hsv(int idx, double h, double s, double v)
-{
-  int r, g, b;
-
-  hsv2rgb(h, s, v, &r, &g, &b);
-  allocate_color_rgb(idx, r, g, b);
-}
-
 bool
 FfmpegVideoEncoder::encode(byte_t *image, byte_t *dirty)
 {

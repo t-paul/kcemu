@@ -24,8 +24,6 @@
 
 #include "kc/system.h"
 
-#include "ui/hsv2rgb.h"
-
 #include "ui/gtk/dirac.h"
 
 DiracVideoEncoder::DiracVideoEncoder(void)
@@ -113,15 +111,6 @@ DiracVideoEncoder::allocate_color_rgb(int idx, int r, int g, int b)
   _col[idx].y = (0.257 * r) + (0.504 * g) + (0.098 * b) + 16;
   _col[idx].u = -(0.148 * r) - (0.291 * g) + (0.439 * b) + 128;
   _col[idx].v = (0.439 * r) - (0.368 * g) - (0.071 * b) + 128;
-}
-
-void
-DiracVideoEncoder::allocate_color_hsv(int idx, double h, double s, double v)
-{
-  int r, g, b;
-
-  hsv2rgb(h, s, v, &r, &g, &b);
-  allocate_color_rgb(idx, r, g, b);
 }
 
 bool

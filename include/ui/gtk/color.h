@@ -32,41 +32,21 @@ class ColorWindow : public UI_Gtk_Window
 {
  private:
   struct {
-    GtkWidget *vbox;
-    GtkWidget *hbox;
-    GtkWidget *fg_frame;
-    GtkWidget *fg_hbox;
-    GtkWidget *bg_frame;
-    GtkWidget *bg_hbox;
-    GtkWidget *s_fg_frame;
-    GtkWidget *s_fg_vscale;
-    GtkWidget *s_bg_frame;
-    GtkWidget *s_bg_vscale;
-    GtkWidget *v_fg_frame;
-    GtkWidget *v_fg_vscale;
-    GtkWidget *v_bg_frame;
-    GtkWidget *v_bg_vscale;
-    GtkWidget *b_frame;
-    GtkWidget *b_vscale;
-    GtkWidget *w_frame;
-    GtkWidget *w_vscale;
-    GtkWidget *separator;
-    GtkWidget *close;
+    GtkWidget *b_fg_vscale;
+    GtkWidget *b_bg_vscale;
+    GtkWidget *c_fg_vscale;
+    GtkWidget *c_bg_vscale;
 
     GtkAdjustment *s_fg_adj;
     GtkAdjustment *s_bg_adj;
     GtkAdjustment *v_fg_adj;
     GtkAdjustment *v_bg_adj;
-    GtkAdjustment *b_adj;
-    GtkAdjustment *w_adj;
   } _w;
 
-  double _saturation_fg;
-  double _saturation_bg;
   double _brightness_fg;
   double _brightness_bg;
-  double _black_level;
-  double _white_level;
+  double _contrast_fg;
+  double _contrast_bg;
 
   CMD *_cmd;
 
@@ -80,14 +60,10 @@ class ColorWindow : public UI_Gtk_Window
   ColorWindow(const char *ui_xml_file);
   virtual ~ColorWindow(void);
 
-  virtual double get_saturation_fg() { return _saturation_fg; }
-  virtual double get_saturation_bg() { return _saturation_bg; }
   virtual double get_brightness_fg() { return _brightness_fg; }
   virtual double get_brightness_bg() { return _brightness_bg; }
-  virtual double get_black_level()   { return _black_level; }
-  virtual double get_white_level()   { return _white_level; }
+  virtual double get_contrast_fg() { return _contrast_fg; }
+  virtual double get_contrast_bg() { return _contrast_bg; }
 };
 
 #endif /* __ui_gtk_color_h */
-
-
