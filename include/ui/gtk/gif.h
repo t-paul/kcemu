@@ -34,14 +34,20 @@ class GifVideoEncoder : public VideoEncoder
 {
 private:
   typedef struct { int r, g, b; } color_t;
+  enum { MAX_FRAME_DELAY = 65535 };
 
   int _width;
   int _height;
   int _fps_den;
-
+  int _frame_delay;
+  
   GifFileType *_gif;
   ColorMapObject *_cmap;
-  
+  byte_t *_buf;
+
+protected:
+  virtual bool flush_buffer(byte_t *buf, int delay);
+
 public:
   GifVideoEncoder(void);
   virtual ~GifVideoEncoder(void);

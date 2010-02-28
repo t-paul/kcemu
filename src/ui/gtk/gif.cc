@@ -19,6 +19,8 @@
 
 #include <string>
 
+#include <string.h>
+
 #include "kc/config.h"
 #ifdef HAVE_LIBGIF
 
@@ -34,6 +36,7 @@ GifVideoEncoder::GifVideoEncoder(void)
   _height = -1;
   _cmap = NULL;
   _gif = NULL;
+  _buf = NULL;
 }
 
 GifVideoEncoder::~GifVideoEncoder(void)
@@ -74,6 +77,7 @@ GifVideoEncoder::init(const char *filename, int width, int height, int fps_den, 
   _width = width;
   _height = height;
   _fps_den = fps_den;
+  _frame_delay = 0;
 
   EGifSetGifVersion(&GIF89_STAMP[GIF_VERSION_POS]);
   _gif = EGifOpenFileName(filename, 0);
@@ -118,9 +122,55 @@ GifVideoEncoder::allocate_color_rgb(int idx, int r, int g, int b)
 bool
 GifVideoEncoder::encode(byte_t *image, byte_t *dirty)
 {
+  _frame_delay += 2 * _fps_den;
+  if (_frame_delay > MAX_FRAME_DELAY)
+    _frame_delay = MAX_FRAME_DELAY;
+
+  if (dirty)
+    {
+      if (_buf == NULL)
+        {
+          _buf = new byte_t[_width * _height];
+          memcpy(_buf, image, _width * _height);
+          return true;
+        }
+
+      bool changed = false;
+      for (int a = 0;a < (_width * _height) / 64;a++)
+        {
+          if (dirty[a])
+            {
+              changed = true;
+              break;
+            }
+        }
+
+      if (!changed)
+        return true;
+    }
+
+  bool ret;
+  if (_buf)
+    {
+      ret = flush_buffer(_buf, _frame_delay);
+      memcpy(_buf, image, _width * _height);
+    }
+  else
+    {
+      ret = flush_buffer(image, _frame_delay);
+    }
+
+  _frame_delay = 0;
+
+  return ret;
+}
+
+bool
+GifVideoEncoder::flush_buffer(byte_t *buf, int delay)
+{
   /*
    * Graphic Control Extension
-   * (see: http://local.wasp.uwa.edu.au/~pbourke/dataformats/gif/
+   * (see: http://local.wasp.uwa.edu.au/~pbourke/dataformats/gif/)
    *
    * byte 1: | 3 bit Reserved | 3 bit Disposal Method | User Input | Transparent |
    *         Disposal Method:
@@ -152,18 +202,16 @@ GifVideoEncoder::encode(byte_t *image, byte_t *dirty)
    *         modified and processing goes on to the next pixel. The index is
    *         present if and only if the Transparency Flag is set to 1.
    */
-  unsigned char EXT_GCE[] = { 0, 2 * _fps_den, 0, 0};
+  unsigned char EXT_GCE[] = {0, delay, delay >> 8, 0};
 
   if (EGifPutExtension(_gif, 0xF9, 4, EXT_GCE) != GIF_OK)
     return false;
 
   if (EGifPutImageDesc(_gif, 0, 0, _width, _height, 0, _cmap) != GIF_OK)
     return false;
-  
-  if (EGifPutLine(_gif, (GifPixelType *)image, _width * _height) != GIF_OK)
-    return false;
 
-  return true;
+  if (EGifPutLine(_gif, buf, _width * _height) != GIF_OK)
+    return false;
 }
 
 void
@@ -171,6 +219,8 @@ GifVideoEncoder::close(void)
 {
   if (_gif != NULL)
     {
+      if (_buf)
+        flush_buffer(_buf, _frame_delay);
       EGifCloseFile(_gif);
       _gif = NULL;
     }
@@ -178,6 +228,11 @@ GifVideoEncoder::close(void)
     {
       FreeMapObject(_cmap);
       _cmap = NULL;
+    }
+  if (_buf != NULL)
+    {
+      delete[] _buf;
+      _buf = NULL;
     }
 }
 

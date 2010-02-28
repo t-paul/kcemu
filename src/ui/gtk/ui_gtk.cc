@@ -767,7 +767,7 @@ UI_Gtk::update(bool full_update, bool clear_cache) {
           {
             _video_frame = _video_skip;
             // we can use the dirty buffer only when not skipping frames
-            _video_encoder->encode(ui->get_buffer(), _video_skip == 0 ? ui->get_dirty_buffer() : NULL);
+            _video_encoder->encode(ui->get_buffer(), _video_skip == 1 ? ui->get_dirty_buffer() : NULL);
           }
         _video_frame--;
       }
