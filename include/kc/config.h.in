@@ -139,6 +139,9 @@
 /* "have libFLAC" */
 #undef HAVE_LIBFLAC
 
+/* "have libgif" */
+#undef HAVE_LIBGIF
+
 /* Define to 1 if you have the `m' library (-lm). */
 #undef HAVE_LIBM
 

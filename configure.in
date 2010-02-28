@@ -25,6 +25,7 @@ AC_ARG_ENABLE(libxvidcore,  [  --enable-libxvidcore    enable usage of libxvidco
 AC_ARG_ENABLE(libdirac,     [  --enable-libdirac       enable usage of libdirac if present [default=yes]],,enable_libdirac=yes)
 AC_ARG_ENABLE(libschroedinger, [  --enable-libschroedinger enable usage of libschroedinger if present [default=yes]],,enable_libschroedinger=yes)
 AC_ARG_ENABLE(libavformat,  [  --enable-libavformat    enable usage of libavformat if present [default=yes]],,enable_libavformat=yes)
+AC_ARG_ENABLE(libgif,       [  --enable-libgif         enable usage of libgif if present [default=yes]],,enable_libgif=yes)
 AC_ARG_ENABLE(libvncserver, [  --enable-libvncserver   enable usage of libvncserver if present [default=yes]],,enable_libvncserver=yes)
 AC_ARG_ENABLE(libmp3lame,   [  --enable-libmp3lame     enable usage of libmp3lame if present [default=yes]],,enable_libmp3lame=yes)
 AC_ARG_ENABLE(ms-bitfields, [  --enable-ms-bitfields   enable usage of gcc -mms-bitfields on MinGW [default=yes]],,enable_ms_bitfields=yes)
@@ -470,6 +471,32 @@ if test "x$enable_libxvidcore" = xyes; then
 ***
 *** If you are still annoyed by this warning you can tell ./configure
 *** not to check for this library by using --disable-libxvidcore
+***])
+        fi
+fi
+
+dnl ---------------------------------
+dnl  check for libgif
+dnl ---------------------------------
+if test "x$enable_libgif" = xyes; then
+        AC_CHECK_LIB(gif,
+                     EGifSetGifVersion,
+                     have_libgif=yes,
+                     have_libgif=no)
+        if test x$have_libgif = xyes; then
+                LIBGIF_LIBS="-lgif"
+                AC_SUBST(LIBGIF_LIBS)
+                AC_DEFINE(HAVE_LIBGIF, 1, "have libgif")
+        else
+		AC_MSG_WARN([
+***
+*** Unable to find libgif!
+***
+*** This is NO ERROR. It only means you can't capture video in
+*** animated GIF format.
+***
+*** If you are still annoyed by this warning you can tell ./configure
+*** not to check for this library by using --disable-libgif
 ***])
         fi
 fi

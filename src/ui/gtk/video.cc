@@ -30,6 +30,7 @@
 #include "ui/gtk/video.h"
 
 #include "ui/gtk/vnc.h"
+#include "ui/gtk/gif.h"
 #include "ui/gtk/xvid.h"
 #include "ui/gtk/dirac.h"
 #include "ui/gtk/schro.h"
@@ -277,6 +278,10 @@ VideoWindow::init_encoder(GtkComboBox *combobox)
 #ifdef HAVE_LIBSCHROEDINGER
   gtk_list_store_append(store, &iter);
   gtk_list_store_set(store, &iter, 0, "Schroedinger", 1, new SchroedingerVideoEncoder(), 2, TRUE, 3, TRUE, -1);
+#endif
+#ifdef HAVE_LIBGIF
+  gtk_list_store_append(store, &iter);
+  gtk_list_store_set(store, &iter, 0, "Animated GIF", 1, new GifVideoEncoder(), 2, TRUE, 3, TRUE, -1);
 #endif
 #ifdef HAVE_LIBVNCSERVER
   gtk_list_store_append(store, &iter);

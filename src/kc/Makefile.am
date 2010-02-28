@@ -200,6 +200,7 @@ kcemu_LDADD = \
 	$(LIBSCHROEDINGER_LIBS)		\
 	$(LIBAVFORMAT_LIBS)		\
 	$(VNCSERVER_LIBS)               \
+	$(LIBGIF_LIBS)                  \
 	$(SYSLIBS_MINGW)		\
 	$(SYSLIBS_LINUX)		\
 	$(SYSLIBS_FREEBSD)		\

@@ -90,6 +90,7 @@ libui_gtk_a_SOURCES = \
 	schro.cc		\
 	ffmpeg.cc		\
 	vnc.cc			\
+	gif.cc			\
 	hedit.cc
 
 if TARGET_LINUX
