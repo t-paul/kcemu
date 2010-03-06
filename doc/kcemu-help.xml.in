@@ -1134,6 +1134,17 @@ VEB Robotron-Meßelektronik "Otto Schön" Dresden
     Optimierte aber zum Teil noch experimentelle Implementierung des von
     der BBC entwickelten Dirac Video-Formates.
 
+  <b>- GIF (animiert)</b>
+    Das Grafikformat GIF erlaubt nicht nur die Speicherung von einem
+    einzelnen Bild, sondern von mehreren Bildern in einer Datei. Durch
+    eine Erweiterung, die ursprünglich von Web-Browsern eingeführt wurde,
+    ist es möglich kleinere Videos im GIF Format zu speichern.
+
+    Bei Einstellung von 50 Bildern pro Sekunde wird die erzeugte GIF Datei
+    optimiert, indem doppelte Bilder nicht gespeichert werden. Bei
+    Einstellung von weniger als 50 Bildern pro Sekunde ist diese Optimierung
+    derzeit nicht möglich.
+
   <b>- VNC</b>
     Hier erfolgt die Ausgabe des Videos nicht in eine Datei, sondern der
     Emulator kann so die Rolle eines VNC Servers übernehmen. Das bedeutet,
