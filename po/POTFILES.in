@@ -251,6 +251,7 @@ src/ui/gtk/main.cc
 src/ui/gtk/ui_gtk_base.cc
 src/ui/gtk/ui_gtk_c80.cc
 src/ui/gtk/options.cc
+src/ui/gtk/video.cc
 src/ui/hsv2rgb.cc
 src/ui/log.cc
 src/ui/status.cc
