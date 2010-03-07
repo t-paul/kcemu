@@ -101,6 +101,7 @@ Section "-bin" SEC_GTK_01
   File "dist\bin\libfontconfig-1.dll"
   File "dist\bin\libexpat-1.dll"
   File "dist\bin\pango-querymodules.exe"
+  File "dist\bin\giflib4.dll"
   File "dist\bin\zlib1.dll"
   File "dist\bin\SDL.dll"
 SectionEnd
@@ -215,6 +216,7 @@ Section Uninstall
   Delete "$INSTDIR\share\KCemu\doc\sys-xy4131.jpg"
   Delete "$INSTDIR\share\KCemu\doc\window-audio.png"
   Delete "$INSTDIR\share\KCemu\doc\window-disk.png"
+  Delete "$INSTDIR\share\KCemu\doc\window-colors.png"
   Delete "$INSTDIR\share\KCemu\doc\window-module-kc85.png"
   Delete "$INSTDIR\share\KCemu\doc\window-module-z1013.png"
   Delete "$INSTDIR\share\KCemu\doc\window-module-z9001.png"
@@ -429,6 +431,8 @@ Section Uninstall
   Delete "$INSTDIR\share\KCemu\icons\icon-vcs80.png"
   Delete "$INSTDIR\share\KCemu\icons\icon-c80.png"
 
+  Delete "$INSTDIR\share\KCemu\icons\kcemu-icon.png"
+  Delete "$INSTDIR\share\KCemu\icons\kcemu-icon.xpm"
   Delete "$INSTDIR\share\KCemu\icons\kcemu-bic.xpm"
   Delete "$INSTDIR\share\KCemu\icons\kcemu-kc85.xpm"
   Delete "$INSTDIR\share\KCemu\icons\kcemu-kc87.xpm"
@@ -542,6 +546,7 @@ Section Uninstall
   Delete "$INSTDIR\bin\libfontconfig-1.dll"
   Delete "$INSTDIR\bin\libexpat-1.dll"
   Delete "$INSTDIR\bin\pango-querymodules.exe"
+  Delete "$INSTDIR\bin\giflib4.dll"
   Delete "$INSTDIR\bin\zlib1.dll"
   Delete "$INSTDIR\bin\SDL.dll"
   Delete "$INSTDIR\etc\gtk-2.0\gdk-pixbuf.loaders"

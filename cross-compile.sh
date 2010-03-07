@@ -86,6 +86,8 @@ unpack_dev_libs () {
             x "$DEP_PACKAGES_DIR"/libtheora-mingw32-1.1.1-gcc42.tar.bz2
             x "$DEP_PACKAGES_DIR"/libogg-mingw32-1.1.4-gcc42.tar.bz2
 
+            u "$DEP_PACKAGES_DIR"/giflib-4.1.4-1-lib.zip
+
             u "$DEP_PACKAGES_DIR"/zlib123-dll.zip
             mv zlib1.dll bin/
 
@@ -125,6 +127,8 @@ unpack_dist_libs () {
             x "$DEP_PACKAGES_DIR"/xvidcore-mingw32-1.2.2-gcc42.tar.bz2
             x "$DEP_PACKAGES_DIR"/libtheora-mingw32-1.1.1-gcc42.tar.bz2
             x "$DEP_PACKAGES_DIR"/libogg-mingw32-1.1.4-gcc42.tar.bz2
+
+            u "$DEP_PACKAGES_DIR"/giflib-4.1.4-1-bin.zip
 
             u "$DEP_PACKAGES_DIR"/zlib123-dll.zip
             mv zlib1.dll bin
