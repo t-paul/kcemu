@@ -7,102 +7,38 @@
 # This special exception was added by Craig Small in version 0.37 of dh-make.
 
 # Uncomment this to turn on verbose mode.
-export DH_VERBOSE=1
-
-# still getting warnings even if debian/compat is set to 5
-export DH_COMPAT=5
-
-configure: configure-stamp
-configure-stamp:
-	dh_testdir
-	./configure \
-		--prefix=/usr \
-		--mandir=\$${prefix}/share/man \
-		--infodir=\$${prefix}/share/info \
-		--enable-libsndfile=no \
-		--enable-libaudiofile=no \
-		--enable-libmp3lame=no \
-		--enable-libvorbis=no \
-		--enable-libflac=no
-
-	touch configure-stamp
-
+#export DH_VERBOSE=1
 
 build: build-stamp
-
-build-stamp: configure-stamp 
+build-stamp:
 	dh_testdir
-
-	# Add here commands to compile the package.
-	$(MAKE)
-	#docbook-to-man debian/blah.sgml > blah.1
-
-	touch $@
+	dh_auto_configure -- \
+		--enable-libsndfile=yes \
+		--enable-libaudiofile=no \
+		--enable-libmp3lame=no \
+		--enable-libvorbis=yes \
+		--enable-libflac=no \
+		--enable-libtheora=yes \
+		--enable-libxvidcore=no \
+		--enable-libdirac=no \
+		--enable-libschroedinger=no \
+		--enable-libavformat=no \
+		--enable-libvncserver=yes
+	dh_auto_build
+	touch build-stamp
 
 clean:
-	dh_testdir
-	dh_testroot
-	rm -f build-stamp configure-stamp
-
-	# Add here commands to clean up after the build process.
-	-$(MAKE) clean
-
-	dh_clean 
+	dh $@
 
 install: build
-	dh_testdir
-	dh_testroot
-	dh_clean -k 
-	dh_installdirs
-
-	$(MAKE) install prefix=$(CURDIR)/debian/kcemu/usr \
-		exec_prefix=$(CURDIR)/debian/kcemu/usr \
-		mandir=$(CURDIR)/debian/kcemu/usr/share/man
-	mkdir -p $(CURDIR)/debian/kcemu/usr/share/pixmaps
-	cp $(CURDIR)/images/*.xpm $(CURDIR)/debian/kcemu/usr/share/pixmaps/
-
+	dh $@
 
 # Build architecture-independent files here.
 binary-indep: build install
-# We have nothing to do by default.
 
 # Build architecture-dependent files here.
 binary-arch: build install
-	dh_testdir
-	dh_testroot
-	dh_installchangelogs 
-	dh_installdocs
-	dh_installexamples
-#	dh_install
-	dh_installmenu
-#	dh_installdebconf	
-#	dh_installlogrotate
-#	dh_installemacsen
-#	dh_installpam
-#	dh_installmime
-#	dh_python
-#	dh_installinit
-#	dh_installcron
-	dh_installinfo
-	dh_installman
-	dh_link
-	dh_strip
-	dh_compress \
-		usr/share/KCemu/disks/a5105sys.dump \
-		usr/share/KCemu/disks/caos.dump \
-		usr/share/KCemu/disks/cpmz9.dump \
-		usr/share/KCemu/disks/microdos.dump \
-		usr/share/KCemu/disks/tools.dump \
-		usr/share/KCemu/disks/z1013cpm.dump \
-		usr/share/KCemu/disks/z1013gdc.dump
-	dh_fixperms
-#	dh_perl
-#	dh_makeshlibs
-	dh_installdeb
-	dh_shlibdeps
-	dh_gencontrol
-	dh_md5sums
-	dh_builddeb
+	dh $@
 
 binary: binary-indep binary-arch
-.PHONY: build clean binary-indep binary-arch binary install configure
+.PHONY: build clean binary-indep binary-arch binary install

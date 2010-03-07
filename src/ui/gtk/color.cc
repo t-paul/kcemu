@@ -1,8 +1,6 @@
 /*
- *  KCemu -- the KC 85/3 and KC 85/4 Emulator
- *  Copyright (C) 1997-2001 Torsten Paul
- *
- *  $Id: color.cc,v 1.4 2002/10/31 01:38:12 torsten_paul Exp $
+ *  KCemu -- The emulator for the KC85 homecomputer series and much more.
+ *  Copyright (C) 1997-2010 Torsten Paul
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -14,9 +12,9 @@
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  *  GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with this program; if not, write to the Free Software
- *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+ *  You should have received a copy of the GNU General Public License along
+ *  with this program; if not, write to the Free Software Foundation, Inc.,
+ *  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
 #include "kc/system.h"
@@ -55,12 +53,10 @@ ColorWindow::sf_adjustment_changed(GtkAdjustment *adj, double *data)
 
 ColorWindow::ColorWindow(const char *ui_xml_file) : UI_Gtk_Window(ui_xml_file)
 {
-  _saturation_fg = Preferences::instance()->get_int_value("color_fg_saturation", 80) / 100.0;
-  _brightness_fg = Preferences::instance()->get_int_value("color_fg_brightness", 95) / 100.0;
-  _saturation_bg = Preferences::instance()->get_int_value("color_bg_saturation", 65) / 100.0;
-  _brightness_bg = Preferences::instance()->get_int_value("color_bg_brightness", 50) / 100.0;
-  _black_level   = Preferences::instance()->get_int_value("color_black_level", 10) / 100.0;
-  _white_level   = Preferences::instance()->get_int_value("color_white_level", 90) / 100.0;
+  _brightness_fg = Preferences::instance()->get_int_value("color_brightness_fg", 50) / 100.0;
+  _contrast_fg   = Preferences::instance()->get_int_value("color_contrast_fg", 70) / 100.0;
+  _brightness_bg = Preferences::instance()->get_int_value("color_brightness_bg", 35) / 100.0;
+  _contrast_bg   = Preferences::instance()->get_int_value("color_contrast_bg", 50) / 100.0;
 
   _cmd = new CMD_color_window_toggle(this);
 }
@@ -91,40 +87,28 @@ ColorWindow::init(void)
 		     (char *)"ui-color-window-toggle"); // FIXME:
 
   /*
-   *  foreground saturation
+   *  foreground contrast
    */
-  _w.s_fg_vscale = get_widget("foreground_saturation_vscale");
-  _w.s_fg_adj = init_adjustment(GTK_RANGE(_w.s_fg_vscale), &_saturation_fg);
+  _w.c_fg_vscale = get_widget("foreground_contrast_vscale");
+  _w.s_fg_adj = init_adjustment(GTK_RANGE(_w.c_fg_vscale), &_contrast_fg);
 
   /*
-   *  foreground brightness (= value of HSV)
+   *  foreground brightness
    */
-  _w.v_fg_vscale = get_widget("foreground_brightness_vscale");
-  _w.v_fg_adj = init_adjustment(GTK_RANGE(_w.v_fg_vscale), &_brightness_fg);
+  _w.b_fg_vscale = get_widget("foreground_brightness_vscale");
+  _w.v_fg_adj = init_adjustment(GTK_RANGE(_w.b_fg_vscale), &_brightness_fg);
 
   /*
-   *  background saturation
+   *  background contrast
    */
-  _w.s_bg_vscale = get_widget("background_saturation_vscale");
-  _w.s_bg_adj = init_adjustment(GTK_RANGE(_w.s_bg_vscale), &_saturation_bg);
+  _w.c_bg_vscale = get_widget("background_contrast_vscale");
+  _w.s_bg_adj = init_adjustment(GTK_RANGE(_w.c_bg_vscale), &_contrast_bg);
   
   /*
-   *  background brightness (= value of HSV)
+   *  background brightness
    */
-  _w.v_bg_vscale = get_widget("background_brightness_vscale");
-  _w.v_bg_adj = init_adjustment(GTK_RANGE(_w.v_bg_vscale), &_brightness_bg);
+  _w.b_bg_vscale = get_widget("background_brightness_vscale");
+  _w.v_bg_adj = init_adjustment(GTK_RANGE(_w.b_bg_vscale), &_brightness_bg);
 
-  /*
-   *  black level (= value of HSV for black pixels)
-   */
-  _w.b_vscale = get_widget("black_level_vscale");
-  _w.b_adj = init_adjustment(GTK_RANGE(_w.b_vscale), &_black_level);
-
-  /*
-   *  white level (= value of HSV for white pixels)
-   */
-  _w.w_vscale = get_widget("white_level_vscale");
-  _w.w_adj = init_adjustment(GTK_RANGE(_w.w_vscale), &_white_level);
-
-  init_dialog("ui-color-window-toggle", NULL);
+  init_dialog("ui-color-window-toggle", "window-colors");
 }

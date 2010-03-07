@@ -1,8 +1,6 @@
 /*
- *  KCemu -- the KC 85/3 and KC 85/4 Emulator
- *  Copyright (C) 1997-2001 Torsten Paul
- *
- *  $Id$
+ *  KCemu -- The emulator for the KC85 homecomputer series and much more.
+ *  Copyright (C) 1997-2010 Torsten Paul
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -14,9 +12,9 @@
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  *  GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with this program; if not, write to the Free Software
- *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+ *  You should have received a copy of the GNU General Public License along
+ *  with this program; if not, write to the Free Software Foundation, Inc.,
+ *  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
 #include <ctype.h>
@@ -52,16 +50,16 @@
  * |     | Rauschkanal         |   x | x | C | B | A | C | B | A   |
  * +-----+---------------------+-----------------------------------+
  * |   8 |                   A |   x | x | x | H |      L(A)       |
- * |   9 | Lautstärke Kanal  B |   x | x | x | H |      L(B)       |
+ * |   9 | Lautstï¿½rke Kanal  B |   x | x | x | H |      L(B)       |
  * |  10 |                   C |   x | x | x | H |      L(C)       |
  * +-----+---------------------+-----------------------------------+
- * |  11 | Hüllkurvenfrequenz  |              FHL                  |
+ * |  11 | Hï¿½llkurvenfrequenz  |              FHL                  |
  * |  12 |                     |              FHH                  |
  * +-----+---------------------+-----------------------------------+
- * |  13 | Hüllkurvenform      |   x | x | x |          HKF        |
+ * |  13 | Hï¿½llkurvenform      |   x | x | x |          HKF        |
  * +-----+---------------------+-----------------------------------+
  *
- *  Parameter für Tonfrequenz
+ *  Parameter fï¿½r Tonfrequenz
  *    FW    = 3750000 / (32 + F)
  *    FL(n) = FW | 256
  *    FH(n) = FW mod 256

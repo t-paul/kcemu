@@ -1,8 +1,6 @@
 /*
- *  KCemu -- the KC 85/3 and KC 85/4 Emulator
- *  Copyright (C) 1997-2002 Torsten Paul
- *
- *  $Id$
+ *  KCemu -- The emulator for the KC85 homecomputer series and much more.
+ *  Copyright (C) 1997-2010 Torsten Paul
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -14,9 +12,9 @@
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  *  GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with this program; if not, write to the Free Software
- *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+ *  You should have received a copy of the GNU General Public License along
+ *  with this program; if not, write to the Free Software Foundation, Inc.,
+ *  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
 #ifndef __kc_keyb0k_h
@@ -692,8 +690,8 @@ static unsigned int __keys_a2[] = {
  *  1:       3       E       D       C       4       R       F       V       | 2
  *  2:       5       T       G       B       6       Z       H       N       | 3
  *  3:       7       U       J       M       8       I       K       ,       | 4
- *  4:       9       O       L       .       0       P       \(Ö)    -       | 5
- *  5:       ~(ß)    ](Ü)    [(Ä)    <       +       #       ^       @       | 6
+ *  4:       9       O       L       .       0       P       \(ï¿½)    -       | 5
+ *  5:       ~(ï¿½)    ](ï¿½)    [(ï¿½)    <       +       #       ^       @       | 6
  *  6:       >       ENTER   UP      LEFT    SPACE   SHLOCK  DOWN    RIGHT   | 7
  *  7:                                                       SHIFT   CTRL    | 8
  *  8:               DEL     TAB     MONITOR ESC     {       }       2MHz    | 9
@@ -711,7 +709,7 @@ static unsigned int __keys_a2[] = {
  *  1:       @       e       d       c       $       r       f       v       | 2
  *  2:       %       t       g       b       &       z       h       n       | 3
  *  3:       /       u       j       m       (       i       k       ;       | 4
- *  4:       )       o       l       :       =       p       ö       _       | 5
+ *  4:       )       o       l       :       =       p       ï¿½       _       | 5
  *  5:       ?       }       {       [       *       '       |       \       | 6
  *  6:       ]       ENTER   UP      LEFT    SPACE   SM-TAST DOWN    RIGHT   | 7
  *  7:                                                       SHIFT   CTRL    | 8

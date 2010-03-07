@@ -1,8 +1,6 @@
 /*
- *  KCemu -- the KC 85/3 and KC 85/4 Emulator
- *  Copyright (C) 1997-2002 Torsten Paul
- *
- *  $Id: ui_gtk3.cc,v 1.15 2002/10/31 01:38:12 torsten_paul Exp $
+ *  KCemu -- The emulator for the KC85 homecomputer series and much more.
+ *  Copyright (C) 1997-2010 Torsten Paul
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -14,9 +12,9 @@
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  *  GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with this program; if not, write to the Free Software
- *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+ *  You should have received a copy of the GNU General Public License along
+ *  with this program; if not, write to the Free Software Foundation, Inc.,
+ *  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
 #include "kc/system.h"
@@ -36,16 +34,16 @@ UI_Gtk3::UI_Gtk3(void) : UI_Gtk_Base(new UI_3())
     _colors.push_back(UI_Color(false, 120)); /* green */
     _colors.push_back(UI_Color(false, 180)); /* cyan */
     _colors.push_back(UI_Color(false,  60)); /* yellow */
-    _colors.push_back(UI_Color(false, 0xd0, 0xd0, 0xd0)); /* white */
-    
+    _colors.push_back(UI_Color(false, 0xe0, 0xe0, 0xe0)); /* white */
+
     _colors.push_back(UI_Color(false, 0x00, 0x00, 0x00)); /* black */
-    _colors.push_back(UI_Color(false, 270)); /* blue + 30° */
-    _colors.push_back(UI_Color(false,  30)); /* red + 30° */
-    _colors.push_back(UI_Color(false, 330)); /* magenta + 30° */
-    _colors.push_back(UI_Color(false, 150)); /* green + 30° */
-    _colors.push_back(UI_Color(false, 210)); /* cyan + 30° */
-    _colors.push_back(UI_Color(false,  90)); /* yellow + 30° */
-    _colors.push_back(UI_Color(false, 0xd0, 0xd0, 0xd0)); /* white */
+    _colors.push_back(UI_Color(false, 260)); /* blue + 30Â° */
+    _colors.push_back(UI_Color(false,  20)); /* red + 30Â° */
+    _colors.push_back(UI_Color(false, 320)); /* magenta + 30Â° */
+    _colors.push_back(UI_Color(false, 140)); /* green + 30Â° */
+    _colors.push_back(UI_Color(false, 210)); /* cyan + 30Â° */
+    _colors.push_back(UI_Color(false,  90)); /* yellow + 30Â° */
+    _colors.push_back(UI_Color(false, 0xe0, 0xe0, 0xe0)); /* white */
 
     _colors.push_back(UI_Color(true, 0x00, 0x00, 0x00)); /* black */
     _colors.push_back(UI_Color(true, 240)); /* blue */
@@ -54,7 +52,7 @@ UI_Gtk3::UI_Gtk3(void) : UI_Gtk_Base(new UI_3())
     _colors.push_back(UI_Color(true, 120)); /* green */
     _colors.push_back(UI_Color(true, 180)); /* cyan */
     _colors.push_back(UI_Color(true,  60)); /* yellow */
-    _colors.push_back(UI_Color(true, 0xd0, 0xd0, 0xd0)); /* white */
+    _colors.push_back(UI_Color(true, 0xe0, 0xe0, 0xe0)); /* white */
 }
 
 UI_Gtk3::~UI_Gtk3(void)

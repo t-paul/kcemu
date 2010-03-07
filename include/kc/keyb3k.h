@@ -1,8 +1,6 @@
 /*
- *  KCemu -- the KC 85/3 and KC 85/4 Emulator
- *  Copyright (C) 1997-2001 Torsten Paul
- *
- *  $Id: keyb3k.h,v 1.2 2001/04/14 15:14:20 tp Exp $
+ *  KCemu -- The emulator for the KC85 homecomputer series and much more.
+ *  Copyright (C) 1997-2010 Torsten Paul
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -14,9 +12,9 @@
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  *  GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with this program; if not, write to the Free Software
- *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+ *  You should have received a copy of the GNU General Public License along
+ *  with this program; if not, write to the Free Software Foundation, Inc.,
+ *  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
 #ifndef __kc_keyb3k_h
@@ -208,7 +206,7 @@ static unsigned int __keys[] = {
   /*  0xad [.] */ 0xffff,
   /*  0xae [.] */ 0xffff,
   /*  0xaf [.] */ 0xffff,
-  /*  0xb0 [°] */ 0x0017,
+  /*  0xb0 [ï¿½] */ 0x0017,
   /*  0xb1 [.] */ 0xffff,
   /*  0xb2 [.] */ 0xffff,
   /*  0xb3 [.] */ 0xffff,

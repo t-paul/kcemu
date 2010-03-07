@@ -1,4 +1,21 @@
 #!/bin/bash
+#
+#  KCemu -- The emulator for the KC85 homecomputer series and much more.
+#  Copyright (C) 1997-2010 Torsten Paul
+#
+#  This program is free software; you can redistribute it and/or modify
+#  it under the terms of the GNU General Public License as published by
+#  the Free Software Foundation; either version 2 of the License, or
+#  (at your option) any later version.
+#
+#  This program is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#  GNU General Public License for more details.
+#
+#  You should have received a copy of the GNU General Public License along
+#  with this program; if not, write to the Free Software Foundation, Inc.,
+#  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
 #
 #  This script is intended to help cross-compiling kcemu on
@@ -86,6 +103,8 @@ unpack_dev_libs () {
             x "$DEP_PACKAGES_DIR"/libtheora-mingw32-1.1.1-gcc42.tar.bz2
             x "$DEP_PACKAGES_DIR"/libogg-mingw32-1.1.4-gcc42.tar.bz2
 
+            u "$DEP_PACKAGES_DIR"/giflib-4.1.4-1-lib.zip
+
             u "$DEP_PACKAGES_DIR"/zlib123-dll.zip
             mv zlib1.dll bin/
 
@@ -125,6 +144,8 @@ unpack_dist_libs () {
             x "$DEP_PACKAGES_DIR"/xvidcore-mingw32-1.2.2-gcc42.tar.bz2
             x "$DEP_PACKAGES_DIR"/libtheora-mingw32-1.1.1-gcc42.tar.bz2
             x "$DEP_PACKAGES_DIR"/libogg-mingw32-1.1.4-gcc42.tar.bz2
+
+            u "$DEP_PACKAGES_DIR"/giflib-4.1.4-1-bin.zip
 
             u "$DEP_PACKAGES_DIR"/zlib123-dll.zip
             mv zlib1.dll bin

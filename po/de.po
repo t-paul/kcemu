@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: KCemu v0.4\n"
 "Report-Msgid-Bugs-To: Torsten.Paul@gmx.de\n"
-"POT-Creation-Date: 2010-01-17 18:03+0100\n"
-"PO-Revision-Date: 2010-01-17 18:03+0100\n"
+"POT-Creation-Date: 2010-03-06 00:58+0100\n"
+"PO-Revision-Date: 2010-03-06 00:59+0100\n"
 "Last-Translator: Torsten Paul <Torsten.Paul@gmx.de>\n"
 "Language-Team: German <Torsten.Paul@gmx.de>\n"
 "MIME-Version: 1.0\n"
@@ -55,19 +55,19 @@ msgstr "Audio"
 
 #: images/color.glade:39
 msgid "KCemu: Color Configuration"
-msgstr "KCemu: Farbkonfiguration"
+msgstr "KCemu: Farbeinstellung"
 
 #: images/color.glade:60
 msgid "Colors"
 msgstr "Farben"
 
 #: images/color.glade:132 images/color.glade:232
-msgid "Saturation"
-msgstr "Sättigung"
-
-#: images/color.glade:166 images/color.glade:266
 msgid "Brightness"
 msgstr "Helligkeit"
+
+#: images/color.glade:166 images/color.glade:266
+msgid "Contrast"
+msgstr "Kontrast"
 
 #: images/color.glade:183
 msgid "Foreground"
@@ -76,14 +76,6 @@ msgstr "Vordergrund"
 #: images/color.glade:283
 msgid "Background"
 msgstr "Hintergrund"
-
-#: images/color.glade:322
-msgid "Black Level"
-msgstr "Schwarz Wert"
-
-#: images/color.glade:356
-msgid "White Level"
-msgstr "Weiß Wert"
 
 #: images/dialog.glade:6
 msgid "KCemu"
@@ -3297,7 +3289,7 @@ msgstr "/Datei Exportieren"
 msgid "/Export Wav"
 msgstr "/WAV Exportieren"
 
-#: src/ui/gtk/ui_gtk.cc:770
+#: src/ui/gtk/ui_gtk.cc:796
 msgid "Info"
 msgstr "Info"
 
@@ -3334,6 +3326,47 @@ msgstr "ROM Image öffnen..."
 #, c-format
 msgid "ROM image is '%s'. The ROM size needs to be %04xh (%d) bytes."
 msgstr "ROM-Image Datei: '%s'. Die ROM-Größe muss %04xh (%d) Byte betragen."
+
+#: src/ui/gtk/video.cc:260
+msgid "<none>"
+msgstr "-"
+
+#: src/ui/gtk/video.cc:264
+msgid "Theora/Ogg"
+msgstr "Theora/Ogg"
+
+#: src/ui/gtk/video.cc:268
+msgid "AVI"
+msgstr "AVI"
+
+#: src/ui/gtk/video.cc:272
+msgid "MPEG 4"
+msgstr "MPEG 4"
+
+#: src/ui/gtk/video.cc:276
+msgid "Dirac"
+msgstr "Dirac"
+
+#: src/ui/gtk/video.cc:280
+msgid "Schroedinger"
+msgstr "Schroedinger"
+
+#: src/ui/gtk/video.cc:284
+msgid "Animated GIF"
+msgstr "GIF (animiert)"
+
+#: src/ui/gtk/video.cc:288
+msgid "VNC"
+msgstr "VNC"
+
+#~ msgid "Saturation"
+#~ msgstr "Sättigung"
+
+#~ msgid "Black Level"
+#~ msgstr "Schwarz Wert"
+
+#~ msgid "White Level"
+#~ msgstr "Weiß Wert"
 
 #~ msgid "A_udio..."
 #~ msgstr "_Audio..."

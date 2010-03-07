@@ -1,8 +1,6 @@
 /*
- *  KCemu -- the KC 85/3 and KC 85/4 Emulator
- *  Copyright (C) 1997-2008 Torsten Paul
- *
- *  $Id$
+ *  KCemu -- The emulator for the KC85 homecomputer series and much more.
+ *  Copyright (C) 1997-2010 Torsten Paul
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -14,9 +12,9 @@
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  *  GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with this program; if not, write to the Free Software
- *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+ *  You should have received a copy of the GNU General Public License along
+ *  with this program; if not, write to the Free Software Foundation, Inc.,
+ *  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
 #include "kc/system.h"
@@ -437,34 +435,12 @@ MainWindow::resize(int width, int height) {
 }
 
 void
-MainWindow::allocate_color_hsv(int idx, double h, double s, double v) {
-    int r, g, b;
-    
-    hsv2rgb(h, s, v, &r, &g, &b);
-
-    _col[idx].red = r << 8;
-    _col[idx].green = g << 8;
-    _col[idx].blue = b << 8;
-    _colormap = gdk_colormap_get_system();
-    gdk_color_alloc(_colormap, &_col[idx]);
-}
-
-void
 MainWindow::allocate_color_rgb(int idx, int r, int g, int b) {
     _col[idx].red = r << 8;
     _col[idx].green = g << 8;
     _col[idx].blue = b << 8;
     _colormap = gdk_colormap_get_system();
     gdk_color_alloc(_colormap, &_col[idx]);
-}
-
-void
-MainWindow::allocate_colors(const char *color_names[]) {
-    _colormap = gdk_colormap_get_system();
-    for (int a = 0;color_names[a];a++) {
-        gdk_color_parse(color_names[a], &_col[a]);
-        gdk_color_alloc(_colormap, &_col[a]);
-    }
 }
 
 static gulong

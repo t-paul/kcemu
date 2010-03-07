@@ -1,8 +1,6 @@
 /*
- *  KCemu -- the KC 85/3 and KC 85/4 Emulator
- *  Copyright (C) 1997-2006 Torsten Paul
- *
- *  $Id: module.cc,v 1.12 2002/10/31 01:38:12 torsten_paul Exp $
+ *  KCemu -- The emulator for the KC85 homecomputer series and much more.
+ *  Copyright (C) 1997-2010 Torsten Paul
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -14,9 +12,9 @@
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  *  GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with this program; if not, write to the Free Software
- *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+ *  You should have received a copy of the GNU General Public License along
+ *  with this program; if not, write to the Free Software Foundation, Inc.,
+ *  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
 #include <stdlib.h>
@@ -31,7 +29,8 @@
 
 #include "ui/gtk/cmd.h"
 #include "ui/gtk/module.h"
-#include "ui/gtk/gtkledline.h"
+
+#include "libgtkex/libgtkex.h"
 
 class CMD_ui_module_window_toggle : public CMD
 {
@@ -378,6 +377,6 @@ ModuleWindow::activate(int slot, byte_t value)
   if (_w.m[slot])
     {
       gtk_widget_set_sensitive(_w.m[slot], !(value & 1));
-      gtk_led_line_set_led(GTK_LED_LINE(_w.led[slot]), 0, value & 1);
+      //gtk_led_line_set_led(GTK_LED_LINE(_w.led[slot]), 0, value & 1);
     }
 }

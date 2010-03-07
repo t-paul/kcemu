@@ -1,8 +1,6 @@
 /*
- *  KCemu -- the KC 85/3 and KC 85/4 Emulator
- *  Copyright (C) 1997-2001 Torsten Paul
- *
- *  $Id: ui_gtk.h,v 1.20 2002/10/31 01:38:07 torsten_paul Exp $
+ *  KCemu -- The emulator for the KC85 homecomputer series and much more.
+ *  Copyright (C) 1997-2010 Torsten Paul
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -14,9 +12,9 @@
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  *  GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with this program; if not, write to the Free Software
- *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+ *  You should have received a copy of the GNU General Public License along
+ *  with this program; if not, write to the Free Software Foundation, Inc.,
+ *  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
 #ifndef __ui_ui_gtk_h
@@ -103,6 +101,7 @@ protected:
     void create_ui(void);
     void destroy_ui(void);
     void add_callback(void);
+    int ensure_range(double val);
     
     void tapeSelect(void);
     
@@ -171,15 +170,7 @@ public:
     virtual void speed_limit_toggle(void);
     virtual void display_effects_toggle(void);
     
-    virtual void allocate_color_hsv(int idx, double h, double s, double v);
-    virtual void allocate_color_rgb(int idx, int r, int g, int b);
-    virtual void allocate_colors_by_name(const char **color_names);
-    virtual void allocate_colors(double saturation_fg,
-            double saturation_bg,
-            double brightness_fg,
-            double brightness_bg,
-            double black_level,
-            double white_level);
+    virtual void allocate_colors(double brightness_fg, double contrast_fg, double brightness_bg, double contrast_bg);
 
     virtual void set_video_encoder(VideoEncoder *encoder);
     virtual void set_video_encoder_state(int state);

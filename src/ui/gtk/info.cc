@@ -1,8 +1,6 @@
 /*
- *  KCemu -- the KC 85/3 and KC 85/4 Emulator
- *  Copyright (C) 1997-2001 Torsten Paul
- *
- *  $Id: info.cc,v 1.9 2002/10/31 01:38:12 torsten_paul Exp $
+ *  KCemu -- The emulator for the KC85 homecomputer series and much more.
+ *  Copyright (C) 1997-2010 Torsten Paul
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -14,16 +12,14 @@
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  *  GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with this program; if not, write to the Free Software
- *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+ *  You should have received a copy of the GNU General Public License along
+ *  with this program; if not, write to the Free Software Foundation, Inc.,
+ *  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
 #include <stdio.h>
 
 #include "kc/system.h"
-
-#include "ui/gtk/gtkledline.h"
 
 #include "kc/z80.h"
 #include "kc/pio.h"
@@ -32,6 +28,8 @@
 
 #include "ui/gtk/cmd.h"
 #include "ui/gtk/info.h"
+
+#include "libgtkex/libgtkex.h"
 
 class CMD_info_window_toggle : public CMD
 {
@@ -120,7 +118,7 @@ InfoWindow::do_update_cpu(void)
 	}
       else
 	{
-	  gtk_led_line_set_value(GTK_LED_LINE(_cpu.reg_led[r[a].reg]), b);
+	  //gtk_led_line_set_value(GTK_LED_LINE(_cpu.reg_led[r[a].reg]), b);
 	}
     }
 }

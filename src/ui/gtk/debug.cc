@@ -1,8 +1,6 @@
 /*
- *  KCemu -- the KC 85/3 and KC 85/4 Emulator
- *  Copyright (C) 1997-2001 Torsten Paul
- *
- *  $Id: debug.cc,v 1.14 2002/10/31 01:38:12 torsten_paul Exp $
+ *  KCemu -- The emulator for the KC85 homecomputer series and much more.
+ *  Copyright (C) 1997-2010 Torsten Paul
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -14,9 +12,9 @@
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  *  GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with this program; if not, write to the Free Software
- *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+ *  You should have received a copy of the GNU General Public License along
+ *  with this program; if not, write to the Free Software Foundation, Inc.,
+ *  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
 #include <stdio.h>
@@ -449,7 +447,7 @@ debug_op_asm::update(DebugWindow *w, scroll_dir_t direction)
   do
     {
       pc = newpc;
-      newpc = disass(pc, &ptr);
+      newpc = 0; // FIXME: call disassembler here
       free(ptr);
       switch (direction)
 	{
@@ -486,7 +484,7 @@ debug_op_asm::update(DebugWindow *w, scroll_dir_t direction)
     {
       if (a == (DEBUG_NR_OF_ASM_LABELS - 2))
 	w->_pc_np = pc;
-      pc = disass(pc, &ptr);
+      pc = 0; // FIXME: call disassembler here
       gtk_label_set_text(GTK_LABEL(w->_w.l_asm[a]), ptr);
       free(ptr);
     }

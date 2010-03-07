@@ -44,7 +44,6 @@ AM_CPPFLAGS = \
 	$(XMU_CFLAGS)
 
 libui_gtk_a_SOURCES = \
-	gtkledline.c		\
 	ui_gtk.cc		\
 	ui_gtk_base.cc		\
 	ui_gtk0.cc		\
@@ -90,6 +89,7 @@ libui_gtk_a_SOURCES = \
 	schro.cc		\
 	ffmpeg.cc		\
 	vnc.cc			\
+	gif.cc			\
 	hedit.cc
 
 if TARGET_LINUX

@@ -1,0 +1,10 @@
+[Desktop Entry]
+Name=KCemu
+GenericName=Emulator for KC85 and compatible computer
+Comment=Emulator for KC85 and compatible computer
+
+Icon=kcemu-icon
+Exec=kcemu -P
+Type=Application
+Terminal=false
+Categories=Game;Emulator;

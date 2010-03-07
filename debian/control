@@ -1,20 +1,20 @@
 Source: kcemu
 Section: otherosfs
 Priority: optional
-Maintainer: Torsten Paul <Torsten.Paul@gmx.de>
-Build-Depends: debhelper (>> 5)
-Standards-Version: 3.7.2
+Maintainer: Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
+Build-Depends: debhelper (>> 7), libz80ex-dev, libsdl-dev, libsndfile-dev, libvncserver-dev, libtheora-dev, libgtk2.0-dev, automake, autoconf, libxmu-dev, libncurses5-dev, netpbm, quilt
+Standards-Version: 3.8.4
+Homepage: http://kcemu.sourceforge.net/
 
 Package: kcemu
 Architecture: any
 Depends: ${shlibs:Depends}, ${misc:Depends}
 Description: KC 85/4 Emulator
- KCemu is an emulator for the Z80 based KC 85 home computer
- series which was quite popular in the former East-Germany.
- It runs most original programs (e.g. Digger, Boulder Dash,
- Bennion RBS, ...) and supports the emulation of the CP/M-like
- operating system called MicroDOS.
+ KCemu is an emulator for the KC85 homecomputer series and other
+ Z80 based microcomputers like Z1013, LC80, Polycomputer 880 and
+ BIC A5105. The emulation supports a number of additional hardware,
+ e.g. floppy disk drives and extended graphic modules.
  .
  For original programs and general information about the
- emulated computer types have a look at http://www.kc85emu.de/
- and http://www.kc85.de/
+ emulated computer systems have a look at http://www.kc-club.de/
+ and http://www.kc85emu.de/.

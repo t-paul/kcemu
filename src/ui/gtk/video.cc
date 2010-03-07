@@ -1,8 +1,6 @@
 /*
- *  KCemu -- the KC 85/3 and KC 85/4 Emulator
- *  Copyright (C) 1997-2008 Torsten Paul
- *
- *  $Id$
+ *  KCemu -- The emulator for the KC85 homecomputer series and much more.
+ *  Copyright (C) 1997-2010 Torsten Paul
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -14,9 +12,9 @@
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  *  GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with this program; if not, write to the Free Software
- *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+ *  You should have received a copy of the GNU General Public License along
+ *  with this program; if not, write to the Free Software Foundation, Inc.,
+ *  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
 #include "kc/kc.h"
@@ -30,6 +28,7 @@
 #include "ui/gtk/video.h"
 
 #include "ui/gtk/vnc.h"
+#include "ui/gtk/gif.h"
 #include "ui/gtk/xvid.h"
 #include "ui/gtk/dirac.h"
 #include "ui/gtk/schro.h"
@@ -256,31 +255,35 @@ VideoWindow::init_encoder(GtkComboBox *combobox)
   GtkListStore *store = gtk_list_store_new(4, G_TYPE_STRING, G_TYPE_POINTER, G_TYPE_BOOLEAN, G_TYPE_BOOLEAN);
 
   gtk_list_store_append(store, &iter);
-  gtk_list_store_set(store, &iter, 0, "<none>", 1, new DummyVideoEncoder(), 2, FALSE, 3, FALSE, -1);
+  gtk_list_store_set(store, &iter, 0, _("<none>"), 1, new DummyVideoEncoder(), 2, FALSE, 3, FALSE, -1);
 
 #ifdef HAVE_LIBTHEORA
   gtk_list_store_append(store, &iter);
-  gtk_list_store_set(store, &iter, 0, "Theora/Ogg", 1, new TheoraVideoEncoder(), 2, TRUE, 3, TRUE, -1);
+  gtk_list_store_set(store, &iter, 0, _("Theora/Ogg"), 1, new TheoraVideoEncoder(), 2, TRUE, 3, TRUE, -1);
 #endif
 #ifdef HAVE_LIBAVFORMAT
   gtk_list_store_append(store, &iter);
-  gtk_list_store_set(store, &iter, 0, "AVI", 1, new FfmpegVideoEncoder(), 2, TRUE, 3, TRUE, -1);
+  gtk_list_store_set(store, &iter, 0, _("AVI"), 1, new FfmpegVideoEncoder(), 2, TRUE, 3, TRUE, -1);
 #endif
 #ifdef HAVE_LIBXVIDCORE
   gtk_list_store_append(store, &iter);
-  gtk_list_store_set(store, &iter, 0, "MPEG 4", 1, new XvidVideoEncoder(), 2, TRUE, 3, TRUE, -1);
+  gtk_list_store_set(store, &iter, 0, _("MPEG 4"), 1, new XvidVideoEncoder(), 2, TRUE, 3, TRUE, -1);
 #endif
 #ifdef HAVE_LIBDIRAC
   gtk_list_store_append(store, &iter);
-  gtk_list_store_set(store, &iter, 0, "Dirac", 1, new DiracVideoEncoder(), 2, TRUE, 3, TRUE, -1);
+  gtk_list_store_set(store, &iter, 0, _("Dirac"), 1, new DiracVideoEncoder(), 2, TRUE, 3, TRUE, -1);
 #endif
 #ifdef HAVE_LIBSCHROEDINGER
   gtk_list_store_append(store, &iter);
-  gtk_list_store_set(store, &iter, 0, "Schroedinger", 1, new SchroedingerVideoEncoder(), 2, TRUE, 3, TRUE, -1);
+  gtk_list_store_set(store, &iter, 0, _("Schroedinger"), 1, new SchroedingerVideoEncoder(), 2, TRUE, 3, TRUE, -1);
+#endif
+#ifdef HAVE_LIBGIF
+  gtk_list_store_append(store, &iter);
+  gtk_list_store_set(store, &iter, 0, _("Animated GIF"), 1, new GifVideoEncoder(), 2, TRUE, 3, TRUE, -1);
 #endif
 #ifdef HAVE_LIBVNCSERVER
   gtk_list_store_append(store, &iter);
-  gtk_list_store_set(store, &iter, 0, "VNC", 1, new VncVideoEncoder(), 2, FALSE, 3, TRUE, -1);
+  gtk_list_store_set(store, &iter, 0, _("VNC"), 1, new VncVideoEncoder(), 2, FALSE, 3, TRUE, -1);
 #endif
 
   gtk_combo_box_set_model(combobox, GTK_TREE_MODEL(store));

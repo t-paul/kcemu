@@ -153,7 +153,6 @@ kcemu_SOURCES = \
 	sound.cc	\
 	sound3.cc	\
 	sound8.cc	\
-	disass.cc	\
 	$(EXTRA_kcemu_SOURCES)
 
 
@@ -186,7 +185,6 @@ kcemu_LDADD = \
 	../libgtkex/libgtkex.a		\
 	../libdbg/libdbg.a		\
 	../cmd/*.o			\
-	$(Z80EX_LIBS)			\
 	$(GTK_LIBS)			\
 	$(SDL_LIBS)			\
 	$(SNDFILE_LIBS)			\
@@ -200,29 +198,16 @@ kcemu_LDADD = \
 	$(LIBSCHROEDINGER_LIBS)		\
 	$(LIBAVFORMAT_LIBS)		\
 	$(VNCSERVER_LIBS)               \
+	$(LIBGIF_LIBS)                  \
 	$(SYSLIBS_MINGW)		\
 	$(SYSLIBS_LINUX)		\
 	$(SYSLIBS_FREEBSD)		\
 	$(GETOPTLIB)			\
-	$(INTLLIBS)
+	$(INTLLIBS)			\
+	$(Z80EX_LIBS)
 
 kcemu_send_SOURCES = \
 	kcemu-send.c
 
 kcemu_send_LDADD = \
 	-lncurses $(INTLLIBS)
-
-#
-# Setting icons for Windows programs with gcc
-# http://fragglet.livejournal.com/4448.html
-#
-# I found I needed the windres rule twice, in the two forms
-# shown. The first tells automake to recognise .rc files
-# (it doesn't understand the second form), while the version
-# of make I was using (GNU make) didn't seem to like the
-# second form. Weird.
-#
-.rc.o:
-	$(RC) $^ -o $@
-%.o : %.rc
-	$(RC) $^ -o $@

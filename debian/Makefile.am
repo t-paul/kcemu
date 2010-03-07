@@ -2,11 +2,17 @@
 
 EXTRA_DIST = \
 	changelog	\
+	compat		\
 	control		\
 	copyright	\
 	dirs		\
 	docs		\
+	kcemu.desktop	\
+	kcemu.install	\
 	kcemu.manpages	\
 	menu		\
+	watch		\
 	rules		\
-	README.Debian
+	README.source	\
+	source/format	\
+	patches/*

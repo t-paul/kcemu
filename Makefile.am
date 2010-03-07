@@ -22,7 +22,7 @@ SUBDIRS = \
 	setup \
 	po 
 
-EXTRA_DIST = VERSION README.de TODO THANKS COPYING COPYING.de
+EXTRA_DIST = VERSION README.de TODO THANKS COPYING COPYING.de .pc/.[qv]*
 
 install-data-local:
 	$(mkinstalldirs) $(DESTDIR)$(docdir)
