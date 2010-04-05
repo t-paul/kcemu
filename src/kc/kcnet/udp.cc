@@ -31,6 +31,9 @@
 
 #include "libdbg/dbg.h"
 
+#include "sys/types.h"
+#include "sys/socket.h"
+
 UDP::UDP(void)
 {
   _socket = 0;
@@ -68,6 +71,14 @@ UDP::open(void)
       close();
       return false;
     }
+  
+  int broadcast = 1;
+
+  if ((setsockopt(_socket, SOL_SOCKET, SO_BROADCAST, &broadcast, sizeof broadcast)) == -1)
+    {
+      printf("UDP::open(): can't set broadcast option\n");
+    }
+
   return true;
 }
 
@@ -120,6 +131,34 @@ UDP::poll(void)
 void
 UDP::send(SocketData *data)
 {
+  if ((_ip0 == 255) && (_ip1 == 255) && (_ip2 == 255) && (_ip3 == 255) && (_port == 67))
+    {
+      printf("UDP::send(): BOOTP - size = %d\n", data->length());
+      byte_t *buf = new byte_t[data->length()];
+      memcpy(buf, data->get(), data->length());
+      _send_data = new SocketData(data->length() + 8);
+      _send_data->put_byte(_ip0);
+      _send_data->put_byte(_ip1);
+      _send_data->put_byte(_ip2);
+      _send_data->put_byte(_ip3);
+      _send_data->put_word(_port);
+      _send_data->put_word(data->length());
+      buf[0] = 2; //BOOTREPLY
+      buf[16] = 192; //YIADDR
+      buf[17] = 168;
+      buf[18] = 46;
+      buf[19] = 30;
+      buf[20] = 192; //SIADDR
+      buf[21] = 168;
+      buf[22] = 46;
+      buf[23] = 104;
+      strcpy((char *)buf + 44, "dali");
+      strcpy((char *)buf + 108, "/tftpboot/kc85.kcc");
+      for (int a = 0;a < data->length();a++)
+        _send_data->put_byte(buf[a]);
+      return;
+    }
+
   printf("UDP::send(): len = %d - %d.%d.%d.%d:%d\n", data->length(), _ip0, _ip1, _ip2, _ip3, _port);
   printf("UDP::send(): data = ");
   for (int a = 0;a < data->length();a++)
