@@ -123,7 +123,7 @@ TCP::close(void)
 void
 TCP::poll(void)
 {
-  unsigned char buf[512];
+  unsigned char buf[200];
 
   if (_socket == 0)
     return;
