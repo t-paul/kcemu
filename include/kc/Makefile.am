@@ -104,6 +104,7 @@ EXTRA_DIST = \
 	mod_js.h	\
 	mod_4131.h	\
 	mod_m052.h	\
+	mod_net.h	\
 	mod_segm.h	\
 	mod_boot.h	\
 	mod_list.h	\

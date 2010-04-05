@@ -140,6 +140,7 @@ kcemu_SOURCES = \
 	mod_disk.cc	\
 	mod_4131.cc	\
 	mod_m052.cc	\
+	mod_net.cc	\
 	mod_list.cc	\
 	tape.cc		\
 	disk.cc		\

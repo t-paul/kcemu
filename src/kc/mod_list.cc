@@ -152,6 +152,7 @@
 #include "kc/mod_rom1.h"
 #include "kc/mod_romb.h"
 #include "kc/mod_raf.h"
+#include "kc/mod_net.h"
 #include "kc/mod_boot.h"
 #include "kc/mod_192k.h"
 #include "kc/mod_320k.h"
@@ -438,6 +439,9 @@ ModuleList::ModuleList(void)
 
   m = new ModuleRAF("RAF-4MB-24h", 0x24, 0x400000);
   _mod_list.push_back(new ModuleListEntry(_("RAF 4MB (port 24h)"), m, (kc_type_t)(KC_TYPE_85_1_CLASS | KC_TYPE_A5105)));
+
+  m = new ModuleNetwork("KCNET");
+  _mod_list.push_back(new ModuleListEntry(_("KC Network"), m, (kc_type_t)(KC_TYPE_85_1_CLASS | KC_TYPE_A5105)));
 
   /*
    *  Digital I/O (kc85/2-4)
