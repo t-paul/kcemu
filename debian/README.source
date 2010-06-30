@@ -1,6 +1,0 @@
-kcemu for Debian
-----------------
-
-This package uses quilt to manage modifications to the upstream
-source. Please see the file /usr/share/doc/quilt/README.source
-for details.
