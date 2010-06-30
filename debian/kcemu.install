@@ -1,4 +1,3 @@
 usr/bin
-images/kcemu-icon_32x32.xpm /usr/share/pixmaps/
-images/kcemu-icon_32x32.png /usr/share/pixmaps/
+images/*xpm /usr/share/pixmaps/
 debian/kcemu.desktop /usr/share/applications/
