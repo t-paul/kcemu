@@ -2,8 +2,8 @@ Source: kcemu
 Section: contrib/otherosfs
 Priority: optional
 Maintainer: Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
-Build-Depends: debhelper (>> 7), libz80ex-dev, libsdl-dev, libsndfile-dev, libvncserver-dev, libtheora-dev, libgtk2.0-dev, automake, autoconf, libxmu-dev, libncurses5-dev, netpbm, quilt, imagemagick
-Standards-Version: 3.8.4
+Build-Depends: debhelper (>> 7.0.50~), libz80ex-dev, libsdl-dev, libsndfile-dev, libvncserver-dev, libtheora-dev, libgtk2.0-dev, automake, autoconf, libxmu-dev, libncurses5-dev, netpbm, imagemagick
+Standards-Version: 3.9.0
 Homepage: http://kcemu.sourceforge.net/
 
 Package: kcemu
