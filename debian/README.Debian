@@ -1,0 +1,14 @@
+kcemu for Debian
+----------------
+
+Like the Commodore 8-bit emulator vice, kcemu does not workout ROM
+images of the chips found inside the KC computers. Due to legal
+reasons these ROM images and also disk and tape images have been removed
+from the original tarball. Before using kcemu, you'll have to get
+those images on your own, please visit the upstream website
+
+http://kcemu.sourceforge.net
+
+to acquire the ROM, disk and tape images there.
+
+-- Adrian Glaubitz <glaubitz@physik.fu-berlin.de>, 2010.06.23
