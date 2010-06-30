@@ -35,6 +35,11 @@ kcread2tap_SOURCES = \
 kctape_LDADD = \
 	libtape.a ../fileio/libfileio.a ../libdbg/libdbg.a $(GETOPTLIB) $(INTLLIBS)
 
+CLEANFILES = \
+	testfile.1 \
+	testfile.2 \
+	test.kct
+
 check:
 	rm -f test.kct testfile.1 testfile.2
 	./test
