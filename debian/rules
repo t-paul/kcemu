@@ -35,6 +35,7 @@ install: build
 
 # Build architecture-independent files here.
 binary-indep: build install
+	dh $@
 
 # Build architecture-dependent files here.
 binary-arch: build install
