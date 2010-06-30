@@ -1,5 +1,5 @@
-kcemu (0.5.1.dfsg-1) unstable; urgency=low
+kcemu (0.5.1+dfsg-1) unstable; urgency=low
 
   * Initial release. (Closes: #538914)
 
- -- Adrian Glaubitz <glaubitz@physik.fu-berlin.de>  Wed, 23 Jun 2010 14:00:19 +0200
+ -- Adrian Glaubitz <glaubitz@physik.fu-berlin.de>  Wed, 30 Jun 2010 16:51:49 +0200
