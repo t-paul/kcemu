@@ -9,17 +9,6 @@ imagedir = $(pkgdatadir)/images
 
 ICONS = \
 	kcemu-icon.png \
-	kcemu-icon.xpm \
-	kcemu-bic.xpm \
-	kcemu-kc85.xpm \
-	kcemu-kc87.xpm \
-	kcemu-lc80.xpm \
-	kcemu-vcs80.xpm \
-	kcemu-c80.xpm \
-	kcemu-pcm.xpm \
-	kcemu-kramermc.xpm \
-	kcemu-poly880.xpm \
-	kcemu-z1013.xpm \
 	kcemu-winicon_16x16.png \
 	kcemu-winicon_32x32.png \
 	kcemu-winicon_48x48.png \
@@ -36,6 +25,19 @@ ICONS = \
 	icon-poly880.png \
 	icon-vcs80.png \
 	icon-z1013.png
+
+LINUXICONS = \
+	kcemu-icon.xpm \
+	kcemu-bic.xpm \
+	kcemu-kc85.xpm \
+	kcemu-kc87.xpm \
+	kcemu-lc80.xpm \
+	kcemu-vcs80.xpm \
+	kcemu-c80.xpm \
+	kcemu-pcm.xpm \
+	kcemu-kramermc.xpm \
+	kcemu-poly880.xpm \
+	kcemu-z1013.xpm
 
 WINICONS = \
 	kcemu-bic.ico \
@@ -109,10 +111,14 @@ UI_XML = \
 	vdip.glade \
 	video.glade
 
-.xpm.ico:
-	xpmtoppm --alphaout /tmp/ico.alpha.1.$$$$ $< | ppmquant 256 > /tmp/ico.icon.$$$$ ; \
+.png.ico:
+#	xpmtoppm --alphaout /tmp/ico.alpha.1.$$$$ $< | ppmquant 256 > /tmp/ico.icon.$$$$ ; \
 	ppmtowinicon -andpgms /tmp/ico.icon.$$$$ /tmp/ico.alpha.1.$$$$ > $@ ; \
 	rm -f /tmp/ico.icon.$$$$ /tmp/ico.alpha.1.$$$$
+	convert $< $@
+
+.png.xpm:
+	convert -resize 32x32 $< $@
 
 .png.ppm:
 	SIZE=`echo "$<" | sed -e 's/.*[0-9]*x\([0-9]*\).*/\1/'`; \
@@ -129,11 +135,11 @@ kcemu-winicon.ico : kcemu-winicon_16x16.ppm kcemu-winicon_32x32.ppm kcemu-winico
 		> $@
 
 if TARGET_LINUX
-icon_DATA = $(ICONS)
+icon_DATA = $(ICONS) $(LINUXICONS)
 endif
 
 if TARGET_FREEBSD
-icon_DATA = $(ICONS)
+icon_DATA = $(ICONS) $(LINUXICONS)
 endif
 
 if TARGET_MINGW
@@ -142,6 +148,15 @@ endif
 
 image_DATA = $(IMAGES) $(UI_XML)
 
-all : $(ICONS) $(WINICONS)
+all : $(ICONS) $(WINICONS) $(LINUXICONS)
 
-EXTRA_DIST = $(ICONS) $(WINICONS) $(IMAGES) $(UI_XML)
+CLEANFILES = kcemu-winicon_16x16.ppm \
+        kcemu-winicon_16x16.alpha.pgm \
+        kcemu-winicon_32x32.ppm \
+        kcemu-winicon_32x32.alpha.pgm \
+        kcemu-winicon_48x48.ppm \
+        kcemu-winicon_48x48.alpha.pgm \
+	$(WINICONS) \
+	$(LINUXICONS)
+
+EXTRA_DIST = $(ICONS) $(WINICONS) $(LINUXICONS) $(IMAGES) $(UI_XML)
