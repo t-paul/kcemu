@@ -141,6 +141,7 @@ kcemu_SOURCES = \
 	mod_4131.cc	\
 	mod_m052.cc	\
 	mod_list.cc	\
+	roms.cc		\
 	tape.cc		\
 	disk.cc		\
 	timer.cc	\
@@ -211,3 +212,12 @@ kcemu_send_SOURCES = \
 
 kcemu_send_LDADD = \
 	-lncurses $(INTLLIBS)
+
+romlist :
+	( \
+		cd ../.. && find roms -type f -a ! -name Makefile\* -print0 | \
+		sort -z | \
+		xargs -0 sha1sum -b | \
+		tr -d '*' | \
+		( while read line ; do set -- $$line ; printf '\tadd_rom(_(""),\n\t\t"%s",\n\t\t"%s", "%s",\n\t\t0x%x);\n' "$$1" $$(basename "$$2") $$(dirname "$$2") $$(stat --printf=%s "$$2") ; done ) \
+	)

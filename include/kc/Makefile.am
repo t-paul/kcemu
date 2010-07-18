@@ -108,6 +108,7 @@ EXTRA_DIST = \
 	mod_boot.h	\
 	mod_list.h	\
 	profile.h	\
+	roms.h		\
 	tape.h		\
 	disk.h		\
 	timer.h		\

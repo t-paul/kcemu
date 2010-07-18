@@ -179,7 +179,7 @@ EmulationType::get_emulation_types(void) {
     return _emulation_type_list;
 }
 
-ROMEntry::ROMEntry(const char *filename, const char *description, bool is_default) : _filename(filename), _description(description), _is_default(is_default)
+ROMEntry::ROMEntry(const char *id, const char *description, bool is_default) : _id(id), _description(description), _is_default(is_default)
 {
 }
 
@@ -188,9 +188,9 @@ ROMEntry::~ROMEntry(void)
 }
 
 const string
-ROMEntry::get_filename(void) const
+ROMEntry::get_id(void) const
 {
-    return _filename;
+    return _id;
 }
 
 const string
@@ -479,8 +479,8 @@ SystemInformation::SystemInformation(void) {
         .set_ui_callback_value(20000)
         .set_ui_callback_retrace_value(1000)
         .set_rom_directory("/roms/z1013")
-        .add_rom(SystemROM::ROM_KEY_SYSTEM, 0x0800, "z1013_20.rom", _("System-ROM V2.0"), NULL)
-        .add_rom(SystemROM::ROM_KEY_CHARGEN, 0x1000, "z1013_zg.rom", _("Z1013 Charset-ROM"), NULL);
+        .add_rom(SystemROM::ROM_KEY_SYSTEM, 0x0800, "c3a45ea5cc4da2b7c270068ba1e2d75916960709", _("System-ROM V2.0"), NULL)
+        .add_rom(SystemROM::ROM_KEY_CHARGEN, 0x1000, "c34da6acfb278dfaebd0efd2882a116f18780a50", _("Z1013 Charset-ROM"), NULL);
     add_system_type(102, "z1013.12", -1, EmulationType::_emulation_type_z1013, KC_VARIANT_Z1013_12,
             N_("    Z1013 with 1k sRAM and 2k ROM, running at 2MHz. Industry\n"
             "    version with only 1k static RAM. Monitor version 2.02.\n"))
@@ -488,8 +488,8 @@ SystemInformation::SystemInformation(void) {
         .set_ui_callback_value(40000)
         .set_ui_callback_retrace_value(1000)
         .set_rom_directory("/roms/z1013")
-        .add_rom(SystemROM::ROM_KEY_SYSTEM, 0x0800, "z1013_20.rom", _("System-ROM V2.0"), NULL)
-        .add_rom(SystemROM::ROM_KEY_CHARGEN, 0x1000, "z1013_zg.rom", _("Z1013 Charset-ROM"), NULL);
+        .add_rom(SystemROM::ROM_KEY_SYSTEM, 0x0800, "c3a45ea5cc4da2b7c270068ba1e2d75916960709", _("System-ROM V2.0"), NULL)
+        .add_rom(SystemROM::ROM_KEY_CHARGEN, 0x1000, "c34da6acfb278dfaebd0efd2882a116f18780a50", _("Z1013 Charset-ROM"), NULL);
     add_system_type(103, "z1013.16", -1, EmulationType::_emulation_type_z1013, KC_VARIANT_Z1013_16,
             N_("    Z1013 with 16k RAM and 2k ROM, running at 2MHz. Successor of\n"
             "    the Z1013.01 but with industry grade circuits clocked at 2MHz.\n"))
@@ -497,8 +497,8 @@ SystemInformation::SystemInformation(void) {
         .set_ui_callback_value(40000)
         .set_ui_callback_retrace_value(1000)
         .set_rom_directory("/roms/z1013")
-        .add_rom(SystemROM::ROM_KEY_SYSTEM, 0x0800, "z1013_20.rom", _("System-ROM V2.0"), NULL)
-        .add_rom(SystemROM::ROM_KEY_CHARGEN, 0x1000, "z1013_zg.rom", _("Z1013 Charset-ROM"), NULL);
+        .add_rom(SystemROM::ROM_KEY_SYSTEM, 0x0800, "c3a45ea5cc4da2b7c270068ba1e2d75916960709", _("System-ROM V2.0"), NULL)
+        .add_rom(SystemROM::ROM_KEY_CHARGEN, 0x1000, "c34da6acfb278dfaebd0efd2882a116f18780a50", _("Z1013 Charset-ROM"), NULL);
     add_system_type(104, "z1013.64", -1, EmulationType::_emulation_type_z1013, KC_VARIANT_Z1013_64,
             N_("    Z1013 with 64k RAM and 2x2k ROM, running at 2MHz. The ROM\n"
             "    contains two system images with 2k each. Loaded is the first\n"
@@ -508,8 +508,8 @@ SystemInformation::SystemInformation(void) {
         .set_ui_callback_value(40000)
         .set_ui_callback_retrace_value(1000)
         .set_rom_directory("/roms/z1013")
-        .add_rom(SystemROM::ROM_KEY_SYSTEM, 0x0800, "z1013_20.rom", _("System-ROM V2.0"), NULL)
-        .add_rom(SystemROM::ROM_KEY_CHARGEN, 0x1000, "z1013_zg.rom", _("Z1013 Charset-ROM"), NULL);
+        .add_rom(SystemROM::ROM_KEY_SYSTEM, 0x0800, "c3a45ea5cc4da2b7c270068ba1e2d75916960709", _("System-ROM V2.0"), NULL)
+        .add_rom(SystemROM::ROM_KEY_CHARGEN, 0x1000, "c34da6acfb278dfaebd0efd2882a116f18780a50", _("Z1013 Charset-ROM"), NULL);
     add_system_type(105, "z1013.a2", -1, EmulationType::_emulation_type_z1013, KC_VARIANT_Z1013_A2,
             N_("    Z1013 with 64k RAM and 2k ROM, running at 2MHz. The ROM\n"
             "    contains two system images with 2k each. Loaded is the second\n"
@@ -519,8 +519,8 @@ SystemInformation::SystemInformation(void) {
         .set_ui_callback_value(40000)
         .set_ui_callback_retrace_value(1000)
         .set_rom_directory("/roms/z1013")
-        .add_rom(SystemROM::ROM_KEY_SYSTEM, 0x0800, "z1013_a2.rom", _("System-ROM A2"), NULL)
-        .add_rom(SystemROM::ROM_KEY_CHARGEN, 0x1000, "z1013_zg.rom", _("Z1013 Charset-ROM"), NULL);
+        .add_rom(SystemROM::ROM_KEY_SYSTEM, 0x0800, "97e158f589198cb96aae1567ee0aa6e47824027e", _("System-ROM A2"), NULL)
+        .add_rom(SystemROM::ROM_KEY_CHARGEN, 0x1000, "c34da6acfb278dfaebd0efd2882a116f18780a50", _("Z1013 Charset-ROM"), NULL);
     add_system_type(106, "z1013.rb", -1, EmulationType::_emulation_type_z1013, KC_VARIANT_Z1013_RB,
             N_("    Z1013 with 64k RAM and 4k ROM. The ROM is the extended\n"
             "    version tagged 2.028 RB that has a different keyboard driver for\n"
@@ -529,8 +529,8 @@ SystemInformation::SystemInformation(void) {
         .set_ui_callback_value(40000)
         .set_ui_callback_retrace_value(1000)
         .set_rom_directory("/roms/z1013")
-        .add_rom(SystemROM::ROM_KEY_SYSTEM, 0x1000, "z1013_rb.rom", _("Brosig-ROM K7659/2.028"), NULL)
-        .add_rom(SystemROM::ROM_KEY_CHARGEN, 0x1000, "z1013_zg.rom", _("Z1013 Charset-ROM"), NULL);
+        .add_rom(SystemROM::ROM_KEY_SYSTEM, 0x1000, "0bcd20338cf0706b384f40901b7f8498c6f6c320", _("Brosig-ROM K7659/2.028"), NULL)
+        .add_rom(SystemROM::ROM_KEY_CHARGEN, 0x1000, "c34da6acfb278dfaebd0efd2882a116f18780a50", _("Z1013 Charset-ROM"), NULL);
     add_system_type(107, "z1013.surl", -1, EmulationType::_emulation_type_z1013, KC_VARIANT_Z1013_SURL,
             N_("    Z1013 with 64k RAM and 4k ROM. The ROM contains the 'Super\n"
             "    Ur-Lader 5.0' that can read arbitrary tape files as system monitor.\n"
@@ -540,8 +540,8 @@ SystemInformation::SystemInformation(void) {
         .set_ui_callback_value(40000)
         .set_ui_callback_retrace_value(1000)
         .set_rom_directory("/roms/z1013")
-        .add_rom(SystemROM::ROM_KEY_SYSTEM, 0x0800, "z1013_ul.rom", _("Super Ur-Lader 5.0"), NULL)
-        .add_rom(SystemROM::ROM_KEY_CHARGEN, 0x1000, "z1013_zg.rom", _("Z1013 Charset-ROM"), NULL);
+        .add_rom(SystemROM::ROM_KEY_SYSTEM, 0x0800, "26d3c8352e57bccb9324ff5e89c0b557d78a9aad", _("Super Ur-Lader 5.0"), NULL)
+        .add_rom(SystemROM::ROM_KEY_CHARGEN, 0x1000, "c34da6acfb278dfaebd0efd2882a116f18780a50", _("Z1013 Charset-ROM"), NULL);
     add_system_type(108, "z1013.bl4", -1, EmulationType::_emulation_type_z1013, KC_VARIANT_Z1013_BL4,
             N_("    Z1013 with 64k RAM and 4k ROM. The ROM contains the Bootloader\n"
             "    BL4 that can load monitor images from floppy disk or can start the\n"
@@ -550,8 +550,8 @@ SystemInformation::SystemInformation(void) {
         .set_ui_callback_value(40000)
         .set_ui_callback_retrace_value(1000)
         .set_rom_directory("/roms/z1013")
-        .add_rom(SystemROM::ROM_KEY_SYSTEM, 2432, "z1013_bl.rom", _("Bootlader BL4"), NULL)
-        .add_rom(SystemROM::ROM_KEY_CHARGEN, 0x1000, "z1013_zg.rom", _("Z1013 Charset-ROM"), NULL);
+        .add_rom(SystemROM::ROM_KEY_SYSTEM, 2432, "eb973eb1bb736ab93e0538a1008a681624c90564", _("Bootlader BL4"), NULL)
+        .add_rom(SystemROM::ROM_KEY_CHARGEN, 0x1000, "c34da6acfb278dfaebd0efd2882a116f18780a50", _("Z1013 Charset-ROM"), NULL);
     /*
      *  KC 85/1
      */
@@ -562,15 +562,15 @@ SystemInformation::SystemInformation(void) {
         .set_ui_callback_value(50000)
         .set_rom_directory("/roms/z9001")
         .add_rom(SystemROM::ROM_KEY_SYSTEM, 0x1000,
-                 "os____f0.851", _("System-ROM"),
-                 "os_rb20.rom", _("ROM-Bank System without menu"),
-                 "os_rb21.rom", _("ROM-Bank System with menu"),
+                 "553609631f5eaa7d6758a73f56c613e280a5b310", _("System-ROM"),
+                 "c2893ce5bb23b280ba4e982e860586d21de2469b", _("ROM-Bank System without menu"),
+                 "5dbb661bdf4daf92d6c4ffbbdec674e57917e9eb", _("ROM-Bank System with menu"),
                  NULL)
         .add_rom(SystemROM::ROM_KEY_CHARGEN, 0x0800,
-                 "chargen.851", _("Z9001 Charset-ROM"),
-                 "zg_de.rom", _("Z9001 Charset-ROM (german)"),
-                 "zg_cga.rom", _("CGA Charset-ROM"),
-                 "zg_cgai.rom", _("CGA Charset-ROM (extended)"),
+                 "2e4928ba7161f5cce7173b7d2ded3d6596ae2aa2", _("Z9001 Charset-ROM"),
+                 "912bb7d1f8b4582894125e82da080bd9c3b88f34", _("Z9001 Charset-ROM (german)"),
+                 "f57a78a928fe1151b2fedb7f1a93a141195422ff", _("CGA Charset-ROM"),
+                 "4d36fefd335903680c45a5e3f38b969d2e9bb621", _("CGA Charset-ROM (extended)"),
                  NULL);
     add_system_type(202, "z9001.11", -1, EmulationType::_emulation_type_kc85_1, KC_VARIANT_85_1_11,
             N_("    Like the z9001.10 but with color extension card.\n"))
@@ -578,15 +578,15 @@ SystemInformation::SystemInformation(void) {
         .set_ui_callback_value(50000)
         .set_rom_directory("/roms/z9001")
         .add_rom(SystemROM::ROM_KEY_SYSTEM, 0x1000,
-                 "os____f0.851", _("System-ROM"),
-                 "os_rb20.rom", _("ROM-Bank System without menu"),
-                 "os_rb21.rom", _("ROM-Bank System with menu"),
+                 "553609631f5eaa7d6758a73f56c613e280a5b310", _("System-ROM"),
+                 "c2893ce5bb23b280ba4e982e860586d21de2469b", _("ROM-Bank System without menu"),
+                 "5dbb661bdf4daf92d6c4ffbbdec674e57917e9eb", _("ROM-Bank System with menu"),
                  NULL)
         .add_rom(SystemROM::ROM_KEY_CHARGEN, 0x0800,
-                 "chargen.851", _("Z9001 Charset-ROM"),
-                 "zg_de.rom", _("Z9001 Charset-ROM (german)"),
-                 "zg_cga.rom", _("CGA Charset-ROM"),
-                 "zg_cgai.rom", _("CGA Charset-ROM (extended)"),
+                 "2e4928ba7161f5cce7173b7d2ded3d6596ae2aa2", _("Z9001 Charset-ROM"),
+                 "912bb7d1f8b4582894125e82da080bd9c3b88f34", _("Z9001 Charset-ROM (german)"),
+                 "f57a78a928fe1151b2fedb7f1a93a141195422ff", _("CGA Charset-ROM"),
+                 "4d36fefd335903680c45a5e3f38b969d2e9bb621", _("CGA Charset-ROM (extended)"),
                  NULL);
     /*
      *  KC 85/2
@@ -598,20 +598,20 @@ SystemInformation::SystemInformation(void) {
         .set_ui_callback_value(35000)
         .set_rom_directory("/roms/kc85")
         .add_rom(SystemROM::ROM_KEY_CAOSE, 0x2000,
-                 "hc900.852", _("HC-900 CAOS"),
-                 "caos__e0.852", _("CAOS 2.2"),
+                 "242a777788c774c5f764313361b1e0a65139ab32", _("HC-900 CAOS"),
+                 "568dd59bfad4c604ba36bc05b094fc598a642f85", _("CAOS 2.2"),
                  NULL)
         .add_rom(SystemROM::ROM_KEY_D004_FC, 0x2000,
-                 "floppy20.rom", _("D004 Version 2.0 (02.01.1989)"),
-                 "floppy30.rom", _("D004 Version 3.0 (07.12.1997)"),
-                 "floppy31.rom", _("D004 Version 3.1 (22.01.2003)"),
-                 "floppy32.rom", _("D004 Version 3.2 (28.10.2008)"),
+                 "66f476de78fb474d9ac61c6eaffce3354fd66776", _("D004 Version 2.0 (02.01.1989)"),
+                 "5582b2541a34a90c7a9516a6a222d4961fc54fcf", _("D004 Version 3.0 (07.12.1997)"),
+                 "38b3164dce23573375fc0237f348d9a699fc6f9f", _("D004 Version 3.1 (22.01.2003)"),
+                 "8232adb5e5f0b25b52f9873cff14831da3a0398a", _("D004 Version 3.2 (28.10.2008)"),
                  NULL)
         .add_rom(SystemROM::ROM_KEY_D004_F8, 0x2000, 3,
-                 "floppy20.rom", _("D004 Version 2.0 (02.01.1989)"),
-                 "floppy30.rom", _("D004 Version 3.0 (07.12.1997)"),
-                 "floppy31.rom", _("D004 Version 3.1 (22.01.2003)"),
-                 "floppy32.rom", _("D004 Version 3.2 (28.10.2008)"),
+                 "66f476de78fb474d9ac61c6eaffce3354fd66776", _("D004 Version 2.0 (02.01.1989)"),
+                 "5582b2541a34a90c7a9516a6a222d4961fc54fcf", _("D004 Version 3.0 (07.12.1997)"),
+                 "38b3164dce23573375fc0237f348d9a699fc6f9f", _("D004 Version 3.1 (22.01.2003)"),
+                 "8232adb5e5f0b25b52f9873cff14831da3a0398a", _("D004 Version 3.2 (28.10.2008)"),
                  NULL);
     /*
      *  KC 85/3
@@ -621,25 +621,25 @@ SystemInformation::SystemInformation(void) {
         .set_ui_callback_value(35000)
         .set_rom_directory("/roms/kc85")
         .add_rom(SystemROM::ROM_KEY_CAOSE, 0x2000,
-                 "caos__e0.853", _("CAOS 3.1"),
-                 "caos33.853", _("CAOS 3.3"),
-                 "caos34.853", _("CAOS 3.4"),
-                 "pi88_ge.853", _("OS PI/88 (yellow/blue)"),
-                 "pi88_sw.853", _("OS PI/88 (black/white)"),
-                 "pi88_ws.853", _("OS PI/88 (white/blue)"),
+                 "efd002fc9146116936e6e6be0366d2afca33c1ab", _("CAOS 3.1"),
+                 "20447d27c9aa41a1c7a3d6ad0699edb06a207aa6", _("CAOS 3.3"),
+                 "ee9f8e7427b9225ae2cecbcfb625d629ab6a601d", _("CAOS 3.4"),
+                 "b8373a44e4553197e3dd23008168d5214b878837", _("OS PI/88 (yellow/blue)"),
+                 "9b5c068f10ff34bc3253f5b51abad51c8da9dd5d", _("OS PI/88 (black/white)"),
+                 "b8b6f606b76bce9fb7fcd61a14120e5e026b6b6e", _("OS PI/88 (white/blue)"),
                  NULL)
-        .add_rom(SystemROM::ROM_KEY_BASIC, 0x2000, "basic_c0.853", _("KC-BASIC"), NULL)
+        .add_rom(SystemROM::ROM_KEY_BASIC, 0x2000, "c2e3af55c79e049e811607364f88c703b0285e2e", _("KC-BASIC"), NULL)
         .add_rom(SystemROM::ROM_KEY_D004_FC, 0x2000,
-                 "floppy20.rom", _("D004 Version 2.0 (02.01.1989)"),
-                 "floppy30.rom", _("D004 Version 3.0 (07.12.1997)"),
-                 "floppy31.rom", _("D004 Version 3.1 (22.01.2003)"),
-                 "floppy32.rom", _("D004 Version 3.2 (28.10.2008)"),
+                 "66f476de78fb474d9ac61c6eaffce3354fd66776", _("D004 Version 2.0 (02.01.1989)"),
+                 "5582b2541a34a90c7a9516a6a222d4961fc54fcf", _("D004 Version 3.0 (07.12.1997)"),
+                 "38b3164dce23573375fc0237f348d9a699fc6f9f", _("D004 Version 3.1 (22.01.2003)"),
+                 "8232adb5e5f0b25b52f9873cff14831da3a0398a", _("D004 Version 3.2 (28.10.2008)"),
                  NULL)
         .add_rom(SystemROM::ROM_KEY_D004_F8, 0x2000, 3,
-                 "floppy20.rom", _("D004 Version 2.0 (02.01.1989)"),
-                 "floppy30.rom", _("D004 Version 3.0 (07.12.1997)"),
-                 "floppy31.rom", _("D004 Version 3.1 (22.01.2003)"),
-                 "floppy32.rom", _("D004 Version 3.2 (28.10.2008)"),
+                 "66f476de78fb474d9ac61c6eaffce3354fd66776", _("D004 Version 2.0 (02.01.1989)"),
+                 "5582b2541a34a90c7a9516a6a222d4961fc54fcf", _("D004 Version 3.0 (07.12.1997)"),
+                 "38b3164dce23573375fc0237f348d9a699fc6f9f", _("D004 Version 3.1 (22.01.2003)"),
+                 "8232adb5e5f0b25b52f9873cff14831da3a0398a", _("D004 Version 3.2 (28.10.2008)"),
                  NULL);
     /*
      *  KC 85/4
@@ -650,25 +650,25 @@ SystemInformation::SystemInformation(void) {
         .set_ui_callback_value(35000)
         .set_rom_directory("/roms/kc85")
         .add_rom(SystemROM::ROM_KEY_CAOSC, 0x1000, 1,
-                 "caos41c.854", _("CAOS 4.1 (C)"),
-                 "caos__c0.854", _("CAOS 4.2 (C)"),
+                 "acd998e3d9e8f592cd884aafc8ac4d291e40e097", _("CAOS 4.1 (C)"),
+                 "774fc2496a59b77c7c392eb5aa46420e7722797e", _("CAOS 4.2 (C)"),
                  NULL)
         .add_rom(SystemROM::ROM_KEY_CAOSE, 0x2000, 1,
-                 "caos41e.854", _("CAOS 4.1 (E)"),
-                 "caos__e0.854", _("CAOS 4.2 (E)"),
+                 "e19819fb477dcb742a13729a9bf5943d63abe863", _("CAOS 4.1 (E)"),
+                 "4300f7ff813c1fb2d5c928dbbf1c9e1fe52a9577", _("CAOS 4.2 (E)"),
                  NULL)
-        .add_rom(SystemROM::ROM_KEY_BASIC, 0x2000, "basic_c0.854", _("KC-BASIC"), NULL)
+        .add_rom(SystemROM::ROM_KEY_BASIC, 0x2000, "c2e3af55c79e049e811607364f88c703b0285e2e", _("KC-BASIC"), NULL)
         .add_rom(SystemROM::ROM_KEY_D004_FC, 0x2000,
-                 "floppy20.rom", _("D004 Version 2.0 (02.01.1989)"),
-                 "floppy30.rom", _("D004 Version 3.0 (07.12.1997)"),
-                 "floppy31.rom", _("D004 Version 3.1 (22.01.2003)"),
-                 "floppy32.rom", _("D004 Version 3.2 (28.10.2008)"),
+                 "66f476de78fb474d9ac61c6eaffce3354fd66776", _("D004 Version 2.0 (02.01.1989)"),
+                 "5582b2541a34a90c7a9516a6a222d4961fc54fcf", _("D004 Version 3.0 (07.12.1997)"),
+                 "38b3164dce23573375fc0237f348d9a699fc6f9f", _("D004 Version 3.1 (22.01.2003)"),
+                 "8232adb5e5f0b25b52f9873cff14831da3a0398a", _("D004 Version 3.2 (28.10.2008)"),
                  NULL)
         .add_rom(SystemROM::ROM_KEY_D004_F8, 0x2000, 3,
-                 "floppy20.rom", _("D004 Version 2.0 (02.01.1989)"),
-                 "floppy30.rom", _("D004 Version 3.0 (07.12.1997)"),
-                 "floppy31.rom", _("D004 Version 3.1 (22.01.2003)"),
-                 "floppy32.rom", _("D004 Version 3.2 (28.10.2008)"),
+                 "66f476de78fb474d9ac61c6eaffce3354fd66776", _("D004 Version 2.0 (02.01.1989)"),
+                 "5582b2541a34a90c7a9516a6a222d4961fc54fcf", _("D004 Version 3.0 (07.12.1997)"),
+                 "38b3164dce23573375fc0237f348d9a699fc6f9f", _("D004 Version 3.1 (22.01.2003)"),
+                 "8232adb5e5f0b25b52f9873cff14831da3a0398a", _("D004 Version 3.2 (28.10.2008)"),
                  NULL);
     /*
      *  KC 85/5
@@ -681,28 +681,28 @@ SystemInformation::SystemInformation(void) {
         .set_ui_callback_value(35000)
         .set_rom_directory("/roms/kc85")
         .add_rom(SystemROM::ROM_KEY_CAOSC, 0x2000, 1,
-                 "caos43c.855", _("CAOS 4.3 (C)"),
-                 "caos__c0.855", _("CAOS 4.4 (C)"),
+                 "5342be5104206d15e7471b094c7749a8a3d708ad", _("CAOS 4.3 (C)"),
+                 "2cf8023ee71ca50b92f9f151b7519f59727d1c79", _("CAOS 4.4 (C)"),
                  NULL)
         .add_rom(SystemROM::ROM_KEY_CAOSE, 0x2000, 1,
-                 "caos43e.855", _("CAOS 4.3 (E)"),
-                 "caos__e0.855", _("CAOS 4.4 (E)"),
+                 "521ac2fbded4148220f8af2d5a5ab99634364079", _("CAOS 4.3 (E)"),
+                 "53ba4394d96e287ff8af01322af1e9879d4e77c4", _("CAOS 4.4 (E)"),
                  NULL)
         .add_rom(SystemROM::ROM_KEY_BASIC, 0x8000, 1,
-                 "basic_c0.855", _("KC-BASIC (EDAS/TEMO/FORTH)"),
-                 "basicusb.855", _("KC-BASIC (EDAS/TEMO/USB)"),
+                 "be2c68a5b461014c57e33a127c3ffb32b0ff2346", _("KC-BASIC (EDAS/TEMO/FORTH)"),
+                 "dcd3b44a4ef116c5981fb932dff1aa5f57735f42", _("KC-BASIC (EDAS/TEMO/USB)"),
                  NULL)
         .add_rom(SystemROM::ROM_KEY_D004_FC, 0x2000, 3,
-                 "floppy20.rom", _("D004 Version 2.0 (02.01.1989)"),
-                 "floppy30.rom", _("D004 Version 3.0 (07.12.1997)"),
-                 "floppy31.rom", _("D004 Version 3.1 (22.01.2003)"),
-                 "floppy32.rom", _("D004 Version 3.2 (28.10.2008)"),
+                 "66f476de78fb474d9ac61c6eaffce3354fd66776", _("D004 Version 2.0 (02.01.1989)"),
+                 "5582b2541a34a90c7a9516a6a222d4961fc54fcf", _("D004 Version 3.0 (07.12.1997)"),
+                 "38b3164dce23573375fc0237f348d9a699fc6f9f", _("D004 Version 3.1 (22.01.2003)"),
+                 "8232adb5e5f0b25b52f9873cff14831da3a0398a", _("D004 Version 3.2 (28.10.2008)"),
                  NULL)
         .add_rom(SystemROM::ROM_KEY_D004_F8, 0x2000, 0,
-                 "floppy20.rom", _("D004 Version 2.0 (02.01.1989)"),
-                 "floppy30.rom", _("D004 Version 3.0 (07.12.1997)"),
-                 "floppy31.rom", _("D004 Version 3.1 (22.01.2003)"),
-                 "floppy32.rom", _("D004 Version 3.2 (28.10.2008)"),
+                 "66f476de78fb474d9ac61c6eaffce3354fd66776", _("D004 Version 2.0 (02.01.1989)"),
+                 "5582b2541a34a90c7a9516a6a222d4961fc54fcf", _("D004 Version 3.0 (07.12.1997)"),
+                 "38b3164dce23573375fc0237f348d9a699fc6f9f", _("D004 Version 3.1 (22.01.2003)"),
+                 "8232adb5e5f0b25b52f9873cff14831da3a0398a", _("D004 Version 3.2 (28.10.2008)"),
                  NULL);
     /*
      *  Polycomputer 880
@@ -712,8 +712,8 @@ SystemInformation::SystemInformation(void) {
         .set_display_name("Polycomputer 880")
         .set_ui_callback_value(18000)
         .set_rom_directory("/roms/poly880")
-        .add_rom(SystemROM::ROM_KEY_SYSTEM1, 0x0400, "poly880a.rom", _("System-ROM 1"), NULL)
-        .add_rom(SystemROM::ROM_KEY_SYSTEM2, 0x0400, "poly880b.rom", _("System-ROM 2"), NULL)
+        .add_rom(SystemROM::ROM_KEY_SYSTEM1, 0x0400, "323f9d3165ed8e95fd530967d8d2f44928015bbd", _("System-ROM 1"), NULL)
+        .add_rom(SystemROM::ROM_KEY_SYSTEM2, 0x0400, "274f1dbe58560b1e0a135be6efb59cffdfd78dde", _("System-ROM 2"), NULL)
         .add_optional_rom(SystemROM::ROM_KEY_SYSTEM3, 0x0400, "poly880c.rom", _("Optional-ROM 1"), NULL)
         .add_optional_rom(SystemROM::ROM_KEY_SYSTEM4, 0x0400, "poly880d.rom", _("Optional-ROM 1"), NULL);
     add_system_type(701, "poly880.sc1", -6, EmulationType::_emulation_type_poly880, KC_VARIANT_POLY880_SC1,
@@ -721,7 +721,7 @@ SystemInformation::SystemInformation(void) {
         .set_display_name("Polycomputer 880 + SC1 ROM")
         .set_ui_callback_value(18000)
         .set_rom_directory("/roms/poly880")
-        .add_rom(SystemROM::ROM_KEY_SYSTEM1, 0x1000, "sc1.rom", _("SC1-ROM"), NULL);
+        .add_rom(SystemROM::ROM_KEY_SYSTEM1, 0x1000, "01568911446eda9f05ec136df53da147b7c6f2bf", _("SC1-ROM"), NULL);
     /*
      *  KC 87
      */
@@ -731,16 +731,16 @@ SystemInformation::SystemInformation(void) {
         .set_ui_callback_value(50000)
         .set_rom_directory("/roms/z9001")
         .add_rom(SystemROM::ROM_KEY_SYSTEM, 0x1000,
-                 "os____f0.851", _("System-ROM"),
-                 "os_rb20.rom", _("ROM-Bank System without menu"),
-                 "os_rb21.rom", _("ROM-Bank System with menu"),
+                 "553609631f5eaa7d6758a73f56c613e280a5b310", _("System-ROM"),
+                 "c2893ce5bb23b280ba4e982e860586d21de2469b", _("ROM-Bank System without menu"),
+                 "5dbb661bdf4daf92d6c4ffbbdec674e57917e9eb", _("ROM-Bank System with menu"),
                  NULL)
-        .add_rom(SystemROM::ROM_KEY_BASIC, 0x2800, "basic_c0.87a", _("KC-BASIC"), NULL)
+        .add_rom(SystemROM::ROM_KEY_BASIC, 0x2800, "ea85b53e21429c4cb85cdb81b92f278a8f4eb574", _("KC-BASIC"), NULL)
         .add_rom(SystemROM::ROM_KEY_CHARGEN, 0x0800,
-                 "chargen.851", _("Z9001 Charset-ROM"),
-                 "zg_de.rom", _("Z9001 Charset-ROM (german)"),
-                 "zg_cga.rom", _("CGA Charset-ROM"),
-                 "zg_cgai.rom", _("CGA Charset-ROM (extended)"),
+                 "2e4928ba7161f5cce7173b7d2ded3d6596ae2aa2", _("Z9001 Charset-ROM"),
+                 "912bb7d1f8b4582894125e82da080bd9c3b88f34", _("Z9001 Charset-ROM (german)"),
+                 "f57a78a928fe1151b2fedb7f1a93a141195422ff", _("CGA Charset-ROM"),
+                 "4d36fefd335903680c45a5e3f38b969d2e9bb621", _("CGA Charset-ROM (extended)"),
                  NULL);
     add_system_type(802, "kc87.11", 7, EmulationType::_emulation_type_kc87, KC_VARIANT_87_11,
             N_("    Successor of the Z9001 with internal 10k BASIC ROM.\n"))
@@ -748,16 +748,16 @@ SystemInformation::SystemInformation(void) {
         .set_ui_callback_value(50000)
         .set_rom_directory("/roms/z9001")
         .add_rom(SystemROM::ROM_KEY_SYSTEM, 0x1000,
-                 "os____f0.851", _("System-ROM"),
-                 "os_rb20.rom", _("ROM-Bank System without menu"),
-                 "os_rb21.rom", _("ROM-Bank System with menu"),
+                 "553609631f5eaa7d6758a73f56c613e280a5b310", _("System-ROM"),
+                 "c2893ce5bb23b280ba4e982e860586d21de2469b", _("ROM-Bank System without menu"),
+                 "5dbb661bdf4daf92d6c4ffbbdec674e57917e9eb", _("ROM-Bank System with menu"),
                  NULL)
-        .add_rom(SystemROM::ROM_KEY_BASIC, 0x2800, "basic_c0.87a", _("KC-BASIC"), NULL)
+        .add_rom(SystemROM::ROM_KEY_BASIC, 0x2800, "ea85b53e21429c4cb85cdb81b92f278a8f4eb574", _("KC-BASIC"), NULL)
         .add_rom(SystemROM::ROM_KEY_CHARGEN, 0x0800,
-                 "chargen.851", _("Z9001 Charset-ROM"),
-                 "zg_de.rom", _("Z9001 Charset-ROM (german)"),
-                 "zg_cga.rom", _("CGA Charset-ROM"),
-                 "zg_cgai.rom", _("CGA Charset-ROM (extended)"),
+                 "2e4928ba7161f5cce7173b7d2ded3d6596ae2aa2", _("Z9001 Charset-ROM"),
+                 "912bb7d1f8b4582894125e82da080bd9c3b88f34", _("Z9001 Charset-ROM (german)"),
+                 "f57a78a928fe1151b2fedb7f1a93a141195422ff", _("CGA Charset-ROM"),
+                 "4d36fefd335903680c45a5e3f38b969d2e9bb621", _("CGA Charset-ROM (extended)"),
                  NULL);
     add_system_type(803, "kc87.20", -8, EmulationType::_emulation_type_kc87, KC_VARIANT_87_20,
             N_("    Like the KC 87.21 but without the color extension card.\n"))
@@ -765,16 +765,16 @@ SystemInformation::SystemInformation(void) {
         .set_ui_callback_value(50000)
         .set_rom_directory("/roms/z9001")
         .add_rom(SystemROM::ROM_KEY_SYSTEM, 0x1000,
-                 "os____f0.87b", _("System-ROM"),
-                 "os_rb20.rom", _("ROM-Bank System without menu"),
-                 "os_rb21.rom", _("ROM-Bank System with menu"),
+                 "b1df6b499517c8366a0795030ee800e8a258e938", _("System-ROM"),
+                 "c2893ce5bb23b280ba4e982e860586d21de2469b", _("ROM-Bank System without menu"),
+                 "5dbb661bdf4daf92d6c4ffbbdec674e57917e9eb", _("ROM-Bank System with menu"),
                  NULL)
-        .add_rom(SystemROM::ROM_KEY_BASIC, 0x2800, "basic_c0.87b", _("KC-BASIC"), NULL)
+        .add_rom(SystemROM::ROM_KEY_BASIC, 0x2800, "8ffecc64ba35c953c93738f8568c83dc6af1ae72", _("KC-BASIC"), NULL)
         .add_rom(SystemROM::ROM_KEY_CHARGEN, 0x0800,
-                 "chargen.851", _("Z9001 Charset-ROM"),
-                 "zg_de.rom", _("Z9001 Charset-ROM (german)"),
-                 "zg_cga.rom", _("CGA Charset-ROM"),
-                 "zg_cgai.rom", _("CGA Charset-ROM (extended)"),
+                 "2e4928ba7161f5cce7173b7d2ded3d6596ae2aa2", _("Z9001 Charset-ROM"),
+                 "912bb7d1f8b4582894125e82da080bd9c3b88f34", _("Z9001 Charset-ROM (german)"),
+                 "f57a78a928fe1151b2fedb7f1a93a141195422ff", _("CGA Charset-ROM"),
+                 "4d36fefd335903680c45a5e3f38b969d2e9bb621", _("CGA Charset-ROM (extended)"),
                  NULL);
     add_system_type(804, "kc87.21", -8, EmulationType::_emulation_type_kc87, KC_VARIANT_87_21,
             N_("    New series with extended BASIC ROM (still 10k but with some routines for\n"
@@ -783,16 +783,16 @@ SystemInformation::SystemInformation(void) {
         .set_ui_callback_value(50000)
         .set_rom_directory("/roms/z9001")
         .add_rom(SystemROM::ROM_KEY_SYSTEM, 0x1000,
-                 "os____f0.87b", _("System-ROM"),
-                 "os_rb20.rom", _("ROM-Bank System without menu"),
-                 "os_rb21.rom", _("ROM-Bank System with menu"),
+                 "b1df6b499517c8366a0795030ee800e8a258e938", _("System-ROM"),
+                 "c2893ce5bb23b280ba4e982e860586d21de2469b", _("ROM-Bank System without menu"),
+                 "5dbb661bdf4daf92d6c4ffbbdec674e57917e9eb", _("ROM-Bank System with menu"),
                  NULL)
-        .add_rom(SystemROM::ROM_KEY_BASIC, 0x2800, "basic_c0.87b", _("KC-BASIC"), NULL)
+        .add_rom(SystemROM::ROM_KEY_BASIC, 0x2800, "8ffecc64ba35c953c93738f8568c83dc6af1ae72", _("KC-BASIC"), NULL)
         .add_rom(SystemROM::ROM_KEY_CHARGEN, 0x0800,
-                 "chargen.851", _("Z9001 Charset-ROM"),
-                 "zg_de.rom", _("Z9001 Charset-ROM (german)"),
-                 "zg_cga.rom", _("CGA Charset-ROM"),
-                 "zg_cgai.rom", _("CGA Charset-ROM (extended)"),
+                 "2e4928ba7161f5cce7173b7d2ded3d6596ae2aa2", _("Z9001 Charset-ROM"),
+                 "912bb7d1f8b4582894125e82da080bd9c3b88f34", _("Z9001 Charset-ROM (german)"),
+                 "f57a78a928fe1151b2fedb7f1a93a141195422ff", _("CGA Charset-ROM"),
+                 "4d36fefd335903680c45a5e3f38b969d2e9bb621", _("CGA Charset-ROM (extended)"),
                  NULL);
     add_system_type(805, "kc87.30", -8, EmulationType::_emulation_type_kc87, KC_VARIANT_87_30,
             N_("    New batch of KC 87.20 with no known hardware differences.\n"))
@@ -800,16 +800,16 @@ SystemInformation::SystemInformation(void) {
         .set_ui_callback_value(50000)
         .set_rom_directory("/roms/z9001")
         .add_rom(SystemROM::ROM_KEY_SYSTEM, 0x1000,
-                 "os____f0.87b", _("System-ROM"),
-                 "os_rb20.rom", _("ROM-Bank System without menu"),
-                 "os_rb21.rom", _("ROM-Bank System with menu"),
+                 "b1df6b499517c8366a0795030ee800e8a258e938", _("System-ROM"),
+                 "c2893ce5bb23b280ba4e982e860586d21de2469b", _("ROM-Bank System without menu"),
+                 "5dbb661bdf4daf92d6c4ffbbdec674e57917e9eb", _("ROM-Bank System with menu"),
                  NULL)
-        .add_rom(SystemROM::ROM_KEY_BASIC, 0x2800, "basic_c0.87b", _("KC-BASIC"), NULL)
+        .add_rom(SystemROM::ROM_KEY_BASIC, 0x2800, "8ffecc64ba35c953c93738f8568c83dc6af1ae72", _("KC-BASIC"), NULL)
         .add_rom(SystemROM::ROM_KEY_CHARGEN, 0x0800,
-                 "chargen.851", _("Z9001 Charset-ROM"),
-                 "zg_de.rom", _("Z9001 Charset-ROM (german)"),
-                 "zg_cga.rom", _("CGA Charset-ROM"),
-                 "zg_cgai.rom", _("CGA Charset-ROM (extended)"),
+                 "2e4928ba7161f5cce7173b7d2ded3d6596ae2aa2", _("Z9001 Charset-ROM"),
+                 "912bb7d1f8b4582894125e82da080bd9c3b88f34", _("Z9001 Charset-ROM (german)"),
+                 "f57a78a928fe1151b2fedb7f1a93a141195422ff", _("CGA Charset-ROM"),
+                 "4d36fefd335903680c45a5e3f38b969d2e9bb621", _("CGA Charset-ROM (extended)"),
                  NULL);
     add_system_type(806, "kc87.31", -8, EmulationType::_emulation_type_kc87, KC_VARIANT_87_31,
             N_("    New batch of KC 87.21 with no known hardware differences.\n"))
@@ -817,16 +817,16 @@ SystemInformation::SystemInformation(void) {
         .set_ui_callback_value(50000)
         .set_rom_directory("/roms/z9001")
         .add_rom(SystemROM::ROM_KEY_SYSTEM, 0x1000,
-                 "os____f0.87b", _("System-ROM"),
-                 "os_rb20.rom", _("ROM-Bank System without menu"),
-                 "os_rb21.rom", _("ROM-Bank System with menu"),
+                 "b1df6b499517c8366a0795030ee800e8a258e938", _("System-ROM"),
+                 "c2893ce5bb23b280ba4e982e860586d21de2469b", _("ROM-Bank System without menu"),
+                 "5dbb661bdf4daf92d6c4ffbbdec674e57917e9eb", _("ROM-Bank System with menu"),
                  NULL)
-        .add_rom(SystemROM::ROM_KEY_BASIC, 0x2800, "basic_c0.87b", _("KC-BASIC"), NULL)
+        .add_rom(SystemROM::ROM_KEY_BASIC, 0x2800, "8ffecc64ba35c953c93738f8568c83dc6af1ae72", _("KC-BASIC"), NULL)
         .add_rom(SystemROM::ROM_KEY_CHARGEN, 0x0800,
-                 "chargen.851", _("Z9001 Charset-ROM"),
-                 "zg_de.rom", _("Z9001 Charset-ROM (german)"),
-                 "zg_cga.rom", _("CGA Charset-ROM"),
-                 "zg_cgai.rom", _("CGA Charset-ROM (extended)"),
+                 "2e4928ba7161f5cce7173b7d2ded3d6596ae2aa2", _("Z9001 Charset-ROM"),
+                 "912bb7d1f8b4582894125e82da080bd9c3b88f34", _("Z9001 Charset-ROM (german)"),
+                 "f57a78a928fe1151b2fedb7f1a93a141195422ff", _("CGA Charset-ROM"),
+                 "4d36fefd335903680c45a5e3f38b969d2e9bb621", _("CGA Charset-ROM (extended)"),
                  NULL);
     /*
      *  LC 80
@@ -836,22 +836,22 @@ SystemInformation::SystemInformation(void) {
         .set_display_name("LC 80 (2 x U505)")
         .set_ui_callback_value(18000)
         .set_rom_directory("/roms/lc80")
-        .add_rom(SystemROM::ROM_KEY_SYSTEM1, 0x0400, "lc80__00.rom", _("System-ROM 1"), NULL)
-        .add_rom(SystemROM::ROM_KEY_SYSTEM2, 0x0400, "lc80__08.rom", _("System-ROM 2"), NULL);
+        .add_rom(SystemROM::ROM_KEY_SYSTEM1, 0x0400, "044440b13e62addbc3f6a77369cfd16f99b39752", _("System-ROM 1"), NULL)
+        .add_rom(SystemROM::ROM_KEY_SYSTEM2, 0x0400, "3a6cbd0c57c38eadb7055dca4b396c348567d1d5", _("System-ROM 2"), NULL);
     add_system_type(902, "lc80.2k", -8, EmulationType::_emulation_type_lc80, KC_VARIANT_LC80_2k,
             N_("    Single board computer LC 80 with 1k RAM and 1 x 2k ROM.\n"))
         .set_display_name("LC 80 (1 x U2716)")
         .set_ui_callback_value(18000)
         .set_rom_directory("/roms/lc80")
-        .add_rom(SystemROM::ROM_KEY_SYSTEM, 0x0800, "lc80__2k.rom", _("System-ROM"), NULL);
+        .add_rom(SystemROM::ROM_KEY_SYSTEM, 0x0800, "6fff953f0f1eee829fd774366313ab7e8053468c", _("System-ROM"), NULL);
     add_system_type(903, "lc80e", -8, EmulationType::_emulation_type_lc80, KC_VARIANT_LC80e,
             N_("    Export variant of the LC 80 with 12k ROM including chess program.\n"))
         .set_display_name("LC 80e")
         .set_ui_callback_value(66000)
         .set_rom_directory("/roms/lc80")
-        .add_rom(SystemROM::ROM_KEY_SYSTEM1, 0x1000, "lc80e_00.rom", _("System-ROM 1"), NULL)
-        .add_rom(SystemROM::ROM_KEY_SYSTEM2, 0x1000, "lc80e_10.rom", _("System-ROM 2"), NULL)
-        .add_rom(SystemROM::ROM_KEY_SYSTEM3, 0x1000, "lc80e_c0.rom", _("System-ROM 3"), NULL);
+        .add_rom(SystemROM::ROM_KEY_SYSTEM1, 0x1000, "f2be3f2a9d3780d59657e49b3abeffb0fc13db89", _("System-ROM 1"), NULL)
+        .add_rom(SystemROM::ROM_KEY_SYSTEM2, 0x1000, "0ea019b0944736ae5b842bf9aa3537300f259b98", _("System-ROM 2"), NULL)
+        .add_rom(SystemROM::ROM_KEY_SYSTEM3, 0x1000, "2f7b3fd046c965185606253f6cd9372da289ca6f", _("System-ROM 3"), NULL);
     /*
      *  A5105
      */
@@ -861,20 +861,20 @@ SystemInformation::SystemInformation(void) {
         .set_ui_callback_value(60000)
         .set_ui_callback_retrace_value(1000)
         .set_rom_directory("/roms/a5105")
-        .add_rom(SystemROM::ROM_KEY_SYSTEM1, 0x8000, "k1505_00.rom", _("System-ROM 1"), NULL)
-        .add_rom(SystemROM::ROM_KEY_SYSTEM2, 0x2000, "k1505_80.rom", _("System-ROM 2"), NULL)
-        .add_rom(SystemROM::ROM_KEY_SYSTEM3, 0x2000, "k5651_40.rom", _("DSE-ROM 1"), NULL)
-        .add_rom(SystemROM::ROM_KEY_SYSTEM4, 0x2000, "k5651_60.rom", _("DSE-ROM 2"), NULL);
+        .add_rom(SystemROM::ROM_KEY_SYSTEM1, 0x8000, "5c33139db9f59e50da5c76729752f8e653ae34ae", _("System-ROM 1"), NULL)
+        .add_rom(SystemROM::ROM_KEY_SYSTEM2, 0x2000, "7e5b587c59676e8549561117ea0b70234f439a94", _("System-ROM 2"), NULL)
+        .add_rom(SystemROM::ROM_KEY_SYSTEM3, 0x2000, "9a7bbe6f0d180dd513c7854f441cee986c8d9765", _("DSE-ROM 1"), NULL)
+        .add_rom(SystemROM::ROM_KEY_SYSTEM4, 0x2000, "7c16226be6c4c71013e8008fba9d2e9c5640b6a7", _("DSE-ROM 2"), NULL);
     add_system_type(1002, "a5105", 9, EmulationType::_emulation_type_a5105, KC_VARIANT_A5105_A5105,
             N_("    BIC/A5105, the full system including the floppy device.\n"))
         .set_display_name("A5105 (BIC Basis Device + Floppy Device)")
         .set_ui_callback_value(60000)
         .set_ui_callback_retrace_value(1000)
         .set_rom_directory("/roms/a5105")
-        .add_rom(SystemROM::ROM_KEY_SYSTEM1, 0x8000, "k1505_00.rom", _("System-ROM 1"), NULL)
-        .add_rom(SystemROM::ROM_KEY_SYSTEM2, 0x2000, "k1505_80.rom", _("System-ROM 2"), NULL)
-        .add_rom(SystemROM::ROM_KEY_SYSTEM3, 0x2000, "k5651_40.rom", _("DSE-ROM 1"), NULL)
-        .add_rom(SystemROM::ROM_KEY_SYSTEM4, 0x2000, "k5651_60.rom", _("DSE-ROM 2"), NULL);
+        .add_rom(SystemROM::ROM_KEY_SYSTEM1, 0x8000, "5c33139db9f59e50da5c76729752f8e653ae34ae", _("System-ROM 1"), NULL)
+        .add_rom(SystemROM::ROM_KEY_SYSTEM2, 0x2000, "7e5b587c59676e8549561117ea0b70234f439a94", _("System-ROM 2"), NULL)
+        .add_rom(SystemROM::ROM_KEY_SYSTEM3, 0x2000, "9a7bbe6f0d180dd513c7854f441cee986c8d9765", _("DSE-ROM 1"), NULL)
+        .add_rom(SystemROM::ROM_KEY_SYSTEM4, 0x2000, "7c16226be6c4c71013e8008fba9d2e9c5640b6a7", _("DSE-ROM 2"), NULL);
     /*
      *  Kramer MC
      */
@@ -883,13 +883,13 @@ SystemInformation::SystemInformation(void) {
             "    by Manfred Kramer.\n"))
         .set_ui_callback_value(30000)
         .set_rom_directory("/roms/kramermc")
-        .add_rom(SystemROM::ROM_KEY_SYSTEM, 0x0400, "io-mon.kmc", _("IO-Monitor"), NULL)
-        .add_rom(SystemROM::ROM_KEY_BASIC, 0x3000, "basic.kmc", _("BASIC"), NULL)
-        .add_rom(SystemROM::ROM_KEY_CHARGEN, 0x0800, "chargen.kmc", _("Charset-ROM"), NULL)
-        .add_rom(SystemROM::ROM_KEY_DEBUGGER, 0x0400, "debugger.kmc", _("Debugger"), NULL)
-        .add_rom(SystemROM::ROM_KEY_REASSEMBLER, 0x0400, "reass.kmc", _("Reassembler"), NULL)
-        .add_rom(SystemROM::ROM_KEY_EDITOR, 0x0400, "editor.kmc", _("Editor"), NULL)
-        .add_rom(SystemROM::ROM_KEY_ASSEMBLER, 0x1c00, "ass.kmc", _("Assembler"), NULL);
+        .add_rom(SystemROM::ROM_KEY_SYSTEM, 0x0400, "197d4ede31ee8768dd4a17854ee21c468e98b3d6", _("IO-Monitor"), NULL)
+        .add_rom(SystemROM::ROM_KEY_BASIC, 0x3000, "61d055495ffcc4a281ef0abc3e299ea95f42544b", _("BASIC"), NULL)
+        .add_rom(SystemROM::ROM_KEY_CHARGEN, 0x0800, "71bbad90dd427d0132c871a4d3848ab3d4d84b8a", _("Charset-ROM"), NULL)
+        .add_rom(SystemROM::ROM_KEY_DEBUGGER, 0x0400, "42e5ced4f965124ae50ec7ac9861d6b668cfab99", _("Debugger"), NULL)
+        .add_rom(SystemROM::ROM_KEY_REASSEMBLER, 0x0400, "3319a96aad710441af30dace906b9725e07ca92c", _("Reassembler"), NULL)
+        .add_rom(SystemROM::ROM_KEY_EDITOR, 0x0400, "505615a218865aa8becde13848a23e1241a14b96", _("Editor"), NULL)
+        .add_rom(SystemROM::ROM_KEY_ASSEMBLER, 0x1c00, "a578d2cf0ea6eb35dcd13e4107e15187de906097", _("Assembler"), NULL);
     /*
      *  PC/M
      */
@@ -898,8 +898,8 @@ SystemInformation::SystemInformation(void) {
             "    by A. Mugler and H. Mathes.\n"))
         .set_ui_callback_value(50000)
         .set_rom_directory("/roms/muglerpc")
-        .add_rom(SystemROM::ROM_KEY_SYSTEM, 0x2000, "muglerpc.pcm", _("System-ROM"), NULL)
-        .add_rom(SystemROM::ROM_KEY_CHARGEN, 0x0800, "chargen.pcm", _("Charset-ROM"), NULL);
+        .add_rom(SystemROM::ROM_KEY_SYSTEM, 0x2000, "ed45100afde4fa807557bb2c98bedb8f83d7e7e0", _("System-ROM"), NULL)
+        .add_rom(SystemROM::ROM_KEY_CHARGEN, 0x0800, "71bbad90dd427d0132c871a4d3848ab3d4d84b8a", _("Charset-ROM"), NULL);
     /*
      *  VCS 80
      */
@@ -909,7 +909,7 @@ SystemInformation::SystemInformation(void) {
         .set_ui_callback_value(25000)
         .set_ui_callback_retrace_value(4000)
         .set_rom_directory("/roms/vcs80")
-        .add_rom(SystemROM::ROM_KEY_SYSTEM, 0x0200, "monitor.rom", _("System-ROM"), NULL);
+        .add_rom(SystemROM::ROM_KEY_SYSTEM, 0x0200, "3472e5a9357eaba3ed6de65dee2b1c6b29349dd2", _("System-ROM"), NULL);
     /*
      *  C 80
      */
@@ -917,7 +917,7 @@ SystemInformation::SystemInformation(void) {
             N_("    Minimal Z80 learning system designed by Dipl.-Ing. Joachim Czepa.\n"))
         .set_ui_callback_value(50000)
         .set_rom_directory("/roms/c80")
-        .add_rom(SystemROM::ROM_KEY_SYSTEM, 0x0400, "monitor.rom", _("System-ROM"), NULL)
+        .add_rom(SystemROM::ROM_KEY_SYSTEM, 0x0400, "14f72cb73a4068b7a5d763cc0e254639c251ce2e", _("System-ROM"), NULL)
         .add_optional_rom(SystemROM::ROM_KEY_USER, 0x0400, "user.rom", _("User-ROM"), NULL);
 
     _system_type_list.sort(less_system_type());

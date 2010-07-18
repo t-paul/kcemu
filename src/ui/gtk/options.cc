@@ -850,11 +850,11 @@ OptionsWindow::set_roms_liststore(int idx, const char *rom_key, SystemROM *rom) 
         gtk_list_store_append(store, &iter);
         gtk_list_store_set(store, &iter,
                            ROMS_DESCRIPTION_COLUMN, entry->get_description().c_str(),
-                           ROMS_FILENAME_COLUMN, entry->get_filename().c_str(),
+                           ROMS_FILENAME_COLUMN, entry->get_id().c_str(),
                            ROMS_TYPE_COLUMN, 1,
                            -1);
         
-        if ((profile_rom_filename != NULL) && (entry->get_filename().compare(profile_rom_filename) == 0)) {
+        if ((profile_rom_filename != NULL) && (entry->get_id().compare(profile_rom_filename) == 0)) {
             active = list_entry;
             active_entry = entry;
         }
@@ -890,7 +890,7 @@ OptionsWindow::set_roms_liststore(int idx, const char *rom_key, SystemROM *rom) 
     
     char tooltip[128];
     snprintf(tooltip, sizeof(tooltip), _("ROM image is '%s'. The ROM size needs to be %04xh (%d) bytes."),
-             active_entry != NULL ? active_entry->get_filename().c_str() : profile_rom_filename,
+             active_entry != NULL ? active_entry->get_id().c_str() : profile_rom_filename,
              rom->get_size(),
              rom->get_size());
     gtk_widget_set_tooltip_text(GTK_WIDGET(_w.roms_comboboxentry[idx]), tooltip);

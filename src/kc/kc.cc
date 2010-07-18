@@ -60,6 +60,7 @@
 #include "kc/pio.h"
 #include "kc/z80.h"
 #include "kc/wav.h"
+#include "kc/roms.h"
 #include "kc/tape.h"
 #include "kc/disk.h"
 #include "kc/daisy.h"
@@ -1081,6 +1082,8 @@ main(int argc, char **argv)
     }
 
   open_debug_output(kcemu_debug_output);
+
+  const RomRegistry *reg = RomRegistry::instance();
 
 #ifdef HOST_OS_MINGW
   close_output();

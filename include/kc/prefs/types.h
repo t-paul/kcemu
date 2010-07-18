@@ -152,14 +152,14 @@ public:
 
 class ROMEntry {
 private:
-    string _filename;
+    string _id;
     string _description;
     bool   _is_default;
 public:
-    ROMEntry(const char *filename, const char *description, bool is_default = false);
+    ROMEntry(const char *id, const char *description, bool is_default = false);
     virtual ~ROMEntry(void);
     
-    const string get_filename(void) const;
+    const string get_id(void) const;
     const string get_description(void) const;
     const bool is_default(void) const;
 };
