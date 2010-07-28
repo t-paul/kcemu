@@ -1084,6 +1084,7 @@ main(int argc, char **argv)
   open_debug_output(kcemu_debug_output);
 
   const RomRegistry *reg = RomRegistry::instance();
+  reg->check_roms();
 
 #ifdef HOST_OS_MINGW
   close_output();

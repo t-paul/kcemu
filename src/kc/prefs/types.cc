@@ -17,9 +17,6 @@
  *  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-#include "prefs/types.h"
-
-
 #include <iostream>
 
 #include <string.h>
@@ -27,6 +24,7 @@
 #include <stdlib.h>
 
 #include "kc/system.h"
+#include "kc/roms.h"
 #include "kc/prefs/types.h"
 #include "kc/prefs/prefs.h"
 
@@ -179,7 +177,7 @@ EmulationType::get_emulation_types(void) {
     return _emulation_type_list;
 }
 
-ROMEntry::ROMEntry(const char *id, const char *description, bool is_default) : _id(id), _description(description), _is_default(is_default)
+ROMEntry::ROMEntry(const char *id, const char *name, const char *description, bool is_default) : _id(id), _name(name), _description(description), _is_default(is_default)
 {
 }
 
@@ -191,6 +189,12 @@ const string
 ROMEntry::get_id(void) const
 {
     return _id;
+}
+
+const string
+ROMEntry::get_name(void) const
+{
+    return _name;
 }
 
 const string
@@ -268,9 +272,22 @@ SystemROM::get_default_rom(void) const
 }
 
 void
-SystemROM::add_rom(const char *filename, const char *description, bool is_default)
+SystemROM::add_rom(const char *id, const char *description, bool is_default)
 {
-    _roms.push_back(new ROMEntry(filename, description, is_default));
+  if (is_mandatory())
+    {
+      const RomRegistryEntry *entry = RomRegistry::instance()->get_rom(id);
+      if (entry == NULL)
+        {
+          cerr << "can't find ROM with id '" << id << "' in registry\n";
+          exit(1);
+        }
+      _roms.push_back(new ROMEntry(id, entry->get_filename(), description, is_default));
+    }
+  else
+    {
+      _roms.push_back(new ROMEntry("", id, description, is_default));
+    }
 }
 
 SystemType::SystemType(int sort, string name, int type, EmulationType &emulation_type, kc_variant_t kc_variant, string description)
@@ -359,9 +376,8 @@ SystemType::get_rom(const char *key) const
 }
 
 void
-SystemType::add_rom(const char *name, bool mandatory, int size, int default_idx, const char *filename, const char *description, va_list ap)
+SystemType::add_rom(SystemROM *rom, int default_idx, const char *filename, const char *description, va_list ap)
 {
-    SystemROM *rom = new SystemROM(name, mandatory, size);
     rom->add_rom(filename, description, 0 == default_idx);
 
     int idx = 0;
@@ -386,7 +402,7 @@ SystemType::add_rom(const char *name, int size, const char *filename, const char
 {
     va_list ap;
     va_start(ap, description);
-    add_rom(name, true, size, 0, filename, description, ap);
+    add_rom(new SystemROM(name, true, size), 0, filename, description, ap);
     va_end(ap);
     return *this;
 }
@@ -396,7 +412,7 @@ SystemType::add_rom(const char *name, int size, int default_idx, const char *fil
 {
     va_list ap;
     va_start(ap, description);
-    add_rom(name, true, size, default_idx, filename, description, ap);
+    add_rom(new SystemROM(name, true, size), default_idx, filename, description, ap);
     va_end(ap);
     return *this;
 }
@@ -406,7 +422,7 @@ SystemType::add_optional_rom(const char *name, int size, const char *filename, c
 {
     va_list ap;
     va_start(ap, description);
-    add_rom(name, false, size, 0, filename, description, ap);
+    add_rom(new SystemROM(name, false, size), 0, filename, description, ap);
     va_end(ap);
     return *this;
 }

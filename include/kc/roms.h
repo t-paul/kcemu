@@ -38,14 +38,21 @@ public:
   RomRegistryEntry(const char *name, const char *id, const char *filename, const char *directory, int size) : _id(id), _name(name), _filename(filename), _directory(directory), _size(size)
   {
   }
+
+  const char * get_id() const;
+  const char * get_name() const;
+  const char * get_filename() const;
+  const char * get_directory() const;
 };
 
 class RomRegistry
 {
+public:
+  typedef map<string, const RomRegistryEntry *> rom_entry_map_t;
 private:
-  static const RomRegistry * _self;
+  static const RomRegistry * _instance;
 
-  map<string, RomRegistryEntry *> _entries;
+  rom_entry_map_t _entries;
   
 protected:
   void add_rom(const char *name, const char *id, const char *filename, const char *directory, int size);
@@ -53,6 +60,9 @@ protected:
 public:
   RomRegistry(void);
   virtual ~RomRegistry(void);
+
+  bool check_roms(void) const;
+  const RomRegistryEntry * get_rom(const char *id) const;
 
   static const RomRegistry * instance();
 };

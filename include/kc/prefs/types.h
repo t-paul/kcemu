@@ -153,13 +153,15 @@ public:
 class ROMEntry {
 private:
     string _id;
+    string _name;
     string _description;
     bool   _is_default;
 public:
-    ROMEntry(const char *id, const char *description, bool is_default = false);
+    ROMEntry(const char *id, const char *name, const char *description, bool is_default = false);
     virtual ~ROMEntry(void);
     
     const string get_id(void) const;
+    const string get_name(void) const;
     const string get_description(void) const;
     const bool is_default(void) const;
 };
@@ -201,7 +203,7 @@ public:
     const rom_entry_list_t & get_roms(void) const;
     const ROMEntry * get_default_rom(void) const;
 
-    void add_rom(const char *name, const char *filename, bool is_default);
+    void add_rom(const char *id, const char *filename, bool is_default);
 };
 
 typedef list<SystemROM *> system_rom_list_t;
@@ -221,7 +223,7 @@ class SystemType {
     string            _rom_dir;
     system_rom_list_t _rom_list;
 
-    virtual void add_rom(const char *name, bool mandatory, int size, int default_idx, const char *filename, const char *description, va_list ap);
+    virtual void add_rom(SystemROM *rom, int default_idx, const char *filename, const char *description, va_list ap);
 
 public:
     SystemType(int sort, string name, int type, EmulationType &emulation_type, kc_variant_t kc_variant, string description);

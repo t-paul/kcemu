@@ -357,7 +357,7 @@ Memory::load_rom(const char *key, void *buf)
       if (rom_entry == NULL)
         rom_entry = rom->get_roms().front();
 
-      romfile = rom_entry->get_id().c_str();
+      romfile = rom_entry->get_name().c_str();
       DBG(1, form("KCemu/Memory/load_rom",
                   "Memory::load_rom(): using default filename '%s'\n",
                   romfile));

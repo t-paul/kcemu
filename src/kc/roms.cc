@@ -18,11 +18,42 @@
  */
 
 #include <stdio.h>
+#include <unistd.h>
 
+#include <iostream>
+
+#include "kc/kc.h"
 #include "kc/system.h"
+
 #include "kc/roms.h"
 
-const RomRegistry * RomRegistry::_self = new RomRegistry();
+using namespace std;
+
+const RomRegistry * RomRegistry::_instance = new RomRegistry();
+
+const char *
+RomRegistryEntry::get_id() const
+{
+  return _id;
+}
+
+const char *
+RomRegistryEntry::get_name() const
+{
+  return _name;
+}
+
+const char *
+RomRegistryEntry::get_filename() const
+{
+  return _filename;
+}
+
+const char *
+RomRegistryEntry::get_directory() const
+{
+  return _directory;
+}
 
 RomRegistry::RomRegistry(void)
 {
@@ -384,7 +415,8 @@ RomRegistry::~RomRegistry(void)
 {
 }
 
-void RomRegistry::add_rom(const char *name, const char *id, const char *filename, const char *directory, int size)
+void
+RomRegistry::add_rom(const char *name, const char *id, const char *filename, const char *directory, int size)
 {
   if (_entries.find(id) != _entries.end())
     {
@@ -394,7 +426,34 @@ void RomRegistry::add_rom(const char *name, const char *id, const char *filename
   _entries[id] = new RomRegistryEntry(id, name, filename, directory, size);
 }
 
-const RomRegistry * RomRegistry::instance()
+const RomRegistryEntry *
+RomRegistry::get_rom(const char *id) const
 {
-  return _self;
+  rom_entry_map_t::const_iterator it = _entries.find(id);
+  return it == _entries.end() ? NULL : (*it).second;
+}
+
+bool
+RomRegistry::check_roms(void) const
+{
+  for (rom_entry_map_t::const_iterator it = _entries.begin();it != _entries.end();it++)
+    {
+      string datadir(kcemu_datadir);
+      string romdir = datadir + "/" + (*it).second->get_directory() + "/";
+      string rompath = romdir + (*it).second->get_filename();
+      const char *romfile = rompath.c_str();
+
+      cout << (*it).second->get_id() << " - " << (*it).second->get_name() << " - " << (*it).second->get_filename() << " -> " << romfile;
+      if (access(romfile, R_OK) == 0)
+        cout << " OK" << endl;
+      else
+        cout << " *** ERROR ***" << endl;
+    }
+  return true;
+}
+
+const RomRegistry *
+RomRegistry::instance()
+{
+  return _instance;
 }
