@@ -47,7 +47,7 @@ public:
           break;
         case 1:
           Status::instance()->setMessage("*** LOAD IMAGE OK ***");
-          a->dump("KCCMD_LOAD_IMAGE_OK");
+          cmd_caller_get_args()->dump("KCCMD_LOAD_IMAGE_OK");
           break;
         }
     }
