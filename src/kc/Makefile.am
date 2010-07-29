@@ -157,7 +157,7 @@ kcemu_SOURCES = \
 if TARGET_MINGW
 SYSLIBS = ../sys/mingw/libsys_mingw.a -lwinmm -lws2_32
 else
-SYSLIBS = ../sys/linux/libsys_linux.a
+SYSLIBS = ../sys/unix/libsys_unix.a
 endif
 
 kcemu_LDADD = \

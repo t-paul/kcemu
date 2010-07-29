@@ -3,5 +3,5 @@
 if TARGET_MINGW
 SUBDIRS = mingw
 else
-SUBDIRS = linux
+SUBDIRS = unix
 endif

@@ -857,7 +857,7 @@ AC_OUTPUT([
 	src/kc/c80/Makefile
 	src/sys/Makefile
 	src/sys/mingw/Makefile
-	src/sys/linux/Makefile
+	src/sys/unix/Makefile
 	src/getopt/Makefile
 	src/cmd/Makefile
 	src/ui/Makefile
