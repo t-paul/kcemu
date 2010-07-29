@@ -32,7 +32,7 @@ sys_getdiskinfo(const char *path, unsigned long *total, unsigned long *available
       unsigned long long free = (unsigned long long) buf.f_bavail * buf.f_bsize;
       unsigned long long size = (unsigned long long) buf.f_blocks * buf.f_frsize;
       *available = free > 0xffffffffUL ? 0xffffffffUL : free;
-      *total = size > 0xffffffffUL ? 0xffffffffUL : total;
+      *total = size > 0xffffffffUL ? 0xffffffffUL : size;
       *block_size = buf.f_bsize;
       return 0;
     }
