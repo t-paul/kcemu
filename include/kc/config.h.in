@@ -334,15 +334,6 @@
 /* "host os" */
 #undef HOST_OS
 
-/* "host os is FreeBSD" */
-#undef HOST_OS_FREEBSD
-
-/* "host os is Linux" */
-#undef HOST_OS_LINUX
-
-/* "host os is MinGW" */
-#undef HOST_OS_MINGW
-
 /* Define as const if the declaration of iconv() needs const. */
 #undef ICONV_CONST
 

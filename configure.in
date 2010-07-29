@@ -162,9 +162,7 @@ case "$host_os" in
 		
 	mingw32*)
 		HOST_OS="MinGW"
-		HOST_OS_MINGW=1
 		AM_CONDITIONAL(TARGET_MINGW, true)
-		AC_DEFINE_UNQUOTED(HOST_OS_MINGW, $HOST_OS_MINGW, "host os is MinGW")
 		CFLAGS="$CFLAGS $use_ms_bitfields"
 		CXXFLAGS="$CXXFLAGS $use_ms_bitfields"
 		LDFLAGS="$LDFLAGS $use_ms_bitfields -mwindows"
@@ -172,15 +170,11 @@ case "$host_os" in
 
 	freebsd*)
 		HOST_OS="FreeBSD"
-		HOST_OS_FREEBSD=1
 		AM_CONDITIONAL(TARGET_FREEBSD, true)
-		AC_DEFINE_UNQUOTED(HOST_OS_FREEBSD, $HOST_OS_FREEBSD, "host os is FreeBSD")
 		;; 
 	*) 
 		HOST_OS="Linux"
-		HOST_OS_LINUX=1
 		AM_CONDITIONAL(TARGET_LINUX, true)
-		AC_DEFINE_UNQUOTED(HOST_OS_LINUX, $HOST_OS_LINUX, "host os is Linux")
 		;;
 esac
 
