@@ -45,7 +45,7 @@ x()
   val += z - zz;
   val *= .8;
       
-  printf("%ld %ld %.2f\n", _x++, 0, val);
+  printf("%ld %ld %.2f\n", _x++, 0L, val);
 }
 
 void

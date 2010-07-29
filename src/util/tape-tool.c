@@ -42,6 +42,9 @@ static int _verbose = 0;
 static int _byte_idx;
 static unsigned char _buf[130];
 
+int
+check_file_type(char *name, char *type, unsigned char *buf);
+
 void
 new_file(void)
 {

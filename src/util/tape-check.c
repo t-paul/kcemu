@@ -24,6 +24,9 @@
 static int verbose = 0;
 
 int
+check_file_type(char *name, char *type, unsigned char *buf);
+
+int
 check(const char *filename)
 {
   int a;
