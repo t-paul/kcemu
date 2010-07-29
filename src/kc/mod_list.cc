@@ -167,8 +167,11 @@
 
 #ifdef HOST_OS_LINUX
 #include "kc/mod_v24.h"
-#include "kc/mod_js.h"
 #endif /* HOST_OS_LINUX */
+
+#ifdef HAVE_JOYSTICK
+#include "kc/mod_js.h"
+#endif
 
 #include "fileio/load.h"
 
@@ -463,10 +466,10 @@ ModuleList::ModuleList(void)
   /*
    *  Joystick module (kc85/2-4)
    */
-#ifdef HOST_OS_LINUX
+#ifdef HAVE_JOYSTICK
   m = new ModuleJoystick("M008", 0xff);
   _mod_list.push_back(new ModuleListEntry(_("M008: Joystick"), m, KC_TYPE_85_2_CLASS));
-#endif /* HOST_OS_LINUX */
+#endif /* HAVE_JOYSTICK */
 
   /*
    *  RAM module 64k (kc85/2-4)

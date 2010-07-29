@@ -790,6 +790,15 @@ else
 	fi
 fi
 
+dnl ----------------------------------------
+dnl  check for the Linux Joystick interface
+dnl ----------------------------------------
+
+AC_CHECK_HEADER(linux/joystick.h,
+  [AM_CONDITIONAL(HAVE_JOYSTICK, true)
+   AC_DEFINE(HAVE_JOYSTICK, 1, "Supported joystick interface present - Currently linux only")],
+  [AM_CONDITIONAL(HAVE_JOYSTICK, false)])
+
 AC_OUTPUT([
 	Makefile
 	include/Makefile
