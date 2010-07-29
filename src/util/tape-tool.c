@@ -674,12 +674,8 @@ fastloader(int counter)
 void
 handle_sample3(int sample)
 {
-  int a;
   float v;
-  static float vv;
   static int x = -1;
-  static int idx = 0;
-  static long buf[LENGTH] = { 0, };
   static int old_sample = 0;
 
   //vv += (sample - old_sample);

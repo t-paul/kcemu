@@ -105,7 +105,6 @@ ProfileParser::parse() {
     
     int state = 1;
     gchar *key = NULL;
-    Profile *profile = NULL;
     
     while (242) {
         GTokenType ttype = g_scanner_get_next_token(scanner);
