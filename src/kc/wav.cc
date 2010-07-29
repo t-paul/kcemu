@@ -501,6 +501,7 @@ WavPlayer::do_play(void)
 void
 WavPlayer::do_record(void)
 {
+#if 0
 #define BLEN (65536)
   static int idx = BLEN;
   unsigned char buf[BLEN];
@@ -559,5 +560,6 @@ WavPlayer::do_record(void)
     {
       z80->addCallback(729, this, (void *)1);
     }
+#endif
 #endif
 }
