@@ -107,10 +107,10 @@ static libdisk_loader_t loader = {
   loader_22dsk_write_sector
 };
 
-static FILE *
+static gzFile
 try_open_gzip(const char *path)
 {
-  FILE *f;
+  gzFile f;
   char *filename;
 
   f = gzopen(path, "rb");
