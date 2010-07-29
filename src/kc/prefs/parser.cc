@@ -194,4 +194,5 @@ Profile *
 MultiProfileParser::get_profile(void) {
     Profile *profile = new Profile(_level, "", "", "");
     _profile_list.push_back(profile);
+    return profile;
 }
