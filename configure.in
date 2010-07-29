@@ -799,6 +799,42 @@ AC_CHECK_HEADER(linux/joystick.h,
    AC_DEFINE(HAVE_JOYSTICK, 1, "Supported joystick interface present - Currently linux only")],
   [AM_CONDITIONAL(HAVE_JOYSTICK, false)])
 
+dnl -----------------------------------------------
+dnl  check for the Unix facilities needed for V.24
+dnl -----------------------------------------------
+
+dnl The serial port code also uses unix IPC and forks of an helper process
+dnl This code checks for the availability of
+dnl  - termios
+dnl  - socketpair (communication to helper)
+dnl  - fork (starting of helper)
+dnl  - fcntl (needed to activate signal raising for sockets)
+dnl  - sigaction (for registering the signal handler)
+
+AC_MSG_CHECKING([Unix serial port facilities])
+AC_COMPILE_IFELSE([AC_LANG_PROGRAM(
+  [[#include <termios.h>
+    #include <stdio.h>
+    #include <sys/types.h>
+    #include <sys/socket.h>
+    #include <unistd.h>
+    #include <fcntl.h>
+    #include <signal.h>]],
+  [[struct termios tio;
+    int fds[2];
+    struct sigaction sa;
+    tcgetattr(0, &tio);
+    socketpair(AF_UNIX, SOCK_STREAM, 0, fds);
+    fork();
+    fcntl(fds[0], F_SETOWN, getpid());
+    fcntl(fds[0], F_SETFL, FASYNC);
+    sigemptyset(&sa.sa_mask);
+    sigaction(SIGIO, &sa, NULL); ]]) ],
+   [AC_MSG_RESULT(yes)
+    AM_CONDITIONAL(HAVE_V24, true)
+    AC_DEFINE(HAVE_V24, 1, "Supported serial port interface present")],
+   [AC_MSG_RESULT(no)])
+
 AC_OUTPUT([
 	Makefile
 	include/Makefile
