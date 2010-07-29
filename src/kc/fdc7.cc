@@ -126,7 +126,7 @@ FDC7::out(word_t addr, byte_t val)
       set_terminal_count((val & 0x10) == 0x10);
 
       if ((val & 0x20) == 0x20)
-	; // RESET
+	{} // RESET
 
       break;
     default:

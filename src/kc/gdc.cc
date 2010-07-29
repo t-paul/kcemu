@@ -128,7 +128,7 @@ GDC::out(word_t addr, byte_t val)
     _screen_on = _cmd & 1;
 
   if ((_cmd & 0xfe) == 0x6e) // VSYNC
-    ;
+    {}
 
   if ((_cmd == 0x4b) && (_idx == 3)) // CCHAR
     {
@@ -138,13 +138,13 @@ GDC::out(word_t addr, byte_t val)
     }
 
   if (_cmd == 0x6b) // START
-    ;
+    {}
 
   if ((_cmd & 0xfe) == 0x0c) // BCTRL
     _screen_on = _cmd & 1;
 
   if (_cmd == 0x46) // ZOOM
-    ;
+    {}
 
   if (_cmd == 0x49) // CURS
     {
@@ -170,7 +170,7 @@ GDC::out(word_t addr, byte_t val)
     }
 
   if (_cmd == 0x47) // PITCH
-    ;
+    {}
 
   if (((_cmd & 0xe4) == 0x20) && (_idx > 0)) // WDAT
     {
@@ -226,25 +226,25 @@ GDC::out(word_t addr, byte_t val)
     _figs_dc = _arg[1] | ((_arg[2] & 0x3f) << 8);
   
   if (_cmd == 0x6c) // FIGD
-    ;
+    {}
 
   if (_cmd == 0x68) // GCHRD
-    ;
+    {}
 
   if ((_cmd & 0xe4) == 0xa0) // RDAT
     _figs_dc = 0;
 
   if (_cmd == 0xe0) // CURD
-    ;
+    {}
 
   if (_cmd == 0xc0) // LPRD
-    ;
+    {}
 
   if ((_cmd & 0xe4) == 0xa4) // DMAR
-    ;
+    {}
 
   if ((_cmd & 0xe4) == 0x24) // DMAW
-    ;
+    {}
 }
 
 byte_t

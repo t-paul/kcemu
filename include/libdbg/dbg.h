@@ -111,19 +111,19 @@ class DBG_class
 #if DBG_LEVEL > 0
 #define DBG_1(x) DBG_X(x,__FILE__,__LINE__)
 #else
-#define DBG_1(x)
+#define DBG_1(x) do {} while(0)
 #endif
 
 #if DBG_LEVEL > 1
 #define DBG_2(x) DBG_X(x,__FILE__,__LINE__)
 #else
-#define DBG_2(x)
+#define DBG_2(x) do {} while(0)
 #endif
 
 #if DBG_LEVEL > 2
 #define DBG_3(x) DBG_X(x,__FILE__,__LINE__)
 #else
-#define DBG_3(x)
+#define DBG_3(x) do {} while(0)
 #endif
 
 #define DBG(x, y) DBG_##x(y)
