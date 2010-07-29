@@ -134,16 +134,10 @@ kcemu-winicon.ico : kcemu-winicon_16x16.ppm kcemu-winicon_32x32.ppm kcemu-winico
 		kcemu-winicon_48x48.ppm kcemu-winicon_48x48.alpha.pgm \
 		> $@
 
-if TARGET_LINUX
-icon_DATA = $(ICONS) $(LINUXICONS)
-endif
-
-if TARGET_FREEBSD
-icon_DATA = $(ICONS) $(LINUXICONS)
-endif
-
 if TARGET_MINGW
 icon_DATA = $(ICONS) $(WINICONS)
+else
+icon_DATA = $(ICONS) $(LINUXICONS)
 endif
 
 image_DATA = $(IMAGES) $(UI_XML)

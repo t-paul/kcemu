@@ -4,11 +4,7 @@ SUBDIRS = prefs kcnet kramermc muglerpc vcs80 c80
 
 bin_PROGRAMS = kcemu
 
-if TARGET_LINUX
-noinst_PROGRAMS = kcemu-send
-endif
-
-if TARGET_FREEBSD
+if !TARGET_MINGW
 noinst_PROGRAMS = kcemu-send
 endif
 
@@ -158,16 +154,10 @@ kcemu_SOURCES = \
 	$(EXTRA_kcemu_SOURCES)
 
 
-if TARGET_LINUX
-SYSLIBS_LINUX = ../sys/linux/libsys_linux.a
-endif
-
-if TARGET_FREEBSD
-SYSLIBS_FREEBSD = ../sys/linux/libsys_linux.a
-endif
-
 if TARGET_MINGW
-SYSLIBS_MINGW = ../sys/mingw/libsys_mingw.a -lwinmm -lws2_32
+SYSLIBS = ../sys/mingw/libsys_mingw.a -lwinmm -lws2_32
+else
+SYSLIBS = ../sys/linux/libsys_linux.a
 endif
 
 kcemu_LDADD = \
@@ -201,9 +191,7 @@ kcemu_LDADD = \
 	$(LIBAVFORMAT_LIBS)		\
 	$(VNCSERVER_LIBS)               \
 	$(LIBGIF_LIBS)                  \
-	$(SYSLIBS_MINGW)		\
-	$(SYSLIBS_LINUX)		\
-	$(SYSLIBS_FREEBSD)		\
+	$(SYSLIBS)			\
 	$(GETOPTLIB)			\
 	$(INTLLIBS)			\
 	$(Z80EX_LIBS)

@@ -149,8 +149,6 @@ dnl  check on which system we will run
 dnl -----------------------------------
 
 AM_CONDITIONAL(TARGET_MINGW, false)
-AM_CONDITIONAL(TARGET_LINUX, false)
-AM_CONDITIONAL(TARGET_FREEBSD, false)
 
 case "$host_os" in
 	beos)
@@ -168,13 +166,8 @@ case "$host_os" in
 		LDFLAGS="$LDFLAGS $use_ms_bitfields -mwindows"
 		;;
 
-	freebsd*)
-		HOST_OS="FreeBSD"
-		AM_CONDITIONAL(TARGET_FREEBSD, true)
-		;; 
 	*) 
-		HOST_OS="Linux"
-		AM_CONDITIONAL(TARGET_LINUX, true)
+		HOST_OS="Unix compatible"
 		;;
 esac
 

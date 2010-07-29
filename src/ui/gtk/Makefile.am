@@ -92,7 +92,7 @@ libui_gtk_a_SOURCES = \
 	gif.cc			\
 	hedit.cc
 
-if TARGET_LINUX
+if !TARGET_MINGW
 bin_PROGRAMS = kcemu-remote
 kcemu_remote_SOURCES = kcemu-remote.c
 kcemu_remote_LDADD = $(X11_LIBS) $(XMU_LIBS) $(INTLLIBS)
