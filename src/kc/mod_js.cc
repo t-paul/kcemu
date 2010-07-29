@@ -20,6 +20,7 @@
 #include <stdio.h>
 #include <fcntl.h>
 #include <errno.h>
+#include <assert.h>
 #include <unistd.h>
 #include <sys/stat.h>
 #include <sys/types.h>
@@ -322,6 +323,8 @@ PIOJoystick::in(word_t addr)
     case 3:
       val = in_B_CTRL();
       break;
+    default:
+      assert(0);
     }
   
   DBG(2, form("KCemu/PIO/joystick/in",

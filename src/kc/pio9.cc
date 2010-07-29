@@ -17,6 +17,7 @@
  *  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
+#include <assert.h>
 #include <iostream>
 #include <iomanip>
 
@@ -55,6 +56,8 @@ PIO9::in(word_t addr)
     case 3:
       val = in_B_CTRL();
       break;
+    default:
+      assert(0);
     }
 
   DBG(2, form("KCemu/PIO/9/in",
