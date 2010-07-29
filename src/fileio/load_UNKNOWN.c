@@ -49,7 +49,7 @@ str2int(const char *str)
     return -1;
   value = strtoul(buf, &endptr, 0);
   if (*endptr == '\0')
-    if ((value >= 0) && (value <= 0xffff))
+    if (value <= 0xffff)
       return value;
   return -1;
 }

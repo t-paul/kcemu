@@ -889,7 +889,7 @@ VDIP_CMD::get_arg(unsigned int arg) const
   if (!has_args())
     return "";
 
-  if ((arg < 0) || (arg >= _args->size()))
+  if (arg >= _args->size())
     return "";
 
   unsigned int a = 0;
