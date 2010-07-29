@@ -98,9 +98,9 @@ ProfileParser::parse() {
     
     scanner->input_name = _filename.c_str();
     
-    scanner->config->cset_skip_characters = " \t";
-    scanner->config->cset_identifier_first = G_CSET_a_2_z;
-    scanner->config->cset_identifier_nth = G_CSET_a_2_z "_" G_CSET_DIGITS;
+    scanner->config->cset_skip_characters = (char*)" \t";
+    scanner->config->cset_identifier_first = (char*)G_CSET_a_2_z;
+    scanner->config->cset_identifier_nth = (char*)G_CSET_a_2_z "_" G_CSET_DIGITS;
     scanner->config->scan_identifier_NULL = TRUE;
     
     int state = 1;

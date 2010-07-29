@@ -269,16 +269,16 @@ TapeWindow::init(void)
     "tape-add-file",
   };
   GtkItemFactoryEntry entriesP[] = {
-    { _("/_Run File"),      "R",  CF(cmd_exec_mci), 0, NULL },
-    { _("/_Load File"),     "L",  CF(cmd_exec_mci), 1, NULL },
-    { _("/_Export File"),   "E",  CF(cmd_exec_mci), 2, NULL },
-    { _("/Export _Wav"),    "W",  CF(cmd_exec_mci), 3, NULL },
-    { _("/sep1"),           NULL, NULL,         0,    "<Separator>" },
-    { _("/Edit _Header"),   "H",  CF(cmd_exec_mci), 4, NULL },
-    { _("/Re_name File"),   "N",  CF(cmd_exec_mci), 5, NULL },
-    { _("/_Delete File"),   "D",  CF(cmd_exec_mci), 6, NULL },
-    { _("/sep2"),           NULL, NULL,         0,    "<Separator>" },
-    { _("/_Add File"),      "A",  CF(cmd_exec_mci), 7, NULL },
+    { _("/_Run File"),      (gchar*)"R",  CF(cmd_exec_mci), 0, NULL },
+    { _("/_Load File"),     (gchar*)"L",  CF(cmd_exec_mci), 1, NULL },
+    { _("/_Export File"),   (gchar*)"E",  CF(cmd_exec_mci), 2, NULL },
+    { _("/Export _Wav"),    (gchar*)"W",  CF(cmd_exec_mci), 3, NULL },
+    { _("/sep1"),           NULL,         NULL,             0, (gchar*)"<Separator>" },
+    { _("/Edit _Header"),   (gchar*)"H",  CF(cmd_exec_mci), 4, NULL },
+    { _("/Re_name File"),   (gchar*)"N",  CF(cmd_exec_mci), 5, NULL },
+    { _("/_Delete File"),   (gchar*)"D",  CF(cmd_exec_mci), 6, NULL },
+    { _("/sep2"),           NULL       , NULL,              0, (gchar*)"<Separator>" },
+    { _("/_Add File"),      (gchar*)"A",  CF(cmd_exec_mci), 7, NULL },
   };
   int nentriesP = sizeof(entriesP) / sizeof(entriesP[0]);
   static char *titles[] =

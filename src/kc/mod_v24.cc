@@ -683,7 +683,7 @@ void
 ModuleV24::open_device(void)
 {
   bool ret;
-  char *s;
+  const char *s;
   const char *dev_name;
 
   dev_name = Preferences::instance()->get_string_value("v24_device", "/dev/ttyS1");

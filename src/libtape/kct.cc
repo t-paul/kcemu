@@ -508,7 +508,7 @@ void
 KCTFile::list(void)
 {
   int com;
-  char *type;
+  const char *type;
   float ratio;
   unsigned long count, c_total, u_total;
 

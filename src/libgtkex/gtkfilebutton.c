@@ -75,7 +75,7 @@ add_recent_info(const gchar *filename, const gchar *group)
   if (group != NULL)
     {
       recent_data.groups = groups;
-      recent_data.groups[0] = group;
+      recent_data.groups[0] = (gchar*)group;
       recent_data.groups[1] = NULL;
     }
 
