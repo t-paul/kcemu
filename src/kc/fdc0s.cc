@@ -60,19 +60,25 @@ FDC0S::in(word_t addr)
       val = in_data(addr);
       break;
     case 0xf2: // MOAUS -- drive motor off
+      val = 0xff;
       break;
     case 0xf4: // MOAUS -- drive motor on (device 1)
+      val = 0xff;
       break;
     case 0xf6: // MOTON -- drive motor on (device 0)
+      val = 0xff;
       break;
     case 0xf8: // TC -- terminal count
+      val = 0xff;
       break;
     case 0xfa: // FDCRES -- fdc reset
+      val = 0xff;
       break;
     default:
       DBG(2, form("KCemu/FDC/in_unhandled",
                   "FDC::in(): addr = %04x\n",
                   addr));
+      val = 0xff;
       break;
     }
 
