@@ -25,13 +25,6 @@
 #include "kc/system.h"
 #include "kc/prefs/types.h"
 
-#ifdef HOST_OS_MINGW
-#ifdef HAVE_LIBSDL
-#include "SDL.h"
-#endif /* HAVE_LIBSDL */
-#include <windows.h>
-#endif /* HOST_OS_MINGW */
-
 #ifdef USE_INCLUDED_GETOPT
 #include "getopt/getopt.h"
 #else
@@ -832,15 +825,8 @@ open_debug_output(char *filename)
   DBGI()->set_output_stream(ofs);
 }
 
-#ifdef HOST_OS_MINGW
-int WINAPI
-WinMain(HINSTANCE hThisInstance, HINSTANCE hPrevInstance, LPSTR lpszArgument, int nStil)
-#define argc _argc
-#define argv _argv
-#else
 int
 main(int argc, char **argv)
-#endif /* HOST_OS_MINGW */
 {
   int c;
   int type;
