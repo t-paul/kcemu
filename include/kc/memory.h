@@ -27,6 +27,8 @@
 
 #include "kc/ic.h"
 
+class SystemROM;
+
 typedef enum { MEM_DISABLED, MEM_WRITE_PROTECT, MEM_ENABLED } MemState;
 
 class MemArea;
@@ -155,6 +157,10 @@ private:
 public:
   byte_t *_memrptr[MemArea::PAGES];
   byte_t *_memwptr[MemArea::PAGES];
+
+  static const char * get_rom_file(const SystemROM *rom);
+  static const char * get_rom_file_from_profile(const char *key);
+  static const char * resolve_path(const char *romfile);
 
   static bool load_rom(const char *key, void *buf);
   static bool load_rom(const char *filename, void *buf, long len, bool force);

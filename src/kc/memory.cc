@@ -313,6 +313,88 @@ Memory::init_memory_groups(memory_group_t mem[]) {
   reload_mem_ptr();
 }
 
+const char *
+Memory::get_rom_file_from_profile(const char *key)
+{
+  const char *romfile = Preferences::instance()->get_string_value(key, NULL);
+
+  if (romfile == NULL)
+    {
+      DBG(1, form("KCemu/Memory/load_rom",
+                  "Memory::load_rom(): profile has no entry for key '%s'\n",
+                  key));
+      return NULL;
+    }
+
+  DBG(1, form("KCemu/Memory/load_rom",
+              "Memory::load_rom(): got filename from profile '%s'\n",
+              romfile));
+
+  if (sys_isabsolutepath(romfile) && (access(romfile, R_OK) != 0))
+    {
+      DBG(1, form("KCemu/Memory/load_rom",
+                  "Memory::load_rom(): rom from profile ('%s') is not readable, using default\n",
+                  romfile));
+      return NULL;
+    }
+
+  return resolve_path(romfile);
+}
+
+const char *
+Memory::get_rom_file(const SystemROM *rom)
+{
+  const ROMEntry * rom_entry = rom->get_default_rom();
+  if (rom_entry == NULL)
+    rom_entry = rom->get_roms().front();
+
+  const char *romfile = rom_entry->get_name().c_str();
+  DBG(1, form("KCemu/Memory/load_rom",
+              "Memory::load_rom(): using default filename '%s'\n",
+              romfile));
+
+  romfile = resolve_path(romfile);
+  if (access(romfile, R_OK) == 0)
+    {
+      return romfile;
+    }
+
+  DBG(1, form("KCemu/Memory/load_rom",
+              "Memory::load_rom(): can't read rom at '%s'\n"
+              "Memory::load_rom(): checking for rom with id '%s'\n",
+              romfile, rom_entry->get_id().c_str()));
+
+  string home = kcemu_homedir;
+  string user_rom_dir = home + "/roms/" + rom_entry->get_id();
+  romfile = user_rom_dir.c_str();
+  DBG(1, form("KCemu/Memory/load_rom",
+              "Memory::load_rom(): checking for rom at '%s'\n",
+              romfile));
+  if (access(romfile, R_OK) == 0)
+    {
+      return romfile;
+    }
+
+  return NULL;
+}
+
+const char *
+Memory::resolve_path(const char *romfile)
+{
+  if (sys_isabsolutepath(romfile))
+    return romfile;
+
+  SystemType *system = Preferences::instance()->get_system_type();
+  string datadir(kcemu_datadir);
+  string romdir = datadir + system->get_rom_directory() + "/";
+  string rompath = romdir + romfile;
+  const char *path = rompath.c_str();
+  DBG(1, form("KCemu/Memory/load_rom",
+              "Memory::load_rom(): resolving relative path to '%s'\n",
+              path));
+  return path;
+}
+
 bool
 Memory::load_rom(const char *key, void *buf)
 {
@@ -328,54 +410,22 @@ Memory::load_rom(const char *key, void *buf)
       exit(1);
     }
 
-  const char *romfile = Preferences::instance()->get_string_value(key, NULL);
-  
+  const char *romfile = get_rom_file_from_profile(key);
+  if (romfile == NULL)
+    {
+      romfile = get_rom_file(rom);
+    }
   if (romfile == NULL)
     {
       DBG(1, form("KCemu/Memory/load_rom",
-                  "Memory::load_rom(): profile has no entry for key '%s'\n",
+                  "Memory::load_rom(): could not find rom for key '%s'\n",
                   key));
-    }
-  else
-    {
-      DBG(1, form("KCemu/Memory/load_rom",
-                  "Memory::load_rom(): got filename from profile '%s'\n",
-                  romfile));
-
-      if (sys_isabsolutepath(romfile) && (access(romfile, R_OK) != 0))
-        {
-          DBG(1, form("KCemu/Memory/load_rom",
-                      "Memory::load_rom(): rom from profile ('%s') is not readable, using default\n",
-                      romfile));
-          romfile = NULL;
-        }
+      cerr << "could not find mandatory rom image\n";
+      exit(1);
     }
 
-  if (romfile == NULL)
-    {
-      const ROMEntry * rom_entry = rom->get_default_rom();
-      if (rom_entry == NULL)
-        rom_entry = rom->get_roms().front();
-
-      romfile = rom_entry->get_name().c_str();
-      DBG(1, form("KCemu/Memory/load_rom",
-                  "Memory::load_rom(): using default filename '%s'\n",
-                  romfile));
-    }
-
-  string rompath; // must be still in scope when calling load_rom() below...
-  if (!sys_isabsolutepath(romfile))
-    {
-      string datadir(kcemu_datadir);
-      string romdir = datadir + system->get_rom_directory() + "/";
-      rompath = romdir + romfile;
-      romfile = rompath.c_str();
-      DBG(1, form("KCemu/Memory/load_rom",
-                  "Memory::load_rom(): resolving relative path to '%s'\n",
-                  romfile));
-    }
-
-  return load_rom(romfile, buf, rom->get_size(), rom->is_mandatory());
+  string rompath(romfile); // must be still in scope when calling load_rom() below...
+  return load_rom(rompath.c_str(), buf, rom->get_size(), rom->is_mandatory());
 }
 
 bool
