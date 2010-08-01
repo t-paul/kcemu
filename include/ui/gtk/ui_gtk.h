@@ -89,6 +89,7 @@ protected:
     UI_Gtk_Window *_plotter_window;
     UI_Gtk_Window *_save_memory_window;
     UI_Gtk_Window *_video_window;
+    UI_Gtk_Window *_rom_download_window;
     
     FileBrowser      *_file_browser;
     DialogWindow     *_dialog_window;
@@ -164,6 +165,7 @@ public:
     virtual void callback(void *data);
 
     virtual char *select_profile(void);
+    virtual void download_roms(void);
 
     virtual GdkPixbuf * get_screenshot(void);
     

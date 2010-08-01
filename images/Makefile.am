@@ -73,6 +73,7 @@ IMAGES = \
 	window-color.png \
 	window-copying.png \
 	window-disk.png \
+	window-download.png \
 	window-help.png \
 	window-info.png \
 	window-keyboard.png \
@@ -93,6 +94,7 @@ UI_XML = \
 	color.glade \
 	dialog.glade \
 	disk.glade \
+	download.glade \
 	help.glade \
 	keyboard.glade \
 	legal.glade \

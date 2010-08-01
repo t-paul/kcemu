@@ -48,6 +48,7 @@ class UI : public InterfaceCircuit, public Callback, public CMD_Caller
     virtual void init(int *argc, char ***argv)    = 0;
     virtual void init2(void)                      = 0;
     virtual char * select_profile(void)           = 0;
+    virtual void download_roms(void)              = 0;
     virtual void show(void)                       = 0;
     virtual void callback(void *data)             = 0;
 

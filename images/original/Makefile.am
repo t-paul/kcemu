@@ -23,4 +23,5 @@ EXTRA_DIST = \
 	xmms.svg \
 	bar6.svg \
 	kxkb.svg \
-	kmplot.svg
+	kmplot.svg \
+	warning.svg

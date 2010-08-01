@@ -1083,9 +1083,6 @@ main(int argc, char **argv)
 
   open_debug_output(kcemu_debug_output);
 
-  const RomRegistry *reg = RomRegistry::instance();
-  reg->check_roms();
-
 #ifdef HOST_OS_MINGW
   close_output();
 #endif /* HOST_OS_MINGW */
@@ -1103,11 +1100,18 @@ main(int argc, char **argv)
   ui = new UI_Gtk();
   ui->init(&argc, &argv);
   
-  if (kcemu_select_profile) {
+  if (kcemu_select_profile)
+    {
       kcemu_profile = ui->select_profile();
-  }
+    }
 
   Preferences::instance()->set_current_profile(kcemu_profile, type);
+
+  const SystemType *system = Preferences::instance()->get_system_type();
+  if (RomRegistry::instance()->count_missing_roms(system->get_rom_directory()) > 0)
+    {
+      ui->download_roms();
+    }
 
   /*
    *  check display scale

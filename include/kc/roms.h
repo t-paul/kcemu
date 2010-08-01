@@ -21,6 +21,7 @@
 #define __kc_roms_h
 
 #include <map>
+#include <list>
 #include <string>
 
 using namespace std;
@@ -35,7 +36,7 @@ private:
   const int _size;
 
 public:
-  RomRegistryEntry(const char *name, const char *id, const char *filename, const char *directory, int size) : _id(id), _name(name), _filename(filename), _directory(directory), _size(size)
+  RomRegistryEntry(const char *id, const char *name, const char *filename, const char *directory, int size) : _id(id), _name(name), _filename(filename), _directory(directory), _size(size)
   {
   }
 
@@ -43,7 +44,10 @@ public:
   const char * get_name() const;
   const char * get_filename() const;
   const char * get_directory() const;
+  int get_size() const;
 };
+
+typedef list<const RomRegistryEntry *> rom_registry_entry_list_t;
 
 class RomRegistry
 {
@@ -61,7 +65,12 @@ public:
   RomRegistry(void);
   virtual ~RomRegistry(void);
 
-  bool check_roms(void) const;
+  const list<const RomRegistryEntry *> * get_missing(const string directory) const;
+  bool save_rom(const RomRegistryEntry *entry, byte_t *buf, unsigned int size) const;
+
+  bool is_missing(const RomRegistryEntry *entry) const;
+  int count_missing_roms(void) const;
+  int count_missing_roms(const string directory) const;
   const RomRegistryEntry * get_rom(const char *id) const;
 
   static const RomRegistry * instance();

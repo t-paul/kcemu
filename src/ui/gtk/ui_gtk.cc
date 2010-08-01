@@ -64,6 +64,7 @@
 #include "ui/gtk/tapeadd.h"
 #include "ui/gtk/options.h"
 #include "ui/gtk/selector.h"
+#include "ui/gtk/download.h"
 #include "ui/gtk/savemem.h"
 #include "ui/gtk/screenshot.h"
 #include "ui/gtk/plotter.h"
@@ -449,6 +450,7 @@ UI_Gtk::~UI_Gtk(void) {
     delete _copying_window;
     delete _options_window;
     delete _selector_window;
+    delete _rom_download_window;
     delete _debug_window;
     delete _info_window;
     delete _wav_window;
@@ -484,8 +486,11 @@ UI_Gtk::init(int *argc, char ***argv) {
      */
     bind_textdomain_codeset(PACKAGE, "UTF-8");
 #endif /* ENABLE_NLS */
-    
+
+    g_thread_init(NULL);
+
     gtk_init(argc, argv);
+    gdk_threads_enter();
     
     string datadir(kcemu_datadir);
     
@@ -511,9 +516,10 @@ UI_Gtk::init(int *argc, char ***argv) {
     
     Error::instance()->addErrorListener(this);
     
-    _dialog_window      = new DialogWindow("dialog.glade");
-    _selector_window    = new ProfileSelectorWindow("selector.glade");
-    _help_window        = new HelpWindow("help.glade");
+    _dialog_window       = new DialogWindow("dialog.glade");
+    _selector_window     = new ProfileSelectorWindow("selector.glade");
+    _rom_download_window = new RomDownloadWindow("download.glade");
+    _help_window         = new HelpWindow("help.glade");
 }
 
 void
@@ -733,7 +739,7 @@ UI_Gtk::gtk_zoom(int zoom) {
 void
 UI_Gtk::processEvents(void) {
     _main_window->process_events();
-    
+
     while (gtk_events_pending())
         gtk_main_iteration();
 }
@@ -828,6 +834,11 @@ char *
 UI_Gtk::select_profile(void) {
     _selector_window->show();
     return ((ProfileSelectorWindow *)_selector_window)->get_selected_profile();
+}
+
+void
+UI_Gtk::download_roms(void) {
+    _rom_download_window->show();
 }
 
 void

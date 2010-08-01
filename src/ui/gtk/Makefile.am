@@ -74,6 +74,7 @@ libui_gtk_a_SOURCES = \
 	options.cc		\
 	screenshot.cc		\
 	selector.cc		\
+	download.cc		\
 	debug.cc		\
 	copying.cc		\
 	savemem.cc		\

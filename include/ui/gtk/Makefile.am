@@ -32,6 +32,7 @@ EXTRA_DIST = \
 	keyboard.h		\
 	options.h		\
 	selector.h		\
+	download.h		\
 	screenshot.h		\
 	copying.h		\
 	savemem.h		\
