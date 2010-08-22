@@ -108,6 +108,7 @@
 #include "kc/timer3.h"
 #include "kc/sound3.h"
 #include "kc/memory3.h"
+#include "kc/ctc_d008.h"
 
 #include "kc/pio4.h"
 #include "kc/ports4.h"
@@ -1225,6 +1226,7 @@ main(int argc, char **argv)
 	  porti    = new Ports4;
 	  p4       = new PIO4;
 	  ctc      = new CTC3;
+          ctc2     = new CTC_D008;
 	  tape     = new Tape(364, 729, 1458, 1);
 	  wav      = new WavPlayer(364, 729, 1458);
 	  keyboard = new Keyboard3;
@@ -1375,7 +1377,9 @@ main(int argc, char **argv)
 	  portg = ports->register_ports("Port86", 0x86, 1, porti,  10);
 	  portg = ports->register_ports("PIO",    0x88, 4, pio,    10);
 	  portg = ports->register_ports("CTC",    0x8c, 4, ctc,    10);
+	  portg = ports->register_ports("CTC (D008)", 0xf8, 4, ctc2, 10);
 
+	  daisy->add_last(ctc2);
 	  daisy->add_last(ctc);
 	  daisy->add_last(pio);
 	  break;

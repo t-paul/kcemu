@@ -57,6 +57,7 @@ kcemu_SOURCES = \
 	ctc8.cc		\
 	ctc9.cc		\
 	ctc_fdc.cc	\
+	ctc_d008.cc	\
 	pio_dio.cc	\
 	pio_vdip.cc	\
 	ctc_dio.cc	\

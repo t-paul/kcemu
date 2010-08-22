@@ -16,6 +16,7 @@ EXTRA_DIST = \
 	pio_dio.h	\
 	pio_vdip.h	\
 	ctc_dio.h	\
+	ctc_d008.h	\
 	ctc_base.h	\
 	cb_list.h	\
 	daisy.h		\
