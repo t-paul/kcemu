@@ -36,6 +36,13 @@ IMAGES = \
 	window-plotter-2_small.png \
 	window-screenshot.png \
 	window-video.png \
+	window-keyboard-kc85.png \
+	window-keyboard-kc85_small.png \
+	window-keyboard-lc80.png \
+	window-keyboard-poly880.png \
+	window-keyboard-poly880_small.png \
+	window-keyboard-z9001.png \
+	window-keyboard-z9001_small.png \
 	kcemu.png
 
 docdir = $(pkgdatadir)/doc

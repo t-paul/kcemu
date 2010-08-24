@@ -64,6 +64,7 @@
 3.9. <link ref="window-screenshot">Screenshot</link>
 3.10. <link ref="window-video">Video</link>
 3.11. <link ref="window-colors">Farbeinstellung</link>
+3.12. <link ref="window-keyboard">Tastatur</link>
 
 </p>
 
@@ -1168,6 +1169,44 @@ VEB Robotron-Meßelektronik "Otto Schön" Dresden
 
   <img src="window-colors.png"/>
   <size value="-2"><c>Die Farbeinstellung</c></size>
+
+</p>
+
+<p><size value="2"><ref name="window-keyboard"/>3.12. Tastatur</size>
+
+  Für einige der Systeme kann die Tastatureingabe zusätzlich über ein
+  spezielles Fenster erfolgen. Im Fenster wird ein Abbild der zum System
+  gehörenden Tastatur angezeigt. Durch Anklicken der gewünschten Taste
+  mit der Maus wird das entsprechende Zeichen an das emulierte System
+  übergeben.
+
+  Dabei lassen sich auch Shift + Taste und CTRL + Taste eingeben, indem
+  das Anklicken der Taste mit der rechten bzw. mittleren Maustaste
+  erfolgt.
+
+  Wird ein KC85/4 emuliert, ergibt sich folgendes Beispiel:
+
+  <m>Linke Maustaste    + [M] : <b>M</b></m>
+  <m>Rechte Maustaste   + [M] : <b>m</b></m>
+  <m>Mittlere Maustaste + [M] : <b>CTRL+M</b> <i>(entspricht Enter Taste)</i></m>
+
+  <img src="window-keyboard-kc85_small.png"/>
+  <size value="-2"><c>Tastatur KC85/4</c></size>
+
+  Der Screenshot der LC 80 Tastatur zeigt auch die für einige Tasten
+  verfügbaren Kürzel auf der PC-Tastatur. Im Beispiel befindet sich der
+  Mauszeiger des PCs gerade über der ADR Taste. In der Fusszeile des
+  Fensters wird nun angezeigt, dass die Eingabe der ADR Taste auch
+  über die F1 Taste der PC-Tastatur erreichen lässt.
+
+  <img src="window-keyboard-lc80.png"/>
+  <size value="-2"><c>Tastatur LC 80</c></size>
+
+  <img src="window-keyboard-z9001_small.png"/>
+  <size value="-2"><c>Tastatur Z9001, KC87</c></size>
+
+  <img src="window-keyboard-poly880_small.png"/>
+  <size value="-2"><c>Tastatur Polycomputer 880</c></size>
 
 </p>
 
