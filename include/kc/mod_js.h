@@ -77,6 +77,11 @@ class PIOJoystick : public PIO, public PIOCallbackInterface, public Callback
   virtual void callback(void *data);
   
   /*
+   *  InterfaceCircuit
+   */
+  virtual void reset(bool power_on = false);
+
+  /*
    *  PIOCallbackInterface
    */
   virtual int callback_A_in(void);

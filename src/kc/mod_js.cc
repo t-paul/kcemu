@@ -303,6 +303,13 @@ PIOJoystick::callback(void *data)
   set_A_EXT(0xff, _val);
 }
 
+void
+PIOJoystick::reset(bool power_on)
+{
+  PIO::reset(power_on);
+  z80->addCallback(CALLBACK_OFFSET, this, NULL);
+}
+
 byte_t
 PIOJoystick::in(word_t addr)
 {
