@@ -47,7 +47,7 @@ PIOJoystick::PIOJoystick(void) : Callback("PIOJoystick")
 
   js_open();
 
-  z80->addCallback(35000, this, NULL);
+  z80->addCallback(CALLBACK_OFFSET, this, NULL);
   register_callback_A_in(this);
 }
 
@@ -205,7 +205,7 @@ PIOJoystick::callback(void *data)
 
   strobe_A();
   strobe_B();
-  z80->addCallback(35000, this, NULL);
+  z80->addCallback(CALLBACK_OFFSET, this, NULL);
 
   /*
    *  reopening the joystick driver after some idle time will
@@ -248,12 +248,12 @@ PIOJoystick::callback(void *data)
 	case JS_EVENT_AXIS:
 	  if (event.number == 0)
 	    {
-	      if (event.value < -10000)
+	      if (event.value < -AXIS_THRESHOLD)
 		{
 		  _left = 1;
 		  _right = 0;
 		}
-	      else if (event.value > 10000)
+	      else if (event.value > AXIS_THRESHOLD)
 		{
 		  _left = 0;
 		  _right = 1;
@@ -266,12 +266,12 @@ PIOJoystick::callback(void *data)
 	    }
 	  else if (event.number == 1)
 	    {
-	      if (event.value < -10000)
+	      if (event.value < -AXIS_THRESHOLD)
 		{
 		  _up = 1;
 		  _down = 0;
 		}
-	      else if (event.value > 10000)
+	      else if (event.value > AXIS_THRESHOLD)
 		{
 		  _up = 0;
 		  _down = 1;
