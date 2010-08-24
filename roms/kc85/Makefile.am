@@ -23,6 +23,8 @@ ROMS = \
 	caos__e0.855 \
 	caos43c.855 \
 	caos43e.855 \
+	caos45c.855 \
+	caos45e.855 \
 	floppy20.rom \
 	floppy30.rom \
 	floppy31.rom \
