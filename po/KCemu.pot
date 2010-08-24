@@ -6,12 +6,13 @@
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: KCemu 0.5\n"
+"Project-Id-Version: KCemu 0.5.1\n"
 "Report-Msgid-Bugs-To: Torsten.Paul@gmx.de\n"
-"POT-Creation-Date: 2010-03-06 00:58+0100\n"
+"POT-Creation-Date: 2010-08-24 20:54+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -118,10 +119,6 @@ msgstr ""
 
 #: images/keyboard.glade:27
 msgid "Keyboard"
-msgstr ""
-
-#: images/keyboard.glade:80
-msgid "Sorry, keyboard display not configured."
 msgstr ""
 
 #: images/legal.glade:6
@@ -613,7 +610,7 @@ msgstr ""
 msgid "End address:"
 msgstr ""
 
-#: images/savemem.glade:170 src/ui/gtk/hedit.cc:240 src/ui/gtk/image.cc:171
+#: images/savemem.glade:170 src/ui/gtk/hedit.cc:238 src/ui/gtk/image.cc:169
 msgid "Start address:"
 msgstr ""
 
@@ -695,7 +692,7 @@ msgstr ""
 msgid "<b>User profiles...</b>"
 msgstr ""
 
-#: images/tapeedit.glade:7 src/ui/gtk/tapeadd.cc:95
+#: images/tapeedit.glade:7 src/ui/gtk/tapeadd.cc:93
 msgid "KCemu: Rename File"
 msgstr ""
 
@@ -917,7 +914,7 @@ msgstr ""
 msgid "Video file"
 msgstr ""
 
-#: images/video.glade:239 src/ui/gtk/wav.cc:176
+#: images/video.glade:239 src/ui/gtk/wav.cc:174
 msgid "Record"
 msgstr ""
 
@@ -925,27 +922,27 @@ msgstr ""
 msgid "Pause"
 msgstr ""
 
-#: images/video.glade:319 src/ui/gtk/wav.cc:166
+#: images/video.glade:319 src/ui/gtk/wav.cc:164
 msgid "Stop"
 msgstr ""
 
-#: src/cmd/image.cc:105 src/kc/wav.cc:83
+#: src/cmd/image.cc:103 src/kc/wav.cc:81
 msgid "KCemu: Select File..."
 msgstr ""
 
-#: src/cmd/image.cc:129
+#: src/cmd/image.cc:127
 msgid "KCemu: Can't load file..."
 msgstr ""
 
-#: src/cmd/image.cc:131
+#: src/cmd/image.cc:129
 msgid "The file you selected couldn't be loaded!"
 msgstr ""
 
-#: src/cmd/image.cc:144
+#: src/cmd/image.cc:142
 msgid "KCemu: Warning..."
 msgstr ""
 
-#: src/cmd/image.cc:146
+#: src/cmd/image.cc:144
 msgid ""
 "The file you selected contains more than one\n"
 "program. Only the first program will be loaded.\n"
@@ -1008,31 +1005,31 @@ msgstr ""
 msgid "%s: option `-W %s' doesn't allow an argument\n"
 msgstr ""
 
-#: src/kc/disk.cc:86
+#: src/kc/disk.cc:84
 msgid "Select disk..."
 msgstr ""
 
-#: src/kc/disk.cc:126 src/kc/tape.cc:218
+#: src/kc/disk.cc:124 src/kc/tape.cc:216
 msgid "create file?"
 msgstr ""
 
-#: src/kc/disk.cc:128 src/kc/tape.cc:220
+#: src/kc/disk.cc:126 src/kc/tape.cc:218
 #, c-format
 msgid ""
 "The file '%s' doesn't exist.\n"
 "Do you want to create it?"
 msgstr ""
 
-#: src/kc/disk.cc:137
+#: src/kc/disk.cc:135
 #, c-format
 msgid "disk-file `%s' attached."
 msgstr ""
 
-#: src/kc/disk.cc:142
+#: src/kc/disk.cc:140
 msgid "Can't attach disk-file."
 msgstr ""
 
-#: src/kc/kc.cc:234
+#: src/kc/kc.cc:232
 msgid ""
 "\n"
 "KCemu comes with ABSOLUTELY NO WARRANTY; for details run `kcemu --"
@@ -1073,7 +1070,7 @@ msgid ""
 "  -W --warranty:       show warranty\n"
 msgstr ""
 
-#: src/kc/kc.cc:301
+#: src/kc/kc.cc:299
 msgid ""
 "\n"
 "\t\t    GNU GENERAL PUBLIC LICENSE\n"
@@ -1337,7 +1334,7 @@ msgid ""
 "\n"
 msgstr ""
 
-#: src/kc/kc.cc:563
+#: src/kc/kc.cc:561
 msgid ""
 "\n"
 "NO WARRANTY\n"
@@ -1365,7 +1362,7 @@ msgid ""
 "\n"
 msgstr ""
 
-#: src/kc/kc.cc:590
+#: src/kc/kc.cc:588
 msgid ""
 "\n"
 "                     END OF TERMS AND CONDITIONS\n"
@@ -1433,12 +1430,12 @@ msgid ""
 "\n"
 msgstr ""
 
-#: src/kc/mod_320k.cc:151
+#: src/kc/mod_320k.cc:149
 #, c-format
 msgid "2,5 MB Modul Bank (%d / %02xh)"
 msgstr ""
 
-#: src/kc/mod_fdc.cc:60
+#: src/kc/mod_fdc.cc:58
 #, c-format
 msgid ""
 "It's not possible to have more than one\n"
@@ -1450,23 +1447,23 @@ msgid ""
 "the same time.)"
 msgstr ""
 
-#: src/kc/mod_gdc.cc:55 src/kc/mod_rtc.cc:52
+#: src/kc/mod_gdc.cc:53 src/kc/mod_rtc.cc:50
 #, c-format
 msgid ""
 "It's not possible to have more than one\n"
 "module of type %s!"
 msgstr ""
 
-#: src/kc/mod_js.cc:154
+#: src/kc/mod_js.cc:152
 msgid "Joystick removed!"
 msgstr ""
 
-#: src/kc/mod_js.cc:165
+#: src/kc/mod_js.cc:163
 #, c-format
 msgid "Joystick (%d.%d.%d): %s on %s"
 msgstr ""
 
-#: src/kc/mod_js.cc:401
+#: src/kc/mod_js.cc:399
 #, c-format
 msgid ""
 "Couldn't find any readable joystick device!\n"
@@ -1477,7 +1474,7 @@ msgid ""
 "file."
 msgstr ""
 
-#: src/kc/mod_js.cc:410
+#: src/kc/mod_js.cc:408
 #, c-format
 msgid ""
 "Couldn't open joystick device (%s)!\n"
@@ -1490,239 +1487,239 @@ msgid ""
 "looks bogus.\n"
 msgstr ""
 
-#: src/kc/mod_list.cc:199
+#: src/kc/mod_list.cc:197
 msgid "<no module>"
 msgstr ""
 
-#: src/kc/mod_list.cc:209
+#: src/kc/mod_list.cc:207
 msgid "RAM Module (1k/2400h)"
 msgstr ""
 
-#: src/kc/mod_list.cc:211
+#: src/kc/mod_list.cc:209
 msgid "RAM Module (2k/2800h)"
 msgstr ""
 
-#: src/kc/mod_list.cc:213
+#: src/kc/mod_list.cc:211
 msgid "RAM Module (4k/3000h)"
 msgstr ""
 
-#: src/kc/mod_list.cc:223
+#: src/kc/mod_list.cc:221
 msgid "RAM Module (2k/0800h)"
 msgstr ""
 
-#: src/kc/mod_list.cc:225
+#: src/kc/mod_list.cc:223
 msgid "RAM Module (4k/1000h)"
 msgstr ""
 
-#: src/kc/mod_list.cc:227
+#: src/kc/mod_list.cc:225
 msgid "RAM Module (8k/2000h)"
 msgstr ""
 
-#: src/kc/mod_list.cc:236 src/kc/mod_list.cc:299
+#: src/kc/mod_list.cc:234 src/kc/mod_list.cc:297
 msgid "RAM Module (16k/4000h)"
 msgstr ""
 
-#: src/kc/mod_list.cc:238
+#: src/kc/mod_list.cc:236
 msgid "RAM Module (32k/8000h)"
 msgstr ""
 
-#: src/kc/mod_list.cc:244
+#: src/kc/mod_list.cc:242
 msgid "256k RAM Floppy"
 msgstr ""
 
-#: src/kc/mod_list.cc:250
+#: src/kc/mod_list.cc:248
 msgid "FDC (Schneider)"
 msgstr ""
 
-#: src/kc/mod_list.cc:256
+#: src/kc/mod_list.cc:254
 msgid "FDC (Kramer)"
 msgstr ""
 
-#: src/kc/mod_list.cc:262
+#: src/kc/mod_list.cc:260
 msgid "GDC 82720"
 msgstr ""
 
-#: src/kc/mod_list.cc:268
+#: src/kc/mod_list.cc:266
 msgid "RTC (port 20h-2fh)"
 msgstr ""
 
-#: src/kc/mod_list.cc:274
+#: src/kc/mod_list.cc:272
 msgid "RTC (port 70h-7fh)"
 msgstr ""
 
-#: src/kc/mod_list.cc:281
+#: src/kc/mod_list.cc:279
 msgid "Basic Module (c000h-e7ffh)"
 msgstr ""
 
-#: src/kc/mod_list.cc:293
+#: src/kc/mod_list.cc:291
 msgid "Plotter Module (c000h-e7ffh)"
 msgstr ""
 
-#: src/kc/mod_list.cc:301
+#: src/kc/mod_list.cc:299
 msgid "RAM Module (16k/8000h)"
 msgstr ""
 
-#: src/kc/mod_list.cc:310
+#: src/kc/mod_list.cc:308
 msgid "ZM30 (c000h-ccffh)"
 msgstr ""
 
-#: src/kc/mod_list.cc:317
+#: src/kc/mod_list.cc:315
 msgid "EDAS (c000h-e7ffh)"
 msgstr ""
 
-#: src/kc/mod_list.cc:324
+#: src/kc/mod_list.cc:322
 msgid "IDAS / ZM (c000h-e7ffh)"
 msgstr ""
 
-#: src/kc/mod_list.cc:331
+#: src/kc/mod_list.cc:329
 msgid "BITEX (c000h-d7ffh)"
 msgstr ""
 
-#: src/kc/mod_list.cc:356
+#: src/kc/mod_list.cc:354
 msgid "KC-CAOS 3.1 (8000h-8fffh)"
 msgstr ""
 
-#: src/kc/mod_list.cc:369
+#: src/kc/mod_list.cc:367
 msgid "192 KByte RAM/EPROM"
 msgstr ""
 
-#: src/kc/mod_list.cc:376
+#: src/kc/mod_list.cc:374
 msgid "KC-Pascal Module"
 msgstr ""
 
-#: src/kc/mod_list.cc:383
+#: src/kc/mod_list.cc:381
 msgid "Mega-ROM Module"
 msgstr ""
 
-#: src/kc/mod_list.cc:390
+#: src/kc/mod_list.cc:388
 msgid "128k ROM Bank"
 msgstr ""
 
-#: src/kc/mod_list.cc:399 src/ui/gtk/module.cc:267
+#: src/kc/mod_list.cc:397 src/ui/gtk/module.cc:266
 msgid "IRM Color Expansion"
 msgstr ""
 
-#: src/kc/mod_list.cc:414
+#: src/kc/mod_list.cc:412
 msgid "Plotter XY4131"
 msgstr ""
 
-#: src/kc/mod_list.cc:421
+#: src/kc/mod_list.cc:419
 msgid "CPM-Z9 BOOT (c000h-c7ffh)"
 msgstr ""
 
-#: src/kc/mod_list.cc:427
+#: src/kc/mod_list.cc:425
 msgid "CPM-Z9 Floppy"
 msgstr ""
 
-#: src/kc/mod_list.cc:433
+#: src/kc/mod_list.cc:431
 msgid "CPM-Z9 64k RAM"
 msgstr ""
 
-#: src/kc/mod_list.cc:439
+#: src/kc/mod_list.cc:437
 msgid "RAF 4MB (port 20h)"
 msgstr ""
 
-#: src/kc/mod_list.cc:442
+#: src/kc/mod_list.cc:440
 msgid "RAF 4MB (port 24h)"
 msgstr ""
 
-#: src/kc/mod_list.cc:448
+#: src/kc/mod_list.cc:446
 msgid "M001: Digital In / Out"
 msgstr ""
 
-#: src/kc/mod_list.cc:455
+#: src/kc/mod_list.cc:453
 msgid "M003: V24"
 msgstr ""
 
-#: src/kc/mod_list.cc:463
+#: src/kc/mod_list.cc:461
 msgid "M006: Basic"
 msgstr ""
 
-#: src/kc/mod_list.cc:470
+#: src/kc/mod_list.cc:468
 msgid "M008: Joystick"
 msgstr ""
 
-#: src/kc/mod_list.cc:477
+#: src/kc/mod_list.cc:475
 msgid "M011: 64k RAM"
 msgstr ""
 
-#: src/kc/mod_list.cc:484
+#: src/kc/mod_list.cc:482
 msgid "M012: Texor"
 msgstr ""
 
-#: src/kc/mod_list.cc:490
+#: src/kc/mod_list.cc:488
 msgid "M022: Expander RAM (16k)"
 msgstr ""
 
-#: src/kc/mod_list.cc:497
+#: src/kc/mod_list.cc:495
 msgid "M026: Forth"
 msgstr ""
 
-#: src/kc/mod_list.cc:504
+#: src/kc/mod_list.cc:502
 msgid "M027: Development"
 msgstr ""
 
-#: src/kc/mod_list.cc:510
+#: src/kc/mod_list.cc:508
 msgid "M032: 256k Segmented RAM"
 msgstr ""
 
-#: src/kc/mod_list.cc:517
+#: src/kc/mod_list.cc:515
 msgid "M033: TypeStar + RAMDOS"
 msgstr ""
 
-#: src/kc/mod_list.cc:523
+#: src/kc/mod_list.cc:521
 msgid "M034: 512k Segmented RAM"
 msgstr ""
 
-#: src/kc/mod_list.cc:529
+#: src/kc/mod_list.cc:527
 msgid "M035: 1M Segmented RAM"
 msgstr ""
 
-#: src/kc/mod_list.cc:535
+#: src/kc/mod_list.cc:533
 msgid "M035x4: 4M RAM"
 msgstr ""
 
-#: src/kc/mod_list.cc:541
+#: src/kc/mod_list.cc:539
 msgid "M036: 128k Segmented RAM"
 msgstr ""
 
-#: src/kc/mod_list.cc:548
+#: src/kc/mod_list.cc:546
 msgid "M052: Network + USB"
 msgstr ""
 
-#: src/kc/mod_list.cc:555
+#: src/kc/mod_list.cc:553
 msgid "M900: WordPro '86 (KC85/3)"
 msgstr ""
 
-#: src/kc/mod_list.cc:562
+#: src/kc/mod_list.cc:560
 msgid "M901: WordPro '86 (KC85/4)"
 msgstr ""
 
-#: src/kc/mod_list.cc:568
+#: src/kc/mod_list.cc:566
 msgid "VDIP: Vinculum USB"
 msgstr ""
 
-#: src/kc/mod_list.cc:572
+#: src/kc/mod_list.cc:570
 msgid "VDIP1: Vinculum USB ROM V1.2"
 msgstr ""
 
-#: src/kc/mod_list.cc:576
+#: src/kc/mod_list.cc:574
 msgid "VDIP2: Vinculum USB ROM V2.1"
 msgstr ""
 
-#: src/kc/mod_list.cc:590
+#: src/kc/mod_list.cc:588
 msgid "Floppy Disk Basis F8"
 msgstr ""
 
-#: src/kc/mod_list.cc:599
+#: src/kc/mod_list.cc:597
 msgid "Floppy Disk Basis FC"
 msgstr ""
 
-#: src/kc/mod_list.cc:797
+#: src/kc/mod_list.cc:795
 msgid "Autostart"
 msgstr ""
 
-#: src/kc/mod_ramf.cc:52
+#: src/kc/mod_ramf.cc:50
 #, c-format
 msgid ""
 "It's not possible to have more than two RAM-Floppy\n"
@@ -1730,51 +1727,51 @@ msgid ""
 "the second one on port 58h."
 msgstr ""
 
-#: src/kc/tape.cc:98
+#: src/kc/tape.cc:96
 #, c-format
 msgid "File `%s' loaded."
 msgstr ""
 
-#: src/kc/tape.cc:176
+#: src/kc/tape.cc:174
 msgid "Select tape-archive..."
 msgstr ""
 
-#: src/kc/tape.cc:230
+#: src/kc/tape.cc:228
 #, c-format
 msgid "tape-archive `%s' attached."
 msgstr ""
 
-#: src/kc/tape.cc:237
+#: src/kc/tape.cc:235
 msgid "Can't attach tape-archive."
 msgstr ""
 
-#: src/kc/tape.cc:278 src/kc/tape.cc:312
+#: src/kc/tape.cc:276 src/kc/tape.cc:310
 msgid "Export As..."
 msgstr ""
 
-#: src/kc/tape.cc:296 src/kc/tape.cc:330
+#: src/kc/tape.cc:294 src/kc/tape.cc:328
 #, c-format
 msgid "File `%s' saved."
 msgstr ""
 
-#: src/kc/tape.cc:301 src/kc/tape.cc:335
+#: src/kc/tape.cc:299 src/kc/tape.cc:333
 msgid "Can't export file."
 msgstr ""
 
-#: src/kc/tape.cc:377
+#: src/kc/tape.cc:375
 msgid "Select file..."
 msgstr ""
 
-#: src/kc/tape.cc:1765
+#: src/kc/tape.cc:1763
 msgid "The format of the selected file is not recognized."
 msgstr ""
 
-#: src/kc/tape.cc:1800
+#: src/kc/tape.cc:1798
 #, c-format
 msgid "File `%s' [%s] added."
 msgstr ""
 
-#: src/kc/tape.cc:1809
+#: src/kc/tape.cc:1807
 msgid ""
 "The file you selected has a name that is already\n"
 "present in the current tape archive.\n"
@@ -1784,107 +1781,107 @@ msgid ""
 "skip this file."
 msgstr ""
 
-#: src/kc/wav.cc:282
+#: src/kc/wav.cc:280
 #, c-format
 msgid "Reading %s `%s' (%d/%d/%d)."
 msgstr ""
 
-#: src/kc/prefs/types.cc:210
+#: src/kc/prefs/types.cc:208
 msgid "rom_caos_c"
 msgstr ""
 
-#: src/kc/prefs/types.cc:211
+#: src/kc/prefs/types.cc:209
 msgid "rom_caos_e"
 msgstr ""
 
-#: src/kc/prefs/types.cc:212
+#: src/kc/prefs/types.cc:210
 msgid "rom_system"
 msgstr ""
 
-#: src/kc/prefs/types.cc:213
+#: src/kc/prefs/types.cc:211
 msgid "rom_system_1"
 msgstr ""
 
-#: src/kc/prefs/types.cc:214
+#: src/kc/prefs/types.cc:212
 msgid "rom_system_2"
 msgstr ""
 
-#: src/kc/prefs/types.cc:215
+#: src/kc/prefs/types.cc:213
 msgid "rom_system_3"
 msgstr ""
 
-#: src/kc/prefs/types.cc:216
+#: src/kc/prefs/types.cc:214
 msgid "rom_system_4"
 msgstr ""
 
-#: src/kc/prefs/types.cc:217
+#: src/kc/prefs/types.cc:215
 msgid "rom_user"
 msgstr ""
 
-#: src/kc/prefs/types.cc:218
+#: src/kc/prefs/types.cc:216
 msgid "rom_basic"
 msgstr ""
 
-#: src/kc/prefs/types.cc:219
+#: src/kc/prefs/types.cc:217
 msgid "rom_debugger"
 msgstr ""
 
-#: src/kc/prefs/types.cc:220
+#: src/kc/prefs/types.cc:218
 msgid "rom_reassembler"
 msgstr ""
 
-#: src/kc/prefs/types.cc:221
+#: src/kc/prefs/types.cc:219
 msgid "rom_editor"
 msgstr ""
 
-#: src/kc/prefs/types.cc:222
+#: src/kc/prefs/types.cc:220
 msgid "rom_assembler"
 msgstr ""
 
-#: src/kc/prefs/types.cc:223
+#: src/kc/prefs/types.cc:221
 msgid "rom_charset"
 msgstr ""
 
-#: src/kc/prefs/types.cc:224
+#: src/kc/prefs/types.cc:222
 msgid "rom_d004_fc"
 msgstr ""
 
-#: src/kc/prefs/types.cc:225
+#: src/kc/prefs/types.cc:223
 msgid "rom_d004_f8"
 msgstr ""
 
-#: src/kc/prefs/types.cc:477
+#: src/kc/prefs/types.cc:475
 msgid ""
 "    Z1013 with 16k RAM and 2k ROM, running at 1MHz. This was the\n"
 "    first version with cheap circuits so the CPU was clocked at only 1MHz\n"
-"    The ROM containes the Z1013 monitor version 2.02.\n"
+"    The ROM contains the Z1013 monitor version 2.02.\n"
 msgstr ""
 
-#: src/kc/prefs/types.cc:484 src/kc/prefs/types.cc:493
-#: src/kc/prefs/types.cc:502 src/kc/prefs/types.cc:513
+#: src/kc/prefs/types.cc:482 src/kc/prefs/types.cc:491
+#: src/kc/prefs/types.cc:500 src/kc/prefs/types.cc:511
 msgid "System-ROM V2.0"
 msgstr ""
 
-#: src/kc/prefs/types.cc:485 src/kc/prefs/types.cc:494
-#: src/kc/prefs/types.cc:503 src/kc/prefs/types.cc:514
-#: src/kc/prefs/types.cc:525 src/kc/prefs/types.cc:535
-#: src/kc/prefs/types.cc:546 src/kc/prefs/types.cc:556
+#: src/kc/prefs/types.cc:483 src/kc/prefs/types.cc:492
+#: src/kc/prefs/types.cc:501 src/kc/prefs/types.cc:512
+#: src/kc/prefs/types.cc:523 src/kc/prefs/types.cc:533
+#: src/kc/prefs/types.cc:544 src/kc/prefs/types.cc:554
 msgid "Z1013 Charset-ROM"
 msgstr ""
 
-#: src/kc/prefs/types.cc:487
+#: src/kc/prefs/types.cc:485
 msgid ""
 "    Z1013 with 1k sRAM and 2k ROM, running at 2MHz. Industry\n"
 "    version with only 1k static RAM. Monitor version 2.02.\n"
 msgstr ""
 
-#: src/kc/prefs/types.cc:496
+#: src/kc/prefs/types.cc:494
 msgid ""
 "    Z1013 with 16k RAM and 2k ROM, running at 2MHz. Successor of\n"
 "    the Z1013.01 but with industry grade circuits clocked at 2MHz.\n"
 msgstr ""
 
-#: src/kc/prefs/types.cc:505
+#: src/kc/prefs/types.cc:503
 msgid ""
 "    Z1013 with 64k RAM and 2x2k ROM, running at 2MHz. The ROM\n"
 "    contains two system images with 2k each. Loaded is the first\n"
@@ -1892,7 +1889,7 @@ msgid ""
 "    shipped by the manufacturer.\n"
 msgstr ""
 
-#: src/kc/prefs/types.cc:516
+#: src/kc/prefs/types.cc:514
 msgid ""
 "    Z1013 with 64k RAM and 2k ROM, running at 2MHz. The ROM\n"
 "    contains two system images with 2k each. Loaded is the second\n"
@@ -1900,22 +1897,22 @@ msgid ""
 "    8x8 matrix.\n"
 msgstr ""
 
-#: src/kc/prefs/types.cc:524
+#: src/kc/prefs/types.cc:522
 msgid "System-ROM A2"
 msgstr ""
 
-#: src/kc/prefs/types.cc:527
+#: src/kc/prefs/types.cc:525
 msgid ""
 "    Z1013 with 64k RAM and 4k ROM. The ROM is the extended\n"
 "    version tagged 2.028 RB that has a different keyboard driver for\n"
 "    the keyboard K7659.\n"
 msgstr ""
 
-#: src/kc/prefs/types.cc:534
+#: src/kc/prefs/types.cc:532
 msgid "Brosig-ROM K7659/2.028"
 msgstr ""
 
-#: src/kc/prefs/types.cc:537
+#: src/kc/prefs/types.cc:535
 msgid ""
 "    Z1013 with 64k RAM and 4k ROM. The ROM contains the 'Super\n"
 "    Ur-Lader 5.0' that can read arbitrary tape files as system monitor.\n"
@@ -1923,364 +1920,364 @@ msgid ""
 "    programs to switch off the system ROM.\n"
 msgstr ""
 
-#: src/kc/prefs/types.cc:545
+#: src/kc/prefs/types.cc:543
 msgid "Super Ur-Lader 5.0"
 msgstr ""
 
-#: src/kc/prefs/types.cc:548
+#: src/kc/prefs/types.cc:546
 msgid ""
 "    Z1013 with 64k RAM and 4k ROM. The ROM contains the Bootloader\n"
 "    BL4 that can load monitor images from floppy disk or can start the\n"
 "    CP/M system.\n"
 msgstr ""
 
-#: src/kc/prefs/types.cc:555
+#: src/kc/prefs/types.cc:553
 msgid "Bootlader BL4"
 msgstr ""
 
-#: src/kc/prefs/types.cc:561
+#: src/kc/prefs/types.cc:559
 msgid ""
 "    Z9001 (later called KC 85/1) with monochrome display, no internal BASIC\n"
 "    ROM. This computer has 16k RAM and 4k ROM with the robotron z9001 "
 "system.\n"
 msgstr ""
 
+#: src/kc/prefs/types.cc:565 src/kc/prefs/types.cc:581
+#: src/kc/prefs/types.cc:734 src/kc/prefs/types.cc:751
+#: src/kc/prefs/types.cc:768 src/kc/prefs/types.cc:786
+#: src/kc/prefs/types.cc:803 src/kc/prefs/types.cc:820
+#: src/kc/prefs/types.cc:846 src/kc/prefs/types.cc:901
+#: src/kc/prefs/types.cc:912 src/kc/prefs/types.cc:920
+msgid "System-ROM"
+msgstr ""
+
+#: src/kc/prefs/types.cc:566 src/kc/prefs/types.cc:582
+#: src/kc/prefs/types.cc:735 src/kc/prefs/types.cc:752
+#: src/kc/prefs/types.cc:769 src/kc/prefs/types.cc:787
+#: src/kc/prefs/types.cc:804 src/kc/prefs/types.cc:821
+msgid "ROM-Bank System without menu"
+msgstr ""
+
 #: src/kc/prefs/types.cc:567 src/kc/prefs/types.cc:583
 #: src/kc/prefs/types.cc:736 src/kc/prefs/types.cc:753
 #: src/kc/prefs/types.cc:770 src/kc/prefs/types.cc:788
 #: src/kc/prefs/types.cc:805 src/kc/prefs/types.cc:822
-#: src/kc/prefs/types.cc:848 src/kc/prefs/types.cc:903
-#: src/kc/prefs/types.cc:914 src/kc/prefs/types.cc:922
-msgid "System-ROM"
-msgstr ""
-
-#: src/kc/prefs/types.cc:568 src/kc/prefs/types.cc:584
-#: src/kc/prefs/types.cc:737 src/kc/prefs/types.cc:754
-#: src/kc/prefs/types.cc:771 src/kc/prefs/types.cc:789
-#: src/kc/prefs/types.cc:806 src/kc/prefs/types.cc:823
-msgid "ROM-Bank System without menu"
-msgstr ""
-
-#: src/kc/prefs/types.cc:569 src/kc/prefs/types.cc:585
-#: src/kc/prefs/types.cc:738 src/kc/prefs/types.cc:755
-#: src/kc/prefs/types.cc:772 src/kc/prefs/types.cc:790
-#: src/kc/prefs/types.cc:807 src/kc/prefs/types.cc:824
 msgid "ROM-Bank System with menu"
+msgstr ""
+
+#: src/kc/prefs/types.cc:570 src/kc/prefs/types.cc:586
+#: src/kc/prefs/types.cc:740 src/kc/prefs/types.cc:757
+#: src/kc/prefs/types.cc:774 src/kc/prefs/types.cc:792
+#: src/kc/prefs/types.cc:809 src/kc/prefs/types.cc:826
+msgid "Z9001 Charset-ROM"
+msgstr ""
+
+#: src/kc/prefs/types.cc:571 src/kc/prefs/types.cc:587
+#: src/kc/prefs/types.cc:741 src/kc/prefs/types.cc:758
+#: src/kc/prefs/types.cc:775 src/kc/prefs/types.cc:793
+#: src/kc/prefs/types.cc:810 src/kc/prefs/types.cc:827
+msgid "Z9001 Charset-ROM (german)"
 msgstr ""
 
 #: src/kc/prefs/types.cc:572 src/kc/prefs/types.cc:588
 #: src/kc/prefs/types.cc:742 src/kc/prefs/types.cc:759
 #: src/kc/prefs/types.cc:776 src/kc/prefs/types.cc:794
 #: src/kc/prefs/types.cc:811 src/kc/prefs/types.cc:828
-msgid "Z9001 Charset-ROM"
+msgid "CGA Charset-ROM"
 msgstr ""
 
 #: src/kc/prefs/types.cc:573 src/kc/prefs/types.cc:589
 #: src/kc/prefs/types.cc:743 src/kc/prefs/types.cc:760
 #: src/kc/prefs/types.cc:777 src/kc/prefs/types.cc:795
 #: src/kc/prefs/types.cc:812 src/kc/prefs/types.cc:829
-msgid "Z9001 Charset-ROM (german)"
-msgstr ""
-
-#: src/kc/prefs/types.cc:574 src/kc/prefs/types.cc:590
-#: src/kc/prefs/types.cc:744 src/kc/prefs/types.cc:761
-#: src/kc/prefs/types.cc:778 src/kc/prefs/types.cc:796
-#: src/kc/prefs/types.cc:813 src/kc/prefs/types.cc:830
-msgid "CGA Charset-ROM"
-msgstr ""
-
-#: src/kc/prefs/types.cc:575 src/kc/prefs/types.cc:591
-#: src/kc/prefs/types.cc:745 src/kc/prefs/types.cc:762
-#: src/kc/prefs/types.cc:779 src/kc/prefs/types.cc:797
-#: src/kc/prefs/types.cc:814 src/kc/prefs/types.cc:831
 msgid "CGA Charset-ROM (extended)"
 msgstr ""
 
-#: src/kc/prefs/types.cc:578
+#: src/kc/prefs/types.cc:576
 msgid "    Like the z9001.10 but with color extension card.\n"
 msgstr ""
 
-#: src/kc/prefs/types.cc:597
+#: src/kc/prefs/types.cc:595
 msgid ""
 "    HC900 (later called KC 85/2) with 16k RAM and 8k ROM. System is called\n"
 "    HC-CAOS 2.2 (home computer - cassette aided operating system). BASIC\n"
 "    is only available as external module.\n"
 msgstr ""
 
-#: src/kc/prefs/types.cc:603
+#: src/kc/prefs/types.cc:601
 msgid "HC-900 CAOS"
 msgstr ""
 
-#: src/kc/prefs/types.cc:604
+#: src/kc/prefs/types.cc:602
 msgid "CAOS 2.2"
+msgstr ""
+
+#: src/kc/prefs/types.cc:605 src/kc/prefs/types.cc:611
+#: src/kc/prefs/types.cc:633 src/kc/prefs/types.cc:639
+#: src/kc/prefs/types.cc:662 src/kc/prefs/types.cc:668
+#: src/kc/prefs/types.cc:696 src/kc/prefs/types.cc:702
+msgid "D004 Version 2.0 (02.01.1989)"
+msgstr ""
+
+#: src/kc/prefs/types.cc:606 src/kc/prefs/types.cc:612
+#: src/kc/prefs/types.cc:634 src/kc/prefs/types.cc:640
+#: src/kc/prefs/types.cc:663 src/kc/prefs/types.cc:669
+#: src/kc/prefs/types.cc:697 src/kc/prefs/types.cc:703
+msgid "D004 Version 3.0 (07.12.1997)"
 msgstr ""
 
 #: src/kc/prefs/types.cc:607 src/kc/prefs/types.cc:613
 #: src/kc/prefs/types.cc:635 src/kc/prefs/types.cc:641
 #: src/kc/prefs/types.cc:664 src/kc/prefs/types.cc:670
 #: src/kc/prefs/types.cc:698 src/kc/prefs/types.cc:704
-msgid "D004 Version 2.0 (02.01.1989)"
+msgid "D004 Version 3.1 (22.01.2003)"
 msgstr ""
 
 #: src/kc/prefs/types.cc:608 src/kc/prefs/types.cc:614
 #: src/kc/prefs/types.cc:636 src/kc/prefs/types.cc:642
 #: src/kc/prefs/types.cc:665 src/kc/prefs/types.cc:671
 #: src/kc/prefs/types.cc:699 src/kc/prefs/types.cc:705
-msgid "D004 Version 3.0 (07.12.1997)"
-msgstr ""
-
-#: src/kc/prefs/types.cc:609 src/kc/prefs/types.cc:615
-#: src/kc/prefs/types.cc:637 src/kc/prefs/types.cc:643
-#: src/kc/prefs/types.cc:666 src/kc/prefs/types.cc:672
-#: src/kc/prefs/types.cc:700 src/kc/prefs/types.cc:706
-msgid "D004 Version 3.1 (22.01.2003)"
-msgstr ""
-
-#: src/kc/prefs/types.cc:610 src/kc/prefs/types.cc:616
-#: src/kc/prefs/types.cc:638 src/kc/prefs/types.cc:644
-#: src/kc/prefs/types.cc:667 src/kc/prefs/types.cc:673
-#: src/kc/prefs/types.cc:701 src/kc/prefs/types.cc:707
 msgid "D004 Version 3.2 (28.10.2008)"
 msgstr ""
 
-#: src/kc/prefs/types.cc:622
+#: src/kc/prefs/types.cc:620
 msgid ""
 "    KC 85/3 with 16k RAM, 8k system ROM with HC-CAOS 3.1 and 8k BASIC ROM.\n"
 msgstr ""
 
-#: src/kc/prefs/types.cc:626
+#: src/kc/prefs/types.cc:624
 msgid "CAOS 3.1"
 msgstr ""
 
-#: src/kc/prefs/types.cc:627
+#: src/kc/prefs/types.cc:625
 msgid "CAOS 3.3"
 msgstr ""
 
-#: src/kc/prefs/types.cc:628
+#: src/kc/prefs/types.cc:626
 msgid "CAOS 3.4"
 msgstr ""
 
-#: src/kc/prefs/types.cc:629
+#: src/kc/prefs/types.cc:627
 msgid "OS PI/88 (yellow/blue)"
 msgstr ""
 
-#: src/kc/prefs/types.cc:630
+#: src/kc/prefs/types.cc:628
 msgid "OS PI/88 (black/white)"
 msgstr ""
 
-#: src/kc/prefs/types.cc:631
+#: src/kc/prefs/types.cc:629
 msgid "OS PI/88 (white/blue)"
 msgstr ""
 
-#: src/kc/prefs/types.cc:633 src/kc/prefs/types.cc:662
-#: src/kc/prefs/types.cc:740 src/kc/prefs/types.cc:757
-#: src/kc/prefs/types.cc:774 src/kc/prefs/types.cc:792
-#: src/kc/prefs/types.cc:809 src/kc/prefs/types.cc:826
+#: src/kc/prefs/types.cc:631 src/kc/prefs/types.cc:660
+#: src/kc/prefs/types.cc:738 src/kc/prefs/types.cc:755
+#: src/kc/prefs/types.cc:772 src/kc/prefs/types.cc:790
+#: src/kc/prefs/types.cc:807 src/kc/prefs/types.cc:824
 msgid "KC-BASIC"
 msgstr ""
 
-#: src/kc/prefs/types.cc:650
+#: src/kc/prefs/types.cc:648
 msgid ""
 "    KC 85/4 with 64k RAM, 64k screen memory, 12k system ROM with HC-CAOS "
 "4.2\n"
 "    and 8k BASIC ROM.\n"
 msgstr ""
 
-#: src/kc/prefs/types.cc:655
+#: src/kc/prefs/types.cc:653
 msgid "CAOS 4.1 (C)"
 msgstr ""
 
-#: src/kc/prefs/types.cc:656
+#: src/kc/prefs/types.cc:654
 msgid "CAOS 4.2 (C)"
 msgstr ""
 
-#: src/kc/prefs/types.cc:659
+#: src/kc/prefs/types.cc:657
 msgid "CAOS 4.1 (E)"
 msgstr ""
 
-#: src/kc/prefs/types.cc:660
+#: src/kc/prefs/types.cc:658
 msgid "CAOS 4.2 (E)"
 msgstr ""
 
-#: src/kc/prefs/types.cc:679
+#: src/kc/prefs/types.cc:677
 msgid ""
-"    Inofficial successor of the KC 85/4 with 256k RAM, 64k screen memory,\n"
+"    Unofficial successor of the KC 85/4 with 256k RAM, 64k screen memory,\n"
 "    16k system ROM with HC-CAOS 4.4, 8k BASIC ROM and 24k User ROM. It is\n"
 "    intended to be used with a modified D004 floppy device with additional\n"
 "    hard-disk support.\n"
 msgstr ""
 
-#: src/kc/prefs/types.cc:686
+#: src/kc/prefs/types.cc:684
 msgid "CAOS 4.3 (C)"
 msgstr ""
 
-#: src/kc/prefs/types.cc:687
+#: src/kc/prefs/types.cc:685
 msgid "CAOS 4.4 (C)"
 msgstr ""
 
-#: src/kc/prefs/types.cc:690
+#: src/kc/prefs/types.cc:688
 msgid "CAOS 4.3 (E)"
 msgstr ""
 
-#: src/kc/prefs/types.cc:691
+#: src/kc/prefs/types.cc:689
 msgid "CAOS 4.4 (E)"
 msgstr ""
 
-#: src/kc/prefs/types.cc:694
+#: src/kc/prefs/types.cc:692
 msgid "KC-BASIC (EDAS/TEMO/FORTH)"
 msgstr ""
 
-#: src/kc/prefs/types.cc:695
+#: src/kc/prefs/types.cc:693
 msgid "KC-BASIC (EDAS/TEMO/USB)"
 msgstr ""
 
-#: src/kc/prefs/types.cc:713
+#: src/kc/prefs/types.cc:711
 msgid "    Polycomputer 880.\n"
 msgstr ""
 
-#: src/kc/prefs/types.cc:717 src/kc/prefs/types.cc:841
-#: src/kc/prefs/types.cc:854 src/kc/prefs/types.cc:866
-#: src/kc/prefs/types.cc:876
+#: src/kc/prefs/types.cc:715 src/kc/prefs/types.cc:839
+#: src/kc/prefs/types.cc:852 src/kc/prefs/types.cc:864
+#: src/kc/prefs/types.cc:874
 msgid "System-ROM 1"
 msgstr ""
 
-#: src/kc/prefs/types.cc:718 src/kc/prefs/types.cc:842
-#: src/kc/prefs/types.cc:855 src/kc/prefs/types.cc:867
-#: src/kc/prefs/types.cc:877
+#: src/kc/prefs/types.cc:716 src/kc/prefs/types.cc:840
+#: src/kc/prefs/types.cc:853 src/kc/prefs/types.cc:865
+#: src/kc/prefs/types.cc:875
 msgid "System-ROM 2"
 msgstr ""
 
-#: src/kc/prefs/types.cc:719 src/kc/prefs/types.cc:720
+#: src/kc/prefs/types.cc:717 src/kc/prefs/types.cc:718
 msgid "Optional-ROM 1"
 msgstr ""
 
-#: src/kc/prefs/types.cc:722
+#: src/kc/prefs/types.cc:720
 msgid "    Polycomputer 880 with chess program rom from SC1.\n"
 msgstr ""
 
-#: src/kc/prefs/types.cc:726
+#: src/kc/prefs/types.cc:724
 msgid "SC1-ROM"
 msgstr ""
 
-#: src/kc/prefs/types.cc:731
+#: src/kc/prefs/types.cc:729
 msgid "    Like the KC 87.11 but without the color extension card.\n"
 msgstr ""
 
-#: src/kc/prefs/types.cc:748
+#: src/kc/prefs/types.cc:746
 msgid "    Successor of the Z9001 with internal 10k BASIC ROM.\n"
 msgstr ""
 
-#: src/kc/prefs/types.cc:765
+#: src/kc/prefs/types.cc:763
 msgid "    Like the KC 87.21 but without the color extension card.\n"
 msgstr ""
 
-#: src/kc/prefs/types.cc:782
+#: src/kc/prefs/types.cc:780
 msgid ""
 "    New series with extended BASIC ROM (still 10k but with some routines "
 "for\n"
 "    plotter support were added).\n"
 msgstr ""
 
-#: src/kc/prefs/types.cc:800
+#: src/kc/prefs/types.cc:798
 msgid "    New batch of KC 87.20 with no known hardware differences.\n"
 msgstr ""
 
-#: src/kc/prefs/types.cc:817
+#: src/kc/prefs/types.cc:815
 msgid "    New batch of KC 87.21 with no known hardware differences.\n"
 msgstr ""
 
-#: src/kc/prefs/types.cc:837
+#: src/kc/prefs/types.cc:835
 msgid "    Single board computer LC 80 with 1k RAM and 2 x 1k ROM.\n"
 msgstr ""
 
-#: src/kc/prefs/types.cc:844
+#: src/kc/prefs/types.cc:842
 msgid "    Single board computer LC 80 with 1k RAM and 1 x 2k ROM.\n"
 msgstr ""
 
-#: src/kc/prefs/types.cc:850
+#: src/kc/prefs/types.cc:848
 msgid "    Export variant of the LC 80 with 12k ROM including chess program.\n"
 msgstr ""
 
-#: src/kc/prefs/types.cc:856
+#: src/kc/prefs/types.cc:854
 msgid "System-ROM 3"
 msgstr ""
 
-#: src/kc/prefs/types.cc:861
+#: src/kc/prefs/types.cc:859
 msgid "    BIC/A5105, only the base device is emulated, no floppy device.\n"
 msgstr ""
 
-#: src/kc/prefs/types.cc:868 src/kc/prefs/types.cc:878
+#: src/kc/prefs/types.cc:866 src/kc/prefs/types.cc:876
 msgid "DSE-ROM 1"
 msgstr ""
 
-#: src/kc/prefs/types.cc:869 src/kc/prefs/types.cc:879
+#: src/kc/prefs/types.cc:867 src/kc/prefs/types.cc:877
 msgid "DSE-ROM 2"
 msgstr ""
 
-#: src/kc/prefs/types.cc:871
+#: src/kc/prefs/types.cc:869
 msgid "    BIC/A5105, the full system including the floppy device.\n"
 msgstr ""
 
-#: src/kc/prefs/types.cc:884
+#: src/kc/prefs/types.cc:882
 msgid ""
 "    Micro-Computer presented in the book \"Praktische Microcomputertechnik"
 "\"\n"
 "    by Manfred Kramer.\n"
 msgstr ""
 
-#: src/kc/prefs/types.cc:888
+#: src/kc/prefs/types.cc:886
 msgid "IO-Monitor"
 msgstr ""
 
-#: src/kc/prefs/types.cc:889
+#: src/kc/prefs/types.cc:887
 msgid "BASIC"
 msgstr ""
 
-#: src/kc/prefs/types.cc:890 src/kc/prefs/types.cc:904
+#: src/kc/prefs/types.cc:888 src/kc/prefs/types.cc:902
 msgid "Charset-ROM"
 msgstr ""
 
-#: src/kc/prefs/types.cc:891
+#: src/kc/prefs/types.cc:889
 msgid "Debugger"
 msgstr ""
 
-#: src/kc/prefs/types.cc:892
+#: src/kc/prefs/types.cc:890
 msgid "Reassembler"
 msgstr ""
 
-#: src/kc/prefs/types.cc:893
+#: src/kc/prefs/types.cc:891
 msgid "Editor"
 msgstr ""
 
-#: src/kc/prefs/types.cc:894
+#: src/kc/prefs/types.cc:892
 msgid "Assembler"
 msgstr ""
 
-#: src/kc/prefs/types.cc:899
+#: src/kc/prefs/types.cc:897
 msgid ""
 "    CP/M based Micro-Computer presented in the magazine \"Funkamateur\"\n"
 "    by A. Mugler and H. Mathes.\n"
 msgstr ""
 
-#: src/kc/prefs/types.cc:909
+#: src/kc/prefs/types.cc:907
 msgid ""
 "    Minimal Z80 learning system presented in the magazine \"rfe\"\n"
 "    by Eckhard Schiller.\n"
 msgstr ""
 
-#: src/kc/prefs/types.cc:919
+#: src/kc/prefs/types.cc:917
 msgid "    Minimal Z80 learning system designed by Dipl.-Ing. Joachim Czepa.\n"
 msgstr ""
 
-#: src/kc/prefs/types.cc:923
+#: src/kc/prefs/types.cc:921
 msgid "User-ROM"
 msgstr ""
 
-#: src/kc/prefs/types.cc:1016
+#: src/kc/prefs/types.cc:1014
 msgid "available emulations:"
 msgstr ""
 
-#: src/libtape/kctape.cc:82
+#: src/libtape/kctape.cc:80
 msgid ""
 "\n"
 "KCtape is part of KCemu the KC 85/4 Emulator and comes with\n"
@@ -2309,7 +2306,7 @@ msgid ""
 "  -B|--print-block-list  show internal block list\n"
 msgstr ""
 
-#: src/libtape/kctape.cc:586
+#: src/libtape/kctape.cc:584
 #, c-format
 msgid ""
 "ERROR: no tape specified, use the -t option to select\n"
@@ -2317,39 +2314,39 @@ msgid ""
 "\n"
 msgstr ""
 
-#: src/ui/gtk/debug.cc:239
+#: src/ui/gtk/debug.cc:237
 msgid "KCemu: Debugger"
 msgstr ""
 
-#: src/ui/gtk/debug.cc:338
+#: src/ui/gtk/debug.cc:336
 msgid "Trace"
 msgstr ""
 
-#: src/ui/gtk/debug.cc:345
+#: src/ui/gtk/debug.cc:343
 msgid "Single Step"
 msgstr ""
 
-#: src/ui/gtk/debug.cc:352
+#: src/ui/gtk/debug.cc:350
 msgid "Execute Step"
 msgstr ""
 
-#: src/ui/gtk/dialog.cc:56
+#: src/ui/gtk/dialog.cc:54
 msgid "???"
 msgstr ""
 
-#: src/ui/gtk/fbrowse.cc:41
+#: src/ui/gtk/fbrowse.cc:39
 msgid "Select File..."
 msgstr ""
 
-#: src/ui/gtk/hedit.cc:98
+#: src/ui/gtk/hedit.cc:96
 msgid "no tape-filename given!"
 msgstr ""
 
-#: src/ui/gtk/hedit.cc:103
+#: src/ui/gtk/hedit.cc:101
 msgid "no KC-filename given!"
 msgstr ""
 
-#: src/ui/gtk/hedit.cc:108 src/ui/gtk/image.cc:91
+#: src/ui/gtk/hedit.cc:106 src/ui/gtk/image.cc:89
 msgid ""
 "error in given load address!\n"
 "\n"
@@ -2358,35 +2355,35 @@ msgid ""
 "octal values require a leading 0 (e.g. 0444)"
 msgstr ""
 
-#: src/ui/gtk/hedit.cc:121 src/ui/gtk/image.cc:107
+#: src/ui/gtk/hedit.cc:119 src/ui/gtk/image.cc:105
 msgid "error in given start address!"
 msgstr ""
 
-#: src/ui/gtk/hedit.cc:176
+#: src/ui/gtk/hedit.cc:174
 msgid "File Properties"
 msgstr ""
 
-#: src/ui/gtk/hedit.cc:201
+#: src/ui/gtk/hedit.cc:199
 msgid "Name in tape-directory:"
 msgstr ""
 
-#: src/ui/gtk/hedit.cc:214
+#: src/ui/gtk/hedit.cc:212
 msgid "Name in KC file-header:"
 msgstr ""
 
-#: src/ui/gtk/hedit.cc:227 src/ui/gtk/image.cc:158
+#: src/ui/gtk/hedit.cc:225 src/ui/gtk/image.cc:156
 msgid "Load address:"
 msgstr ""
 
-#: src/ui/gtk/hedit.cc:253
+#: src/ui/gtk/hedit.cc:251
 msgid "autostart"
 msgstr ""
 
-#: src/ui/gtk/image.cc:128
+#: src/ui/gtk/image.cc:126
 msgid "Input Image Properties"
 msgstr ""
 
-#: src/ui/gtk/image.cc:135
+#: src/ui/gtk/image.cc:133
 msgid ""
 "It was not possible to automatically determine the\n"
 "type of the selected file. Thus I don't know at which\n"
@@ -2396,91 +2393,91 @@ msgid ""
 "needed values yourself."
 msgstr ""
 
-#: src/ui/gtk/image.cc:187
+#: src/ui/gtk/image.cc:185
 msgid "Start Program after Loading"
 msgstr ""
 
-#: src/ui/gtk/image.cc:199
+#: src/ui/gtk/image.cc:197
 msgid "OK"
 msgstr ""
 
-#: src/ui/gtk/image.cc:211
+#: src/ui/gtk/image.cc:209
 msgid "Cancel"
 msgstr ""
 
-#: src/ui/gtk/info.cc:134
+#: src/ui/gtk/info.cc:132
 msgid "byte output"
 msgstr ""
 
-#: src/ui/gtk/info.cc:135
+#: src/ui/gtk/info.cc:133
 msgid "byte input"
 msgstr ""
 
-#: src/ui/gtk/info.cc:136
+#: src/ui/gtk/info.cc:134
 msgid "byte input/output"
 msgstr ""
 
-#: src/ui/gtk/info.cc:137
+#: src/ui/gtk/info.cc:135
 msgid "bit input/output"
 msgstr ""
 
-#: src/ui/gtk/info.cc:328
+#: src/ui/gtk/info.cc:326
 msgid "Mode:"
 msgstr ""
 
-#: src/ui/gtk/info.cc:347 src/ui/gtk/info.cc:421
+#: src/ui/gtk/info.cc:345 src/ui/gtk/info.cc:419
 msgid "IRQ:"
 msgstr ""
 
-#: src/ui/gtk/info.cc:366 src/ui/gtk/info.cc:440
+#: src/ui/gtk/info.cc:364 src/ui/gtk/info.cc:438
 msgid "IRQ Vector:"
 msgstr ""
 
-#: src/ui/gtk/info.cc:393
+#: src/ui/gtk/info.cc:391
 msgid "Channel A"
 msgstr ""
 
-#: src/ui/gtk/info.cc:397
+#: src/ui/gtk/info.cc:395
 msgid "Channel B"
 msgstr ""
 
-#: src/ui/gtk/info.cc:466
+#: src/ui/gtk/info.cc:464
 msgid "Channel 0"
 msgstr ""
 
-#: src/ui/gtk/info.cc:470
+#: src/ui/gtk/info.cc:468
 msgid "Channel 1"
 msgstr ""
 
-#: src/ui/gtk/info.cc:474
+#: src/ui/gtk/info.cc:472
 msgid "Channel 2"
 msgstr ""
 
-#: src/ui/gtk/info.cc:478
+#: src/ui/gtk/info.cc:476
 msgid "Channel 3"
 msgstr ""
 
-#: src/ui/gtk/info.cc:493
+#: src/ui/gtk/info.cc:491
 msgid "KCemu: Info"
 msgstr ""
 
-#: src/ui/gtk/info.cc:518
+#: src/ui/gtk/info.cc:516
 msgid "CPU"
 msgstr ""
 
-#: src/ui/gtk/info.cc:521
+#: src/ui/gtk/info.cc:519
 msgid "PIO"
 msgstr ""
 
-#: src/ui/gtk/info.cc:524
+#: src/ui/gtk/info.cc:522
 msgid "CTC"
 msgstr ""
 
-#: src/ui/gtk/info.cc:547
+#: src/ui/gtk/info.cc:545
 msgid "Update"
 msgstr ""
 
-#: src/ui/gtk/info.cc:557 src/ui/gtk/wav.cc:146
+#: src/ui/gtk/info.cc:555 src/ui/gtk/wav.cc:144
 msgid "Close"
 msgstr ""
 
@@ -2488,141 +2485,145 @@ msgstr ""
 msgid "KCemu: Keyboard"
 msgstr ""
 
-#: src/ui/gtk/module.cc:212
+#: src/ui/gtk/keyboard.cc:608
+msgid "Sorry, keyboard display not configured."
+msgstr ""
+
+#: src/ui/gtk/module.cc:211
 msgid "No module slots available for this computer."
 msgstr ""
 
-#: src/ui/gtk/module.cc:224
+#: src/ui/gtk/module.cc:223
 #, c-format
 msgid "Slot %d"
 msgstr ""
 
-#: src/ui/gtk/module.cc:319
+#: src/ui/gtk/module.cc:318
 msgid "Floppy Disk Basis [F0]"
 msgstr ""
 
-#: src/ui/gtk/module.cc:324
+#: src/ui/gtk/module.cc:323
 #, c-format
 msgid "D002: Busdriver [%02X]"
 msgstr ""
 
-#: src/ui/gtk/module.cc:332 src/ui/gtk/module.cc:334
+#: src/ui/gtk/module.cc:331 src/ui/gtk/module.cc:333
 msgid "Basis Device"
 msgstr ""
 
-#: src/ui/gtk/tape.cc:78
+#: src/ui/gtk/tape.cc:76
 msgid "Please enter the new name for the file."
 msgstr ""
 
-#: src/ui/gtk/tape.cc:274
+#: src/ui/gtk/tape.cc:272
 msgid "/_Run File"
 msgstr ""
 
-#: src/ui/gtk/tape.cc:275
+#: src/ui/gtk/tape.cc:273
 msgid "/_Load File"
 msgstr ""
 
-#: src/ui/gtk/tape.cc:276
+#: src/ui/gtk/tape.cc:274
 msgid "/_Export File"
 msgstr ""
 
-#: src/ui/gtk/tape.cc:277
+#: src/ui/gtk/tape.cc:275
 msgid "/Export _Wav"
 msgstr ""
 
-#: src/ui/gtk/tape.cc:278
+#: src/ui/gtk/tape.cc:276
 msgid "/sep1"
 msgstr ""
 
-#: src/ui/gtk/tape.cc:279
+#: src/ui/gtk/tape.cc:277
 msgid "/Edit _Header"
 msgstr ""
 
-#: src/ui/gtk/tape.cc:280
+#: src/ui/gtk/tape.cc:278
 msgid "/Re_name File"
 msgstr ""
 
-#: src/ui/gtk/tape.cc:281
+#: src/ui/gtk/tape.cc:279
 msgid "/_Delete File"
 msgstr ""
 
-#: src/ui/gtk/tape.cc:282
+#: src/ui/gtk/tape.cc:280
 msgid "/sep2"
 msgstr ""
 
-#: src/ui/gtk/tape.cc:283
+#: src/ui/gtk/tape.cc:281
 msgid "/_Add File"
 msgstr ""
 
-#: src/ui/gtk/tape.cc:288
+#: src/ui/gtk/tape.cc:286
 msgid "Name"
 msgstr ""
 
-#: src/ui/gtk/tape.cc:289
+#: src/ui/gtk/tape.cc:287
 msgid "Type"
 msgstr ""
 
-#: src/ui/gtk/tape.cc:290
+#: src/ui/gtk/tape.cc:288
 msgid "Load"
 msgstr ""
 
-#: src/ui/gtk/tape.cc:291
+#: src/ui/gtk/tape.cc:289
 msgid "Start"
 msgstr ""
 
-#: src/ui/gtk/tape.cc:292
+#: src/ui/gtk/tape.cc:290
 msgid "Size"
 msgstr ""
 
-#: src/ui/gtk/tape.cc:304 src/ui/gtk/tape.cc:310
+#: src/ui/gtk/tape.cc:302 src/ui/gtk/tape.cc:308
 msgid "<TapeP>"
 msgstr ""
 
-#: src/ui/gtk/tape.cc:311
+#: src/ui/gtk/tape.cc:309
 msgid "/Run File"
 msgstr ""
 
-#: src/ui/gtk/tape.cc:312
+#: src/ui/gtk/tape.cc:310
 msgid "/Load File"
 msgstr ""
 
-#: src/ui/gtk/tape.cc:313
+#: src/ui/gtk/tape.cc:311
 msgid "/Edit Header"
 msgstr ""
 
-#: src/ui/gtk/tape.cc:314
+#: src/ui/gtk/tape.cc:312
 msgid "/Delete File"
 msgstr ""
 
-#: src/ui/gtk/tape.cc:315
+#: src/ui/gtk/tape.cc:313
 msgid "/Rename File"
 msgstr ""
 
-#: src/ui/gtk/tape.cc:316
+#: src/ui/gtk/tape.cc:314
 msgid "/Export File"
 msgstr ""
 
-#: src/ui/gtk/tape.cc:317
+#: src/ui/gtk/tape.cc:315
 msgid "/Export Wav"
 msgstr ""
 
-#: src/ui/gtk/ui_gtk.cc:796
+#: src/ui/gtk/ui_gtk.cc:794
 msgid "Info"
 msgstr ""
 
-#: src/ui/gtk/wav.cc:136
+#: src/ui/gtk/wav.cc:134
 msgid "Open"
 msgstr ""
 
-#: src/ui/gtk/wav.cc:156
+#: src/ui/gtk/wav.cc:154
 msgid "Play"
 msgstr ""
 
-#: src/ui/gtk/options.cc:96
+#: src/ui/gtk/options.cc:94
 msgid "Save profiles?"
 msgstr ""
 
-#: src/ui/gtk/options.cc:98
+#: src/ui/gtk/options.cc:96
 msgid ""
 "Some profiles were changed!\n"
 "\n"
@@ -2630,43 +2631,43 @@ msgid ""
 "'Cancel': will allow to continue editing."
 msgstr ""
 
-#: src/ui/gtk/options.cc:607
+#: src/ui/gtk/options.cc:605
 msgid "Open ROM Image..."
 msgstr ""
 
-#: src/ui/gtk/options.cc:894
+#: src/ui/gtk/options.cc:892
 #, c-format
 msgid "ROM image is '%s'. The ROM size needs to be %04xh (%d) bytes."
 msgstr ""
 
-#: src/ui/gtk/video.cc:260
+#: src/ui/gtk/video.cc:258
 msgid "<none>"
 msgstr ""
 
-#: src/ui/gtk/video.cc:264
+#: src/ui/gtk/video.cc:262
 msgid "Theora/Ogg"
 msgstr ""
 
-#: src/ui/gtk/video.cc:268
+#: src/ui/gtk/video.cc:266
 msgid "AVI"
 msgstr ""
 
-#: src/ui/gtk/video.cc:272
+#: src/ui/gtk/video.cc:270
 msgid "MPEG 4"
 msgstr ""
 
-#: src/ui/gtk/video.cc:276
+#: src/ui/gtk/video.cc:274
 msgid "Dirac"
 msgstr ""
 
-#: src/ui/gtk/video.cc:280
+#: src/ui/gtk/video.cc:278
 msgid "Schroedinger"
 msgstr ""
 
-#: src/ui/gtk/video.cc:284
+#: src/ui/gtk/video.cc:282
 msgid "Animated GIF"
 msgstr ""
 
-#: src/ui/gtk/video.cc:288
+#: src/ui/gtk/video.cc:286
 msgid "VNC"
 msgstr ""
