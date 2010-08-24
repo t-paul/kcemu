@@ -158,6 +158,16 @@ PIOJoystick::js_open(void)
 
   if (!_is_open)
     {
+      /*
+       * Try to grab the joystick device. This would ensure that
+       * the events go exclusively to KCemu. If the grab fails,
+       * we still use the device but this might mean that the
+       * system gives the events to other programs too (like the
+       * X-Server).
+       */
+      int grab = 1;
+      ioctl(_fd, EVIOCGRAB, &grab);
+
       char buf[1024];
       snprintf(buf, sizeof(buf),
 	       _("Joystick (%d.%d.%d): %s on %s"),
