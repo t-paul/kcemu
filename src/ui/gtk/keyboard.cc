@@ -616,5 +616,5 @@ KeyboardWindow::init(void)
   g_timeout_add(1000, timeout_callback, this);
 #endif
 
-  init_dialog("ui-keyboard-window-toggle", NULL);
+  init_dialog("ui-keyboard-window-toggle", "window-keyboard");
 }
