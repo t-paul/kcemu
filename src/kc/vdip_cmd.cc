@@ -73,9 +73,7 @@ public:
       }
     else
       {
-        // ml-dos expects FI error in UGET
-        add_error(ERR_INVALID);
-        //add_error(ERR_COMMAND_FAILED);
+        add_error(ERR_COMMAND_FAILED);
       }
   }
 
