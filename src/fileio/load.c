@@ -153,7 +153,7 @@ fileio_get_image_z1013(fileio_prop_t *prop, unsigned char *buf)
 {
   int a, b, len;
 
-  len = prop->size - 32;
+  len = prop->size - 36;
 
   a = 36;
   b = 0;
@@ -219,8 +219,37 @@ fileio_get_image(fileio_prop_t *prop, unsigned char *buf)
 }
 
 void
-fill_header_COM(unsigned char *data,
-                fileio_prop_t *prop)
+fill_header_HS(unsigned char *data, fileio_prop_t *prop)
+{
+  int a, c;
+  int end = prop->load_addr + ((prop->size / 36) * 32) + 1;
+
+  memset(data, 0, 36);
+  memset(data + 18, ' ', 16);
+  data[0] = prop->load_addr & 0xff;
+  data[1] = (prop->load_addr >> 8) & 0xff;
+  data[2] = prop->load_addr & 0xff;
+  data[3] = (prop->load_addr >> 8) & 0xff;
+  data[4] = end & 0xff;
+  data[5] = (end >> 8) & 0xff;
+  data[6] = prop->start_addr & 0xff;
+  data[7] = (prop->start_addr >> 8) & 0xff;
+  data[14] = ' ';
+  data[15] = 0xd3;
+  data[16] = 0xd3;
+  data[17] = 0xd3;
+
+  for (a = 0;a < 16;a++)
+    {
+      c = toupper(prop->name[a]);
+      if (c == 0)
+        break;
+      data[a + 18] = c;
+    }
+}
+
+void
+fill_header_COM(unsigned char *data, fileio_prop_t *prop)
 {
   int a, c, end;
 

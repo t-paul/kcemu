@@ -54,6 +54,31 @@ str2int(const char *str)
   return -1;
 }
 
+void
+copy_headersave(unsigned char *data, long size, fileio_prop_t *prop)
+{
+  char *src = data;
+  char *dst = prop->data + 36;
+
+  int a = 0;
+  while (size > 0)
+    {
+      switch (a++ % 36)
+        {
+        case 0:
+        case 1:
+        case 34:
+        case 35:
+          *dst++ = 0;
+          break;
+        default:
+          size--;
+          *dst++ = *src++;
+          break;
+        }
+    }
+}
+
 static int
 loader_UNKNOWN_load(const char *filename,
                     unsigned char *data,
@@ -62,10 +87,8 @@ loader_UNKNOWN_load(const char *filename,
 {
   int a;
   const char *ptr;
-  unsigned long val, xsize;
+  unsigned long val;
   unsigned short load, start;
-
-  xsize = size + (size + 127) / 128;
 
   a = 0;
   load = 0;
@@ -135,14 +158,33 @@ loader_UNKNOWN_load(const char *filename,
   /*
    *  copy data...
    */
-  (*prop)->size  = size + 128;
-  (*prop)->data = (unsigned char *)malloc(xsize + 129);
-  if ((*prop)->data == 0)
-    return -1;
+  if (fileio_get_kctype() == FILEIO_Z1013)
+    {
+      unsigned long xsize = 36 * ((size + 31) / 32) + 36;
 
-  *(*prop)->data = 0; // block number
-  fill_header_COM((*prop)->data + 1, *prop);
-  fileio_copy_blocks((*prop)->data + 129, data, size, 1);
+      (*prop)->size = xsize;
+      (*prop)->data = (unsigned char *) malloc(xsize);
+      if ((*prop)->data == 0)
+        return -1;
+
+      memset((*prop)->data, 0, xsize);
+      fill_header_HS((*prop)->data, *prop);
+      copy_headersave(data, size, *prop);
+    }
+  else
+    {
+      unsigned long xsize = size + (size + 127) / 128;
+
+      (*prop)->size = size + 128;
+      (*prop)->data = (unsigned char *) malloc(xsize + 129);
+      if ((*prop)->data == 0)
+        return -1;
+
+      memset((*prop)->data, 0, xsize + 129);
+      *(*prop)->data = 0; // block number
+      fill_header_COM((*prop)->data + 1, *prop);
+      fileio_copy_blocks((*prop)->data + 129, data, size, 1);
+    }
 
   return 0;
 }
