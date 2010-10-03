@@ -55,4 +55,7 @@ void loader_BIN_init(void);
 void loader_TAPE_init(void);
 void loader_UNKNOWN_init(void);
 
+/** dump 128 byte block as hex/ascii dump */
+void dump_block(int block, unsigned char *ptr);
+
 #endif /* __fileio_loadp_h */

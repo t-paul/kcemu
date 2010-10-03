@@ -122,10 +122,10 @@ fileio_load_file(const char *filename, fileio_prop_t **prop)
       if (loaders[a])
         if (loaders[a]->check)
           {
-	    /* printf("trying %s...\n", loaders[a]->get_name()); */
+	    //printf("trying %s...\n", loaders[a]->get_name());
             if (loaders[a]->check(filename, data, stat_buf.st_size))
               {
-	        /* printf("using %s.\n", loaders[a]->get_name()); */
+	        //printf("using %s.\n", loaders[a]->get_name());
                 ret = loaders[a]->load(filename, data, stat_buf.st_size, prop);
 		(*prop)->filetype = loaders[a]->get_type();
                 break;
@@ -252,6 +252,31 @@ fill_header_COM(unsigned char *data,
 }
 
 void
+dump_block(int block, unsigned char *ptr)
+{
+  int a, b, c, idx;
+
+  printf("\nblock: %02x (%d)\n", block, block);
+
+  for (a = 0;a < 8;a++)
+    {
+      idx = 16 * a;
+      printf("%04xh:", idx);
+      for (b = 0;b < 16;b++)
+        {
+          printf("%s%02x", b == 8 ? " | " : " ", ptr[idx + b]);
+        }
+      printf(" - ");
+      for (b = 0;b < 16;b++)
+        {
+          c = ptr[idx + b];
+          printf("%s%c", b == 8 ? " | " : "", isprint(c) ? c : '.');
+        }
+      printf("\n");
+    }
+}
+
+void
 fileio_copy_blocks(unsigned char *dptr, const unsigned char *sptr, long size, int block)
 {
   long len;
@@ -265,6 +290,9 @@ fileio_copy_blocks(unsigned char *dptr, const unsigned char *sptr, long size, in
 
       len = (size > 128) ? 128 : size;
       memcpy(dptr + 1, sptr, len);
+
+      //dump_block(*dptr, dptr + 1);
+
       dptr += 129;
       sptr += 128;
       size -= 128;

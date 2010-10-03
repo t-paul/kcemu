@@ -49,7 +49,6 @@ typedef struct wav_header
 } wav_header_t;
 
 static int _value = -1;
-static int _start_block = 1;
 
 struct tape_buf
 {
@@ -140,6 +139,7 @@ write_block(FILE *out, int block, unsigned char *buf, int sync_bits)
   unsigned char crc = 0;
   
   //printf("[%02x] ", block); fflush(stdout);
+  //dump_block(block, buf);
 
   flen += write_bits(out, BIT_1, sync_bits, &sync);
   flen += write_bits(out, BIT_S, 1, &sync); // sync bit
@@ -210,18 +210,6 @@ _fileio_save_wav(FILE *out, const unsigned char *data, int size)
 {
   wav_header_t header;
   long flen, start_silence, end_silence;
-
-  switch (fileio_get_kctype())
-    {
-    case FILEIO_KC85_1:
-      _start_block = 0;
-      break;
-    case FILEIO_KC85_3:
-      _start_block = 1;
-      break;
-    case FILEIO_Z1013: // FIXME: not implemented
-      return -1;
-    }
 
   start_silence = RATE / 2;
   end_silence = RATE * 2;

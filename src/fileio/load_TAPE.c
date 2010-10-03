@@ -122,6 +122,9 @@ loader_TAPE_load(const char *filename,
   switch (fileio_get_kctype())
     {
     case FILEIO_KC85_1:
+      data[8] = 'C';
+      data[9] = 'O';
+      data[10] = 'M';
       fileio_copy_blocks((*prop)->data, data, size, 0);
       break;
     case FILEIO_KC85_3:
