@@ -359,7 +359,7 @@ read_header(teledisk_prop_t *prop)
       if (fread(buf, 1, comment.len, prop->f) != comment.len)
         return 0;
 
-      printf("comment: %s\n", buf);
+      //printf("comment: %s\n", buf);
       prop->comment = strdup(buf);
     }
 
