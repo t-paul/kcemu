@@ -433,7 +433,7 @@ dnl ---------------------------------
 have_avformat=no
 min_libavformat="52.41.0"
 if test "x$enable_libavformat" = xyes; then
-	PKG_CHECK_MODULES(LIBAVFORMAT, libavformat >= $min_libavformat,
+	PKG_CHECK_MODULES(LIBAVFORMAT, libavformat >= $min_libavformat libavcodec libavutil,
 	[
                 have_avformat=yes
                 AC_DEFINE(HAVE_LIBAVFORMAT, 1, "have libavformat")
