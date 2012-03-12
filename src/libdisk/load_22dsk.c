@@ -81,7 +81,7 @@
 
 typedef struct {
   FILE *f;
-  gzFile *gzf;
+  gzFile gzf;
   int read_only;
   int len;
   struct {
