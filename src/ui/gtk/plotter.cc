@@ -18,7 +18,7 @@
  */
 
 #include <cairo/cairo.h>
-#include <glib-2.0/glib/gmain.h>
+#include <glib-2.0/glib.h>
 #include <gtk-2.0/gtk/gtkspinbutton.h>
 
 #include "kc/kc.h"

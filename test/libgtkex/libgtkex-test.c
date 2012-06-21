@@ -17,7 +17,7 @@
  *  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-#include <glib-2.0/glib/gmain.h>
+#include <glib-2.0/glib.h>
 
 #include "libgtkex/libgtkex.h"
 
