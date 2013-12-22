@@ -3,10 +3,8 @@
 noinst_LIBRARIES = libaudio.a
 
 AM_CPPFLAGS = \
+	-I../../include \
 	-DDEBUG -DLINUX
-
-INCLUDES = \
-	-I../../include
 
 libaudio_a_SOURCES = \
 	load.c \

@@ -2,7 +2,7 @@
 
 noinst_LIBRARIES = libsys_mingw.a
 
-INCLUDES = \
+AM_CPPFLAGS = \
 	-I../../../include
 
 libsys_mingw_a_SOURCES = \

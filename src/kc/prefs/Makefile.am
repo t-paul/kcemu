@@ -3,6 +3,7 @@
 noinst_LIBRARIES = libprefs.a
 
 AM_CPPFLAGS = \
+	-I../../../include \
         -DKCEMU_PACKAGE=\"$(PACKAGE)\" \
         -DKCEMU_DATADIR=\"$(pkgdatadir)\" \
         -DKCEMU_LOCALEDIR=\"$(localedir)\" \
@@ -10,7 +11,6 @@ AM_CPPFLAGS = \
         $(GTK_CFLAGS) \
         $(SDL_CFLAGS)
 
-INCLUDES = -I../../../include
 
 libprefs_a_SOURCES = \
 	prefs.cc \

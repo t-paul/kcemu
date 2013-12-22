@@ -2,10 +2,8 @@
 
 noinst_LIBRARIES = libgtkex.a
 
-INCLUDES = \
-	-I../../include
-
 AM_CPPFLAGS = \
+	-I../../include \
         $(GTK_CFLAGS)
 
 libgtkex_a_SOURCES = \

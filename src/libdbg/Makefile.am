@@ -4,10 +4,8 @@ noinst_LIBRARIES = libdbg.a
 
 noinst_PROGRAMS = dbg-test
 
-INCLUDES = \
-	-I../../include
-
 AM_CPPFLAGS = \
+	-I../../include \
 	-DVERSION=\"$(VERSION)\"
 
 libdbg_a_SOURCES = \

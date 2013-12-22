@@ -7,10 +7,8 @@ EXTRA_DIST = extract-system-tracks.sh
 noinst_LIBRARIES = libdisk.a
 
 AM_CPPFLAGS = \
+	-I../../include \
 	-DDEBUG -DLINUX
-
-INCLUDES = \
-	-I../../include
 
 libdisk_a_SOURCES = \
 	disk.c \

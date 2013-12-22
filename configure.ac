@@ -4,12 +4,17 @@ dnl
 dnl  Process this file with autoconf to produce a configure script.
 dnl ----------------------------------------------------------------
 
-AC_INIT(include/kc/kc.h)
-AC_CONFIG_AUX_DIR(config)
+. ./VERSION
 
-AC_GNU_SOURCE
-AC_CANONICAL_HOST
+VERSION=$KCEMU_VERSION
+
+AC_INIT([KCemu], m4_esyscmd([sh ./VERSION -v]))
+
+AC_CONFIG_SRCDIR([include/kc/kc.h])
+AC_CONFIG_AUX_DIR(config)
 AC_CANONICAL_TARGET
+AC_CANONICAL_HOST
+AC_GNU_SOURCE
 
 dnl -----------------------
 dnl  declare extra options
@@ -36,10 +41,6 @@ AC_ARG_WITH(debug_level,    [  --with-debug-level=L    set debug level to L (0..
 dnl ---------------------
 dnl  set package version
 dnl ---------------------
-
-. ./VERSION
-
-VERSION=$KCEMU_VERSION
 
 AC_DEFINE_UNQUOTED(PACKAGE, "$PACKAGE", "package name")
 AC_DEFINE_UNQUOTED(VERSION, "$VERSION", "package version")
@@ -78,7 +79,8 @@ dnl  initialize automake
 dnl ---------------------
 
 AM_CONFIG_HEADER(include/kc/config.h)
-AM_INIT_AUTOMAKE($PACKAGE, $VERSION, no-define)
+AM_INIT_AUTOMAKE([no-define])
+
 
 dnl ---------------------
 dnl  checks for programs
@@ -761,7 +763,7 @@ dnl --------------------------------------
 
 if test x$enable_sound = xyes; then
 	AC_DEFINE(ENABLE_SOUND, 1, "enable sound")
-	AM_PATH_SDL(1.2.0, have_libsdl=yes, have_libsdl=no)
+	AM_PATH_SDL([1.2.0], have_libsdl=yes, have_libsdl=no)
 fi
 
 if test x$have_libsdl = xyes; then

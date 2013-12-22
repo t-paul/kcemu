@@ -6,10 +6,8 @@ noinst_PROGRAMS = test-load
 
 noinst_LIBRARIES = libfileio.a
 
-INCLUDES = \
-	-I../../include
-
 AM_CPPFLAGS = \
+	-I../../include \
 	-DVERSION=\"$(VERSION)\" \
 	-DFILEIO_DEBUG
 

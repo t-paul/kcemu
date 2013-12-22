@@ -2,7 +2,7 @@
 
 noinst_LIBRARIES = libmuglerpc.a
 
-INCLUDES = -I../../../include
+AM_CPPFLAGS = -I../../../include
 
 libmuglerpc_a_SOURCES = \
 	ctc.cc \

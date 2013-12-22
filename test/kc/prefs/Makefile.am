@@ -4,7 +4,7 @@ TESTS = t_prefs
 
 check_PROGRAMS = $(TESTS)
 
-INCLUDES = -I../../../include $(CPPUNIT_CFLAGS)
+AM_CPPFLAGS = -I../../../include $(CPPUNIT_CFLAGS)
 LIBS = $(GTK_LIBS)
 
 if TARGET_MINGW

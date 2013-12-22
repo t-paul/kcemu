@@ -2,7 +2,7 @@
 
 noinst_LIBRARIES = libkramermc.a
 
-INCLUDES = -I../../../include
+AM_CPPFLAGS = -I../../../include
 
 libkramermc_a_SOURCES = \
 	pio.cc \

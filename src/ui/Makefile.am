@@ -4,10 +4,8 @@ SUBDIRS = generic gtk
 
 noinst_LIBRARIES = libui.a
 
-INCLUDES = \
-	-I../../include
-
 AM_CPPFLAGS = \
+	-I../../include \
 	-DVERSION=\"$(VERSION)\"
 
 libui_a_SOURCES = \

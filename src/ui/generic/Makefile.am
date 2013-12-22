@@ -2,7 +2,7 @@
 
 noinst_LIBRARIES = libui_generic.a
 
-INCLUDES = \
+AM_CPPFLAGS = \
 	-I../../../include
 
 libui_generic_a_SOURCES = \

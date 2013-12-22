@@ -15,10 +15,8 @@ noinst_PROGRAMS = show_tap kcread2tap
 noinst_LIBRARIES = libtape.a
 
 AM_CPPFLAGS = \
+	-I../../include \
 	-DDEBUG -DLINUX
-
-INCLUDES = \
-	-I../../include
 
 libtape_a_SOURCES = \
 	kct.cc

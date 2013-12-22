@@ -2,7 +2,7 @@
 
 noinst_LIBRARIES = libgetopt.a
 
-INCLUDES = \
+AM_CPPFLAGS = \
 	-I../../include/getopt
 
 libgetopt_a_SOURCES = \

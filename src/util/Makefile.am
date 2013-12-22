@@ -9,11 +9,9 @@ noinst_PROGRAMS = disk-tool tape-tool tape-check tape-check-bc tape-merge tape-t
 LIBS=
 
 AM_CPPFLAGS = \
+	-I../../include \
+	`gtk-config --cflags` \
 	-DDEBUG
-
-INCLUDES = \
-	-I../../include
-	`gtk-config --cflags`
 
 #wav2kc_SOURCES = \
 #	wav2kc.c

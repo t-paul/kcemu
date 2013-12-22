@@ -12,12 +12,10 @@ if USE_INCLUDED_GETOPT
 GETOPTLIB = ../getopt/libgetopt.a
 endif
 
-INCLUDES = \
-	-I../../include
-
 localedir = $(prefix)/share/locale
 
 AM_CPPFLAGS = \
+	-I../../include \
 	-DKCEMU_PACKAGE=\"$(PACKAGE)\" \
 	-DKCEMU_DATADIR=\"$(pkgdatadir)\" \
 	-DKCEMU_LOCALEDIR=\"$(localedir)\" \

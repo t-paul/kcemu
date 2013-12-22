@@ -3,12 +3,11 @@
 noinst_LIBRARIES = libkcnet.a
 
 AM_CPPFLAGS = \
+	-I../../../include \
         -DKCEMU_PACKAGE=\"$(PACKAGE)\" \
         -DKCEMU_DATADIR=\"$(pkgdatadir)\" \
         -DKCEMU_LOCALEDIR=\"$(localedir)\" \
         -DDEBUG
-
-INCLUDES = -I../../../include
 
 libkcnet_a_SOURCES = \
 	kcnet.cc \

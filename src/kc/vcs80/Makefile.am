@@ -2,7 +2,7 @@
 
 noinst_LIBRARIES = libvcs80.a
 
-INCLUDES = -I../../../include
+AM_CPPFLAGS = -I../../../include
 
 libvcs80_a_SOURCES = \
 	pio.cc \

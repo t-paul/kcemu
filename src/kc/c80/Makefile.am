@@ -2,7 +2,7 @@
 
 noinst_LIBRARIES = libc80.a
 
-INCLUDES = -I../../../include
+AM_CPPFLAGS = -I../../../include
 
 libc80_a_SOURCES = \
 	pio.cc \

@@ -2,7 +2,7 @@
 
 noinst_LIBRARIES = libsys_unix.a
 
-INCLUDES = \
+AM_CPPFLAGS = \
 	-I../../../include
 
 libsys_unix_a_SOURCES = \

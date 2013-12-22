@@ -2,7 +2,7 @@
 
 SUBDIRS = data
 
-INCLUDES = -I../../include $(CPPUNIT_CFLAGS)
+AM_CPPFLAGS = -I../../include $(CPPUNIT_CFLAGS)
 
 LIBS = \
 	$(CPPUNIT_LIBS) \

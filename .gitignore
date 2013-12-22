@@ -17,6 +17,7 @@ Makefile.in
 Makefile
 build-stamp
 configure-stamp
+configure.lineno
 intl/Makefile
 asm/autostart/Makefile.in
 asm/autostart/Makefile
@@ -163,6 +164,8 @@ config.log
 config.status
 config/config.guess
 config/config.sub
+config/compile
+config/test-driver
 config/depcomp
 config/install-sh
 config/missing

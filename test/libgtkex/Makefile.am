@@ -5,5 +5,5 @@ EXTRA_DIST = \
 
 check_PROGRAMS = libgtkex-test
 
-INCLUDES = -I../../include $(GTK_CFLAGS)
+AM_CPPFLAGS = -I../../include $(GTK_CFLAGS)
 LIBS = ../../src/libgtkex/libgtkex.a $(GTK_LIBS)

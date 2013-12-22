@@ -2,7 +2,7 @@
 
 SUBDIRS = prefs
 
-INCLUDES = -I../../include $(CPPUNIT_CFLAGS)
+AM_CPPFLAGS = -I../../include $(CPPUNIT_CFLAGS)
 
 if HAVE_CPPUNIT
 
