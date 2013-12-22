@@ -438,7 +438,10 @@ KCNET::mem_write(word_t addr, byte_t val)
               SocketData *data = new SocketData(len);
               word_t base = 0x4000 + idx * 0x0800;
               for (int a = 0;a < len;a++)
-                data->put_byte(_mem[base + _old_write_ptr[idx] + a]);
+                {
+                  word_t ofs = (_old_write_ptr[idx] + a) % 0x0800;
+                  data->put_byte(_mem[base + ofs]);
+                }
               _socket[idx]->send(data);
               delete data;
             }

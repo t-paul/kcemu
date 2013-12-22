@@ -12,10 +12,12 @@ kcemu-Makefile.mk
 nbproject
 
 KCemu-*.tar.gz
+.pc
 .deps
 Makefile.in
 Makefile
 build-stamp
+configure.lineno
 configure-stamp
 intl/Makefile
 asm/autostart/Makefile.in

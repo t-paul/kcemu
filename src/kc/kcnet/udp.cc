@@ -108,7 +108,7 @@ UDP::poll(void)
   if (_send_data != NULL)
     return;
 
-  printf("poll: socket = %d\n", _socket);
+  //printf("poll: socket = %d\n", _socket);
   int r = sys_socket_recvfrom(_socket, buf, sizeof(buf), &ip0, &ip1, &ip2, &ip3, &port);
   if (r < 0)
     return;
