@@ -10,7 +10,7 @@ LIBS = $(GTK_LIBS)
 if TARGET_MINGW
 SYSLIB=../../../src/sys/mingw/libsys_mingw.a
 else
-SYSLIB=../../../src/sys/linux/libsys_linux.a
+SYSLIB=../../../src/sys/unix/libsys_unix.a
 endif
 
 t_prefs_SOURCES = t_prefs.cc
