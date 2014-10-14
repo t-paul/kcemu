@@ -634,12 +634,14 @@ SystemInformation::SystemInformation(void) {
                  "floppy30.rom", _("D004 Version 3.0 (07.12.1997)"),
                  "floppy31.rom", _("D004 Version 3.1 (22.01.2003)"),
                  "floppy32.rom", _("D004 Version 3.2 (28.10.2008)"),
+                 "floppy33.853", _("D004 Version 3.3 (13.03.2011)"),
                  NULL)
         .add_rom(SystemROM::ROM_KEY_D004_F8, 0x2000, 3,
                  "floppy20.rom", _("D004 Version 2.0 (02.01.1989)"),
                  "floppy30.rom", _("D004 Version 3.0 (07.12.1997)"),
                  "floppy31.rom", _("D004 Version 3.1 (22.01.2003)"),
                  "floppy32.rom", _("D004 Version 3.2 (28.10.2008)"),
+                 "floppy33.853", _("D004 Version 3.3 (13.03.2011)"),
                  NULL);
     /*
      *  KC 85/4
@@ -663,12 +665,14 @@ SystemInformation::SystemInformation(void) {
                  "floppy30.rom", _("D004 Version 3.0 (07.12.1997)"),
                  "floppy31.rom", _("D004 Version 3.1 (22.01.2003)"),
                  "floppy32.rom", _("D004 Version 3.2 (28.10.2008)"),
+                 "floppy33.854", _("D004 Version 3.3 (13.03.2011)"),
                  NULL)
         .add_rom(SystemROM::ROM_KEY_D004_F8, 0x2000, 3,
                  "floppy20.rom", _("D004 Version 2.0 (02.01.1989)"),
                  "floppy30.rom", _("D004 Version 3.0 (07.12.1997)"),
                  "floppy31.rom", _("D004 Version 3.1 (22.01.2003)"),
                  "floppy32.rom", _("D004 Version 3.2 (28.10.2008)"),
+                 "floppy33.854", _("D004 Version 3.3 (13.03.2011)"),
                  NULL);
     /*
      *  KC 85/5
@@ -683,12 +687,12 @@ SystemInformation::SystemInformation(void) {
         .add_rom(SystemROM::ROM_KEY_CAOSC, 0x2000, 1,
                  "caos43c.855", _("CAOS 4.3 (C)"),
                  "caos__c0.855", _("CAOS 4.4 (C)"),
-                 "caos45c.855", _("CAOS 4.5 beta6 (C)"),
+                 "caos45c.855", _("CAOS 4.5 (C)"),
                  NULL)
         .add_rom(SystemROM::ROM_KEY_CAOSE, 0x2000, 1,
                  "caos43e.855", _("CAOS 4.3 (E)"),
                  "caos__e0.855", _("CAOS 4.4 (E)"),
-                 "caos45e.855", _("CAOS 4.5 beta6 (E)"),
+                 "caos45e.855", _("CAOS 4.5 (E)"),
                  NULL)
         .add_rom(SystemROM::ROM_KEY_BASIC, 0x8000, 1,
                  "basic_c0.855", _("KC-BASIC (EDAS/TEMO/FORTH)"),
@@ -699,12 +703,14 @@ SystemInformation::SystemInformation(void) {
                  "floppy30.rom", _("D004 Version 3.0 (07.12.1997)"),
                  "floppy31.rom", _("D004 Version 3.1 (22.01.2003)"),
                  "floppy32.rom", _("D004 Version 3.2 (28.10.2008)"),
+                 "floppy33.854", _("D004 Version 3.3 (13.03.2011)"),
                  NULL)
         .add_rom(SystemROM::ROM_KEY_D004_F8, 0x2000, 0,
                  "floppy20.rom", _("D004 Version 2.0 (02.01.1989)"),
                  "floppy30.rom", _("D004 Version 3.0 (07.12.1997)"),
                  "floppy31.rom", _("D004 Version 3.1 (22.01.2003)"),
                  "floppy32.rom", _("D004 Version 3.2 (28.10.2008)"),
+                 "floppy33.854", _("D004 Version 3.3 (13.03.2011)"),
                  NULL);
     /*
      *  Polycomputer 880

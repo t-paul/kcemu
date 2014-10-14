@@ -356,6 +356,8 @@ Section Uninstall
   Delete "$INSTDIR\share\KCemu\roms\kc85\floppy30.rom"
   Delete "$INSTDIR\share\KCemu\roms\kc85\floppy31.rom"
   Delete "$INSTDIR\share\KCemu\roms\kc85\floppy32.rom"
+  Delete "$INSTDIR\share\KCemu\roms\kc85\floppy33.853"
+  Delete "$INSTDIR\share\KCemu\roms\kc85\floppy33.854"
   Delete "$INSTDIR\share\KCemu\roms\kc85\m006.rom"
   Delete "$INSTDIR\share\KCemu\roms\kc85\m012.rom"
   Delete "$INSTDIR\share\KCemu\roms\kc85\m026.rom"
