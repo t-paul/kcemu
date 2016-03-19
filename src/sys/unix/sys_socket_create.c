@@ -36,6 +36,14 @@ sys_socket_create(int stream, int nonblocking)
   if (s < 0)
     return -1;
 
+  if (type == SOCK_DGRAM) {
+    /* Set socket to allow broadcast */
+    int broadcastPermission = 1;
+    if (setsockopt(s, SOL_SOCKET, SO_BROADCAST, (void *) &broadcastPermission,
+          sizeof(broadcastPermission)) < 0)
+        perror("setsockopt() failed");
+  }
+
   if (!nonblocking)
     return s;
 

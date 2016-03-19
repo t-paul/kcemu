@@ -18,6 +18,8 @@
  */
 
 #include <stdio.h>
+#include <sys/socket.h>
+#include <arpa/inet.h>
 
 #include "kc/system.h"
 
@@ -68,6 +70,23 @@ UDP::open(void)
       close();
       return false;
     }
+
+  int enable = 1;
+  setsockopt(_socket, SOL_SOCKET, SO_REUSEADDR, (const char *) &enable, sizeof(enable));
+#ifdef __APPLE__
+  setsockopt(sock, SOL_SOCKET, SO_REUSEPORT, (const char *) &enable, sizeof(enable));
+#endif
+
+  struct sockaddr_in addr;
+  memset(&addr, 0, sizeof(struct sockaddr_in));
+  addr.sin_family = AF_INET;
+  addr.sin_addr.s_addr = INADDR_ANY;
+  addr.sin_port = htons(_port);
+
+  if (bind(_socket, (struct sockaddr *) &addr, sizeof(addr)) != 0) {
+    printf("UDP::bind error\n");
+  }
+
   return true;
 }
 
@@ -97,7 +116,7 @@ UDP::poll(void)
   if (_send_data != NULL)
     return;
 
-  printf("poll: socket = %d\n", _socket);
+//  printf("poll: socket = %d\n", _socket);
   int r = sys_socket_recvfrom(_socket, buf, sizeof(buf), &ip0, &ip1, &ip2, &ip3, &port);
   if (r < 0)
     return;
