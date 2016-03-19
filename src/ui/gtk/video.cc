@@ -102,6 +102,9 @@ VideoWindow::set_state(int state)
 void
 VideoWindow::ui_set_state(int state)
 {
+  if (_window == 0) {
+    return;
+  }
   switch (state)
     {
     case VideoEncoder::VIDEO_ENCODER_STATE_RECORD:
