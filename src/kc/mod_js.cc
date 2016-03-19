@@ -47,7 +47,7 @@ PIOJoystick::PIOJoystick(void) : Callback("PIOJoystick")
 
   js_open();
 
-  z80->addCallback(35000, this, NULL);
+  z80->addCallback(CALLBACK_OFFSET, this, NULL);
   register_callback_A_in(this);
 }
 
@@ -158,6 +158,16 @@ PIOJoystick::js_open(void)
 
   if (!_is_open)
     {
+      /*
+       * Try to grab the joystick device. This would ensure that
+       * the events go exclusively to KCemu. If the grab fails,
+       * we still use the device but this might mean that the
+       * system gives the events to other programs too (like the
+       * X-Server).
+       */
+      int grab = 1;
+      ioctl(_fd, EVIOCGRAB, &grab);
+
       char buf[1024];
       snprintf(buf, sizeof(buf),
 	       _("Joystick (%d.%d.%d): %s on %s"),
@@ -205,7 +215,7 @@ PIOJoystick::callback(void *data)
 
   strobe_A();
   strobe_B();
-  z80->addCallback(35000, this, NULL);
+  z80->addCallback(CALLBACK_OFFSET, this, NULL);
 
   /*
    *  reopening the joystick driver after some idle time will
@@ -248,12 +258,12 @@ PIOJoystick::callback(void *data)
 	case JS_EVENT_AXIS:
 	  if (event.number == 0)
 	    {
-	      if (event.value < -10000)
+	      if (event.value < -AXIS_THRESHOLD)
 		{
 		  _left = 1;
 		  _right = 0;
 		}
-	      else if (event.value > 10000)
+	      else if (event.value > AXIS_THRESHOLD)
 		{
 		  _left = 0;
 		  _right = 1;
@@ -266,12 +276,12 @@ PIOJoystick::callback(void *data)
 	    }
 	  else if (event.number == 1)
 	    {
-	      if (event.value < -10000)
+	      if (event.value < -AXIS_THRESHOLD)
 		{
 		  _up = 1;
 		  _down = 0;
 		}
-	      else if (event.value > 10000)
+	      else if (event.value > AXIS_THRESHOLD)
 		{
 		  _up = 0;
 		  _down = 1;
@@ -301,6 +311,13 @@ PIOJoystick::callback(void *data)
     _val ^= 32;
 
   set_A_EXT(0xff, _val);
+}
+
+void
+PIOJoystick::reset(bool power_on)
+{
+  PIO::reset(power_on);
+  z80->addCallback(CALLBACK_OFFSET, this, NULL);
 }
 
 byte_t

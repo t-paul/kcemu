@@ -1,2 +1,3 @@
-images/*.xpm /usr/share/pixmaps/
+usr/bin
+images/*xpm /usr/share/pixmaps/
 debian/kcemu.desktop /usr/share/applications/

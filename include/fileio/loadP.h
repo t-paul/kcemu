@@ -39,6 +39,8 @@ typedef struct file_loader
 
 void fill_header_COM(unsigned char *data,
                      fileio_prop_t *prop);
+void fill_header_HS(unsigned char *data,
+                    fileio_prop_t *prop);
 void fileio_copy_blocks(unsigned char *dptr,
 			const unsigned char *sptr,
 			long size,

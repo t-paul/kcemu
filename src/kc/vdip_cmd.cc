@@ -62,9 +62,10 @@ public:
     struct stat buf;
     const char *arg = get_arg(0).c_str();
     string filename = get_vdip()->get_path(arg);
+
+    add_string("\r");
     if (stat(filename.c_str(), &buf) == 0)
       {
-        add_string("\r");
         add_string(arg);
         add_char(' ');
         add_dword(buf.st_size);
@@ -73,9 +74,7 @@ public:
       }
     else
       {
-        // ml-dos expects FI error in UGET
-        add_error(ERR_INVALID);
-        //add_error(ERR_COMMAND_FAILED);
+        add_error(ERR_COMMAND_FAILED);
       }
   }
 

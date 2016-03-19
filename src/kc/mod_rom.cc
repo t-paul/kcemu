@@ -86,7 +86,7 @@ ModuleROM::~ModuleROM(void)
 word_t
 ModuleROM::get_addr(byte_t val)
 {
-  return 0xc000;
+  return (val & 0xc0) << 8;
 }
 
 dword_t

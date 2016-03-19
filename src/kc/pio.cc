@@ -568,6 +568,9 @@ PIO::reti(void)
 void
 PIO::strobe_A(void)
 {
+  if (_mode[A] == MODE_CONTROL)
+    return;
+  
   //_strobe[A] = 1; this blocks the keyboard when the tape loader is active
   trigger_irq(A);
 }
@@ -575,6 +578,9 @@ PIO::strobe_A(void)
 void
 PIO::strobe_B(void)
 {
+  if ((_mode[B] == MODE_CONTROL) && (_mode[A] != MODE_BIDIRECTIONAL))
+    return;
+
   //_strobe[B] = 1;
   trigger_irq(B);
 }

@@ -1,19 +1,48 @@
 Source: kcemu
-Section: otherosfs
+Section: contrib/otherosfs
 Priority: optional
 Maintainer: Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
-Build-Depends: debhelper (>> 7), libz80ex-dev, libsdl-dev, libsndfile-dev, libvncserver-dev, libtheora-dev, libgtk2.0-dev, automake, autoconf, libxmu-dev, libncurses5-dev, netpbm, quilt
-Standards-Version: 3.8.4
+Build-Depends: debhelper (>> 7.0.50~), libz80ex-dev, libsdl-dev, libsndfile-dev, libvncserver-dev, libtheora-dev, libgtk2.0-dev, automake, autoconf, libxmu-dev, libncurses5-dev, netpbm, imagemagick
+Standards-Version: 3.9.0
 Homepage: http://kcemu.sourceforge.net/
 
 Package: kcemu
 Architecture: any
-Depends: ${shlibs:Depends}, ${misc:Depends}
-Description: KC 85/4 Emulator
+Depends: ${shlibs:Depends}, ${misc:Depends}, kcemu-common
+Description: KC 85/4 emulator
  KCemu is an emulator for the KC85 homecomputer series and other
  Z80 based microcomputers like Z1013, LC80, Polycomputer 880 and
  BIC A5105. The emulation supports a number of additional hardware,
  e.g. floppy disk drives and extended graphic modules.
+ .
+ The Debian package does not contain the ROM images required to
+ run the emulated machines. Please refer to the README.Debian
+ file for more information.
+ .
+ Some alternate keywords for the above:
+ KC85, KC87, LC80, Z1013, A5105, Polycomputer 880
+ .
+ For original programs and general information about the
+ emulated computer systems have a look at http://www.kc-club.de/
+ and http://www.kc85emu.de/.
+
+Package: kcemu-common
+Architecture: all
+Depends: ${misc:Depends}
+Description: KC 85/4 emulator - common files
+ KCemu is an emulator for the KC85 homecomputer series and other
+ Z80 based microcomputers like Z1013, LC80, Polycomputer 880 and
+ BIC A5105. The emulation supports a number of additional hardware,
+ e.g. floppy disk drives and extended graphic modules.
+ .
+ This package contains files common to all architectures.
+ .
+ The Debian package does not contain the ROM images required to
+ run the emulated machines. Please refer to the README.Debian
+ file for more.
+ .
+ Some alternate keywords for the above:
+ KC85, KC87, LC80, Z1013, A5105, Polycomputer 880
  .
  For original programs and general information about the
  emulated computer systems have a look at http://www.kc-club.de/

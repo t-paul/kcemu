@@ -128,22 +128,24 @@ KeyboardWindow::~KeyboardWindow(void)
 gboolean
 KeyboardWindow::sf_expose(GtkWidget *widget, GdkEventExpose *event, gpointer data)
 {
-  int w, h;
   KeyboardWindow *self = (KeyboardWindow *)data;
 
   gdk_window_set_back_pixmap(self->_w.canvas->window, NULL, FALSE);
 
-  w = self->_w.canvas->allocation.width;
-  h = self->_w.canvas->allocation.height;
+  int w = self->_w.canvas->allocation.width;
+  int h = self->_w.canvas->allocation.height;
   gdk_draw_rectangle(self->_w.canvas->window,
 		     self->_w.canvas->style->black_gc,
 		     FALSE, 0, 0, w - 1, h - 1);
+
+  int width = gdk_pixbuf_get_width(self->_pixbuf_normal);
+  int height = gdk_pixbuf_get_height(self->_pixbuf_normal);
   gdk_draw_pixbuf(self->_w.canvas->window,
 		  self->_w.canvas->style->fg_gc[GTK_STATE_NORMAL],
 		  self->_pixbuf_normal,
 		  0, 0,
 		  1, 1,
-		  w - 2, h - 2,
+		  width, height,
 		  GDK_RGB_DITHER_NONE,
 		  0, 0);
 
@@ -603,6 +605,7 @@ KeyboardWindow::init(void)
     }
   else
     {
+      gtk_label_set_text(GTK_LABEL(_w.not_configured_label), _("Sorry, keyboard display not configured."));
       gtk_misc_set_padding(GTK_MISC(_w.not_configured_label), 100, 50);
       gtk_notebook_set_current_page(GTK_NOTEBOOK(_w.notebook), 1);
     }
@@ -613,5 +616,5 @@ KeyboardWindow::init(void)
   g_timeout_add(1000, timeout_callback, this);
 #endif
 
-  init_dialog("ui-keyboard-window-toggle", NULL);
+  init_dialog("ui-keyboard-window-toggle", "window-keyboard");
 }

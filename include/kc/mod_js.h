@@ -29,7 +29,9 @@ class PIOJoystick : public PIO, public PIOCallbackInterface, public Callback
 {
  private:
   enum {
-    IDLE_COUNTER_INIT = 500
+    IDLE_COUNTER_INIT = 500,
+    CALLBACK_OFFSET   = 35000,
+    AXIS_THRESHOLD    = 10000,
   };
 
  private:
@@ -74,6 +76,11 @@ class PIOJoystick : public PIO, public PIOCallbackInterface, public Callback
    */
   virtual void callback(void *data);
   
+  /*
+   *  InterfaceCircuit
+   */
+  virtual void reset(bool power_on = false);
+
   /*
    *  PIOCallbackInterface
    */
