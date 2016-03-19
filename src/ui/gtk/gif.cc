@@ -79,12 +79,12 @@ GifVideoEncoder::init(const char *filename, int width, int height, int fps_den, 
   _fps_den = fps_den;
   _frame_delay = 0;
 
-  EGifSetGifVersion(&GIF89_STAMP[GIF_VERSION_POS]);
-  _gif = EGifOpenFileName(filename, 0);
+  _gif = EGifOpenFileName(filename, false, NULL);
+  EGifSetGifVersion(_gif, true);
   if (_gif == NULL)
     return false;
 
-  _cmap = MakeMapObject(256, NULL);
+  _cmap = GifMakeMapObject(256, NULL);
   for (int a = 0;a < 256;a++)
     {
       _cmap->Colors[a].Red = 0;
@@ -99,10 +99,10 @@ GifVideoEncoder::init(const char *filename, int width, int height, int fps_den, 
   if (EGifPutComment(_gif, comment.c_str()) != GIF_OK)
     return false;
 
-  if (EGifPutExtensionFirst(_gif, 0xFF, 11, EXT_NETSCAPE) != GIF_OK)
+  if (EGifPutExtension(_gif, 0xFF, 11, EXT_NETSCAPE) != GIF_OK)
     return false;
 
-  if (EGifPutExtensionLast(_gif, 0, 3, EXT_NETSCAPE_LOOP) != GIF_OK)
+  if (EGifPutExtension(_gif, 0, 3, EXT_NETSCAPE_LOOP) != GIF_OK)
     return false;
 
   return true;
@@ -202,7 +202,7 @@ GifVideoEncoder::flush_buffer(byte_t *buf, int delay)
    *         modified and processing goes on to the next pixel. The index is
    *         present if and only if the Transparency Flag is set to 1.
    */
-  unsigned char EXT_GCE[] = {0, delay, delay >> 8, 0};
+  unsigned char EXT_GCE[] = {0, (unsigned char)delay, (unsigned char)(delay >> 8), 0};
 
   if (EGifPutExtension(_gif, 0xF9, 4, EXT_GCE) != GIF_OK)
     return false;
@@ -212,6 +212,8 @@ GifVideoEncoder::flush_buffer(byte_t *buf, int delay)
 
   if (EGifPutLine(_gif, buf, _width * _height) != GIF_OK)
     return false;
+
+  return true;
 }
 
 void
@@ -221,12 +223,12 @@ GifVideoEncoder::close(void)
     {
       if (_buf)
         flush_buffer(_buf, _frame_delay);
-      EGifCloseFile(_gif);
+      EGifCloseFile(_gif, NULL);
       _gif = NULL;
     }
   if (_cmap != NULL)
     {
-      FreeMapObject(_cmap);
+      GifFreeMapObject(_cmap);
       _cmap = NULL;
     }
   if (_buf != NULL)
