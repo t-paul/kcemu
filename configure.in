@@ -149,8 +149,6 @@ dnl  check on which system we will run
 dnl -----------------------------------
 
 AM_CONDITIONAL(TARGET_MINGW, false)
-AM_CONDITIONAL(TARGET_LINUX, false)
-AM_CONDITIONAL(TARGET_FREEBSD, false)
 
 case "$host_os" in
 	beos)
@@ -162,25 +160,14 @@ case "$host_os" in
 		
 	mingw32*)
 		HOST_OS="MinGW"
-		HOST_OS_MINGW=1
 		AM_CONDITIONAL(TARGET_MINGW, true)
-		AC_DEFINE_UNQUOTED(HOST_OS_MINGW, $HOST_OS_MINGW, "host os is MinGW")
 		CFLAGS="$CFLAGS $use_ms_bitfields"
 		CXXFLAGS="$CXXFLAGS $use_ms_bitfields"
 		LDFLAGS="$LDFLAGS $use_ms_bitfields -mwindows"
 		;;
 
-	freebsd*)
-		HOST_OS="FreeBSD"
-		HOST_OS_FREEBSD=1
-		AM_CONDITIONAL(TARGET_FREEBSD, true)
-		AC_DEFINE_UNQUOTED(HOST_OS_FREEBSD, $HOST_OS_FREEBSD, "host os is FreeBSD")
-		;; 
 	*) 
-		HOST_OS="Linux"
-		HOST_OS_LINUX=1
-		AM_CONDITIONAL(TARGET_LINUX, true)
-		AC_DEFINE_UNQUOTED(HOST_OS_LINUX, $HOST_OS_LINUX, "host os is Linux")
+		HOST_OS="Unix compatible"
 		;;
 esac
 
@@ -753,11 +740,12 @@ dnl --------------
 dnl  check for OSS
 dnl --------------
 
-AC_CHECK_HEADERS(sys/soundcard.h)
-AC_CHECK_HEADERS(machine/soundcard.h)
-if test x$ac_cv_header_sys_soundcard_h = xyes -o x$ac_cv_header_machine_soundcard_h = xyes; then
-	AC_DEFINE(HAVE_OSS, 1, "have oss")
-else
+AC_CHECK_HEADER(sys/soundcard.h,
+  [AC_DEFINE(HAVE_OSS, 1, "have oss")
+   AC_DEFINE(OSS_HEADER, [<sys/soundcard.h>], "soundcard.h path")],
+  [AC_CHECK_HEADER(machine/soundcard.h,
+     [AC_DEFINE(HAVE_OSS, 1, "have oss")
+      AC_DEFINE(OSS_HEADER, [<machine/soundcard.h>], "soundcard.h path")],
 	AC_MSG_WARN([
 ***
 *** Unable to find OSS header file soundcard.h! The audio loader
@@ -765,8 +753,7 @@ else
 ***
 *** This is NO ERROR. It only means you can't directly load programs
 *** by reading directly from the soundcard line input.
-***])
-fi
+***]))])
 
 dnl --------------------------------------
 dnl  check for libSDL if sound is enabled
@@ -789,6 +776,51 @@ else
 		enable_sound=no
 	fi
 fi
+
+dnl ----------------------------------------
+dnl  check for the Linux Joystick interface
+dnl ----------------------------------------
+
+AC_CHECK_HEADER(linux/joystick.h,
+  [AM_CONDITIONAL(HAVE_JOYSTICK, true)
+   AC_DEFINE(HAVE_JOYSTICK, 1, "Supported joystick interface present - Currently linux only")],
+  [AM_CONDITIONAL(HAVE_JOYSTICK, false)])
+
+dnl -----------------------------------------------
+dnl  check for the Unix facilities needed for V.24
+dnl -----------------------------------------------
+
+dnl The serial port code also uses unix IPC and forks of an helper process
+dnl This code checks for the availability of
+dnl  - termios
+dnl  - socketpair (communication to helper)
+dnl  - fork (starting of helper)
+dnl  - fcntl (needed to activate signal raising for sockets)
+dnl  - sigaction (for registering the signal handler)
+
+AC_MSG_CHECKING([Unix serial port facilities])
+AC_COMPILE_IFELSE([AC_LANG_PROGRAM(
+  [[#include <termios.h>
+    #include <stdio.h>
+    #include <sys/types.h>
+    #include <sys/socket.h>
+    #include <unistd.h>
+    #include <fcntl.h>
+    #include <signal.h>]],
+  [[struct termios tio;
+    int fds[2];
+    struct sigaction sa;
+    tcgetattr(0, &tio);
+    socketpair(AF_UNIX, SOCK_STREAM, 0, fds);
+    fork();
+    fcntl(fds[0], F_SETOWN, getpid());
+    fcntl(fds[0], F_SETFL, FASYNC);
+    sigemptyset(&sa.sa_mask);
+    sigaction(SIGIO, &sa, NULL); ]]) ],
+   [AC_MSG_RESULT(yes)
+    AM_CONDITIONAL(HAVE_V24, true)
+    AC_DEFINE(HAVE_V24, 1, "Supported serial port interface present")],
+   [AC_MSG_RESULT(no)])
 
 AC_OUTPUT([
 	Makefile
@@ -825,7 +857,7 @@ AC_OUTPUT([
 	src/kc/c80/Makefile
 	src/sys/Makefile
 	src/sys/mingw/Makefile
-	src/sys/linux/Makefile
+	src/sys/unix/Makefile
 	src/getopt/Makefile
 	src/cmd/Makefile
 	src/ui/Makefile

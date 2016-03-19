@@ -41,13 +41,17 @@ main(void)
 			case 0x19: continue;
 			case 0x1e: continue;
 
-			case 0x0f: c = '-'; break;
-			case 0x1f: c = '-'; break;
-			case '{':  c = '�'; break;
-			case '|':  c = '�'; break;
-			case '}':  c = '�'; break;
-			case ']':  c = '�'; break;
-			case '~':  c = '�'; break;
+			case 0x0f: c = '-';  break;
+			case 0x1f: c = '-';  break;
+
+                        // encoding: latin1
+			case 0x5d: c = 0xc4; break; // [ -> Ä
+			case 0x5e: c = 0xd6; break; // \ -> Ö
+			case 0x5f: c = 0xdc; break; // ] -> Ü
+			case 0x7b: c = 0xe4; break; // { -> ä
+			case 0x7c: c = 0xf6; break; // | -> ö
+			case 0x7d: c = 0xfc; break; // } -> ü
+			case 0x7e: c = 0xdf; break; // ~ -> ß
 		}
 		fputc(c, stdout);
 	}

@@ -235,7 +235,6 @@ WavPlayer::init_filter_kernel(void)
 bool
 WavPlayer::open(const char *filename)
 {
-#ifdef HOST_OS_LINUX
   DBG(1, form("KCemu/WavPlayer",
               "WavPlayer::open(): `%s'\n",
 	      filename));
@@ -248,13 +247,11 @@ WavPlayer::open(const char *filename)
     return false;
 
   return true;
-#endif /* HOST_OS_LINUX */
 }
 
 bool
 WavPlayer::play()
 {
-#ifdef HOST_OS_LINUX
   char buf[1000];
   char *shortname;
   const char *filename, *fmt;
@@ -288,7 +285,6 @@ WavPlayer::play()
   _stopped = false;
   z80->addCallback(0, this, (void *)0);
 
-#endif /* HOST_OS_LINUX */
   return true;
 }
 
@@ -313,7 +309,6 @@ WavPlayer::stop(void)
 void
 WavPlayer::close()
 {
-#ifdef HOST_OS_LINUX
   DBG(1, form("KCemu/WavPlayer",
               "WavPlayer::close()\n"));
 
@@ -321,7 +316,6 @@ WavPlayer::close()
     libaudio_close(_prop);
 
   _prop = NULL;
-#endif /* HOST_OS_LINUX */
 }
 
 void
@@ -371,7 +365,6 @@ WavPlayer::get_y(float value)
 void
 WavPlayer::do_play(void)
 {
-#ifdef HOST_OS_LINUX
   int a, c;
   int byte_cnt;
   double v;
@@ -503,13 +496,12 @@ WavPlayer::do_play(void)
       z80->addCallback(_bit_1, this, (void *)0);
     }
 #endif
-#endif /* HOST_OS_LINUX */
 }
  
 void
 WavPlayer::do_record(void)
 {
-#ifdef HOST_OS_LINUX
+#if 0
 #define BLEN (65536)
   static int idx = BLEN;
   unsigned char buf[BLEN];
@@ -569,5 +561,5 @@ WavPlayer::do_record(void)
       z80->addCallback(729, this, (void *)1);
     }
 #endif
-#endif /* HOST_OS_LINUX */
+#endif
 }

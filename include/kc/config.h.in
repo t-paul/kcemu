@@ -121,6 +121,9 @@
    declares uintmax_t. */
 #undef HAVE_INTTYPES_H_WITH_UINTMAX
 
+/* "Supported joystick interface present - Currently linux only" */
+#undef HAVE_JOYSTICK
+
 /* Define if you have <langinfo.h> and nl_langinfo(CODESET). */
 #undef HAVE_LANGINFO_CODESET
 
@@ -192,9 +195,6 @@
 
 /* Define to 1 if the system has the type `long long int'. */
 #undef HAVE_LONG_LONG_INT
-
-/* Define to 1 if you have the <machine/soundcard.h> header file. */
-#undef HAVE_MACHINE_SOUNDCARD_H
 
 /* Define to 1 if you have the <mcheck.h> header file. */
 #undef HAVE_MCHECK_H
@@ -291,9 +291,6 @@
 /* Define to 1 if you have the <sys/param.h> header file. */
 #undef HAVE_SYS_PARAM_H
 
-/* Define to 1 if you have the <sys/soundcard.h> header file. */
-#undef HAVE_SYS_SOUNDCARD_H
-
 /* Define to 1 if you have the <sys/stat.h> header file. */
 #undef HAVE_SYS_STAT_H
 
@@ -315,6 +312,9 @@
 /* Define to 1 if the system has the type `unsigned long long int'. */
 #undef HAVE_UNSIGNED_LONG_LONG_INT
 
+/* "Supported serial port interface present" */
+#undef HAVE_V24
+
 /* Define to 1 or 0, depending whether the compiler supports simple visibility
    declarations. */
 #undef HAVE_VISIBILITY
@@ -333,15 +333,6 @@
 
 /* "host os" */
 #undef HOST_OS
-
-/* "host os is FreeBSD" */
-#undef HOST_OS_FREEBSD
-
-/* "host os is Linux" */
-#undef HOST_OS_LINUX
-
-/* "host os is MinGW" */
-#undef HOST_OS_MINGW
 
 /* Define as const if the declaration of iconv() needs const. */
 #undef ICONV_CONST
@@ -366,6 +357,9 @@
 
 /* "KCemu version" */
 #undef KCEMU_VERSION
+
+/* "soundcard.h path" */
+#undef OSS_HEADER
 
 /* "package name" */
 #undef PACKAGE

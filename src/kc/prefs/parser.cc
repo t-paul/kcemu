@@ -98,14 +98,13 @@ ProfileParser::parse() {
     
     scanner->input_name = _filename.c_str();
     
-    scanner->config->cset_skip_characters = " \t";
-    scanner->config->cset_identifier_first = G_CSET_a_2_z;
-    scanner->config->cset_identifier_nth = G_CSET_a_2_z "_" G_CSET_DIGITS;
+    scanner->config->cset_skip_characters = (char*)" \t";
+    scanner->config->cset_identifier_first = (char*)G_CSET_a_2_z;
+    scanner->config->cset_identifier_nth = (char*)G_CSET_a_2_z "_" G_CSET_DIGITS;
     scanner->config->scan_identifier_NULL = TRUE;
     
     int state = 1;
     gchar *key = NULL;
-    Profile *profile = NULL;
     
     while (242) {
         GTokenType ttype = g_scanner_get_next_token(scanner);
@@ -194,4 +193,5 @@ Profile *
 MultiProfileParser::get_profile(void) {
     Profile *profile = new Profile(_level, "", "", "");
     _profile_list.push_back(profile);
+    return profile;
 }

@@ -25,13 +25,6 @@
 #include "kc/system.h"
 #include "kc/prefs/types.h"
 
-#ifdef HOST_OS_MINGW
-#ifdef HAVE_LIBSDL
-#include "SDL.h"
-#endif /* HAVE_LIBSDL */
-#include <windows.h>
-#endif /* HOST_OS_MINGW */
-
 #ifdef USE_INCLUDED_GETOPT
 #include "getopt/getopt.h"
 #else
@@ -832,45 +825,8 @@ open_debug_output(char *filename)
   DBGI()->set_output_stream(ofs);
 }
 
-#ifdef HOST_OS_MINGW
-void
-close_output(void)
-{
-  FILE *f;
-
-  /*
-   *  Prevent the dos box from popping up by redirecting
-   *  stdout and stdin to /dev/null. If opening /dev/null
-   *  doesn't work we use the magically present NUL file.
-   *  If both fail we fall back to creating a KCemu.log.
-   */
-  f = fopen("/dev/null", "wb");
-  if (f == NULL)
-    {
-      f = fopen("NUL", "wb");
-      if (f == NULL)
-	{
-	  f = fopen("KCemu.log", "wb");
-	}
-    }
-
-  if (f == NULL)
-    return;
-
-  *stdout = *f;
-  *stderr = *f;
-}
-#endif /* HOST_OS_MINGW */
-
-#ifdef HOST_OS_MINGW
-int WINAPI
-WinMain(HINSTANCE hThisInstance, HINSTANCE hPrevInstance, LPSTR lpszArgument, int nStil)
-#define argc _argc
-#define argv _argv
-#else
 int
 main(int argc, char **argv)
-#endif /* HOST_OS_MINGW */
 {
   int c;
   int type;
@@ -1081,10 +1037,6 @@ main(int argc, char **argv)
     }
 
   open_debug_output(kcemu_debug_output);
-
-#ifdef HOST_OS_MINGW
-  close_output();
-#endif /* HOST_OS_MINGW */
 
   if (kcemu_homedir == NULL)
     kcemu_homedir = strdup(".");

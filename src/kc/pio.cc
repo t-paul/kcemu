@@ -231,6 +231,7 @@ PIO::out_CTRL(int port, byte_t val)
 {
   byte_t old_mode;
   char p = (port == A) ? 'A' : 'B';
+  (void)p; // prevent "unused" warning when compiling without debug code
 
   if (port == A)
     {
@@ -450,6 +451,7 @@ PIO::set_EXT(int port, byte_t mask, byte_t val)
 {
   byte_t old;
   char p = "AB"[port];
+  (void)p; // prevent "unused" warning when compiling without debug code
 
   /*
   if (_irq_active[port] )

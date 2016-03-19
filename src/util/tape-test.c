@@ -45,7 +45,7 @@ x()
   val += z - zz;
   val *= .8;
       
-  printf("%ld %ld %.2f\n", _x++, 0, val);
+  printf("%ld %ld %.2f\n", _x++, 0L, val);
 }
 
 void
@@ -67,7 +67,7 @@ handle_sample2(long sample)
 int
 main(int argc, char **argv)
 {
-  int a, c, channels;
+  int a, c;
   libaudio_prop_t *prop;
 
   libaudio_init(LIBAUDIO_TYPE_ALL);

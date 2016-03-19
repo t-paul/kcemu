@@ -431,7 +431,7 @@ debug_op_asm::update(DebugWindow *w, scroll_dir_t direction)
 {
   int a;
   int done;
-  char *ptr;
+  char *ptr = NULL;
   int pc, newpc;
 
   if (direction == SCROLL_NEXT_PAGE)

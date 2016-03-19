@@ -4,11 +4,7 @@ SUBDIRS = prefs kcnet kramermc muglerpc vcs80 c80
 
 bin_PROGRAMS = kcemu
 
-if TARGET_LINUX
-noinst_PROGRAMS = kcemu-send
-endif
-
-if TARGET_FREEBSD
+if !TARGET_MINGW
 noinst_PROGRAMS = kcemu-send
 endif
 
@@ -29,23 +25,25 @@ AM_CPPFLAGS = \
 	$(GTK_CFLAGS) \
 	$(SDL_CFLAGS)
 
-LINUX_EXTRA_kcemu_SOURCES = mod_v24.cc mod_js.cc
+JOYSTICK_EXTRA_kcemu_SOURCES = mod_js.cc
+V24_EXTRA_kcemu_SOURCES = mod_v24.cc
 MINGW_EXTRA_kcemu_SOURCES = kcemu.rc
-FREEBSD_EXTRA_kcemu_SOURCES = mod_v24.cc
 
-if TARGET_LINUX
-EXTRA_kcemu_SOURCES = $(LINUX_EXTRA_kcemu_SOURCES)
+EXTRA_kcemu_SOURCES = 
+
+if HAVE_JOYSTICK
+EXTRA_kcemu_SOURCES += $(JOYSTICK_EXTRA_kcemu_SOURCES)
+endif
+
+if HAVE_V24
+EXTRA_kcemu_SOURCES += $(V24_EXTRA_kcemu_SOURCES)
 endif
 
 if TARGET_MINGW
-EXTRA_kcemu_SOURCES = $(MINGW_EXTRA_kcemu_SOURCES)
+EXTRA_kcemu_SOURCES += $(MINGW_EXTRA_kcemu_SOURCES)
 endif
 
-if TARGET_FREEBSD
-EXTRA_kcemu_SOURCES = $(FREEBSD_EXTRA_kcemu_SOURCES)
-endif
-
-EXTRA_DIST = $(LINUX_EXTRA_kcemu_SOURCES) $(MINGW_EXTRA_kcemu_SOURCES) $(FREEBSD_EXTRA_kcemu_SOURCES)
+EXTRA_DIST = $(JOYSTICK_EXTRA_kcemu_SOURCES) $(V24_EXTRA_kcemu_SOURCES) $(MINGW_EXTRA_kcemu_SOURCES)
 
 kcemu_SOURCES = \
 	kc.cc		\
@@ -156,16 +154,10 @@ kcemu_SOURCES = \
 	$(EXTRA_kcemu_SOURCES)
 
 
-if TARGET_LINUX
-SYSLIBS_LINUX = ../sys/linux/libsys_linux.a
-endif
-
-if TARGET_FREEBSD
-SYSLIBS_FREEBSD = ../sys/linux/libsys_linux.a
-endif
-
 if TARGET_MINGW
-SYSLIBS_MINGW = ../sys/mingw/libsys_mingw.a -lwinmm -lws2_32
+SYSLIBS = ../sys/mingw/libsys_mingw.a -lwinmm -lws2_32
+else
+SYSLIBS = ../sys/unix/libsys_unix.a
 endif
 
 kcemu_LDADD = \
@@ -199,9 +191,7 @@ kcemu_LDADD = \
 	$(LIBAVFORMAT_LIBS)		\
 	$(VNCSERVER_LIBS)               \
 	$(LIBGIF_LIBS)                  \
-	$(SYSLIBS_MINGW)		\
-	$(SYSLIBS_LINUX)		\
-	$(SYSLIBS_FREEBSD)		\
+	$(SYSLIBS)			\
 	$(GETOPTLIB)			\
 	$(INTLLIBS)			\
 	$(Z80EX_LIBS)

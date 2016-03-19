@@ -38,9 +38,11 @@ FileBrowser::execute(CMD_Args *args, CMD_Context context)
   _args = args;
   title = _("Select File...");
   if (_args)
+  {
     arg_title = _args->get_string_arg("ui-file-select-title");
-  if (arg_title)
-    title = arg_title;
+    if (arg_title)
+      title = arg_title;
+  }
 
   path = NULL;
   if (_args)

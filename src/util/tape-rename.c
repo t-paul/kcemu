@@ -18,6 +18,11 @@
  */
 
 #include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+int
+check_file_type(char *name, char *type, unsigned char *buf);
 
 static int _verbose = 0;
 

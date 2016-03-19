@@ -17,6 +17,7 @@
  *  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
+#include <assert.h>
 #include <iostream>
 #include <iomanip>
 
@@ -151,6 +152,7 @@ CTC::handle_counter_mode(int channel)
     case 1: cv = counter_value_1(); break;
     case 2: cv = counter_value_2(); break;
     case 3: cv = counter_value_3(); break;
+    default: assert(0);
     }
   
   if (cv == 0)

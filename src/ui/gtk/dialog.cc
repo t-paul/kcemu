@@ -41,7 +41,8 @@ DialogWindow::~DialogWindow(void)
 void
 DialogWindow::execute(CMD_Args *args, CMD_Context context)
 {
-  char *text;
+  char * textbuffer;
+  const char *text;
   const char *title;
   const char *text_arg;
   const char *text_val;
@@ -51,6 +52,7 @@ DialogWindow::execute(CMD_Args *args, CMD_Context context)
   text = NULL;
   text_val = NULL;
   text_arg = NULL;
+  textbuffer = NULL;
   title = _("???");
   if (_args)
     {
@@ -62,8 +64,9 @@ DialogWindow::execute(CMD_Args *args, CMD_Context context)
           text_arg_val = _args->get_string_arg(text_arg);
           if (text_arg_val)
             {
-              text = new char[strlen(text_val) + strlen(text_arg_val) + 1];
-              sprintf(text, text_val, text_arg_val);
+              textbuffer = new char[strlen(text_val) + strlen(text_arg_val) + 1];
+              sprintf(textbuffer, text_val, text_arg_val);
+              text = textbuffer;
             }
         }
       if (text == NULL)
@@ -85,6 +88,7 @@ DialogWindow::execute(CMD_Args *args, CMD_Context context)
   default:
     break;
   }
+  delete[] textbuffer;
 }
 
 void

@@ -20,6 +20,8 @@
 #include <math.h>
 #include <stdio.h>
 #include <ctype.h>
+#include <stdlib.h>
+#include <string.h>
 #include <unistd.h>
 
 #include "libaudio/libaudio.h"
@@ -39,6 +41,9 @@ static int filename_idx = 0;
 static int _verbose = 0;
 static int _byte_idx;
 static unsigned char _buf[130];
+
+int
+check_file_type(char *name, char *type, unsigned char *buf);
 
 void
 new_file(void)
@@ -669,12 +674,8 @@ fastloader(int counter)
 void
 handle_sample3(int sample)
 {
-  int a;
   float v;
-  static float vv;
   static int x = -1;
-  static int idx = 0;
-  static long buf[LENGTH] = { 0, };
   static int old_sample = 0;
 
   //vv += (sample - old_sample);

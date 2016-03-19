@@ -101,7 +101,7 @@ UI_3::generic_update(Scanline *scanline, MemAccess *memaccess, bool clear_cache)
   p = 0;
   for (y = 0;y < 256;y++)
     {
-      pc = (p & 0x7f) | ((p & 0xfe00) >> 2) + 0x2800;
+      pc = (p & 0x7f) | (((p & 0xfe00) >> 2) + 0x2800);
       ys = _bitswap1[y];
 
       s = 0;

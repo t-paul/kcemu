@@ -165,10 +165,13 @@
 #include "kc/mod_m052.h"
 #include "kc/mod_vdip.h"
 
-#ifdef HOST_OS_LINUX
+#ifdef HAVE_V24
 #include "kc/mod_v24.h"
+#endif /* HAVE_V24 */
+
+#ifdef HAVE_JOYSTICK
 #include "kc/mod_js.h"
-#endif /* HOST_OS_LINUX */
+#endif
 
 #include "fileio/load.h"
 
@@ -448,10 +451,10 @@ ModuleList::ModuleList(void)
   /*
    *  V24 module
    */
-#ifdef HOST_OS_LINUX
+#ifdef HAVE_V24
     m = new ModuleV24("M003", 0xee);
     _mod_list.push_back(new ModuleListEntry(_("M003: V24"), m, KC_TYPE_85_2_CLASS));
-#endif /* HOST_OS_LINUX */
+#endif /* HAVE_V24 */
 
   /*
    *  basic (kc85/2) (this is actually 16k and includes a new system rom!)
@@ -463,10 +466,10 @@ ModuleList::ModuleList(void)
   /*
    *  Joystick module (kc85/2-4)
    */
-#ifdef HOST_OS_LINUX
+#ifdef HAVE_JOYSTICK
   m = new ModuleJoystick("M008", 0xff);
   _mod_list.push_back(new ModuleListEntry(_("M008: Joystick"), m, KC_TYPE_85_2_CLASS));
-#endif /* HOST_OS_LINUX */
+#endif /* HAVE_JOYSTICK */
 
   /*
    *  RAM module 64k (kc85/2-4)

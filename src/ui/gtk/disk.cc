@@ -181,7 +181,7 @@ DiskWindow::init(void)
     "ui-disk-detach-3",
     "ui-disk-detach-4",
   };
-  static const char * disk_files[] = {
+/*  static const char * disk_files[] = {
     "a5105sys.dump",
     "caos.dump",
     "cpmz9.dump",
@@ -192,7 +192,7 @@ DiskWindow::init(void)
     NULL
   };
 
-  GtkTreeIter iter;
+  GtkTreeIter iter;*/
   GtkListStore *store = gtk_list_store_new(1, G_TYPE_STRING);
 //  for (int a = 0;disk_files[a] != NULL;a++)
 //    {

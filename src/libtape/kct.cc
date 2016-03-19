@@ -367,7 +367,7 @@ KCTFile::dirent_allocate(const char        *filename,
       if ((o & 1) == 0) ent = 0;
       else if ((o & 2) == 0) ent = 1;
       else if ((o & 4) == 0) ent = 2;
-      else if ((o & 8) == 0) ent = 3;
+      else /*if ((o & 8) == 0)*/ ent = 3; /* o & 0xf is known to be != 0xf */
       //o &= DIRBLOCK_OFFSET_MASK;
       _header.offset[idx] |= (1 << ent);
       ret = dirblock_read(_dirblock, o);
@@ -508,7 +508,7 @@ void
 KCTFile::list(void)
 {
   int com;
-  char *type;
+  const char *type;
   float ratio;
   unsigned long count, c_total, u_total;
 

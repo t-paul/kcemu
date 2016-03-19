@@ -53,8 +53,6 @@ FDC4::in(word_t addr)
 {
   byte_t val = 0;
 
-  word_t pc = fdc_z80->getPC();
-
   switch (addr & 0xff)
     {
     case 0xf0: // D004 (KC85/4)
@@ -62,20 +60,20 @@ FDC4::in(word_t addr)
       val = get_msr();
       DBG(2, form("KCemu/FDC/in_F0",
                   "FDC::in(): %04xh addr = %04x, val = %02x [%c]\n",
-                  pc, addr, val, isprint(val) ? val : '.'));
+                  fdc_z80->getPC(), addr, val, isprint(val) ? val : '.'));
       break;
     case 0xf1: // D004 (KC85/4)
       val = in_data(addr);
       DBG(2, form("KCemu/FDC/in_F1",
                   "FDC::in(): %04xh addr = %04x, val = %02x [%c]\n",
-                  pc, addr, val, isprint(val) ? val : '.'));
+                  fdc_z80->getPC(), addr, val, isprint(val) ? val : '.'));
       break;
     case 0xf2: // D004 (KC85/4)
       /* DAK-FDC (DMA-Acknowledge) */
       val = read_byte();
       DBG(2, form("KCemu/FDC/in_F2",
                   "FDC::in(): %04xh addr = %04x, val = %02x [%c]\n",
-                  pc, addr, val, isprint(val) ? val : '.'));
+                  fdc_z80->getPC(), addr, val, isprint(val) ? val : '.'));
       break;
     case 0xf4: // D004 (KC85/4)
       /* 
@@ -89,27 +87,27 @@ FDC4::in(word_t addr)
       val = get_input_gate();
       DBG(2, form("KCemu/FDC/in_F4",
                   "FDC::in(): %04xh addr = %04x, val = %02x [%c]\n",
-                  pc, addr, val, isprint(val) ? val : '.'));
+                  fdc_z80->getPC(), addr, val, isprint(val) ? val : '.'));
       break;
     case 0xf6: // D004 (KC85/4)
       /* Select-Latch */
       val = 0x00;
       DBG(2, form("KCemu/FDC/in_F6",
                   "FDC::in(): %04xh addr = %04x, val = %02x [%c]\n",
-                  pc, addr, val, isprint(val) ? val : '.'));
+                  fdc_z80->getPC(), addr, val, isprint(val) ? val : '.'));
       break;
     case 0xf8: // D004 (KC85/4)
       /* TC-FDC (Terminalcount) - End of DMA Transfer */
       val = 0x00;
       DBG(2, form("KCemu/FDC/in_F8",
                   "FDC::in(): %04xh addr = %04x, val = %02x [%c]\n",
-                  pc, addr, val, isprint(val) ? val : '.'));
+                  fdc_z80->getPC(), addr, val, isprint(val) ? val : '.'));
       break;
     }
 
   DBG(2, form("KCemu/FDC/in",
               "FDC::in(): %04xh  addr = %04x, val = %02x\n",
-              pc, addr, val));
+              fdc_z80->getPC(), addr, val));
 
   return val;
 }
@@ -117,36 +115,34 @@ FDC4::in(word_t addr)
 void
 FDC4::out(word_t addr, byte_t val)
 {
-  word_t pc = fdc_z80->getPC();
-
   DBG(2, form("KCemu/FDC/out",
               "FDC::out(): %04xh (I=%02x): addr = %04x, val = %02x [%c]\n",
-              pc, fdc_z80->getI(), addr, val, isprint(val) ? val : '.'));
+              fdc_z80->getPC(), fdc_z80->getI(), addr, val, isprint(val) ? val : '.'));
 
   switch (addr & 0xff)
     {
     case 0xf1: // D004 (KC85/4)
       DBG(2, form("KCemu/FDC/out_F1",
                   "FDC::out(): %04xh addr = %04x, val = %02x [%c]\n",
-                  pc, addr, val, isprint(val) ? val : '.'));
+                  fdc_z80->getPC(), addr, val, isprint(val) ? val : '.'));
       out_data(addr, val);
       break;
     case 0xf2: // D004 (KC85/4)
       DBG(2, form("KCemu/FDC/out_F2",
                   "FDC::out(): %04xh addr = %04x, val = %02x [%c]\n",
-                  pc, addr, val, isprint(val) ? val : '.'));
+                  fdc_z80->getPC(), addr, val, isprint(val) ? val : '.'));
       write_byte(val);
       break;
     case 0xf6: // D004 (KC85/4)
       DBG(2, form("KCemu/FDC/out_F6",
                   "FDC::out(): %04xh addr = %04x, val = %02x [%c]\n",
-                  pc, addr, val, isprint(val) ? val : '.'));
+                  fdc_z80->getPC(), addr, val, isprint(val) ? val : '.'));
       drive_select(val & 0x0f);
       break;
     case 0xf8: // D004 (KC85/4)
       DBG(2, form("KCemu/FDC/out_F8",
                   "FDC::out(): %04xh Terminal Count %02x\n",
-                  pc, val));
+                  fdc_z80->getPC(), val));
 
       set_state(FDC_STATE_RESULT);
       set_input_gate(0x40, 0x00);
@@ -154,7 +150,7 @@ FDC4::out(word_t addr, byte_t val)
     default:
       DBG(2, form("KCemu/FDC/out_unhandled",
                   "FDC::out(): %04xh addr = %04x, val = %02x [%c]\n",
-                  pc, addr, val, isprint(val) ? val : '.'));
+                  fdc_z80->getPC(), addr, val, isprint(val) ? val : '.'));
       break;
     }
 }

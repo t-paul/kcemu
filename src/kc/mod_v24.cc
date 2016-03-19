@@ -180,11 +180,13 @@ ModuleV24::out(word_t addr, byte_t val)
       DBG(2, form("KCemu/ModuleV24/out/data/A",
                   "out_data: sio A 08h: %0xh (io_type = %d)\n",
                   val, _io_type));
-      if (_fd_out[A] && (_io_type != IO_NONE))
-        if (_io_type == IO_FILE)
-          write(_fd_out[A], &val, 1);
-        else
-          send(_fd_out[A], &val, 1, 0);
+      if (_fd_out[A] && (_io_type != IO_NONE)) 
+        {
+          if (_io_type == IO_FILE)
+            write(_fd_out[A], &val, 1);
+          else
+            send(_fd_out[A], &val, 1, 0);
+        }
       break;
     case 0x09:
       /* SIO channel B - data */
@@ -192,10 +194,12 @@ ModuleV24::out(word_t addr, byte_t val)
                   "out_data: sio B 09h: %0xh (io_type = %d)\n",
                   val, _io_type));
       if (_fd_out[B] && (_io_type != IO_NONE))
-        if (_io_type == IO_FILE)
-          write(_fd_out[B], &val, 1);
-        else
-          send(_fd_out[B], &val, 1, 0);
+        {
+          if (_io_type == IO_FILE)
+            write(_fd_out[B], &val, 1);
+          else
+            send(_fd_out[B], &val, 1, 0);
+        }
       break;
     case 0x0a:
       /* SIO channel A - control */
@@ -683,7 +687,7 @@ void
 ModuleV24::open_device(void)
 {
   bool ret;
-  char *s;
+  const char *s;
   const char *dev_name;
 
   dev_name = Preferences::instance()->get_string_value("v24_device", "/dev/ttyS1");

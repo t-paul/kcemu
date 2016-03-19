@@ -31,7 +31,7 @@
 #include <sys/stat.h>
 #include <sys/ioctl.h>
 #include <sys/types.h>
-#include <sys/soundcard.h>
+#include OSS_HEADER
 
 #define OSS_BUF_SIZE (1024)
 

@@ -826,11 +826,15 @@ KCNET_CMD_READ_BYTES::data_read(void)
 {
   if (_idx < _counter)
     {
-      word_t ptr = _kcnet->get_pointer();
       byte_t val = _kcnet->mem_read();
+
       DBG(2, form("KCemu/KCNET_CMD/KCNET_CMD_READ_BYTES",
                   "KCNET_CMD_READ_BYTES:      addr: %04xh - %02xh (%3d / '%c') - index = %02xh (%3d)  | %s\n",
-                  ptr, val, val, isprint(val) ? val : '.', _idx, _idx, _kcnet->mem_info(ptr)));
+                  _kcnet->get_pointer(),
+                  val, val, isprint(val) ? val : '.',
+                  _idx, _idx,
+                  _kcnet->mem_info(_kcnet->get_pointer())));
+
       _idx++;
 
       if (_idx == _counter)

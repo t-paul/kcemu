@@ -58,6 +58,7 @@ PortsMuglerPC::in(word_t addr)
       DBG(0, form("KCemu/internal_error",
 		  "PortsMuglerPC: called in() with undefined address %04xh\n",
 		  addr));
+      val = 0xff;
       break;
     }
 
