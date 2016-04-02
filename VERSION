@@ -24,10 +24,29 @@ else
         KCEMU_EXTRA_VERSION=0
 fi
 
-################################################################
-
-if [ "x-v" = "x$1" ]
-then
-	echo -n "$KCEMU_VERSION"
+# reproducible builds, see https://wiki.debian.org/ReproducibleBuilds
+DATE_FMT="%Y-%m-%d"
+TIME_FMT="%H:%M"
+if [ -z "$SOURCE_DATE_EPOCH" -a -d .git -a $(git status --porcelain | grep -v "^??" | wc -l) -eq 0 ]; then
+	SOURCE_DATE_EPOCH=$(git log -1 --pretty=%ct)
+fi
+if [ -n "$SOURCE_DATE_EPOCH" ]; then
+	KCEMU_BUILD_DATE=$(date -u -d "@$SOURCE_DATE_EPOCH" "+$DATE_FMT" 2>/dev/null || date -u -r "$SOURCE_DATE_EPOCH" "+$DATE_FMT" 2>/dev/null || date -u "+$DATE_FMT")
+	KCEMU_BUILD_TIME=$(date -u -d "@$SOURCE_DATE_EPOCH" "+$TIME_FMT" 2>/dev/null || date -u -r "$SOURCE_DATE_EPOCH" "+$TIME_FMT" 2>/dev/null || date -u "+$TIME_FMT")
+else
+	KCEMU_BUILD_DATE=$(date "+$DATE_FMT")
+	KCEMU_BUILD_TIME=$(date "+$TIME_FMT")
 fi
 
+################################################################
+
+case "$1" in
+	-v)
+		echo -n "$KCEMU_VERSION"
+		;;
+	-b)
+		echo -n "$KCEMU_BUILD_DATE / $KCEMU_BUILD_TIME"
+		;;
+	*)
+		;;
+esac

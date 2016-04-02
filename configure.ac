@@ -4,14 +4,14 @@ dnl
 dnl  Process this file with autoconf to produce a configure script.
 dnl ----------------------------------------------------------------
 
-. ./VERSION
-
-VERSION=$KCEMU_VERSION
-
 AC_INIT([KCemu], m4_esyscmd([sh ./VERSION -v]))
+
+KCEMU_SET_VERSION
+VERSION=$KCEMU_VERSION
 
 AC_CONFIG_SRCDIR([include/kc/kc.h])
 AC_CONFIG_AUX_DIR(config)
+AC_CONFIG_MACRO_DIRS([config])
 AC_CANONICAL_TARGET
 AC_CANONICAL_HOST
 AC_GNU_SOURCE
@@ -51,6 +51,8 @@ AC_DEFINE_UNQUOTED(KCEMU_MICRO_VERSION, $KCEMU_MICRO_VERSION, "KCemu micro versi
 AC_DEFINE_UNQUOTED(KCEMU_EXTRA_VERSION, $KCEMU_EXTRA_VERSION, "KCemu extra version")
 AC_DEFINE_UNQUOTED(KCEMU_EXTRA_VERSION_TEXT, "$KCEMU_EXTRA_VERSION_TEXT", "KCemu extra version text")
 AC_DEFINE_UNQUOTED(KCEMU_VERSION, "$KCEMU_VERSION", "KCemu version")
+AC_DEFINE_UNQUOTED(KCEMU_BUILD_DATE, "$KCEMU_BUILD_DATE", "KCemu build date (or source date epoch if available)")
+AC_DEFINE_UNQUOTED(KCEMU_BUILD_TIME, "$KCEMU_BUILD_TIME", "KCemu build time (or source date epoch if available)")
 
 AC_DEFINE(PACKAGE_URL, "$PACKAGE_URL", "KCemu Homepage")
 AC_DEFINE(PACKAGE_NAME, "$PACKAGE-$KCEMU_VERSION")
