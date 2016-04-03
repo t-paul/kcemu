@@ -340,6 +340,12 @@
 /* Define if integer division by zero raises signal SIGFPE. */
 #undef INTDIV0_RAISES_SIGFPE
 
+/* "KCemu build date (or source date epoch if available)" */
+#undef KCEMU_BUILD_DATE
+
+/* "KCemu build time (or source date epoch if available)" */
+#undef KCEMU_BUILD_TIME
+
 /* "KCemu extra version" */
 #undef KCEMU_EXTRA_VERSION
 

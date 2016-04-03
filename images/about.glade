@@ -82,7 +82,7 @@
               <object class="GtkLabel" id="main_label_copyright">
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
-                <property name="label" translatable="yes">(c) 1997-2010 Torsten Paul</property>
+                <property name="label" translatable="yes">(c) 1997-2016 Torsten Paul</property>
                 <property name="selectable">True</property>
               </object>
               <packing>
