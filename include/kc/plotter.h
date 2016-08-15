@@ -24,32 +24,38 @@
 
 #include "kc/kc.h"
 
+#if __cplusplus > 199711L
+#define CONST constexpr
+#else
+#define CONST const
+#endif
+
 class Plotter
 {
 private:
   /** paper width in mm (A4) */
-  static const double WIDTH_MM = 210.0;
+  static CONST double WIDTH_MM = 210.0;
 
   /** paper height in mm (A4) */
-  static const double HEIGHT_MM = 297.0;
+  static CONST double HEIGHT_MM = 297.0;
 
   /** plotting area width in mm */
-  static const double PLOTTING_AREA_WIDTH_MM = 188.0;
+  static CONST double PLOTTING_AREA_WIDTH_MM = 188.0;
 
   /** plotting area height in mm */
-  static const double PLOTTING_AREA_HEIGHT_MM = 255.0;
+  static CONST double PLOTTING_AREA_HEIGHT_MM = 255.0;
 
   /** scaling factor for the buffer image surface */
-  static const double BUFFER_SURFACE_SCALE = 10.0;
+  static CONST double BUFFER_SURFACE_SCALE = 10.0;
 
   /** scaling factor for the onscreen image surface */
-  static const double ONSCREEN_SURFACE_SCALE = 3.0;
+  static CONST double ONSCREEN_SURFACE_SCALE = 3.0;
 
   /** plotter step width in cm */
-  static const double STEP_WIDTH = 0.1;
+  static CONST double STEP_WIDTH = 0.1;
 
   /** convert mm to points per inch (for pdf output) */
-  static const double MM_TO_INCH = 72.0 / 25.4;
+  static CONST double MM_TO_INCH = 72.0 / 25.4;
 
 private:
   /** current coordianates of the plotting pen */
