@@ -28,6 +28,15 @@
 
 #include "kc/plotter.h"
 
+const double Plotter::WIDTH_MM = 210.0;
+const double Plotter::HEIGHT_MM = 297.0;
+const double Plotter::PLOTTING_AREA_WIDTH_MM = 188.0;
+const double Plotter::PLOTTING_AREA_HEIGHT_MM = 255.0;
+const double Plotter::BUFFER_SURFACE_SCALE = 10.0;
+const double Plotter::ONSCREEN_SURFACE_SCALE = 3.0;
+const double Plotter::STEP_WIDTH = 0.1;
+const double Plotter::MM_TO_INCH = 72.0 / 25.4;
+
 Plotter::Plotter(void)
 {
   init();
