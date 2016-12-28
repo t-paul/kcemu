@@ -1,5 +1,6 @@
 # ignore objects and archives
 *.[oa]
+*.l[oa]
 
 # anjuta files
 .anjuta
