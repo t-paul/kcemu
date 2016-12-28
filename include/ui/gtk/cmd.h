@@ -46,7 +46,7 @@ void cmd_exec_sftb(GtkWidget *widget, gpointer data);
 /*
  *  cmd_exec as GTK+ menu callback
  */
-void cmd_exec_mc(gpointer data, guint action, GtkWidget *widget);
+void cmd_exec_mc(gpointer data);
 
 /*
  *  cmd_exec as GTK+ menu callback, with data being an array of

@@ -464,6 +464,7 @@ UI_Gtk::~UI_Gtk(void) {
 void
 UI_Gtk::init(int *argc, char ***argv) {
     self = this;
+	_ui = NULL;
     _shift_lock = false;
     _speed_limit = true;
     

@@ -263,13 +263,12 @@ MainWindow::wire_menu_item(const char *name, const char *shortcut, const char *c
     string path = string("<KCemu>/") + parent_name + "/" + name;
 
     gtk_menu_item_set_accel_path(item, path.c_str());
-    g_signal_connect(item, "activate", G_CALLBACK(cmd_exec_mc), (gpointer)(command));
-
+    g_signal_connect_swapped(item, "activate", G_CALLBACK(cmd_exec_mc), (gpointer)(command));
     string popup_name = string(name) + "_p";
     GtkMenuItem *popup_item = GTK_MENU_ITEM(get_widget_or_null(popup_name.c_str()));
     if (popup_item != NULL) {
-    gtk_menu_item_set_accel_path(popup_item, path.c_str());
-        g_signal_connect(popup_item, "activate", G_CALLBACK(cmd_exec_mc), (gpointer)(command));
+        gtk_menu_item_set_accel_path(popup_item, path.c_str());
+        g_signal_connect_swapped(popup_item, "activate", G_CALLBACK(cmd_exec_mc), (gpointer)(command));
     }
 
     if (shortcut != NULL) {

@@ -43,9 +43,9 @@ cmd_exec_sftb(GtkWidget *widget, gpointer data)
 }
 
 void
-cmd_exec_mc(gpointer data, guint action, GtkWidget *widget)
+cmd_exec_mc(gpointer data)
 {
-  const char *name = (const char *)action;
+  const char *name = (const char *)data;
   CMD_EXEC(name);
 }
 
