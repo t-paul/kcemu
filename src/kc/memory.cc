@@ -366,9 +366,7 @@ Memory::load_rom(const char *key, void *buf)
   string rompath; // must be still in scope when calling load_rom() below...
   if (!sys_isabsolutepath(romfile))
     {
-      string datadir(kcemu_datadir);
-      string romdir = datadir + system->get_rom_directory() + "/";
-      rompath = romdir + romfile;
+      rompath = string(kcemu_datadir) + system->get_rom_directory() + "/" + romfile;
       romfile = rompath.c_str();
       DBG(1, form("KCemu/Memory/load_rom",
                   "Memory::load_rom(): resolving relative path to '%s'\n",
