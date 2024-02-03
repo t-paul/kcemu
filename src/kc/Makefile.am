@@ -198,4 +198,4 @@ kcemu_send_SOURCES = \
 	kcemu-send.c
 
 kcemu_send_LDADD = \
-	-lncurses $(INTLLIBS)
+	-lncurses -ltinfo $(INTLLIBS)

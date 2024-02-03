@@ -44,7 +44,7 @@ AM_CPPFLAGS = \
 #disp_wav_SOURCES = \
 #	disp-wav.c
 #disp_wav_LDADD = \
-#	-lncurses
+#	-lncurses -ltinfo
 
 disk_tool_SOURCES = \
 	disk-tool.c
