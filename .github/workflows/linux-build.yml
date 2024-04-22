@@ -1,0 +1,26 @@
+name: linux-build
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - name: setup
+      run: >
+        sudo apt-get update
+        sudo apt-get install -y --no-install-recommends \
+          libsdl1.2-dev
+          libgtk2.0-dev
+          libz80ex-dev
+    - uses: actions/checkout@v3
+    - name: configure
+      run: ./config/bootstrap
+    - name: make
+      run: make
+    - name: make check
+      run: make check
