@@ -689,17 +689,22 @@ SystemInformation::SystemInformation(void) {
                  "caos__c0.855", _("CAOS 4.4 (C)"),
                  "caos45c.855", _("CAOS 4.5 (C)"),
                  "caos46c.855", _("CAOS 4.6 beta (27.03.2016) (C)"),
+                 "caos47c.855", _("CAOS 4.7 beta (21.02.2017) (C)"),
+                 "caos48c.855", _("CAOS 4.8 (05.01.2024) (C)"),
                  NULL)
         .add_rom(SystemROM::ROM_KEY_CAOSE, 0x2000, 1,
                  "caos43e.855", _("CAOS 4.3 (E)"),
                  "caos__e0.855", _("CAOS 4.4 (E)"),
                  "caos45e.855", _("CAOS 4.5 (E)"),
                  "caos46e.855", _("CAOS 4.6 beta (27.03.2016) (E)"),
+                 "caos47e.855", _("CAOS 4.7 beta (21.02.2017) (E)"),
+                 "caos48e.855", _("CAOS 4.8 (05.01.2024) (E)"),
                  NULL)
         .add_rom(SystemROM::ROM_KEY_BASIC, 0x8000, 1,
                  "basic_c0.855", _("KC-BASIC (EDAS/TEMO/FORTH)"),
                  "basicusb.855", _("KC-BASIC (EDAS/TEMO/USB)"),
                  "user46.855", _("USER 4.6 (27.03.2016)"),
+                 "user47.855", _("USER 4.7 (21.02.2017)"),
                  NULL)
         .add_rom(SystemROM::ROM_KEY_D004_FC, 0x2000, 3,
                  "floppy20.rom", _("D004 Version 2.0 (02.01.1989)"),

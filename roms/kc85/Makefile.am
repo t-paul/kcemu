@@ -27,6 +27,10 @@ ROMS = \
 	caos45e.855 \
 	caos46c.855 \
 	caos46e.855 \
+	caos47c.855 \
+	caos47e.855 \
+	caos48c.855 \
+	caos48e.855 \
 	floppy20.rom \
 	floppy30.rom \
 	floppy31.rom \
@@ -34,6 +38,7 @@ ROMS = \
 	floppy33.853 \
 	floppy33.854 \
 	user46.855 \
+	user47.855 \
 	vdip12.rom \
 	vdip21.rom \
 	m006.rom \
