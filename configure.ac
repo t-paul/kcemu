@@ -4,7 +4,7 @@ dnl
 dnl  Process this file with autoconf to produce a configure script.
 dnl ----------------------------------------------------------------
 
-AC_INIT([KCemu], m4_esyscmd([sh ./VERSION -v]))
+AC_INIT([KCemu],[m4_esyscmd(sh ./VERSION -v)])
 
 KCEMU_SET_VERSION
 VERSION=$KCEMU_VERSION
@@ -14,7 +14,7 @@ AC_CONFIG_AUX_DIR(config)
 AC_CONFIG_MACRO_DIRS([config])
 AC_CANONICAL_TARGET
 AC_CANONICAL_HOST
-AC_GNU_SOURCE
+AC_USE_SYSTEM_EXTENSIONS
 
 dnl -----------------------
 dnl  declare extra options
@@ -183,15 +183,14 @@ dnl ---------------------------------------------------------------
 
 AC_C_CONST
 AC_C_INLINE
-AC_HEADER_TIME
+AC_CHECK_HEADERS_ONCE([sys/time.h])
 
 dnl -------------------------------
 dnl  check for common header files
 dnl -------------------------------
 
 AC_PATH_X
-AC_HEADER_STDC
-AC_CHECK_HEADERS(sys/time.h mcheck.h)
+AC_CHECK_HEADERS(mcheck.h)
 
 dnl ----------------------------------
 dnl  check for common C++ header files
@@ -203,7 +202,16 @@ AC_LANG_POP(C++)
 dnl --------------------------------------
 dnl  checks for various library functions
 dnl --------------------------------------
-AC_TYPE_SIGNAL
+AC_CACHE_CHECK([return type of signal handlers],[ac_cv_type_signal],[AC_COMPILE_IFELSE(
+[AC_LANG_PROGRAM([#include <sys/types.h>
+#include <signal.h>
+],
+		 [return *(signal (0, 0)) (0) == 1;])],
+		   [ac_cv_type_signal=int],
+		   [ac_cv_type_signal=void])])
+AC_DEFINE_UNQUOTED([RETSIGTYPE],[$ac_cv_type_signal],[Define as the return type of signal handlers
+		    ('int' or 'void').])
+
 AC_CHECK_FUNCS(gettimeofday strstr strchr strrchr strtol strcasecmp strncasecmp mtrace)
 AC_CHECK_FUNC(localtime_r, AC_DEFINE(HAVE_LOCALTIME_R, 1, "localtime_r"))
 AC_CHECK_FUNC(localtime, AC_DEFINE(HAVE_LOCALTIME, 1, "localtime"))
@@ -319,7 +327,7 @@ if test x$have_libz80ex = xyes; then
 		ac_save_LIBS="$LIBS"
 		CFLAGS="$CFLAGS $Z80EX_CFLAGS"
 		LIBS="$Z80EX_LIBS $LIBS"
-		AC_TRY_RUN([
+		AC_RUN_IFELSE([AC_LANG_SOURCE([[
 #include <stdio.h>
 #include <z80ex/z80ex.h>
 
@@ -337,7 +345,7 @@ main()
 
   return 0;
 }
-],AC_MSG_RESULT(yes),have_libz80ex=no)
+]])],[AC_MSG_RESULT(yes)],[have_libz80ex=no],[])
 		CFLAGS="$ac_save_CFLAGS"
 		LIBS="$ac_save_LIBS"
 		AC_SUBST(Z80EX_LIBS)
@@ -826,7 +834,7 @@ AC_COMPILE_IFELSE([AC_LANG_PROGRAM(
     AC_DEFINE(HAVE_V24, 1, "Supported serial port interface present")],
    [AC_MSG_RESULT(no)])
 
-AC_OUTPUT([
+AC_CONFIG_FILES([
 	Makefile
 	include/Makefile
 	include/kc/Makefile
@@ -906,8 +914,8 @@ AC_OUTPUT([
 	po/Makefile.in
 	conf/Makefile
 	setup/Makefile
-	setup/KCemuSetup.nsi],
-	[])
+	setup/KCemuSetup.nsi])
+AC_OUTPUT
 
 
 
