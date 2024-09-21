@@ -135,7 +135,7 @@ do_open(const char *path)
   int ro;
   FILE *f;
   int b1, b2;
-  gzFile *gzf;
+  gzFile gzf;
   dsk_data_t *data;
 
   f = NULL;
